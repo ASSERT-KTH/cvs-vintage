@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
-import javax.swing.text.Segment;
 import java.util.ArrayList;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.MiscUtilities;
@@ -32,7 +31,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * An interface representing a portion of the current selection.
  * @author Slava Pestov
- * @version $Id: Selection.java,v 1.10 2002/12/24 17:35:24 spestov Exp $
+ * @version $Id: Selection.java,v 1.11 2003/01/12 03:08:25 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable

@@ -25,23 +25,20 @@ package org.gjt.sp.jedit.search;
 
 //{{{ Imports
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.20 2002/12/24 17:35:24 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.21 2003/01/12 03:08:25 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {

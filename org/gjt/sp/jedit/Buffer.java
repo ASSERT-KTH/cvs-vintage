@@ -26,7 +26,6 @@ package org.gjt.sp.jedit;
 //{{{ Imports
 import gnu.regexp.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.text.*;
 import java.awt.Toolkit;
 import java.io.File;
@@ -55,7 +54,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.111 2003/01/11 23:53:12 spestov Exp $
+ * @version $Id: Buffer.java,v 1.112 2003/01/12 03:08:23 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1981,7 +1980,7 @@ public class Buffer implements EBComponent
 			 * Scan backwards, looking for a line with
 			 * a valid line context.
 			 */
-			int start, end;
+			int start;
 			if(textMode)
 			{
 				start = lineIndex;

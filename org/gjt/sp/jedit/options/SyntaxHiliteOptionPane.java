@@ -25,7 +25,6 @@ package org.gjt.sp.jedit.options;
 
 //{{{ Imports
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -41,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: SyntaxHiliteOptionPane.java,v 1.3 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: SyntaxHiliteOptionPane.java,v 1.4 2003/01/12 03:08:24 spestov Exp $
  */
 public class SyntaxHiliteOptionPane extends AbstractOptionPane
 {
@@ -366,7 +365,6 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 
 		content.add(BorderLayout.SOUTH,box);
 
-		Dimension screen = getToolkit().getScreenSize();
 		pack();
 		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
 

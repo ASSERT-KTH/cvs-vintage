@@ -28,7 +28,6 @@ import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.io.File;
 import java.net.*;
 import java.util.*;
 import org.gjt.sp.jedit.browser.VFSBrowser;
@@ -41,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.10 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.11 2003/01/12 03:08:24 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {

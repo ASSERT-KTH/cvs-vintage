@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.search;
 
 //{{{ Imports
 import javax.swing.border.*;
-import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -36,13 +35,12 @@ import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.msg.SearchSettingsChanged;
 import org.gjt.sp.jedit.msg.ViewUpdate;
 import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.31 2002/12/14 22:06:08 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.32 2003/01/12 03:08:25 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {

@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.23 2003/01/05 20:42:29 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.24 2003/01/12 03:08:23 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -70,8 +70,6 @@ public class VFSFileChooserDialog extends EnhancedDialog
 		browser = new VFSBrowser(view,path,mode,multipleSelection,true);
 		browser.addBrowserListener(new BrowserHandler());
 		content.add(BorderLayout.CENTER,browser);
-
-		JPanel bottomPanel = new JPanel(new BorderLayout());
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel,BoxLayout.X_AXIS));

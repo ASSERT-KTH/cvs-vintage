@@ -29,7 +29,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.*;
 import java.awt.*;
 import java.util.Vector;
 import org.gjt.sp.jedit.*;
@@ -39,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.45 2002/09/20 19:53:23 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.46 2003/01/12 03:08:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer

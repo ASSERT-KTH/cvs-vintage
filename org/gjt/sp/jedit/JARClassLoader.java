@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.20 2003/01/07 23:30:52 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.21 2003/01/12 03:08:23 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -263,7 +263,6 @@ public class JARClassLoader extends ClassLoader
 			{
 				ZipEntry entry = (ZipEntry)pluginResources.get(i);
 				String name = entry.getName();
-				String lname = name.toLowerCase();
 				if(name.equalsIgnoreCase("actions.xml"))
 				{
 					jEdit.loadActions(

@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.*;
@@ -32,10 +31,8 @@ import java.awt.event.*;
 import java.util.*;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.search.*;
 import org.gjt.sp.jedit.textarea.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -44,7 +41,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.42 2003/01/06 02:46:16 spestov Exp $
+ * @version $Id: View.java,v 1.43 2003/01/12 03:08:23 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {

@@ -26,7 +26,6 @@ package org.gjt.sp.jedit.io;
 //{{{ Imports
 import java.awt.Component;
 import java.io.*;
-import java.util.Vector;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -34,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.27 2003/01/11 19:46:41 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.28 2003/01/12 03:08:24 spestov Exp $
  */
 public class FileVFS extends VFS
 {

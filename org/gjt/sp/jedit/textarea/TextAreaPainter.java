@@ -27,9 +27,7 @@ import javax.swing.text.*;
 import javax.swing.JComponent;
 import java.awt.event.MouseEvent;
 import java.awt.font.*;
-import java.awt.geom.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.Buffer;
@@ -49,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.58 2002/09/08 21:40:59 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.59 2003/01/12 03:08:25 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -648,8 +646,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		int lastInvalid = (clipRect.y + clipRect.height - 1) / height;
 
 		textArea.chunkCache.updateChunksUpTo(lastInvalid);
-
-		int lineCount = textArea.getVirtualLineCount();
 
 		int y = (clipRect.y - clipRect.y % height);
 

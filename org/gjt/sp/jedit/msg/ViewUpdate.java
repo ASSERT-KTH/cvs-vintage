@@ -22,13 +22,12 @@
 
 package org.gjt.sp.jedit.msg;
 
-import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.*;
 
 /**
  * Message sent when a view-related change occurs.
  * @author Slava Pestov
- * @version $Id: ViewUpdate.java,v 1.3 2002/05/14 07:55:49 spestov Exp $
+ * @version $Id: ViewUpdate.java,v 1.4 2003/01/12 03:08:24 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */

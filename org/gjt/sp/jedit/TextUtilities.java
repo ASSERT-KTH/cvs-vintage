@@ -22,7 +22,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import java.awt.*;
 import java.util.*;
 import javax.swing.text.Segment;
 import org.gjt.sp.jedit.syntax.*;
@@ -41,7 +40,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.38 2002/12/30 00:26:52 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.39 2003/01/12 03:08:23 spestov Exp $
  */
 public class TextUtilities
 {
@@ -376,7 +375,6 @@ loop:		for(int i = pos; i >= 0; i--)
 			type = SYMBOL;
 		//}}}
 
-		boolean seenWhiteSpace = false;
 loop:		for(int i = pos; i < line.length(); i++)
 		{
 			ch = line.charAt(i);

@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -31,16 +30,14 @@ import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.options.GlobalOptions;
-import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.textarea.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.31 2003/01/02 19:44:52 spestov Exp $
+ * @version $Id: EditPane.java,v 1.32 2003/01/12 03:08:23 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {

@@ -19,18 +19,11 @@
 
 package org.gjt.sp.jedit.gui;
 
-import javax.swing.border.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.awt.*;
-import org.gjt.sp.jedit.*;
-
 /**
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: DockableWindowContainer.java,v 1.5 2001/09/27 09:23:00 spestov Exp $
+ * @version $Id: DockableWindowContainer.java,v 1.6 2003/01/12 03:08:24 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public interface DockableWindowContainer

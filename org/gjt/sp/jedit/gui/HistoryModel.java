@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import org.gjt.sp.jedit.jEdit;
@@ -35,7 +34,7 @@ import org.gjt.sp.util.Log;
  * A history list. One history list can be used by several history text
  * fields.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.5 2002/08/12 16:55:58 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.6 2003/01/12 03:08:24 spestov Exp $
  */
 public class HistoryModel
 {

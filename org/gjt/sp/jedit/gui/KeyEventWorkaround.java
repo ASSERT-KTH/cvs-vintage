@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
 import java.awt.event.*;
-import java.awt.*;
 import org.gjt.sp.jedit.OperatingSystem;
 //}}}
 
@@ -34,7 +33,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * hopelessly broken in this regard.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.13 2002/03/28 04:08:42 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.14 2003/01/12 03:08:24 spestov Exp $
  */
 public class KeyEventWorkaround
 {

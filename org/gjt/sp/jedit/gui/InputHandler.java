@@ -24,13 +24,9 @@ package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import java.awt.event.*;
-import java.awt.Component;
-import java.util.*;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -42,7 +38,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.11 2002/03/14 10:20:20 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.12 2003/01/12 03:08:24 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -331,8 +327,8 @@ public abstract class InputHandler extends KeyAdapter
 		{
 			JEditTextArea textArea = view.getTextArea();
 
-			Buffer buffer = view.getBuffer();
-			/* if(!buffer.insideCompoundEdit())
+			/* Buffer buffer = view.getBuffer();
+			if(!buffer.insideCompoundEdit())
 				buffer.beginCompoundEdit(); */
 
 			int _repeatCount = getRepeatCount();

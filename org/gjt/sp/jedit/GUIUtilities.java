@@ -23,17 +23,13 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import gnu.regexp.REException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.net.*;
 import java.util.*;
 import org.gjt.sp.jedit.browser.*;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.io.VFS;
-import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.jedit.syntax.SyntaxStyle;
 import org.gjt.sp.jedit.syntax.Token;
 import org.gjt.sp.util.Log;
@@ -55,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.46 2003/01/09 02:55:18 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.47 2003/01/12 03:08:23 spestov Exp $
  */
 public class GUIUtilities
 {

@@ -26,7 +26,6 @@ package org.gjt.sp.jedit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -34,7 +33,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.11 2002/10/22 18:27:41 spestov Exp $
+ * @version $Id: EditAction.java,v 1.12 2003/01/12 03:08:23 spestov Exp $
  */
 public abstract class EditAction
 {

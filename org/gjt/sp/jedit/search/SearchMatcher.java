@@ -20,12 +20,11 @@
 package org.gjt.sp.jedit.search;
 
 import gnu.regexp.CharIndexed;
-import javax.swing.text.Segment;
 
 /**
  * An abstract interface for matching strings.
  * @author Slava Pestov
- * @version $Id: SearchMatcher.java,v 1.7 2002/12/10 22:32:36 spestov Exp $
+ * @version $Id: SearchMatcher.java,v 1.8 2003/01/12 03:08:25 spestov Exp $
  */
 public interface SearchMatcher
 {

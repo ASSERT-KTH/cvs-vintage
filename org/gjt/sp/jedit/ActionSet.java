@@ -24,7 +24,7 @@ import java.util.*;
 /**
  * A set of actions..
  * @author Slava Pestov
- * @version $Id: ActionSet.java,v 1.4 2001/10/02 13:54:13 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.5 2003/01/12 03:08:23 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -151,7 +151,6 @@ public class ActionSet
 	void getActions(Vector vec)
 	{
 		Enumeration enum = actions.elements();
-		int i = 0;
 		while(enum.hasMoreElements())
 			vec.addElement(enum.nextElement());
 	}

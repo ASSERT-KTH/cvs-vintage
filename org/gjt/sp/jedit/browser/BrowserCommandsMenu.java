@@ -24,18 +24,16 @@
 package org.gjt.sp.jedit.browser;
 
 //{{{ Imports
-import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.event.*;
 
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.15 2002/11/21 21:32:08 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.16 2003/01/12 03:08:23 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu

@@ -23,20 +23,15 @@
 package org.gjt.sp.jedit.help;
 
 //{{{ Imports
-import com.microstar.xml.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.html.*;
-import javax.swing.text.Document;
-import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
-import java.util.*;
-import org.gjt.sp.jedit.browser.FileCellRenderer; // for icons
 import org.gjt.sp.jedit.gui.RolloverButton;
 import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.jedit.*;
@@ -47,7 +42,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.6 2002/12/26 01:30:41 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.7 2003/01/12 03:08:24 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -204,8 +199,6 @@ public class HelpViewer extends JFrame implements EBComponent
 		// reset default cursor so that the hand cursor doesn't
 		// stick around
 		viewer.setCursor(Cursor.getDefaultCursor());
-
-		int index = url.indexOf('#');
 
 		URL _url = null;
 		try

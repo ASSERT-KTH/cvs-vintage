@@ -23,13 +23,12 @@
 package org.gjt.sp.jedit;
 
 import javax.swing.text.Position;
-import org.gjt.sp.util.Log;
 
 /**
  * A named location in a buffer.
  *
  * @author Slava Pestov
- * @version $Id: Marker.java,v 1.4 2002/02/11 03:15:30 spestov Exp $
+ * @version $Id: Marker.java,v 1.5 2003/01/12 03:08:23 spestov Exp $
  */
 public class Marker
 {

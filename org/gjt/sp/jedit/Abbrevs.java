@@ -23,8 +23,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import javax.swing.text.Element;
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import org.gjt.sp.jedit.gui.AddAbbrevDialog;
@@ -35,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.9 2002/11/07 22:52:14 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.10 2003/01/12 03:08:23 spestov Exp $
  */
 public class Abbrevs
 {

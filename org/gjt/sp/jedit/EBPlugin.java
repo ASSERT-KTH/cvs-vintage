@@ -19,13 +19,10 @@
 
 package org.gjt.sp.jedit;
 
-import java.util.Vector;
-import org.gjt.sp.jedit.gui.OptionsDialog;
-
 /**
  * Plugins extending this class are automatically added to the EditBus.
  * @author Slava Pestov
- * @version $Id: EBPlugin.java,v 1.2 2001/09/29 09:20:15 spestov Exp $
+ * @version $Id: EBPlugin.java,v 1.3 2003/01/12 03:08:23 spestov Exp $
  */
 public abstract class EBPlugin extends EditPlugin implements EBComponent
 {

@@ -27,13 +27,12 @@ package org.gjt.sp.jedit.syntax;
 import gnu.regexp.RE;
 import java.util.*;
 import org.gjt.sp.jedit.Mode;
-import javax.swing.text.Segment;
 //}}}
 
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.18 2002/08/16 19:18:23 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.19 2003/01/12 03:08:25 spestov Exp $
  */
 public class ParserRuleSet
 {

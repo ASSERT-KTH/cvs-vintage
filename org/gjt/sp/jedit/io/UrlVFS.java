@@ -26,14 +26,13 @@ package org.gjt.sp.jedit.io;
 import java.awt.Component;
 import java.io.*;
 import java.net.*;
-import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * URL VFS.
  * @author Slava Pestov
- * @version $Id: UrlVFS.java,v 1.5 2002/05/28 03:01:22 spestov Exp $
+ * @version $Id: UrlVFS.java,v 1.6 2003/01/12 03:08:24 spestov Exp $
  */
 public class UrlVFS extends VFS
 {

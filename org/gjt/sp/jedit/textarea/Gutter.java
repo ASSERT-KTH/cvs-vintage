@@ -26,12 +26,10 @@ package org.gjt.sp.jedit.textarea;
 //{{{ Imports
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -47,7 +45,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.27 2002/12/24 17:35:24 spestov Exp $
+ * @version $Id: Gutter.java,v 1.28 2003/01/12 03:08:25 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -110,11 +108,6 @@ public class Gutter extends JComponent implements SwingConstants
 
 		int firstLine = clip.y / lineHeight;
 		int lastLine = (clip.y + clip.height - 1) / lineHeight;
-
-		FontMetrics pfm = textArea.getPainter().getFontMetrics();
-
-		int baseline = (int)((this.baseline + lineHeight
-			- pfm.getDescent()) / 2.0);
 
 		int y = (clip.y - clip.y % lineHeight);
 

@@ -24,8 +24,6 @@ package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
 import javax.swing.*;
-import java.awt.event.*;
-import java.awt.image.*;
 import java.awt.*;
 import org.gjt.sp.jedit.*;
 //}}}
@@ -33,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.8 2002/06/19 06:03:25 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.9 2003/01/12 03:08:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer

@@ -23,11 +23,9 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import javax.swing.text.*;
 import java.awt.datatransfer.*;
 import java.awt.Toolkit;
 import java.io.*;
-import java.util.Vector;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.util.Log;
@@ -37,7 +35,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.8 2002/11/01 20:11:26 spestov Exp $
+ * @version $Id: Registers.java,v 1.9 2003/01/12 03:08:23 spestov Exp $
  */
 public class Registers
 {

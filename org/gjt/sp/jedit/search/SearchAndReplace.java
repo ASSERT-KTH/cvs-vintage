@@ -27,7 +27,6 @@ package org.gjt.sp.jedit.search;
 import bsh.BshMethod;
 import javax.swing.text.Segment;
 import javax.swing.JOptionPane;
-import java.awt.Component;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.msg.SearchSettingsChanged;
 import org.gjt.sp.jedit.textarea.*;
@@ -39,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.38 2002/12/27 02:13:34 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.39 2003/01/12 03:08:25 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -740,8 +739,6 @@ loop:			for(;;)
 		boolean smartCaseReplace = (replace != null
 			&& TextUtilities.getStringCase(replace)
 			== TextUtilities.LOWER_CASE);
-
-		JEditTextArea textArea = view.getTextArea();
 
 		try
 		{

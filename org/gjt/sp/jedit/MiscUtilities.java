@@ -25,7 +25,6 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
-import gnu.regexp.RE;
 import javax.swing.text.Segment;
 import javax.swing.JMenuItem;
 import java.io.*;
@@ -38,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.30 2002/12/27 02:13:33 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.31 2003/01/12 03:08:23 spestov Exp $
  */
 public class MiscUtilities
 {

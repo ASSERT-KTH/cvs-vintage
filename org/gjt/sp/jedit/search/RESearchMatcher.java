@@ -26,7 +26,6 @@ package org.gjt.sp.jedit.search;
 import bsh.BshMethod;
 import bsh.NameSpace;
 import gnu.regexp.*;
-import javax.swing.text.Segment;
 import org.gjt.sp.jedit.BeanShell;
 import org.gjt.sp.jedit.MiscUtilities;
 //}}}
@@ -34,7 +33,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.16 2002/12/10 22:32:36 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.17 2003/01/12 03:08:25 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {

@@ -23,11 +23,9 @@
 package org.gjt.sp.jedit.search;
 
 //{{{ Imports
-import gnu.regexp.RE;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.io.*;
-import java.util.Vector;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
@@ -36,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recursive directory search.
  * @author Slava Pestov
- * @version $Id: DirectoryListSet.java,v 1.4 2002/06/18 02:44:52 spestov Exp $
+ * @version $Id: DirectoryListSet.java,v 1.5 2003/01/12 03:08:25 spestov Exp $
  */
 public class DirectoryListSet extends BufferListSet
 {

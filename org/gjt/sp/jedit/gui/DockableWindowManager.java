@@ -26,12 +26,9 @@ package org.gjt.sp.jedit.gui;
 import bsh.EvalError;
 import bsh.NameSpace;
 import com.microstar.xml.*;
-import org.gjt.sp.jedit.browser.VFSBrowser;
-import org.gjt.sp.jedit.search.HyperSearchResults;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -40,7 +37,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.43 2002/12/24 17:35:23 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.44 2003/01/12 03:08:24 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -973,9 +970,6 @@ public class DockableWindowManager extends JPanel
 			Dimension _leftButtons = leftButtons.getPreferredSize();
 			Dimension _bottomButtons = bottomButtons.getPreferredSize();
 			Dimension _rightButtons = rightButtons.getPreferredSize();
-			Dimension _center = (center == null
-				? new Dimension(0,0)
-				: center.getPreferredSize());
 			Dimension _topToolbars = (topToolbars == null
 				? new Dimension(0,0)
 				: topToolbars.getPreferredSize());

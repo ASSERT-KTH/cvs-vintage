@@ -29,15 +29,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.StringTokenizer;
 import org.gjt.sp.jedit.buffer.FoldHandler;
-import org.gjt.sp.jedit.msg.BufferUpdate;
-import org.gjt.sp.jedit.textarea.FoldVisibilityManager;
 import org.gjt.sp.jedit.*;
 //}}}
 
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.24 2002/10/16 19:31:34 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.25 2003/01/12 03:08:24 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {

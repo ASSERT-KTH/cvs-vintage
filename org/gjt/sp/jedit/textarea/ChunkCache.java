@@ -25,10 +25,8 @@ package org.gjt.sp.jedit.textarea;
 
 //{{{ Imports
 import java.util.*;
-import javax.swing.text.*;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.syntax.*;
-import org.gjt.sp.util.Log;
 //}}}
 
 /**
@@ -38,7 +36,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.51 2003/01/05 20:42:30 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.52 2003/01/12 03:08:25 spestov Exp $
  */
 class ChunkCache
 {

@@ -31,7 +31,6 @@ import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.*;
-import org.gjt.sp.jedit.buffer.FoldHandler;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.jedit.*;
@@ -49,7 +48,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.47 2002/12/26 01:30:41 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.48 2003/01/12 03:08:24 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */

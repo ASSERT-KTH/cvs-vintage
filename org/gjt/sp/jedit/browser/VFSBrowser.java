@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.62 2003/01/09 02:55:18 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.63 2003/01/12 03:08:23 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -264,7 +264,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 
 		propertiesChanged();
 
-		HistoryModel filterModel = HistoryModel.getModel("vfs.browser.filter");
 		String filter = jEdit.getProperty("vfs.browser.last-filter");
 		if(filter == null)
 			filter = jEdit.getProperty("vfs.browser.default-filter");
