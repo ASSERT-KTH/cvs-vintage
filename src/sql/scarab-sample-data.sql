@@ -4331,9 +4331,9 @@ INSERT INTO SCARAB_R_MODULE_OPTION VALUES (7,10,90,NULL,1,3,3);
 -- SECURITY - Sample Users
 
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (2, 'jon@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
+    values (2, 'jon@foo.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@foo.com', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (3, 'jss@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@latchkey.com', 'abcdef' );
+    values (3, 'jss@foo.com', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Jon', 'Stevens', 'jon@foo.com', 'abcdef' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
     values (4, 'jmcnally@tigris.org', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'John', 'McNally', 'jmcnally@tigris.org', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
