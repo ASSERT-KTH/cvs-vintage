@@ -1,7 +1,7 @@
 
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeGroupEdit.vm"))
+#set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
 #set ($attTypeName = $attType.AttributeClass.Name)
 
 #macro (IssueTypeAttributeEditBar $val)
@@ -22,7 +22,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 
 <form action="$link.setPage("admin,IssueTypeAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.IssueTypeAttributeEdit" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeOptionSelect.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
@@ -125,7 +125,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
 ## commenting out till we decide how to do <input type="submit" value="$l10n.Copy" />&#160;
-<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributeoptions" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteissuetypeoptions" />&#160;
 <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
 #end
