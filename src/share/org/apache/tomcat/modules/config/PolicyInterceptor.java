@@ -94,12 +94,21 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	policyFile=pf;
     }
 
+    public void addInterceptor(ContextManager cm, Context ctx,
+			       BaseInterceptor module)
+	throws TomcatException
+    {
+	// Just override parent 
+    }
+
     /** Set the security manager, so that policy will be used
      */
     public void engineInit(ContextManager cm) throws TomcatException {
 	if( System.getSecurityManager() != null ) return;
 	try {
 	    if( null == System.getProperty("java.security.policy")) {
+		log( "Setting java.security.policy. This may fail on some VMs, please"
+		     + " set it as a system property before starting tomcat");
 		File f=null;
 		if( policyFile==null ) {
 		    policyFile="conf/tomcat.policy";
@@ -113,15 +122,19 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 		try {
 		    policyFile=f.getCanonicalPath();
 		} catch(IOException ex ) {}
-		log("Setting policy file to " + policyFile);
-		System.setProperty("java.security.policy",
-				   policyFile);
+
+		if( debug > 0 )
+		    log("Setting policy file to " + policyFile +
+			" tomcat.home= " + System.getProperty( "tomcat.home") );
+
+		System.setProperty("java.security.policy",  policyFile);
 		
 	    }
+	    
 	    Class c=Class.forName(securityManagerClass);
 	    Object o=c.newInstance();
+	    Policy.getPolicy().refresh();
 	    System.setSecurityManager((SecurityManager)o);
-
 	    log("Security Manager set to " + securityManagerClass +
 		" " + System.getProperty("java.security.policy"));
 	} catch( ClassNotFoundException ex ) {
@@ -140,6 +153,7 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 					  Permissions p )
     {
 	if( context.isTrusted() ) {
+	    if( debug > 0 ) log( "All permissions for " + context );
 	    AllPermission aP=new AllPermission();
 	    p.add( aP );
 	    return;
@@ -151,8 +165,7 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	p.add(fp);
 
 	// Add default write "-" FilePermission for docBase 
-	fp = new FilePermission(base + File.separator + "-",
-				"write");
+	fp = new FilePermission(base + File.separator + "-", "write");
 	p.add(fp);
 	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
 				"read");
@@ -160,21 +173,33 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
 				"write");
 	p.add(fp);
+
+	// Read on the common and apps dir
+	fp = new FilePermission(cm.getInstallDir() + File.separator +
+				"lib" + File.separator + "common" +
+				File.separator + "-",
+				"read");
+	p.add(fp);
+	fp = new FilePermission(cm.getInstallDir() + File.separator +
+				"lib" + File.separator + "apps" +
+				File.separator + "-",
+				"read");
+	p.add(fp);
+	
+	RuntimePermission rp = new RuntimePermission("getClassLoader");
+	p.add( rp );
 	
 	// JspFactory.getPageContext() runs in JSP Context and needs the below
 	// permission during the init of a servlet generated from a JSP.
 	PropertyPermission pp = new PropertyPermission("line.separator","read");
-	if( pp != null )
-	    p.add((Permission)pp);
+	p.add(pp);
 	pp = new PropertyPermission("file.separator", "read");
-	if( pp != null )
-	    p.add((Permission)pp);
+	p.add(pp);
 	pp = new PropertyPermission("path.separator", "read");
-	if( pp != null )
-	    p.add((Permission)pp);
+	p.add(pp);
 
-	if( debug > 0 || ctx.getDebug() > 0 )
-	    ctx.log("Permissions " + p );
+	if( debug > 0 || context.getDebug() > 0 )
+	    context.log( "permissions " + p );
 	    
     }
     

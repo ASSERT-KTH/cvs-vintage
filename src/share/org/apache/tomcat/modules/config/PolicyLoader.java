@@ -83,6 +83,7 @@ import org.apache.tomcat.util.log.*;
 public class PolicyLoader extends BaseInterceptor {
     String securityManagerClass="java.lang.SecurityManager";
     String policyFile=null;
+    boolean sandbox=false;
     
     public PolicyLoader() {
     }
@@ -103,6 +104,13 @@ public class PolicyLoader extends BaseInterceptor {
 	policyFile=pf;
     }
 
+    /** Enable/disable the module, independent of command line
+	options
+    */
+    public void setSandbox( boolean b ) {
+	this.sandbox=b;
+    }
+    
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
     public void addInterceptor(ContextManager cm, Context ctx,
@@ -113,12 +121,15 @@ public class PolicyLoader extends BaseInterceptor {
 
 	if( ! jdk11Compat.isJava2() )
 	    return;
-	
+
+	if( debug > 0 )
+	    log("Checking for security manager " + cm.getProperty( "sandbox" ));
 	// find if PolicyInterceptor has already been loaded
-	if( System.getSecurityManager() != null ||
+	if( sandbox ||
+	    System.getSecurityManager() != null ||
 	    cm.getProperty("sandbox") != null )
 	    {
-	    log("Found security manager ");
+	    log("Loading sandbox ");
 	    try {
 		Class c=Class.
              forName( "org.apache.tomcat.modules.config.PolicyInterceptor" );
@@ -126,7 +137,7 @@ public class PolicyLoader extends BaseInterceptor {
 		PolicyLoader policyModule=(PolicyLoader)c.newInstance();
 		policyModule.setSecurityManagerClass( securityManagerClass);
 		policyModule.setPolicyFile( policyFile );
-
+		policyModule.setDebug( debug );
 		cm.addInterceptor( policyModule );
 
 		// we could also remove PolicyLoader, since it's no longer
