@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.38 2004/07/20 23:46:07 d00mst Exp $
+// $Id: UmlModelEventPump.java,v 1.39 2004/07/30 17:09:13 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,6 +67,10 @@ import ru.novosoft.uml.MFactoryImpl;
  * event in the future.
  * @since Oct 14, 2002
  * @author jaap.branderhorst@xs4all.nl
+ * @deprecated by Linus Tolke as of 0.17.1. This class is part of the 
+ *             NSUML-dependant API of the model component. Use the NSUML-free 
+ *             {@link org.argouml.model.Model#getPump()} and the
+ *             {@link org.argouml.model.ModelEventPump} interface.
  */
 public final class UmlModelEventPump implements MElementListener {
 
