@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.IOException;
 import java.io.*;
 import java.net.*;
@@ -165,7 +166,7 @@ public class RequestImpl  implements Request {
         StringManager.getManager("org.apache.tomcat.core");
 
     public RequestImpl() {
-	//	System.out.println("XXX new ri " );
+	//	log("XXX new ri " );
  	headers = new MimeHeaders();
  	recycle(); // XXX need better placement-super()
     }
@@ -227,7 +228,7 @@ public class RequestImpl  implements Request {
 	    return serverName;
 	}
 	// default to localhost - and warn
-	//	System.out.println("No server name, defaulting to localhost");
+	//	log("No server name, defaulting to localhost");
 	serverName="localhost";
 	return serverName;
     }
@@ -467,7 +468,7 @@ public class RequestImpl  implements Request {
 	//	context.log("RequestImpl:  created new session!");
 	contextM.doNewSessionRequest( this, response );
 	if ( serverSession == null ) {
-	    context.log("RequestImpl: no session created!");
+	    log("RequestImpl: no session created!");
 	    return null;
 	}
 
@@ -906,4 +907,19 @@ public class RequestImpl  implements Request {
 	return notes[pos];
     }
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    
+    protected void log(String s) {
+	log(s, null);
+    }
+    protected void log(String s, Throwable t) {
+	if (context != null) {
+	    loghelper.setLogger(context.getLoggerHelper().getLogger());
+	}
+	else if (contextM != null) {
+	    loghelper.setLogger(contextM.getLoggerHelper().getLogger());
+	}
+	loghelper.log(s);
+    }		       
+    
 }
