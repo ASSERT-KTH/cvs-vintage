@@ -52,10 +52,11 @@ public abstract class AttributeValue
     public void setOptionId(NumberKey optionId)
         throws Exception
     {
-        List options = getAttribute().getAttributeOptions();
+        List options = getIssue().getModule()
+            .getRModuleOptions(getAttribute());
         for ( int i=options.size()-1; i>=0; i-- ) 
         {
-            AttributeOption option = (AttributeOption)options.get(i);
+            RModuleOption option = (RModuleOption)options.get(i);
             if ( option.getOptionId().equals(optionId) ) 
             {
                 setValue(option.getDisplayValue());
@@ -98,6 +99,7 @@ public abstract class AttributeValue
         super.setAttribute(v);
     }
 
+    public abstract boolean isEquivalent(AttributeValue aval);
 
     /* * Creates, initializes and returns a new Attribute.
      * @return new Attribute instance

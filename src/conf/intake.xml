@@ -28,19 +28,18 @@
         <field name="AttributeId" key="attid" type="NumberKey">
            <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
-        <field name="DisplayValue" key="dispval" type="String">
+        <field name="Name" key="name" type="String">
             <rule minLength="1">Option name is not allowed to be empty</rule>
             <rule maxLength="255">Option name must be less than 255 characters long</rule>
         </field>
         <field name="NumericValue" key="numval" type="int">
            <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
-        <field name="NewDisplayValue" key="newdispval" type="String"
-               mapToProperty="DisplayValue">
+        <field name="NewName" key="newname" type="String"
+               mapToProperty="Name">
             <rule maxLength="255"/>
         </field>
-        <field name="Deleted" key="del" type="boolean" 
-               mapToObject="" mapToProperty=""/>
+        <field name="Deleted" key="del" type="boolean"/>
 </group>
 <group class="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">

@@ -52,7 +52,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2001/03/03 00:07:07 $
+ * @version $Revision: 1.4 $ $Date: 2001/04/19 06:28:51 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {
@@ -76,7 +76,7 @@ public class VotedAverageAttribute extends VotedAttribute
         }
         else
         {
-            return getOptionByNum(total/count).getDisplayValue();
+            return getOptionByNum(total/count).getName();
         }
     }
 }

@@ -56,7 +56,7 @@ import org.tigris.scarab.om.*;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.5 $ $Date: 2001/03/03 00:07:07 $
+ * @version $Revision: 1.6 $ $Date: 2001/04/19 06:28:51 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {
@@ -117,4 +117,40 @@ public abstract class OptionAttribute extends AttributeValue
         optionsById = (Hashtable)res[1];
         optionsByNum = (Hashtable)res[2];
     }
+
+    /*
+    public boolean isAncestor(AttributeValue aval)
+    {
+        boolean result = false;
+        if ( aval instanceof OptionAttribute ) 
+        {
+            NumberKey optionId = aval.getOptionId();
+            Criteria crit = new Criteria()
+                .add(ROptionOptionPeer.OPTION2_ID, optionId)
+                .add(ROptionOptionPeer.RELATIONSHIP_ID, 
+                     OptionRelationship.PARENT_CHILD);
+
+        }
+        
+    }
+
+    public boolean isEquivalent(AttributeValue aval)
+    {
+        boolean result = false;
+        if ( aval instanceof OptionAttribute ) 
+        {
+            NumberKey optionId = aval.getOptionId();
+        }
+        
+    }
+    public boolean isEquivalent(AttributeValue aval)
+    {
+        boolean result = false;
+        if ( aval instanceof OptionAttribute ) 
+        {
+            NumberKey optionId = aval.getOptionId();
+        }
+        
+    }
+    */
 }

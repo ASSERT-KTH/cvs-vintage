@@ -1,13 +1,14 @@
 #macro ( attrValueSelect $attrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #set ( $attr = $attrValue.Attribute )
+    #set ( $module = $attrValue.Issue.Module )
         <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
 
         <select name="$attrInput.OptionId.Key" #if($size.length())size="$size"#end>
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end
-            #foreach ($option in $attr.AttributeOptions)
+            #foreach ($option in $module.getRModuleOptions($attr))
               #set ( $selected = "" )
               #if ( $option.OptionId == $attrInput.get($optionFieldName).Value.Value )
                 #set ( $selected = " selected" )

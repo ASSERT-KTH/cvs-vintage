@@ -50,7 +50,7 @@ public class Issue
     public HashMap getModuleAttributeValuesMap() throws Exception
     {
         Criteria crit = new Criteria(2)
-            .add(RModuleAttributePeer.DELETED, false);
+            .add(RModuleAttributePeer.ACTIVE, true);
         
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
@@ -82,6 +82,23 @@ public class Issue
         return map;
     }
 
+    public AttributeValue getAttributeValue(Attribute attribute)
+       throws Exception
+    {
+        Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.DELETED, false)        
+            .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
+
+        List avals = getAttributeValues(crit);
+        AttributeValue aval = null;
+        if ( avals.size() == 1 ) 
+        {
+            aval = (AttributeValue)avals.get(0);
+        }
+        
+        return aval;
+    }
+
 
     /**
      * AttributeValues in the order that is preferred for this module
@@ -92,7 +109,7 @@ public class Issue
         Map values = getModuleAttributeValuesMap();
 
         Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.DELETED, false)
+            .add(RModuleAttributePeer.ACTIVE, true)
             .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         Attribute[] attributes = getModule().getAttributes(crit);
 
@@ -108,7 +125,7 @@ public class Issue
         Map values = getAttributeValuesMap();
 
         Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.DELETED, false)
+            .add(RModuleAttributePeer.ACTIVE, true)
             .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         Attribute[] attributes = getModule().getAttributes(crit);
 
@@ -152,7 +169,38 @@ public class Issue
         return orderedValues;
     }
 
+    /*
+    public static getMatchingIssues(AttributeValue[] avals, 
+                                    boolean combineText)
+    {
 
+        Iterator iter = issue.getModuleAttributeValuesMap()
+            .values().iterator();
+
+        for ( int j=dedupeAttributes.length-1; j>=0; j-- ) 
+        {
+            while ( iter.hasNext() ) 
+            {
+                aval = (AttributeValue)iter.next();
+                if ( aval.getAttribute().equals(dedupeAttributes[j])) 
+                {
+                    group = intake.get("AttributeValue", aval.getQueryKey());
+                    group.setProperties(aval);
+                        
+                    for ( int k=matchingIssues.size()-1; k>=0; k--) 
+                    {
+                        Issue possibleMatch = (Issue)matchingIssues.get(k);
+                        possibleMatch.getAttributeValue(dedupeAttributes[j]);
+                    }
+                        
+                        
+                        field.setRequired(true);
+                        break;
+                    }                    
+                }
+            }
+        }
+    */
 
     /**
      * AttributeValues that are set for this Issue
@@ -195,7 +243,7 @@ public class Issue
         throws Exception
     {
         Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.DELETED, false)        
+            .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
         Attribute[] attributes = getModule().getAttributes(crit);
         //        Vector moduleAttributes = 

@@ -71,6 +71,9 @@ import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.word.Vocabulary;
 
@@ -78,7 +81,7 @@ import org.tigris.scarab.word.Vocabulary;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.8 2001/04/17 00:07:37 fedor Exp $
+    @version $Id: ReportIssue.java,v 1.9 2001/04/19 06:28:50 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -100,6 +103,41 @@ public class ReportIssue extends VelocityAction
         Field summary = group.get("Value");
         summary.setRequired(true);
 
+        // set any other required flags
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.ACTIVE, true)        
+            .add(RModuleAttributePeer.REQUIRED, true);        
+        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        Iterator iter = issue.getModuleAttributeValuesMap()
+            .values().iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)iter.next();
+            group = intake.get("AttributeValue", aval.getQueryKey(), false);
+            if ( group != null ) 
+            {            
+                Field field = null;
+                if ( aval instanceof OptionAttribute ) 
+                {
+                    field = group.get("OptionId");
+                }
+                else 
+                {
+                    field = group.get("Value");
+                }
+                
+                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+                {
+                    if ( aval.getAttribute().getPrimaryKey().equals(
+                         requiredAttributes[j].getPrimaryKey() )) 
+                    {
+                        field.setRequired(true);
+                        break;
+                    }                    
+                }
+            }
+        }
+        
         if ( intake.isAllValid() ) 
         {
             // search for duplicate issues based on summary
@@ -109,14 +147,16 @@ public class ReportIssue extends VelocityAction
             // do not show more than 25 dupe guesses.
             int matchingIssuesCount = matchingIssueIds.length;
             if (matchingIssuesCount>25)
-                matchingIssuesCount=20;
+                matchingIssuesCount=25;
             //looks like we have to fetch them one by one to keep the order
             Vector matchingIssues = new Vector(matchingIssuesCount);
 
             for (int i=0; i<matchingIssuesCount; i++)
+            {
                 matchingIssues
                     .add(IssuePeer
                         .retrieveByPK(new NumberKey(matchingIssueIds[i])));
+            }
 
             String template = null;
             if ( matchingIssues.size() > 0 )

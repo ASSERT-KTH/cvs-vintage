@@ -34,11 +34,20 @@ public class Attribute
 
     private static Criteria allOptionsCriteria;
 
+    /** should be cloned to use */
+    private static Criteria moduleOptionsCriteria;
+
     static
     {
         allOptionsCriteria = new Criteria();
         allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
-        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.DISPLAY_VALUE);
+        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
+
+        moduleOptionsCriteria = new Criteria();
+        moduleOptionsCriteria
+            .addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+        moduleOptionsCriteria
+            .addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
     }
 
 
@@ -88,7 +97,7 @@ public class Attribute
      * return the options (for attributes that have them).  They are put
      * into order by the numeric value.
      */
-    public Vector getAttributeOptions()
+    public List getAllAttributeOptions()
         throws Exception
     {
         return getAttributeOptions(allOptionsCriteria);  
@@ -107,15 +116,14 @@ public class Attribute
         for (int i=0; i<size; i++) 
         {
             AttributeOption opt = (AttributeOption)v.get(i);
-            if ( option.getDisplayValue()
-                 .equalsIgnoreCase(opt.getDisplayValue()) ) 
+            if ( option.getName()
+                 .equalsIgnoreCase(opt.getName()) ) 
             {
                 throw new ScarabException("Adding option " + 
-                    option.getDisplayValue() + 
+                    option.getName() + 
                     " failed due to a non-unique name." );
             }
         }
-
         
         Vector sortedOptions = (Vector)v.clone();
         sortedOptions.add(option);

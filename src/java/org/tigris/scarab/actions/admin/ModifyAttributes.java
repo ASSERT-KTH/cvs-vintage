@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.8 2001/04/12 01:37:40 jmcnally Exp $
+    @version $Id: ModifyAttributes.java,v 1.9 2001/04/19 06:28:51 jmcnally Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -116,26 +116,6 @@ public class ModifyAttributes extends VelocityAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE, template );
 
-        /*
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        if ( intake.isAllValid() )
-        {
-	        Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-	        String attributeID = attribute.get("Id").toString();
-
-	        ApplicationTool srt = TurbinePull.getTool(context, 
-	            ScarabConstants.SCARAB_REQUEST_TOOL);
-	        if (srt != null)
-	        {
-	            StringKey sk = new StringKey();
-	            sk.setValue(attributeID);
-	            Attribute attr = Attribute.getInstance(sk);
-	            ((ScarabRequestTool)srt).setAttribute(attr);
-	        }
-        }
-        */
         setTemplate(data, nextTemplate);
     }
 
@@ -222,13 +202,8 @@ public class ModifyAttributes extends VelocityAction
                     {
                         // remove from the Attribute's list
                         attributeOptions.remove(i);
-                        // delete from the db
-                        AttributeOptionPeer.doDelete(option);
                     }
-                    else 
-                    {
-                        option.save();
-                    }
+                    option.save();
 
                     // we need this because we are accepting duplicate
                     // numeric values and resorting, so we do not want
@@ -245,8 +220,8 @@ public class ModifyAttributes extends VelocityAction
             if ( group != null ) 
             {
                 group.setProperties(option);
-                if ( option.getDisplayValue() != null 
-                     && option.getDisplayValue().length() != 0 ) 
+                if ( option.getName() != null 
+                     && option.getName().length() != 0 ) 
                 {
                     try
                     {
@@ -254,7 +229,7 @@ public class ModifyAttributes extends VelocityAction
                     }
                     catch (ScarabException se)
                     {
-                        group.get("DisplayValue")
+                        group.get("Name")
                             .setMessage("Please select a unique name.");
                     }
                 }

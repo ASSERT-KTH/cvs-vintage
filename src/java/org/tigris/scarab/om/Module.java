@@ -33,6 +33,9 @@ public class Module
 {
     private static final NumberKey ROOT_ID = new NumberKey("0");
 
+    // private Map attributeOptions = new HashMap(); 
+
+
     /**
      * Creates a new Issue.
      *
@@ -70,12 +73,60 @@ public class Module
     }
 
     /**
+     * Array of Attributes used for deduping.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getDedupeAttributes()
+        throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.DEDUPE, true)        
+            .add(RModuleAttributePeer.ACTIVE, true);        
+        return getAttributes(crit);
+    }
+
+    /**
      * gets a list of all of the Attributes.
      */
     public Attribute[] getAllAttributes()
         throws Exception
     {
         return getAttributes(new Criteria());
+    }
+
+
+
+    public List getRModuleOptions(Attribute attribute)
+        throws Exception
+    {
+        return getRModuleOptions(attribute, true);
+    }
+
+    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
+        throws Exception
+    {
+        Criteria crit = new Criteria(2);
+        if ( activeOnly ) 
+        {
+            crit.add(RModuleOptionPeer.ACTIVE, true);
+        }
+        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
+        crit.addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+        crit.addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+
+        List rModOpts = null;
+        Module module = this;
+        Module prevModule = null;
+        do
+        {
+            rModOpts = module.getRModuleOptionsJoinAttributeOption(crit);
+            prevModule = module;
+            module = prevModule.getModuleRelatedByParentId();
+        }
+        while ( rModOpts.size() == 0 && 
+               !ROOT_ID.equals((NumberKey)prevModule.getPrimaryKey()));
+        return rModOpts;
     }
 
     /**

@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.9 2001/04/18 21:26:33 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.10 2001/04/19 06:28:52 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -40,6 +40,7 @@
         <reference local="TRANSACTION_ID" foreign="TRANSACTION_ID"/>
     </foreign-key>
 </table>
+
 
 <!--
     Attachment is a piece of information associated with an issue.
@@ -122,6 +123,8 @@
     <column name="ATTACHMENT_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
+
+
 <!--
     Possible attributes of an issue.
     Example: Operating System
@@ -141,6 +144,10 @@
     -->
     <column name="ATTRIBUTE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
     <!--
+        A required option for this attribute to be active.
+    -->
+    <column name="REQUIRED_OPTION_ID" type="INTEGER"></column>
+    <!--
         Flag, which marks that attribute has been deleted.
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
@@ -148,7 +155,13 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_TYPE">
         <reference local="ATTRIBUTE_TYPE_ID" foreign="ATTRIBUTE_TYPE_ID"/>
     </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="REQUIRED_OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
 </table>
+
+
+
 <!--
     Attribute class is group of attributes types that have the same properties.
     Example: Free form input
@@ -174,6 +187,9 @@
     -->
     <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"></column>
 </table>
+
+
+
 <!--
     Attribute option is possible value of an attribute of an issue.
     Example: DOS 3.1 (for attribute Operating System)
@@ -189,18 +205,44 @@
     -->
     <column name="ATTRIBUTE_ID" required="true" type="INTEGER"></column>
     <!--
-        Value that represents the option in the UI.
+        Name.
     -->
-    <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"/>
+    <column name="OPTION_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
     <!--
         Value of the atttribute that represents the option.
         Can be used for sorting in UI and computing averages of votes.
     -->
     <column name="NUMERIC_VALUE" required="false" type="INTEGER"></column>
+    <!--
+        Flag, which marks that option has been deleted.
+    -->
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
 </table>
+
+
+<!--
+    Possible types of dependency between options.
+    Example: Parent-Child
+    Example: Requires
+-->
+<table name="SCARAB_OPTION_RELATIONSHIP" idMethod="idbroker" 
+       javaName="OptionRelationship">
+    <!--
+        Unique identifier.
+    -->
+    <column name="RELATIONSHIP_ID" primaryKey="true" required="true" 
+            type="INTEGER"/>
+    <!--
+        Name.
+    -->
+    <column name="RELATIONSHIP_NAME" javaName="Name" required="true" 
+            type="VARCHAR" size="100"/>
+</table>
+
 
 <!--
     Attribute type is group of attributes that have the same representation
@@ -517,10 +559,14 @@
     -->
     <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!--
-        Flag, which marks that module attribute has been deleted.
+        Value that represents the attribute in the UI.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"></column>
+    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Flag, which marks that module attribute is not used.
+    -->
+    <column name="ACTIVE" required="false" type="BOOLEANINT" 
+        default="1" size="1"></column>
     <!--
         Flag, which marks that issues entered for this module must have
         this attribute set.
@@ -532,6 +578,11 @@
         order Attribute listings.
     -->
     <column name="PREFERRED_ORDER" required="true" default="0" type="INTEGER"/>
+    <!--
+        Flag, which marks this attribute as being useful for deduping.
+    -->
+    <column name="DEDUPE" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
@@ -540,6 +591,81 @@
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
 </table>
+
+
+
+<!--
+    Options that are applicable to issues of the particular module.
+-->
+<table name="SCARAB_R_MODULE_OPTION" idMethod="none" javaName="RModuleOption">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Option.
+    -->
+    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Value that represents the option in the UI.
+    -->
+    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Flag, which marks that option has been deleted within the module.
+    -->
+    <column name="ACTIVE" required="false" type="BOOLEANINT" 
+        default="1" size="1"></column>
+    <!--
+        Allows the template engineer and module owner some means to 
+        order option listings.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false" 
+            default="-1" type="INTEGER"/>
+
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+</table>
+
+
+<!--
+    Sets up relations between options.
+-->
+<table name="SCARAB_R_OPTION_OPTION" idMethod="none" javaName="ROptionOption">
+    <!--
+        Parent Option.
+    -->
+    <column name="OPTION1_ID" primaryKey="true" required="true" 
+            type="INTEGER"/>
+    <!--
+        Child Option.
+    -->
+    <column name="OPTION2_ID" primaryKey="true" required="true" 
+            type="INTEGER"/>
+    <!--
+        Type.
+    -->
+    <column name="RELATIONSHIP_ID" required="true" type="INTEGER"/>
+    <!--
+        Flag, which marks that association has been deleted.
+    -->
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
+
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="OPTION1_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="OPTION2_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_OPTION_RELATIONSHIP">
+        <reference local="RELATIONSHIP_ID" foreign="RELATIONSHIP_ID"/>
+    </foreign-key>
+</table>
+
 
 <!--
     Person associated with the module.

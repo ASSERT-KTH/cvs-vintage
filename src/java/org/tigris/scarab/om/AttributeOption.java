@@ -41,8 +41,8 @@ public class AttributeOption
                 }
                 else if (opt1.getNumericValue() == opt2.getNumericValue()) 
                 {
-                    result = opt1.getDisplayValue()
-                        .compareTo(opt2.getDisplayValue()); 
+                    result = opt1.getName()
+                        .compareTo(opt2.getName()); 
                 }
                 return result;
             }            
@@ -76,6 +76,7 @@ public class AttributeOption
         aAttribute = v;
         super.setAttribute(v);
     }
+
 }
 
 

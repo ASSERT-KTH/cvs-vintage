@@ -48,11 +48,11 @@ $page.setTitle("Attribute Editor")
 
       <td width="25%">          
         <div align="center">
-#if (!$intakeOption.DisplayValue.isValid())
-    $intakeOption.DisplayValue.Message<br>
+#if (!$intakeOption.Name.isValid())
+    $intakeOption.Name.Message<br>
 #end
-          <input type="text" name="$intakeOption.DisplayValue.Key" 
-                  value="$intakeOption.DisplayValue">
+          <input type="text" name="$intakeOption.Name.Key" 
+                  value="$intakeOption.Name">
     
       </div>
       </td>
@@ -84,8 +84,8 @@ $page.setTitle("Attribute Editor")
       <td width="25%">          
         <div align="center">
 
-          <input type="text" name="$intakeOption.NewDisplayValue.Key" 
-                  value="$!intakeOption.NewDisplayValue">
+          <input type="text" name="$intakeOption.NewName.Key" 
+                  value="$!intakeOption.NewName">
     
       </div>
       </td>
