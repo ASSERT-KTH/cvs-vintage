@@ -9,6 +9,9 @@
     <!-- Work directory - source download and build files -->
     <property name="ws.dir" value="${user.home}/ws" />
 
+    <property name="get.prefix" 
+       value="http://tokyo.javasoft.com/~costin/jakarta" />
+
     <!-- Directory where build images will be generated -->
     <property name="nightly.dir" value="/www/jakarta.apache.org/builds/tomcat/nightly" />
 
@@ -84,11 +87,11 @@
 
    <!-- ******************** Getting binaries from build machines  ******************** -->
     <target name="binaries.get"  depends="init">
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-SunOS-${DSTAMP}.zip" 
+        <get src="${get.prefix}/tomcat-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/tomcat.zip" ignoreErrors="true" />
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/servletapi-SunOS-${DSTAMP}.zip" 
+        <get src="${get.prefix}/servletapi-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/servletapi.zip" ignoreErrors="true" />
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ant-SunOS-${DSTAMP}.zip" 
+        <get src="${get.prefix}/ant-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/ant.zip"  ignoreErrors="true" />
         <copyfile src="${nightly.dir}/tomcat.zip" dest="${nightly.dir}/tomcat-${DSTAMP}.zip" />
         <copyfile src="${nightly.dir}/ant.zip" dest="${nightly.dir}/ant-${DSTAMP}.zip" />
@@ -97,20 +100,21 @@
   
     <!-- logs -->
     <target name="logs.get"  depends="init">
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/build.log" 
+        <get src="${get.prefix}/build.log" 
              dest="${nightly.dir}/log/build-Solaris-${DSTAMP}.log" ignoreErrors="true" />
 
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/test-tomcat.log" 
+        <get src="${get.prefix}/test-tomcat.log" 
              dest="${nightly.dir}/log/test-tomcat-Solaris-${DSTAMP}.log" ignoreErrors="true" />
 
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/test-watchdog.log" 
+        <get src="${get.prefix}/test-watchdog.log" 
              dest="${nightly.dir}/log/test-watchdog-Solaris-${DSTAMP}.log" ignoreErrors="true" />
 
-        <get src="ftp://osaka.javasoft.com/pub/jakarta/watchdog-test.log" 
+<!--         <get src="ftp://osaka.javasoft.com/pub/jakarta/watchdog-test.log" 
              dest="${nightly.dir}/log/test-watchdog-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
 
         <get src="ftp://osaka.javasoft.com/pub/jakarta/test-tomcat.log" 
              dest="${nightly.dir}/log/test-tomcat-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
+-->
     </target>
 
     <!-- native packages -->
