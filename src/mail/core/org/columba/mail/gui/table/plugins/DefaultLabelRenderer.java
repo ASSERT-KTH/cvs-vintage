@@ -134,6 +134,13 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer, P
 				setFont(plainFont);
 			}
 		}
+		
+		Color msgColor = (Color) header.get("columba.color");
+		if (msgColor != null) {
+			setForeground(msgColor);
+		} else {
+			setForeground(foreground);
+		}
 
 		return this;
 	}
