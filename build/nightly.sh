@@ -110,7 +110,7 @@ fi
 ## Build things now
 if [ ${DEPBUILD} -gt 0 ] ; then
 echo "Building Torque Start..."
-cd ${DIR}; cd ${TORQUE}/build
+cd ${DIR}; cd ${TORQUE}
 ant dist
 echo "Building Torque Finish..."
 
