@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.15 2001/11/20 00:55:34 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.16 2001/11/28 23:59:40 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -177,7 +177,7 @@ public class MoveIssue extends RequireLoginFirstAction
                attVal.startTransaction(transaction);
                attVal.save();
             }
-            descBuf = new StringBuffer("Moved from ");
+            descBuf = new StringBuffer(" moved from ");
             descBuf.append(oldModule.getName()).append(" to ");
             descBuf.append(newModule.getName());
         }
@@ -213,7 +213,7 @@ public class MoveIssue extends RequireLoginFirstAction
                newActivity.setIssueId(newIssue.getIssueId());
                newActivity.save();
             }
-            descBuf = new StringBuffer("Copied from issue ");
+            descBuf = new StringBuffer(" copied from issue ");
             descBuf.append(issue.getUniqueId());
             descBuf.append(" in module ").append(oldModule.getName());
         }
