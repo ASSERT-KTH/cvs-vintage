@@ -81,7 +81,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.52 2002/08/06 17:19:33 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.53 2002/08/26 17:10:09 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -98,6 +98,8 @@ public abstract class AbstractScarabUser
 
     private static final String[] homePageArray = {"home,EnterNew.vm", 
         "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
+
+    private static final int MAX_INDEPENDENT_WINDOWS = 10;
 
     /** 
      * counter used as part of a key to store an Issue the user is 
@@ -502,7 +504,6 @@ public abstract class AbstractScarabUser
      * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)
      */
     public Issue getReportingIssue(String key)
-        throws Exception
     {
         return (Issue)issueMap.get(key);
     }
@@ -535,11 +536,38 @@ public abstract class AbstractScarabUser
     {
         if ( issue == null ) 
         {
-            issueMap.remove(String.valueOf(key));
+            issueMap.remove(key);
         }
         else 
         {
-            issueMap.put(String.valueOf(key), issue);
+            try
+            {
+                if (issueMap.size() >= MAX_INDEPENDENT_WINDOWS) 
+                {
+                    // make sure issues are not being accumulated, set a 
+                    // reasonable limit of 10 open new issues
+                    int intKey = Integer.parseInt(key);
+                    int count = 0;
+                    for (int i=intKey-1; i>=0; i--) 
+                    {
+                        String testKey = String.valueOf(i);
+                        if (getReportingIssue(testKey) != null) 
+                        {
+                            if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                            {
+                                issueMap.remove(testKey);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.get().error("Nonfatal error clearing old issues.  "
+                                + "This could be a memory leak.", e);
+            }
+            
+            issueMap.put(key, issue);
         }
     }
 
@@ -585,22 +613,33 @@ public abstract class AbstractScarabUser
         }
         else 
         {
-            // make sure reports are not being accumulated, set a reasonable
-            // limit of 10 open reports
-            int intKey = Integer.parseInt(key);
-            int count = 0;
-            for (int i=intKey-1; i>=0; i--) 
+            try
             {
-                String testKey = String.valueOf(i);
-                if (getCurrentReport(testKey) != null) 
+                if (reportMap.size() >= MAX_INDEPENDENT_WINDOWS) 
                 {
-                    if (++count > 10) 
+                    // make sure reports are not being accumulated, set a 
+                    // reasonable limit of MAX_INDEPENDENT_WINDOWS open reports
+                    int intKey = Integer.parseInt(key);
+                    int count = 0;
+                    for (int i=intKey-1; i>=0; i--) 
                     {
-                        reportMap.remove(testKey);
+                        String testKey = String.valueOf(i);
+                        if (getCurrentReport(testKey) != null) 
+                        {
+                            if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                            {
+                                reportMap.remove(testKey);
+                            }
+                        }
                     }
                 }
             }
-            
+            catch (Exception e)
+            {
+                Log.get().error("Nonfatal error clearing old reports.  "
+                                + "This could be a memory leak.", e);
+            }
+
             reportMap.put(String.valueOf(key), report);
         }
     }
@@ -1122,6 +1161,33 @@ public abstract class AbstractScarabUser
         }
         else 
         {
+            try
+            {
+                if (mitListMap.size() >= MAX_INDEPENDENT_WINDOWS) 
+                {
+                    // make sure lists are not being accumulated, set a 
+                    // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
+                    int intKey = Integer.parseInt(String.valueOf(key));
+                    int count = 0;
+                    for (int i=intKey-1; i>=0; i--) 
+                    {
+                        String testKey = String.valueOf(i);
+                        if (getCurrentMITList(testKey) != null) 
+                        {
+                            if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                            {
+                                mitListMap.remove(testKey);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.get().error("Nonfatal error clearing old MIT lists.  "
+                                + "This could be a memory leak.", e);
+            }
+
             mitListMap.put(key, list);
         }
     }
@@ -1198,6 +1264,33 @@ public abstract class AbstractScarabUser
         }
         else 
         {
+            try
+            {
+                if (mostRecentQueryMap.size() >= MAX_INDEPENDENT_WINDOWS) 
+                {
+                    // make sure lists are not being accumulated, set a 
+                    // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
+                    int intKey = Integer.parseInt(String.valueOf(key));
+                    int count = 0;
+                    for (int i=intKey-1; i>=0; i--) 
+                    {
+                        String testKey = String.valueOf(i);
+                        if (getMostRecentQuery(testKey) != null) 
+                        {
+                            if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                            {
+                                mostRecentQueryMap.remove(testKey);
+                                mostRecentQueryMITMap.remove(testKey);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.get().error("Nonfatal error clearing old queries.  "
+                                + "This could be a memory leak.", e);
+            }
             mostRecentQueryMap.put(key, queryString);
             mostRecentQueryMITMap.put(key, getCurrentMITList(key));
         }
@@ -1334,4 +1427,17 @@ public abstract class AbstractScarabUser
     protected abstract void 
         deleteRModuleUserAttribute(RModuleUserAttribute rmua)
         throws Exception;
+
+
+    /**
+     * Report the sizes of maps used to hold per-thread attributes
+     */
+    public String getStats()
+    {
+        return " IssueMap=" + issueMap.size()
+            + "; ReportMap=" + reportMap.size()
+            + "; MITListMap=" + mitListMap.size()
+            + "; MostRecentQueryMap=" + mostRecentQueryMap.size()
+            + "; MostRecentQueryMITMap=" + mostRecentQueryMITMap.size();
+    }
 }
