@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.13 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrMultiComposite.java,v 1.14 2005/04/03 19:01:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,8 @@ import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLDecision;
 
 /**
- * Well-formedness rule [2] for MAssociationEnd. See page 28 of UML
- * 1.1 Semantics. OMG document ad/97-08-04.
+ * Well-formedness rule [2] for MAssociationEnd. See page 2-45 of UML
+ * chapter 2: Semantics. OMG document UML V1.3 June 1999.
  *
  * @author jrobbins
  */
