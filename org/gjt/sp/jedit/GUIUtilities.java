@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.45 2002/12/31 02:48:02 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.46 2003/01/09 02:55:18 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1006,7 +1006,10 @@ public class GUIUtilities
 	public static boolean isPopupTrigger(MouseEvent evt)
 	{
 		if(OperatingSystem.isMacOS())
-			return evt.isControlDown();
+		{
+			return (evt.isControlDown() || ((evt.getModifiers()
+				& InputEvent.BUTTON2_MASK) != 0));
+		}
 		else
 			return ((evt.getModifiers() & InputEvent.BUTTON3_MASK) != 0);
 	} //}}}

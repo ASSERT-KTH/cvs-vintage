@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 /**
  * Contains operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.4 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.5 2003/01/09 02:55:18 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -134,7 +134,7 @@ public class OperatingSystem
 		{
 			String osName = System.getProperty("os.name");
 			if(osName.indexOf("Windows 9") != -1
-				|| osName.indexOf("Windows ME") != -1)
+				|| osName.indexOf("Windows M") != -1)
 			{
 				os = WINDOWS_9x;
 			}

@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.2 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.3 2003/01/09 02:55:19 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -615,6 +615,9 @@ public class BufferIORequest extends WorkRequest
 				}
 				else
 					buffer.setBooleanProperty(ERROR_OCCURRED,true);
+
+				if(!twoStageSave)
+					VFSManager.sendVFSUpdate(vfs,path,true);
 			}
 			catch(IOException io)
 			{
