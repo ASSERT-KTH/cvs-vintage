@@ -32,10 +32,10 @@ import org.jnp.server.Main;
 /**
  * A JBoss service that starts the jnp JNDI server.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -147,8 +147,17 @@ public class NamingService
       // Read jndi.properties into system properties
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       InputStream is = loader.getResourceAsStream("jndi.properties");
+      if (is == null)
+         throw new RuntimeException("Cannot find jndi.properties, it should be at conf/jndi.properties by default.");
       Properties props = new Properties();
-      props.load(is);
+      try
+      {
+         props.load(is);
+      }
+      finally
+      {
+         is.close();
+      }
 
       for (Enumeration keys = props.propertyNames(); keys.hasMoreElements(); )
       {
