@@ -5,8 +5,6 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
-
-
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -43,7 +41,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th width="70">$l10n.Select</th>
-<th>#sort ("name" "Name")</th>
+<th>#sort ("name" "$l10n.Name")</th>
 <th>$l10n.Locked</th>
 <th>$l10n.Default</th>
 </tr>
@@ -59,8 +57,6 @@
 #end
 </table>
 #end
-
-
 
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
@@ -79,8 +75,8 @@
  <h3>Deleted artifact types</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
- <th>&nbsp;</th>
- <th>Name</th>
+ <th width="70">$l10n.Select</th>
+ <th>$l10n.Name</th>
  </tr>
 
 #foreach ($issueType in $deletedIssueTypes)
