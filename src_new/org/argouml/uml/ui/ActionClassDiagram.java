@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.17 2004/09/16 20:50:04 mvw Exp $
+// $Id: ActionClassDiagram.java,v 1.18 2004/10/06 19:18:22 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class ActionClassDiagram extends ActionAddDiagram {
             LOG.error("No namespace as argument");
             LOG.error(handle);
             throw new IllegalArgumentException(
-                "The argument " + handle + "is not a namespace.");
+                "The argument " + handle + " is not a namespace.");
         }
         return true;       
     }
