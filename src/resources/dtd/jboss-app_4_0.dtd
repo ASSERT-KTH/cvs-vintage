@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- The JBoss 4.x specific elements for ears.
-$Id: jboss-app_4_0.dtd,v 1.1 2004/04/17 13:28:15 tdiesler Exp $
+$Id: jboss-app_4_0.dtd,v 1.2 2004/05/20 19:52:09 ejort Exp $
 
 DOCTYPE jboss-app
     PUBLIC "-//JBoss//DTD J2EE Application 1.4//EN"
@@ -10,7 +10,7 @@ DOCTYPE jboss-app
 
 <!-- The jboss-app element is the root element.
 -->
-<!ELEMENT jboss-app (security-domain?, unauthenticated-principal?, loader-repository?, module*, security-role*)>
+<!ELEMENT jboss-app (security-domain?, unauthenticated-principal?, loader-repository?, jmx-name?, module*, security-role*)>
 
 <!--
   The security-domain element specifies the JNDI name of the security
@@ -65,6 +65,14 @@ org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
 implementation to use to parse the loader-repository-config content.
 -->
 <!ATTLIST loader-repository-config configParserClass CDATA #IMPLIED>
+
+<!-- The jmx-name element allows one to specify the JMX ObjectName to use
+for the MBean associated with the ejb-jar module. This must be a unique
+name and valid JMX ObjectName string.
+
+   Used in: jboss
+-->
+<!ELEMENT jmx-name (#PCDATA)>
 
 <!-- The module element is used to specify a jboss specific module archive.
 -->

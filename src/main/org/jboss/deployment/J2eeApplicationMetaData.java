@@ -6,7 +6,7 @@
  */
 package org.jboss.deployment;
 
-// $Id: J2eeApplicationMetaData.java,v 1.7 2004/04/22 20:36:40 ejort Exp $
+// $Id: J2eeApplicationMetaData.java,v 1.8 2004/05/20 19:52:04 ejort Exp $
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import javax.management.ObjectName;
  * descriptors.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @see org.jboss.metadata.XmlLoadable
  */
 public class J2eeApplicationMetaData
@@ -55,6 +55,9 @@ public class J2eeApplicationMetaData
    private String unauthenticatedPrincipal;
 
    final Collection modules = new HashSet();
+   
+   /** The jmx name */
+   private String jmxName;
 
    // Static --------------------------------------------------------
 
@@ -100,6 +103,11 @@ public class J2eeApplicationMetaData
       return unauthenticatedPrincipal;
    }
 
+   public String getJMXName()
+   {
+      return jmxName;
+   }
+   
    /**
     * Imports either the application.xml or jboss-app.xml from the given element.
     *
@@ -199,6 +207,11 @@ public class J2eeApplicationMetaData
          }
          securityRoles.put(roleName, srMetaData);
       }
+
+      // Get any user defined JMX name
+      Element jmxNameElement = getOptionalChild(rootElement, "jmx-name");
+      if (jmxNameElement != null)
+         jmxName = getElementContent(jmxNameElement);
 
       // extract modules...
       for (Iterator it = getChildrenByTagName(rootElement, "module"); it.hasNext();)

@@ -76,7 +76,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.149 $
+ * @version $Revision: 1.150 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -211,6 +211,18 @@ public abstract class Container
       return homeInterface;
    }
 
+   /**
+    * Whether the bean is call by value
+    * 
+    * @return true for call by value
+    */
+   public boolean isCallByValue()
+   {
+      if (ejbModule.isCallByValue())
+         return true;
+      return metaData.isCallByValue();
+   }
+   
    /**
     * Sets a transaction manager for this container.
     *

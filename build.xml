@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.164 2004/05/16 15:07:30 remm Exp $ -->
+<!-- $Id: build.xml,v 1.165 2004/05/20 19:52:06 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -260,6 +260,7 @@
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/deployment/EARDeployer.java"/>
+        <include name="org/jboss/deployment/EARDeployment.java"/>
         <include name="org/jboss/ejb/Container.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
         <include name="org/jboss/ejb/EJBDeployer.java"/>

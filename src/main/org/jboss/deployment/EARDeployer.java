@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.management.ObjectName;
 import javax.security.jacc.PolicyConfigurationFactory;
 import javax.security.jacc.PolicyConfiguration;
 
@@ -25,6 +26,8 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
+import org.jboss.mx.util.MBeanProxyExt;
+import org.jboss.system.ServiceControllerMBean;
 import org.jboss.util.file.JarUtils;
 
 import org.w3c.dom.Element;
@@ -37,15 +40,65 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class EARDeployer
    extends SubDeployerSupport
    implements EARDeployerMBean
 {
+   private ServiceControllerMBean serviceController;
+
+   private boolean isolated = false;
+
+   private boolean callByValue = false;
+   
    public EARDeployer()
    {
       super();
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    * @return whether ear deployments should be isolated
+    */
+   public boolean isIsolated()
+   {
+      return isolated;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    * @param isolated whether ear deployments should be isolated
+    */
+   public void setIsolated(boolean isolated)
+   {
+      this.isolated = isolated;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    * @return whether ear deployments should be call by value
+    */
+   public boolean isCallByValue()
+   {
+      return callByValue;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    * @param callByValue whether ear deployments should be call by value
+    */
+   public void setCallByValue(boolean callByValue)
+   {
+      this.callByValue = callByValue;
+   }
+   
+   protected void startService() throws Exception
+   {
+      serviceController = (ServiceControllerMBean)
+      MBeanProxyExt.create(ServiceControllerMBean.class,
+                           ServiceControllerMBean.OBJECT_NAME, server);
+      super.startService();
    }
    
    public boolean accepts(DeploymentInfo di) 
@@ -76,6 +129,7 @@ public class EARDeployer
          in.close();
 
          // Check for a jboss-app.xml descriptor
+         Element loader = null;
          in = di.localCl.getResourceAsStream("META-INF/jboss-app.xml");
          if( in != null )
          {
@@ -86,9 +140,9 @@ public class EARDeployer
             // Import module/service archives to metadata
             metaData.importXml(jbossApp);
             // Check for a loader-repository for scoping
-            Element loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
-            initLoaderRepository(di, loader);
+            loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
          }
+         initLoaderRepository(di, loader);
 
          // resolve the watch
          if (di.url.getProtocol().equals("file"))
@@ -214,13 +268,53 @@ public class EARDeployer
       super.init(di);
    }
    
+   public void create(DeploymentInfo di) throws DeploymentException
+   {
+      super.create(di);
+
+      // Create an MBean for the EAR deployment
+      try
+      {
+         EARDeployment earDeployment = new EARDeployment(di);
+         String name = earDeployment.getJMXName();
+         ObjectName objectName = new ObjectName(name);
+         server.registerMBean(earDeployment, objectName);
+         di.deployedObject = objectName;
+         serviceController.create(di.deployedObject);
+      }
+      catch (Exception e)
+      {
+         DeploymentException.rethrowAsDeploymentException("Error during create of EARDeployment: " + di.url, e);
+      }
+   }
+   
    public void start(DeploymentInfo di)
       throws DeploymentException
    {
       super.start (di);
+      try
+      {
+         serviceController.start(di.deployedObject);
+      }
+      catch (Exception e)
+      {
+         DeploymentException.rethrowAsDeploymentException("Error during start of EARDeployment: " + di.url, e);
+      }
       log.info ("Started J2EE application: " + di.url);
    }
 
+   public void stop(DeploymentInfo di) throws DeploymentException
+   {
+      try
+      {
+         serviceController.stop(di.deployedObject);
+      }
+      catch (Exception e)
+      {
+         DeploymentException.rethrowAsDeploymentException("Error during stop of EARDeployment: " + di.url, e);
+      }
+      super.destroy(di);
+   }
 
    /**
     * Describe <code>destroy</code> method here.
@@ -231,6 +325,15 @@ public class EARDeployer
    public void destroy(DeploymentInfo di) throws DeploymentException
    {
       log.info("Undeploying J2EE application, destroy step: " + di.url);
+      try
+      {
+         serviceController.destroy(di.deployedObject);
+         serviceController.remove(di.deployedObject);
+      }
+      catch (Exception e)
+      {
+         DeploymentException.rethrowAsDeploymentException("Error during destroy of EARDeployment: " + di.url, e);
+      }
       super.destroy(di);
    }
 
@@ -243,9 +346,21 @@ public class EARDeployer
    protected void initLoaderRepository(DeploymentInfo di, Element loader)
       throws Exception
    {
-      if( loader == null )
-         return;
+      if (loader == null)
+      {
+         if (isolated)
+         {
+            J2eeApplicationMetaData metaData = (J2eeApplicationMetaData) di.metaData;
+            String name = EARDeployment.getJMXName(metaData, di) + ",extension=LoaderRepository";
+            ObjectName objectName = new ObjectName(name); 
 
+            LoaderRepositoryConfig config = new LoaderRepositoryFactory.LoaderRepositoryConfig();
+            config.repositoryName = objectName;
+            di.setRepositoryInfo(config);
+         }
+         return;
+      }
+         
       LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
       di.setRepositoryInfo(config);
    }

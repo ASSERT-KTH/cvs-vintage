@@ -66,7 +66,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -313,7 +313,7 @@ public class ProxyFactory
          String byValueAttr = MetaData.getElementAttribute(ielement, "call-by-value");
          if(byValueAttr != null)
          {
-            if(beanMetaData.isCallByValue() == new Boolean(byValueAttr).booleanValue())
+            if (container.isCallByValue() == new Boolean(byValueAttr).booleanValue())
             {
                Class clazz = loader.loadClass(className);
                classes.add(clazz);

@@ -33,6 +33,7 @@ import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.deployment.EARDeployerMBean;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -75,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -133,6 +134,9 @@ public class EjbModule
 
    private TransactionManager tm;
 
+   /** Whether we are call by value */
+   private boolean callByValue;
+   
    public EjbModule(final DeploymentInfo di, TransactionManager tm,
       ObjectName webServiceName)
    {
@@ -211,6 +215,16 @@ public class EjbModule
    }
 
    /**
+    * Whether the container is call by value
+    * 
+    * @return true for call by value
+    */
+   public boolean isCallByValue()
+   {
+      return callByValue;
+   }
+   
+   /**
     * Get a container from this deployment unit that corresponds to a given name
     *
     * @param   name  ejb-name name defined in ejb-jar.xml
@@ -276,6 +290,28 @@ public class EjbModule
 
       log.debug("createService, begin");
 
+      //Ask the ejb deployer whether we are call by value
+      try
+      {
+         if (((Boolean) server.getAttribute(EJBDeployerMBean.OBJECT_NAME, "CallByValue")).booleanValue())
+            callByValue = true;         
+      }
+      catch (Exception ignored)
+      {
+         log.debug("Unable to ask the EJBDeployer whether we are call by value", ignored);
+      }
+
+      //Ask the ejb deployer whether we are call by value
+      try
+      {
+         if (callByValue == false && ((Boolean) server.getAttribute(EARDeployerMBean.OBJECT_NAME, "CallByValue")).booleanValue())
+            callByValue = true;         
+      }
+      catch (Exception ignored)
+      {
+         log.debug("Unable to ask the EARDeployer whether we are call by value", ignored);
+      }
+      
       //Set up the beans in this module.
       try
       {
