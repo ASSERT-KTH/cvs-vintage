@@ -26,7 +26,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.4 2003/01/18 16:37:04 linus Exp $
+// $Id: CrCircularInheritance.java,v 1.5 2003/02/02 17:11:50 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,7 +39,7 @@ import org.tigris.gef.util.*;
 import org.apache.log4j.Category;
 import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
-import org.argouml.uml.*;
+import org.argouml.model.ModelFacade;import org.argouml.model.uml.foundation.core.CoreHelper;import org.argouml.uml.*;
 
 /** Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -56,13 +56,7 @@ public class CrCircularInheritance extends CrUML {
     // no need for trigger on "specialization"
   }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MGeneralizableElement)) return NO_PROBLEM;
-    MGeneralizableElement ge = (MGeneralizableElement) dm;
-    VectorSet reach = (new VectorSet(ge)).reachable(new SuperclassGen());
-    if (reach.contains(ge)) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+  public boolean predicate2(Object dm, Designer dsgr) {      boolean problem = NO_PROBLEM;      if (ModelFacade.isAGeneralizableElement(dm)) {          try {              CoreHelper.getHelper().getChildren(dm);          }          catch (IllegalStateException ex) {              problem = PROBLEM_FOUND;          }      }      return problem;  }
 
   public ToDoItem toDoItem(Object dm, Designer dsgr) {
     MGeneralizableElement ge = (MGeneralizableElement) dm;
