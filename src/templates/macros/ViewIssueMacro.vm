@@ -43,8 +43,7 @@
     #else
         #attrValueErrorMsg($attVal "Value")
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
-           <#textAreaMedium() name="$attrInput.Value.Key"
-               >$!attrInput.Value</textarea>
+           #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
            <input name= "$attrInput.Value.Key"
                value="$!attrInput.Value" size="20" type="text" />
