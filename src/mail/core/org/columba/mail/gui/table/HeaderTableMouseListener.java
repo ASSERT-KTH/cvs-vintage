@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.awt.Point;
@@ -20,17 +21,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
- */
 
 public class HeaderTableMouseListener extends MouseAdapter {
 	private TableController headerTableViewer;
@@ -44,8 +38,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			new ViewMessageAction(headerTableViewer.getMailFrameController());
 	}
 
-	protected void processPopup(MouseEvent event) {
-
+	protected void processPopup(final MouseEvent event) {
 		int selectedRows = headerTableViewer.getView().getSelectedRowCount();
 
 		if (selectedRows <= 1) {
@@ -57,40 +50,27 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			headerTableViewer.getView().setRowSelectionInterval(row, row);
 
 		}
-
-		headerTableViewer.getPopupMenu().show(
-			event.getComponent(),
-			event.getX(),
-			event.getY());
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                                headerTableViewer.getPopupMenu().show(
+                                        event.getComponent(), event.getX(), event.getY());
+                        }
+                });
 	}
 
 	public void mousePressed(MouseEvent event) {
-
-		if (event.isPopupTrigger()) {
-			processPopup(event);
-
-		}
-
-	}
-
-	public void mouseReleased(MouseEvent event) {
-
-		if (event.isPopupTrigger()) {
-			processPopup(event);
-
-		}
-
-	}
-
+                if (event.isPopupTrigger()) {
+                        processPopup(event);
+                }
+        }
+        
 	public void mouseClicked(MouseEvent event) {
-
-		if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
-			viewMessageAction.actionPerformed(null);
-		}
-
-		if (event.getClickCount() == 2)
-			processDoubleClick();
-
+                if (event.getClickCount() == 2) {
+                        processDoubleClick();
+                } else {
+                        if (event.getModifiers() == InputEvent.BUTTON1_MASK)
+                                viewMessageAction.actionPerformed(null);
+                }
 	}
 
 	protected void processDoubleClick() {
@@ -100,4 +80,6 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			headerTableViewer.getMailFrameController()).actionPerformed(
 			null);
 	}
+        
+	public void mouseReleased(MouseEvent event) {}
 }
