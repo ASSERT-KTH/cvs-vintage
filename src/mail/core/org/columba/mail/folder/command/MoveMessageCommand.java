@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -36,10 +37,6 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  */
 public class MoveMessageCommand extends CopyMessageCommand {
-
-	protected Folder destFolder;
-
-	protected FolderCommandAdapter adapter;
 
 	/**
 	 * Constructor for MoveMessageCommand.
@@ -79,7 +76,6 @@ public class MoveMessageCommand extends CopyMessageCommand {
 		// -> only available if virtual folder is involved in operation
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
-
 			ev =
 				new TableModelChangedEvent(
 					TableModelChangedEvent.REMOVE,
@@ -90,7 +86,6 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 			MailInterface.treeModel.nodeChanged(u.getFolder());
 		}
-
 	}
 
 	/**
@@ -100,17 +95,9 @@ public class MoveMessageCommand extends CopyMessageCommand {
 		// calling CopyMessageCommand.execute() here!
 		super.execute(worker);
 
-		// use wrapper for easier handling of references array
-		adapter =
-			new FolderCommandAdapter(
-				(FolderCommandReference[]) getReferences());
-
 		// get source reference array
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 		
-		// get destination folder
-		destFolder = (Folder) adapter.getDestinationFolder();
-
 		// for every source reference
 		for (int i = 0; i < r.length; i++) {
 
@@ -144,8 +131,6 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 			// We are done - clear the status message after a delay
 			worker.clearDisplayTextWithDelay();
-			
 		}
-
 	}
 }
