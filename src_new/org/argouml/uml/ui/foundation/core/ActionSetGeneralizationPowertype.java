@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizationPowertype.java,v 1.13 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionSetGeneralizationPowertype.java,v 1.14 2005/03/07 17:50:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,10 @@ public class ActionSetGeneralizationPowertype extends UMLAction {
             }
         }
         if (newClassifier != oldClassifier && gen != null) {
+            newClassifier = /*(MClassifier)*/ Model.getModelManagementHelper()
+                .getCorrespondingElement(
+                        newClassifier,
+                        Model.getFacade().getModel(gen));
             Model.getCoreHelper().setPowertype(gen, newClassifier);
         }
 
