@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="Cp1252"?>
-
-<jboss>
-    <secure>false</secure>
-    <container-configurations />
-    <resource-managers />
-    <enterprise-beans />
-</jboss>
