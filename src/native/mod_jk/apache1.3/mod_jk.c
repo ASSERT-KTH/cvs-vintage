@@ -102,14 +102,6 @@
 #define JK_MAGIC_TYPE       ("application/x-jakarta-servlet")
 #define NULL_FOR_EMPTY(x)   ((x && !strlen(x)) ? NULL : x) 
 
-/*
- * If you are not using SSL, comment out the following line. It will make
- * apache run faster.  
- *
- * Personally, I (DM), think this may be a lie.
- */
-#define ADD_SSL_INFO    
-
 module MODULE_VAR_EXPORT jk_module;
 
 /*
@@ -430,30 +422,8 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
 
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
-    /* Wrong:    s->server_name  = (char *)ap_get_server_name( r ); */
-    s->server_name= (char *)(r->hostname ? r->hostname : 
-                 r->server->server_hostname);
-    
-    
-    s->server_port= htons( r->connection->local_addr.sin_port );
-    /* Wrong: s->server_port  = r->server->port; */
-
-    
-    /*    Winners:  htons( r->connection->local_addr.sin_port )
-                      (r->hostname ? r->hostname : 
-                             r->server->server_hostname),
-    */
-    /* printf( "Port %u %u %u %s %s %s %d %d \n", 
-        ap_get_server_port( r ), 
-        htons( r->connection->local_addr.sin_port ),
-        ntohs( r->connection->local_addr.sin_port ),
-        ap_get_server_name( r ),
-        (r->hostname ? r->hostname : r->server->server_hostname),
-        r->hostname,
-        r->connection->base_server->port,
-        r->server->port
-        );
-    */
+    s->server_name  = (char *)(r->hostname ? r->hostname : r->server->server_hostname);
+    s->server_port  = htons( r->connection->local_addr.sin_port );
     s->server_software = (char *)ap_get_server_version();
 
     s->method       = (char *)r->method;
@@ -617,9 +587,17 @@ static const char *jk_set_worker_file(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->worker_file = worker_file;
+    /* we need an absolute path */
+    conf->worker_file = ap_server_root_relative(cmd->pool,worker_file);
 
-    if (stat(worker_file, &statbuf) == -1)
+    /* work-around Apache 1.3 bug in ap_server_root_relative */
+    if (conf->worker_file == worker_file)
+        conf->worker_file = ap_pstrdup(cmd->pool,worker_file);
+ 
+    if (conf->worker_file == NULL)
+        return "JkWorkersFile file_name invalid";
+
+    if (stat(conf->worker_file, &statbuf) == -1)
         return "Can't find the workers file specified";
 
     return NULL;
@@ -633,7 +611,15 @@ static const char *jk_set_log_file(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->log_file = log_file;
+    /* we need an absolute path */
+     conf->log_file = ap_server_root_relative(cmd->pool,log_file);
+
+    /* work-around Apache 1.3 bug in ap_server_root_relative */
+    if ( conf->log_file == log_file)
+         conf->log_file = ap_pstrdup(cmd->pool,log_file);
+ 
+    if (conf->log_file == NULL)
+         return "JkLogFile file_name invalid";
 
     return NULL;
 }
@@ -691,9 +677,9 @@ static const char *jk_set_cipher_indicator(cmd_parms *cmd,
     return NULL;
 }
 
-static const char *jk_set_sesion_indicator(cmd_parms *cmd, 
-                                           void *dummy, 
-                                           char *indicator)
+static const char *jk_set_session_indicator(cmd_parms *cmd, 
+                                            void *dummy, 
+                                            char *indicator)
 {
     server_rec *s = cmd->server;
     jk_server_conf_t *conf =
@@ -794,7 +780,7 @@ static const command_rec jk_cmds[] =
      "Name of the Apache environment that contains SSL client certificates"},
     {"JkCIPHERIndicator", jk_set_cipher_indicator, NULL, RSRC_CONF, TAKE1,
      "Name of the Apache environment that contains SSL client cipher"},
-    {"JkSESSIONIndicator", jk_set_sesion_indicator, NULL, RSRC_CONF, TAKE1,
+    {"JkSESSIONIndicator", jk_set_session_indicator, NULL, RSRC_CONF, TAKE1,
      "Name of the Apache environment that contains SSL session"},
     {"JkExtractSSL", jk_set_enable_ssl, NULL, RSRC_CONF, FLAG,
      "Turns on SSL processing and information gathering by mod_jk"},     

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: General purpose map object                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -466,3 +466,4 @@ static char *update_env_variables(char *value, jk_map_t *m)
 
     return rc;
 }
+

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Worker list                                                *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 /*
@@ -128,3 +128,4 @@
     };
     #endif /* _JK_WORKER_LIST_H */
 #endif /* _PLACE_WORKER_LIST_HERE */
+
