@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.6 2000/06/19 21:53:13 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/06/19 21:53:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.7 2000/07/03 09:03:42 bergsten Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/07/03 09:03:42 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.facade;
@@ -74,23 +74,24 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Costin Manolache
+ * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 final class HttpServletResponseFacade  implements HttpServletResponse
 {
     // Use the strings from core
     private static StringManager sm =  StringManager.getManager("org.apache.tomcat.core");
-    
+
     private Response response;
     private boolean usingStream = false;
     private boolean usingWriter = false;
     ServletOutputStreamFacade osFacade=null;
     PrintWriter writer = null; // XXX will go away when we add the convertor
-    
+
     /** Package
      */
     HttpServletResponseFacade(Response response) {
@@ -103,8 +104,8 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	writer=null;
 	if( osFacade != null ) osFacade.recycle();
     }
-    
-    // -------------------- Public methods -------------------- 
+
+    // -------------------- Public methods --------------------
 
     public void addCookie(Cookie cookie) {
         response.addCookie(cookie);
@@ -124,7 +125,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	else
 	    return (location);
     }
-    
+
     /**
      * @deprecated
      */
@@ -146,11 +147,11 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public String encodeUrl(String url) {
 	return encodeURL(url);
     }
-    
+
     public String getCharacterEncoding() {
 	return response.getCharacterEncoding();
     }
-    
+
     public ServletOutputStream getOutputStream() {
 	if ( usingWriter ) {
 	    String msg = sm.getString("serverResponse.outputStream.ise");
@@ -194,7 +195,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public void sendError(int sc) throws IOException {
 	sendError(sc, "No detailed message");
     }
-    
+
     public void sendError(int sc, String msg) throws IOException {
 	if (isCommitted()) {
 	    Context ctx=response.getRequest().getContext();
@@ -207,7 +208,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	// 	if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
 	// 	    response.resetBuffer();
 	// Keep headers and cookies that are set
-	
+
 	setStatus( sc );
 	Request request=response.getRequest();
 	request.setAttribute("javax.servlet.error.message", msg);
@@ -229,7 +230,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	sendError(HttpServletResponse.SC_MOVED_TEMPORARILY,
 		  toAbsolute(location));
     }
-    
+
     public void setContentLength(int len) {
 	response.setContentLength(len);
     }
@@ -246,14 +247,14 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	headerF.setName( name );
 	headerF.setDateValue( date );
     }
-    
+
     public void addDateHeader(String name, long value) {
 	MimeHeaders headers=response.getMimeHeaders();
 	MimeHeaderField headerF=headers.putHeader();
 	headerF.setName( name );
 	headerF.setDateValue( value );
     }
-    
+
     public void setHeader(String name, String value) {
 	response.setHeader(name, value);
     }
@@ -261,7 +262,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public void addHeader(String name, String value) {
 	response.addHeader(name, value);
     }
-    
+
     public void setIntHeader(String name, int value) {
 	response.setHeader(name, Integer.toString(value));
     }
@@ -269,35 +270,35 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public void addIntHeader(String name, int value) {
         response.addHeader(name, Integer.toString(value));
     }
-    
+
     public void setStatus(int sc) {
 	response.setStatus(sc);
     }
-    
+
     public void setBufferSize(int size) throws IllegalStateException {
 	response.setBufferSize(size);
     }
-    
+
     public int getBufferSize() {
 	return response.getBufferSize();
     }
-    
+
     public void reset() throws IllegalStateException {
 	response.reset();
     }
-    
+
     public boolean isCommitted() {
 	return response.isBufferCommitted();
     }
-    
+
     public void flushBuffer() throws IOException {
 	response.flushBuffer();
     }
-    
+
     public void setLocale(Locale loc) {
         response.setLocale(loc);
     }
-    
+
     public Locale getLocale() {
 	return response.getLocale();
     }
@@ -308,11 +309,11 @@ final class HttpServletResponseFacade  implements HttpServletResponse
      */
     public void setStatus(int sc, String msg) {
 	response.setStatus(sc);
-    }    
+    }
 
 
-    // -------------------- Private methods -------------------- 
-    
+    // -------------------- Private methods --------------------
+
     /**
      * Return <code>true</code> if the specified URL should be encoded with
      * a session identifier.  This will be true if all of the following
@@ -348,7 +349,12 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    return (false);
 	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
 	    return (false);
-	if (request.getServerPort() != url.getPort())
+        // Set the URL port to HTTP default if not available before comparing
+        int urlPort = url.getPort();
+        if (urlPort == -1) {
+            urlPort = 80;
+        }
+	if (request.getServerPort() != urlPort)
 	    return (false);
 	String contextPath = request.getContext().getPath();
 	if ((contextPath != null) && (contextPath.length() > 0)) {
@@ -391,7 +397,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    }
 	}
 	return (url.toString());
-			     
+
     }
 
 
