@@ -43,12 +43,12 @@ public class ExternalEditor {
 		MimeHeader myHeader = new MimeHeader("text", "plain");
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		TempFileStore tmpFileStore = new TempFileStore();
-		File TmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
+		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
 		FileWriter FO;
 		FileReader FI;
 
 		try {
-			FO = new FileWriter(TmpFile);
+			FO = new FileWriter(tmpFile);
 		} catch (java.io.IOException ex) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -90,11 +90,12 @@ public class ExternalEditor {
 				"composer",
 				"extern_editor_using_msg"));
 
-		Process Child = viewer.open(myHeader, TmpFile);
+		Process child = viewer.open(myHeader, tmpFile);
+                if (child == null) return false;
 
 		try {
 			// Wait for external editor to quit
-			Child.waitFor();
+			child.waitFor();
 		} catch (InterruptedException ex) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -105,7 +106,7 @@ public class ExternalEditor {
 		EditView.setFont(OldFont);
 
 		try {
-			FI = new FileReader(TmpFile);
+			FI = new FileReader(tmpFile);
 		} catch (java.io.FileNotFoundException ex) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -116,11 +117,11 @@ public class ExternalEditor {
 		//      int i = FI.available();
 		char[] buf = new char[1000];
 		int i;
-		String Message = new String("");
+		String message = new String("");
 		try {
 			while ((i = FI.read(buf)) >= 0) {
 				//System.out.println( "*>"+String.copyValueOf(buf)+"<*");
-				Message += new String(buf, 0, i);
+				message += new String(buf, 0, i);
 				//System.out.println( "-->"+Message+"<--");
 			}
 			FI.close();
@@ -135,7 +136,7 @@ public class ExternalEditor {
 		//System.out.println( "++>"+Message+"<++");
 		//System.out.println( Message.length());
 
-		EditView.setText(Message);
+		EditView.setText(message);
 
 		return true;
 	} // END public boolean startExternalEditor()
