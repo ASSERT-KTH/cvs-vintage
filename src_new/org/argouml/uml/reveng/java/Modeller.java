@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.14 2001/06/11 20:21:14 marcus Exp $
+// $Id: Modeller.java,v 1.15 2001/06/19 20:39:45 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -389,7 +389,7 @@ public class Modeller
 	}
 
 
-	for(Iterator i = mOperation.getParameters().iterator();
+	for(Iterator i = mOperation.getParameters().iterator(); 
 	    i.hasNext(); ) {
 	    mOperation.removeParameter((MParameter)i.next());
 	}
@@ -445,17 +445,22 @@ public class Modeller
     */
     public void addBodyToOperation(Object op, String body)
     {
-		if (op == null || !(op instanceof MOperation)) {
-			System.out.println("adding body failed: no operation!");
-		    return;
-		}
-		if (body == null || body.length() == 0)
-		    return;
-
-		MOperation operation = (MOperation)op;
-		MMethod method = new MMethodImpl();
-		method.setBody(new MProcedureExpression("Java",body));
-		operation.addMethod(method);
+	if (op == null || !(op instanceof MOperation)) {
+	    System.out.println("adding body failed: no operation!");
+	    return;
+	}
+	if (body == null || body.length() == 0)
+	    return;
+	
+	MOperation operation = (MOperation)op;
+	MMethod method = new MMethodImpl();
+	method.setBody(new MProcedureExpression("Java", body));
+	method.setSpecification(operation);
+	method.setName(operation.getName() + ".java");
+	method.setVisibility(operation.getVisibility());
+	method.setOwnerScope(operation.getOwnerScope());
+	method.setNamespace(parseState.getClassifier());
+	operation.addMethod(method);
     }
 
     /**
