@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: process.xml,v 1.15 2004/09/16 05:58:13 linus Exp $ -->
+<!-- $Id: process.xml,v 1.16 2004/10/31 19:46:47 mvw Exp $ -->
 
   <chapter id="processes">
     <title>Processes for the ArgoUML project</title>
@@ -667,7 +667,11 @@ Do one of the following:
 If the problem is gone, the feature is present put the Issue in
 Status VERIFIED and
 add the version of the ArgoUML used for the test in in the comment.
-</para>
+              </para>
+              <para> Remark: As an additional activity, the 
+                verifier may check if the manual needs to be adapted, and if 
+                so, may REOPEN the issue with an explanation text, and setting 
+                the correct subcomponent (Documentation &amp; Help). </para>
             </listitem>
             <listitem>
               <para>
