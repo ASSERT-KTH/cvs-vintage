@@ -345,7 +345,7 @@
         <echo message="checking: ${src.java.dir.scarab}/report.scarab.om.generation"/>
         <uptodate property="gen.uptodate"
                   targetfile="${src.java.dir.scarab}/report.scarab.om.generation">
-            <srcfiles dir="${src.sql.dir}"
+            <srcfiles dir="${src.schema.dir}"
                       includes="${scarab.torque.schemas}"/>
         </uptodate>
     </target>
