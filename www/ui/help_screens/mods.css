@@ -1,0 +1,44 @@
+#toc { 
+	position: absolute;
+	top: 15px;
+	left: 0px;
+	width: 150px;
+	padding: 0 10 0 0
+	}
+#toc ul, #toc ol {
+	margin-left: 0;
+	padding-left: 0;
+	}
+#toc li {
+	margin-top: 7px;
+	padding-left: 10px;
+	list-style-type: none;
+	background-image: url(http://www.sc-dev3.sp.collab.net/branding/images/strich.gif);
+	background-repeat: no-repeat;
+	background-position:  .5em .5em;
+	}
+div#toc {
+	font-size:	xx-small !important;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	x-small !important
+	}
+html>body #toc {
+	font-size:	x-small !important
+	}
+.docs { 
+	margin: 61px 0 0 200px;
+	padding: 0 1.5em;
+	background: #fff;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	}
+body { 
+	background: #efefef url(http://scarab.tigris.org/nonav/ui/csi/images/help_logo.gif) top right no-repeat !important;
+	padding: 0 !important;
+	}
+#toc h3 {
+	border-top: none;
+	}
+.courtesylinks {
+	padding-top: -15px;
