@@ -1,0 +1,5 @@
+$Id: OBSOLETE.txt,v 1.1 2003/09/29 07:43:33 hgomez Exp $
+
+The mod_jk in this directory is obsolete and you should instead use the one
+present in jakarta-tomcat-connectors project.
+
