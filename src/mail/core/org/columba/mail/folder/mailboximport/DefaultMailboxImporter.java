@@ -21,6 +21,8 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 
 import org.columba.mail.folder.Folder;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.SourceInputStream;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -163,8 +165,18 @@ public abstract class DefaultMailboxImporter {
      */
     protected void saveMessage(String rawString, WorkerStatusController worker,
         Folder destFolder) throws Exception {
-        destFolder.addMessage(rawString);
-
+        
+        /* 
+         * *20031231, karlpeder* Using InputStream instead of rawString
+         * directly. Ensures size is set correctly by addMessage (bug #??????)
+         * 
+         * TODO: Add correct bug id
+         */
+		//destFolder.addMessage(rawString);
+		SourceInputStream in =
+				new SourceInputStream(new CharSequenceSource(rawString));
+		destFolder.addMessage(in); 
+        
         counter++;
 
         worker.setDisplayText("Importing messages: " + getCount());
