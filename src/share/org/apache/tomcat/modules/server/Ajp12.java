@@ -75,6 +75,7 @@ class Ajp12 {
     Socket socket;
     InputStream sin;
     BufferedInputStream ajpin;
+    private boolean TomcatAuthentication=true;
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;
@@ -145,8 +146,10 @@ class Ajp12 {
 		    req.queryString().setString( readString(ajpin, null));  
 		    req.setRemoteAddr(readString(ajpin, ""));
 		    req.setRemoteHost( readString(ajpin, ""));
-		    req.setRemoteUser( readString(ajpin, null)); 
-		    req.setAuthType(readString(ajpin, null)); 
+                    if (isTomcatAuthentication())
+                        dummy=readString(ajpin, null);
+                    else req.setRemoteUser( readString(ajpin, null));
+		    req.setAuthType(readString(ajpin, null));
 		    //remote port
 		    dummy = readString(ajpin, null);                 
 		    req.method().setString( readString(ajpin, null));
@@ -364,6 +367,14 @@ class Ajp12 {
             p = p+r;
         }
         return new String(b, CHARSET);
+    }
+
+    public boolean isTomcatAuthentication() {
+        return TomcatAuthentication;
+    }
+
+    public void setTomcatAuthentication(boolean newTomcatAuthentication) {
+        TomcatAuthentication = newTomcatAuthentication;
     }
 
     

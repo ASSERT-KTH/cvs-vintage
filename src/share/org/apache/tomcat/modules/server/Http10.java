@@ -170,7 +170,7 @@ public class Http10 {
 	    
 	    // XXX this does not currently handle headers which
 	    // are folded to take more than one line.
-	    if( ! parseHeaderFiled(headers, buf, start, off - start) ) {
+	    if( ! parseHeaderField(headers, buf, start, off - start) ) {
 		// error parsing header
 		return 200;
 	    }
@@ -185,7 +185,7 @@ public class Http10 {
      * @param len the length of the bytes
      * @exception IllegalArgumentException if the header format was invalid
      */
-    public final boolean parseHeaderFiled(MimeHeaders headers, byte[] b,
+    public final boolean parseHeaderField(MimeHeaders headers, byte[] b,
 					  int off, int len)
     {
 	int start = off;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.24 2000/11/06 15:10:27 nacho Exp $
- * $Revision: 1.24 $
- * $Date: 2000/11/06 15:10:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.25 2000/12/03 22:29:39 nacho Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/12/03 22:29:39 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -355,7 +355,7 @@ public final class JDBCRealm extends BaseInterceptor {
 
             // Log the problem for posterity
             log(sm.getString("jdbcRealm.checkPasswordSQLException",
-                     username));
+                     username),ex);
 
             // Clean up the JDBC objects so that they get recreated next time
             if (preparedAuthenticate != null) {
@@ -383,12 +383,11 @@ public final class JDBCRealm extends BaseInterceptor {
     private boolean checkConnection(){
         try {
             if( (dbConnection == null) || dbConnection.isClosed() ) {
+                Class.forName(driverName);
                 log(sm.getString("jdbcRealm.checkConnectionDBClosed"));
                 if ((connectionName == null || connectionName.equals("")) &&
                         (connectionPassword == null || connectionPassword.equals(""))) {
-
                         dbConnection = DriverManager.getConnection(connectionURL);
-
                 } else {
                         dbConnection = DriverManager.getConnection(connectionURL,
                                                                    connectionName,
@@ -401,8 +400,11 @@ public final class JDBCRealm extends BaseInterceptor {
             }
             return true;
         }catch (SQLException ex){
-            log(sm.getString("jdbcRealm.checkConnectionSQLException"));
+            log(sm.getString("jdbcRealm.checkConnectionSQLException"),ex);
             return false;
+        }
+        catch( ClassNotFoundException ex ) {
+            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
         }
     }
 
@@ -436,10 +438,8 @@ public final class JDBCRealm extends BaseInterceptor {
                 return res;
             }
 
-
             for(int i=0 ; i<vrol.size() ; i++ )
               res[i]=(String)vrol.elementAt(i);
-
             return res;
         }
         catch( SQLException ex ) {
@@ -477,16 +477,19 @@ public final class JDBCRealm extends BaseInterceptor {
 
     public void contextShutdown(Context ctx)
             throws org.apache.tomcat.core.TomcatException {
+        shutdown();
+    }
+
+    public void shutdown()
+            throws org.apache.tomcat.core.TomcatException {
       // Validate and update our current component state
       if (started) {
-            if( dbConnection != null ) {
-              try {
+        try {
+            if( dbConnection != null && !dbConnection.isClosed())
                 dbConnection.close();
-              }
-              catch( SQLException ex ) {
-                log("dbConnection.close Exception!!!");
-              }
-           }
+        }catch( SQLException ex ) {
+            log("dbConnection.close Exception!!!",ex);
+        }
       }
     }
 
@@ -594,7 +597,6 @@ public final class JDBCRealm extends BaseInterceptor {
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-        //TODO:  Override this org.apache.tomcat.core.BaseInterceptor method
         super.engineInit(cm);
         init(cm);
     }
@@ -604,15 +606,6 @@ public final class JDBCRealm extends BaseInterceptor {
           started = true;
       // set-up a per/container note for maps
           try {
-             Class.forName(driverName);
-             if ((connectionName == null || connectionName.equals("")) &&
-                 (connectionPassword == null || connectionPassword.equals(""))) {
-                 dbConnection = DriverManager.getConnection(connectionURL);
-             } else {
-                 dbConnection = DriverManager.getConnection(connectionURL,
-                                                            connectionName,
-                                                            connectionPassword);
-             }
           // XXX make the name a "global" static - after everything is stable!
             reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
                 , "required.roles");
@@ -623,13 +616,15 @@ public final class JDBCRealm extends BaseInterceptor {
             log("setting up note for " + cm, ex);
             throw new RuntimeException( "Invalid state ");
           }
-          catch( ClassNotFoundException ex ) {
-            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
-          }
-          catch( SQLException ex ) {
-            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
-          }
       }
+    }
+
+    /** Called before the ContextManager is stoped.
+     *  You need to stop any threads and remove any resources.
+     */
+    public void engineShutdown(ContextManager cm) throws TomcatException {
+        //TODO:  Override this org.apache.tomcat.core.BaseInterceptor method
+        shutdown();
     }
 
 

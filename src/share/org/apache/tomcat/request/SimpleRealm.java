@@ -84,7 +84,6 @@ import org.xml.sax.*;
 public class SimpleRealm extends  BaseInterceptor {
 
     MemoryRealm memoryRealm;
-    ContextManager cm;
     int reqRolesNote=-1;
     int reqRealmSignNote=-1;
     String filename;
@@ -95,7 +94,6 @@ public class SimpleRealm extends  BaseInterceptor {
 	throws TomcatException
     {
         super.contextInit(ctx);
-        ContextManager cm=ctx.getContextManager();
         init(cm,ctx);
         try {
             // XXX make the name a "global" static -
@@ -177,13 +175,13 @@ public class SimpleRealm extends  BaseInterceptor {
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-        super.engineInit(cm);
+//        super.engineInit(cm);
         init(cm,null);
     }
 
     void init(ContextManager cm,Context ctx) {
 	if( memoryRealm==null) {
-	    memoryRealm = new MemoryRealm(cm,null,filename);
+	    memoryRealm = new MemoryRealm(filename,cm.getHome());
 	    try {
 		memoryRealm.readMemoryRealm();
 	    } catch(Exception ex ) {
@@ -192,124 +190,109 @@ public class SimpleRealm extends  BaseInterceptor {
 	    }
 	}
     }
-}
 
-class MemoryRealm {
-    // String user -> password
-    Hashtable passwords=new Hashtable();
-    // String role -> Vector users
-    Hashtable roles=new Hashtable();
-    // user -> roles
-    Hashtable userRoles= new Hashtable();
-    String filename;
-    Context ctx;
-    Logger log;
-    int debug=0;
-    ContextManager cm;
+    class MemoryRealm {
+        // String user -> password
+        Hashtable passwords=new Hashtable();
+        // String role -> Vector users
+        Hashtable roles=new Hashtable();
+        // user -> roles
+        Hashtable userRoles= new Hashtable();
+        String filename;
+        String home;
 
-    MemoryRealm(Context ctx,String fn) {
-	this(ctx.getContextManager(),ctx,fn);
-    }
-
-    MemoryRealm(ContextManager cm,Context ctx,String fn) {
-	this.cm=cm;
-        filename=fn;
-        if(ctx==null){
-                log=cm.getLogger();
-                debug=cm.getDebug();
-        }else {
-                log=ctx.getLog().getLogger();
-                debug=ctx.getDebug();
+        MemoryRealm(String fn,String home) {
+            this.home=home;
+            filename=fn;
         }
 
+        public Hashtable getRoles() {
+            return roles;
+        }
+
+        public void addUser(String name, String pass, String groups ) {
+            if( debug > 0 )  log( "Add user " + name + " " + pass + " " + groups );
+            passwords.put( name, pass );
+            groups += ",";
+            while (true) {
+                int comma = groups.indexOf(",");
+                if (comma < 0)
+                    break;
+                addRole( groups.substring(0, comma).trim(), name);
+                groups = groups.substring(comma + 1);
+            }
+        }
+
+        public void addRole( String role, String user ) {
+            Vector users=(Vector)roles.get(role);
+            if(users==null) {
+                users=new Vector();
+                roles.put(role, users );
+            }
+            users.addElement( user );
+
+            Vector thisUserRoles=(Vector)userRoles.get( user );
+            if( thisUserRoles == null ) {
+                thisUserRoles = new Vector();
+                userRoles.put( user, thisUserRoles );
+            }
+            thisUserRoles.addElement( role );
+        }
+
+        public boolean checkPassword( String user, String pass ) {
+            if( user==null ) return false;
+            if( debug > 0 ) log( "check " + user+ " " + pass + " " + passwords.get( user ));
+            return pass.equals( (String)passwords.get( user ) );
+        }
+
+        public String[] getUserRoles( String user ) {
+            Vector v=(Vector)userRoles.get( user );
+            if( v==null) return null;
+            String roles[]=new String[v.size()];
+            for( int i=0; i<roles.length; i++ ) {
+                roles[i]=(String)v.elementAt( i );
+            }
+            return roles;
+        }
+
+        public boolean userInRole( String user, String role ) {
+            Vector users=(Vector)roles.get(role);
+            if( debug > 0 ) log( "check role " + user+ " " + role + " "  );
+            if(users==null) return false;
+            return users.indexOf( user ) >=0 ;
+        }
+        void readMemoryRealm() throws Exception {
+            File f;
+            if (filename != null)
+                f=new File( home + File.separator + filename );
+            else
+                f=new File( home + "/conf/tomcat-users.xml");
+
+            if( ! f.exists() ) {
+                log( "File not found  " + f );
+                return;
+            }
+            XmlMapper xh=new XmlMapper();
+            if( debug > 5 ) xh.setDebug( 2 );
+
+            // call addUser using attributes as parameters
+            xh.addRule("tomcat-users/user",
+                       new XmlAction() {
+                               public void start(SaxContext sctx) throws Exception {
+                                   int top=sctx.getTagCount()-1;
+                                   MemoryRealm mr=(MemoryRealm)sctx.getRoot();
+                                   AttributeList attributes = sctx.getAttributeList( top );
+                                   String user=attributes.getValue("name");
+                                   String pass=attributes.getValue("password");
+                                   String group=attributes.getValue("roles");
+                                   mr.addUser( user, pass, group );
+                               }
+                           }
+                       );
+
+            xh.readXml( f, this );
+        }
     }
 
-    public Hashtable getRoles() {
-    	return roles;
-    }
-
-    public void addUser(String name, String pass, String groups ) {
-	if( debug > 0 )  log.log( "Add user " + name + " " + pass + " " + groups );
-	passwords.put( name, pass );
-	groups += ",";
-	while (true) {
-	    int comma = groups.indexOf(",");
-	    if (comma < 0)
-		break;
-	    addRole( groups.substring(0, comma).trim(), name);
-	    groups = groups.substring(comma + 1);
-	}
-    }
-
-    public void addRole( String role, String user ) {
-	Vector users=(Vector)roles.get(role);
-	if(users==null) {
-	    users=new Vector();
-	    roles.put(role, users );
-	}
-	users.addElement( user );
-
-	Vector thisUserRoles=(Vector)userRoles.get( user );
-	if( thisUserRoles == null ) {
-	    thisUserRoles = new Vector();
-	    userRoles.put( user, thisUserRoles );
-	}
-	thisUserRoles.addElement( role );
-    }
-
-    public boolean checkPassword( String user, String pass ) {
-	if( user==null ) return false;
-	if( debug > 0 ) log.log( "check " + user+ " " + pass + " " + passwords.get( user ));
-	return pass.equals( (String)passwords.get( user ) );
-    }
-
-    public String[] getUserRoles( String user ) {
-	Vector v=(Vector)userRoles.get( user );
-	if( v==null) return null;
-	String roles[]=new String[v.size()];
-	for( int i=0; i<roles.length; i++ ) {
-	    roles[i]=(String)v.elementAt( i );
-	}
-	return roles;
-    }
-
-    public boolean userInRole( String user, String role ) {
-	Vector users=(Vector)roles.get(role);
-	if( debug > 0 ) log.log( "check role " + user+ " " + role + " "  );
-	if(users==null) return false;
-	return users.indexOf( user ) >=0 ;
-    }
-    void readMemoryRealm() throws Exception {
-	String home=cm.getHome();
-        File f;
-        if (filename != null)
-            f=new File( home + File.separator + filename );
-        else
-            f=new File( home + "/conf/tomcat-users.xml");
-
-	if( ! f.exists() ) {
-	    log.log( "File not found  " + f );
-	    return;
-	}
-	XmlMapper xh=new XmlMapper();
-	if( debug > 5 ) xh.setDebug( 2 );
-
-	// call addUser using attributes as parameters
-	xh.addRule("tomcat-users/user",
-		   new XmlAction() {
-			   public void start(SaxContext sctx) throws Exception {
-			       int top=sctx.getTagCount()-1;
-			       MemoryRealm mr=(MemoryRealm)sctx.getRoot();
-			       AttributeList attributes = sctx.getAttributeList( top );
-			       String user=attributes.getValue("name");
-			       String pass=attributes.getValue("password");
-			       String group=attributes.getValue("roles");
-			       mr.addUser( user, pass, group );
-			   }
-		       }
-		   );
-	
-	xh.readXml( f, this );
-    }
 }
 

@@ -75,8 +75,8 @@ import org.apache.tomcat.util.*;
 /* 
  */
 public class Ajp12Interceptor extends PoolTcpConnector
-    implements  TcpConnectionHandler
-{
+    implements  TcpConnectionHandler{
+    private boolean TomcatAuthentication=true;
     public Ajp12Interceptor() {
 	super();
     }
@@ -125,10 +125,15 @@ public class Ajp12Interceptor extends PoolTcpConnector
 		resA=(AJP12Response)thData[1];
 		if( reqA!=null ) reqA.recycle();
 		if( resA!=null ) resA.recycle();
+//XXX Need to revert the tomcat auth state? if yes put it into recycle and
+//    and uncomment here                
+//                ((AJP12Request)reqA).setTomcatAuthentication(isTomcatAuthtentication());
 	    }
 
 	    if( reqA==null || resA==null ) {
 		reqA = new AJP12Request();
+                ((AJP12Request)reqA).setTomcatAuthentication(
+                                        isTomcatAuthentication());
 		resA=new AJP12Response();
 		cm.initRequest( reqA, resA );
 	    }
@@ -146,6 +151,14 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	} catch (Exception e) {
 	    log("HANDLER THREAD PROBLEM", e);
 	}
+    }
+
+    public boolean isTomcatAuthentication() {
+        return TomcatAuthentication;
+    }
+
+    public void setTomcatAuthentication(boolean newTomcatAuthentication) {
+        TomcatAuthentication = newTomcatAuthentication;
     }
 }
 
@@ -176,6 +189,13 @@ class AJP12Request extends Request {
 	return ajp12.doRead( b,off,len);
     }
 
+    public boolean isTomcatAuthentication() {
+        return ajp12.isTomcatAuthentication();
+    }
+
+    public void setTomcatAuthentication(boolean newTomcatAuthentication) {
+        ajp12.setTomcatAuthentication(newTomcatAuthentication);
+    }
 }
 
 
