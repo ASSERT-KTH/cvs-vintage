@@ -64,6 +64,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 
 import org.apache.tomcat.util.Queue;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  * A real implementation of the Logger abstraction. 
@@ -72,36 +73,6 @@ import org.apache.tomcat.util.Queue;
  * @since  Tomcat 3.1
  */
 public class TomcatLogger extends Logger {
-
-    /**
-     * Converts a Throwable to a printable stack trace, including the
-     * nested root cause for a ServletException if applicable
-     * 
-     * @param t any Throwable, or ServletException, or null
-     **/
-    public static String throwableToString( Throwable t ) {
-	StringWriter sw = new StringWriter();
-	PrintWriter w = new PrintWriter(sw);
-	
-	if (t != null) {
-	    t.printStackTrace(w);
-	    if (t instanceof ServletException) {
-		Throwable cause = ((ServletException)t).getRootCause();
-		if (cause != null) {
-		    // we could use a StringManager here to get the
-		    // localized translation of "Root cause" , but
-		    // since it's going into a log, no user will see
-		    // it, and it's desirable that the log file is
-		    // predictable, so just use English
-		    String rootmsg = "Root cause:";
-		    w.println(rootmsg);
-		    cause.printStackTrace(w);
-		}
-	    }
-	}
-	w.flush();	// couldn't hurt...
-	return sw.toString();
-    }
     
     /**
      * This is an entry that is created in response to every
@@ -213,6 +184,11 @@ public class TomcatLogger extends Logger {
     public void flush() {
 	logDaemon.flush();
     }
+
+    public String toString() {
+	return "TomcatLogger(" + getName() + ", " + getPath() + ")";
+    }
+    
 }
 
 /**
@@ -243,7 +219,7 @@ class LogDaemon extends Thread {
 			    writer.write(newline);
 			    writer.flush();
 			} catch (Exception ex) { // IOException
-			    ex.printStackTrace();
+			    ex.printStackTrace(); // nowhere else to write it
 			}
 		} while (!LogDaemon.this.logQueue.isEmpty());
 	    }
