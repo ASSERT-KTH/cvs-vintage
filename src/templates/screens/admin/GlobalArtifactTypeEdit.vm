@@ -88,7 +88,7 @@
   #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
 #end
 #else
-<p class="alert">There are no attribute groups.
+<p class="alert">$l10n.NoAttributeGroups</p>
 #end
 </table>
 
@@ -114,8 +114,8 @@
 <tr>
 <th nowrap="nowrap">$l10n.Select</th>
 <th>$l10n.UserAttributeName</th>
-<th>Active</th>
-<th>Sequence #</th>
+<th>$l10n.Active</th>
+<th>$l10n.Sequence</th>
 </tr>
 
 #foreach ($userAttr in $userAttrs)

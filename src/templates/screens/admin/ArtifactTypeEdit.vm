@@ -87,7 +87,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <h3>$l10n.AttributeGroups</h3>
 #set ($maxNum = $groups.size()+1)
 #if ($groups.isEmpty())
-    <p class="alert">There are no attribute groups.</p>
+    <p class="alert">$l10n.NoAttributeGroups</p>
     <div class="functnbar3">
     <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
     </div>
