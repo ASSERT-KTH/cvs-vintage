@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Transaction class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: TransactionTest.java,v 1.1 2002/03/26 00:00:49 elicia Exp $
+ * @version $Id: TransactionTest.java,v 1.2 2002/07/24 18:05:50 jon Exp $
  */
 public class TransactionTest extends BaseTestCase
 {
@@ -94,17 +94,23 @@ public class TransactionTest extends BaseTestCase
         attachment.setDataAsString("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
-        trans = new Transaction();
-        trans.create(new NumberKey("1"), getUser1(), attachment);
+        
+        Transaction trans = TransactionManager
+            .getInstance(new NumberKey("1"), getUser1(), attachment);
+        trans.save();
         System.out.println("new transaction id = " + trans.getTransactionId());
 
         // Create some activities
-        Activity activity = new Activity();
-        Activity activity1 = new Activity();
-        activity.create(getIssue0(), null, "trans activity",
-          trans, "oldValue", "newValue");
-        activity1.create(getIssue0(), null, "trans activity",
-          trans, "oldValue", "newValue");
+        Activity activity = ActivityManager
+            .createTextActivity(getIssue0(), null
+            trans,"trans activity",null,
+            "oldValue", "newValue");
+        activity.save();
+        Activity activity1 = ActivityManager
+            .createTextActivity(getIssue0(), null
+            trans,"trans activity",null,
+            "oldValue", "newValue");
+        activity1.save();
     }
 
     public void testGetActivityList() throws Exception

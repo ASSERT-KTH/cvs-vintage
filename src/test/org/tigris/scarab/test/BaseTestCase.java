@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.15 2002/05/29 20:12:32 elicia Exp $
+ * @version $Id: BaseTestCase.java,v 1.16 2002/07/24 18:05:51 jon Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -230,8 +230,10 @@ public class BaseTestCase extends TestCase
         attach.setTextFields(getUser1(), getIssue0(), Attachment.MODIFICATION__PK);
         attach.setName("commenttest");
         attach.save();
-        Transaction trans = new Transaction();
-        trans.create(TransactionTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
+
+        Transaction trans = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
+        trans.save();
         return trans;
     }
 

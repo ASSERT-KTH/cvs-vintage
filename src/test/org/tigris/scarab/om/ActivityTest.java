@@ -59,7 +59,7 @@ import junit.framework.*;
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.3 2002/03/14 01:13:14 jmcnally Exp $
+ * @version $Id: ActivityTest.java,v 1.4 2002/07/24 18:05:50 jon Exp $
  */
 public class ActivityTest extends BaseTestCase
 {
@@ -90,11 +90,11 @@ public class ActivityTest extends BaseTestCase
     {
         System.out.println("\ntestCreateLong()");
         Transaction trans = getEditTransaction();
-        Activity activity = new Activity();
-        activity.create(getIssue0(), getPlatformAttribute(),
-          "new activity long create", trans, 0, 0, null, null,
-          new NumberKey(5), new NumberKey(6), "before", "after");
-        trans = activity.getTransaction();
+        Activity activity = ActivityManager
+            .createNumericActivity(getIssue0(), getPlatformAttribute()
+            trans,"new activity long create",null,
+            new NumberKey(5), new NumberKey(6));
+        activity.save();
         Transaction newtrans = activity.getTransaction();
         assertEquals("getTransaction expected: " + trans.getTransactionId() +
         " got: " + newtrans.getTransactionId(),
@@ -110,9 +110,13 @@ public class ActivityTest extends BaseTestCase
     {
         System.out.println("\ntestCreateShort()");
         Transaction trans = getEditTransaction();
-        Activity activity = new Activity();
-        activity.create(getIssue0(), null, "new activity short create",
-          trans, "oldValue", "newValue");
+
+        Activity activity = ActivityManager
+            .createTextActivity(getIssue0(), getPlatformAttribute()
+            trans,"new activity long create",null,
+            "oldValue", "newValue");
+        activity.save();
+
         Transaction newtrans = activity.getTransaction();
         assertEquals("getTransaction expected: " + trans.getTransactionId() +
         " got: " + newtrans.getTransactionId(),
