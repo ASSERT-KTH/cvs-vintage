@@ -76,10 +76,10 @@
    <td>#textAreaSmall("template_comment_$template.IssueId" "")</textarea></td>
    <td>
     <select name="template_action_$template.IssueId">
-    <option>No action</option>
-    <option>Comment only</option>
-    <option>Approve</option>
-    <option>Reject</option>
+   <option value="none">No action</option>
+   <option value="comment">Comment only</option>
+   <option value="approve">Approve</option>
+   <option value="reject" >Reject</option>
     </select>
    </td>
   </tr>
