@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.194 2003/08/04 00:23:07 spestov Exp $
+ * @version $Id: Buffer.java,v 1.195 2003/08/04 03:19:13 spestov Exp $
  */
 public class Buffer
 {
@@ -211,10 +211,15 @@ public class Buffer
 					return false;
 				}
 
-				if(!vfs.load(view,this,path))
+				// have to check again since above might set
+				// NEW_FILE flag
+				if(reload || !getFlag(NEW_FILE))
 				{
-					setFlag(LOADING,false);
-					return false;
+					if(!vfs.load(view,this,path))
+					{
+						setFlag(LOADING,false);
+						return false;
+					}
 				}
 			}
 		}

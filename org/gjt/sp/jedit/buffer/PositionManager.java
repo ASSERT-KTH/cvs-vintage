@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.23 2003/07/28 02:10:56 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.24 2003/08/04 03:19:13 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -51,15 +51,18 @@ public class PositionManager
 		//System.err.println(this + ": create " + offset);
 		PosBottomHalf bh;
 
+		// moves gap to offset if necessary
+		contentInserted(offset,0);
+
 		if(root == null)
-			root = bh = new PosBottomHalf(offset);
+			root = bh = new PosBottomHalf(offset - gapWidth);
 		else
 		{
 			bh = root.find(offset);
 
 			if(bh == null)
 			{
-				bh = new PosBottomHalf(offset);
+				bh = new PosBottomHalf(offset - gapWidth);
 				bh.red = true;
 				root.insert(bh);
 				if(!Debug.DISABLE_POSITION_BALANCE)
@@ -384,10 +387,7 @@ public class PositionManager
 		//{{{ PosBottomHalf constructor
 		PosBottomHalf(int offset)
 		{
-			if(offset >= gapOffset)
-				this.offset = offset - gapWidth;
-			else
-				this.offset = offset;
+			this.offset = offset;
 		} //}}}
 
 		//{{{ getOffset() method
