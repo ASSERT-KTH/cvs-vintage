@@ -171,18 +171,18 @@ value="false" />
            #end
 #end
 
-#macro (rows)
- #if( $velocityCount % 2 > 0 )
+#macro (indexedRows $count)
+ #if( $count % 2 > 0 )
     <tr class="a">
  #else 
     <tr class="b">
  #end
 #end
 
-#macro ( datatitle $title )
-<h3>$title</h3>
+#macro (rows)
+ #indexedRows($velocityCount)
 #end
 
-#macro ( trclass $count )
-  #if( $count % 2 > 0 )class="a"#else class="b"#end
+#macro ( datatitle $title )
+<h3>$title</h3>
 #end

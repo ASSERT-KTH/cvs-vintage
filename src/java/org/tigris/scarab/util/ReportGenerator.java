@@ -57,6 +57,7 @@ import org.apache.torque.om.Retrievable;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 import org.apache.torque.pool.DBConnection;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
@@ -73,6 +74,7 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.ScarabUser;
 
 /** 
  * generates reports
@@ -90,15 +92,19 @@ public class ReportGenerator
     private static List reportTypes;
     private static List axisCategories;
 
+    private ModuleEntity module;
     private String name;    
     private String description;
     private int type;
-    private String[] filters;
+    private ScarabUser generatedBy;
+    private Date generatedDate;
+    private String[] toBeGrouped;
     private List dates;
     private int axis1Category;
     private int axis2Category;
     private String[] axis1AttributesAndOptions;
     private String[] axis2AttributesAndOptions;
+    private List optionGroups;
 
     /** used to store query key as part of Retrievable interface */ 
     private String queryKey;
@@ -127,7 +133,24 @@ public class ReportGenerator
     {
         return axisCategories;
     }
-
+    
+    /**
+     * Get the value of module.
+     * @return value of module.
+     */
+    public ModuleEntity getModule() 
+    {
+        return module;
+    }
+    
+    /**
+     * Set the value of module.
+     * @param v  Value to assign to module.
+     */
+    public void setModule(ModuleEntity  v) 
+    {
+        this.module = v;
+    }
     
     /**
      * Get the value of name.
@@ -184,45 +207,260 @@ public class ReportGenerator
         this.type = v;
     }
 
+    
     /**
+     * Get the value of generatedBy.
+     * @return value of generatedBy.
      */
-    public String[] getFilterAttributesAndOptions() 
+    public ScarabUser getGeneratedBy() 
     {
-        return this.filters;
+        return generatedBy;
+    }
+    
+    /**
+     * Set the value of generatedBy.
+     * @param v  Value to assign to generatedBy.
+     */
+    public void setGeneratedBy(ScarabUser  v) 
+    {
+        this.generatedBy = v;
+    }
+    
+    
+    /**
+     * Get the value of generatedDate.
+     * @return value of generatedDate.
+     */
+    public Date getGeneratedDate() 
+    {
+        return generatedDate;
+    }
+    
+    /**
+     * Set the value of generatedDate.
+     * @param v  Value to assign to generatedDate.
+     */
+    public void setGeneratedDate(Date  v) 
+    {
+        this.generatedDate = v;
     }
     
     /**
      */
-    public void setFilterAttributesAndOptions(String[] v) 
+    public String[] getAttributesAndOptionsForGrouping() 
+    {
+        return this.toBeGrouped;
+    }
+    
+    /**
+     */
+    public void setAttributesAndOptionsForGrouping(String[] v) 
     {
         if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
         {
-            this.filters = null;
+            this.toBeGrouped = null;
         }
         else 
         {
-            this.filters = v;            
+            this.toBeGrouped = v;            
         }
     }
 
-    public List getSelectedFilterOptions(ModuleEntity module)
+    public List getOptionGroups()
+    {
+        System.out.println("returning og's: " + optionGroups );
+        return optionGroups;
+    }
+
+    public OptionGroup getNewOptionGroup()
+    {
+        System.out.println("getting new option group");
+        return new OptionGroup();
+    }
+
+    public void setOptionGroups(List groups)
+    {
+        this.optionGroups = groups;
+    }
+
+    public String[] getGroupNames()
+    {
+        String[] names = null;
+        if ( optionGroups != null ) 
+        {
+            names = new String[optionGroups.size()];
+            for ( int i=0; i<names.length; i++ ) 
+            {
+                names[i] = ((OptionGroup)optionGroups.get(i)).getDisplayValue();
+            }
+        }
+        return names;
+    }
+
+    public void setGroupNames(String[] names)
+    {
+        if ( names == null ) 
+        {
+            optionGroups = null;
+        }
+        else 
+        {
+            optionGroups = new ArrayList(names.length);
+            for ( int i=0; i<names.length; i++ ) 
+            {
+                optionGroups.add(new OptionGroup(names[i]));
+            }
+        }
+    }
+
+    public List getSelectedOptionsForGrouping()
+        throws Exception
     {
         List options = null;
-        String[] filters = getFilterAttributesAndOptions();
-        if ( filters == null ) 
+        String[] toBeGrouped = getAttributesAndOptionsForGrouping();
+        if ( toBeGrouped == null ) 
         {
             options = new ArrayList(0);
         }
         else 
         {
-            // fill out list of RModuleOptions based on selected attributes
-            // and options
-            
+            options = getSelectedOptions(toBeGrouped);
         }
         return options;
     }
 
-    public List getAllFilterOptions(ModuleEntity module)
+    private String[] remove(String[] array, int index)
+    {
+        String[] newArray = new String[array.length-1];
+        for ( int i=0; i<array.length; i++ ) 
+        {
+            if ( i != index ) 
+            {
+                newArray[i] = array[i];
+            }
+        }
+        return newArray;
+    }
+
+    private void moveToFront(String[] array, int index)
+    {
+        String tmp = array[index];
+        for ( int i=index-1; i>=0; i-- ) 
+        {
+            array[i+1] = array[i];
+        }
+        array[0] = tmp;
+    }
+
+    /**
+     * fill out list of RModuleOptions based on selected attributes
+     * and options
+     */
+    private List getSelectedOptions(String[] keys)
+        throws Exception
+    {
+        List rmas = module.getRModuleAttributes(true);
+        List options = new ArrayList(7*rmas.size());
+        int start = 0;
+        for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
+        {
+            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+            System.out.println("Attribute: " + rma.getAttribute().getName() );
+            if ( rma.getAttribute().isOptionAttribute()) 
+            {            
+                String rmaId = getKey(rma);
+                boolean isRMASelected = false;
+                for ( int j=start; j<keys.length; j++ ) 
+                {
+                    if ( rmaId.equals(keys[j]) ) 
+                    {
+            System.out.println("matched ");
+                        isRMASelected = true;
+                        //removing the key, as it is already matched
+                        moveToFront(keys, j);
+                        start++;
+                        break;
+                    }                    
+                }
+                // if selected add all the attributes otherwise we still need
+                // to check for a partial list
+                List rmos = module
+                    .getLeafRModuleOptions(rma.getAttribute());
+                if ( isRMASelected ) 
+                {
+            System.out.println("adding all options " );
+                    for ( int j=0; j<rmos.size(); j++ ) 
+                    {
+System.out.println("adding Option: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
+                        options.add( rmos.get(j) );
+                    }               
+                }
+                else 
+                {
+            System.out.println("searching options: " );
+
+                    for ( int j=0; j<rmos.size(); j++ ) 
+                    {
+System.out.println("?? Option: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
+                        String rmoId = getKey((RModuleOption)rmos.get(j));
+                        boolean isRMOSelected = false;
+                        for ( int k=start; k<keys.length; k++ ) 
+                        {
+                            if ( rmoId.equals(keys[k]) ) 
+                            {
+System.out.println("match: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
+                                isRMOSelected = true;
+                                //removing the key, as it is already matched
+                                moveToFront(keys, k);
+                                start++;
+                                break;
+                            }                    
+                        }
+                        if ( isRMOSelected ) 
+                        {
+                            options.add( rmos.get(j) );
+                        }                                   
+                    }
+System.out.println("done searching options: " );
+                }
+            }
+        }
+        return options;
+    }
+
+    public List getSelectedAxis1Options()
+        throws Exception
+    {
+        List options = null;
+        String[] axis1AOs = getAxis1AttributesAndOptions();
+        if ( axis1AOs == null ) 
+        {
+            options = new ArrayList(0);
+        }
+        else 
+        {
+            options = getSelectedOptions(axis1AOs);
+        }
+        return options;
+    }
+
+    public List getSelectedAxis2Options()
+        throws Exception
+    {
+        List options = null;
+        String[] axis2AOs = getAxis2AttributesAndOptions();
+        if ( axis2AOs == null ) 
+        {
+            options = new ArrayList(0);
+        }
+        else 
+        {
+            options = getSelectedOptions(axis2AOs);
+        }
+        return options;
+    }
+
+    public List getAllOptionsForGrouping()
         throws Exception
     {
         List rmas = module.getRModuleAttributes(true);
@@ -233,8 +471,6 @@ public class ReportGenerator
             if ( rma.getAttribute().isOptionAttribute()) 
             {            
                 allOptions.add( new AttributeOrOptionSelectOption(rma) );
-                //Criteria crit = new Criteria()
-                //    .add(RModuleOptionPeer.ACTIVE, true);
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
@@ -247,9 +483,42 @@ public class ReportGenerator
         return allOptions;
     }
 
-    public List getDates()
+    public Date[] getDates()
     {
-        return dates;
+        Date[] d = null;
+        if ( dates != null ) 
+        {
+            int max = dates.size();
+            d = new Date[max];
+            for ( int i=0; i<max; i++ ) 
+            {
+                d[i] = (Date)dates.get(i);
+            }
+        }
+        
+        return d;
+    }
+
+    public void setDates(List v)
+    {
+        this.dates = v;
+    }
+
+    public void setDates(Date[] v)
+    {
+        if ( v == null ) 
+        {
+            dates = null;
+        }
+        else
+        {
+            int max = v.length;
+            dates = new ArrayList(max);
+            for ( int i=0; i<max; i++ ) 
+            {
+                dates.add(v[i]);
+            }
+        }
     }
 
     /**
@@ -283,7 +552,7 @@ public class ReportGenerator
         }
     }
 
-    public List getOptionsMinusFilter(ModuleEntity module)
+    public List getOptionsMinusGroupedOptions()
         throws Exception
     {
         List rmas = module.getRModuleAttributes(true);
@@ -292,7 +561,7 @@ public class ReportGenerator
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
 
-            if ( !isFilterAttribute(rma) && 
+            if ( !isGroupedAttribute(rma) && 
                  rma.getAttribute().isOptionAttribute()) 
             {            
                 options.add( new AttributeOrOptionSelectOption(rma) );
@@ -301,7 +570,7 @@ public class ReportGenerator
                 for ( int j=0; j<rmos.size(); j++ ) 
                 {
                     RModuleOption rmo = (RModuleOption)rmos.get(j);
-                    if ( !isFilterOption(rmo)) 
+                    if ( !isGroupedOption(rmo)) 
                     {
                         options.add( new AttributeOrOptionSelectOption(rmo));
                     }   
@@ -311,44 +580,44 @@ public class ReportGenerator
         return options;
     }
 
-    private boolean isFilterAttribute(RModuleAttribute rma)
+    private boolean isGroupedAttribute(RModuleAttribute rma)
         throws Exception
     {
         String test = getKey(rma);
-        return isFilterAttributeOrOption(test);
+        return isGroupedAttributeOrOption(test);
     }
 
-    private boolean isFilterOption(RModuleOption rmo)
+    private boolean isGroupedOption(RModuleOption rmo)
         throws Exception
     {
         String test = getKey(rmo);
-        boolean isFilterOption = isFilterAttributeOrOption(test);
-        if ( !isFilterOption ) 
+        boolean isGroupedOption = isGroupedAttributeOrOption(test);
+        if ( !isGroupedOption ) 
         {
             // check that the whole attribute is not picked
             test = getKey(rmo.getAttributeOption().getAttribute());
-            isFilterOption = isFilterAttributeOrOption(test);
+            isGroupedOption = isGroupedAttributeOrOption(test);
         }
         
-        return isFilterOption;
+        return isGroupedOption;
     }
 
-    private boolean isFilterAttributeOrOption(String test)
+    private boolean isGroupedAttributeOrOption(String test)
     {
-        boolean isFilter = false;
-        String[] filterAttributeAndOptions = getFilterAttributesAndOptions();
-        if ( filterAttributeAndOptions != null ) 
+        boolean isGrouped = false;
+        String[] attributeAndOptions = getAttributesAndOptionsForGrouping();
+        if ( attributeAndOptions != null ) 
         {
-            for (int i=0; i<filterAttributeAndOptions.length; i++)
+            for (int i=0; i<attributeAndOptions.length; i++)
             {
-                if ( test.equals(filterAttributeAndOptions[i]) )
+                if ( test.equals(attributeAndOptions[i]) )
                 {
-                    isFilter = true;
+                    isGrouped = true;
                     break;
                 }
             }
         }
-        return isFilter;
+        return isGrouped;
     }
 
     /**
@@ -430,6 +699,33 @@ public class ReportGenerator
         }
     }
 
+    public void generateReport()
+    {
+    }
+
+    public int getIssueCount(AttributeOption o1, AttributeOption o2,
+                             List groups, Date date)
+    {
+        Criteria crit = new Criteria();
+        crit.addSelectColumn("count(*)");
+        // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
+        // where a1.new_option_id=axis1option 
+        // and a2.new_option_id=axis2option 
+        // and a3.new_option_id in (grouped_options)
+        // and a1.issue_id=a2.issue_id
+        // and a1.issue_id=a3.issue_id
+        // and t1.transaction_id=a1.transaction_id
+        // and t2.transaction_id=a2.transaction_id
+        // and t3.transaction_id=a3.transaction_id
+        // and t1.created_date<date
+        // and t2.created_date<date
+        // and t3.created_date<date
+        // and a1.end_date>date
+        // and a2.end_date>date
+        // and a3.end_date>date
+        return 1;
+    }
+
     // *********************************************************
     // Retrievable implementation
     // *********************************************************
@@ -456,8 +752,187 @@ public class ReportGenerator
         this.queryKey = v;
     }
 
+
+
     // *********************************************************
 
+    public static class OptionGroup
+        implements Retrievable
+    {
+        private String displayValue;
+        private boolean selected;
+        private String queryKey;
+        private List options;
+        
+        public OptionGroup()
+        {
+        }
+
+        public OptionGroup(String name)
+        {
+            displayValue = name;
+        }
+
+        /**
+         * Get the value of displayValue.
+         * @return value of displayValue.
+         */
+        public String getDisplayValue() 
+        {
+            return displayValue;
+        }
+        
+        /**
+         * Set the value of displayValue.
+         * @param v  Value to assign to displayValue.
+         */
+        public void setDisplayValue(String  v) 
+        {
+            this.displayValue = v;
+        }
+        
+        
+        /**
+         * Get the value of selected.
+         * @return value of selected.
+         */
+        public boolean isSelected() 
+        {
+            return selected;
+        }
+        
+        /**
+         * Set the value of selected.
+         * @param v  Value to assign to selected.
+         */
+        public void setSelected(boolean  v) 
+        {
+            this.selected = v;
+        }
+        
+
+        public void addOption(RModuleOption rmo)
+        {
+            if ( options == null ) 
+            {
+                options = new ArrayList();
+            }
+            options.add(rmo);
+        }
+
+        public List getOptions()
+        {
+            if ( options == null ) 
+            {
+                options = new ArrayList();
+            }
+            return options;
+        }
+
+        // *********************************************************
+        // Retrievable implementation
+        // *********************************************************
+        
+        /**
+         * Get the value of queryKey.
+         * @return value of queryKey.
+         */    
+        public String getQueryKey() 
+        {
+            /*
+            List groups = getOptionGroups();
+            int index = -1;
+            for ( int i=0; i<groups.size(); i++ ) 
+            {
+                if ( ((OptionGroup)groups.get(i)).getDisplayValue()
+                     .equals(displayValue)) 
+                {
+                    index = i;
+                    break;
+                }
+            }
+            
+            return String.valueOf(index);
+            */
+            if ( queryKey == null ) 
+            {
+                return "";
+            }
+            return queryKey;
+        }
+
+        
+        /**
+         * Set the value of queryKey.
+         * @param v  Value to assign to queryKey.
+         */
+        public void setQueryKey(String  v) 
+        {
+            this.queryKey = v;
+        }
+    }
+
+
+    // *********************************************************
+
+    public class OptionForGrouping
+        implements Retrievable
+    {
+        private RModuleOption rmo;
+        private int groupNumber;
+
+        public OptionForGrouping(RModuleOption rmo)
+        {
+            this.rmo = rmo;
+        }
+        
+        /**
+         * Get the value of groupNumber.
+         * @return value of groupNumber.
+         */
+        public int getGroupNumber() 
+        {
+            return groupNumber;
+        }
+        
+        /**
+         * Set the value of groupNumber.
+         * @param v  Value to assign to groupNumber.
+         */
+        public void setGroupNumber(int  v) 
+        {
+            this.groupNumber = v;
+        }
+        
+        public String getDisplayValue()
+        {
+            return rmo.getDisplayValue();
+        }
+
+        // *********************************************************
+        // Retrievable implementation
+        // *********************************************************
+        
+        /**
+         * Get the value of queryKey.
+         * @return value of queryKey.
+         */    
+        public String getQueryKey() 
+        {
+            return "ofg" + rmo.getQueryKey();
+        }
+        
+        /**
+         * Set the value of queryKey.
+         * @param v  Value to assign to queryKey.
+         */
+        public void setQueryKey(String  v) 
+        {
+            // does nothing
+        }
+    }
+    
+    // *********************************************************
 
     public static class SimpleSelectOption
     {
@@ -567,6 +1042,7 @@ public class ReportGenerator
         }
         
     }
+
 
     // *********************************************************
 

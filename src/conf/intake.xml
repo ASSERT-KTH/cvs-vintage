@@ -327,15 +327,42 @@
         <field name="Description" key="desc" type="String"> 
             <rule name="maxLength" value="255">Attribute description must be less than 255 characters long</rule>
         </field>
-        <field name="FilterAttributesAndOptions" key="fao" 
+        <field name="AttributesAndOptionsForGrouping" key="fao" 
                type="String" multiValued="true"/>
         <field name="NewDate" key="date" type="DateString">
            <rule name="format1" value="MM/dd/yy HH:mm"/>
            <rule name="format2" value="MM/dd/yy"/>
            <rule name="flexible" value="true"/>
         </field>
+        <field name="Dates" key="dates" type="DateString" multiValued="true">
+           <rule name="format1" value="MM/dd/yy HH:mm"/>
+           <rule name="format2" value="MM/dd/yy"/>
+           <rule name="flexible" value="true"/>
+        </field>
         <field name="Axis1Category" key="a1c" type="int"/>
         <field name="Axis2Category" key="a2c" type="int"/>
+        <field name="Axis1AttributesAndOptions" key="a1ao" 
+               type="String" multiValued="true"/>
+        <field name="Axis2AttributesAndOptions" key="a2ao" 
+               type="String" multiValued="true"/>
+ </group>
+
+
+<group name="OptionGroup" key="repog" mapToObject="util.ReportGenerator$OptionGroup">
+    <field name="Id" key="type" type="int">
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="DisplayValue" key="dv" type="String">
+        <rule name="maxLength" 
+              value="40">Name must be less than 40 characters long</rule>
+    </field>
+    <field name="Selected" key="sel" type="boolean"/>
+</group>
+
+<group name="OptionForGrouping" key="repofg" mapToObject="util.ReportGenerator$OptionForGrouping">
+    <field name="GroupNumber" key="type" type="int">
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
 </group>
 
 </input-data>

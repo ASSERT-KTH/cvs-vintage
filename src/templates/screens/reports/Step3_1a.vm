@@ -70,6 +70,7 @@
     <input type="submit" value="back" />
 </p>
 
+#addReportHiddenInputs($report)
 $intake.declareGroups()
 </form>
 

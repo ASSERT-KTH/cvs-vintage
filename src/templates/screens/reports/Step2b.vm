@@ -1,4 +1,6 @@
-<!-- Scarab - App -->
+#set ( $report = $scarabR.Report )
+#set ($action = $link.setPage("reports,Step2b.vm").setAction("GenerateReport"))
+
 <div class="app" id="div2-4-1-step3">
 
 <h2>Define report (2.4.1)</h2>
@@ -34,66 +36,88 @@ column.</p>
 <form method="get" action="$action">
 
 <p class="functnbar">
-    <input type="submit" name="eventSubmit_doAddgroup" value="add group" />
+    <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
     &nbsp;
-    <input type="submit" name="eventSubmit_doDeletegroup" 
+    <input type="submit" name="eventSubmit_doStep2bdeletegroup" 
         value="delete group" />
 </p>
 		
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 		<th nowrap="nowrap">&nbsp;</th>
-		<th><a href="#" title="sort">group number</a></th>
-		<th><a href="#" title="sort">group name</a></th>
+		<th>group number</th>
+		<th>group name</th>
 	</tr>
     
-#foreach ( $filterGroup in $report.FilterGroups )
-    #set ($intakeFilterGroup = $intake.FilterGroup.mapTo($filterGroup)
+#set ($finalCount = 1)
+#foreach ( $optionGroup in $report.OptionGroups )
+    #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($optionGroup))
 		
-	<tr #trclass($velocityCount)>
+	#rows()
 		<td><input type="checkbox" 
-                name="$intakeFilterGroup.Selected.Key" /></td>
+                name="$intakeOptionGroup.Selected.Key" /></td>
 		<td>Group $velocityCount</td>
-		<td><input type="text" value="$intakeFilterGroup.Name" 
-                name="$intakeFilterGroup.Name.Key" /></td>
+		<td><input type="text" value="$intakeOptionGroup.DisplayValue" 
+                name="$intakeOptionGroup.DisplayValue.Key" /></td>
 	</tr>
+    #set ($finalCount = $velocityCount + 1)
 #end
+
+#set ( $optionGroup = $report.NewOptionGroup )
+    #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($optionGroup))
+	##indexedRows($finalCount)
+<tr>
+		<td>&nbsp;</td>
+		<td>Group $finalCount (new)</td>
+    #if ($intakeOptionGroup.DisplayValue.isValid())
+        ## don't show the last entered value
+        #set ($value = "")
+    #else
+        #set ($value = $intakeOptionGroup.DisplayValue)
+    #end
+		<td><input type="text" value="$value" 
+                name="$intakeOptionGroup.DisplayValue.Key" /></td>
+	</tr>
+
 </table>
 
 <p class="functnbar">
-    <input type="submit" name="eventSubmit_doAddgroup" value="add group" />
+    <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
     &nbsp;
-    <input type="submit" name="eventSubmit_doDeletegroup" 
+    <input type="submit" name="eventSubmit_doStep2bdeletegroup" 
         value="delete group" />
 </p>
 
 		
+#if ($report.OptionGroups && $report.OptionGroups.size() > 0)
 <h3>Grouping PFA/Options</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>	
-		<th><a href="#" title="sort">group name</a></th>
-		<th><a href="#" title="sort">attribute</a></th>
-		<th><a href="#" title="sort">option</a></th>
+		<th>group name</th>
+		<th>attribute</th>
+		<th>option</th>
 	</tr>
 
-#foreach ( $attOption in $report.SelectedFilterOptions )		
-	<tr #trclass($velocityCount)>
+    #foreach ( $attOption in $report.SelectedOptionsForGrouping )		
+        #set ($intakeOptionForGrouping = $intake.OptionForGrouping.mapTo($attOption))
+	  #rows()
 		
 		<td>
-            <select name="">
-    #foreach ( $filterGroup in $report.FilterGroups )
-        #set ( $optionValue = $velocityCount - 1 )
-		        <option value="$optionValue">$filterGroup.Name</option>
-    #end
+            <select name="ofg$attOption.QueryKey">
+        #foreach ( $optionGroup in $report.OptionGroups )
+            #set ( $optionValue = $velocityCount - 1 )
+		        <option value="$optionValue">$optionGroup.DisplayValue</option>
+        #end
 		    </select>
         </td>
 		<td>$attOption.RModuleAttribute.DisplayValue</td>
 		<td>$attOption.DisplayValue</td>
 
 	</tr>
-#end		
+    #end
 </table>
+#end
 
 <p class="functnbar">
     <input type="submit" value="continue"  name="eventSubmit_doStep2b" />
@@ -101,6 +125,7 @@ column.</p>
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
 
+#addReportHiddenInputs($report)
 $intake.declareGroups()
 </form>
 	

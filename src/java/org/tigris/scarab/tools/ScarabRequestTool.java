@@ -163,6 +163,11 @@ public class ScarabRequestTool
     private ParentChildAttributeOption pcao = null;
 
     /**
+     * A ReportGenerator
+     */
+    private ReportGenerator reportGenerator = null;
+
+    /**
      * A AttributeOption object for use within the Scarab API.
      */
     private int nbrPages = 0;
@@ -813,7 +818,13 @@ try{
      */
     public ReportGenerator getReport()
     {
-        return new ReportGenerator();
+        if ( reportGenerator == null ) 
+        {
+            reportGenerator = new ReportGenerator();
+            reportGenerator.setModule(getCurrentModule());
+        }
+        
+        return reportGenerator;
     }
     
     /**

@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -61,12 +62,15 @@ import org.apache.commons.util.SequencedHashtable;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
@@ -86,7 +90,7 @@ import org.tigris.scarab.util.ReportGenerator;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.2 2001/09/24 17:52:24 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.3 2001/10/01 03:43:23 jmcnally Exp $
 */
 public class GenerateReport 
     extends TemplateAction
@@ -94,37 +98,133 @@ public class GenerateReport
     public void doStep1( RunData data, TemplateContext context )
         throws Exception
     {
-        ReportGenerator report = getReportGenerator(data);
-        setTarget(data, "reports,Step2.vm");
+        ReportGenerator report = populateReportGenerator(data, context);
+        if ( report == null) 
+        {
+            setTarget(data, "reports,Step1.vm");            
+        }
+        else 
+        {
+            setTarget(data, "reports,Step2.vm");
+        }
     }
 
     public void doStep2agoto2b( RunData data, TemplateContext context )
         throws Exception
     {
-        step2a(data, context);
-        setTarget(data, "reports,Step2b.vm");
+        if ( populateReportGenerator(data, context) == null) 
+        {
+            setTarget(data, "reports,Step2.vm");            
+        }
+        else 
+        {
+            step2a(data, context);
+            setTarget(data, "reports,Step2b.vm");
+        }
     }
 
     public void doStep2agoto3( RunData data, TemplateContext context )
+        throws Exception
     {
-        step2a(data, context);
-        setTarget(data, "reports,Step3_1a.vm");            
+        if ( populateReportGenerator(data, context) == null) 
+        {
+            setTarget(data, "reports,Step2.vm");            
+        }
+        else 
+        {
+            step2a(data, context);
+            setTarget(data, "reports,Step3_1a.vm");
+        }
     }
 
     public void step2a( RunData data, TemplateContext context )
     {
     }
 
+    public void doStep2baddgroup( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ReportGenerator report = populateReportGenerator(data, context);
+        if ( report != null) 
+        {
+            // add new option group
+            List groups = report.getOptionGroups();
+            ReportGenerator.OptionGroup group = report.getNewOptionGroup();
+            IntakeTool intake = (IntakeTool)context
+                .get(ScarabConstants.INTAKE_TOOL);
+            Group intakeGroup = intake.get("OptionGroup", 
+                                           group.getQueryKey(), false);
+            if ( intakeGroup != null ) 
+            {
+                intakeGroup.setProperties(group);
+                if ( group.getDisplayValue() != null 
+                     && group.getDisplayValue().length() > 0 ) 
+                {
+                    group.setQueryKey(String.valueOf(groups.size()));
+                    groups.add(group);
+                }
+            }
+        }
+        setTarget(data, "reports,Step2b.vm");
+    }
+
+    public void doStep2bdeletegroup( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ReportGenerator report = populateReportGenerator(data, context);
+        if ( report != null) 
+        {
+            // remove any selected option groups
+            List groups = report.getOptionGroups();
+            for ( int i=groups.size()-1; i>=0; i-- ) 
+            {
+                if (((ReportGenerator.OptionGroup)groups.get(i)).isSelected())
+                {
+                    groups.remove(i);
+                }
+            }
+        }
+        setTarget(data, "reports,Step2b.vm");
+    }
+
     public void doStep2b( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, "reports,Step3_1a.vm");
+        ReportGenerator report = populateReportGenerator(data, context);
+        if ( report != null) 
+        {
+            setTarget(data, "reports,Step3_1a.vm");
+        }
+        else 
+        {
+            setTarget(data, "reports,Step2b.vm");
+        }
     }
 
     public void doStep3_1a( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, "reports,Step3_1b.vm");
+        if ( populateReportGenerator(data, context) == null) 
+        {
+            setTarget(data, "reports,Step3_1a.vm"); 
+        }
+        else 
+        {
+            setTarget(data, "reports,Step3_1b.vm");
+        }
+    }
+
+    public void doStep3_1b( RunData data, TemplateContext context )
+        throws Exception
+    {
+        if ( populateReportGenerator(data, context) == null) 
+        {
+            setTarget(data, "reports,Step3_1b.vm"); 
+        }
+        else 
+        {
+            setTarget(data, "reports,Report_1.vm");
+        }
     }
 
     /**
@@ -147,8 +247,67 @@ public class GenerateReport
         doCancel(data, context);
     }
 
-    public ReportGenerator getReportGenerator(RunData data)
+    private ReportGenerator populateReportGenerator( RunData data, 
+                                                     TemplateContext context)
+       throws Exception
     {
-        return null;
+        ReportGenerator report = null;
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() ) 
+        {
+            ScarabRequestTool scarabR = (ScarabRequestTool)context
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL); 
+            report = scarabR.getReport();
+            populateReportGenerator(report, data.getParameters());
+
+        }
+        return report;
+    }
+
+    public static void populateReportGenerator(ReportGenerator report, 
+                                               ValueParser parameters)
+       throws Exception
+    {
+        Intake intake = new Intake();
+        intake.init(parameters);
+        
+        // System.out.println("Parameters: "+ 
+        //    ((RunData)context.get("data")).getParameters() );
+        intake.get("Report", report.getQueryKey(), false)
+            .setProperties(report);
+
+        // set up option groups
+        int i = 0;
+        List groups = new ArrayList();
+        ReportGenerator.OptionGroup group = report.getNewOptionGroup();
+        group.setQueryKey(String.valueOf(i++));
+        Group intakeGroup = intake.get("OptionGroup", 
+                                       group.getQueryKey(), false);
+        while ( intakeGroup != null ) 
+        {
+            intakeGroup.setProperties(group);
+            groups.add(group);
+
+            group = report.getNewOptionGroup();
+            group.setQueryKey(String.valueOf(i++));
+            intakeGroup = intake.get("OptionGroup", 
+                                     group.getQueryKey(), false);
+        }
+        report.setOptionGroups(groups);
+
+        List options = report.getSelectedOptionsForGrouping();
+        for ( i=0; i<options.size(); i++ ) 
+        {
+            RModuleOption rmo = (RModuleOption)options.get(i);
+            String key = "ofg" + rmo.getQueryKey();
+            int groupIndex = parameters.getInt(key);
+            if ( groupIndex >= 0 && groupIndex < groups.size() ) 
+            {
+                ((ReportGenerator.OptionGroup)groups.get(groupIndex))
+                    .addOption(rmo);
+            }
+        }
     }
 }

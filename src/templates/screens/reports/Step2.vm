@@ -1,7 +1,6 @@
 #set ( $report = $scarabR.Report )
 #set ( $intakeReport = $intake.Report.mapTo($report) )
 #set ( $action = $link.setPage("reports,Step2.vm").setAction("GenerateReport"))
-#set ($module = $scarabR.CurrentModule )
 
 <div class="app" id="div2-4-1-step2">
 
@@ -46,10 +45,10 @@ seperate column (i.e. side-by-side comparison).</p>
 			<th width="120">attributes</th>
 			<td>
 
-			<select name="$intakeReport.FilterAttributesAndOptions.Key" 
+			<select name="$intakeReport.AttributesAndOptionsForGrouping.Key" 
                 multiple="multiple" size="20">
 
-                #attributeOptionOptionList( $report.getAllFilterOptions($module) )
+                #attributeOptionOptionList( $report.AllOptionsForGrouping )
 			</select>
 		
 			</td>
@@ -66,6 +65,7 @@ seperate column (i.e. side-by-side comparison).</p>
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
 
+#addReportHiddenInputs($report)
 $intake.declareGroups()
 </form>
 

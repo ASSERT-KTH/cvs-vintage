@@ -2,7 +2,7 @@
 #set ( $intakeReport = $intake.Report.mapTo($report) )
 #set ( $action = $link.setPage("reports,Step3_1b.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Report_1.vm") )
 
-<div class="app" id="div2-4-1-step5">
+<div class="app" id="div2-4-1-step3_1b">
 
 <h2>Define report (2.4.1)</h2>
 		
@@ -23,6 +23,8 @@
 </p>
 		
 <h3>Select row/column content</h3>	  
+
+<form method="get" action="$action">
 		
 <div class="axial">
 	<table border="1" cellspacing="2" cellpadding="3">
@@ -33,7 +35,7 @@
 			<select name="$intakeReport.Axis1AttributesAndOptions.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.getOptionsMinusFilters($module) )
+                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions )
 			</select>
 			</td>
 		</tr>
@@ -44,7 +46,7 @@
 			<select name="$intakeReport.Axis2AttributesAndOptions.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.getOptionsMinusFilters($module) )
+                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions )
 			</select>
 			</td>
 		</tr>
@@ -52,9 +54,15 @@
 </div>
 
 <p class="functnbar">
-    <input type="submit" value="Generate report" />&nbsp;
-    <input type="submit" value="cancel" />
+    <input type="submit" value="Generate report" 
+            name="eventSubmit_doStep3_1b" />
+    &nbsp;
+    <input type="submit" value="cancel" name="eventSubmit_doCancel" />
 </p>
+
+#addReportHiddenInputs($report)
+$intake.declareGroups()
+</form>
 	
 </div>
 

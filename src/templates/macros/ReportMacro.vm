@@ -14,3 +14,65 @@
 #end
 
 #end
+
+
+
+#macro ( addReportHiddenInputs $report )
+
+#set ( $ir = $intake.Report.mapTo($report) )
+#if ($report.Name)
+    <input type="hidden" name="$ir.Name.Key" value="$ir.Name" />
+#end
+#if ($report.Description)
+    <input type="hidden" name="$ir.Description.Key" value="$ir.Description" />
+#end
+#if ($report.Type != 0)
+    <input type="hidden" name="$ir.Type.Key" value="$ir.Type" />
+#end
+#if ($report.AttributesAndOptionsForGrouping)
+    #foreach ($ao in $report.AttributesAndOptionsForGrouping)
+    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key" 
+        value="$ao" />
+    #end
+#end
+#if ($report.OptionGroups)
+    #foreach ($group in $report.OptionGroups)
+        #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($group))
+        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key" 
+            value="$intakeOptionGroup.DisplayValue" />
+        #if ($group.Options)
+            #foreach ($option in $group.Options)
+                <input type="hidden" name="ofg$option.QueryKey" 
+                    value="$group.QueryKey" />        
+            #end
+        #end
+    #end
+#end
+#if ($report.Axis1Category != 0)
+    <input type="hidden" name="$ir.Axis1Category.Key" 
+        value="$ir.Axis1Category" />
+#end
+#if ($report.Axis2Category != 0)
+    <input type="hidden" name="$ir.Axis2Category.Key" 
+        value="$ir.Axis2Category" />
+#end
+#if ($report.Axis1AttributesAndOptions)
+    #foreach ($ao in $report.Axis1AttributesAndOptions)
+    <input type="hidden" name="$ir.Axis1AttributesAndOptions.Key" 
+        value="$ao" />
+    #end
+#end
+#if ($report.Axis2AttributesAndOptions)
+    #foreach ($ao in $report.Axis2AttributesAndOptions)
+    <input type="hidden" name="$ir.Axis2AttributesAndOptions.Key" 
+        value="$ao" />
+    #end
+#end
+#if ($report.Dates)
+    #foreach ($date in $report.Dates)
+        <input type="hidden" name="$ir.Dates.Key" 
+            value="$format.getDate("MM/dd/yy HH:mm", $date)" />
+    #end
+#end
+
+#end
