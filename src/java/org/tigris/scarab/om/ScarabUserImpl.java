@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.70 2002/06/28 20:02:36 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.71 2002/07/02 03:38:31 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -898,7 +898,8 @@ public class ScarabUserImpl
     /**
      * The current issue type
      */
-    public IssueType getCurrentIssueType() 
+    public IssueType getCurrentIssueType()
+        throws Exception
     {
         return internalUser.getCurrentIssueType();
     }

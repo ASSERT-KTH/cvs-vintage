@@ -961,13 +961,6 @@ try{
             currentModule = user.getCurrentModule();            
         }
 
-        if (currentModule == null)
-        {
-            currentModule = getModule(
-                data.getParameters()
-                .getString(ScarabConstants.CURRENT_MODULE));
-            setCurrentModule(currentModule);
-        }
         return currentModule;
     }
 
@@ -982,35 +975,6 @@ try{
         if (user != null) 
         {
              currentIssueType = user.getCurrentIssueType();            
-        }
-        if (currentIssueType == null)
-        {
-            // if the current issue_type_id is present in the parameter list
-            //then select that issue as the current issue_type
-            if (data.getParameters()
-                .containsKey(ScarabConstants.CURRENT_ISSUE_TYPE))
-            {
-                currentIssueType = getIssueType(data.getParameters()
-                    .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
-            }
-            else if (getCurrentModule() != null)
-            {
-                List navIssueTypes = getCurrentModule().getNavIssueTypes();
-                if (navIssueTypes.size() > 0)
-                {
-                    currentIssueType = (IssueType)navIssueTypes.get(0);
-                }
-                else 
-                {
-                    List activeIssueTypes = 
-                        getCurrentModule().getIssueTypes(true);
-                    if (activeIssueTypes.size() > 0)
-                    {
-                        currentIssueType = (IssueType)activeIssueTypes.get(0);
-                    }
-                }
-            }
-            setCurrentIssueType(currentIssueType);
         }
         return currentIssueType;
     }

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.66 2002/06/28 20:02:36 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.67 2002/07/02 03:38:31 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -379,7 +379,8 @@ public interface ScarabUser extends User
      * The current issue type which represents the issue type
      * selected by the user within a request.
      */
-    public IssueType getCurrentIssueType();
+    public IssueType getCurrentIssueType()
+        throws Exception;
 
     /**
      * The current issue type which represents the issue type

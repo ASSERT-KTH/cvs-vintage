@@ -55,9 +55,15 @@ import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 import org.apache.log4j.Category;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.IssueTypeManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.IssueType;
 
 /**
  * This valve clears any stale data out of the user due to aborted wizards.  
@@ -81,16 +87,20 @@ public class FreshenUserValve
         //xmitScreens.put(, null);
     }
 
+
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
     public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        setCurrentModule(user, data);
+        setCurrentIssueType(user, data);
+
         // set the thread key 
         String key = data.getParameters()
             .getString(ScarabConstants.THREAD_QUERY_KEY);
-        ScarabUser user = (ScarabUser)data.getUser();
         if (key != null) 
         {
             user.setThreadKey(new Integer(key));
@@ -123,4 +133,46 @@ public class FreshenUserValve
         // Pass control to the next Valve in the Pipeline
         context.invokeNext( data );
     }
+
+    private void setCurrentModule(ScarabUser user, RunData data)
+        throws TurbineException
+    {
+        Module module = null;
+        String key = data.getParameters()
+            .getString(ScarabConstants.CURRENT_MODULE);
+        if (key != null) 
+        {
+            try
+            {
+                module = ModuleManager.getInstance(new NumberKey(key));
+            }
+            catch (TorqueException e)
+            {
+                throw new TurbineException(e);
+            }
+        }
+        user.setCurrentModule(module);
+    }
+
+    private void setCurrentIssueType(ScarabUser user, RunData data)
+        throws TurbineException
+    {
+        IssueType currentIssueType = null;
+        String key = data.getParameters()
+            .getString(ScarabConstants.CURRENT_ISSUE_TYPE);
+        if (key != null) 
+        {
+            try
+            {
+                currentIssueType = 
+                    IssueTypeManager.getInstance(new NumberKey(key));
+            }
+            catch (TorqueException e)
+            {
+                throw new TurbineException(e);
+            }
+        }
+        user.setCurrentIssueType(currentIssueType);
+    }
+    
 }
