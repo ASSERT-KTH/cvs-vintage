@@ -172,6 +172,9 @@
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
      <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
      <copydir src="${src.client.dir}" dest="${dist.dir}/client"/>
+
+     <chmod src="${dist.dir}/bin/run.sh" perm="u+x" />
+
   </target>
 
   <!-- =================================================================== -->
