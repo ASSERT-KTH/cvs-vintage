@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.8 2001/03/13 22:54:33 melaquias Exp $
+/* $Id: ApacheConfig.java,v 1.9 2001/03/14 07:29:45 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -112,7 +112,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.8 $ $Date: 2001/03/13 22:54:33 $
+	@version $Revision: 1.9 $ $Date: 2001/03/14 07:29:45 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -439,6 +439,7 @@ public class ApacheConfig  extends BaseInterceptor {
         will try first to resolve it absolutely 
         against the return value of getConfigHome().  If that is null, then
         it instead will resolve against the current user.dir.
+        If this file doesn't exist, the relative path is returned.
         <p>
         @return a File object with the path to the mod_jserv.so file.
     */
@@ -453,6 +454,8 @@ public class ApacheConfig  extends BaseInterceptor {
             }else{//resolve against user.dir
                 jservF = new File(jservF.getAbsolutePath());
             }
+	    if( !jservF.exists() )
+		jservF = modJserv;
         }
        return jservF;
     }
@@ -479,6 +482,7 @@ public class ApacheConfig  extends BaseInterceptor {
         will try first to resolve it absolutely 
         against the return value of getConfigHome().  If that is null, then
         it instead will resolve against the current user.dir.
+        If this file doesn't exist, the relative path is returned.
         <p>
         @return a File object with the path to the mod_jk.so file.
     */
@@ -493,6 +497,8 @@ public class ApacheConfig  extends BaseInterceptor {
             }else{//resolve against user.dir
                 jkF = new File(jkF.getAbsolutePath());
             }
+	    if( !jkF.exists() )
+		jkF = modJk;
         }
        return jkF;
     }
