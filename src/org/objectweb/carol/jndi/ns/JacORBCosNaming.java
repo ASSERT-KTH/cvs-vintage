@@ -1,6 +1,6 @@
 /**
  * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004 Bull S.A.
+ * Copyright (C) 2004-2005 Bull S.A.
  * Contact: jonas-team@objectweb.org
  *
  * This library is free software; you can redistribute it and/or
@@ -18,9 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- * Initial developer: Florent BENOIT
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.3 2005/02/14 15:08:43 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.4 2005/02/17 10:55:48 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
