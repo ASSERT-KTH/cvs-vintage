@@ -15,10 +15,12 @@ $l10n.NoDependencies
  <th>$l10n.Type</th>
 </tr>
 
+#set ($counter = 0)
 #foreach ($depend in $issueParents)
   #set ($parent = $scarabR.getIssueByPk($depend.ObservedId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
-  #indexedRows($velocityCount)
+  #indexedRows($counter)
+  #set ($counter = $counter + 1)
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
   <td>#booleanCheckbox($dependGroup.Deleted)</td>
 #elseif ($canEdit)
@@ -54,8 +56,8 @@ $l10n.NoDependencies
 #foreach ($depend in $issueChildren)
   #set ($child = $scarabR.getIssueByPk($depend.ObserverId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
-  #indexedRows($velocityCount)
-  #set ($counter = $velocityCount)
+  #indexedRows($counter)
+  #set ($counter = $counter + 1)
 
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $child.Module) )
     <td>#booleanCheckbox($dependGroup.Deleted)</td>
@@ -91,7 +93,6 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 
 #if ($canEdit)
 #set ($newDependGroup = $intake.Depend.Default)
-#set ($counter = $counter+1)
 #indexedRows($counter)
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
 <td>&nbsp;</td>
