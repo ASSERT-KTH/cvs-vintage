@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.3 2001/08/11 03:37:28 larryi Exp $
+/* $Id: BaseJkConfig.java,v 1.4 2001/08/23 15:01:57 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -118,7 +118,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.3 $
+	@version $Revision: 1.4 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;
@@ -132,8 +132,22 @@ public class BaseJkConfig  extends BaseInterceptor {
     protected boolean forwardAll=true;
 
     protected String tomcatHome;
-
+    protected boolean regenerate=false;
+    
     // -------------------- Tomcat callbacks --------------------
+
+    public void addInterceptor( ContextManager cm,
+				Context ctx,
+				BaseInterceptor bi )
+	throws TomcatException
+    {
+	if( cm.getProperty( "jkconf" ) != null ) {
+	    // we are in config generation mode - prevent tomcat
+	    // from starting.
+	    //???	    cm.setNote("nostart", this );
+	}
+    }
+	
     // Auto-config should be able to react to dynamic config changes,
     // and regenerate the config.
 
@@ -145,7 +159,13 @@ public class BaseJkConfig  extends BaseInterceptor {
     {
         if( state != ContextManager.STATE_INIT )
             return;
-        execute( cm );
+	// Generate the config only if "regenerate" property is
+	// set on the module or if an explicit "jkconf" option has
+	// been set on context manager.
+	if( regenerate ||
+	    cm.getProperty("jkconf") !=null) {
+		execute( cm );
+	}
     }
 
     public void contextInit(Context ctx)
