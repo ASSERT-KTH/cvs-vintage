@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.4 1999/11/13 00:14:14 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/13 00:14:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.5 1999/12/08 23:48:06 bergsten Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/08 23:48:06 $
  *
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -57,7 +57,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 
 package org.apache.jasper.runtime;
 
@@ -90,25 +90,26 @@ import org.apache.jasper.Constants;
 
 
 /**
- * Implementation of the PageContext class from the JSP spec. 
+ * Implementation of the PageContext class from the JSP spec.
  *
- * The removeAttribute method does not work for request scope. Needs fixing. 
+ * The removeAttribute method does not work for request scope. Needs fixing.
  *
  * @author Anil K. Vijendran
  * @author Larry Cable
+ * @author Hans Bergsten
  */
 public class PageContextImpl extends PageContext {
     PageContextImpl(JspFactory factory) {
         this.factory = factory;
     }
 
-    public void initialize(Servlet servlet, ServletRequest request, 
-                           ServletResponse response, String errorPageURL, 
-                           boolean needsSession, int bufferSize, 
-                           boolean autoFlush)  
-        throws IOException, IllegalStateException, IllegalArgumentException 
+    public void initialize(Servlet servlet, ServletRequest request,
+                           ServletResponse response, String errorPageURL,
+                           boolean needsSession, int bufferSize,
+                           boolean autoFlush)
+        throws IOException, IllegalStateException, IllegalArgumentException
     {
-        
+
 	// initialize state
 
 	this.servlet      = servlet;
@@ -123,9 +124,9 @@ public class PageContextImpl extends PageContext {
 
 	// setup session (if required)
 
-	if (request instanceof HttpServletRequest && needsSession) 
+	if (request instanceof HttpServletRequest && needsSession)
 	    this.session = ((HttpServletRequest)request).getSession();
-	
+
 	if (needsSession && session == null)
 	    throw new IllegalStateException("Page needs a session and none is available");
 
@@ -142,7 +143,7 @@ public class PageContextImpl extends PageContext {
 	setAttribute(REQUEST,     request);
 	setAttribute(RESPONSE,    response);
 
-	if (session != null) 
+	if (session != null)
 	    setAttribute(SESSION, session);
 
 	setAttribute(PAGE,        servlet);
@@ -163,7 +164,7 @@ public class PageContextImpl extends PageContext {
 	response     = null;
 	out	     = null; // out is closed elsewhere
 	session      = null;
-	
+
 	attributes.clear();
     }
 
@@ -176,19 +177,19 @@ public class PageContextImpl extends PageContext {
 	switch (scope) {
 	    case PAGE_SCOPE:
 		return attributes.get(name);
-		
+
 	    case REQUEST_SCOPE:
 		return request.getAttribute(name);
-	    
+
 	    case SESSION_SCOPE:
-		if (session == null) 
+		if (session == null)
 		    throw new IllegalArgumentException("can't access SESSION_SCOPE without an HttpSession");
 		else
 		    return session.getAttribute(name);
-	    
+
 	    case APPLICATION_SCOPE:
 		return context.getAttribute(name);
-	    
+
 	    default:
 		throw new IllegalArgumentException("unidentified scope");
 	}
@@ -211,7 +212,7 @@ public class PageContextImpl extends PageContext {
 	    break;
 
 	    case SESSION_SCOPE:
-		if (session == null) 
+		if (session == null)
 		    throw new IllegalArgumentException("can't access SESSION_SCOPE without an HttpSession");
 		else
 		    session.setAttribute(name, o);
@@ -282,7 +283,7 @@ public class PageContextImpl extends PageContext {
             if (o != null)
                 return o;
         }
-        
+
         return context.getAttribute(name);
     }
 
@@ -323,14 +324,14 @@ public class PageContextImpl extends PageContext {
     public ServletConfig getServletConfig() { return config; }
     public ServletContext getServletContext() { return config.getServletContext(); }
     public ServletRequest getRequest() { return request; }
-    public ServletResponse getResponse() { return response; } 
+    public ServletResponse getResponse() { return response; }
     public Exception getException() { return (Exception)request.getAttribute(EXCEPTION); }
     public Object getPage() { return servlet; }
-        
+
 
     private final String getAbsolutePathRelativeToContext(String relativeUrlPath) {
         String path = relativeUrlPath;
-        
+
         if (!path.startsWith("/")) {
             String uri = ((HttpServletRequest) request).getServletPath();
             String baseURI = uri.substring(0, uri.lastIndexOf('/'));
@@ -339,15 +340,15 @@ public class PageContextImpl extends PageContext {
 
         return path;
     }
-    
+
     public void include(String relativeUrlPath)
-        throws ServletException, IOException 
+        throws ServletException, IOException
     {
         String path = getAbsolutePathRelativeToContext(relativeUrlPath);
         context.getRequestDispatcher(path).include(request, response);
     }
 
-    public void forward(String relativeUrlPath) 
+    public void forward(String relativeUrlPath)
         throws ServletException, IOException
     {
         String path = getAbsolutePathRelativeToContext(relativeUrlPath);
@@ -355,35 +356,38 @@ public class PageContextImpl extends PageContext {
     }
 
     Stack writerStack = new Stack();
-    
+
     public BodyContent pushBody() {
         JspWriter previous = out;
         writerStack.push(out);
         out = new BodyContentImpl(previous);
         return (BodyContent) out;
     }
-    
+
     public JspWriter popBody() {
         out = (JspWriter) writerStack.pop();
         return out;
     }
-    
+
     public void handlePageException(Exception e)
     throws IOException, ServletException {
-	
+
 	// set the request attribute with the exception.
 	request.setAttribute("javax.servlet.jsp.jspException", e);
-	
+
 	if (errorPageURL != null && !errorPageURL.equals("")) {
 	    forward(errorPageURL);
 	} // Otherwise throw the exception wrapped inside a ServletException.
-	else
-	    throw new ServletException(e.getMessage());
-	    
+	else {
+	    // Set the exception as the root cause in the ServletException
+	    // to get a stack trace for the real problem
+	    throw new ServletException(e);
+	}
+
     }
 
-    protected JspWriter _createOut(int bufferSize, boolean autoFlush) 
-        throws IOException, IllegalArgumentException 
+    protected JspWriter _createOut(int bufferSize, boolean autoFlush)
+        throws IOException, IllegalArgumentException
     {
         return new JspWriterImpl(response, bufferSize, autoFlush);
     }
@@ -411,7 +415,7 @@ public class PageContextImpl extends PageContext {
 
     protected transient Hashtable	attributes = new Hashtable(16);
 
-    // per request state 
+    // per request state
 
     protected transient ServletRequest	request;
     protected transient ServletResponse response;
