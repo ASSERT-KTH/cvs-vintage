@@ -37,7 +37,7 @@ table, th, td	{
  margin-top: .4em
  }
 .app h3 {
-	background: #036 url(../images/nw_min.gif) no-repeat;
+	background: #036 url($data.Request.ContextPath/images/nw_min.gif) no-repeat;
  }
 .app h3, .app h4, .functnbar	 {
 	padding: 5px;
@@ -50,7 +50,7 @@ table, th, td	{
  text-decoration: none
  }
 .app h4 {	
- background: #ccc url(../images/nw_min.gif) no-repeat;
+ background: #ccc url($data.Request.ContextPath/images/nw_min.gif) no-repeat;
 	color: #000;
 	}
 #apphead h2 {
@@ -129,11 +129,11 @@ ul.tasks li {
  margin-left: 2px;
  }
 .tabs th {
-	background: url(../images/nw_min.gif) no-repeat top left;
+	background: url($data.Request.ContextPath/images/nw_min.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	}
 .tabs td {
-	background: url(../images/nw_min.gif) no-repeat top left;
+	background: url($data.Request.ContextPath/images/images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
@@ -155,13 +155,13 @@ ul.tasks li {
 	border-bottom: 1px solid #999; 
 	}
 .functnbar {
-	background: #999 url(../images/nw_min.gif) no-repeat top left;
+	background: #999 url($data.Request.ContextPath/images/nw_min.gif) no-repeat top left;
 	}
 .functnbar2 {
-	background: #999 url(../images/sw_min.gif) no-repeat bottom left;
+	background: #999 url($data.Request.ContextPath/images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar3 {
-	background: #ccc url(../images/sw_min.gif) no-repeat bottom left;
+	background: #ccc url($data.Request.ContextPath/images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar, .functnbar2, {
  padding: 2px;
