@@ -25,7 +25,7 @@
 // Classes: FigNodeModelElement
 // Original Author: abonner
 
-// $Id: FigNodeModelElement.java,v 1.34 2002/11/05 19:10:45 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.35 2002/11/06 07:44:27 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -718,7 +718,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
      * @see org.tigris.gef.presentation.Fig#delete()
      */
     public void delete() {
-        super.delete();
+        
         Object own = getOwner();
         if (own instanceof MClassifier) {
             MClassifier cls = (MClassifier)own;
@@ -729,12 +729,16 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
                     MOperation oper = (MOperation)feature;
                     Iterator it2 = oper.getParameters().iterator();
                     while (it2.hasNext()) {
-                        ((MParameter)it2.next()).removeMElementListener(this);
+                        UmlModelEventPump.getPump().removeModelEventListener(this, (MParameter)it2.next());
                     }
                 }
-                feature.removeMElementListener(this);
+                UmlModelEventPump.getPump().removeModelEventListener(this, feature);
             }
         }
+        if (own instanceof MBase) {
+            UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)own);
+        }
+        super.delete();
     }
 
     /**
