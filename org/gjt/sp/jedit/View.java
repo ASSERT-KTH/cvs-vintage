@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.76 2003/04/21 03:21:36 spestov Exp $
+ * @version $Id: View.java,v 1.77 2003/04/23 18:52:08 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -761,6 +761,12 @@ public class View extends JFrame implements EBComponent
 	 */
 	public EditPane goToBuffer(Buffer buffer)
 	{
+		if(editPane.getBuffer() == buffer)
+		{
+			editPane.focusOnTextArea();
+			return editPane;
+		}
+
 		EditPane[] editPanes = getEditPanes();
 		for(int i = 0; i < editPanes.length; i++)
 		{

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.24 2003/04/14 23:15:26 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.25 2003/04/23 18:52:06 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -65,7 +65,7 @@ public class JARClassLoader extends ClassLoader
 		zipFile = new JarFile(path);
 		definePackages();
 
-		jar = new EditPlugin.JAR(path,this);
+		jar = new EditPlugin.JAR(path,this,zipFile);
 
 		Enumeration entires = zipFile.entries();
 		while(entires.hasMoreElements())
@@ -286,9 +286,7 @@ public class JARClassLoader extends ClassLoader
 				else if(name.equalsIgnoreCase("dockables.xml"))
 				{
 					DockableWindowManager.loadDockableWindows(jar,
-						path + "!dockables.xml",
-						new BufferedReader(new InputStreamReader(
-						zipFile.getInputStream(entry))));
+						getResource(name));
 				}
 			}
 		}
