@@ -480,6 +480,8 @@ static int jk_handler(request_rec *r)
             private_data.read_body_started = JK_FALSE;
             private_data.r = r;
 
+            jk_init_ws_service(&s);
+
             s.ws_private = &private_data;
             s.pool = &private_data.p;            
             
@@ -501,7 +503,7 @@ static int jk_handler(request_rec *r)
 		    ap_set_userdata( end , "jk_thread_endpoint", &jk_cleanup_endpoint,  tpool );
 		}
 #else
-		end=worker->get_endpoint(worker, &end, l);
+		worker->get_endpoint(worker, &end, l);
 #endif
 		{   
 		    int is_recoverable_error = JK_FALSE;

@@ -638,6 +638,7 @@ static int jk_handler(request_rec *r)
             private_data.read_body_started = JK_FALSE;
             private_data.r = r;
 
+            jk_init_ws_service(&s);
             s.ws_private = &private_data;
             s.pool = &private_data.p;            
             

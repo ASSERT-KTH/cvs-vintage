@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 
@@ -350,6 +350,8 @@ NSAPI_PUBLIC int jk_service(pblock *pb,
         private_data.pb = pb;
         private_data.sn = sn;
         private_data.rq = rq;
+
+        jk_init_ws_service(&s);
 
         s.ws_private = &private_data;
         s.pool = &private_data.p;
