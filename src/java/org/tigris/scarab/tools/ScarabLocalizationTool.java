@@ -46,8 +46,11 @@ package org.tigris.scarab.tools;
  * individuals on behalf of CollabNet.
  */
 
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.turbine.Log;
+import org.apache.turbine.RunData;
 import org.apache.turbine.tool.LocalizationTool;
 
 /**
@@ -58,13 +61,23 @@ import org.apache.turbine.tool.LocalizationTool;
 public class ScarabLocalizationTool
     extends LocalizationTool
 {
+    private static final String DEFAULT_SCOPE = "default";
     private static final String TITLE_PROP = "title";
+
+    /**
+     * We need to keep a reference to the request's
+     * <code>RunData</code> so that we can extract the name of the
+     * target <i>after</i> the <code>Action</code> has run (which may
+     * have changed the target from its original value as a sort of
+     * internal redirect).
+     */
+    private RunData data;
 
     /**
      * Initialized by <code>init()</code>, cleared by
      * <code>refresh()</code>.
      */
-    private Properties properties;
+    private Map properties;
 
     /**
      * Creates a new instance.
@@ -72,31 +85,74 @@ public class ScarabLocalizationTool
     public ScarabLocalizationTool()
     {
         super();
+
+        // FIXME: Remove this hard coding
+        properties = new Properties();
+        //properties.put(DEFAULT_SCOPE + '.' + TITLE_PROP, "DefaultTitle");
     }
 
     /**
      * Provides <code>$l10n.Title</code> to templates, grabbing it
      * from the <code>title</code> property for the current template.
      *
-     * @return The title for the template used in the current request.
+     * @return The title for the template used in the current request,
+     * or the text <code>Scarab</code> if not set.
      */
     public String getTitle()
     {
-        return "Scarab";
+        String title = null;
+
+        if (properties != null)
+        {
+            // $l10n.get($props.get($template, "title"))
+            // HELP: Not sure if values like "entry/Wizard1.vm.title"
+            // will be valid keys for Java .properties files...
+            String templateName = data.getTarget();
+            if (templateName == null)
+            {
+                templateName = DEFAULT_SCOPE;
+            }
+            String propName = templateName + '.' + TITLE_PROP;
+            String l10nKey = (String) properties.get(propName);
+            Log.debug("ScarabLocalizationTool: Property name '" + propName +
+                      "' -> localization key '" + l10nKey + '\'');
+            if (l10nKey != null)
+            {
+                title = get(l10nKey);
+            }
+        }
+
+        if (title == null)
+        {
+            // Either the property name doesn't correspond to a
+            // localization key, or the localization property pointed
+            // to by the key doesn't have a value.
+            // TODO: Supply a *localized* default.
+            title = "Scarab";
+        }
+
+        return title;
     }
 
 
-    // ---- ApplicationTool interface ----------------------------------------
+    // ---- ApplicationTool implementation  ----------------------------------
 
     public void init(Object runData)
     {
         super.init(runData);
-        //properties = ;
+        if (runData instanceof RunData)
+        {
+            data = (RunData) runData;
+            // TODO: Use Zope like property overlays (must implement
+            // them first in Turbine).
+            //properties = ;
+        }
     }
 
     public void refresh()
     {
         super.refresh();
+        data = null;
         properties = null;
     }
 }
