@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.22 2002/09/15 15:37:18 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.23 2002/10/08 15:57:41 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -394,8 +394,17 @@ public class GenerateReport
         }
         else if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Report_1.vm");
-            intake.removeAll();
+            if (report.getDates() == null || report.getDates().length == 0) 
+            {
+                Group intakeDate = intake.get("ReportDate", "0", false);
+                intakeDate.get("Date")
+                    .setMessage("intake_YouMustSupplyAtLeastOneDate");
+            }
+            else 
+            {
+                setTarget(data, "reports,Report_1.vm");
+                intake.removeAll();
+            }            
         }
         else 
         {
