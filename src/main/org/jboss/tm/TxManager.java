@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class TxManager
    implements TransactionManager,
@@ -50,7 +50,7 @@ public class TxManager
    private Logger log = Logger.getLogger(this.getClass());
    
    /** True if trace messages should be logged. */
-   private boolean trace = log.isDebugEnabled();
+   private boolean trace = log.isTraceEnabled();
    
    /**
     *  Default timeout in milliseconds.
