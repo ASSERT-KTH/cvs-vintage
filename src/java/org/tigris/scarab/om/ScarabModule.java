@@ -94,7 +94,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.121 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.122 2003/01/07 00:36:28 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -138,12 +138,14 @@ public class ScarabModule
             
             if (permissions.size() >= 1)
             {
+                ArrayList groups = new ArrayList(2);
+                groups.add(getPrimaryKey());
+                groups.add(new NumberKey("0"));
                 crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
                              TurbineRolePermissionPeer.PERMISSION_ID);
                 crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
                              TurbineUserGroupRolePeer.ROLE_ID);
-                crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
-                         getPrimaryKey());
+                crit.addIn(TurbineUserGroupRolePeer.GROUP_ID, groups);
                 crit.addJoin(ScarabUserImplPeer.USER_ID, 
                              TurbineUserGroupRolePeer.USER_ID);
                 try
