@@ -83,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.38 2002/11/23 00:03:17 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.39 2002/11/25 20:58:50 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -140,8 +140,8 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
-        context.put("moduleId", newModuleId.toString());
-        context.put("issueTypeId", newIssueTypeId.toString());
+        context.put("newModuleId", newModuleId.toString());
+        context.put("newIssueTypeId", newIssueTypeId.toString());
 
         String nextTemplate = getNextTemplate(data);
         setTarget(data, nextTemplate);
