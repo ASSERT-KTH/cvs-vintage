@@ -23,11 +23,11 @@ package org.tigris.scarab.actions;
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
+ *
+ * 5. Products derived from this software may not use the "Tigris" or
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
  * prior written permission of Collab.Net.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,15 +41,15 @@ package org.tigris.scarab.actions;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
 import java.util.List;
 import java.util.ArrayList;
 
-// Turbine Stuff 
+// Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
@@ -59,6 +59,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -70,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.15 2003/06/25 17:46:01 mpoeschl Exp $
+ * @version $Id: ModuleQuery.java,v 1.16 2003/08/14 16:38:46 parun Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -82,41 +83,63 @@ public class ModuleQuery extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         // the list to add items to
         MITList list = null;
-        if (data.getParameters().getBoolean("allit")) 
+        if (data.getParameters().getBoolean("allit"))
         {
             Module module = user.getCurrentModule();
+            List issueTypes = module.getIssueTypes(false);
+            if (issueTypes == null || issueTypes.isEmpty())
+            {
+                scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+                return;
+            }
             list = MITListManager
                 .getSingleModuleAllIssueTypesList(module, user);
             user.setCurrentMITList(list);
         }
-        else 
+        else
         {
             String[] rmitIds = data.getParameters().getStrings("rmit_id");
-            if (rmitIds == null || rmitIds.length == 0) 
+            if (rmitIds == null || rmitIds.length == 0)
             {
                 scarabR.setAlertMessage(
                     l10n.get("MustSelectAtLeastOneIssueType"));
                 return;
             }
-            else 
+            else
             {
                 List rmits = new ArrayList(rmitIds.length);
-                for (int i=0; i<rmitIds.length; i++) 
+                boolean isIssueTypeAvailable = true;
+                for (int i=0; i<rmitIds.length && isIssueTypeAvailable; i++)
                 {
                     try
                     {
-                        rmits.add(RModuleIssueTypeManager
-                            .getInstance(rmitIds[i]));
+                        RModuleIssueType rmit = RModuleIssueTypeManager
+                                                .getInstance(rmitIds[i]);
+                        if (rmit == null || rmit.getIssueType().getDeleted())
+                        {
+                            isIssueTypeAvailable = false;
+                        }
+                        else
+                        {
+                            rmits.add(rmit);
+                        }
                     }
                     catch (Exception e)
                     {
                         // would probably be a hack of the form
                         scarabR.setAlertMessage(
-                          l10n.get("InvalidIssueTypeId"));
+                          l10n.get("IssueTypeUnavailable"));
                         Log.get().debug("", e);
                         return;
                     }
                 }
+                if (!isIssueTypeAvailable)
+                {
+                    scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+                    setTarget(data, "home,ModuleQuery.vm");
+                    return;
+                }
+
                 user.setCurrentMITList(null);
                 user.addRMITsToCurrentMITList(rmits);
                 // Another oddity due to ScarabUserImpl not extending
@@ -124,19 +147,19 @@ public class ModuleQuery extends RequireLoginFirstAction
                 user.getCurrentMITList().setScarabUser(user);
             }
         }
-        
+
         // Do we go to AdvancedQuery.vm or run a canned query?
         String queryType = data.getParameters().getString("querytype");
-        if ("custom".equals(queryType)) 
+        if ("custom".equals(queryType))
         {
             try
             {
                 // we do this here because getSearch() can throw an exception
-                // if it does throw an exception, then we want to show the 
+                // if it does throw an exception, then we want to show the
                 // ModuleQuery page again. if it doesn't, then we put the result
-                // into the context so that AdvancedQueryMacro can access it 
+                // into the context so that AdvancedQueryMacro can access it
                 // instead of having to call the method yet again which would
-                // have a performance impact. kind of ugly, but it is in the 
+                // have a performance impact. kind of ugly, but it is in the
                 // name of performance and not throwing exceptions. =) (JSS)
                 /* Not sure we still need this. Commenting out for now,
                  * while I investigate further
@@ -154,14 +177,14 @@ public class ModuleQuery extends RequireLoginFirstAction
                 Log.get().debug("", e);
             }
         }
-        else if ("all".equals(queryType) || "my".equals(queryType)) 
+        else if ("all".equals(queryType) || "my".equals(queryType))
         {
-            String query = null; 
-            if ("all".equals(queryType)) 
+            String query = null;
+            if ("all".equals(queryType))
             {
                 query = "";
             }
-            else 
+            else
             {
                 String userId = user.getQueryKey();
                 StringBuffer sb = new StringBuffer(26 + 2*userId.length());
