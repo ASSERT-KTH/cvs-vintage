@@ -36,7 +36,7 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -244,14 +244,14 @@ public class LogInterceptor extends AbstractInterceptor
             else if (remoteTxRollback.detail instanceof Error) 
             {
                String msg = formatException(
-                     "Unexpected Error A", 
+                     "Unexpected Error", 
                      remoteTxRollback.detail);
                cause = new EJBException(msg);
             }
             else 
             {
                String msg = formatException(
-                     "Unexpected Throwable B", 
+                     "Unexpected Throwable", 
                      remoteTxRollback.detail);
                cause = new EJBException(msg);
             }
@@ -375,7 +375,7 @@ public class LogInterceptor extends AbstractInterceptor
          log.error("Unexpected Error:", e);
          if (isLocal) 
          {
-            String msg = formatException("Unexpected Error C", e);
+            String msg = formatException("Unexpected Error", e);
             return new EJBException(msg);
          }
          else 
@@ -394,7 +394,7 @@ public class LogInterceptor extends AbstractInterceptor
       else
       {
          // The should not happen
-         String msg = formatException("Unexpected Throwable D", e);
+         String msg = formatException("Unexpected Throwable", e);
          log.warn("Unexpected Throwable", e);
          if (isLocal)
          {

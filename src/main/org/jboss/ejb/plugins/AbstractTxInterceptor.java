@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -202,12 +202,12 @@ abstract class AbstractTxInterceptor
                }
                else if(e instanceof Error) 
                {
-                 String msg = formatException("Unexpected Error 1", e);
+                 String msg = formatException("Unexpected Error", e);
                  cause = new EJBException(msg);
                }
                else
                {
-                  String msg = formatException("Unexpected Throwable 2", e);
+                  String msg = formatException("Unexpected Throwable", e);
                   cause = new EJBException(msg);
                }
             }
