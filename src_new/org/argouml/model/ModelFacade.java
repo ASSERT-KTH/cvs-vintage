@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.88 2003/08/30 23:23:49 alexb Exp $
+// $Id: ModelFacade.java,v 1.89 2003/08/30 23:40:28 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1848,7 +1848,7 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
-
+   
     /**
      * Returns the do activity action of a state
      * @param handle
@@ -1885,6 +1885,18 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /** Get the nodeInstance of a MComponentInstance.
+     *
+     * @param handle the MComponentInstance
+     * @returns the dispatchaction (or null)
+     */
+    public static Object getNodeInstance(Object handle) {
+        if (handle instanceof MComponentInstance) {
+            return ((MComponentInstance) handle).getNodeInstance();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+    
     /** The list of operations
      *
      * @param handle classifier to examine.

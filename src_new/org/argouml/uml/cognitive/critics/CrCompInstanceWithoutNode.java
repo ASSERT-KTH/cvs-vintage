@@ -1,4 +1,4 @@
-// $Id: CrCompInstanceWithoutNode.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrCompInstanceWithoutNode.java,v 1.7 2003/08/30 23:40:28 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrCompInstanceWithoutNode.java
 // Classes: CrCompInstanceWithoutNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrCompInstanceWithoutNode.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrCompInstanceWithoutNode.java,v 1.7 2003/08/30 23:40:28 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,11 +35,9 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.diagram.deployment.ui.FigComponentInstance;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.argouml.model.ModelFacade;
+
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
-
-
-
 
 /**
  * A critic to detect when there are component-instances that
@@ -105,8 +103,7 @@ public class CrCompInstanceWithoutNode extends CrUML {
 		offs.addElement(fc);
 	    }
 	    else if (fc.getEnclosingFig() != null
-		     && ((((MComponentInstance) fc.getOwner())
-			  .getNodeInstance())
+		     && ((ModelFacade.getNodeInstance(fc.getOwner()))
 			 == null))
 	    {
 		if (offs == null) {

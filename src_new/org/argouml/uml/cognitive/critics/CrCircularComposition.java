@@ -1,5 +1,5 @@
 
-// $Id: CrCircularComposition.java,v 1.8 2003/08/30 23:23:49 alexb Exp $
+// $Id: CrCircularComposition.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.8 2003/08/30 23:23:49 alexb Exp $
+// $Id: CrCircularComposition.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,8 +41,6 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.GenCompositeClasses;
 import org.tigris.gef.util.VectorSet;
-
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 /**  */
 public class CrCircularComposition extends CrUML {
