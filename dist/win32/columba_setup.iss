@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Columba
-AppVerName=Columba 0.10.1
+AppVerName=Columba 0.12.0
 AppPublisherURL=http://columba.sourceforge.net/
 AppSupportURL=http://columba.sourceforge.net/
 AppUpdatesURL=http://columba.sourceforge.net/
@@ -24,14 +24,12 @@ OutputDir=.
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; MinVersion: 4,4
 
 [Files]
-Source: lib\crimson.jar; DestDir: {app}\lib\
-Source: lib\jaxp.jar; DestDir: {app}\lib\
-Source: lib\xalan.jar; DestDir: {app}\lib\
 Source: lib\jakarta-oro-2.0.6.jar; DestDir: {app}\lib\
 Source: lib\jargs.jar; DestDir: {app}\lib\
-Source: lib\xalan.jar; DestDir: {app}\lib\
 Source: lib\log4j.jar; DestDir: {app}\lib\
 Source: lib\lucene-1.3-rc1.jar; DestDir: {app}\lib\
+Source: lib\jwizz-0.1.0.jar; DestDir: {app}\lib\
+Source: lib\plastic.jar; DestDir: {app}\lib\
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
 Source: native\win32\launcher\bin\columba.exe; DestDir: {app}; DestName: columba.exe; Components: JDK14 JDK13
