@@ -23,6 +23,7 @@ import java.rmi.ServerException;
 import java.util.ArrayList;
 
 import javax.ejb.Handle;
+import javax.ejb.EJBObject;
 import javax.ejb.SessionBean;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
@@ -44,7 +45,7 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.26 $
+*  @version $Revision: 1.27 $
 */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -74,7 +75,7 @@ public class StatefulSessionFilePersistenceManager
         con = (StatefulSessionContainer)c;
     }
     
-    public void init()
+    public void create()
     throws Exception
     {
         
@@ -192,7 +193,7 @@ public class StatefulSessionFilePersistenceManager
         
         // Create EJBObject
         if (con.getContainerInvoker() != null)
-            ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
+            ctx.setEJBObject((EJBObject)con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
         // Create EJBLocalObject
         if (con.getLocalHomeClass() != null)
             ctx.setEJBLocalObject(con.getLocalContainerInvoker().getStatefulSessionEJBLocalObject(ctx.getId()));

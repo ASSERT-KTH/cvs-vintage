@@ -26,7 +26,7 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.metadata.SessionMetaData;
 
 /**
@@ -35,7 +35,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -100,7 +100,7 @@ public class StatefulSessionInstanceInterceptor
    
    // Interceptor implementation -----------------------------------
    
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       // Get context
@@ -109,7 +109,7 @@ public class StatefulSessionInstanceInterceptor
       EnterpriseContext ctx = container.getInstancePool().get();
 		
 		
-      // set the context on the methodInvocation
+      // set the context on the Invocation
       mi.setEnterpriseContext(ctx);
 		
       // It is a new context for sure so we can lock it
@@ -174,7 +174,7 @@ public class StatefulSessionInstanceInterceptor
       }
    }
 	
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
       AbstractInstanceCache cache =
@@ -292,7 +292,7 @@ public class StatefulSessionInstanceInterceptor
       }
    }
 	
-   protected boolean isCallAllowed(MethodInvocation mi) 
+   protected boolean isCallAllowed(Invocation mi) 
    {
       Method m = mi.getMethod();
       if (m.equals(getEJBHome) ||

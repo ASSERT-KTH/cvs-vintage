@@ -29,7 +29,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -73,7 +73,7 @@ public class SingletonStatelessSessionInstancePool
       this.con = c;
    }
 
-   public void init()
+   public void create()
       throws Exception
    {
    }
