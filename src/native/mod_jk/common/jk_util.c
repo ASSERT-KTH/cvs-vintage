@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 
@@ -697,6 +697,7 @@ void jk_init_ws_service(jk_ws_service_t *s)
     s->server_port          = 80;
     s->server_software      = NULL;
     s->content_length       = 0;
+    s->content_read         = 0;
     s->is_ssl               = JK_FALSE;
     s->ssl_cert             = NULL;
     s->ssl_cert_len         = 0;

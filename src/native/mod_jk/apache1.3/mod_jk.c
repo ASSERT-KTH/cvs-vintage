@@ -718,6 +718,16 @@ static int jk_handler(request_rec *r)
                                       l, 
                                       &is_recoverable_error);
                 
+                    if (s.content_read < s.content_length) {
+			/* Toss all further characters left to read fm client */
+			char *buff = ap_palloc(r->pool, 2048);
+			if (buff != NULL) {
+			    int rd;
+			    while ((rd = ap_get_client_block(r, buff, 2048)) > 0) {
+				s.content_read += rd;
+			    }
+			}
+		    }
                     end->done(&end, l);
                 }
             }

@@ -58,7 +58,7 @@
  *              These are the web server (ws) the worker and the connection*
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -104,6 +104,7 @@ struct jk_ws_service {
     char    *server_software;
     unsigned content_length;    /* integer that represents the content  */
                                 /* length should be 0 if unknown.        */
+    unsigned content_read;
 
     /*
      * SSL information

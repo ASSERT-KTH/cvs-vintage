@@ -57,7 +57,7 @@
  * Description: Experimental bi-directionl protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -344,6 +344,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 		}
 
 		if(read_into_msg_buff(ep, r, msg, l, len)) {
+		    r->content_read += len;
 		    return JK_AJP13_HAS_RESPONSE;
 		}                  
 
@@ -604,6 +605,7 @@ static int JK_METHOD service(jk_endpoint_t *e,
             if(!read_into_msg_buff(p, s, msg, l, len)) {
                 return JK_FALSE;
             }                  
+            s->content_read = len;
             if(!connection_tcp_send_message(p, msg, l)) {
     	        jk_log(l, JK_LOG_ERROR,
 			           "Error sending request body\n");
