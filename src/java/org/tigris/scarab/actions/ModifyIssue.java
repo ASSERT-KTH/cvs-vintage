@@ -65,6 +65,7 @@ import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 import org.apache.turbine.om.*;
+import org.apache.turbine.om.security.User;
 
 // Scarab Stuff
 import org.tigris.scarab.om.*;
@@ -76,7 +77,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.5 2001/07/07 00:11:51 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.6 2001/07/07 02:39:45 elicia Exp $
 */
 public class ModifyIssue extends VelocityAction
 {
@@ -89,8 +90,15 @@ public class ModifyIssue extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
        
+        // comment field is required to modify attributes
         Attachment attachment = new Attachment();
-        // TODO: Explanatory comment is required
+        Group commentGroup = intake.get("Attachment", "attCommentKey", false);
+        Field commentField = commentGroup.get("DataAsString");
+        commentField.setRequired(true);
+        if (!commentField.isValid() )
+        {
+        commentField.setMessage("An explanatory comment is required to modify attributes.");
+        }
 
         // set any other required flags
         Criteria crit = new Criteria()
@@ -114,7 +122,11 @@ public class ModifyIssue extends VelocityAction
             {
                 field = group.get("OptionId");
             }
-            else 
+            else if ( aval instanceof User )
+            {
+                field = group.get("UserId");
+            }
+            else
             {
                 field = group.get("Value");
             }
@@ -133,16 +145,11 @@ public class ModifyIssue extends VelocityAction
         if ( intake.isAllValid() ) 
         {
             // Save explanatory comment
-            Group commentGroup = intake.get("Attachment", "attCommentKey", false);
             commentGroup.setProperties(attachment);
-            if ( attachment.getDataAsString() != null && 
-                 !attachment.getDataAsString().equals("") )
-            {
-                attachment.setIssue(issue);
-                attachment.setTypeId(new NumberKey("2"));
-                attachment.setMimeType("text/plain");
-                attachment.save();
-            }
+            attachment.setIssue(issue);
+            attachment.setTypeId(new NumberKey("2"));
+            attachment.setMimeType("text/plain");
+            attachment.save();
                     
             // Save transaction record
             Transaction transaction = new Transaction();
@@ -216,7 +223,6 @@ public class ModifyIssue extends VelocityAction
    private void SubmitAttachment (RunData data, Context context, String type)
         throws Exception
     {                          
-        // TODO: display message if a field is missing for URL
         String id = data.getParameters().getString("id");
         Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
         IntakeTool intake = (IntakeTool)context
@@ -238,10 +244,22 @@ public class ModifyIssue extends VelocityAction
 
         if ( group != null ) 
         {
-            group.setProperties(attachment);
-            if ( attachment.getDataAsString() != null && 
-                 !attachment.getDataAsString().equals("") )
+            Field nameField = group.get("Name"); 
+            Field dataField = group.get("DataAsString"); 
+            nameField.setRequired(true);
+            dataField.setRequired(true);
+            if (!nameField.isValid() )
             {
+               nameField.setMessage("This field requires a value.");
+            }
+            if (!dataField.isValid() )
+            {
+               dataField.setMessage("This field requires a value.");
+            }
+
+            if (intake.isAllValid() )
+            {
+                group.setProperties(attachment);
                 attachment.setIssue(issue);
                 attachment.setTypeId(new NumberKey(typeID));
                 attachment.setMimeType("text/plain");
