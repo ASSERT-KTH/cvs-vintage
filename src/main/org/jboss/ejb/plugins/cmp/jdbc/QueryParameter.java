@@ -16,8 +16,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 
@@ -144,7 +142,7 @@ public final class QueryParameter
    private int jdbcType;
 
    public QueryParameter(
-      JDBCStoreManager manager,
+      JDBCEntityPersistenceStore manager,
       Method method,
       String parameterString)
    {
@@ -313,20 +311,20 @@ public final class QueryParameter
       //JDBCUtil.setParameter(log, ps, index, jdbcType, arg);
    }
 
-   private static JDBCCMPFieldBridge getCMPField(
-      JDBCStoreManager manager,
+   private static JDBCFieldBridge getCMPField(
+      JDBCEntityPersistenceStore manager,
       Class intf,
       String fieldName)
    {
       Catalog catalog = manager.getCatalog();
-      JDBCEntityBridge entityBridge = (JDBCEntityBridge)catalog.getEntityByInterface(intf);
+      JDBCAbstractEntityBridge entityBridge = (JDBCAbstractEntityBridge)catalog.getEntityByInterface(intf);
       if(entityBridge == null)
       {
          throw new IllegalArgumentException("Entity not found in application " +
             "catalog with interface=" + intf.getName());
       }
 
-      JDBCCMPFieldBridge cmpField = entityBridge.getCMPFieldByName(fieldName);
+      JDBCFieldBridge cmpField = (JDBCFieldBridge)entityBridge.getFieldByName(fieldName);
       if(cmpField == null)
       {
          throw new IllegalArgumentException("cmpField not found:" +

@@ -11,6 +11,7 @@ import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCJBossQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
 import org.jboss.deployment.DeploymentException;
 
 import javax.ejb.FinderException;
@@ -21,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class QueryFactory
 {
@@ -98,6 +99,11 @@ public class QueryFactory
             else if(q instanceof JDBCQlQueryMetaData)
             {
                QueryCommand queryCommand = new EJBQLQueryCommand(entity, (JDBCQlQueryMetaData)q);
+               queriesByMethod.put(q.getMethod(), queryCommand);
+            }
+            else if(q instanceof JDBCDeclaredQueryMetaData)
+            {
+               QueryCommand queryCommand = new DeclaredSQLQueryCommand(entity, (JDBCDeclaredQueryMetaData)q);
                queriesByMethod.put(q.getMethod(), queryCommand);
             }
             else

@@ -10,10 +10,11 @@ import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public interface JDBCEntityPersistenceStore
    extends EntityPersistenceStore
@@ -29,4 +30,6 @@ public interface JDBCEntityPersistenceStore
    void putApplicationData(Object key, Object value);
 
    EntityContainer getContainer();
+
+   Catalog getCatalog();
 }
