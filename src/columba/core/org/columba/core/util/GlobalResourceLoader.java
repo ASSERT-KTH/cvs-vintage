@@ -209,7 +209,7 @@ public class GlobalResourceLoader {
                         sBundlePath = generateBundlePath(sPath, sName);
                         bundle = (ResourceBundle) htBundles.get(sBundlePath);
                 }
-		if (bundle == null) {
+		if (bundle == null && sBundlePath != null) {
 			try {
 				// use ResourceBundle's internal classloader
 				if (classLoader == null)
