@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.4 2004/05/14 01:26:18 ejort Exp $
-$Revision: 1.4 $
+$Id: jboss_3_2.dtd,v 1.5 2004/05/21 03:43:08 ejort Exp $
+$Revision: 1.5 $
 
 Overview of the architecture of jboss.xml
 
@@ -24,6 +24,7 @@ Overview of the architecture of jboss.xml
       <ejb-name />
       <jndi-name />
       <local-jndi-name />
+      <call-by-value>
       <read-only>
       <configuration-name>
       <security-proxy>
@@ -348,7 +349,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? ,
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? call-by-value? , read-only? ,
  configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , resource-ref* ,
  resource-env-ref* , method-attributes? , clustered? , cluster-config?,
  cache-invalidation? , cache-invalidation-config?, depends*)>
@@ -362,7 +363,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, configuration-name?,
+<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value? , configuration-name?,
  invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , resource-ref* , resource-env-ref* , clustered? ,
  cluster-config?, method-attributes?, depends*)>
 
@@ -408,6 +409,13 @@ jnp-context?)>
   Used in: entity and session
 -->
 <!ELEMENT local-jndi-name (#PCDATA)>
+
+<!--
+  Determine if the bean should use by value call semantics
+
+  Used in: entity and session
+-->
+<!ELEMENT call-by-value (#PCDATA)>
 
 <!--
   The read-only element flags an entity bean as read only.
@@ -923,6 +931,16 @@ elements corresponds to the order of the interceptor chain.
   default if metricsEnabled is not explicitly given.
 -->
 <!ATTLIST interceptor metricsEnabled  (true | false )  "false">
+
+<!--
+  The call-by-value attribute is used to indicate that the interceptor
+  should only be included when the value of the attribute corresponds
+  to the value of org.jboss.metadata.BeanMetaData callByValue.
+  For example, if a bean defines the element <call-by-value>true</call-by-value>
+  then a marshalling invoker interceptor will be used instead of the
+  non marshalling optimized invoker interceptor.
+-->
+<!ATTLIST interceptor call-by-value  (true | false )  #IMPLIED>
 
 <!--
   The instance-pool element gives the class name of the instance pool
