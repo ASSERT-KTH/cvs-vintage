@@ -36,4 +36,4 @@ set CP=%CP%;%PWD%\..\..\build\classes
 echo CLASSPATH= %CP%
 
 
-java -classpath "%CP%" org.apache.tools.ant.Main %1 %2 %3 %4 %5
+java %ANT_OPTS% -classpath "%CP%" org.apache.tools.ant.Main %1 %2 %3 %4 %5
