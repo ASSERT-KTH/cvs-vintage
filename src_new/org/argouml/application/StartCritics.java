@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.4 2003/08/30 13:56:54 alexb Exp $
+// $Id: StartCritics.java,v 1.5 2003/09/04 18:26:18 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,9 @@ import java.util.Locale;
 /** StartCritics is a thread which helps to start the critiquing thread
  */
 public class StartCritics implements Runnable {
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
     public void run() {
         Designer dsgr = Designer.theDesigner();
         org.argouml.uml.cognitive.critics.Init.init();
