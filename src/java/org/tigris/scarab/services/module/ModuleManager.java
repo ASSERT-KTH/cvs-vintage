@@ -51,7 +51,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModulePeer;
 
 import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.om.security.User;
+import org.apache.turbine.services.security.entity.User;
 import org.apache.turbine.services.TurbineServices;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.util.StringUtils;
@@ -62,7 +62,7 @@ import org.apache.turbine.services.db.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.6 2001/07/11 07:33:49 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.7 2001/07/17 01:55:50 jmcnally Exp $
  */
 public abstract class ModuleManager
 {
