@@ -3,6 +3,7 @@ package org.columba.mail.pop3;
 import java.util.Vector;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -59,32 +60,35 @@ public class FetchNewMessagesCommand extends Command {
 		server = r[0].getServer();
 
 		log("Authenticating...", worker);
-		
-		totalMessageCount= server.getMessageCount();
-		
-		Vector newUIDList = fetchUIDList(totalMessageCount, worker);
 
-		Vector messageSizeList = fetchMessageSizes(worker);
+		totalMessageCount = server.getMessageCount();
 
-		Vector newMessagesUIDList = synchronize(newUIDList);
+		try {
+			Vector newUIDList = fetchUIDList(totalMessageCount, worker);
 
-		downloadNewMessages(
-			newUIDList,
-			messageSizeList,
-			newMessagesUIDList,
-			worker);
+			Vector messageSizeList = fetchMessageSizes(worker);
 
-		logout(worker);
-		
-		if ( newMessageCount==0 ) log("No new messages on server", worker);
+			Vector newMessagesUIDList = synchronize(newUIDList);
+
+			downloadNewMessages(
+				newUIDList,
+				messageSizeList,
+				newMessagesUIDList,
+				worker);
+
+			logout(worker);
+
+			if (newMessageCount == 0)
+				log("No new messages on server", worker);
+		} catch (CommandCancelledException e) {
+			server.forceLogout();
+		}
 
 	}
-	
-	protected void log(String message, WorkerStatusController worker)
-	{
-		worker.setDisplayText(server.getFolderName()+": "+message);
+
+	protected void log(String message, WorkerStatusController worker) {
+		worker.setDisplayText(server.getFolderName() + ": " + message);
 	}
-	
 
 	public void downloadMessage(
 		int index,
@@ -96,7 +100,9 @@ public class FetchNewMessagesCommand extends Command {
 		// whereas Vector numbers start with 0
 		//  -> always increase fetch number
 		Message message = server.getMessage(index + 1, serverUID, worker);
-		message.getHeader().set("columba.size", new Integer(Math.round(size / 1024)));
+		message.getHeader().set(
+			"columba.size",
+			new Integer(Math.round(size / 1024)));
 		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
 		//System.out.println("message:\n" + message.getSource());
 
@@ -167,20 +173,22 @@ public class FetchNewMessagesCommand extends Command {
 		ColumbaLogger.log.info(
 			"need to fetch " + newMessagesUIDList.size() + " messages.");
 
-		int totalSize = calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList );
-		
-		
+		int totalSize =
+			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
+
 		worker.setProgressBarMaximum(totalSize);
 		worker.setProgressBarValue(0);
-		
+
 		newMessageCount = newMessagesUIDList.size();
 		for (int i = 0; i < newMessageCount; i++) {
 			Object serverUID = newMessagesUIDList.get(i);
 
 			ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 
-			log("Fetching "+i+"/"+newMessageCount+" messages...", worker);
-			
+			log(
+				"Fetching " + i + "/" + newMessageCount + " messages...",
+				worker);
+
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
 			int index = newUIDList.indexOf(serverUID);
 			ColumbaLogger.log.info(
@@ -221,8 +229,9 @@ public class FetchNewMessagesCommand extends Command {
 		return newMessagesUIDList;
 	}
 
-	public Vector fetchMessageSizes(WorkerStatusController worker) throws Exception {
-		
+	public Vector fetchMessageSizes(WorkerStatusController worker)
+		throws Exception {
+
 		log("Fetching message size list...", worker);
 		// fetch message-size list 		
 		Vector messageSizeList = server.getMessageSizeList();
@@ -232,12 +241,14 @@ public class FetchNewMessagesCommand extends Command {
 
 	}
 
-	public Vector fetchUIDList(int totalMessageCount, WorkerStatusController worker)
+	public Vector fetchUIDList(
+		int totalMessageCount,
+		WorkerStatusController worker)
 		throws Exception {
 		// fetch UID list 
-		
+
 		log("Fetch UID list...", worker);
-				
+
 		Vector newUIDList = server.getUIDList(totalMessageCount, worker);
 		ColumbaLogger.log.info(
 			"fetched UID-list capacity=" + newUIDList.size());
@@ -249,7 +260,7 @@ public class FetchNewMessagesCommand extends Command {
 		server.logout();
 
 		ColumbaLogger.log.info("logout");
-		
+
 		log("Logout...", worker);
 	}
 }
