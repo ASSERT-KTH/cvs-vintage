@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.47 2002/09/19 04:21:17 billbarker Exp $
+rem $Id: tomcat.bat,v 1.48 2002/09/27 01:47:23 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -97,7 +97,7 @@ set _RUNJAVA="%JAVA_HOME%\bin\java"
 
 :setClasspath
 
-set CLASSPATH=%TOMCAT_INSTALL%\lib\tomcat.jar;%TOMCAT_INSTALL%\lib\common\commons-logging.jar
+set CLASSPATH=%TOMCAT_INSTALL%\lib\tomcat.jar;%TOMCAT_INSTALL%\lib\common\commons-logging-api.jar
 
 rem ----- Execute The Requested Command -------------------------------------
 

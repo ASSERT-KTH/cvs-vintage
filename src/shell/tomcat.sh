@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.34 2002/09/19 04:21:17 billbarker Exp $
+# $Id: tomcat.sh,v 1.35 2002/09/27 01:47:22 larryi Exp $
 
 # Shell script to start and stop the server
 
@@ -117,7 +117,7 @@ export MAIN
 
 oldCP=$CLASSPATH
 unset CLASSPATH
-CLASSPATH=${TOMCAT_INSTALL}/lib/tomcat.jar:${TOMCAT_INSTALL}/lib/common/commons-logging.jar
+CLASSPATH=${TOMCAT_INSTALL}/lib/tomcat.jar:${TOMCAT_INSTALL}/lib/common/commons-logging-api.jar
 
 # Ignore previous CLASSPATH
 
