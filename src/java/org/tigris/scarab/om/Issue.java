@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.290 2003/04/15 02:11:37 elicia Exp $
+ * @version $Id: Issue.java,v 1.291 2003/04/21 22:31:58 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1365,8 +1365,14 @@ public class Issue
             if (obj == null) 
             {        
                 ActivitySet activitySet = getInitialActivitySet();
-                result = activitySet.getCreatedDate();
-                ScarabCache.put(result, this, GET_CREATED_DATE);
+                // If our associated data is in a bad state (e.g. we
+                // have no entries in the SCARAB_ACTIVITY table), we
+                // might not have an ActivitySet.
+                if (activitySet != null)
+                {
+                    result = activitySet.getCreatedDate();
+                    ScarabCache.put(result, this, GET_CREATED_DATE);
+                }
             }
             else 
             {
