@@ -22,7 +22,7 @@ package org.gjt.sp.util;
 /**
  * Services work requests in the background.
  * @author Slava Pestov
- * @version $Id: WorkThread.java,v 1.5 2002/04/26 07:28:54 spestov Exp $
+ * @version $Id: WorkThread.java,v 1.6 2002/05/28 03:53:21 spestov Exp $
  */
 public class WorkThread extends Thread
 {
@@ -187,7 +187,7 @@ public class WorkThread extends Thread
 
 	private void doRequest(WorkThreadPool.Request request)
 	{
-//		Log.log(Log.DEBUG,WorkThread.class,"Running in work thread: " + request);
+		Log.log(Log.DEBUG,WorkThread.class,"Running in work thread: " + request);
 
 		try
 		{
