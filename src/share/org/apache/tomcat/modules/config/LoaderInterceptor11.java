@@ -80,6 +80,7 @@ import java.security.*;
 public class LoaderInterceptor11 extends BaseInterceptor {
     boolean useAL=false;
     boolean useNoParent=false;
+    private int attributeInfo;
     
     public LoaderInterceptor11() {
     }
@@ -97,6 +98,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	useNoParent=b;
     }
 
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
+	attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				   "req.attribute");
+    }
+    
     /** Add all WEB-INF/classes and WEB-INF/lib to the context
      *  path
      */
@@ -157,7 +165,8 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     /** Construct another class loader, when the context is reloaded.
      */
     public void reload( Request req, Context context) throws TomcatException {
-	log( "Reload event " + context.getPath() );
+	if( debug > 0 )
+	    log( "Reload event " + context.getPath() );
 
 	// construct a new loader
 	ClassLoader oldLoader=context.getClassLoader();
@@ -206,7 +215,56 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     }
     
     // --------------------
+    private static final String separator =
+	System.getProperty("path.separator", ":");
 
+    public final Object getInfo( Context ctx, Request req,
+				 int info, String k )
+    {
+	if( req!=null )
+	    return null;
+	if( info== attributeInfo ) {
+	    // request for a context attribute, handled by tomcat
+	    if( ! k.startsWith( "org.apache.tomcat" ) )
+		return null;
+	    if (k.equals("org.apache.tomcat.jsp_classpath")) {
+		return getClassPath(ctx);
+	    }
+	    if(k.equals("org.apache.tomcat.classloader")) {
+		return ctx.getClassLoader();
+	    }
+
+	}
+	return null;
+    }
+
+    static Jdk11Compat jdkProxy=Jdk11Compat.getJdkCompat();
+
+    private String getClassPath(Context ctx) {
+	StringBuffer cpath=new StringBuffer();
+	// local context class path
+	URL classPaths[]=ctx.getClassPath();
+	convertClassPath( cpath , classPaths );
+
+        ClassLoader parentLoader=ctx.getContextManager().getParentLoader();
+	// apps class path 
+	convertClassPath(cpath, jdkProxy.getParentURLs(parentLoader));
+	// common class loader
+	convertClassPath(cpath, jdkProxy.getURLs(parentLoader));
+	if( debug>9 )
+	    log("Getting classpath " + cpath);
+	return cpath.toString();
+    }
+
+    private void convertClassPath( StringBuffer cpath, URL classPaths[] ) {
+	if( classPaths==null ) return;
+	for(int i=0; i< classPaths.length ; i++ ) {
+	    URL cp = classPaths[i];
+	    if (cpath.length()>0) cpath.append( separator );
+	    cpath.append(cp.getFile());
+	}
+    }
+    
     static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
     private void getJars(Vector v, File f) {
