@@ -14,6 +14,9 @@ import java.sql.PreparedStatement;
 
 import org.jboss.ejb.DeploymentException;
 
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
 
@@ -30,35 +33,136 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class JDBCDefinedFinderCommand extends JDBCFinderCommand
-{
-   // Attributes ----------------------------------------------------
+public class JDBCDefinedFinderCommand extends JDBCFinderCommand {
    
    private JDBCDeclaredQueryMetaData metadata;
    private int[] parameterArray;
 
-   // Constructors --------------------------------------------------
+   public JDBCDefinedFinderCommand(JDBCStoreManager manager, 
+         JDBCQueryMetaData q) throws DeploymentException {
 
-   public JDBCDefinedFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) throws DeploymentException {
       super(manager, q);
 
       metadata = (JDBCDeclaredQueryMetaData) q;
       
-      StringBuffer sql = new StringBuffer();
+      initSelectObject();
+
+      String sql = buildSQL();
+
+      setSQL(parseParameters(sql));
+
+    }
+ 
+   protected void setParameters(PreparedStatement ps, Object argOrArgs) 
+         throws Exception {
+
+      Object[] args = (Object[])argOrArgs;
+   
+      for(int i = 0; i < parameterArray.length; i++) {
+         Object arg = args[parameterArray[i]];
+         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(
+               arg.getClass());
+         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
+      }
+   }
+   
+   /**
+    * Initializes the entity or field to be selected.
+    * @throws DeploymentException if the specified object is invalid or
+    *    non-existant
+    */
+   private void initSelectObject() throws DeploymentException {
+      if(metadata.getEJBName() != null) {
+         Container c = manager.getContainer().getApplication().getContainer(
+               metadata.getEJBName());
+
+
+         if( !(c instanceof EntityContainer)) {
+            throw new DeploymentException("declared sql can only select an " +
+                  "entity bean");
+         }      
+         EntityContainer entityContainer = (EntityContainer) c;
       
-      String from = metadata.getFrom();
-      if(from != null && from.length()>0) {
-         sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields(), entityMetaData.getTableName()));
-         sql.append(" FROM ").append(entityMetaData.getTableName());
-      } else {
-         sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
-         sql.append(" FROM ").append(entityMetaData.getTableName());
+         // check that the entity is managed by a CMPPersistenceManager
+         if( !(entityContainer.getPersistenceManager() instanceof 
+                  CMPPersistenceManager)) {
+            throw new DeploymentException("declared-sql can only select " +
+                  "cmp entities.");
+         }                  
+         CMPPersistenceManager cmpPM = (CMPPersistenceManager)
+               entityContainer.getPersistenceManager();
+         if( !(cmpPM.getPersistenceStore() instanceof JDBCStoreManager)) {
+            throw new DeploymentException("declared-sql can only select " +
+                  "a JDBC cmp entity.");
+         }
+         JDBCStoreManager storeManager = (JDBCStoreManager)
+               cmpPM.getPersistenceStore();
+      
+         if(storeManager.getEntityBridge() == null) {
+             throw new DeploymentException("The entity to select has not be " +
+                   "properly initialized");
+         }
+         
+         if(metadata.getFieldName() != null) {
+            selectEntity = null;
+            selectCMPField = storeManager.getEntityBridge()
+                  .getCMPFieldByName(metadata.getFieldName());
+            if(selectCMPField == null) {
+               throw new DeploymentException("Unknown cmp field: " +
+                     metadata.getFieldName());
+            }
+         } else {
+            selectEntity = storeManager.getEntityBridge();
+         }
+      }
+   }
+   
+   /**
+    * Builds the sql statement based on the delcared-sql metadata specification.
+    * @return the sql statement for this query
+    */
+   private String buildSQL() {
+      StringBuffer sql = new StringBuffer();
+
+      sql.append("SELECT ");
+      if(metadata.isSelectDistinct()) {
+         sql.append("DISTINCT ");
       }
       
-      String where = parseWhere(metadata.getWhere());
-      if(where.length() > 0) {
+      String from = metadata.getFrom();
+      if(from != null && from.trim().length()>0) {
+         if(selectCMPField == null) {
+            sql.append(SQLUtil.getColumnNamesClause(
+                  selectEntity.getJDBCPrimaryKeyFields(), 
+                  selectEntity.getMetaData().getTableName()));
+            sql.append(" FROM ");
+            sql.append(selectEntity.getMetaData().getTableName());
+         } else {
+            sql.append(SQLUtil.getColumnNamesClause(
+                  selectCMPField,
+                  selectCMPField.getMetaData().getEntity().getTableName()));
+            sql.append(" FROM ");
+            sql.append(selectCMPField.getMetaData().getEntity().getTableName());
+         }
+
+         sql.append(" ").append(from);
+      } else {
+         if(selectCMPField == null) {
+            sql.append(SQLUtil.getColumnNamesClause(
+                  selectEntity.getJDBCPrimaryKeyFields()));
+            sql.append(" FROM ");
+            sql.append(selectEntity.getMetaData().getTableName());
+         } else {
+            sql.append(SQLUtil.getColumnNamesClause(selectCMPField));
+            sql.append(" FROM ");
+            sql.append(selectCMPField.getMetaData().getEntity().getTableName());
+         }
+      }
+      
+      String where = metadata.getWhere();
+      if(where != null && where.trim().length() > 0) {
          sql.append(" WHERE ").append(where);
       }
       
@@ -71,54 +175,52 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       if(other != null && other.trim().length() > 0) {
          sql.append(other);
       }
-
-      setSQL(sql.toString());
+      return sql.toString();
    }
- 
-   // JDBCFinderCommand overrides ------------------------------------
 
-   protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
-      Object[] args = (Object[])argOrArgs;
-   
-      for(int i = 0; i < parameterArray.length; i++) {
-         Object arg = args[parameterArray[i]];
-         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
-         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
-      }
-   }
-   
-   protected String parseWhere(String where) throws DeploymentException {
-      StringBuffer whereBuf = new StringBuffer();
+   /**
+    * Replaces the parameters in the specifiec sql with question marks, and 
+    * initializes the parameter setting code. Parameters are encoded in curly
+    * brackets use a zero based index.
+    * @param sql the sql statement that is parsed for parameters
+    * @return the original sql statement with the parameters replaced with a 
+    *    question mark
+    * @throws DeploymentException if a error occures while parsing the sql
+    */
+   private String parseParameters(String sql) throws DeploymentException {
+      StringBuffer sqlBuf = new StringBuffer();
       ArrayList parameters = new ArrayList();      
       
       // Replace placeholders {0} with ?
-      if(where != null) {
-         where = where.trim();
+      if(sql != null) {
+         sql = sql.trim();
 
-         StringTokenizer queryWhere = new StringTokenizer(where,"{}", true);
-         while(queryWhere.hasMoreTokens()) {
-            String token = queryWhere.nextToken();
+         StringTokenizer tokens = new StringTokenizer(sql,"{}", true);
+         while(tokens.hasMoreTokens()) {
+            String token = tokens.nextToken();
             if(token.equals("{")) {
                
-               token = queryWhere.nextToken();
+               token = tokens.nextToken();
                try {
                   Integer parameterIndex = new Integer(token);
                   
-                  // of if we are here we can assume that we have a parameter and not a function
-                  whereBuf.append("?");
+                  // of if we are here we can assume that we have 
+                  // a parameter and not a function
+                  sqlBuf.append("?");
                   parameters.add(parameterIndex);
                   
-                  if(!queryWhere.nextToken().equals("}")) {
-                     throw new DeploymentException("Invalid parameter - missing closing '}' : " + where);
+                  if(!tokens.nextToken().equals("}")) {
+                     throw new DeploymentException("Invalid parameter - " +
+                           "missing closing '}' : " + sql);
                   }
                } catch(NumberFormatException e) {
                   // ok we don't have a parameter, we have a function
                   // push the tokens on the buffer and continue
-                  whereBuf.append("{").append(token);                  
+                  sqlBuf.append("{").append(token);                  
                }   
             } else {
                // not parameter... just append it
-               whereBuf.append(token);
+               sqlBuf.append(token);
             }
          }
       }
@@ -129,6 +231,6 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
          parameterArray[i] = ((Integer)parameters.get(i)).intValue();
       }
       
-      return whereBuf.toString().trim();
+      return sqlBuf.toString().trim();
    }
 }
