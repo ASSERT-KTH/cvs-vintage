@@ -6,14 +6,12 @@
  */
 package org.jboss.system;
 
-import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -29,7 +27,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.6 $ <p>
+ * @version $Revision: 1.7 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import

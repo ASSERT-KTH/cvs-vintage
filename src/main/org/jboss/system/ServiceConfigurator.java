@@ -15,7 +15,6 @@ import java.beans.PropertyEditorManager;
 import java.io.StringWriter;
 import java.io.Writer;   
 import java.lang.reflect.Method;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -42,7 +41,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

@@ -9,7 +9,6 @@ package org.jboss.system;
 import javax.management.ObjectName;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Document;
 
 /** 
  * This is the main Service Controller API.
@@ -20,7 +19,7 @@ import org.w3c.dom.Document;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

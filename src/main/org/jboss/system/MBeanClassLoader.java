@@ -7,27 +7,15 @@
 package org.jboss.system;
 
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.io.InputStream;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-
-import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.MBeanServerFactory;
-import javax.management.MBeanException;
-import javax.management.InstanceNotFoundException;
-import javax.management.ReflectionException;
-import javax.management.MalformedObjectNameException;
-import javax.management.loading.MLet;
 
 /**
  * The pupose of MBeanCL is to load the classes on behalf of an MBean.
  * 
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>

@@ -32,7 +32,6 @@ import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
 import org.w3c.dom.Element;
-import javax.management.IntrospectionException;
 import org.jboss.logging.Logger;
 
 /**
@@ -42,7 +41,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.13 $ <p>
+ * @version $Revision: 1.14 $ <p>
  *
  * <b>Revisions:</b> <p>
  *

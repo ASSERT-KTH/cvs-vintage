@@ -7,17 +7,10 @@
 
 package org.jboss.system;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.List;
-import java.util.ListIterator;
-import javax.management.ObjectName;
+import java.util.ListIterator;import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.management.MBeanRegistration;
 import javax.management.RuntimeMBeanException;
-import javax.management.RuntimeOperationsException;
 import org.apache.log4j.Category;
 
 /**
@@ -25,7 +18,7 @@ import org.apache.log4j.Category;
  * provides the ability to handle user shutdown requests.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class Shutdown implements MBeanRegistration, ShutdownMBean {
     // Constants -----------------------------------------------------

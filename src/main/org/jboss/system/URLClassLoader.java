@@ -9,17 +9,7 @@ package org.jboss.system;
 import java.net.URL;
 import java.io.InputStream;
 
-import java.util.Map;
-import java.util.HashMap;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.MBeanServerFactory;
-import javax.management.MBeanException;
-import javax.management.InstanceNotFoundException;
-import javax.management.ReflectionException;
-import javax.management.MalformedObjectNameException;
-import javax.management.loading.MLet;
 
 /**
  * The URLClassLoader is associated with a given URL.
@@ -30,7 +20,7 @@ import javax.management.loading.MLet;
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
