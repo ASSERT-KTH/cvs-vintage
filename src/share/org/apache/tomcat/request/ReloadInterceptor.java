@@ -103,8 +103,8 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    context.setDependManager( dm );
 	}
 
-	File inf_xml = cm.getAbsolute( new File(context.getDocBase() +
-						"/WEB-INF/web.xml"));
+	File inf_xml = new File(context.getAbsolutePath() +
+				"/WEB-INF/web.xml");
 	if( inf_xml.exists() ) {
 	    Dependency dep=new Dependency();
 	    dep.setTarget("web.xml");

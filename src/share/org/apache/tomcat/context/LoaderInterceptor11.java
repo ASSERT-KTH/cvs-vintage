@@ -83,14 +83,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     public void addContext( ContextManager cm, Context context)
 	throws TomcatException
     {
-        String base = context.getDocBase();
+        String base = context.getAbsolutePath();
 
 	// Add "WEB-INF/classes"
 	File dir = new File(base + "/WEB-INF/classes");
 
         // GS, Fix for the jar@lib directory problem.
         // Thanks for Kevin Jones for providing the fix.
-        dir = cm.getAbsolute(dir);
 	if( dir.exists() ) {
 	    try {
 		URL url=new URL( "file", null, dir.getAbsolutePath() + "/" );
@@ -99,14 +98,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    }
         }
 
-        File f = cm.getAbsolute(new File(base + "/WEB-INF/lib"));
+        File f = new File(base + "/WEB-INF/lib");
 	Vector jars = new Vector();
 	getJars(jars, f);
 
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
-	    File jarF=new File(f, jarfile );
-	    File jf=cm.getAbsolute( jarF );
+	    File jf=new File(f, jarfile );
 	    String absPath=jf.getAbsolutePath();
 	    try {
 		URL url=new URL( "file", null, absPath );

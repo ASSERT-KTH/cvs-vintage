@@ -1142,8 +1142,7 @@ public final class ContextManager implements LogAware{
 	if( path!=null ) {
 	    File f=new File( path );
 	    if( ! f.isAbsolute() ) {
-		// Make it relative to home !
-		File wd= getAbsolute( f );
+		File wd= new File(getHome(), f.getPath());
 		l.setPath( wd.getAbsolutePath() );
 	    }
 	    // create the files, ready to log.
@@ -1375,17 +1374,8 @@ public final class ContextManager implements LogAware{
 	return getInstallDir();
     }
 
-    /** Convert a relative name to absolute by using the "home" property
+    /** Default container
      */
-    public File getAbsolute(File f) {
-        if (!f.isAbsolute()) {
-            // evaluate repository path relative to the context's home
-	    // directory
-	    return new File(getHome(), f.getPath());
-        }
-        return f;
-    }
-
     public Container getContainer() {
         return defaultContainer;
     }
@@ -1393,20 +1383,4 @@ public final class ContextManager implements LogAware{
     public void setContainer(Container newDefaultContainer) {
         defaultContainer = newDefaultContainer;
     }
-
-
-    // Do we need that ?
-    
-    //     /** Map the context facade back to the context.
-    // 	This call doesn't involve any security checks, and
-    // 	can be used by internal components (  they
-    // 	already have access to ContextManager ).
-    // 	Servlets need to call getAttribute(), and that
-    // 	will do the required security checks
-    //     */
-    //     public Context getRealContext( Object facade ) {
-    // 	return null;
-    //     }
-
-
 }

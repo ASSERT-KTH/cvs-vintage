@@ -103,7 +103,7 @@ public class PolicyInterceptor extends BaseInterceptor {
 	    if( null == System.getProperty("java.security.policy")) {
 		if( policyFile==null ) {
 		    // XXX ugly API - change CM
-		    File f=cm.getAbsolute(new File("conf/tomcat.policy"));
+		    File f= new File(cm.getHome(), "conf/tomcat.policy");
 		    policyFile=f.getPath();
 		}
 		log("Setting policy file to " + policyFile);
@@ -147,10 +147,10 @@ public class PolicyInterceptor extends BaseInterceptor {
 	throws TomcatException
     {
 	ContextManager cm = context.getContextManager();
-	String base = context.getDocBase();
+	String base = context.getAbsolutePath();
 	    
 	try {	
-	    File dir = cm.getAbsolute(new File(base));
+	    File dir = new File(base);
 	    URL url = new URL("file:" + dir.getAbsolutePath());
 	    CodeSource cs = new CodeSource(url,null);
 	    

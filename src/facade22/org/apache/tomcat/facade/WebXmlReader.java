@@ -103,8 +103,8 @@ public class WebXmlReader extends BaseInterceptor {
 	    // default should be inside
 	    // readDefaultWebXml( ctx );
 	    
-	    File inf_xml = cm.getAbsolute( new File(ctx.getDocBase() +
-						    "/WEB-INF/web.xml"));
+	    File inf_xml = new File(ctx.getAbsolutePath() +
+				    "/WEB-INF/web.xml");
 	    if( inf_xml.exists() )
 		processWebXmlFile(ctx, inf_xml.getPath() );
 
