@@ -26,7 +26,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: ToDoItem.java,v 1.2 2002/03/27 19:57:51 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -262,7 +262,7 @@ public class ToDoItem implements java.io.Serializable {
    *  raised this issue is no longer present. */
   public boolean stillValid(Designer d) {
     if (_poster == null) return true;
-    if (_wizard != null && _wizard.isStarted() && !_wizard.isFinsished())
+    if (_wizard != null && _wizard.isStarted() && !_wizard.isFinished())
       return true;
     return _poster.stillValid(this, d);
   }
