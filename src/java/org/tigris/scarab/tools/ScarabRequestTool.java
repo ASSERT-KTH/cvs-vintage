@@ -1338,35 +1338,27 @@ try{
             data.setMessage("Please enter a search field.");
             return null ;
         }
-
-        // Build list of eligible assignees for this issue
-        ScarabUser[] eligibleUsers = module.getUsers(module.getUserPermissions(getCurrentIssueType()));
-        List userIds = new ArrayList();
-        for (int i = 0; i < eligibleUsers.length; i++)
-        {
-            userIds.add(eligibleUsers[i].getUserId());
-        }
-
-        Criteria crit = new Criteria();
-        crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
-        String searchTerm = "%" + searchString + "%";
+        
+        String firstName = null;
+        String lastName = null;
+        String email = null;
         if (searchField.equals("First Name"))
         {
-            crit.add(ScarabUserImplPeer.FIRST_NAME, 
-                    (Object)searchTerm, Criteria.LIKE);
+            firstName = searchString;
         }
         else if (searchField.equals("Last Name"))
         {
-            crit.add(ScarabUserImplPeer.LAST_NAME,  
-                    (Object)searchTerm, Criteria.LIKE);
+            lastName = searchString;
         }
         else
         {
-            crit.add(ScarabUserImplPeer.LOGIN_NAME, 
-                    (Object)searchTerm, Criteria.LIKE);
+            email = searchString;
         }
-        return ScarabUserImplPeer.doSelect(crit);
+
+        return module.getUsers(firstName, lastName, null, email, 
+                               getCurrentIssueType());
     }
+
 
     /**
      * Return a subset of the passed-in list.

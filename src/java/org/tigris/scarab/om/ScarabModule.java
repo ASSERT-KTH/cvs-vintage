@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.83 2002/01/18 22:26:07 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.84 2002/01/27 21:21:12 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -162,6 +162,52 @@ public class ScarabModule
             scarabUsers = new ScarabUser[0];
         }
         return scarabUsers;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String, String, String, IssueType)
+     */
+    public List getUsers(String firstName, String lastName, 
+                         String username, String email, IssueType issueType)
+        throws Exception
+    {
+        ScarabUser[] eligibleUsers = getUsers(getUserPermissions(issueType));
+        List userIds = new ArrayList();
+        for (int i = 0; i < eligibleUsers.length; i++)
+        {
+            userIds.add(eligibleUsers[i].getUserId());
+        }
+        Criteria crit = new Criteria();
+        crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+
+        if (firstName != null)
+        {
+            crit.add(ScarabUserImplPeer.FIRST_NAME, addWildcards(firstName), 
+                     Criteria.LIKE);
+        }
+        if (lastName != null)
+        {
+            crit.add(ScarabUserImplPeer.LAST_NAME, addWildcards(lastName), 
+                     Criteria.LIKE);
+        }
+        if (username != null)
+        {
+            crit.add(ScarabUserImplPeer.LOGIN_NAME, addWildcards(username), 
+                     Criteria.LIKE);
+        }
+        if (email != null)
+        {
+            crit.add(ScarabUserImplPeer.EMAIL, addWildcards(email), 
+                     Criteria.LIKE);
+        }
+        return ScarabUserImplPeer.doSelect(crit);
+    }
+
+    private Object addWildcards(String s)
+    {
+        return new StringBuffer(s.length() + 2)
+            .append('%').append(s).append('%').toString(); 
     }
 
     /**
