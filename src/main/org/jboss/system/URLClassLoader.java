@@ -29,7 +29,7 @@ import javax.management.loading.MLet;
  *    resources and classes.
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -42,12 +42,50 @@ public class URLClassLoader
 {
    /** One URL per classLoader in our case */
    private URL url = null;
-	
    /** An SCL can also be loading on behalf of an MBean */
    private ObjectName mbean = null;
 	
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
+	
+	/**
+	* One url per SCL
+	*
+	* @param String application
+	* @param ClassLoader parent
+	*/
+	public URLClassLoader( String pUrl )
+	{
+      super( new URL[] {} );
+      try {
+         URL lUrl = new URL( pUrl );
+         addURL( lUrl );
+         this.url = lUrl;
+      }
+      catch( Exception e ) {
+			System.out.println("[GPA] WARNING: URL "+url+" is not valid");
+      }
+      
+		try {
+			
+			url.openStream();
+			
+			
+			if (libraries == null) libraries = ServiceLibraries.getLibraries();
+			
+/*
+			//Reload the library if necessary
+			if (reload) 
+					libraries.removeClassLoader(this) ;
+*/
+
+			// A URL enabled SCL must register itself with the libraries to be queried
+			libraries.addClassLoader(this);
+		}
+		catch(Exception e) { 
+			System.out.println("[GPA] WARNING: URL "+url+" could not be opened");
+		}
+	}
 	
    /**
     * One url per SCL

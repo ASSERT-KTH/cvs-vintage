@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class XMLAdaptorService
   extends ServiceMBeanSupport
@@ -89,7 +89,8 @@ public class XMLAdaptorService
     }
     catch( Exception e )
     {
-      log.exception( e );
+// AS ToDo
+//      log.exception( e );
     }
   }
 	private void bind( XMLAdaptorImpl pImplementation )
@@ -125,14 +126,16 @@ public class XMLAdaptorService
       );
 		lContext.bind( lName.get( 0 ), lReference );
 
-		log.log( "JBoss XML Adaptor Service '" + JNDI_NAME + "' bound to " + JNDI_NAME );
+// AS ToDo
+//		log.log( "JBoss XML Adaptor Service '" + JNDI_NAME + "' bound to " + JNDI_NAME );
 	}
 
 	private void unbind() throws NamingException
 	{
       new InitialContext().unbind( JNDI_NAME );
       NonSerializableFactory.unbind( JNDI_NAME );
-      log.log("JBoss XML Adaptor service '" + JNDI_NAME + "' removed from JNDI" );
+// AS ToDo
+//      log.log("JBoss XML Adaptor service '" + JNDI_NAME + "' removed from JNDI" );
 	}
 
 }

@@ -27,7 +27,7 @@ import javax.management.ReflectionException;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
-import org.jboss.logging.Log;
+// import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -105,7 +105,8 @@ public class RMIConnectorService
 			new InitialContext().unbind( getJNDIName() );
 		}
 		catch( Exception e )	{
-			log.exception( e );
+// AS ToDo
+//			log.exception( e );
 		}
 	}
 }
