@@ -107,6 +107,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributeManager;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
@@ -560,8 +561,37 @@ try{
         }
         catch(Exception e){e.printStackTrace();}
         return attributeOption;
-   }
+    }
 
+    /**
+     * First attempts to get the RModuleUserAttributes from the user.
+     * If it is empty, then it will try to get the defaults from the module.
+     * If anything fails, it will return an empty list.
+     */
+    public List getRModuleUserAttributes()
+    {
+        List result = null;
+        try
+        {
+            Module module = getCurrentModule();
+            IssueType issueType = getCurrentIssueType();
+            result = ((ScarabUser)data.getUser())
+                .getRModuleUserAttributes(module, issueType);
+            if (result.isEmpty())
+            {
+                result = module.getDefaultRModuleUserAttributes(issueType);
+            }
+        }
+        catch (Exception e)
+        {
+        }
+        if (result == null)
+        {
+            result = new ArrayList();
+        }
+        return result;
+    }
+    
     /**
      * A Query object for use within the Scarab API.
      */
@@ -989,6 +1019,20 @@ try{
         }        
     }
 
+    public RModuleIssueType getCurrentRModuleIssueType()
+    {
+        RModuleIssueType rmit = null;
+        try
+        {
+            rmit = ((ScarabUser)data.getUser()).getCurrentRModuleIssueType();
+        }
+        catch (Exception e)
+        {
+            Log.get().debug("getCurrentRModuleIssueType: ", e);
+        }
+        return rmit;
+    }
+
     /**
      * Looks at the current RModuleIssueType and if it is null,
      * returns the users homepage. If it is not null, and is 
@@ -1000,7 +1044,7 @@ try{
         String nextTemplate = null;
         try
         {
-            rmit = ((ScarabUser)data.getUser()).getCurrentRModuleIssueType();
+            rmit = getCurrentRModuleIssueType();
             if (rmit == null)
             {
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
