@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.19 2003/09/17 21:11:47 thierrylach Exp $
+// $Id: ProjectManager.java,v 1.20 2003/09/19 11:46:37 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -315,7 +315,7 @@ public final class ProjectManager {
             XMIReader xmiReader = null;
             try {
                 xmiReader = new org.argouml.xml.xmi.XMIReader();
-            } catch (SAXException se) { // duh, this must be _catched and handled
+            } catch (SAXException se) { // duh, this must be catched and handled
                 _cat.error(se);
                 throw se;
             } catch (ParserConfigurationException pc) {
