@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.55 2003/02/17 19:48:56 spestov Exp $
+ * @version $Id: View.java,v 1.56 2003/02/20 22:17:14 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1257,14 +1257,15 @@ public class View extends JFrame implements EBComponent
 		dockableWindowManager.propertiesChanged();
 		status.propertiesChanged();
 
+		removeToolBar(status);
+		getContentPane().remove(status);
+
 		if(jEdit.getBooleanProperty("view.toolbar.alternateLayout"))
 		{
 			getContentPane().add(BorderLayout.NORTH,topToolBars);
 			getContentPane().add(BorderLayout.SOUTH,bottomToolBars);
 			if(!plainView && jEdit.getBooleanProperty("view.status.visible"))
 				addToolBar(BOTTOM_GROUP,STATUS_BAR_LAYER,status);
-			else
-				removeToolBar(status);
 		}
 		else
 		{
@@ -1273,12 +1274,7 @@ public class View extends JFrame implements EBComponent
 			dockableWindowManager.add(DockableWindowManager.DockableLayout
 				.BOTTOM_TOOLBARS,bottomToolBars);
 			if(!plainView && jEdit.getBooleanProperty("view.status.visible"))
-			{
-				removeToolBar(status);
 				getContentPane().add(BorderLayout.SOUTH,status);
-			}
-			else
-				getContentPane().remove(status);
 		}
 
 		getRootPane().revalidate();
