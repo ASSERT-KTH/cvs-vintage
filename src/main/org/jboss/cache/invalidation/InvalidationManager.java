@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>Revisions:</b>
  *
@@ -114,7 +114,7 @@ public class InvalidationManager
       if (log.isTraceEnabled ())
          log.trace ("Batch cache invalidation. Caches concerned: " + invalidations.length);
       
-      this.crossDomainBatchInvalidate (null, invalidations, this.DEFAULT_TO_ASYNCHRONOUS_MODE);      
+      this.crossDomainBatchInvalidate (null, invalidations, asynchronous);
    }
 
    public void invalidateAll(String groupName)
