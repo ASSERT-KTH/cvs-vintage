@@ -18,7 +18,7 @@
 	<pathelement 
 		path="${stests.home}/WEB-INF/classes" />
 	<pathelement 
-		path="${tomcat.home}/lib/container/tomcat_util.jar" />
+		path="${tomcat.home}/webapps/admin/WEB-INF/lib/tomcat_util_test.jar" />
 	<pathelement 
 		path="${tomcat.home}/lib/container/jaxp.jar" />
 	<pathelement 
