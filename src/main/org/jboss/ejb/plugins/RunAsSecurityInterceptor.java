@@ -22,7 +22,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -69,10 +69,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
       try
       {
          Object returnValue = getNext().invokeHome(mi);
@@ -80,10 +77,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityAssociation.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -93,10 +87,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsIdentity != null)
-      {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
-      }
+      SecurityActions.pushRunAsIdentity(runAsIdentity);
       try
       {
          Object returnValue = getNext().invoke(mi);
@@ -104,10 +95,7 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsIdentity != null)
-         {
-            SecurityAssociation.popRunAsIdentity();
-         }
+         SecurityActions.popRunAsIdentity();
       }
    }
 
