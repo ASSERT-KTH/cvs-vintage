@@ -3,7 +3,7 @@
 <server>
 
   <depends>JBOSS-SYSTEM:service=Naming</depends>
-  <depends>:service=Jetty</depends>
+  <depends>JBOSS-SYSTEM:service=Jetty</depends>
 
   <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->
@@ -23,7 +23,7 @@
 	 name="J2EE:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
     <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=Jetty</attribute>
+    <attribute name="WarDeployerName">JBOSS-SYSTEM:service=Jetty</attribute>
   </mbean>
 
   <!-- 
@@ -34,7 +34,7 @@
          name="J2EE:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
     <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=Jetty</attribute>
+    <attribute name="WarDeployerName">JBOSS-SYSTEM:service=Jetty</attribute>
   </mbean>
   -->
 
