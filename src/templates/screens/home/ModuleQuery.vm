@@ -1,8 +1,5 @@
 <div id="home-modulequery" class="app">
 
-
-
-
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -26,16 +23,24 @@
   choose one of the following three options, select multiple issue types, 
   and click "Go"
 </div>
-<div class="colbar">	
-  <div><input type="radio" name="querytype" value="custom" />&nbsp;
+
+<div class="colbar">
+  #set ($checked = false)
+  #if (!$data.Parameters.getString("querytype") || $data.Parameters.getString("querytype") == "custom")
+      #set ($checked = true)
+  #end
+  <div><input type="radio" name="querytype" value="custom" 
+       #if ($checked)checked="checked"#end />&nbsp;
     <strong>Query selected:</strong> query common fields from issue types in 
     this module
   </div>
-  <div><input type="radio" name="querytype" value="all" />&nbsp;
+  <div><input type="radio" name="querytype" value="all"
+       #if ($data.Parameters.getString("querytype") == "all")checked="checked"#end />&nbsp;
     <strong>All issues:</strong> generates a list of all issues from issue 
     types selected from the list
   </div>
-  <div><input type="radio" name="querytype" value="my" />&nbsp;
+  <div><input type="radio" name="querytype" value="my"
+       #if ($data.Parameters.getString("querytype") == "my")checked="checked"#end />&nbsp;
     <strong>My issues:</strong>
   </div>
 </div>
@@ -47,16 +52,30 @@
     <th>Description</th>
   </tr>
 
+#set ($rmits = $scarabR.CurrentModule.RModuleIssueTypes)
+#set ($isMoreThanOne = $rmits.size() > 1)
+#if ($isMoreThanOne)
   <tr class="a">        
-    <td><input type="checkbox" name="allit" value="true"/></td>
+#set ($checked = !$data.Parameters.getString("rmit_id"))
+    <td><input type="checkbox" name="allit" value="true"
+        #checked($checked) /></td>
     <td>All issue types</td>
     <td>Query all issue types in this list</td>
   </tr>        
-
-#foreach ($rmit in $scarabR.CurrentModule.RModuleIssueTypes)
-  #indexedRows2($velocityCount)        
+#end
+#set ($checked = !$isMoreThanOne)
+#foreach ($rmit in $rmits)
+  #if ($isMoreThanOne)
+    #indexedRows2($velocityCount)
+  #else
+    #indexedRows($velocityCount)
+  #end
     <td>
-      <input type="checkbox" name="rmit_id" value="$rmit.QueryKey"/>
+  #if ($data.Parameters.getString("rmit_id") == $rmit.QueryKey)
+      #set ($checked = true)
+  #end
+      <input type="checkbox" name="rmit_id" value="$rmit.QueryKey" #checked($checked) />
+      #set ($checked = false)
     </td>
     <td><a href="$link.setPage("AdvancedQuery.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $rmit.IssueType.QueryKey).addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "AdvancedQuery.vm").setAction("SelectIssueType")">$rmit.DisplayName</a></td>
     <td>$rmit.IssueType.Description</td>
