@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: Import.java,v 1.27 2003/03/19 14:48:57 lepekhine Exp $
+//$Id: Import.java,v 1.28 2003/03/19 23:10:28 alexb Exp $
 
 package org.argouml.uml.reveng;
 
@@ -55,8 +55,8 @@ import org.apache.log4j.Category;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Revision: 1.27 $
- * <p>$Date: 2003/03/19 14:48:57 $
+ * <p>$Revision: 1.28 $
+ * <p>$Date: 2003/03/19 23:10:28 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -446,6 +446,13 @@ class ImportRun implements Runnable {
 class ImportStatusBar extends StatusBar {
     public void setMaximum(int i) { _progress.setMaximum(i); }
     public void setValue(int i) { _progress.setValue(i); }
+    
+    public ImportStatusBar() {
+        
+        super();
+        _progress.setPreferredSize(new Dimension(150, 30));
+    }
+
 }
 
 /**
@@ -481,7 +488,6 @@ class ImportStatusScreen extends JDialog {
 	getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         
         Dimension contentPaneSize = getContentPane().getPreferredSize();
-	setSize(contentPaneSize.width, contentPaneSize.height);
 	setLocation(scrSize.width/2 - contentPaneSize.width/2,
 		    scrSize.height/2 - contentPaneSize.height/2);
         pack();
@@ -490,7 +496,8 @@ class ImportStatusScreen extends JDialog {
 
     public void setMaximum(int i) { _statusBar.setMaximum(i);numberOfFiles = i; }
     public void setValue(int i) {
-	_statusBar.setValue(i);
+        
+        _statusBar.setValue(i);
         progressLabel.setText("Parsing file "+i+" of "+numberOfFiles+".");
 	repaint();
     }
