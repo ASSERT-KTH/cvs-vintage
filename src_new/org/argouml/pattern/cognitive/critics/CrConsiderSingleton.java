@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.17 2003/08/30 18:47:05 alexb Exp $
+// $Id: CrConsiderSingleton.java,v 1.18 2004/07/21 13:12:13 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,6 +111,9 @@ public class CrConsiderSingleton extends CrUML {
         // ... and not incompletely imported
         if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
 
+        	// abstract classes are hardly ever singletons
+        if (ModelFacade.isAbstract(dm)) return NO_PROBLEM;
+        
         // Check for Singleton stereotype, uninitialised instance variables and
         // outgoing associations, as per JavaDoc above.
 
