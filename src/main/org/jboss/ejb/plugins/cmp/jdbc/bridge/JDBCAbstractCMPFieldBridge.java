@@ -20,7 +20,6 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
-import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
@@ -41,7 +40,7 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    protected JDBCStoreManager manager;
@@ -114,7 +113,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       } catch(Exception e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error getting primary key " +
-               "field member " + getFieldName() + ": " + e);
+               "field member " + getFieldName(), e);
       }
    }
 
@@ -145,7 +144,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       } catch(Exception e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error setting instance field " +
-               getFieldName() + ": " + e);
+               getFieldName(), e);
       }
    }
 
@@ -219,7 +218,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       } catch(SQLException e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error setting parameters for field " +
-               getFieldName() + ": " + e);
+               getFieldName(), e);
       }
    }   
 
@@ -243,9 +242,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          throw e;
       } catch(Exception e) {
          // Non recoverable internal exception
-         e.printStackTrace();
          throw new EJBException("Internal error getting results for field " +
-               getFieldName() + ": " + e);
+               getFieldName(), e);
       }
    }      
    
@@ -291,7 +289,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       } catch(SQLException e) {
          // Non recoverable internal exception
          throw new EJBException("Internal error getting results " +
-               "for field member " + getFieldName() + ": " + e);
+               "for field member " + getFieldName(), e);
       }
    }
    
