@@ -9,14 +9,14 @@ package org.jboss.web;
 import java.net.URL;
 import java.util.Iterator;
 
-import org.w3c.dom.Element;
+import org.jboss.metadata.WebMetaData;
 
 /** A WebApplication represents the information for a war deployment.
 
 @see AbstractWebContainer
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.5 $
 */
 public class WebApplication
 {
@@ -26,10 +26,8 @@ public class WebApplication
     String name = "";
     /** URL where this application was deployed from */
     URL url;
-    /** The root element of thw web-app.xml descriptor. */
-    Element webApp;
-    /** The root element of thw jboss-web.xml descriptor. */
-    Element jbossWeb;
+    /** The web app metadata from the web.xml and jboss-web.xml descriptors */
+    WebMetaData metaData;
     /** Arbitary data object for storing application specific data */
     Object data;
 
@@ -37,6 +35,14 @@ public class WebApplication
      */
     public WebApplication()
     {
+    }
+    /** Create a WebApplication instance with with given web-app metadata.
+     @param metaData, the web-app metadata containing the web.xml and
+     jboss-web.xml descriptor metadata.
+     */
+    public WebApplication(WebMetaData metaData)
+    {
+       this.metaData = metaData;
     }
     /** Create a WebApplication instance with with given name,
         url and class loader.
@@ -102,34 +108,20 @@ public class WebApplication
         this.url = url;
     }
 
-    /** Getter for property webApp.
-     * @return Value of property webApp.
+    /** Getter for property metaData.
+     * @return Value of property metaData.
      */
-    public Element getWebApp()
+    public WebMetaData getMetaData()
     {
-        return webApp;
-    }
-    /** Setter for property webApp.
-     * @param webApp New value of property webApp.
-     */
-    public void setWebApp(Element webApp)
-    {
-        this.webApp = webApp;
+       return metaData;
     }
     
-    /** Getter for property jbossWeb.
-     * @return Value of property jbossWeb.
+    /** Setter for property metaData.
+     * @param metaData New value of property metaData.
      */
-    public Element getJbossWeb()
+    public void setMetaData(WebMetaData metaData)
     {
-        return jbossWeb;
-    }
-    /** Setter for property jbossWeb.
-     * @param jbossWeb New value of property jbossWeb.
-     */
-    public void setJbossWeb(Element jbossWeb)
-    {
-        this.jbossWeb = jbossWeb;
+       this.metaData = metaData;
     }
 
     public Object getAppData()

@@ -7,6 +7,17 @@
 
 package org.jboss.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -14,15 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.JarURLConnection;
-import java.net.URL;
 import java.util.jar.JarFile;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -70,10 +72,13 @@ It provides support for mapping the following web-app.xml/jboss-web.xml elements
 into the JBoss server JNDI namespace:
 - env-entry
 - resource-ref
+- resource-env-ref
 - ejb-ref
+- ejb-local-ref
 - security-domain
 
-Subclasses need to implement the {@link #performDeploy(String, String, WebDescriptorParser) performDeploy()}
+Subclasses need to implement the {@link #performDeploy(WebApplication, String,
+ WebDescriptorParser) performDeploy()}
 and {@link #performUndeploy(String) performUndeploy()} methods to perform the
 container specific steps and return the web application info required by the
 AbstractWebContainer class.
@@ -142,9 +147,10 @@ For a complete example see the
 {@link org.jboss.web.catalina.EmbeddedCatalinaServiceSX EmbeddedCatalinaServiceSX}
 in the catalina module.
 
-@see #performDeploy(String, String)
+@see #performDeploy(WebApplication webApp, String warUrl,
+        WebDescriptorParser webAppParser)
 @see #performUndeploy(String)
-@see #parseWebAppDescriptors(DeploymentInfo, ClassLoader, Element, Element)
+@see #parseWebAppDescriptors(ClassLoader, WebMetaData)
 @see #linkSecurityDomain(String, Context)
 @see org.jboss.security.SecurityManager;
 @see org.jboss.security.RealmMapping;
@@ -152,7 +158,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.39 $
+@version $Revision: 1.40 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -163,11 +169,11 @@ public abstract class AbstractWebContainer
       /** This method is called as part of subclass performDeploy() method implementations
       to parse the web-app.xml and jboss-web.xml deployment descriptors from a
       war deployment. The method creates the ENC(java:comp/env) env-entry,
-      resource-ref, & ejb-ref element values. The creation of the env-entry
+      resource-ref, ejb-ref, etc element values. The creation of the env-entry
       values does not require a jboss-web.xml descriptor. The creation of the
       resource-ref and ejb-ref elements does require a jboss-web.xml descriptor
       for the JNDI name of the deployed resources/EJBs.
-      
+
       Because the ENC context is private to the web application, the web
       application class loader is used to identify the ENC. The class loader
       is used because each war typically requires a unique class loader to
@@ -177,13 +183,12 @@ public abstract class AbstractWebContainer
       invocations if these methods interace with the JNDI ENC context.
       
       @param loader, the ClassLoader for the web application. May not be null.
-      @param webApp, the root element of thw web-app.xml descriptor. May not be null.
-      @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
-      to indicate that no jboss-web.xml descriptor exists.
+      @param metaData, the WebMetaData from the WebApplication object passed to
+       the performDeploy method.
       */
-      public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception;
+      public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception;
    }
-   
+
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
 
@@ -333,6 +338,7 @@ public abstract class AbstractWebContainer
    public void create(DeploymentInfo di) throws DeploymentException
    {
    }
+
    /** A template pattern implementation of the deploy() method. This method
    calls the {@link #performDeploy(String, String) performDeploy()} method to
    perform the container specific deployment steps and registers the
@@ -342,22 +348,21 @@ public abstract class AbstractWebContainer
       URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
       thread.setContextClassLoader(warLoader);
       WebDescriptorParser webAppParser = ...;
-      WebApplication warInfo = performDeploy(ctxPath, warUrl, webAppParser);
-      ClassLoader loader = warInfo.getClassLoader();
-      Element webApp = warInfo.getWebApp();
-      Element jbossWeb = warInfo.getJbossWeb();
+      WebMetaData metaData = parseMetaData(ctxPath, warUrl);
+      WebApplication warInfo = new WebApplication(metaData);
+      performDeploy(warInfo, warUrl, webAppParser);
       deploymentMap.put(warUrl, warInfo);
       thread.setContextClassLoader(appClassLoader);
    
    The subclass performDeploy() implementation needs to invoke
-   webAppParser.parseWebAppDescriptors(loader, webApp, jbossWeb) to have the
-   JNDI java:comp/env namespace setup before any web app component can access
+   webAppParser.parseWebAppDescriptors(loader, warInfo) to have the JNDI
+   java:comp/env namespace setup before any web app component can access
    this namespace.
-   
-   @param ctxPath, The context-root element value from the J2EE
-   application/module/web application.xml descriptor. This may be null
-   if war was is not being deployed as part of an enterprise application.
-   @param warUrl, The string for the URL of the web application war.
+
+   @param di, The deployment info that contains the context-root element value
+    from the J2EE application/module/web application.xml descriptor. This may
+    be null if war was is not being deployed as part of an enterprise application.
+    It also contains the URL of the web application war.
    */
    public synchronized void start(DeploymentInfo di) throws DeploymentException
    {
@@ -370,7 +375,6 @@ public abstract class AbstractWebContainer
          URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser(di);
-         // If there is no di.webContext build it from the war or jboss-web.xml
          String webContext = di.webContext;
          if( webContext != null )
          {
@@ -379,17 +383,18 @@ public abstract class AbstractWebContainer
          }
          // Get the war URL
          URL warURL = di.localUrl != null ? di.localUrl : di.url;
-         // If there is no webContext build one
-         if( webContext == null )
-            webContext = buildWebContext(di);
 
-         if (log.isDebugEnabled()) {
+         if (log.isDebugEnabled())
+         {
             log.debug("webContext: " + webContext);
             log.debug("warURL: " + warURL);
             log.debug("webAppParser: " + webAppParser);
          }
 
-         WebApplication warInfo = performDeploy(webContext, warURL.toString(), webAppParser);
+         // Parse the web.xml and jboss-web.xml descriptors
+         WebMetaData metaData = parseMetaData(webContext, warURL);
+         WebApplication warInfo = new WebApplication(metaData);
+         performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
       }
       catch(DeploymentException e)
@@ -409,11 +414,9 @@ public abstract class AbstractWebContainer
 
    /** This method is called by the deploy() method template and must be overriden by
    subclasses to perform the web container specific deployment steps. 
-   @param ctxPath, The context-root element value from the J2EE
-   application/module/web application.xml descriptor. This may be null
-   if war was is not being deployed as part of an enterprise application. If it
-   is null, you should check the jboss-web.xml descriptor for a context-root
-   element.
+   @param webApp, The web application information context. This contains the
+    metadata such as the context-root element value from the J2EE
+   application/module/web application.xml descriptor and virtual-host.
    @param warUrl, The string for the URL of the web application war.
    @param webAppParser, The callback interface the web container should use to
    setup the web app JNDI environment for use by the web app components. This
@@ -422,7 +425,7 @@ public abstract class AbstractWebContainer
    @return WebApplication, the web application information required by the
    AbstractWebContainer class to track the war deployment status.
    */
-   protected abstract WebApplication performDeploy(String ctxPath, String warUrl,
+   protected abstract void performDeploy(WebApplication webApp, String warUrl,
       WebDescriptorParser webAppParser) throws Exception;
 
    /** A template pattern implementation of the undeploy() method. This method
@@ -430,10 +433,10 @@ public abstract class AbstractWebContainer
    perform the container specific undeployment steps and unregisters the
    the warUrl from the deployment map.
    */
-   public synchronized void stop(DeploymentInfo sdi) 
+   public synchronized void stop(DeploymentInfo di) 
       throws DeploymentException 
    {
-      String warUrl = sdi.localUrl.toString();
+      String warUrl = di.localUrl.toString();
       try
       {
          performUndeploy(warUrl);
@@ -505,20 +508,14 @@ public abstract class AbstractWebContainer
    implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
    
    @param loader, the ClassLoader for the web application. May not be null.
-   @param webApp, the root element of thw web-app.xml descriptor. May not be null.
-   @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
-   to indicate that no jboss-web.xml descriptor exists.
+   @param metaData, the WebMetaData from the WebApplication object passed to
+    the performDeploy method.
    */
    protected void parseWebAppDescriptors(DeploymentInfo di, ClassLoader loader,
-      Element webApp, Element jbossWeb)
+      WebMetaData metaData)
       throws Exception
    {
-      log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
-      WebMetaData metaData = new WebMetaData();
-      metaData.importXml(webApp);
-      if( jbossWeb != null )
-         metaData.importXml(jbossWeb);
-      
+      log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");      
       InitialContext iniCtx = new InitialContext();
       Context envCtx = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
@@ -881,80 +878,109 @@ public abstract class AbstractWebContainer
       A war name of ROOT.war is handled as a special case of a war that
       should be installed as the default web context.
     */
-   protected String buildWebContext(DeploymentInfo di)
+   protected WebMetaData parseMetaData(String ctxPath, URL warURL)
    {
-      String webContext = null;
-      String warName = di.shortName;
-      URL warURL = di.url;
+      WebMetaData metaData = new WebMetaData();
+      InputStream jbossWebIS = null;
+      InputStream webIS = null;
 
+      // Parse the war deployment descriptors, web.xml and jboss-web.xml
       try
       {
-         // First check for a WEB-INF/jboss-web.xml context-root element
-         InputStream warIS = warURL.openStream();
-         java.util.zip.ZipInputStream zipIS = new java.util.zip.ZipInputStream(warIS);
-         java.io.FilterInputStream wrapperIS = new java.io.FilterInputStream(zipIS)
+         // See if the warUrl is a directory
+         File warDir = new File(warURL.getFile());
+         if( warURL.getProtocol().equals("file") && warDir.isDirectory() == true )
          {
-            public void close()
+            File webDD = new File(warDir, "WEB-INF/web.xml");
+            if( webDD.exists() == true )
+               webIS = new FileInputStream(webDD);
+            File jbossWebDD = new File(warDir, "WEB-INF/jboss-web.xml");
+            if( jbossWebDD.exists() == true )
+               jbossWebIS = new FileInputStream(jbossWebDD);
+         }
+         else
+         {
+            // First check for a WEB-INF/web.xml and a WEB-INF/jboss-web.xml
+            InputStream warIS = warURL.openStream();
+            java.util.zip.ZipInputStream zipIS = new java.util.zip.ZipInputStream(warIS);
+            java.util.zip.ZipEntry entry;
+            byte[] buffer = new byte[512];
+            int bytes;
+            while( (entry = zipIS.getNextEntry()) != null )
             {
+               if( entry.getName().equals("WEB-INF/web.xml") )
+               {
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                  while( (bytes = zipIS.read(buffer)) > 0 )
+                  {
+                     baos.write(buffer, 0, bytes);
+                  }
+                  webIS = new ByteArrayInputStream(baos.toByteArray());
+               }
+               else if( entry.getName().equals("WEB-INF/jboss-web.xml") )
+               {
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                  while( (bytes = zipIS.read(buffer)) > 0 )
+                  {
+                     baos.write(buffer, 0, bytes);
+                  }
+                  jbossWebIS = new ByteArrayInputStream(baos.toByteArray());
+               }
             }
-         };
-         java.util.zip.ZipEntry entry;
-         while( (entry = zipIS.getNextEntry()) != null )
+            zipIS.close();
+         }
+
+         try
          {
-            if( entry.getName().equals("WEB-INF/jboss-web.xml") )
+            XmlFileLoader xmlLoader = new XmlFileLoader();
+            if( webIS != null )
             {
-               try
-               {
-               XmlFileLoader xmlLoader = new XmlFileLoader();
-               Document jbossWebDoc = xmlLoader.getDocument(wrapperIS, "WEB-INF/jboss-web.xml");
+               Document webDoc = xmlLoader.getDocument(webIS, "WEB-INF/web.xml");
+               Element web = webDoc.getDocumentElement();
+               metaData.importXml(web);
+            }
+            if( jbossWebIS != null )
+            {
+               Document jbossWebDoc = xmlLoader.getDocument(jbossWebIS, "WEB-INF/jboss-web.xml");
                Element jbossWeb = jbossWebDoc.getDocumentElement();
-               NodeList contextRoot = jbossWeb.getElementsByTagName("context-root");
-               if( contextRoot.getLength() > 0 )
-               {
-                  webContext = contextRoot.item(0).getFirstChild().getNodeValue();
-                  webContext = webContext.trim();
-                  log.trace("Found jboss-web/context-root="+webContext);
-               }
-               }
-               catch(Exception e)
-               {
-               }
-               break;
+               metaData.importXml(jbossWeb);
             }
          }
-         zipIS.close();
+         catch(Exception e)
+         {
+         }
+
       }
       catch(Exception e)
       {
-         log.trace("Failed to parse warURL("+warURL+") WEB-INF/jboss-web.xml", e);
+         log.trace("Failed to parse descriptors for war("+warURL+")", e);
       }
 
+      // Build a war root context from the war name if one was not specified
+      String webContext = ctxPath;
+      if( webContext == null )
+         webContext = metaData.getContextRoot();
       if( webContext == null )
       {
          // Build the context from the war name, strip the .war suffix
-         webContext = warName;
+         webContext = warURL.getFile();
+         webContext = webContext.replace('\\', '/');
+         if( webContext.endsWith("/") )
+            webContext = webContext.substring(0, webContext.length()-1);
+         int prefix = webContext.lastIndexOf('/');
+         if( prefix > 0 )
+            webContext = webContext.substring(prefix+1);
          int suffix = webContext.indexOf(".war");
          if( suffix > 0 )
             webContext = webContext.substring(0, suffix);
-         // Strip any '<int-value>.' prefix
-         int index = 0;
-         for(; index < webContext.length(); index ++)
-         {
-            char c = webContext.charAt(index);
-            if( Character.isDigit(c) == false && c != '.' )
-               break;
-         }
-         webContext = webContext.substring(index);
-         // Special hanling for a war file named ROOT
-         if( webContext.equals("ROOT") )
-            webContext = "";
       }
 
       // Servlet containers are anal about the web context starting with '/'
       if( webContext.length() > 0 && webContext.charAt(0) != '/' )
          webContext = "/" + webContext;
+      metaData.setContextRoot(webContext);
 
-      return webContext;
+      return metaData;
    }
 
    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
@@ -967,9 +993,9 @@ public abstract class AbstractWebContainer
       {
          this.di = di;
       }
-      public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
+      public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception
       {
-         AbstractWebContainer.this.parseWebAppDescriptors(di, loader, webApp, jbossWeb);
+         AbstractWebContainer.this.parseWebAppDescriptors(di, loader, metaData);
       }
    }
 }
