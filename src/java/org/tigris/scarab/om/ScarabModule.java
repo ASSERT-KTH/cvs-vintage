@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.138 2003/04/30 00:05:19 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.139 2003/05/01 21:36:09 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -633,7 +633,8 @@ public class ScarabModule
             try
             {
                 GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_DOMAIN, this, domain);
+                    .setString(GlobalParameter.MODULE_DOMAIN, this,
+                               domain.toLowerCase());
             }
             catch (Exception e)
             {
@@ -657,7 +658,8 @@ public class ScarabModule
             try
             {
                 GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_SCHEME, this, scheme);
+                    .setString(GlobalParameter.MODULE_SCHEME, this,
+                               scheme.toLowerCase());
             }
             catch (Exception e)
             {
