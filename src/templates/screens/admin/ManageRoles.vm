@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.9 2002/04/09 22:06:28 jon Exp $
+@version $Id: ManageRoles.vm,v 1.10 2002/04/22 22:04:35 jon Exp $
 *#
 
 <div id="manageRoles" class="app">
@@ -12,15 +12,15 @@
 <form action="admin%2CManageRoles.vm" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
 
-<table cellspacing="0" cellpadding="2">
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
 <tr>
-  <th>Select</th>
+  <th width="60">Select</th>
   <th>Role</th>
 </tr>
 
 #foreach ($role in $securityAdmin.Roles)
 #indexedRows ($velocityCount)
-  <td align="center">
+  <td>
     <input type="radio" name="name" value="$role.Name" />
   </td>
   <td>
