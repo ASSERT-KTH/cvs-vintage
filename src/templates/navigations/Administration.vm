@@ -9,7 +9,7 @@
 
 #if ($adminMenu.equals("1"))
 <div><strong>Users</strong>
- <div><a href="admin,ManageUserSearch.vm">User Management</a></div>
+ <div>$link.setPage("admin,ManageUserSearch.vm").setLabel("User Management")</div>
  <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User")</div>
 #else
 <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")
@@ -22,8 +22,8 @@
 
 #if ($adminMenu.equals("2"))
 <div><strong>Roles</strong>
- <div><a href="admin,ManageRoles.vm">Role List</a></div>
- <div><a href="admin,AddRole.vm">Add New Role</a></div>
+ <div>$link.setPage("admin,ManageRoles.vm").setLabel("Role List")</div>
+ <div>$link.setPage("admin,AddRole.vm").setLabel("Add New Role")</div>
 #else
 <div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")
 #end
