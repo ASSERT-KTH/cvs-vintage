@@ -1,4 +1,4 @@
-// $Id: FileFilters.java,v 1.10 2003/06/29 23:48:17 linus Exp $
+// $Id: FileFilters.java,v 1.11 2004/04/30 19:05:18 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FileFilters.java,v 1.10 2003/06/29 23:48:17 linus Exp $
+// $Id: FileFilters.java,v 1.11 2004/04/30 19:05:18 mkl Exp $
 
 package org.argouml.util;
 
@@ -132,6 +132,10 @@ public class FileFilters {
     public static final SuffixFilter SVGFilter = new
         SuffixFilter("svg", "Scalable Vector Graphics file");
   
+    /** Filter for IDL files */
+    public static final SuffixFilter IDLFilter = new
+		SuffixFilter("idl", "Interface Definition Language file");
+    
     /**
      * Returns the suffix for which a FileFilter filters. 
      * @param filter The FileFilter from which we want to know the suffix
