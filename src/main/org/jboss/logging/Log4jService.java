@@ -24,14 +24,11 @@ import org.jboss.util.ThrowableListener;
 
 /**
  * This is a JMX MBean that provides three features:
+ * 
  * <ol>
  * <li>It initalizes the log4j framework from the log4j properties format file
  *     specified by the ConfigurationPath attribute to that the log4j may be
  *     used by JBoss components.
- * <li>It collects JMX notification events fired by the "service=Log" mbean
- *     and logs the msgs to log4j. This allows the Log4jService
- *     to replace all other JBoss logging services like ConsoleLogging and
- *     FileLogging.
  * <li>It uses the log name as the category to log under, allowing you to turn 
  *     individual components on and off using the log4j configuration file
  *     (automatically reloaded frequently).
@@ -41,7 +38,7 @@ import org.jboss.util.ThrowableListener;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Log4jService
    implements Log4jServiceMBean, MBeanRegistration
@@ -56,8 +53,7 @@ public class Log4jService
     *    xml snippet.
     */
    public static final String DEFAULT_PATH =
-      System.getProperty(Log4jService.class.getName() + ".configfile",
-                         "log4j.properties");
+      System.getProperty(Log4jService.class.getName() + ".configfile", "log4j.properties");
 
    // Attributes ----------------------------------------------------
 
@@ -169,32 +165,7 @@ public class Log4jService
       category.info("Started Log4jService, config=" + url);
 
       // Install listener for unhandled throwables to turn them into log messages
-      ThrowableHandler.addThrowableListener(new ThrowableListener()
-         {
-            private Logger log = Logger.getLogger(this.getClass());
-            
-            public void onThrowable(int type, Throwable t)
-            {
-               switch (type)
-               {
-                  default:
-                     // if type is not valid then make it any error
-                     
-                  case ThrowableHandler.Type.ERROR:
-                     log.error("unhandled throwable", t);
-                     break;
-                     
-                  case ThrowableHandler.Type.WARNING:
-                     log.warn("unhandled throwable", t);
-                     break;
-
-                  case ThrowableHandler.Type.UNKNOWN:
-                     // these could be red-herrings, so log them as trace
-                     log.trace("unhandled throwable, status is unknown", t);
-                     break;
-               }
-            }
-         });
+      ThrowableHandler.addThrowableListener(new ThrowableListenerLoggingAdapter());
    }
    
    /**
@@ -238,4 +209,36 @@ public class Log4jService
    }
    
    // --- End MBeanRegistration interface methods
+
+   /**
+    * Adapts ThrowableHandler to the Loggger interface.  Using nested 
+    * class instead of anoynmous class for better category naming.
+    */
+   private static class ThrowableListenerLoggingAdapter
+      implements ThrowableListener
+   {
+      private Logger log = Logger.getLogger(ThrowableListenerLoggingAdapter.class);
+      
+      public void onThrowable(int type, Throwable t)
+      {
+         switch (type)
+         {
+             default:
+                // if type is not valid then make it any error
+             
+             case ThrowableHandler.Type.ERROR:
+                log.error("unhandled throwable", t);
+                break;
+             
+             case ThrowableHandler.Type.WARNING:
+                log.warn("unhandled throwable", t);
+                break;
+             
+             case ThrowableHandler.Type.UNKNOWN:
+                // these could be red-herrings, so log them as trace
+                log.trace("unhandled throwable, status is unknown", t);
+                break;
+         }
+      }
+   }
 }
