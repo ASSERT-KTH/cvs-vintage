@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.5 2003/05/01 14:21:48 kataka Exp $
+// $Id: ClassfileImport.java,v 1.6 2003/06/23 10:13:01 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,13 +44,12 @@ import org.argouml.uml.reveng.Import;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
 
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.5 $
- * $Date: 2003/05/01 14:21:48 $
+ * $Revision: 1.6 $
+ * $Date: 2003/06/23 10:13:01 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -327,11 +326,11 @@ public class ClassfileImport extends FileImportSupport {
 
         // Create a modeller for the parser
         org.argouml.uml.reveng.java.Modeller modeller = 
-            new org.argouml.uml.reveng.java.Modeller(
-                    (MModel)_currentProject.getModel(),
-		    _diagram, _import,
-                    attribute.isSelected(),
-                    datatype.isSelected(), fileName);
+            new org.argouml.uml.reveng.java.Modeller(_currentProject.getModel(),
+                                                      _diagram, _import,
+                                                     attribute.isSelected(),
+                                                     datatype.isSelected(), 
+                                                     fileName);
 
 	// do something with the tree
 	ClassfileTreeParser tparser = new ClassfileTreeParser();
