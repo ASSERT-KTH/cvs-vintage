@@ -179,16 +179,14 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
-	try {
-	    errorServlet.service( req, res );
-	} catch( IOException e ) {
-	    // ASSERT: Only thrown by included servlets
-	    // we can ignore it and it's very common - probably the user
+	errorServlet.service( req, res );
+	Exception ex=res.getErrorException();
+	if( ex!=null && ! (ex instanceof IOException) ) {
+	    // we can ignore IOException - probably the user
 	    // has clicked "STOP"
-	} catch( Exception e ) {
 	    // we need to log any other error - something may be
 	    // broken if the error servlet has errors.
-	    ctx.log( "Error in errorServlet", e);
+	    ctx.log( "Error in errorServlet", ex);
 	} 
     }
 
@@ -280,16 +278,14 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
-	try {
-	    errorServlet.service( req, res );
-	} catch( IOException e ) {
-	    // ASSERT: Only thrown by included servlets
-	    // we can ignore it and it's very common - probably the user
+	errorServlet.service( req, res );
+	Exception ex=res.getErrorException();
+	if( ! (ex instanceof IOException) ) {
+	    // we can ignore IOException - probably the user
 	    // has clicked "STOP"
-	} catch( Exception e ) {
 	    // we need to log any other error - something may be
 	    // broken if the error servlet has errors.
-	    ctx.log( "Error in errorServlet", e);
+	    ctx.log( "Error in errorServlet", ex);
 	} 
     }
 
@@ -335,7 +331,6 @@ class NotFoundHandler extends Handler {
     int sbNote=0;
     
     NotFoundHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.notFoundHandler";
     }
@@ -388,7 +383,6 @@ class ExceptionHandler extends Handler {
     int sbNote=0;
 
     ExceptionHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.exceptionHandler";
     }
@@ -462,7 +456,6 @@ class StatusHandler extends Handler {
     int sbNote=0;
 
     StatusHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.statusHandler";
     }
@@ -523,7 +516,6 @@ class RedirectHandler extends Handler {
     int sbNote=0;
 
     RedirectHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.redirectHandler";
     }

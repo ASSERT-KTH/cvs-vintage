@@ -122,9 +122,14 @@ public class JspInterceptor extends BaseInterceptor {
 	}
     }
 
+    /** Set the HttpJspBase classloader before init,
+	as required by Jasper
+    */
     public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
+	if( ! (sw instanceof ServletWrapper) )
+	    return;
 	Servlet theServlet = ((ServletWrapper)sw).getServlet();
 	if (theServlet instanceof HttpJspBase)  {
 	    if( debug > 0 )
@@ -224,7 +229,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    // set initial exception on the servlet if one is present
 	    if ( jspInfo.isExceptionPresent() ) {
 		wrapper.setErrorException(jspInfo.getCompileException());
-		wrapper.setExceptionPermanent(true);
+		wrapper.setState(Handler.STATE_DISABLED);
 	    }
 	} catch( TomcatException ex ) {
 	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);

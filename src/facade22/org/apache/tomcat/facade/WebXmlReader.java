@@ -53,8 +53,8 @@ public class WebXmlReader extends BaseInterceptor {
 	throws TomcatException
     {
 	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
-// 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
-	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
+	// 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
+	//	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
 	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
 
 // 	ctx.addServletMapping( "/servlet/*", "invoker");
@@ -187,7 +187,18 @@ public class WebXmlReader extends BaseInterceptor {
 	    // Servlet
 	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.facade.ServletWrapper") ); // servlet-wrapper
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
-	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
+	    //	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
+
+	    xh.addRule("web-app/servlet", new XmlAction() {
+			   public void end( SaxContext xctx)
+			       throws Exception {
+			       ServletWrapper sw=(ServletWrapper)
+				   xctx.currentObject();
+			       Context cctx=(Context)xctx.previousObject();
+			       sw.addServlet(cctx);
+			   }
+		       }
+		   );
 	    // remove it from stack when done
 	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) );
 	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClass",0));

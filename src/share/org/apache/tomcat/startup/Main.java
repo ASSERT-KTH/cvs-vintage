@@ -282,7 +282,7 @@ public class Main {
 				      "org.apache.tomcat.task.StartTomcat");
 	    processArgs( proxy, args );
 	    setAttribute( proxy, "parentClassLoader", parentL );
-	    setAttribute( proxy, "serverClassPath", urls );
+	    //	    setAttribute( proxy, "serverClassPath", urls );
 	    execute(  proxy, "execute" );
 	    return;
 	} catch( Exception ex ) {

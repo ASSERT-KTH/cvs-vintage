@@ -144,7 +144,10 @@ public final class Servlet22Interceptor
 	    ServletWrapper sw=new ServletWrapper();
 	    sw.setName( hN );
 	    sw.setContext( ct.getContext() );
-	    log( "Create handler ");
+	    // *.jsp -> jsp is a legacy default mapping  
+	    if( ! "jsp".equals(hN) ) {
+		log( "Create handler " + hN);
+	    }
 	    ct.setHandler(sw);
 	    ct.getContext().addServlet(  sw );
 	}

@@ -217,7 +217,6 @@ class FileHandler extends Handler  {
     int realFileNote;
 
     FileHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.fileHandler";
     }
@@ -329,7 +328,6 @@ class DirHandler extends Handler  {
     int sbNote=0;
     
     DirHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.dirHandler";
     }

@@ -820,6 +820,7 @@ public final class Context implements LogAware {
     	throws TomcatException
     {
 	wrapper.setContext( this );
+	wrapper.setState( Handler.STATE_ADDED );
 	String name=wrapper.getName();
 
         // check for duplicates
@@ -835,6 +836,9 @@ public final class Context implements LogAware {
     public final  void removeServletByName(String servletName)
 	throws TomcatException
     {
+	Handler h=getServletByName( servletName );
+	if( h!=null )
+	    h.setState( Handler.STATE_NEW );
 	servlets.remove( servletName );
     }
 

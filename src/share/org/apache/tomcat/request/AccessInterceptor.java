@@ -216,8 +216,10 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	Container ctxCt=ctx.getContainer();
 	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.
 	    getNote( secMapNote );
-	if( ctxSecurityC==null)
-	    ctxCt.setNote( secMapNote, new SecurityConstraints() );
+	if( ctxSecurityC==null) {
+	    ctxSecurityC= new SecurityConstraints();
+	    ctxCt.setNote( secMapNote, ctxSecurityC );
+	}
 
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
 	    if( debug > 0 )
@@ -342,7 +344,6 @@ class BasicAuthHandler extends Handler {
     int sbNote=0;
     
     BasicAuthHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.basicAuthHandler";
     }
@@ -389,7 +390,6 @@ class BasicAuthHandler extends Handler {
 class FormAuthHandler extends Handler {
     
     FormAuthHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formAuthHandler";
     }
@@ -447,7 +447,6 @@ class FormAuthHandler extends Handler {
 class FormSecurityCheckHandler extends Handler {
     
     FormSecurityCheckHandler() {
-	initialized=true;
 	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formSecurityCheck";
     }
