@@ -22,10 +22,11 @@ import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
 import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
-import org.objectweb.carol.jndi.wrapping.JNDIRemoteReference;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.multi.ProtocolCurrent;
+
+import com.sun.jndi.rmi.registry.RemoteReference;
 /**
  * @author riviereg
  *
@@ -91,9 +92,9 @@ public class IIOPContext implements Context {
 	private Object unwrapObject(Object o, Name name) throws NamingException {
 		try {
 			//TODO: May we can do a narrow ? 
-			if (o instanceof JNDIRemoteReference) {
+			if (o instanceof RemoteReference) {
 				// build of the Referenceable object with is Reference
-				Reference objRef = ((JNDIRemoteReference) o).getReference();
+				Reference objRef = ((RemoteReference) o).getReference();
 				ObjectFactory objFact =
 					(ObjectFactory) (Class
 						.forName(objRef.getFactoryClassName()))
@@ -136,8 +137,8 @@ public class IIOPContext implements Context {
 					.getCurrentPortableRemoteObject()
 					.exportObject(
 					irw);
-				JNDIReferenceWrapper oldObj =
-					(JNDIReferenceWrapper) wrapperHash.put(name, irw);
+				Remote oldObj =
+					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent
@@ -164,8 +165,8 @@ public class IIOPContext implements Context {
 					.getCurrentPortableRemoteObject()
 					.exportObject(
 					irw);
-				JNDIReferenceWrapper oldObj =
-					(JNDIReferenceWrapper) wrapperHash.put(name, irw);
+				Remote oldObj =
+					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent
@@ -193,8 +194,8 @@ public class IIOPContext implements Context {
 					.getCurrentPortableRemoteObject()
 					.exportObject(
 					irw);
-				JNDIResourceWrapper oldObj =
-					(JNDIResourceWrapper) wrapperHash.put(name, irw);
+				Remote oldObj =
+					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent

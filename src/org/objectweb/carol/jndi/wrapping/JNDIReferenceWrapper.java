@@ -30,15 +30,17 @@ package org.objectweb.carol.jndi.wrapping;
 import java.rmi.RemoteException;
 
 import javax.naming.Reference;
+import com.sun.jndi.rmi.registry.RemoteReference;
 
 /*
- * Class <code>JNDIReferenceWrapper</code> is the CAROL Remote Reference implementation. This implementation make the 
- * iiop reference wrapping to/from a remote object
+ * Class <code>JNDIReferenceWrapper</code> is the CAROL Remote Reference implementation. 
+ * This implementation make the 
+ * reference wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public class JNDIReferenceWrapper implements JNDIRemoteReference {
+public class JNDIReferenceWrapper implements RemoteReference {
     
     /**
      * <code>Reference</code> reference to wrap

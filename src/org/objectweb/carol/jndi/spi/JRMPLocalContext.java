@@ -29,11 +29,12 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
+import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.multi.ProtocolCurrent;
 
-import com.sun.jndi.rmi.registry.ReferenceWrapper;
+import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * @author riviereg
@@ -81,7 +82,7 @@ public class JRMPLocalContext implements Context {
 		environment = env;
 		environment.put(
 			"java.naming.factory.initial",
-			"org.objectweb.carol.jndi.spi.JRMPLocalContext");
+			"org.objectweb.carol.jndi.spi.JRMPContextWrapperFactory");
 	}
 
 	/**
@@ -106,12 +107,12 @@ public class JRMPLocalContext implements Context {
 	 * @param o the object to resolve
 	 * @return the unwrapped object
 	 */
-	private Object unwrapObject(Object o,Name name) throws NamingException {
+	private Object unwrapObject(Object o, Name name) throws NamingException {
 		try {
 			//TODO: May we can do a narrow ? 
-			if (o instanceof ReferenceWrapper) {
+			if (o instanceof RemoteReference) {
 				// build of the Referenceable object with is Reference
-				Reference objRef = ((ReferenceWrapper) o).getReference();
+				Reference objRef = ((RemoteReference) o).getReference();
 				ObjectFactory objFact =
 					(ObjectFactory) (Class
 						.forName(objRef.getFactoryClassName()))
@@ -142,27 +143,26 @@ public class JRMPLocalContext implements Context {
 	 * @return  a <code>Remote JNDIRemoteReference Object</code> if o is a ressource
 	 *          o if else
 	 */
-	private Object wrapObject(Object o,Name name, boolean replace)
+	private Object wrapObject(Object o, Name name, boolean replace)
 		throws NamingException {
 		try {
 			if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-				ReferenceWrapper irw =
-					new ReferenceWrapper(
+				JNDIReferenceWrapper irw =
+					new JNDIReferenceWrapper(
 						((Referenceable) o).getReference());
-//				ProtocolCurrent
-//					.getCurrent()
-//					.getCurrentPortableRemoteObject()
-//					.exportObject(
-//					irw);
-				ReferenceWrapper oldObj =
-					(ReferenceWrapper) wrapperHash.put(name, irw);
+				ProtocolCurrent
+					.getCurrent()
+					.getCurrentPortableRemoteObject()
+					.exportObject(
+					irw);
+				Remote oldObj = (Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
-							oldObj);
+							(Remote) oldObj);
 					} else {
 						ProtocolCurrent
 							.getCurrent()
@@ -175,15 +175,14 @@ public class JRMPLocalContext implements Context {
 				}
 				return irw;
 			} else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
-				ReferenceWrapper irw =
-					new ReferenceWrapper((Reference) o);
-//				ProtocolCurrent
-//					.getCurrent()
-//					.getCurrentPortableRemoteObject()
-//					.exportObject(
-//					irw);
-				ReferenceWrapper oldObj =
-					(ReferenceWrapper) wrapperHash.put(name, irw);
+				JNDIReferenceWrapper irw =
+					new JNDIReferenceWrapper((Reference) o);
+				ProtocolCurrent
+					.getCurrent()
+					.getCurrentPortableRemoteObject()
+					.exportObject(
+					irw);
+				Remote oldObj = (Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent
@@ -328,7 +327,7 @@ public class JRMPLocalContext implements Context {
 	}
 
 	public void rename(Name oldName, Name newName) throws NamingException {
-		if(wrapperHash.containsKey(oldName)){
+		if (wrapperHash.containsKey(oldName)) {
 			wrapperHash.put(newName, wrapperHash.remove(oldName));
 		}
 		bind(newName, lookup(oldName));

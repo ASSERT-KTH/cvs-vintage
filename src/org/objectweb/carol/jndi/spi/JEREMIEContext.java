@@ -122,8 +122,8 @@ public class JEREMIEContext implements Context {
 					.getCurrentPortableRemoteObject()
 					.exportObject(
 					irw);
-				JNDIResourceWrapper oldObj =
-					(JNDIResourceWrapper) wrapperHash.put(name, irw);
+				Remote oldObj =
+					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
 						ProtocolCurrent
