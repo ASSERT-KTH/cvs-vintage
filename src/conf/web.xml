@@ -48,24 +48,24 @@
     </servlet>
 -->
     <servlet-mapping>
-        <servlet-name>scarab</servlet-name>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
         <url-pattern>/s/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>scarab</servlet-name>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
         <url-pattern>/issue/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>scarab</servlet-name>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
         <url-pattern>/issues/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>scarab</servlet-name>
-        <url-pattern>/servlet/scarab/*</url-pattern>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/servlet/@SCARAB_CONTEXT@/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>scarab</servlet-name>
-        <url-pattern>/servlets/scarab/*</url-pattern>
+        <servlet-name>@SCARAB_CONTEXT@</servlet-name>
+        <url-pattern>/servlets/@SCARAB_CONTEXT@/*</url-pattern>
     </servlet-mapping>
 
     <security-constraint>
