@@ -17,12 +17,14 @@ package org.columba.mail.folder.command;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.util.Date;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
@@ -32,6 +34,8 @@ import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.coder.Decoder;
+import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -140,26 +144,34 @@ public class PrintMessageCommand extends FolderCommand {
 	}
 
 	/**
+	 * This method executes the print action, i.e. it prints the selected
+	 * messages.
+	 * 
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
 
+		/*
+		 * *20030531, karlpeder* Fixed minor flaws to be able to print at least
+		 * text messages.
+		 */
+
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = r[0].getUids();
+		Object[] uids = r[0].getUids(); // uid for messages to print
 
 		Folder srcFolder = (Folder) r[0].getFolder();
 
+		// Print each message
 		for (int j = 0; j < uids.length; j++) {
 			Object uid = uids[j];
-			//ColumbaLogger.log.debug("copying UID=" + uid);
+			ColumbaLogger.log.debug("Printing UID=" + uid);
 
 			Message message = new Message();
-
 			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
-
 			MimePartTree mimePartTree = srcFolder.getMimePartTree(uid, worker);
 
+			// Does the user prefer html or plain text?
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 					"/options/html");
@@ -180,8 +192,8 @@ public class PrintMessageCommand extends FolderCommand {
 				bodyPart =
 					srcFolder.getMimePart(uid, bodyPart.getAddress(), worker);
 
+			// Setup print document for message
 			cDocument messageDoc = new cDocument();
-
 			messageDoc.setHeader(getMailHeader());
 			messageDoc.setFooter(getMailFooter());
 
@@ -190,14 +202,17 @@ public class PrintMessageCommand extends FolderCommand {
 			cHGroup hLine;
 			Object value;
 
+			// Add header information to print
 			for (int i = 0; i < Array.getLength(headerKeys); i++) {
 				hKey = new cParagraph();
+				// *20030531, karlpeder* setting headerKeys to lowercase for lookup!
 				hKey.setText(
-					MailResourceLoader.getString("header", headerKeys[i]));
+					MailResourceLoader.getString("header", headerKeys[i].toLowerCase()));
 				hKey.setFontStyle(Font.BOLD);
 
 				hValue = new cParagraph();
-				if (headerKeys[i].equals("date")) {
+				// *20030531, karlpeder* case ignored for string comparison
+				if (headerKeys[i].equalsIgnoreCase("date")) {
 					value = header.get("columba.date");
 				} else {
 					value = header.get(headerKeys[i]);
@@ -215,16 +230,86 @@ public class PrintMessageCommand extends FolderCommand {
 				hLine.add(hValue);
 
 				messageDoc.appendPrintObject(hLine);
+			}
 
-				cParagraph body = new cParagraph();
-				body.setTopMargin(new cCmUnit(1.0));
+			// Add body of message to print
+			String mimesubtype = bodyPart.getHeader().getContentSubtype();
+			if (mimesubtype.equals("html")) {
+				messageDoc.appendPrintObject(getHTMLBodyPrintObject(bodyPart));
+			}
+			else {
+				messageDoc.appendPrintObject(getPlainBodyPrintObject(bodyPart));
+			}
 
-				messageDoc.appendPrintObject(body);
+			// print the print document (i.e. the message)
+			messageDoc.print();
 
-				messageDoc.print();
+		} // end of for loop over uids to print 
+
+	}
+
+
+	/**
+	 * Private utility to create a print object representing the 
+	 * body of a plain text message. The messagebody is decoded according
+	 * to present charset.<br>
+	 * Precondition: Mime subtype is "plain".
+	 *
+	 * @param	bodyPart	Body part of message
+	 * @return	Print object ready to be appended to the print document
+	 * @author	Karl Peder Olesen (karlpeder), 20030531
+	 */
+	private cPrintObject getPlainBodyPrintObject(MimePart bodyPart) {
+
+		// First determine which charset to use
+		// TODO: How to determine present charset? For now I pretend it's allways "auto"		
+		String charset = bodyPart.getHeader().getContentParameter("charset");
+		
+		// Decode message according to charset
+		Decoder decoder = CoderRouter.getDecoder(
+				bodyPart.getHeader().contentTransferEncoding);
+		String decodedBody = null;
+		try {
+			// decode using specified charset
+			decodedBody = decoder.decode(bodyPart.getBody(), charset);
+		}
+		catch (UnsupportedEncodingException ex) {
+			ColumbaLogger.log.info("charset " + charset + " isn't supported, falling back to default...");
+			try {
+				// decode using default charset
+				decodedBody = decoder.decode(bodyPart.getBody(), null);
+			}
+			catch (UnsupportedEncodingException never) {
+				// should never happen!?
+				never.printStackTrace();
 			}
 		}
+		
+		// create a print object and return it
+		cParagraph printBody = new cParagraph();
+		printBody.setTopMargin(new cCmUnit(1.0));
+		printBody.setText(decodedBody);
+		return printBody;
 
+	}
+	
+	/**
+	 * Private utility to create a print object representing the 
+	 * body of a html message.<br>
+	 * Precondition: Mime subtype is "html".
+	 * 
+	 * NB: HTML printing still not supported
+	 *
+	 * @param	bodyPart	Body part of message
+	 * @return	Print object ready to be appended to the print document
+	 * @author	Karl Peder Olesen (karlpeder), 20030531
+	 */
+	private cPrintObject getHTMLBodyPrintObject(MimePart bodyPart) {
+		ColumbaLogger.log.info("HTML message - print still not supported");
+		cParagraph dummyBody = new cParagraph();
+		dummyBody.setTopMargin(new cCmUnit(1.0));
+		dummyBody.setText("HTML print still not supported, sorry!");
+		return dummyBody;
 	}
 
 }

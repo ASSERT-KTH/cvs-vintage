@@ -49,7 +49,7 @@ public class PrintAction extends FrameAction {
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 			
-		setEnabled(false);
+		setEnabled(true);	// *20030531, karlpeder* Print functionality reactivated
 	}
 
 	/* (non-Javadoc)
