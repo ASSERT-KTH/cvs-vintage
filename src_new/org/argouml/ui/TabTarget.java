@@ -23,16 +23,18 @@
 
 package org.argouml.ui;
 
+import org.argouml.ui.targetmanager.TargetListener;
+
 /**
  * An interface for JPanels that are in the DetailsPane, and that
  * change target based on the selections made in the gui/views.
  *
- * $Id: TabTarget.java,v 1.1 2003/03/28 20:31:07 alexb Exp $
+ * $Id: TabTarget.java,v 1.2 2003/05/01 08:49:39 kataka Exp $
  *
  * @since 0.13.4
- * @author $Author: alexb $
+ * @author $Author: kataka $
  */
-public interface TabTarget {
+public interface TabTarget extends TargetListener {
     
   /**
    *

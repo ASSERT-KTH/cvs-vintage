@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.11 2003/01/07 20:49:11 kataka Exp $
+// $Id: UMLPlainTextDocument.java,v 1.12 2003/05/01 08:49:40 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -124,6 +124,7 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      * @param target The target to set
      */
     public final void setTarget(Object target) {
+        
         if (target instanceof MBase) {
             if (_target != null)
                 UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, getEventName());
@@ -167,7 +168,7 @@ public abstract class UMLPlainTextDocument extends PlainDocument
     protected abstract String getProperty();
     
     private final void setFiring(boolean firing) {
-        if (firing)
+        if (firing && _target != null)
             UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, _eventName);
         else
             UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _eventName);
