@@ -1,4 +1,4 @@
-// $Id: RefBaseObjectProxy.java,v 1.2 2003/09/09 18:04:25 thierrylach Exp $
+// $Id: RefBaseObjectProxy.java,v 1.3 2003/09/09 18:05:18 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,8 @@ public class RefBaseObjectProxy implements InvocationHandler, RefBaseObject {
     private Object realObject;
 
     /**
-     * 
+     * Returns the actual object which was proxied.
+     *
      * @param o proxied object to extract from
      * @return the realObject behind the proxy
      */
