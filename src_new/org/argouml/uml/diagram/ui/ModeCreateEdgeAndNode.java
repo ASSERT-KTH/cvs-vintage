@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.4 2000/09/18 12:57:25 1sturm Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.5 2000/09/27 16:27:17 boger Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -293,6 +293,11 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 					done();
 					//me.consume();
 					_newItem = null;
+
+                                        // set the new edge in place
+                                        if (_sourceFigNode != null) _sourceFigNode.updateEdges();
+                                        if (destFigNode != null) destFigNode.updateEdges();
+
 					return;
 				}
 				else

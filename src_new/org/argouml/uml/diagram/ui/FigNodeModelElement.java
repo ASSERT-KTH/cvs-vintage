@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: FigNodeModelElement.java,v 1.2 2000/09/27 16:27:17 boger Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -165,7 +165,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     if (figures != null && (size > 0)) {
       for (int i=0; i<size; i++) {
         Object o = figures.elementAt(i);
-        if (o instanceof FigNodeModelElement) {
+        if (o instanceof FigNodeModelElement && o != getEnclosingFig() ) {
           FigNodeModelElement fignode = (FigNodeModelElement) o;
           Vector enclosed = fignode.getEnclosedFigs();
           fignode.elementOrdering(enclosed);
