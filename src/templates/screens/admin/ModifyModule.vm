@@ -1,9 +1,13 @@
 #set ($createNew = $data.Parameters.New)
+#set ($canEdit = "false")
 
 #if ($createNew && $createNew.equals("true"))
-$page.setTitle("New Module") 
+  $page.setTitle("New Module") 
 #else
-$page.setTitle("Modify Module") 
+  $page.setTitle("Modify Module") 
+  #set ($moduleId = $data.Parameters.getString("moduleid"))
+  #set ($editModule = $scarabR.getModule($moduleId))
+  #set ($canEdit = $security.hasPermission("Module | Edit", $editModule))
 #end
 
 #macro (ModifyModuleBar $var)
@@ -26,19 +30,12 @@ $page.setTitle("Modify Module")
 <div id="module" class="app">
 <h2>$page.Title</h2>
 
-#set ($currentModule = $scarabR.CurrentModule)
-#set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
-#if (!$canEdit)
-
 <h3>Module Details</h3>
-<p class="alert">Sorry, you do not have enough permissions to modify the
-module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a>.</p>
 
-#else
-
-<form action="$link.setPage("ModifyModule.vm")" method="post">
+<form action="$link.setPage("admin,ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" /> 
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModifyModule.vm" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageModules.vm" /> 
 
 #ModifyModuleBar("")
 
@@ -47,11 +44,10 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
 #if ($createNew && $createNew.equals("true"))
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="true" /> 
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
 #else
-#set ($moduleGroup = $intake.Module.mapTo($currentModule))
+#set ($moduleGroup = $intake.Module.mapTo($editModule))
 <input type="hidden" name="new" value="false" /> 
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ModifyModule.vm" /> 
+<input type="hidden" name="moduleId" value="$moduleId" /> 
 #end
 
 <div class="axial">
@@ -86,18 +82,15 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
   </tr>
   <tr>
    <th>* Parent Module:</th>
-   <td>
+   <td> 
+     #set ($userModules = $data.User.EditableModules)
     <select name="$moduleGroup.ParentId.Key">
-     #set ($userModules = $data.User.Modules)
+      <option value="0">Root Module</option>
      #foreach ($userModule in $userModules)
-        #foreach ($ancestor in $userModule.Ancestors)
-         #if ($security.hasPermission("Module | Edit", $userModule))
-           #if ($ancestor.RealName.equals($currentModule.Parent.RealName))
-            <option selected="selected" value="$ancestor.ModuleId">$ancestor.RealName</option>
-           #else
-            <option value="$ancestor.ModuleId">$ancestor.RealName</option>
-           #end
-         #end
+        #if ($userModule.RealName.equals($userModule.Parent.RealName))
+          <option selected="selected" value="$userModule.ModuleId">$userModule.Name</option>
+        #else
+          <option value="$userModule.ModuleId">$userModule.Name</option>
         #end
      #end
     </select>
@@ -112,5 +105,4 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
 $intake.declareGroups()
 </form>
 
-#end
 </div>

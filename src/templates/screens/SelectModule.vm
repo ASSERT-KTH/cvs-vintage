@@ -1,4 +1,4 @@
-$page.setTitle("Module management")
+$page.setTitle("Select Module")
 
 #set ($userModules = $data.User.Modules)
 #set ($currentModule = $scarabR.CurrentModule)
@@ -64,18 +64,6 @@ $module.Description
 #end
 
 </table>
-
-<form action="$link.setPage("ModifyModule.vm").addPathInfo("new", "true")" method="post">
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-<input type="submit" name="maxumusDorkus" value="Create new module" />
-  </td>
- </tr>
-</table>
-</div>
-</form>
 
 #else
 <p><strong class="alert">

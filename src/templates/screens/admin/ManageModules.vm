@@ -1,0 +1,43 @@
+$page.setTitle("Manage Modules ")
+
+#set ($userModules = $data.User.EditableModules)
+<div id="managemodule" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Modules</h3>
+#if ($userModules.size() > 0)
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+    <th>Module name</th>
+    <th>Module desc</th>
+</tr>
+
+#foreach ($module in $userModules)
+#indexedRows($velocityCount)
+<td>
+<a href="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId)">$module.Name</a>
+</td>
+<td>
+$module.Description
+</td>
+</tr>
+#end
+
+</table>
+#end
+
+<form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("new", "true")" method="post">
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" name="maxumusDorkus" value="Create new module" />
+  </td>
+ </tr>
+</table>
+</div>
+</form>
+
+
+</div>
