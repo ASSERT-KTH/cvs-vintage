@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/TagHandlerPool.java,v 1.2 2001/05/11 18:43:13 clucas Exp $
+ *
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights

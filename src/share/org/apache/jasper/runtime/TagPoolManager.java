@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/TagPoolManager.java,v 1.2 2001/05/11 18:43:21 clucas Exp $
+ *
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights
@@ -73,7 +77,7 @@ package org.apache.jasper.runtime;
  * </ul>
  *
  * @author Casey Lucas <clucas@armassolutions.com>
- * @see TagPoolManagerInterceptor
+ * @see org.apache.tomcat.facade.TagPoolManagerInterceptor
  */
 public interface TagPoolManager {
 
@@ -86,11 +90,11 @@ public interface TagPoolManager {
     /**
      * Obtain a named pool.  Each uniquely named pool holds tag
      * handlers.
-     *
+     * 
      * @param poolName unique name of the tag pool
      * @param handlerClass
      *                 the type of tag handler objects stored by the pool
-     * @return
+     * @return the pool that should be used for this poolName and handlerClass
      */
     public TagHandlerPool getPool(String poolName, Class handlerClass);
 

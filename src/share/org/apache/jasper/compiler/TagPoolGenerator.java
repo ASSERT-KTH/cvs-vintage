@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagPoolGenerator.java,v 1.3 2001/05/11 18:42:54 clucas Exp $
+ *
+ * ====================================================================
+ * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights
@@ -68,7 +72,7 @@ import org.apache.jasper.Constants;
  * during jsp initialization.
  *
  * @author Casey Lucas <clucas@armassolutions.com>
- * @see TagPoolManager
+ * @see org.apache.jasper.runtime.TagPoolManager
  */
 public class TagPoolGenerator extends GeneratorBase
     implements ClassDeclarationPhase, InitMethodPhase {
@@ -118,11 +122,11 @@ public class TagPoolGenerator extends GeneratorBase
      * This method returns a unique pool name based on the given
      * TagLibraryInfo, TagInfo, and set of tag attributes.  Tag
      * attribute order does not affect the returned name.
-     *
+     * 
      * @param tli
      * @param ti
      * @param attributes
-     * @return
+     * @return unique pool name based on parameters
      */
     public static String getPoolName(TagLibraryInfo tli, TagInfo ti, Hashtable attributes) {
         return getSafeVariableName(tli.getURI() + "_" + ti.getTagName() + getStringFromAttributes(attributes));
@@ -132,12 +136,11 @@ public class TagPoolGenerator extends GeneratorBase
     /**
      * This method returns a unique pool variable name given
      * TagLibraryInfo, TagInfo and set of tag attributes.
-     *
+     * 
      * @param tli
      * @param ti
      * @param attributes
-     * @return
-     * @see getPoolName
+     * @return unique pool variable name based on parameters
      */
     public static String getPoolVariableName(TagLibraryInfo tli, TagInfo ti, Hashtable attributes) {
         return getPoolVariableName(getPoolName(tli, ti, attributes));
@@ -147,10 +150,9 @@ public class TagPoolGenerator extends GeneratorBase
     /**
      * This method returns a unique pool variable name given
      * a unique pool name
-     *
+     * 
      * @param poolName
-     * @return
-     * @see getPoolName
+     * @return unique pool variable name
      */
     public static String getPoolVariableName(String poolName) {
         return getSafeVariableName(POOL_VARIABLE_NAME_PREFIX + poolName);
@@ -187,9 +189,9 @@ public class TagPoolGenerator extends GeneratorBase
     /**
      * This method generates a string based on a set of tag attributes.
      * It sorts the attributes by name then concatenates them.
-     *
+     * 
      * @param attributes
-     * @return
+     * @return string based on tag attributes
      */
     private static String getStringFromAttributes(Hashtable attributes) {
         if (attributes == null || attributes.isEmpty()) {
@@ -240,9 +242,9 @@ public class TagPoolGenerator extends GeneratorBase
      * This method generates a string that can be used as a java
      * variable name.  Characters that cant be used are replaced
      * with an underscore.
-     *
+     * 
      * @param s
-     * @return
+     * @return string that can be used as java variable name
      */
     private static String getSafeVariableName(String s) {
         StringBuffer buffer = new StringBuffer();

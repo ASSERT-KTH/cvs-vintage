@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagPoolManagerGenerator.java,v 1.3 2001/05/11 18:42:57 clucas Exp $
+ *
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights
@@ -63,7 +67,7 @@ import org.apache.jasper.Constants;
  * declares and attempts to obtain a TagPoolManager.
  *
  * @author Casey Lucas <clucas@armassolutions.com>
- * @see TagPoolManager
+ * @see org.apache.jasper.runtime.TagPoolManager
  */
 public class TagPoolManagerGenerator extends GeneratorBase
     implements InitMethodPhase {
