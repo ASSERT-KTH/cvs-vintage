@@ -1008,43 +1008,27 @@ public class Issue
     }
 
     /**
-     * Returns list of child issues
+     * Returns list of child dependencies
      * i.e., related to this issue through the DEPEND table.
      */
     public List getChildren() throws Exception  
     {
-        ArrayList children = new ArrayList();
         Criteria crit = new Criteria()
-            .add(DependPeer.OBSERVED_ID, getIssueId());
-        List depends = (List) DependPeer.doSelect(crit);
-        for ( int i=0; i<depends.size(); i++ ) 
-        {
-            Depend depend = (Depend) depends.get(i); 
-            Issue childIssue = (Issue) IssuePeer
-                      .retrieveByPK(new NumberKey(depend.getObserverId()));
-            children.add(childIssue);
-        }
-        return children;
+            .add(DependPeer.OBSERVED_ID, getIssueId())
+            .add(DependPeer.DELETED, false);
+        return DependPeer.doSelect(crit);
     }
 
     /**
-     * Returns list of parent issues
+     * Returns list of parent dependencies
      * i.e., related to this issue through the DEPEND table.
      */
     public List getParents() throws Exception  
     {
-        ArrayList parents = new ArrayList();
         Criteria crit = new Criteria()
-            .add(DependPeer.OBSERVER_ID, getIssueId());
-        List depends = (List) DependPeer.doSelect(crit);
-        for ( int i=0; i<depends.size(); i++ ) 
-        {
-            Depend depend = (Depend) depends.get(i); 
-            Issue parentIssue = (Issue) IssuePeer
-                      .retrieveByPK(new NumberKey(depend.getObservedId()));
-            parents.add(parentIssue);
-        }
-        return parents;
+            .add(DependPeer.OBSERVER_ID, getIssueId())
+            .add(DependPeer.DELETED, false);
+        return DependPeer.doSelect(crit);
     }
         
     /**
