@@ -95,6 +95,21 @@
         <mkdir dir="${build.dir.scarab}/webapps"/>
     </target>
 
+
+    <!-- ================================================================== -->
+    <!-- Check to see what optional dependencies are available              -->
+    <!-- ================================================================== -->
+    <target name="check_for_optional_packages">
+        <available property="lucene.present"
+                   classname="com.lucene.document.Document">
+            <classpath refid="classpath"/>
+        </available>
+        <available property="junit.present"
+           classname="junit.framework.TestCase">
+            <classpath refid="classpath"/>
+        </available>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
@@ -141,10 +156,26 @@
                 <include name="**/*.java"/>
                 <include name="**/*.properties"/>
                 <include name="**/package.html"/>
+                <exclude name="**/*Lucene*.java"/>
             </fileset>
         </copy>
+        <!-- add Lucene code to source directory -->
+        <antcall target="copy_lucene"/>
         
         <mkdir dir="${build.project}/logs"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Adds Lucene adaptor code to source directory                       -->
+    <!-- ================================================================== -->
+    <target name="copy_lucene" depends="check_for_optional_packages"
+        if="lucene.present">
+
+        <copy todir="${build.src.scarab}/org" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
+                <include name="**/*Lucene*.java"/>
+            </fileset>
+        </copy>
     </target>
 
 
