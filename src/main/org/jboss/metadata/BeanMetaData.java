@@ -29,7 +29,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -103,6 +103,8 @@ public abstract class BeanMetaData
    protected String configurationName;
    private ConfigurationMetaData configuration;
    private String securityProxy;
+   
+   protected boolean clustered = false;
 	
    // Static --------------------------------------------------------
     
@@ -310,6 +312,10 @@ public abstract class BeanMetaData
          result = null;
       return result;
    }
+   
+   // Cluster configuration methods
+   //
+   public boolean isClustered () { return this.clustered; }
 
    public void importEjbJarXml(Element element) throws DeploymentException
    {
@@ -459,6 +465,12 @@ public abstract class BeanMetaData
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
+      
+      // Determine if the bean is to be deployed in the cluster (more advanced config will be added in the future)
+      //
+      String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered? "True" : "False"));
+      clustered = clusteredElt.equals ("True");
+      
    }
 
    // Package protected ---------------------------------------------
