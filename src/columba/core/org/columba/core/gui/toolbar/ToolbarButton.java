@@ -23,7 +23,7 @@ import java.awt.Insets;
 import javax.swing.Icon;
 import javax.swing.SwingConstants;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.menu.CButton;
@@ -45,7 +45,7 @@ public class ToolbarButton extends CButton {
 		setRequestFocusEnabled(false);
 	}
 
-	public ToolbarButton(BasicAction a) {
+	public ToolbarButton(FrameAction a) {
 		super(a);
 
 		setRequestFocusEnabled(false);

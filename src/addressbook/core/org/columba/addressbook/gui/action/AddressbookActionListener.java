@@ -20,23 +20,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 
 public class AddressbookActionListener implements ActionListener {
-	public BasicAction cutAction;
-	public BasicAction copyAction;
-	public BasicAction pasteAction;
-	public BasicAction selectAllAction;
-	public BasicAction deleteAction;
-	public BasicAction closeAction;
-	public BasicAction addContactAction;
-	public BasicAction addGroupAction;
-	public BasicAction removeAction;
-	public BasicAction propertiesAction;
-	public BasicAction addAddressbookAction;
-	public BasicAction addressbookImportAction;
-	public BasicAction addvcardAction;
-	public BasicAction savevcardAction;
+	public FrameAction cutAction;
+	public FrameAction copyAction;
+	public FrameAction pasteAction;
+	public FrameAction selectAllAction;
+	public FrameAction deleteAction;
+	public FrameAction closeAction;
+	public FrameAction addContactAction;
+	public FrameAction addGroupAction;
+	public FrameAction removeAction;
+	public FrameAction propertiesAction;
+	public FrameAction addAddressbookAction;
+	public FrameAction addressbookImportAction;
+	public FrameAction addvcardAction;
+	public FrameAction savevcardAction;
 
 	private AddressbookInterface addressbookInterface;
 

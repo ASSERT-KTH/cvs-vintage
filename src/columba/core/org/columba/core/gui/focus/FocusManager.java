@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.focus;
 
 import java.awt.event.FocusEvent;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 
 /**
  * 
@@ -56,13 +57,13 @@ public class FocusManager implements FocusListener {
 	/**
 	 * all actions
 	 */
-	BasicAction cutAction;
-	BasicAction copyAction;
-	BasicAction pasteAction;
-	BasicAction deleteAction;
-	BasicAction selectAllAction;
-	BasicAction undoAction;
-	BasicAction redoAction;
+	FrameAction cutAction;
+	FrameAction copyAction;
+	FrameAction pasteAction;
+	FrameAction deleteAction;
+	FrameAction selectAllAction;
+	FrameAction undoAction;
+	FrameAction redoAction;
 
 	/**
 	 * current focus owner
@@ -252,49 +253,49 @@ public class FocusManager implements FocusListener {
 	/**
 	 * @param action
 	 */
-	public void setCopyAction(BasicAction action) {
+	public void setCopyAction(FrameAction action) {
 		copyAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setCutAction(BasicAction action) {
+	public void setCutAction(FrameAction action) {
 		cutAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setDeleteAction(BasicAction action) {
+	public void setDeleteAction(FrameAction action) {
 		deleteAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setPasteAction(BasicAction action) {
+	public void setPasteAction(FrameAction action) {
 		pasteAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setRedoAction(BasicAction action) {
+	public void setRedoAction(FrameAction action) {
 		redoAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setSelectAllAction(BasicAction action) {
+	public void setSelectAllAction(FrameAction action) {
 		selectAllAction = action;
 	}
 
 	/**
 	 * @param action
 	 */
-	public void setUndoAction(BasicAction action) {
+	public void setUndoAction(FrameAction action) {
 		undoAction = action;
 	}
 

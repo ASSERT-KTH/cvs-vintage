@@ -21,7 +21,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.gui.frame.FrameMediator;
 
 /**
- * Adds an Observable/Observer to {@link BasicAction}. 
+ * Adds an Observable/Observer to {@link FrameAction}. 
  * <p>
  * This makes it possible to notify gui-elements like
  * JRadioButtonMenuItem and JRadioButton, which are created using this

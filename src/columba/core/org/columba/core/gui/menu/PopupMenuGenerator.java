@@ -12,7 +12,7 @@ import java.util.ListIterator;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
@@ -37,13 +37,11 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 		FrameMediator frameController,
 		String path) {
 		super(frameController, path);
-
 	}
 
 	public void createPopupMenu(JPopupMenu menu) {
 		menu.removeAll();
 		createPopupMenu(getMenuRoot(), menu);
-
 	}
 
 	/*
@@ -78,7 +76,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 
 				if (next.getAttribute("action") != null) {
 					try {
-						BasicAction action =
+						FrameAction action =
 							(
 								(
 									ActionPluginHandler) MainInterface
@@ -162,5 +160,4 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 
 		return menu;
 	}
-
 }

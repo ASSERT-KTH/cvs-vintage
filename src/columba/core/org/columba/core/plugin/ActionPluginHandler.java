@@ -19,7 +19,7 @@ package org.columba.core.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
@@ -90,7 +90,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
 	}
 
-	public BasicAction getAction(
+	public FrameAction getAction(
 		String name,
 		FrameMediator controller)
 		throws Exception {
@@ -104,18 +104,18 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 				// -> return existing instance from hashmap
 				// -> don't use this temporary instance
 
-				return (BasicAction) map.get(name);
+				return (FrameAction) map.get(name);
 			} else {
 				// put first time instance in hashmap
-				BasicAction a =
-					(BasicAction) getPlugin(name, new Object[] { controller });
+				FrameAction a =
+					(FrameAction) getPlugin(name, new Object[] { controller });
 				map.put(name, a);
 
 				return a;
 			}
 		}
 
-		return (BasicAction) getPlugin(name, new Object[] { controller });
+		return (FrameAction) getPlugin(name, new Object[] { controller });
 	}
 
 	public IMenu getIMenu(String name, FrameMediator controller)

@@ -20,7 +20,7 @@ import java.util.ListIterator;
 
 import javax.swing.JMenu;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
@@ -119,9 +119,6 @@ public abstract class AbstractMenuGenerator {
 					extensionName);
 			}
 		}
-		
-		
-
 	}
 
 	private void createExtension(
@@ -189,7 +186,7 @@ public abstract class AbstractMenuGenerator {
 
 				if (next.getAttribute("action") != null) {
 					try {
-						BasicAction action =
+						FrameAction action =
 							(
 								(
 									ActionPluginHandler) MainInterface
@@ -299,5 +296,4 @@ public abstract class AbstractMenuGenerator {
 
 		return menu;
 	}
-
 }

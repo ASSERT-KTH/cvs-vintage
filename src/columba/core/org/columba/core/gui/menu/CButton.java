@@ -20,7 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.help.HelpManager;
 
 
@@ -49,7 +49,7 @@ public class CButton extends JButton {
 	{
 		super(action);
 		
-		BasicAction basicAction = (BasicAction) action;
+		FrameAction basicAction = (FrameAction) action;
 		
 		if ( basicAction.getTopicID() != null )
 			HelpManager.enableHelpOnButton(this, basicAction.getTopicID());

@@ -18,36 +18,36 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.mail.gui.composer.ComposerController;
 
 public class ComposerActionListener implements ActionListener {
 	//private ComposerInterface composerInterface;
 
-	public BasicAction undoAction;
-	public BasicAction redoAction;
-	public BasicAction attachFileAction;
-	public BasicAction spellCheckAction;
-	public BasicAction attachMessageAction;
-	public BasicAction cutAction;
-	public BasicAction copyAction;
-	public BasicAction pasteAction;
-	public BasicAction deleteAction;
-	public BasicAction sendAction;
-	public BasicAction sendLaterAction;
-	public BasicAction newAction;
-	public BasicAction saveAction;
-	public BasicAction saveAsAction;
-	public BasicAction saveDraftAction;
-	public BasicAction saveTemplateAction;
-	public BasicAction exitAction;
-	public BasicAction addressbookAction;
-	public BasicAction selectAllAction;
-	public BasicAction signAction;
-	public BasicAction encryptAction;
+	public FrameAction undoAction;
+	public FrameAction redoAction;
+	public FrameAction attachFileAction;
+	public FrameAction spellCheckAction;
+	public FrameAction attachMessageAction;
+	public FrameAction cutAction;
+	public FrameAction copyAction;
+	public FrameAction pasteAction;
+	public FrameAction deleteAction;
+	public FrameAction sendAction;
+	public FrameAction sendLaterAction;
+	public FrameAction newAction;
+	public FrameAction saveAction;
+	public FrameAction saveAsAction;
+	public FrameAction saveDraftAction;
+	public FrameAction saveTemplateAction;
+	public FrameAction exitAction;
+	public FrameAction addressbookAction;
+	public FrameAction selectAllAction;
+	public FrameAction signAction;
+	public FrameAction encryptAction;
 	// 09/16/02 ALP
 	// Added as part of external editor support
-	public BasicAction externEditAction;
+	public FrameAction externEditAction;
 
 	public ComposerActionListener(ComposerController c) {
 		/*
@@ -60,7 +60,7 @@ public class ComposerActionListener implements ActionListener {
 	private void initActions() {
 		/*
 		undoAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -86,7 +86,7 @@ public class ComposerActionListener implements ActionListener {
 		undoAction.setEnabled(true);
 
 		redoAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -112,7 +112,7 @@ public class ComposerActionListener implements ActionListener {
 		redoAction.setEnabled(true);
 
 		cutAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -138,7 +138,7 @@ public class ComposerActionListener implements ActionListener {
 		cutAction.setEnabled(true);
 
 		copyAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -164,7 +164,7 @@ public class ComposerActionListener implements ActionListener {
 		copyAction.setEnabled(true);
 
 		pasteAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -191,7 +191,7 @@ public class ComposerActionListener implements ActionListener {
 		pasteAction.setEnabled(false);
 
 		attachFileAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -216,7 +216,7 @@ public class ComposerActionListener implements ActionListener {
 		attachFileAction.setEnabled(true);
 
 		spellCheckAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -242,7 +242,7 @@ public class ComposerActionListener implements ActionListener {
 		spellCheckAction.setEnabled(true);
 
 		attachMessageAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -267,7 +267,7 @@ public class ComposerActionListener implements ActionListener {
 		attachMessageAction.setEnabled(true);
 
 		sendAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -294,7 +294,7 @@ public class ComposerActionListener implements ActionListener {
 		sendAction.setEnabled(true);
 
 		sendLaterAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -319,7 +319,7 @@ public class ComposerActionListener implements ActionListener {
 		sendLaterAction.setEnabled(true);
 
 		saveAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -344,7 +344,7 @@ public class ComposerActionListener implements ActionListener {
 		saveAction.setEnabled(false);
 
 		saveAsAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -369,7 +369,7 @@ public class ComposerActionListener implements ActionListener {
 		saveAsAction.setEnabled(false);
 
 		saveDraftAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -396,7 +396,7 @@ public class ComposerActionListener implements ActionListener {
 		saveAsAction.setEnabled(false);
 
 		saveTemplateAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -421,7 +421,7 @@ public class ComposerActionListener implements ActionListener {
 		saveTemplateAction.setEnabled(true);
 
 		newAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -446,7 +446,7 @@ public class ComposerActionListener implements ActionListener {
 		newAction.setEnabled(true);
 
 		exitAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -471,7 +471,7 @@ public class ComposerActionListener implements ActionListener {
 		exitAction.setEnabled(true);
 
 		addressbookAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -497,7 +497,7 @@ public class ComposerActionListener implements ActionListener {
 		addressbookAction.setEnabled(true);
 
 		deleteAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -522,7 +522,7 @@ public class ComposerActionListener implements ActionListener {
 		deleteAction.setEnabled(true);
 
 		selectAllAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -547,7 +547,7 @@ public class ComposerActionListener implements ActionListener {
 		selectAllAction.setEnabled(false);
 
 		signAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -572,7 +572,7 @@ public class ComposerActionListener implements ActionListener {
 		signAction.setEnabled(true);
 
 		encryptAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",
@@ -599,7 +599,7 @@ public class ComposerActionListener implements ActionListener {
 		// 09/16/02 ALP
 		// Added as part of external editor support
 		externEditAction =
-			new BasicAction(
+			new FrameAction(
 				MailResourceLoader.getString(
 					"menu",
 					"composer",

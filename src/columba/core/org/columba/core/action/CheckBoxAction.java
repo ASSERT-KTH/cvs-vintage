@@ -21,7 +21,7 @@ import javax.swing.JCheckBoxMenuItem;
 import org.columba.core.gui.frame.FrameMediator;
 
 /**
- * Adds an Observable/Observer to {@link BasicAction}. 
+ * Adds an Observable/Observer to {@link FrameAction}. 
  * <p>
  * This makes it possible to notify gui-elements like
  * JCheckBoxMenuItem and JToogleButton, which are created using this

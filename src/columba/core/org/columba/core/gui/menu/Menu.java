@@ -20,7 +20,7 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -92,18 +92,15 @@ public class Menu extends JMenuBar {
 		menuGenerator.createMenuBar(this);
 	}
 
-	public void addMenuEntry(String id, BasicAction action) {
-
+	public void addMenuEntry(String id, FrameAction action) {
 		CMenuItem menuItem = new CMenuItem(action);
 		menuItem.addMouseListener(handler);
 
 		JMenu menu = getMenu(id);
 		menu.add(menuItem);
-
 	}
 
 	public JMenu getMenu(String id) {
-
 		for (int i = 0; i < getMenuCount(); i++) {
 			JMenu menu = (JMenu) getComponent(i);
 
@@ -113,12 +110,10 @@ public class Menu extends JMenuBar {
 				return menu;
 			}
 		}
-
 		return null;
 	}
 
 	public void addMenuSeparator(String id) {
-
 		for (int i = 0; i < getMenuCount(); i++) {
 			JMenu menu = (JMenu) getComponent(i);
 
@@ -128,7 +123,5 @@ public class Menu extends JMenuBar {
 				menu.addSeparator();
 			}
 		}
-
 	}
-
 }

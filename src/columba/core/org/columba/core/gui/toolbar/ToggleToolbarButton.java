@@ -14,7 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JToggleButton;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.SelectionStateObservable;
 import org.columba.core.gui.util.ImageUtil;
@@ -60,15 +60,14 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 		// no text!
 		setText("");
 
-		setIcon(((BasicAction) action).getSmallIcon());
+		setIcon(((FrameAction) action).getSmallIcon());
 		
 		// apply transparent icon
-		if ( ((BasicAction) action).getSmallIcon() != null )
-		setDisabledIcon(ImageUtil.createTransparentIcon(((BasicAction) action).getSmallIcon()));
+		if ( ((FrameAction) action).getSmallIcon() != null )
+		setDisabledIcon(ImageUtil.createTransparentIcon(((FrameAction) action).getSmallIcon()));
 			 
 		//setToolTipText(((BasicAction) action).getTooltipText());
 		((CheckBoxAction) getAction()).getObservable().addObserver(this);
-		
 	}
 
 	public boolean isFocusTraversable() {
@@ -85,5 +84,4 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 		setSelected(selectionState);
 
 	}
-
 }

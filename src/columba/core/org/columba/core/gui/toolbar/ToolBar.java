@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
-import org.columba.core.action.BasicAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.logging.ColumbaLogger;
@@ -63,7 +63,6 @@ public class ToolBar extends JToolBar {
 		setRollover(true);
 
 		setFloatable(false);
-
 	}
 
 	public boolean getVisible() {
@@ -105,7 +104,7 @@ public class ToolBar extends JToolBar {
 		add(image);
 	}
 
-	public void addButton(BasicAction action) {
+	public void addButton(FrameAction action) {
 
 		ToolbarButton button = new ToolbarButton(action);
 		button.setRolloverEnabled(true);
@@ -113,5 +112,4 @@ public class ToolBar extends JToolBar {
 		add(button);
 
 	}
-
 }
