@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.44 2002/04/14 19:42:56 reverbel Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.45 2002/04/17 13:34:49 reverbel Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -106,21 +106,6 @@
   <mbean code="org.jboss.resource.connectionmanager.CachedConnectionManager" name="jboss.jca:service=CachedConnectionManager">
   </mbean>
 
-
-  <!-- ==================================================================== -->
-  <!-- RMI/IIOP                                                             -->
-  <!-- ==================================================================== -->
-  <!-- Uncomment to use the iiop module with JacORB
-  <mbean code="org.jboss.iiop.CorbaORBService"
-         name="jboss:service=CorbaORB">
-    <attribute name="ORBClass">org.jacorb.orb.ORB</attribute>
-    <attribute name="ORBSingletonClass">org.jacorb.orb.ORBSingleton</attribute>
-    <attribute name="IIOPServerName">JBoss</attribute>
-    <attribute name="IIOPPort">5000</attribute>
-    <attribute name="PortableInterceptorInitializerClass">org.jboss.ejb.plugins.iiop.server.CodebaseInterceptorInitializer</attribute>
-    <attribute name="Verbosity">1</attribute>
-  </mbean>
-  -->
 
   <!-- ==================================================================== -->
   <!-- The deployers...                                                     -->
