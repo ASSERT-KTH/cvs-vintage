@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.98 2002/01/23 23:53:14 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.99 2002/01/24 01:06:07 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -404,7 +404,12 @@ public class ReportIssue extends RequireLoginFirstAction
                 Group commentGroup = intake.get("Attachment", "_1", false);
                 Attachment comment = new Attachment();
                 commentGroup.setProperties(comment);
-                issue.addComment(comment, (ScarabUser)data.getUser());
+                if ( comment.getData() != null 
+                     && comment.getData().length > 0) 
+                {
+                    issue.addComment(comment, (ScarabUser)data.getUser());     
+                }
+                
 
                 // set the template to the user selected value
                 String template = data.getParameters()
