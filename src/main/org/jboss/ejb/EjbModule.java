@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -317,6 +317,9 @@ public class EjbModule
       {
          ApplicationMetaData appMetaData = (ApplicationMetaData) deploymentInfo.metaData;
          Iterator beans = appMetaData.getEnterpriseBeans();
+         String contextID = deploymentInfo.shortName;
+         PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+         PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
          while (beans.hasNext())
          {
             BeanMetaData bean = (BeanMetaData) beans.next();
@@ -325,11 +328,8 @@ public class EjbModule
             con.setDeploymentInfo(deploymentInfo);
             addContainer(con);
             //@todo support overriding the context id via metadata is needed
-            String contextID = deploymentInfo.shortName;
             con.setJaccContextID(contextID);
             // Register the permissions with the JACC layer
-            PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
-            PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
             createPermissions(bean, pc);
             deploymentInfo.context.put("javax.security.jacc.PolicyConfiguration", pc);
             // Link this to the parent PC
@@ -428,6 +428,11 @@ public class EjbModule
       }
 
       ListIterator iter = containerOrdering.listIterator(containerOrdering.size());
+      // Unegister the permissions with the JACC layer
+      String contextID = deploymentInfo.shortName;
+      PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+      PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
+      pc.delete();
       while ( iter.hasPrevious() )
       {
          Container con = (Container) iter.previous();
@@ -924,8 +929,11 @@ public class EjbModule
          String[] params = null;
          if( mmd.isParamGiven() )
             params = mmd.getMethodParams();
+         String methodName = mmd.getMethodName();
+         if( methodName != null && methodName.equals("*") )
+            methodName = null;
          EJBMethodPermission p = new EJBMethodPermission(mmd.getEjbName(),
-            mmd.getMethodName(), mmd.getInterfaceType(), params);
+            methodName, mmd.getInterfaceType(), params);
          if( mmd.isUnchecked() )
          {
             pc.addToUncheckedPolicy(p);
