@@ -10,13 +10,13 @@
         <include name="org/objectweb/carol/cmi/compiler/*.vm"/>
       </fileset>
       <manifest>
-        <attribute name="Specification-Title" value="${carol.cmi.name}" />
+        <attribute name="Specification-Title" value="$Cluster Method Invokation (CMI) Compiler" />
         <attribute name="Specification-Version" value="${carol.version}" />
         <attribute name="Specification-Vendor" value="ObjectWeb" />
-        <attribute name="Implementation-Title" value="${carol.cmi.package}" />
+        <attribute name="Implementation-Title" value="org.objectweb.carol.cmi.compiler" />
         <attribute name="Implementation-Version" value="${carol.version}" />
         <attribute name="Implementation-Vendor" value="INRIA" />
-        <attribute name="Main-Class" value="${carol.cmi.compiler}" />
+        <attribute name="Main-Class" value="org.objectweb.carol.cmi.compiler.Compiler" />
         <attribute name="Class-Path" value="ow_carol_core.jar" />
       </manifest>
     </jar>

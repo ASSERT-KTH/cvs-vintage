@@ -35,9 +35,6 @@
   <property name="carol.version" value="1.8.9" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
-  <property name="carol.cmi.name" value="Cluster Method Invokation (CMI) Compiler" />
-  <property name="carol.cmi.package" value="org.objectweb.carol.cmi.compiler" />
-  <property name="carol.cmi.compiler" value="org.objectweb.carol.cmi.compiler.Compiler" />
 
   <!-- directories target definition -->
   <property name="dist.lib"        value="${dist}/lib"/>
