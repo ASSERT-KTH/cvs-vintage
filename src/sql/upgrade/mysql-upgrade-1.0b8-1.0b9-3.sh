@@ -1,9 +1,11 @@
 #!/bin/sh
 
-### DEFINE THESE PARAMETERS
+### DEFINE THESE PARAMETERS IF YOU NEED TO
 username=
 password=
-database=
+HOSTNAME=
+port=
+database=scarab
 
 HELP=$1
 
@@ -34,17 +36,34 @@ if [ ! -x "${MYSQL}" ] ; then
     exit 1
 fi
 
+USERCMD=
+if [ "${username}" != "" ] ; then
+    USERCMD="--user=${username}"
+fi
+
+PASSCMD=
+if [ ! -z "${password}" ] ; then
+    PASSCMD="--password=${password}"
+fi
+PORTCMD=
+if [ "${port}" != "" ] ; then
+    PORTCMD="--port=${port}"
+fi
+HOSTCMD="--host=${HOSTNAME}"
+
+MYSQLCMD="${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
+
 SQL="select SCARAB_ATTRIBUTE.ATTRIBUTE_ID from SCARAB_ATTRIBUTE where deleted=1"
-echo $SQL |  ${MYSQL} -u{$username} -p{$password} {database} | grep -v '^ATTRIBUTE_ID' | \
+echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} | grep -v '^ATTRIBUTE_ID' | \
 while read attributeid ; do
  echo "attributeid is: $attributeid"
  SQL="delete from SCARAB_R_MODULE_ATTRIBUTE where ATTRIBUTE_ID='$attributeid'"
- echo $SQL |  ${MYSQL} -u{$username} -p{$password} {database} 
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} 
  SQL="select SCARAB_ATTRIBUTE_OPTION.OPTION_ID from SCARAB_ATTRIBUTE_OPTION where ATTRIBUTE_ID='$attributeid'"
- echo $SQL |  ${MYSQL} -u{$username} -p{$password} {database} | grep -v '^OPTION_ID' | \
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} | grep -v '^OPTION_ID' | \
  while read optionid; do
-   echo "id is $optionid"
+   echo "optionid is $optionid"
    SQL="delete from SCARAB_R_MODULE_OPTION where OPTION_ID='$optionid'"
-   echo $SQL |  ${MYSQL} -u{$username} -p{$password} {database}
+   echo $SQL | ${MYSQL} ${MYSQLCMD} ${database}
  done
 done
