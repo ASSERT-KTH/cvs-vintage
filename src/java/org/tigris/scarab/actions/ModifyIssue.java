@@ -75,10 +75,11 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.3 2001/06/29 01:55:58 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.4 2001/07/02 23:09:06 elicia Exp $
 */
 public class ModifyIssue extends VelocityAction
 {
+
     public void doSubmitattributes( RunData data, Context context )
         throws Exception
     {
@@ -97,23 +98,8 @@ public class ModifyIssue extends VelocityAction
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(), false);
 
-               /* Debugging code */
-                System.out.println("aval=" + aval.getAttributeId());
-                System.out.println("group=" + group);
-                Field field = null;
                 if ( group != null ) 
                 {            
-                    if ( aval instanceof OptionAttribute ) 
-                    {
-                        field = group.get("OptionId");
-                    }
-                    else 
-                    {
-                        field = group.get("Value");
-                    }
-
-                    System.out.println("field=" + field);
-
                     group.setProperties(aval);
                 }
             }
@@ -127,7 +113,19 @@ public class ModifyIssue extends VelocityAction
         }
     }
 
-   public void doSaveComment (RunData data, Context context )
+   public void doSubmiturl (RunData data, Context context ) 
+        throws Exception
+   {
+        submitAttachment (data, context, "url");
+   } 
+
+   public void doSubmitcomment (RunData data, Context context ) 
+        throws Exception
+   {
+        submitAttachment (data, context, "comment");
+   } 
+
+   private void submitAttachment (RunData data, Context context, String type)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -135,20 +133,101 @@ public class ModifyIssue extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         Attachment attachment = new Attachment();
-        Group group = intake.get("Attachment", 
-                           attachment.getQueryKey(), false);
+        String typeID= null;
+        Group group = null;
+
+        if (type.equals("url"))
+        {
+            group = intake.get("Attachment", "urlKey", false);
+            typeID = "3";
+        } else if (type.equals("comment")) {
+            group = intake.get("Attachment", "commentKey", false);
+            typeID = "2";
+        }
+
         if ( group != null ) 
         {
             group.setProperties(attachment);
-            if ( attachment.getData().length > 0 ) 
+            if ( attachment.getDataAsString() != null && 
+                 !attachment.getDataAsString().equals("") )
             {
                 attachment.setIssue(issue);
-                attachment.setTypeId(new NumberKey(1));
-                        attachment.save();
+                attachment.setTypeId(new NumberKey(typeID));
+                attachment.setMimeType("text/plain");
+                attachment.save();
             }
         }
-     }
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, 
+                       "IssueView.vm");
+        setTemplate(data, template);            
+   } 
 
+   public void doDeleteurl (RunData data, Context context )
+        throws Exception
+    {                          
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentId;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("url_delete_"))
+            {
+               attachmentId = key.substring(11);
+               Attachment attachment = (Attachment) AttachmentPeer.
+                                     retrieveByPK(new NumberKey(attachmentId));
+               attachment.delete();
+            } 
+        }
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, 
+                       "IssueView.vm");
+        setTemplate(data, template);            
+    }
+
+    /**
+        Modifies the dependency type between parent and child issues.
+    */
+    public void doUpdatechild (RunData data, Context context )
+        throws Exception
+    {                          
+        String id = data.getParameters().getString("id");
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        Issue parent = (Issue) IssuePeer.retrieveByPK(
+                        new NumberKey(id));
+        String key;
+        String childId;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("child_depend_type_"))
+            {
+               String dependTypeId = params.getString(key);
+               
+               childId = key.substring(18);
+               Issue child = (Issue) IssuePeer.retrieveByPK(
+                              new NumberKey(childId));
+               Depend depend = parent.getDependency(child);
+               // User selected to remove the dependency
+               if (dependTypeId.equals("none"))
+               {
+                   depend.delete();
+               } else {
+                   DependType dependType = (DependType) DependTypePeer.
+                                           retrieveByPK(new NumberKey
+                                           (dependTypeId));
+                   depend.setDependType(dependType);
+               }
+               depend.save();
+               break;
+            }
+         }
+    }
 
     /**
         This manages clicking the Cancel button
