@@ -85,6 +85,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  #set ($dummy = $link.setPage("IssueList.vm").setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("pageNum", "$pageNum"))
 #end
 
+## TODO: Start a new table every 100 results to speed up rendering in
+## non-IE browsers.  Count only the query results to assure that the
+## full 100 result possibility is sectioned off within a single table,
+## ignoring the row with column headings (e.g. <th> elements).
+## Issuezilla uses this trick with good results.
+
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th width="70">Select</th>

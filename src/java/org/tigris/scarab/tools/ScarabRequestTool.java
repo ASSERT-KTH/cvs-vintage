@@ -1,7 +1,7 @@
 package org.tigris.scarab.tools;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -286,7 +286,12 @@ public class ScarabRequestTool
         attributeOption = null;
         roo = null;
         pcao = null;
-        issueSearch = null;
+        if (issueSearch != null)
+        {
+            // This must _always_ be called by dispose()
+            issueSearch.close();
+            issueSearch = null;
+        }
         issueList = null;
         reportGenerator = null;
         nbrPages = 0;
