@@ -69,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.23 2002/04/30 19:49:24 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.24 2002/05/01 01:11:08 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -234,6 +234,14 @@ public abstract class ScarabTemplateAction extends TemplateAction
     {
         setTarget(data, getCancelTemplate(data));            
     }
+
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSave( data, context);
+        doCancel( data, context);
+    }
+
 
     protected Category log()
     {
