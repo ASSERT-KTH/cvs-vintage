@@ -46,7 +46,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.11 $</tt>
+ * @version <tt>$Revision: 1.12 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -166,8 +166,6 @@ public class JDBCStoreManager2
          // Make a copy of the managers (for safty)
          List managers = new ArrayList(managersMap.values());
 
-         //
-         //
          // Start Phase 2: resolve relationships
          for(int i = 0; i < managers.size(); ++i)
          {
@@ -175,9 +173,14 @@ public class JDBCStoreManager2
             manager.resolveRelationships();
          }
 
-         //
-         //
-         // Start Phase 3: create tables and compile queries
+         // Start Phase 3: init cmr loaders
+         for(int i = 0; i < managers.size(); ++i)
+         {
+            JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
+            manager.startEntity();
+         }
+
+         // Start Phase 4: create tables and compile queries
          for(int i = 0; i < managers.size(); ++i)
          {
             JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
@@ -432,8 +435,6 @@ public class JDBCStoreManager2
 
    protected void startStoreManager() throws Exception
    {
-      entityBridge.start();
-
       queryFactory = new QueryFactory(entityBridge);
       queryFactory.init();
 
@@ -468,6 +469,12 @@ public class JDBCStoreManager2
       }
 
       createCmd.init(this);
+   }
+
+   private void startEntity()
+      throws DeploymentException
+   {
+      entityBridge.start();
    }
 
    private JDBCEntityMetaData loadJDBCEntityMetaData()
