@@ -22,7 +22,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JDBCQueryMetaDataFactory {
 	private JDBCEntityMetaData entity;
@@ -88,7 +88,7 @@ public class JDBCQueryMetaDataFactory {
    public Method[] getQueryMethods(QueryMetaData queryData) throws DeploymentException {
 		String methodName = queryData.getMethodName();
 		Class[] parameters = convertToJavaClasses(queryData.getMethodParams());
-		String methodIntf = queryData.getMethodName();
+		String methodIntf = queryData.getMethodIntf();
 		return getQueryMethods(methodName, parameters, methodIntf);
 	}
 
@@ -103,9 +103,15 @@ public class JDBCQueryMetaDataFactory {
 		} else {
 			// interface element
 			if(methodIntf == null || methodIntf.equals(QueryMetaData.HOME)) {
-				methods.add(getQueryMethod(methodName, parameters, entity.getHomeClass()));
+				Class homeClass = entity.getHomeClass(); // optional, might be null
+				if(homeClass != null) {
+					methods.add(getQueryMethod(methodName, parameters, homeClass));
+				}
 			} else if(methodIntf == null || methodIntf.equals(QueryMetaData.LOCAL_HOME)) {
-				methods.add(getQueryMethod(methodName, parameters, entity.getLocalHomeClass()));
+				Class localHomeClass = entity.getLocalHomeClass(); // optional, might be null
+				if(localHomeClass != null) {
+					methods.add(getQueryMethod(methodName, parameters, localHomeClass));
+				}
 			}
 		}          
 
