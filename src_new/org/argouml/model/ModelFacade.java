@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.90 2003/08/30 23:46:12 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.91 2003/08/30 23:58:45 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2265,6 +2265,21 @@ public class ModelFacade {
     public static Object getTarget(Object handle) {
         if (isATransition(handle)) {
             return ((MTransition) handle).getTarget();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /**
+     * Returns the target scope of some model element
+     * @param handle
+     * @return Object
+     */
+    public static Object getTargetScope(Object handle) {
+        if (handle instanceof MStructuralFeature) {
+            return ((MStructuralFeature) handle).getTargetScope();
+        }
+        if (handle instanceof MAssociationEnd) {
+            return ((MAssociationEnd) handle).getTargetScope();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
