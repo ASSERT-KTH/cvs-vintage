@@ -57,19 +57,25 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypeManager;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
- *  This class will allow you to set the selected Issue Type for a user.
- *       
- *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectIssueType.java,v 1.9 2002/06/25 23:04:48 jmcnally Exp $
+ * This class will allow you to set the selected Issue Type for a user.
+ * It will also contains the logic for setting the target screen
+ * to display depending on whether or not the issue type supports
+ * dedupe or not. this is business logic that belongs in the action,
+ * not in the templates.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: SelectIssueType.java,v 1.10 2002/07/03 17:43:40 jon Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
     /**
-        This manages clicking the Refresh button
-    */
+     * Main action execution.
+     */
     public void doSelect( RunData data, TemplateContext context ) throws Exception
     {
         // set the next issue type
@@ -77,7 +83,7 @@ public class SelectIssueType extends RequireLoginFirstAction
             data.getParameters().getString(ScarabConstants.NEW_ISSUE_TYPE);
         if (newIssueType == null)
         {
-            setTarget(data, "SelectIssueType.vm");
+            setTarget(data, ((ScarabUser)data.getUser()).getHomePage());
             return;
         }
         data.getParameters().setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
@@ -90,13 +96,7 @@ public class SelectIssueType extends RequireLoginFirstAction
         scarabR.setReportingIssue(null);
         data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
 
-        // set the next template
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, 
-            Turbine.getConfiguration()
-                       .getString("template.homepage", "SelectIssueType.vm") );
-
-        setTarget(data, nextTemplate);
+        setTarget(data, scarabR.getNextEntryTemplate());
     }
 
     /**
