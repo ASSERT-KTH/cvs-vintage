@@ -9,7 +9,7 @@ $page.setTitle("Query results")
 #set ($search = $scarabR.Search)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($searchType = $data.Parameters.getString("searchType",""))
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($resultsPerPage = $data.Parameters.getString("resultsPerPage",""))
 #set ($pageNum = $data.Parameters.getInt("pageNum",0))
 #set ($issueList = $scarabR.IssueList)
 
@@ -18,8 +18,8 @@ $page.setTitle("Query results")
   <p class="alert">There are no matching issues.</p>
 #else
 
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
+#if ($resultsPerPage.equals("0"))
+  #set ($resultsPerPage = "25")
 #end
 #if ($pageNum == 0)
   #set ($pageNum = "1")
@@ -27,7 +27,7 @@ $page.setTitle("Query results")
 
 #if ($issueList.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage))
  #if ($pagList)
    #set ($issueList = $pagList)
  #end
