@@ -71,11 +71,10 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 /**
  * <p>Sends file contents directly to the output stream, setting the
  * <code>Content-Type</code> to excel and writing back to the browser
- * a tab-delimited file: Excel (and gnumeric) seem to digest this
- * fine.  We used to use <a
- * href="http://jakarta.apache.org/poi/">POI</a> to compose an Excel
- * binary data file, but its outrageous memory consumption didn't
- * scale for large result sets. POI assembles the its output in
+ * a tab-delimited file: Excel seem to digest this fine.  We used to
+ * use <a href="http://jakarta.apache.org/poi/">POI</a> to compose an
+ * Excel binary data file, but its outrageous memory consumption
+ * didn't scale for large result sets. POI assembles the its output in
  * memory.  After study of the native OLE2 excel file format, it
  * appears very difficult to generate the file in another fashion.</p>
  *
@@ -239,15 +238,15 @@ public class IssueListToExcel extends Default
                         {
                             if (comma != null)
                             {
-                                value.append(comma);
+                                buf.append(comma);
                             }
                             else
                             {
                                 comma = ", ";
                             }
 
-                            value.append(escapeCommas(((AttributeValue)
-                                                       i.next()).getValue()));
+                            buf.append(escapeCommas(((AttributeValue) i.next())
+                                                    .getValue()));
                         }
                         value = buf.toString();
                     }
