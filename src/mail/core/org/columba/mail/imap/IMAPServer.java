@@ -28,9 +28,9 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.util.ListTools;
-import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.FilterCriteria;

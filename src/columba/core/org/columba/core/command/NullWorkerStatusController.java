@@ -14,9 +14,8 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.util;
+package org.columba.core.command;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 
 /**

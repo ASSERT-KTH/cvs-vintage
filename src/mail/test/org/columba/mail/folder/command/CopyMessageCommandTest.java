@@ -18,7 +18,7 @@ package org.columba.mail.folder.command;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.columba.core.util.NullWorkerStatusController;
+import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.FolderTstHelper;

@@ -20,7 +20,7 @@ package org.columba.mail.gui.composer.command;
 import java.io.InputStream;
 import java.util.List;
 
-import org.columba.core.util.NullWorkerStatusController;
+import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;

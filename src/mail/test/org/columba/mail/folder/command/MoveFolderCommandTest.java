@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.util.NullWorkerStatusController;
+import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.MailboxTstFactory;
