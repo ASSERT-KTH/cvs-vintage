@@ -163,14 +163,16 @@ $page.setTitle("Enter issue")
      <th>
       Workflow options</th>
      <td>
-    return to&#160;
+    go to 
    <input type="radio" checked="checked" name="$scarabG.Constant.NEXT_TEMPLATE"
       value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")" />
-      Enter New Issue
+      Enter New Issue |
   <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
-      Start Page
+      Start Page |
   <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="AssignIssue.vm" />
-      Assign Issue
+      Assign Issue |
+  <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+      View This New Issue
       </td>
       </tr>
     </table>
