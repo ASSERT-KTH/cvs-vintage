@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.5 2004/08/13 15:32:28 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.6 2004/08/13 18:43:20 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -129,7 +129,7 @@ public class JavaWsdlMapping
       for (int i = 0; seiMapping == null && i < seiMappings.length; i++)
       {
          ServiceEndpointInterfaceMapping aux = seiMappings[i];
-         if (seiMapping.getWsdlPortType().equals(portType))
+         if (aux.getWsdlPortType().equals(portType))
             seiMapping = aux;
       }
 
