@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.18 2004/07/26 22:43:05 mvw Exp $
+// $Id: FigState.java,v 1.19 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public abstract class FigState extends FigStateVertex {
         internal = new FigText(getInitialX() + 2, getInitialY() + 2 + 21 + 4,
                 getInitialWidth() - 4, getInitialHeight()
                         - (getInitialY() + 2 + 21 + 4));
-        internal.setFont(LABEL_FONT);
+        internal.setFont(getLabelFont());
         internal.setTextColor(Color.black);
         internal.setLineWidth(0);
         internal.setFilled(false);

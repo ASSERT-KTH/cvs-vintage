@@ -1,4 +1,4 @@
-// $Id: FigNote.java,v 1.12 2004/07/26 22:43:05 mvw Exp $
+// $Id: FigNote.java,v 1.13 2004/08/01 16:28:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,13 +62,13 @@ public class FigNote extends FigNodeModelElement {
      */
     public FigNote() {
 	Color handleColor = Globals.getPrefs().getHandleColor();
-	_bigPort = new FigRect(10, 10, 90, 20, handleColor, Color.lightGray);
+	setBigPort(new FigRect(10, 10, 90, 20, handleColor, Color.lightGray));
 	getNameFig().setExpandOnly(true);
 	getNameFig().setText("FigNote");
 	// initialize any other Figs here
 
 	// add Figs to the FigNode in back-to-front order
-	addFig(_bigPort);
+	addFig(getBigPort());
 	addFig(getNameFig());
 
 

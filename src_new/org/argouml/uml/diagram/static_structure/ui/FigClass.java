@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.97 2004/07/26 09:20:41 mvw Exp $
+// $Id: FigClass.java,v 1.98 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1165,7 +1165,7 @@ public class FigClass extends FigNodeModelElement {
                     // bounds not relevant here
                     attr.setFilled(false);
                     attr.setLineWidth(0);
-                    attr.setFont(LABEL_FONT);
+                    attr.setFont(getLabelFont());
                     attr.setTextColor(Color.black);
                     attr.setJustification(FigText.JUSTIFY_LEFT);
                     attr.setMultiLine(false);
@@ -1227,7 +1227,7 @@ public class FigClass extends FigNodeModelElement {
                     // bounds not relevant here
                     oper.setFilled(false);
                     oper.setLineWidth(0);
-                    oper.setFont(LABEL_FONT);
+                    oper.setFont(getLabelFont());
                     oper.setTextColor(Color.black);
                     oper.setJustification(FigText.JUSTIFY_LEFT);
                     oper.setMultiLine(false);
@@ -1244,9 +1244,9 @@ public class FigClass extends FigNodeModelElement {
                 //oper.setItalic(((MOperation)bf).isAbstract()); //
                 //does not properly work (GEF bug?)
                 if (ModelFacade.isAbstract(bf)) {
-                    oper.setFont(ITALIC_LABEL_FONT);
+                    oper.setFont(getItalicLabelFont());
                 } else {
-                    oper.setFont(LABEL_FONT);
+                    oper.setFont(getLabelFont());
                 }
                 oper.damage();
                 ocounter++;
@@ -1300,9 +1300,9 @@ public class FigClass extends FigNodeModelElement {
         }
         Object cls = /*(MClass)*/ getOwner();
         if (ModelFacade.isAbstract(cls)) {
-            getNameFig().setFont(ITALIC_LABEL_FONT);
+            getNameFig().setFont(getItalicLabelFont());
 	} else {
-            getNameFig().setFont(LABEL_FONT);
+            getNameFig().setFont(getLabelFont());
 	}
         super.updateNameText();
         setBounds(rect.x, rect.y, rect.width, rect.height);

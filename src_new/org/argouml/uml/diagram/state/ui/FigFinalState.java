@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.18 2004/07/26 12:07:49 mvw Exp $
+// $Id: FigFinalState.java,v 1.19 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,7 @@ public class FigFinalState extends FigStateVertex {
 	setNameFig(new FigText(x + 10, y + 22, 0, 21, true));
 	getNameFig().setFilled(false);
 	getNameFig().setLineWidth(0);
-	getNameFig().setFont(LABEL_FONT);
+	getNameFig().setFont(getLabelFont());
 	getNameFig().setTextColor(Color.black);
 	getNameFig().setMultiLine(false);
 	getNameFig().setAllowsTab(false);

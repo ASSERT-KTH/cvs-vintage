@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.20 2004/07/22 11:15:58 mkl Exp $
+// $Id: FigMNodeInstance.java,v 1.21 2004/08/01 16:28:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
     // constructors
 
     public FigMNodeInstance() {
-        _bigPort = new FigRect(10, 10, 200, 180);
+        setBigPort(new FigRect(10, 10, 200, 180));
         _cover = new FigCube(10, 10, 200, 180, Color.black, Color.white);
         _test = new FigRect(10, 10, 1, 1, Color.black, Color.white);
 
@@ -72,7 +72,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
         getNameFig().setJustification(0);
         getNameFig().setUnderline(true);
 
-        addFig(_bigPort);
+        addFig(getBigPort());
         addFig(_cover);
         addFig(getStereotypeFig());
         addFig(getNameFig());
@@ -96,7 +96,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
     public Object clone() {
         FigMNodeInstance figClone = (FigMNodeInstance) super.clone();
         Iterator it = figClone.getFigs(null).iterator();
-        figClone._bigPort = (FigRect) it.next();
+        figClone.setBigPort((FigRect) it.next());
         figClone._cover = (FigCube) it.next();
         figClone.setStereotypeFig((FigText) it.next());
         figClone.setNameFig((FigText) it.next());
@@ -135,7 +135,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
 	}
 
         Rectangle oldBounds = getBounds();
-        _bigPort.setBounds(x, y, w, h);
+        getBigPort().setBounds(x, y, w, h);
         _cover.setBounds(x, y, w, h);
 
         Dimension stereoDim = getStereotypeFig().getMinimumSize();

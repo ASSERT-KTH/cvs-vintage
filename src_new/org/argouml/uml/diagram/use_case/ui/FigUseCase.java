@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.37 2004/07/26 10:41:00 mvw Exp $
+// $Id: FigUseCase.java,v 1.38 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1369,7 +1369,7 @@ public class FigUseCase extends FigNodeModelElement {
 
                     epFig.setFilled(false);
                     epFig.setLineWidth(0);
-                    epFig.setFont(LABEL_FONT);
+                    epFig.setFont(getLabelFont());
                     epFig.setTextColor(Color.black);
                     epFig.setJustification(FigText.JUSTIFY_LEFT);
                     epFig.setMultiLine(false);
@@ -1420,9 +1420,9 @@ public class FigUseCase extends FigNodeModelElement {
         // italics if it is abstract, otherwise ordinary font.
 
         if (ModelFacade.isAbstract(useCase)) {
-            getNameFig().setFont(ITALIC_LABEL_FONT);
+            getNameFig().setFont(getItalicLabelFont());
         } else {
-            getNameFig().setFont(LABEL_FONT);
+            getNameFig().setFont(getLabelFont());
         }
         setBounds(oldBounds.x, oldBounds.y, oldBounds.width, oldBounds.height);
 

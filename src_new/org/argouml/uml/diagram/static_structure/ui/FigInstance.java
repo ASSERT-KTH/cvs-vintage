@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.7 2004/02/28 12:29:42 linus Exp $
+// $Id: FigInstance.java,v 1.8 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.7 2004/02/28 12:29:42 linus Exp $
+// $Id: FigInstance.java,v 1.8 2004/08/01 16:28:26 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -63,7 +63,7 @@ public class FigInstance extends FigNodeModelElement {
 
 	// initialize any other Figs here
 	_attr = new FigText(10, 30, 90, 40, Color.black, "Times", 10);
-	_attr.setFont(LABEL_FONT);
+	_attr.setFont(getLabelFont());
 	_attr.setExpandOnly(true);
 	_attr.setTextColor(Color.black);
 	_attr.setAllowsTab(false);
@@ -72,7 +72,7 @@ public class FigInstance extends FigNodeModelElement {
 	_attr.setJustification(FigText.JUSTIFY_LEFT);
 
 	// add Figs to the FigNode in back-to-front order
-	addFig(_bigPort);
+	addFig(getBigPort());
 	addFig(getNameFig());
 	addFig(_attr);
 
@@ -91,7 +91,7 @@ public class FigInstance extends FigNodeModelElement {
     public Object clone() {
 	FigInstance figClone = (FigInstance) super.clone();
 	Iterator iter = figClone.getFigs(null).iterator();
-	figClone._bigPort = (FigRect) iter.next();
+	figClone.setBigPort((FigRect) iter.next());
 	figClone.setNameFig((FigText) iter.next());
 	figClone._attr = (FigText) iter.next();
 	return figClone;
@@ -117,7 +117,7 @@ public class FigInstance extends FigNodeModelElement {
 	getNameFig().setBounds(x, y, w, nameMinimum.height);
 	_attr.setBounds(x, y + getNameFig().getBounds().height,
 			w, h - getNameFig().getBounds().height);
-	_bigPort.setBounds(x + 1, y + 1, w - 2, h - 2);
+	getBigPort().setBounds(x + 1, y + 1, w - 2, h - 2);
 
 	calcBounds(); //_x = x; _y = y; _w = w; _h = h;
 	updateEdges();

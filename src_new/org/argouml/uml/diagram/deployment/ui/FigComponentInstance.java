@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.26 2004/07/28 15:12:49 mkl Exp $
+// $Id: FigComponentInstance.java,v 1.27 2004/08/01 16:28:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponentInstance.java
 // Classes: FigComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponentInstance.java,v 1.26 2004/07/28 15:12:49 mkl Exp $
+// $Id: FigComponentInstance.java,v 1.27 2004/08/01 16:28:25 mvw Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -77,7 +77,7 @@ public class FigComponentInstance extends FigNodeModelElement {
         getNameFig().setFilled(false);
         getNameFig().setUnderline(true);
 
-        addFig(_bigPort);
+        addFig(getBigPort());
         addFig(_cover);
         addFig(getStereotypeFig());
         addFig(getNameFig());
@@ -108,7 +108,7 @@ public class FigComponentInstance extends FigNodeModelElement {
     public Object clone() {
         FigComponentInstance figClone = (FigComponentInstance) super.clone();
         Iterator it = figClone.getFigs(null).iterator();
-        figClone._bigPort = (FigRect) it.next();
+        figClone.setBigPort((FigRect) it.next());
         figClone._cover = (FigRect) it.next();
         figClone.setStereotypeFig((FigText) it.next());
         figClone.setNameFig((FigText) it.next());
@@ -163,7 +163,7 @@ public class FigComponentInstance extends FigNodeModelElement {
 	}
 
         Rectangle oldBounds = getBounds();
-        _bigPort.setBounds(x, y, w, h);
+        getBigPort().setBounds(x, y, w, h);
         _cover.setBounds(x, y, w, h);
 
         Dimension stereoDim = getStereotypeFig().getMinimumSize();

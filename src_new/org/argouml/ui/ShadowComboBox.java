@@ -1,4 +1,4 @@
-// $Id: ShadowComboBox.java,v 1.6 2004/01/28 07:17:46 linus Exp $
+// $Id: ShadowComboBox.java,v 1.7 2004/08/01 16:28:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,7 @@ public class ShadowComboBox extends JComboBox {
     private class ShadowFig extends FigNodeModelElement {
         public ShadowFig() {
             super();
-            addFig(_bigPort);
+            addFig(getBigPort());
             addFig(getNameFig());
         }
     }
