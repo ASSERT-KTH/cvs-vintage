@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.10 2001/08/15 02:30:29 mmanders Exp $
- * $Revision: 1.10 $
- * $Date: 2001/08/15 02:30:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.11 2001/08/16 00:26:14 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2001/08/16 00:26:14 $
  *
  * ====================================================================
  *
@@ -88,75 +88,35 @@ public class JNIConnectionHandler extends BaseInterceptor {
     public JNIConnectionHandler() {
     }
 
-    // -------------------- Config -------------------- 
-    boolean nativeLibLoaded=false;
-    
-    /** Location of the jni library
-     */
-    public void setNativeLibrary(String lib) {
-        // First try to load from the library path
-        try {
-            System.loadLibrary(lib);
-	    nativeLibLoaded=true;
-            System.out.println("Library " + lib +
-			       " was loaded from the lib path");
-            return;
-        } catch(UnsatisfiedLinkError usl) {
-            //usl.printStackTrace();
-            System.err.println("Failed to loadLibrary() " + lib);
-        }
-        
-        // Loading from the library path failed
-        // Try to load assuming lib is a complete pathname.
-        try {
-	    System.load(lib);
-	    nativeLibLoaded=true;
-	    System.out.println("Library " + lib + " loaded");
-            return;
-        } catch(UnsatisfiedLinkError usl) {
-            System.err.println("Failed to load() " + lib);
-            //usl.printStackTrace();
-        }
-        
-        // OK, try to load from the default libexec 
-        // directory. 
-        // libexec directory = tomcat.home + / + libexec
-        File f = new File(System.getProperties().getProperty("tomcat.home"),
-			  "libexec");
-
-	String os=System.getProperty( "os.name" ).toLowerCase();
-        if( os.indexOf("windows")>= 0) {
-            f = new File(f, "jni_connect.dll");
-        } else if ( os.indexOf("netware")>= 0) {
-            f = new File(f, "jni_conn.nlm");
-        } else {
-            f = new File(f, "jni_connect.so");
-        }
-        System.load(f.toString());
-	nativeLibLoaded=true;
-        System.out.println("Library " + f.toString() + " loaded");
-    }
-
-    // ==================== hack for server startup  ====================
-
     // JNIEndpoint was called to start tomcat
     // Hack used to set the handler in JNIEndpoint.
     // This works - if we have problems we may take the time
     // and implement a better mechanism
     static JNIEndpoint ep;
-    boolean running = true;
 
     public static void setEndpoint(JNIEndpoint jniep)
     {
         ep = jniep;
     }
 
+    // -------------------- Config -------------------- 
+    boolean nativeLibLoaded=false;
+    String lib;
+    
+    /** Location of the jni library
+     */
+    public void setNativeLibrary(String lib) {
+	this.lib=lib;
+    }
+
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	if( ep==null ) return;
 	super.engineInit( cm );
+
 	if(! nativeLibLoaded ) {
-	    throw new TomcatException("Missing connector native library name");
+	    initLibrary();
 	}
 	try {
 	    // notify the jni side that jni is set up corectly
@@ -167,6 +127,7 @@ public class JNIConnectionHandler extends BaseInterceptor {
     }
 
     public void engineShutdown(ContextManager cm) throws TomcatException {
+	if( ep==null ) return;
 	try {
 	    // notify the jni side that the jni handler is no longer
 	    // in use ( we shut down )
@@ -227,6 +188,70 @@ public class JNIConnectionHandler extends BaseInterceptor {
 		pool.addElement( reqA );
 	    }
 	}
+    }
+
+    // -------------------- Find the native library --------------------
+
+    private void initLibrary()
+	throws TomcatException
+    {
+	if( ep==null ) {
+	    if( debug > 0 )
+		log("JNI connector disabled, endpoint is null");
+	}
+
+	if( lib==null ) {
+	    lib="jni_connector.";
+	    String os = System.getProperty("os.name").toLowerCase();
+	    if(os.indexOf("windows")>=0){
+		lib+="dll";
+	    } else if(os.indexOf("netware")>=0){
+		lib+="nlm";
+	    } else {
+		lib+="so";
+	    }
+        }
+	log("JNI mode detected, try to load library " + lib );
+
+	File libF=new File(lib);
+	if( ! libF.isAbsolute() ) {
+	    // not absolute, try first LD_LIB_PATH
+	    try {
+		System.loadLibrary(lib);
+		nativeLibLoaded=true;
+		System.out.println("Library " + lib +
+				   " was loaded from the lib path");
+		return;
+	    } catch(UnsatisfiedLinkError usl) {
+		System.err.println("Failed to loadLibrary() " + lib);
+		if( debug > 0 )
+		    usl.printStackTrace();
+	    }
+	}
+
+	if( ! libF.isAbsolute() ) {
+	    File f1=new File(cm.getInstallDir());
+	    // XXX should it be "libexec" ???
+	    File f2=new File( f1, "bin" + File.pathSeparator + "native" );
+	    libF=new File( f2, lib );
+	}
+
+	if( ! libF.exists() ) {
+	    throw new TomcatException( "Native library doesn't exist " + libF );
+	}
+	
+        // Loading from the library path failed
+        // Try to load assuming lib is a complete pathname.
+        try {
+	    System.load(lib);
+	    nativeLibLoaded=true;
+	    System.out.println("Library " + lib + " loaded");
+            return;
+        } catch(UnsatisfiedLinkError usl) {
+            System.err.println("Failed to load() " + lib);
+            if( debug > 0 )
+		usl.printStackTrace();
+        }        
     }
 
     // -------------------- Native methods --------------------
