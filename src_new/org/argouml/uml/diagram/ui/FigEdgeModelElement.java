@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.54 2004/03/08 07:07:50 linus Exp $
+// $Id: FigEdgeModelElement.java,v 1.55 2004/04/22 23:47:01 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -699,6 +699,21 @@ public abstract class FigEdgeModelElement
 	}
 
 	return false;
+    }
+
+    public boolean hit(Rectangle r) {
+	// Check if labels etc have been hit
+	// Apparently GEF does require PathItems to be "annotations"
+	// which ours aren't, so until that is resolved...
+	int size = _pathItems.size();
+	Iterator it = getPathItemFigs().iterator();
+	while (it.hasNext()) {
+	    Fig f = (Fig) it.next();
+	    if (f.hit(r))
+		return true;
+	}
+
+	return super.hit(r);
     }
 
 // TODO: Explain the added value of this method to that given in
