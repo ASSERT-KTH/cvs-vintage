@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.187 2004/06/23 07:02:39 linus Exp $
+// $Id: ModelFacade.java,v 1.188 2004/06/27 17:23:12 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5303,7 +5303,8 @@ public class ModelFacade {
     }
 
     public static void setComponentInstance(Object handle, Object c) {
-        if (handle instanceof MInstance && c instanceof MComponentInstance) {
+        if (handle instanceof MInstance
+	    && (c == null || c instanceof MComponentInstance)) {
             ((MInstance) handle).setComponentInstance((MComponentInstance) c);
             return;
         }
