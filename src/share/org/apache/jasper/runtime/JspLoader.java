@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.2 1999/10/21 01:48:42 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/21 01:48:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.3 1999/12/21 12:34:31 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/21 12:34:31 $
  *
  * ====================================================================
  * 
@@ -207,8 +207,8 @@ public class JspLoader extends ClassLoader {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    public boolean loadJSP(String name, String classpath, boolean isErrorPage, 
-                           HttpServletRequest req, HttpServletResponse res) 
+    public synchronized boolean loadJSP(String name, String classpath, 
+	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
 	Class jspClass = (Class) loadedJSPs.get(name);
