@@ -32,7 +32,7 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.27 $
+ *   @version $Revision: 1.28 $
  */
 public class Main
 {
@@ -46,16 +46,21 @@ public class Main
    throws Exception
    {
       String cn = "default"; // Default configuration name is "default", i.e. all conf files are in "/conf/default"
-
+      String patchDir = null;
       // Given conf name?
       if (args.length == 1)
          cn = args[0];
-
-         final String confName = cn;   
+      for(int a = 0; a < args.length; a ++)
+      {
+          if( args[a].startsWith("-p") )
+              patchDir = args[a+1];
+      }
+      final String confName = cn;   
+      final String patchDirName = patchDir;
 
       // Load system properties
+      URL jbossProps = Main.class.getClassLoader().getResource(confName+"/jboss.properties");
       InputStream propertiesIn = Main.class.getClassLoader().getResourceAsStream(confName+"/jboss.properties");
-
       if ( propertiesIn == null )
       {
          throw new IOException("jboss.properties missing");
@@ -86,14 +91,14 @@ public class Main
       {
          public Object run()
          {
-            new Main(confName);
+            new Main(confName, patchDirName);
             return null;
          }
       });
    }
 
    // Constructors --------------------------------------------------
-   public Main(String confName)
+   public Main(String confName, String patchDir)
    {
    	  Date startTime = new Date();
       
@@ -117,11 +122,34 @@ public class Main
 
          // Add configuration directory to MLet
          URL confDirectory = new File("../conf/"+confName).getCanonicalFile().toURL();
+         URL[] urls = {confDirectory};
+         // Add any patch jars to the MLet so they are seen ahead of the JBoss jars
+         if( patchDir != null )
+         {
+             File dir = new File(patchDir);
+             ArrayList tmp = new ArrayList();
+             File[] jars = dir.listFiles(new java.io.FileFilter()
+                 {
+                     public boolean accept(File pathname)
+                     {
+                         String name = pathname.getName();
+                         return name.endsWith(".jar") || name.endsWith(".zip");
+                     }
+                 }
+             );
+             tmp.add(confDirectory);
+             for(int j = 0; jars != null && j < jars.length; j ++)
+             {
+                 File jar = jars[j];
+                 URL u = jar.getCanonicalFile().toURL();
+                 tmp.add(u);
+             }
+             urls = new URL[tmp.size()];
+             tmp.toArray(urls);
+         }
 
          // Create MLet
-         MLet mlet = new MLet(new URL[]
-            { confDirectory 
-         });
+         MLet mlet = new MLet(urls);
          server.registerMBean(mlet, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
 
          // Set MLet as classloader for this app
