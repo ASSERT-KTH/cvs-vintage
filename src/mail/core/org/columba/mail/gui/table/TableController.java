@@ -15,13 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.tree.TreePath;
+
 import org.columba.core.config.HeaderItem;
+import org.columba.core.config.OptionsSerializer;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
@@ -45,13 +53,6 @@ import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.HeaderList;
 
-import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.TreePath;
-
 
 /**
  * This class shows the messageheaderlist
@@ -60,7 +61,7 @@ import javax.swing.tree.TreePath;
  * @version 0.9.1
  * @author Frederik
  */
-public class TableController implements FocusOwner, ListSelectionListener {
+public class TableController implements FocusOwner, ListSelectionListener, OptionsSerializer {
     private HeaderTableModel headerTableModel;
     private FilterToolbar filterToolbar;
     private HeaderTableMouseListener headerTableMouseListener;
@@ -599,4 +600,54 @@ public class TableController implements FocusOwner, ListSelectionListener {
     public void valueChanged(ListSelectionEvent arg0) {
         MainInterface.focusManager.updateActions();
     }
+    
+    /*************************** OptionsSerializer ****************************/
+    
+    
+    /* (non-Javadoc)
+     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+     */
+    public void loadOptionsFromXml(XmlElement element) {
+        // not implemented yet
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
+     */
+    public XmlElement saveOptionsToXml() {
+        XmlElement parent = new XmlElement("table");
+        
+        // threaded view
+        parent.addAttribute("enable_threaded_view", Boolean.toString(getTableModelThreadedView().isEnabled()));
+        
+        // sorting order
+        parent.addAttribute("sorting_order", Boolean.toString(getTableModelSorter().getSortingOrder()));
+        
+        // selected column
+        parent.addAttribute("sorting_column", getTableModelSorter().getSortingColumn());
+        
+        XmlElement columns = new XmlElement("columns");
+        
+        // TODO: save list of columns
+        // for each column
+        int c = -1;
+        for ( int i=0; i<c; i++)
+        {
+            XmlElement column = new XmlElement("column");
+            
+            column.addAttribute("name", "name");
+            column.addAttribute("size", "0");
+            column.addAttribute("position", "0");
+            
+            // add to columns list
+            columns.addElement(column);
+        }
+        
+        // filter toolbar configuration
+        parent.addElement(getFilterToolbar().saveOptionsToXml());
+        
+        return parent;
+    }
+
 }

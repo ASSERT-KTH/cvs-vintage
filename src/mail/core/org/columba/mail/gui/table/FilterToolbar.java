@@ -17,21 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTextField;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.ToolbarToggleButton;
-
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,8 +30,24 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import org.columba.core.config.OptionsSerializer;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTextField;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.ToolbarToggleButton;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.model.TableModelFilter;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
-public class FilterToolbar extends JPanel implements ActionListener {
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+
+public class FilterToolbar extends JPanel implements ActionListener, OptionsSerializer {
     public JToggleButton newButton;
     public JToggleButton oldButton;
     private JToggleButton answeredButton;
@@ -257,4 +258,36 @@ public class FilterToolbar extends JPanel implements ActionListener {
             ex.printStackTrace();
         }
     }
+    
+    
+    
+    /*************************** OptionsSerializer ****************************/
+    
+    
+    
+    /* (non-Javadoc)
+     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+     */
+    public void loadOptionsFromXml(XmlElement element) {
+       // not yet implemented
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
+     */
+    public XmlElement saveOptionsToXml() {
+        XmlElement parent = new XmlElement("filtertoolbar");
+        
+        // save all possible states
+        parent.addAttribute("new_state",Boolean.toString(newButton.isSelected()));
+        parent.addAttribute("answered_state", Boolean.toString(answeredButton.isSelected()));
+        parent.addAttribute("flagged_state", Boolean.toString(flaggedButton.isSelected()));
+        parent.addAttribute("expunged_state", Boolean.toString(expungedButton.isSelected()));
+        parent.addAttribute("attachment_state", Boolean.toString(attachmentButton.isSelected()));
+        parent.addAttribute("pattern", textField.getText());
+        
+        return parent;
+    }
+
 }
