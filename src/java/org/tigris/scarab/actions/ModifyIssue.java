@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.53 2002/01/07 17:07:28 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.54 2002/01/07 20:27:32 kminshull Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -436,24 +436,15 @@ public class ModifyIssue extends RequireLoginFirstAction
                         String fileName = fileNameWithPath
                             .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
                         
-                        ExtendedProperties extProp = TurbineServices.getInstance()
-                            .getService(UploadService.SERVICE_NAME).getConfiguration();
-                        String uploadFileRepo = (String)extProp.getProperty(UploadService.REPOSITORY_KEY);
-                        String moduleCode = scarabR.getIssue().getModule().getCode();
-                        String repoModuleDir = uploadFileRepo + File.separator + moduleCode;
-                        File repoDir = new File(repoModuleDir);
-                        
-                        if (!repoDir.exists())
-                        {
-                            repoDir.mkdir();
-                        }
                         attachment.setData(null);
                         attachment.setAttachmentType(AttachmentType
                                                          .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
                         attachment.setIssue(issue);
                         attachment.setTypeId(new NumberKey(1));
                         attachment.save();    
-                        String uploadFile = repoModuleDir + File.separator + fileName 
+                        String uploadFile = attachment
+                            .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
+                            + File.separator + fileName 
                             + "_" + attachment.getPrimaryKey().toString();
                         
                         file.write(uploadFile);
@@ -830,3 +821,4 @@ public class ModifyIssue extends RequireLoginFirstAction
         doCancel(data, context);
     }
 }
+

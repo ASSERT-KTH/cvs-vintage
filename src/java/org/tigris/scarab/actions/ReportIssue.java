@@ -95,7 +95,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.73 2002/01/04 17:23:21 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.74 2002/01/07 20:27:47 kminshull Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -331,18 +331,6 @@ public class ReportIssue extends RequireLoginFirstAction
                         String fileName = fileNameWithPath
                             .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
                         
-                        ExtendedProperties extProp = TurbineServices.getInstance()
-                            .getService(UploadService.SERVICE_NAME).getConfiguration();
-                        String uploadFileRepo = (String)extProp.getProperty(UploadService.REPOSITORY_KEY);
-                        String moduleCode = scarabR.getIssue().getModule().getCode();
-                        String repoModuleDir = uploadFileRepo + File.separator + moduleCode;
-                        File repoDir = new File(repoModuleDir);
-                        
-                        if (!repoDir.exists())
-                        {
-                            repoDir.mkdir();
-                        }
-                        
                         attachment.setData(null);
                         attachment.setAttachmentType(AttachmentType
                                                          .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
@@ -350,7 +338,9 @@ public class ReportIssue extends RequireLoginFirstAction
                         attachment.setTypeId(new NumberKey(1));
                         attachment.save();    
 
-                        String uploadFile = repoModuleDir + File.separator + fileName 
+                        String uploadFile = attachment
+                            .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
+                            + File.separator + fileName 
                             + "_" + attachment.getPrimaryKey().toString();
                         
                         file.write(uploadFile);
