@@ -34,6 +34,7 @@ import java.awt.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.*;
@@ -43,7 +44,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.9 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.10 2001/10/08 10:31:13 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4934,7 +4935,7 @@ forward_scan:		do
 		public void changedUpdate(DocumentEvent evt) {}
 	}
 
-	class FoldHandler implements Buffer.FoldListener
+	class FoldHandler implements FoldListener
 	{
 		public void foldLevelsChanged(int firstLine, int lastLine)
 		{

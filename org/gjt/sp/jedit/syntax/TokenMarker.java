@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.5 2001/10/08 10:31:13 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  */
@@ -719,8 +719,6 @@ loop:			for(int i = 0; i < len; i++)
 
 	public static class LineContext
 	{
-		public static int COUNT;
-		public static int COUNT_GC;
 		public LineContext parent;
 		public ParserRule inRule;
 		public ParserRuleSet rules;
@@ -747,13 +745,6 @@ loop:			for(int i = 0; i < len; i++)
 
 		public LineContext()
 		{
-			COUNT++;
-			COUNT_GC++;
-		}
-
-		public void finalize()
-		{
-			COUNT_GC--;
 		}
 
 		public Object clone()
