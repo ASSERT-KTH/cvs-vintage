@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.2 2005/01/04 13:30:38 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.3 2005/01/25 22:00:44 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
@@ -33,7 +33,7 @@ import java.util.Properties;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -98,6 +98,12 @@ public class ServiceRefMetaData implements Serializable
       return jaxrpcMappingFile;
    }
 
+   public URL getJavaWsdlMappingLocation()
+   {
+      URL location = resourceCL.findResource(jaxrpcMappingFile);
+      return location;
+   }
+
    public JavaWsdlMapping getJavaWsdlMapping()
    {
       if (javaWsdlMapping == null && jaxrpcMappingFile != null)
@@ -105,7 +111,7 @@ public class ServiceRefMetaData implements Serializable
          try
          {
             // setup the XML binding Unmarshaller
-            URL location = resourceCL.findResource(jaxrpcMappingFile);
+            URL location = getJavaWsdlMappingLocation();
             JavaWsdlMappingFactory mappingFactory = JavaWsdlMappingFactory.newInstance();
             javaWsdlMapping = mappingFactory.parse(location);
          }
