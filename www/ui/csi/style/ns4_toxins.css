@@ -52,11 +52,6 @@ table, th, td	{
  color: white;
  text-decoration: none
  }
-.functnbar {
-	padding: 3px;
-	font-weight: bold;
-	background: #000
-	}
 #apphead h2 {
  margin-top: 0;
  margin-bottom: .2em
@@ -164,6 +159,7 @@ ul.tasks li {
  padding: 2px;
 	margin-top: .67em;
 	margin-bottom: .67em;
+	font-weight: bold;
 	}
 .functnbar3 {
  padding: 5px;
@@ -178,9 +174,6 @@ ul.tasks li {
 .functnbar td a, .functnbar2 td a {
 	color: #fff;
 	text-decoration: underline;
-	}
-.functnbar td.firstchild, .functnbar2 td.firstchild {
-	border-left: none;
 	}
 #topmodule {
 	border-top: 1px solid white;

@@ -1,142 +1,106 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
 <html>
+ <head>
+  <title>Customize/create artifact type (2.1.4.0)</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+<!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
+  <meta http-equiv="Content-type" content="text/html" />
 
-<head>
-    <title>Customize/create artifact type (2.1.4.0)</title>
-    <link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-    <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
-</head>
+  <style type="text/css">
+  @import url(../csi/style/ns4_toxins.css);
+  </style>
 
-<body>
-<form action="#" method="get">
-
-    <!-- SourceCast -->
-    <div id="banner">
-        <table border="0" cellspacing="12" cellpadding="0" width="100%">
-        <tr>
-        
-        <td>
-        <div align="right" id="loginstatus">
+  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+ </head>
+<body marginwidth="0" marginheight="0">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+         <div>
+    Logged in: <strong class="username">Elicia David</strong>
+   </div>
             <div>
-                Logged in as: <strong class="username">User XX</strong>
-            </div>
-            <div>
-                <a href="#">Edit Profile</a> | <a href="#">Logout</a>
-            </div>
-        </div>
-        </td>
-        </tr>
-        </table>
-    </div>
-    <!-- SourceCast -->
-    
-	<!-- SourceCast -->
-	<div id="modulenav">
-		<table border="0" cellspacing="0" cellpadding="8" width="100%">
-		<tr>
-		
-		<td>
-			
-			<strong><small><a href="#">select module</a>&nbsp;&nbsp;|&nbsp;&nbsp;current module: <a href="#">Module X</a></small></strong>
-			
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="8" width="97%" id="main">
+   Current Module:
+   <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/SelectModule.vm"><strong>Turbine &gt; Source</strong></a>
+</div>
+   <div>
+        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
+      | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Links.vm">Links</a>
+  | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/entry%2CWizard1.vm">Enter Issue</a>
+  | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
+<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
-<td id="leftcol" width="20%">
-<!-- Structural Elements -->
-	
-    <!-- SourceCast -->
+  <td id="leftcol" width="20%">
+ <div id="navcolumn">
+
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Index.vm">Index</a></strong></div>
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/SelectArtifactType.vm">Artifact types</a></strong>
+      <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/1">Defect</a></small></div>
+      <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/1">Patch</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/5">Task</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/7">Feature</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/9">Enhancement</a></small></div>
+  </div>
 
 
-	<div id="navcolumn">
-
-<div><strong><small>Artifact types</small></strong>
-
-			<div><strong><small><a href="#">Index</a></small></strong></div>
-			<div><strong><small><a href="#">Defect</a></small></strong>
-			<div><a href="#"><small>Enter new</a></small></div>
-			<div><small><a href="#">Template list</a></small></div>
-			<div><small><a href="#">New report</a></small></div>
-			<div><small><a href="#">Saved reports</a></small></div>
-			</div>
-			
-			<div><small><a href="#">Enhancement</a></small></div>
-			<div><small><a href="#">Feature</a></small></div>
-			<div><small><a href="#">Patch</a></small></div>
-			<div><small><a href="#">Task</a></small></div>
+<div><small><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/SelectArtifactType.vm">Administration</a></strong>
+<div><small><small><a href="#">Manage arifact types</a></small></div>
+<div><small><small><a href="#">Global attributes</a></small></div>
+<div><small><small><a href="#">User submission queue</a></small></div>
+<div><small><small><a href="#">Team management</a></small></div>
+</div>  </div>
 
 </div>
-
-   <div><strong><small>Admin functions</small></strong>
-
-	<!-- SourceCast -->
-<div><small><a href="#">Manage artifact types</a></small></div>
-<div><small><strong>Customize "enter artifact"</small></strong></div>
-<div><small><a href="#">Global attributes</a></small></div>
+  <div id="helptext">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+ <tr>
+ <th>How do I...?</th>
+ </tr>
+ <tr>
+ <td>
+  <div>Learn
+ more about this project? </div> <div>Print this page...</div>
+<div>Troubleshoot...
 </div>
+</td>
+</tr>
+</table>
 </div>
-    
-    <!-- SourceCast -->
-    <div id="helptext">
-        <table border="0" cellspacing="0" cellpadding="3" width="100%">
-        <tr>
-        <th>How do I...?</th>
-        </tr>
-        <tr>
-        <td>
-            <div> 
-                <a href="#">[Go to help index]</a>
-            </div>
-            <div> 
-                <a href="#">Use this page</a>...
-            </div>
-            <div>
-                <a href="#">Learn about a project</a>...
-            </div>
-            <div>
-                <a href="#">Join a project</a>...
-            </div>
-        </td>
-        </tr>
-        </table>
-    </div>
-    <!-- SourceCast -->
-    
-<!-- Structural Elements -->
 </td>
 <td width="100%" id="bodycol">
-<!-- Structural Elements -->
-
-    <!-- Scarab - App -->
-    <div id="topmodule">
-        <table border="0" cellspacing="0" cellpadding="3" width="100%">
-        <tr>
-            <td nowrap="nowrap">
-            <select>
-            <option>saved queries</option>
-            <option>query one</option>
-            <option>query two</option>
-            </select> 
-            <input type="submit" name="query" value="Go" />
-            &nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-            <input type="text" size="15" name="" />
-            <input type="submit" name="query" value="Query" />
-            &nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-            <a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
-            </td>           
-        </tr>
-        </table>
-    </div>
-    <!-- Scarab - App -->
-    
+ <!-- Scarab - App -->
+ <div id="topmodule">
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
+                  <input type="text" name="id" size="15" maxlength="255" />&#160;
+        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
+        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     <small>
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
+     </small>
+   </form>
+   </td>
+  </tr>
+  </table>
+ </div>
     <!-- Scarab - App -->
  
         
@@ -146,21 +110,9 @@
   
 
         <div class="functnbar">
-            <table cellpadding="0" cellspacing="0" border="0">
 
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute group options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
+<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
 
-            <tr>
-            <td><input type="submit" value="submit changes" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" />&#160;<input type="submit" value="resort" /></td>
-
-            </tr>
-            </table>
         </div>
 
 		
@@ -187,27 +139,39 @@
 		</div>
 		
         
-        <h3>Artifact instance "history" and "Comments" display options</h3>
-        
-        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
-        <select class="select">
+        <h3>Issue view display options</h3>
+
+		<div class="axial">
+			<table border="1" cellspacing="2" cellpadding="3">
+			<tr>
+			<th>Comments</th>
+			<td><select class="select">
         <option>5</option>
         <option>10</option>
         <option>15</option>
         <option>20</option>
-        </select>
-        most recent artifact instance history entries (otherwise, a link will appear leading to a seperate page).
-        </p>
+        </select>&nbsp;most recent.
         
-        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
-        <select class="select">
+        <p>Full list on seperate screen</p>
+        	</td>
+			</tr>
+			
+			<tr>
+			<th>Change history entries</th>
+			<td><select class="select">
         <option>5</option>
         <option>10</option>
         <option>15</option>
         <option>20</option>
-        </select>
-        most recent artifact instance comments (otherwise, a link will appear to a seperate page).
-        </p>
+        </select>&nbsp;most recent.
+        
+        <p>Full list on seperate screen</p>
+        </td>
+			</tr>
+			
+			</table>
+		</div>
+
 
                         
         <h3>Attribute groups</h3>
@@ -268,45 +232,32 @@
         </td>
         </tr>
         </table>
+<div class="functnbar3">
 
- 
+<input type="submit" value="Add new" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute group</small>&#160;
+</div>
         <div class="functnbar2">
-            <table cellpadding="0" cellspacing="0" border="0">
 
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute group options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
+<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
 
-            <tr>
-            <td><input type="submit" value="submit changes" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" />&#160;<input type="submit" value="resort" /></td>
-
-            </tr>
-            </table>
         </div>       
 
     <!-- Scarab - App -->
-
-<!-- Structural Elements -->
 </td>
 </tr>
 </table>
-<!-- Structural Elements -->
+<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
 
-    <!-- SourceCast -->
-    <div id="footer">
-        <p>
-        <a href="#">Domain Home</a> |
-        <a href="#">Help</a> | 
-        <a href="#">Site FAQ</a> |
-        <a href="#">Feedback</a>
-        </p>
-    </div>
-    <!-- SourceCast -->
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
 
-</form>
-</body>
+</td></tr>
+</table>
+</div>
+
+ </body>
 </html>
