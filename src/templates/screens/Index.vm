@@ -1,6 +1,6 @@
 <div class="app" id="index">
 
-<h3>Welcome to Scarab</h3>
+<h2>Welcome to Scarab</h2>
 
 <table cellpadding="0" cellspacing="4" border="0">
 <tr>
@@ -38,9 +38,9 @@ details:
 </p>
 
 <ul>
-<li><small>a set of users</small></li>
-<li><small>a set of roles</small></li>
-<li><small>a set of permissions per role, per issue type</small></li>
+<li>a set of users</li>
+<li>a set of roles</li>
+<li>a set of permissions per role, per issue type</li>
 </ul>
 
 <p>Scarab uses the generic term "module" instead of the more common
@@ -63,9 +63,9 @@ attributes and attribute options:
 </p>
 
 <ul>
-<li><small>a customizable set of attributes</small></li>
-<li><small>a customizable set of options (per attribute)</small></li>
-<li><small>a unique set of permissions per role</small></li>
+<li>a customizable set of attributes</li>
+<li>a customizable set of options (per attribute)</li>
+<li>a unique set of permissions per role</li>
 </ul>
 
 <p>Once a user selects an issue type, Scarab's navigation will
@@ -74,9 +74,9 @@ within that issue type, giving authorized user's access to
 functionality such as:</p>
 
 <ul>
-<li><small>enter a new issue</small></li>
-<li><small>query the database</small></li>
-<li><small>run reports on database activity</small></li>
+<li>enter a new issue</li>
+<li>query the database</li>
+<li>run reports on database activity</li>
 </ul>
 
 <p>The user's input remains confined to the selected issue type until
