@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.43 2003/05/16 01:34:42 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.44 2003/05/17 17:35:59 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1512,14 +1512,17 @@ loop:		for(;;)
 		{
 			if(delayedUpdate)
 			{
-				for(int i = delayedUpdateStart;
-					i <= delayedUpdateEnd;
-					i++)
+				if(textArea.getDisplayManager() == DisplayManager.this)
 				{
-					if(isLineVisible(i))
-						getScreenLineCount(i);
+					for(int i = delayedUpdateStart;
+						i <= delayedUpdateEnd;
+						i++)
+					{
+						if(isLineVisible(i))
+							getScreenLineCount(i);
+					}
+					_notifyScreenLineChanges();
 				}
-				_notifyScreenLineChanges();
 
 				delayedUpdate = false;
 			}
