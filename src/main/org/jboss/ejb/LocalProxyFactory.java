@@ -21,7 +21,7 @@ import javax.ejb.EJBLocalObject;
  * @see EJBProxyFactory
  * 
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface LocalProxyFactory
    extends GenericEntityObjectFactory, ContainerPlugin
@@ -74,9 +74,9 @@ public interface LocalProxyFactory
     * This method is called whenever a collection of EJBLocalObjects for a
     * collection of primary keys is needed.
     *
-    * @param enum    enumeration of primary keys
+    * @param c       collection of primary keys
     * @return        a collection of EJBLocalObjects implementing the remote
     *                interface for this container
     */
-   Collection getEntityLocalCollection(Collection enum);
+   Collection getEntityLocalCollection(Collection c);
 }

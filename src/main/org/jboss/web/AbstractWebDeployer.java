@@ -147,7 +147,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.25 $
+@version $Revision: 1.26 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -628,11 +628,11 @@ public abstract class AbstractWebDeployer
    protected void linkMessageDestinationRefs(WebMetaData metaData, Context envCtx, DeploymentInfo di)
       throws NamingException, DeploymentException
    {
-      Iterator enum = metaData.getMessageDestinationReferences();
+      Iterator i = metaData.getMessageDestinationReferences();
 
-      while (enum.hasNext())
+      while (i.hasNext())
       {
-         MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
+         MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) i.next();
 
          String refName = ref.getRefName();
          String jndiName = ref.getJNDIName();

@@ -33,11 +33,11 @@ import java.util.Iterator;
 *  Persistence manager for BMP entites.  All calls are simply deligated
 *  to the entity implementation class.
 *
-*  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+*  @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.54 $
+*  @version $Revision: 1.55 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -336,11 +336,11 @@ public class BMPPersistenceManager
       {
          // to preserve 1.0 spec compatiblity
          ArrayList array = new ArrayList();
-         Enumeration enum = (Enumeration) result;
-         while (enum.hasMoreElements() == true)
+         Enumeration enumeration = (Enumeration) result;
+         while (enumeration.hasMoreElements() == true)
          {
             // Wrap a cache key around the given object id/primary key
-            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enum.nextElement());
+            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enumeration.nextElement());
             Object o = factory.getEntityEJBObject(cacheKey);
             array.add(o);
          }
@@ -350,11 +350,11 @@ public class BMPPersistenceManager
       {
 
          ArrayList array = new ArrayList(((Collection) result).size());
-         Iterator enum =  ((Collection) result).iterator();
-         while (enum.hasNext())
+         Iterator enumeration =  ((Collection) result).iterator();
+         while (enumeration.hasNext())
          {
             // Wrap a cache key around the given object id/primary key
-            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enum.next());
+            final Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(enumeration.next());
             Object o = factory.getEntityEJBObject(cacheKey);
             array.add(o);
          }

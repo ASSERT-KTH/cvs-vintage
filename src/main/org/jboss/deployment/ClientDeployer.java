@@ -28,7 +28,7 @@ import java.util.Iterator;
  * client jars
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -196,10 +196,10 @@ public class ClientDeployer extends SubDeployerSupport
       Context envCtx = Util.createSubcontext(iniCtx, appClientName);
       log.debug("Creating client ENC binding under: " + appClientName);
       // Bind environment properties
-      Iterator enum = metaData.getEnvironmentEntries().iterator();
-      while (enum.hasNext())
+      Iterator i = metaData.getEnvironmentEntries().iterator();
+      while (i.hasNext())
       {
-         EnvEntryMetaData entry = (EnvEntryMetaData) enum.next();
+         EnvEntryMetaData entry = (EnvEntryMetaData) i.next();
          log.debug("Binding env-entry: " + entry.getName() + " of type: " +
             entry.getType() + " to value:" + entry.getValue());
          EnvEntryMetaData.bindEnvEntry(envCtx, entry);
@@ -207,10 +207,10 @@ public class ClientDeployer extends SubDeployerSupport
 
       // Bind EJB references
       HashMap ejbRefs = metaData.getEjbReferences();
-      enum = ejbRefs.values().iterator();
-      while (enum.hasNext())
+      i = ejbRefs.values().iterator();
+      while (i.hasNext())
       {
-         EjbRefMetaData ref = (EjbRefMetaData) enum.next();
+         EjbRefMetaData ref = (EjbRefMetaData) i.next();
          log.debug("Binding an EJBReference " + ref.getName());
 
          if (ref.getLink() != null)
@@ -248,10 +248,10 @@ public class ClientDeployer extends SubDeployerSupport
       
       // Bind resource references
       HashMap resRefs = metaData.getResourceReferences();
-      enum = resRefs.values().iterator();
-      while (enum.hasNext())
+      i = resRefs.values().iterator();
+      while (i.hasNext())
       {
-         ResourceRefMetaData ref = (ResourceRefMetaData) enum.next();
+         ResourceRefMetaData ref = (ResourceRefMetaData) i.next();
          String refName = ref.getRefName();
          String jndiName = ref.getJndiName();
 
@@ -282,10 +282,10 @@ public class ClientDeployer extends SubDeployerSupport
 
       // Bind resource env references
       HashMap envRefs = metaData.getResourceEnvReferences();
-      enum = envRefs.values().iterator();
-      while (enum.hasNext())
+      i = envRefs.values().iterator();
+      while (i.hasNext())
       {
-         ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
+         ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) i.next();
          String encName = resRef.getRefName();
          String jndiName = resRef.getJndiName();
          // Should validate the type...

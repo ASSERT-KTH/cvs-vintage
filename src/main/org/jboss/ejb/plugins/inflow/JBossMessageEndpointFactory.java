@@ -50,7 +50,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -233,7 +233,7 @@ public class JBossMessageEndpointFactory
       throw new Error("Not valid for MessageDriven beans");
    }
    
-   public Collection getEntityCollection(Collection enum)
+   public Collection getEntityCollection(Collection c)
    {
       throw new Error("Not valid for MessageDriven beans");
    }

@@ -92,7 +92,7 @@ import java.util.HashSet;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.166 $
+ * @version $Revision: 1.167 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -978,10 +978,10 @@ public abstract class Container
 
       // Bind environment properties
       {
-         Iterator enum = beanMetaData.getEnvironmentEntries();
-         while (enum.hasNext())
+         Iterator i = beanMetaData.getEnvironmentEntries();
+         while (i.hasNext())
          {
-            EnvEntryMetaData entry = (EnvEntryMetaData) enum.next();
+            EnvEntryMetaData entry = (EnvEntryMetaData) i.next();
             if (debug)
             {
                log.debug("Binding env-entry: " + entry.getName() + " of type: " +
@@ -994,10 +994,10 @@ public abstract class Container
 
       // Bind EJB references
       {
-         Iterator enum = beanMetaData.getEjbReferences();
-         while (enum.hasNext())
+         Iterator i = beanMetaData.getEjbReferences();
+         while (i.hasNext())
          {
-            EjbRefMetaData ref = (EjbRefMetaData) enum.next();
+            EjbRefMetaData ref = (EjbRefMetaData) i.next();
             if (debug)
                log.debug("Binding an EJBReference " + ref.getName());
 
@@ -1099,10 +1099,10 @@ public abstract class Container
 
       // Bind Local EJB references
       {
-         Iterator enum = beanMetaData.getEjbLocalReferences();
-         while (enum.hasNext())
+         Iterator i = beanMetaData.getEjbLocalReferences();
+         while (i.hasNext())
          {
-            EjbLocalRefMetaData ref = (EjbLocalRefMetaData) enum.next();
+            EjbLocalRefMetaData ref = (EjbLocalRefMetaData) i.next();
             String refName = ref.getName();
             log.debug("Binding an EJBLocalReference " + ref.getName());
 
@@ -1140,15 +1140,15 @@ public abstract class Container
 
       // Bind resource references
       {
-         Iterator enum = beanMetaData.getResourceReferences();
+         Iterator i = beanMetaData.getResourceReferences();
 
          // let's play guess the cast game ;)  New metadata should fix this.
          ApplicationMetaData application =
                  beanMetaData.getApplicationMetaData();
 
-         while (enum.hasNext())
+         while (i.hasNext())
          {
-            ResourceRefMetaData ref = (ResourceRefMetaData) enum.next();
+            ResourceRefMetaData ref = (ResourceRefMetaData) i.next();
 
             String resourceName = ref.getResourceName();
             String finalName = application.getResourceByName(resourceName);
@@ -1237,11 +1237,11 @@ public abstract class Container
 
       // Bind resource env references
       {
-         Iterator enum = beanMetaData.getResourceEnvReferences();
-         while (enum.hasNext())
+         Iterator i = beanMetaData.getResourceEnvReferences();
+         while (i.hasNext())
          {
             ResourceEnvRefMetaData resRef =
-                    (ResourceEnvRefMetaData) enum.next();
+                    (ResourceEnvRefMetaData) i.next();
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
@@ -1256,11 +1256,11 @@ public abstract class Container
 
       // Bind message destination references
       {
-         Iterator enum = beanMetaData.getMessageDestinationReferences();
+         Iterator i = beanMetaData.getMessageDestinationReferences();
 
-         while (enum.hasNext())
+         while (i.hasNext())
          {
-            MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
+            MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) i.next();
 
             String refName = ref.getRefName();
             String jndiName = ref.getJNDIName();
