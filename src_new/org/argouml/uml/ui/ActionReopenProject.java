@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.8 2004/10/13 05:52:27 linus Exp $
+// $Id: ActionReopenProject.java,v 1.9 2004/12/11 11:22:33 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,8 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.text.MessageFormat;
-
-import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.ProjectBrowser;
 
 /**
  * Reopens a project with respect of the calling event handler - should be 
@@ -82,52 +75,15 @@ public class ActionReopenProject extends UMLAction {
      * project
      */
     public void actionPerformed(ActionEvent e) {
-
-        
-        // actually copy from ActionOpenProject, there should be a better way
-        ProjectBrowser pb = ProjectBrowser.getInstance();
-        Project p = ProjectManager.getManager().getCurrentProject();
-
-        if (p != null && p.needsSave()) {
-            String t =
-                MessageFormat.format(
-                        Translator.localize(
-                                "optionpane.open-project-save-changes-to"),
-			new Object[] {
-			    p.getName()
-			});
-
-            int response =
-                JOptionPane.showConfirmDialog(
-					      pb,
-					      t,
-					      t,
-					      JOptionPane.YES_NO_CANCEL_OPTION);
-
-            if (response == JOptionPane.CANCEL_OPTION 
-	        || response == JOptionPane.CLOSED_OPTION)
-                return;
-            if (response == JOptionPane.YES_OPTION) {
-                boolean safe = false;
-
-                if (ActionSaveProject.SINGLETON.shouldBeEnabled()) {
-                    safe = ActionSaveProject.SINGLETON.trySave(true);
-                }
-                if (!safe) {
-                    safe = ActionSaveProjectAs.SINGLETON.trySave(false);
-                }
-                if (!safe)
-                    return;
-            }
-        }
-        
         // load of the new project
         // just reuse of the ActionOpen object
-        File toOpen = new File(filename);;
+        ActionOpenProject openProjectHandler =
+            new ActionOpenProject();
         
+        if (!openProjectHandler.askConfirmationAndSave()) return;
+        
+        File toOpen = new File(filename);;
         try {
-            ActionOpenProject openProjectHandler =
-		new ActionOpenProject();
             openProjectHandler.loadProject(toOpen.toURL());
         }
         catch ( java.net.MalformedURLException ex) {

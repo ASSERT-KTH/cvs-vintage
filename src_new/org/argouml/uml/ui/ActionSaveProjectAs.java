@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.26 2004/10/13 05:52:29 linus Exp $
+// $Id: ActionSaveProjectAs.java,v 1.27 2004/12/11 11:22:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.AbstractFilePersister;
+import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
@@ -53,9 +54,6 @@ public class ActionSaveProjectAs extends ActionSaveProject {
      */
     public static final ActionSaveProjectAs SINGLETON = 
         new ActionSaveProjectAs();
-
-    //public static final String separator = "/";
-    //System.getProperty("file.separator");
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -98,6 +96,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
     protected File getNewFile() {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
+        PersisterManager pm = new PersisterManager();
 
         JFileChooser chooser = null;
         URL url = p.getURL();
@@ -119,10 +118,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         FileFilter allFiles = chooser.getFileFilter();
         chooser.removeChoosableFileFilter(allFiles);
         
-        chooser.addChoosableFileFilter(zargoPersister);
-        chooser.addChoosableFileFilter(argoPersister);
-        chooser.addChoosableFileFilter(xmiPersister);
-        chooser.setFileFilter(zargoPersister);
+        pm.setFileChooserFilters(chooser);
         
         int retval = chooser.showSaveDialog(pb);
         if (retval == JFileChooser.APPROVE_OPTION) {

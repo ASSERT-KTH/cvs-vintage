@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.35 2004/10/13 05:52:29 linus Exp $
+// $Id: ActionSaveProject.java,v 1.36 2004/12/11 11:22:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,13 +37,10 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.AbstractFilePersister;
-import org.argouml.kernel.ArgoFilePersister;
+import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectFilePersister;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.kernel.XmiFilePersister;
-import org.argouml.kernel.ZargoFilePersister;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 
@@ -65,21 +62,6 @@ public class ActionSaveProject extends UMLAction {
      */
     public static final ActionSaveProject SINGLETON = new ActionSaveProject(); 
 
-    /**
-     * To persist to and from zargo (zipped file) storage.
-     */
-    protected AbstractFilePersister zargoPersister = new ZargoFilePersister();
-    
-    /**
-     * To persist to and from argo (xml file) storage.
-     */
-    protected AbstractFilePersister argoPersister  = new ArgoFilePersister();
-    
-    /**
-     * To persist to and from XMI file storage.
-     */
-    protected AbstractFilePersister xmiPersister  = new XmiFilePersister();
-    
     ////////////////////////////////////////////////////////////////
     // constructors
 
@@ -136,6 +118,7 @@ public class ActionSaveProject extends UMLAction {
     public boolean trySave(boolean overwrite, File file) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
+	PersisterManager pm = new PersisterManager();
 
 	try {
 	    if (file.exists() && !overwrite) {
@@ -160,18 +143,13 @@ public class ActionSaveProject extends UMLAction {
 			"label.save-project-status-writing"),
 				     new Object[] {file} );
 	    pb.showStatus (sStatus);
-		
-	    ProjectFilePersister persister = null;
-	    String name = file.getName();
-	    if (name.endsWith("." + zargoPersister.getExtension())) {
-	        persister = zargoPersister;
-	    } else if (name.endsWith("." + argoPersister.getExtension())) {
-	        persister = argoPersister;
-	    } else {
-	        throw new IllegalStateException("Filename " + project.getName() 
-	        + " is not of a known file type");
-	    }
-	    
+
+            ProjectFilePersister persister = 
+                pm.getPersisterFromFileName(file.getName());
+            if (persister == null)
+                throw new IllegalStateException("Filename " + project.getName() 
+                        + " is not of a known file type");
+
 	    project.preSave();
 	    persister.save(project, file);
 	    project.postSave();
