@@ -79,7 +79,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -499,17 +499,22 @@ public class EjbModule
          // cleanup container
          con.setBeanMetaData(null);
          con.setWebClassLoader(null);
+         con.setClassLoader(null);
+         con.setLocalClassLoader(null);
+         con.setEjbModule(null);
+         con.setDeploymentInfo(null);
+         con.setTransactionManager(null);
+         con.setSecurityManager(null);
+         con.setRealmMapping(null);
+         con.setSecurityProxy(null);
+         con.proxyFactories.clear();
       }
 
       this.containers.clear();
       this.localHomes.clear();
       this.containerOrdering.clear();
       this.moduleData.clear();
-      this.classLoader = null;
-      this.deploymentInfo = null;
       this.serviceController = null;
-      this.webServiceName = null;
-      this.tm = null;
    }
 
    // ******************

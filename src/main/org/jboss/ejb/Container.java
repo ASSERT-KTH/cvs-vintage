@@ -81,7 +81,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.155 $
+ * @version $Revision: 1.156 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -369,9 +369,6 @@ public abstract class Container
     */
    public void setEjbModule(EjbModule app)
    {
-      if (app == null)
-         throw new IllegalArgumentException("Null EjbModule");
-
       ejbModule = app;
    }
 
@@ -753,30 +750,15 @@ public abstract class Container
    {
       localProxyFactory.destroy();
       ejbModule.removeLocalHome(this);
-      this.classLoader = null;
-      // this.webClassLoader = null; disposed by EjbModule
-      this.localClassLoader = null;
-      this.ejbModule = null;
 
-      // this.lockManager = null; Setting this to null causes AbstractCache
-      // to fail on undeployment
-      di = null;
-      // metaData = null; disposed by EjbModule
       beanClass = null;
       homeInterface = null;
       remoteInterface = null;
       localHomeInterface = null;
       localInterface = null;
-      tm = null;
-      sm = null;
-      rm = null;
-      securityProxy = null;
       methodPermissionsCache.clear();
-      proxyFactories.clear();
       invokeStats.resetStats();
       marshalledInvocationMapping.clear();
-      proxyFactories.clear();
-      proxyFactoryTL = null;
    }
 
    /**
