@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -98,6 +98,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    private boolean hasForeignKey;
    
+   /**
+    * Indicates whether the foreign key is a part of primary key
+    */
+   private boolean fkPartOfPk;
+
    /**
     * The key fields that this entity maintains in the relation table.
     */
@@ -254,19 +259,67 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                   new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData));
          }
          tableKeyFields = Collections.unmodifiableList(tableKeyFields);
-      } else {      
+      } else {
          // initialize foreign key fields
          Collection foreignKeys = metadata.getRelatedRole().getKeyFields();
          foreignKeyFields = new ArrayList(foreignKeys.size());
          for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
-            JDBCCMPFieldMetaData cmpFieldMetaData = 
+
+            JDBCCMPFieldMetaData fkFieldMetaData = 
                   (JDBCCMPFieldMetaData)i.next();
-            foreignKeyFields.add(new JDBCCMP2xFieldBridge(
+
+            // now determine whether the fk is a part pk.
+            // fk is a part of pk if its fields are mapped to
+            // the primary key columns
+            String fkColumnName = fkFieldMetaData.getColumnName();
+
+            JDBCCMP2xFieldBridge fkField = null;
+            // look among the pk fields for the field with matching column name
+            for(Iterator pkIter = entity.getPrimaryKeyFields().iterator();
+               pkIter.hasNext() && fkField == null;) {
+
+               JDBCCMP2xFieldBridge pkField = (JDBCCMP2xFieldBridge)pkIter.next();
+               JDBCCMPFieldMetaData pkFieldMetaData =
+                  entity.getMetaData().getCMPFieldByName(pkField.getFieldName());
+
+               if(fkColumnName.equals(pkFieldMetaData.getColumnName())) {
+
+                     // mark the fk as being a part of pk
+                     fkPartOfPk = true;
+
+                     JDBCCMP2xFieldBridge relatedPkField =
+                        (JDBCCMP2xFieldBridge)relatedEntity.
+                           getFieldByName(fkFieldMetaData.getFieldName());
+
+                     // construct the foreign key field
+                     fkField = new JDBCCMP2xFieldBridge(
+                        pkField.getManager(),               // this pk's manager
+                        relatedPkField.getFieldName(),
+                        relatedPkField.getFieldType(),
+                        pkField.getJDBCType(),              // this pk's jdbc type
+                        relatedPkField.isReadOnly(),
+                        relatedPkField.getReadTimeOut(),
+                        false,                              // not a primary key
+                        relatedPkField.getPrimaryKeyClass(),
+                        relatedPkField.getPrimaryKeyField(),
+                        false                               // is not an unknown key
+                     );
+               }
+            }
+
+            // if the fk is not a part of pk then create a new field
+            if(fkField == null) {
+               fkField = new JDBCCMP2xFieldBridge(
                   manager,
-                  cmpFieldMetaData,
-                  manager.getJDBCTypeFactory().getJDBCType(
-                     cmpFieldMetaData)));
+                  fkFieldMetaData,
+                  manager.getJDBCTypeFactory().getJDBCType(fkFieldMetaData)
+               );
+            }
+
+            // add the fk field to the list
+            foreignKeyFields.add(fkField);
          }
+
          foreignKeyFields = Collections.unmodifiableList(foreignKeyFields);
          hasForeignKey = !foreignKeyFields.isEmpty();
          if(hasForeignKey) {
@@ -344,6 +397,13 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    public boolean hasForeignKey() {
       return hasForeignKey;
+   }
+
+   /**
+    * Returns true if this fk is a part of pk and false otherwise
+    */
+   public boolean isFkPartOfPk() {
+      return fkPartOfPk;
    }
 
    /**
