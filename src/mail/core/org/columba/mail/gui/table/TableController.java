@@ -28,7 +28,6 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.util.CScrollPane;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -58,7 +57,6 @@ public class TableController {
 	private TableView headerTable;
 	private HeaderTableModel headerTableModel;
 
-	public CScrollPane scrollPane;
 	private SwingWorker worker;
 	private Folder folder;
 	private HeaderList headerList;

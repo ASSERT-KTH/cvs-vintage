@@ -20,13 +20,13 @@ import java.awt.Color;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 
-import org.columba.core.gui.util.CScrollPane;
 import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.message.HeaderInterface;
 
-public class MessageView extends CScrollPane {
+public class MessageView extends JScrollPane {
 
 	public static final int VIEWER_HTML = 1;
 	public static final int VIEWER_SIMPLE = 0;
