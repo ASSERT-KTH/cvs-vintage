@@ -163,7 +163,10 @@ public class OutgoingServerPanel
 
 			item.set("host", hostTextField.getText());
 
-			item.set("enable_ssl", secureCheckBox.isEnabled());
+			// *20031025, karlpeder* Fixed bug which meant that it was impossible
+			// to disable ssl.
+			//item.set("enable_ssl", secureCheckBox.isEnabled());
+			item.set("enable_ssl", secureCheckBox.isSelected());
 
 			if (needAuthCheckBox.isSelected()) {
 
