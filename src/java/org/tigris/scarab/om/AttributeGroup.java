@@ -72,7 +72,7 @@ public  class AttributeGroup
     /**
      * List of attributes in this group.
      */
-    public Vector getAttributes()
+    public List getAttributes()
         throws Exception
     {
         Vector attributes = null;
@@ -82,7 +82,7 @@ public  class AttributeGroup
                                                   AttributePeer.ATTRIBUTE_ID)
             .addAscendingOrderByColumn(RAttributeAttributeGroupPeer.PREFERRED_ORDER);
         attributes = AttributePeer.doSelect(crit);
-        return attributes;
+        return (List)attributes;
     }
 
     /**
