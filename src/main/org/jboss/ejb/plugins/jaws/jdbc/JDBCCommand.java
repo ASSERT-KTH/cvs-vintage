@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCCommand
 {
@@ -327,11 +327,12 @@ public abstract class JDBCCommand
       throws SQLException
    {
       Object result = rs.getObject(idx);
-      
+
       if (debug) {
+		  String className = result == null ? "null" : result.getClass().getName();
          log.debug("Got result: idx=" + idx +
                    ", value=" + result +
-                   ", class=" + result.getClass().getName() +
+                   ", class=" + className +
                    ", JDBCtype=" + getJDBCTypeName(jdbcType));
       }
       
