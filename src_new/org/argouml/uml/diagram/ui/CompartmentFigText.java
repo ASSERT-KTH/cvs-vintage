@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.19 2004/09/10 20:05:30 mvw Exp $
+// $Id: CompartmentFigText.java,v 1.20 2004/11/11 09:47:02 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,24 +120,24 @@ public class CompartmentFigText extends FigText {
     // The following method overrides are necessary for proper graphical
     // behavior
 
-    /**
-     * Override for correct graphical behaviour.<p>
-     *
-     * @param w  Desired line width. Overridden and set to zero anyway.
-     */
-    public void setLineWidth(int w) {
-        super.setLineWidth(0);
-    }
+//    /**
+//     * Override for correct graphical behaviour.<p>
+//     *
+//     * @param w  Desired line width. Overridden and set to zero anyway.
+//     */
+//    public void setLineWidth(int w) {
+//        super.setLineWidth(0);
+//    }
 
 
-    /**
-     * Override for correct graphical behaviour.<p>
-     *
-     * @return  Current line width&mdash;always 1.
-     */
-    public int getLineWidth() {
-        return 1;
-    }
+//    /**
+//     * Override for correct graphical behaviour.<p>
+//     *
+//     * @return  Current line width&mdash;always 1.
+//     */
+//    public int getLineWidth() {
+//        return 1;
+//    }
 
     
     /**
