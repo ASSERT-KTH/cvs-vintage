@@ -79,6 +79,7 @@ import org.apache.jasper.Options;
 import org.apache.jasper.EmbededServletOptions;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JspEngineContext;
+import org.apache.jasper.compiler.Mangler;
 import org.apache.jasper.runtime.*;
 
 import org.apache.jasper.compiler.Compiler;
@@ -478,7 +479,7 @@ public class JspServlet extends HttpServlet {
      * from whence it came
      */
     public boolean isOutDated(File jsp, JspCompilationContext ctxt,
-			      JspMangler mangler ) {
+			      Mangler mangler ) {
         File jspReal = null;
 	boolean outDated;
 	
