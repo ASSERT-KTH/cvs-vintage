@@ -28,18 +28,21 @@ public class AccountWizardLauncher {
     
     public void launchWizard() {
         DataModel data = new DataModel();
-        Step[] steps = new Step[]{
-            new IdentityStep(data),
-            new IncomingServerStep(data),
-            new OutgoingServerStep(data)
-            //advanced step?
-        };
+        Step[] steps;
         if (MailConfig.getAccountList().count() == 0) {
-            Step[] temp = new Step[steps.length + 2];
-            temp[0] = new WelcomeStep();
-            System.arraycopy(steps, 0, temp, 1, steps.length);
-            temp[temp.length - 1] = new FinishStep();
-            steps = temp;
+            steps = new Step[]{
+                new WelcomeStep(),
+                new IdentityStep(data),
+                new IncomingServerStep(data),
+                new OutgoingServerStep(data, false),
+                new FinishStep()
+            };
+        } else {
+            steps = new Step[]{
+                new IdentityStep(data),
+                new IncomingServerStep(data),
+                new OutgoingServerStep(data, true)
+            };
         }
         WizardModel model = new DefaultWizardModel(steps);
         model.addWizardModelListener(new AccountCreator(data));

@@ -32,9 +32,10 @@ import org.columba.mail.util.MailResourceLoader;
 
 class OutgoingServerStep extends AbstractStep {
         protected DataModel data;
+        protected boolean isLastStep;
 	private JTextField hostTextField;
 
-	public OutgoingServerStep(DataModel data) {
+	public OutgoingServerStep(DataModel data, boolean isLastStep) {
 		super(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -44,6 +45,7 @@ class OutgoingServerStep extends AbstractStep {
                                     "accountwizard",
                                     "outgoingserver_description"));
                 this.data = data;
+                this.isLastStep = isLastStep;
                 setCanGoNext(false);
 	}
         
@@ -56,7 +58,6 @@ class OutgoingServerStep extends AbstractStep {
                                     "accountwizard",
                                     "outgoingserver_text")));
                 component.add(Box.createVerticalStrut(40));
-
                 WizardTextField middlePanel = new WizardTextField();
                 JLabel addressLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
@@ -75,11 +76,19 @@ class OutgoingServerStep extends AbstractStep {
                 data.registerDataLookup("OutgoingServer.host", new DefaultDataLookup(hostTextField, method, null));
                 hostTextField.getDocument().addDocumentListener(new DocumentListener() {
                         public void removeUpdate(DocumentEvent e) {
-                                setCanGoNext(e.getDocument().getLength() > 0);
+                                setCanProceed(e.getDocument().getLength() > 0);
                         }
                         
                         public void insertUpdate(DocumentEvent e) {
-                                setCanGoNext(e.getDocument().getLength() > 0);
+                                setCanProceed(e.getDocument().getLength() > 0);
+                        }
+                        
+                        protected void setCanProceed(boolean b) {
+                                if (isLastStep) {
+                                        setCanFinish(b);
+                                } else {
+                                        setCanGoNext(b);
+                                }
                         }
                         
                         public void changedUpdate(DocumentEvent e) {}
