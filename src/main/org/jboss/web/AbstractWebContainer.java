@@ -161,7 +161,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
    
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.52 $
+@version $Revision: 1.53 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -507,7 +507,8 @@ public abstract class AbstractWebContainer
    public synchronized void stop(DeploymentInfo di) 
       throws DeploymentException 
    {
-      String warUrl = di.localUrl.toString();
+      URL warURL = di.localUrl != null ? di.localUrl : di.url;
+      String warUrl = warURL.toString();
       try
       {
          performUndeploy(warUrl);
