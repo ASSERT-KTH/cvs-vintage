@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.26 2001/02/26 09:42:30 nacho Exp $
+/* $Id: Main.java,v 1.27 2001/03/04 03:36:52 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -102,7 +102,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.26 $ $Date: 2001/02/26 09:42:30 $
+	@version $Revision: 1.27 $ $Date: 2001/03/04 03:36:52 $
  */
 public class Main {
 
@@ -227,9 +227,9 @@ public class Main {
             return libBase;
         }
         if( homeDir!=null ){
-            libBase=checkDir( homeDir + "/lib");
+            libBase=checkDir( homeDir + "/lib/container");
         }else{
-            libBase=checkDir("./lib");
+            libBase=checkDir("./lib/container");
         }
         return libBase;
     }
@@ -239,9 +239,9 @@ public class Main {
             return serverBase;
         }
         if( homeDir!=null ){
-            serverBase=checkDir( homeDir + "/lib/shared");
+            serverBase=checkDir( homeDir + "/lib/apps");
         }else{
-            serverBase=checkDir("./lib/shared");
+            serverBase=checkDir("./lib/apps");
         }
         return serverBase;
     }
@@ -271,7 +271,7 @@ public class Main {
             // the server classloader loads from classes dir too and from tools.jar
 
             Vector serverJars=new Vector();
-            serverJars.addElement( getURL(  getServerDir() ,"../classes/" ));
+            //serverJars.addElement( getURL(  getServerDir() ,"../classes/" ));
             Vector serverUrlV =getClassPathV(getServerDir());
             for(int i=0; i < serverUrlV.size();i++){
                 serverJars.addElement(serverUrlV.elementAt(i));
