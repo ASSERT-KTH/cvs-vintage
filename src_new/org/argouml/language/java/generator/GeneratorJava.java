@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.102 2004/10/03 17:59:19 mvw Exp $
+// $Id: GeneratorJava.java,v 1.103 2004/10/12 06:57:06 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1236,7 +1236,7 @@ public class GeneratorJava
 		    : (null);
                 String sName =
                     (node.getName() != null)
-		    ? (node.getName().getText().toString())
+		    ? (node.getName().getText())
 		    : (constraintName + "_" + (constraintID++));
 
                 if ((sKind == null) || (sExpression == null)) {
