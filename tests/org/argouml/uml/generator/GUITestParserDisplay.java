@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.4 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestParserDisplay.java,v 1.5 2004/06/28 06:25:35 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -401,14 +401,13 @@ public class GUITestParserDisplay extends TestCase {
 	    ProjectManager.getManager().getCurrentProject().getModel();
 
 	Iterator it =
-	    ExtensionMechanismsHelper
-	    .getHelper()
-	    .getStereotypes(ns)
-	    .iterator();
+	    ExtensionMechanismsHelper.getHelper()
+	        .getStereotypes(ns).iterator();
 	while (it.hasNext()) {
 	    MStereotype s = (MStereotype) it.next();
-	    if (name.equals(s.getName()))
+	    if (name.equals(s.getName())) {
 		return;
+	    }
 	}
 	ExtensionMechanismsFactory.getFactory().buildStereotype(elem, 
 								name,

@@ -1,4 +1,4 @@
-// $Id: GenericUmlObjectTestFixture.java,v 1.3 2004/02/24 08:28:17 linus Exp $
+// $Id: GenericUmlObjectTestFixture.java,v 1.4 2004/06/28 06:24:23 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,7 +155,7 @@ public abstract class GenericUmlObjectTestFixture extends TestCase {
      */
     protected void runTestRefPackage(Object o) {
 	assertTrue("Should be a RefPackage", o instanceof RefPackage);
-	RefPackage rp = (RefPackage)o;
+	RefPackage rp = (RefPackage) o;
 	// TODO: test method refAllAssociations()
 	// TODO: test method refAllClasses()
 	// TODO: test method refAllPackages()

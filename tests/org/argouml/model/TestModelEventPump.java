@@ -1,4 +1,4 @@
-// $Id: TestModelEventPump.java,v 1.1 2004/04/19 05:56:46 linus Exp $
+// $Id: TestModelEventPump.java,v 1.2 2004/06/28 06:23:53 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,7 +133,7 @@ public class TestModelEventPump extends TestCase {
         Model.getPump().addClassModelEventListener(listener,
                 				   elem.getClass(),
                 				   new String[] {
-                					"isRoot" 
+						       "isRoot" 
         					   });
         elem.setRoot(true);
         assertTrue(eventcalled);
@@ -147,7 +147,7 @@ public class TestModelEventPump extends TestCase {
         Model.getPump().addClassModelEventListener(listener,
                 				   elem.getClass(),
                 				   new String[] {
-                					"remove" 
+						       "remove" 
         					   });
         elem.remove();
         assertTrue(eventcalled);
@@ -161,7 +161,7 @@ public class TestModelEventPump extends TestCase {
         Model.getPump().addClassModelEventListener(listener,
                 				   elem.getClass(),
                 				   new String[] {
-                					"parameter" 
+						       "parameter" 
         					   });
         elem.addParameter(new MParameterImpl());
         assertTrue(eventcalled);
@@ -177,7 +177,7 @@ public class TestModelEventPump extends TestCase {
         Model.getPump().addClassModelEventListener(listener,
                 				   elem.getClass(),
                 				   new String[] {
-                					"parameter" 
+						       "parameter" 
         					   });
         elem.removeParameter(param);
         assertTrue(eventcalled);
@@ -274,7 +274,7 @@ public class TestModelEventPump extends TestCase {
         Model.getPump().addClassModelEventListener(listener,
                 				   elem.getClass(),
                 				   new String[] {
-                					"isRoot" 
+						       "isRoot" 
         					   });
         Model.getPump().removeClassModelEventListener(listener,
                 				      elem.getClass(),
