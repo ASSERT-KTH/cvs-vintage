@@ -1109,6 +1109,7 @@ public final class ContextManager {
     public static final int REQUEST_NOTE=2;
     public static final int HANDLER_NOTE=3;
     public static final int SESSION_NOTE=4;
+    public static final int MODULE_NOTE=5;
     
     public static final int REQ_RE_NOTE=0;
 
