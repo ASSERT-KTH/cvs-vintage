@@ -7,8 +7,6 @@
 
 package org.jboss.ejb;
 
-
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,6 +53,7 @@ import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
@@ -112,13 +111,14 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.103 $
+ * @version $Revision: 1.104 $
  *
- * @todo convert all the deployment/service lifecycle stuff to an aspect/interceptor.  Make this whole stack into a model mbean.
+ * @todo convert all the deployment/service lifecycle stuff to an 
+ * aspect/interceptor.  Make this whole stack into a model mbean.
  */
-public abstract class Container
-   extends ServiceMBeanSupport
-   implements MBeanRegistration, DynamicMBean, StatisticsProvider
+public abstract class Container extends ServiceMBeanSupport
+   implements MBeanRegistration, DynamicMBean, 
+   StatisticsProvider, InstancePoolContainer
 {
    public final static String BASE_EJB_CONTAINER_NAME = 
          "jboss.j2ee:service=EJB";
@@ -135,8 +135,9 @@ public abstract class Container
    static final String CMT_VALUE = "Container";
    static final String ANY_VALUE = "Both";
    
-   //Externally supplied configuration data
-
+   /**
+    * Externally supplied configuration data
+    */
    private DeploymentInfo di;
 
    /**
@@ -146,13 +147,13 @@ public abstract class Container
     */
    protected BeanMetaData metaData;
    
-   /** This is the application that this container is a part of */
+   /** 
+    * This is the application that this container is a part of 
+    */
    protected EjbModule ejbModule;
    
-
-   //Internally generated configuration data
-
-   /** ObjectName of Container
+   /** 
+    * ObjectName of Container
     * @todo use getObjectName() from serviceMBeanSupport.
     */
    private ObjectName jmxName;
@@ -171,55 +172,99 @@ public abstract class Container
     */
    protected ClassLoader classLoader;
    
-   /** The class loader for remote dynamic classloading */
+   /** 
+    * The class loader for remote dynamic classloading 
+    */
    protected ClassLoader webClassLoader;
 
-   /** This is the EnterpriseBean class */
+   /** 
+    * This is the EnterpriseBean class.
+    */
    protected Class beanClass;
    
-   /** This is the Home interface class */
+   /** 
+    * This is the Home interface class.
+    */
    protected Class homeInterface;
    
-   /** This is the Remote interface class */
+   /**
+    * This is the Remote interface class.
+    */
    protected Class remoteInterface;
    
-   /** ??? */
+   /** 
+    * This is the Local Home interface class
+    */
    protected Class localHomeInterface;
    
-   /** ??? */   
+   /**
+    * This is the Local interface class
+    */
    protected Class localInterface;
+    
+   /** 
+    * This is the instance cache for this container 
+    */
+   private InstanceCache instanceCache;
    
-   /** This is the TransactionManager */
+   /** 
+    * This is the instancepool that is to be used 
+    */
+   private InstancePool instancePool;
+  
+   /** 
+    * This is the TransactionManager
+    */
    protected TransactionManager tm;
    
-   /** This is the SecurityManager */
+   /**
+    * This is the SecurityManager 
+    */
    protected AuthenticationManager sm;
    
-   /** This is the realm mapping */
+   /** 
+    * This is the realm mapping
+    */
    protected RealmMapping rm;
    
-   /** The custom security proxy used by the SecurityInterceptor */
+   /**
+    * The custom security proxy used by the SecurityInterceptor
+    */
    protected Object securityProxy;
    
-   /** This is the bean lock manager that is to be used */
+   /**
+    * This is the bean lock manager that is to be used
+    */
    protected BeanLockManager lockManager;
    
-   /** ??? */
-   protected LocalProxyFactory localProxyFactory = 
-      new BaseLocalProxyFactory();
+   /**
+    * The proxy factory for local interfaces
+    */
+   protected LocalProxyFactory localProxyFactory = new BaseLocalProxyFactory();
    
-   /** This is a cache for method permissions */
+   /**
+    * This is a cache for method permissions
+    */
    private HashMap methodPermissionsCache = new HashMap();
    
-   /** Maps for MarshalledInvocation mapping */
+   /**
+    * Maps for MarshalledInvocation mapping
+    */
    protected Map marshalledInvocationMapping = new HashMap();
    
-   /** This Container's codebase, a sequence of URLs separated by spaces */
+   /**
+    * This Container's codebase, a sequence of URLs separated by spaces
+    */
    protected String codebase = "";
    
-   /** ObjectName of the JSR-77 EJB representation **/
+   /**
+    * ObjectName of the JSR-77 EJB representation
+    */
    protected String mEJBObjectName;
    
+   /**
+    * ??? What is this for ???
+    */
    protected HashMap proxyFactories = new HashMap();
 
    /** 
@@ -234,9 +279,11 @@ public abstract class Container
     */
    private boolean started = false;
    
-   // Public --------------------------------------------------------
-
-   //Properties set from the outside
+   /**
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself.
+    */
+   protected Interceptor interceptor;
 
    /**
     * Get the Di value.
@@ -256,8 +303,6 @@ public abstract class Container
       this.di = di;
    }
 
-   
-
    /**
     * Sets the application deployment unit for this container. All the bean
     * containers within the same application unit share the same instance.
@@ -266,9 +311,10 @@ public abstract class Container
     */
    public void setEjbModule(EjbModule app)
    {
-      if (app == null)
+      if(app == null)
+      {
          throw new IllegalArgumentException("Null EjbModule");
-      
+      }
       ejbModule = app;
    }
    
@@ -277,8 +323,6 @@ public abstract class Container
       return ejbModule;
    }
    
-
-
    /**
     * Sets the meta data for this container. The meta data consists of the
     * properties found in the XML descriptors.
@@ -300,8 +344,16 @@ public abstract class Container
       return metaData;
    }
 
-
-   //Properties set up in createService/initialization
+   public Class getHomeClass()
+   {
+      return homeInterface;
+   }
+   
+   public Class getRemoteClass()
+   {
+      return remoteInterface;
+   }
+ 
    public Class getLocalClass() 
    {
       return localInterface;
@@ -311,7 +363,38 @@ public abstract class Container
    {
       return localHomeInterface;
    }
+
+   public void setInstancePool(InstancePool instancePool)
+   {
+      if(instancePool == null) 
+      {
+         throw new IllegalArgumentException("instancePool is null");
+      }
+
+      this.instancePool = instancePool;
+      instancePool.setContainer(this);
+   }
    
+   public InstancePool getInstancePool()
+   {
+      return instancePool;
+   }
+
+   public void setInstanceCache(InstanceCache instanceCache)
+   {
+      if(instanceCache == null)
+      {
+         throw new IllegalArgumentException("instanceCache is null");
+      }
+      this.instanceCache = instanceCache;
+      instanceCache.setContainer(this);
+   }
+
+   public InstanceCache getInstanceCache()
+   {
+      return instanceCache;
+   }
+
    /**
     * Sets a transaction manager for this container.
     *
@@ -390,16 +473,22 @@ public abstract class Container
       proxyFactoryTL.set(factory);
    }
    
+   public LocalProxyFactory getLocalProxyFactory()
+   {
+      return localProxyFactory;
+   }
+   
    public EJBProxyFactory lookupProxyFactory(String binding)
    {
       return (EJBProxyFactory)proxyFactories.get(binding);
    }
+
    /**
     * Sets the local class loader for this container. 
     * Used for loading resources from the local jar file for this container. 
     * NOT for loading classes!
     *
-    * @param   cl
+    * @param cl the new local class loader
     */
    public void setLocalClassLoader(ClassLoader cl)
    {
@@ -409,7 +498,7 @@ public abstract class Container
    /**
     * Returns the local classloader for this container.
     *
-    * @return   The local classloader for this container.
+    * @return the local classloader for this container.
     */
    public ClassLoader getLocalClassLoader()
    {
@@ -420,7 +509,7 @@ public abstract class Container
     * Sets the class loader for this container. All the classes and resources
     * used by the bean in this container will use this classloader.
     *
-    * @param   cl
+    * @param cl the new class loader
     */
    public void setClassLoader(ClassLoader cl)
    {
@@ -428,22 +517,25 @@ public abstract class Container
    }
    
    /**
-    * Returns the classloader for this container.
+    * Returns the class loader for this container.
     *
-    * @return
+    * @return the class loader for this container
     */
    public ClassLoader getClassLoader()
    {
       return classLoader;
    }
 
-   /** Get the class loader for dynamic class loading via http.
+   /** 
+    * Get the class loader for dynamic class loading via http.
     */
    public ClassLoader getWebClassLoader()
    {
       return webClassLoader;
    }
-   /** Set the class loader for dynamic class loading via http.
+
+   /** 
+    * Set the class loader for dynamic class loading via http.
     */
    public void setWebClassLoader(final ClassLoader webClassLoader)
    {
@@ -507,8 +599,11 @@ public abstract class Container
     */
    public void setCodebase(final String codebase) 
    { 
-      if (codebase != null) 
+      // Why not throw an IllegalArgumentException???
+      if(codebase != null) 
+      {
          this.codebase = codebase;
+      }
    }
 
    /**
@@ -660,11 +755,11 @@ public abstract class Container
     */
    protected void destroyService() throws Exception
    {
-         // Remove JSR-77 EJB-Wrapper
-         if( mEJBObjectName != null )
-         {
-            EJB.destroy( getServer(), mEJBObjectName );
-         }
+      // Remove JSR-77 EJB-Wrapper
+      if( mEJBObjectName != null )
+      {
+         EJB.destroy( getServer(), mEJBObjectName );
+      }
       localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
       this.classLoader = null;
@@ -676,37 +771,30 @@ public abstract class Container
       this.methodPermissionsCache.clear();
    }
 
-
-
-
-   /**
-    * This method is called when a method call comes
-    * in on the Home object.  The Container forwards this call to the
-    * interceptor chain for further processing.
-    *
-    * @param mi   the object holding all info about this invocation
-    * @return     the result of the home invocation
-    * 
-    * @throws Exception
-    */
-   public abstract Object invokeHome(Invocation mi)
-      throws Exception;
-   
    /**
     * This method is called when a method call comes
     * in on an EJBObject.  The Container forwards this call to the interceptor
     * chain for further processing.
     *
-    * @param id        the id of the object being invoked. May be null
-    *                  if stateless
-    * @param method    the method being invoked
-    * @param args      the parameters
-    * @return          the result of the invocation
-    * 
-    * @throws Exception
+    * @param invocation the invocation information
+    * @return the result of the invocation
+    * @throws Exception if a problem occurs 
     */
-   public abstract Object invoke(Invocation mi)
-      throws Exception;
+   public Object invoke(Invocation invocation) throws Exception
+   {
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+      try
+      {
+         return getInterceptor().invoke(invocation);
+      }
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
+   }
    
    // DynamicMBean interface implementation ----------------------------------
    
@@ -715,29 +803,29 @@ public abstract class Container
              MBeanException,
              ReflectionException
    {
-      if ("ClassLoader".equals(attribute))
+      if("ClassLoader".equals(attribute))
       {
-	 return getClassLoader();
+         return getClassLoader();
       }
-      if ("BeanClass".equals(attribute))
+      if("BeanClass".equals(attribute))
       {
-	 return getBeanClass();
+         return getBeanClass();
       }
-      if ("BeanMetaData".equals(attribute))
+      if("BeanMetaData".equals(attribute))
       {
-	 return getBeanMetaData();
+         return getBeanMetaData();
       }
-      if ("State".equals(attribute))
+      if("State".equals(attribute))
       {
-	 return new Integer(getState());
+         return new Integer(getState());
       }
-      if ("StateString".equals(attribute))
+      if("StateString".equals(attribute))
       {
-	 return getStateString();
+         return getStateString();
       }
       throw new AttributeNotFoundException("invalid attribute: " + attribute);
    }
-   
+
    public void setAttribute(Attribute attribute)
       throws AttributeNotFoundException,
              InvalidAttributeValueException,
@@ -812,7 +900,6 @@ public abstract class Container
                }
                
                return invoke(invocation);
-            
             }
             else if(type == InvocationType.HOME ||
                   type == InvocationType.LOCALHOME)
@@ -832,8 +919,7 @@ public abstract class Container
                   }
                }
                
-               return invokeHome(invocation);
-            
+               return invoke(invocation);
             }
             else 
             {
@@ -1039,10 +1125,29 @@ public abstract class Container
    
    abstract Interceptor createContainerInterceptor();
    
-   public abstract void addInterceptor(Interceptor in);
+   public void addInterceptor(Interceptor in)
+   {
+      if (interceptor == null)
+      {
+         interceptor = in;
+      }
+      else
+      {
+         Interceptor current = interceptor;
+         while (current.getNext() != null)
+         {
+            current = current.getNext();
+         }
+         
+         current.setNext(in);
+      }
+   }
    
-   // Private -------------------------------------------------------
-   
+   public Interceptor getInterceptor()
+   {
+      return interceptor;
+   }
+  
    /**
     * This method sets up the naming environment of the bean.
     * We create the java:comp/env namespace with properties, EJB-References,
@@ -1717,28 +1822,9 @@ public abstract class Container
     * All container interceptors perform the same basic functionality
     * and only differ slightly.
     */
-   protected abstract class AbstractContainerInterceptor
-      implements Interceptor
+   protected abstract class AbstractContainerInterceptor 
+         extends AbstractInterceptor
    {
-      protected final Logger log = Logger.getLogger(this.getClass());
-      protected Element config = null;
-      
-      public void setContainer(Container con) {}
-
-      public void setConfiguration(Element e) { config = e; }
-      
-      public void setNext(Interceptor interceptor) {}
-      
-      public Interceptor getNext() { return null; }
-      
-      public void create() {}
-      
-      public void start() {}
-      
-      public void stop() {}
-      
-      public void destroy() {}
-
       protected void rethrow(Exception e)
          throws Exception
       {
@@ -1765,23 +1851,5 @@ public abstract class Container
 
          throw e;
       }
-
-      // Monitorable implementation ------------------------------------
-      
-      public void sample(Object s)
-      {
-         // Just here to because Monitorable request it but will be removed soon
-      }
-      
-      public Map retrieveStatistic()
-      {
-         return null;
-      }
-      
-      public void resetStatistic()
-      {
-      }
-      
    }
-
 }

@@ -1,9 +1,9 @@
 /**
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
@@ -26,69 +26,61 @@ import org.jboss.ejb.plugins.lock.Entrancy;
  * as reentrant.
  *
  * <p><b>WARNING: critical code</b>, get approval from senior developers
- *    before changing.
+ * before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class EntityReentranceInterceptor
-   extends AbstractInterceptor
+public final class EntityReentranceInterceptor extends AbstractInterceptor
 {
-   /**
-    *  The container of this interceptor.
-    */
-   protected EntityContainer container;
+   private boolean reentrant = false;
 
-   protected boolean reentrant = false;
-
-   // Public --------------------------------------------------------
- 
-   public Container getContainer() { return container; }
-
-   public void setContainer(Container container)
+   public void start()
    {
-      this.container = (EntityContainer)container;
-      if( container != null )
-      {
-         EntityMetaData meta = (EntityMetaData)container.getBeanMetaData();
-         reentrant = meta.isReentrant();
-      }
+      EntityMetaData meta = (EntityMetaData)getContainer().getBeanMetaData();
+      reentrant = meta.isReentrant();
    }
- 
-   public Object invoke(Invocation mi)
-      throws Exception
+
+   public Object invoke(Invocation invocation) throws Exception
    {
-      // We are going to work with the context a lot
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
-      if (isReentrantMethod(mi))
+      if(invocation.getType().isHome()) 
       {
-         return getNext().invoke(mi);
+         return getNext().invoke(invocation);
       }
+      
+      if(isNonEntrantMethod(invocation))
+      {
+         return getNext().invoke(invocation);
+      }
+
+      // We are going to work with the context a lot
+      EntityEnterpriseContext ctx = 
+            (EntityEnterpriseContext)invocation.getEnterpriseContext();
 
       // Not a reentrant method like getPrimaryKey
-
       synchronized(ctx)
       {
-         if (!reentrant && ctx.isLocked())
+         if(!reentrant && ctx.isLocked())
          {
-            if (mi.getType() == InvocationType.REMOTE)
+            if(invocation.getType() == InvocationType.REMOTE)
             {
                throw new RemoteException("Reentrant method call detected: " 
-                                         + container.getBeanMetaData().getEjbName() + " " 
-                                         + ctx.getId().toString());
+                     + getContainer().getBeanMetaData().getEjbName() + " " 
+                     + ctx.getId().toString());
             }
             else
             {
                throw new EJBException("Reentrant method call detected: " 
-                                      + container.getBeanMetaData().getEjbName() + " " 
-                                      + ctx.getId().toString());
+                     + getContainer().getBeanMetaData().getEjbName() + " " 
+                     + ctx.getId().toString());
             }
          }
          ctx.lock();
       }
+
       try
       {
-         return getNext().invoke(mi); 
+         return getNext().invoke(invocation); 
       }
       finally
       {
@@ -99,54 +91,51 @@ public class EntityReentranceInterceptor
       }
    }
 
-   // Private ------------------------------------------------------
-
    private static final Method getEJBHome;
    private static final Method getHandle;
    private static final Method getPrimaryKey;
    private static final Method isIdentical;
    private static final Method remove;
-   
+
    static
    {
       try
       {
-         Class[] noArg = new Class[0];
-         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-         getHandle = EJBObject.class.getMethod("getHandle", noArg);
-         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-         remove = EJBObject.class.getMethod("remove", noArg);
+         getEJBHome = EJBObject.class.getMethod("getEJBHome", null);
+         getHandle = EJBObject.class.getMethod("getHandle", null);
+         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", null);
+         isIdentical = EJBObject.class.getMethod(
+               "isIdentical", 
+               new Class[] { EJBObject.class });
+         remove = EJBObject.class.getMethod("remove", null);
       }
-      catch (Exception e) {
+      catch (Exception e) 
+      {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
       }
    }
-   
-   protected boolean isReentrantMethod(Invocation mi)
+
+   private boolean isNonEntrantMethod(Invocation invocation)
    {
       // is this a known non-entrant method
-      Method m = mi.getMethod();
-      if (m != null && (
-             m.equals(getEJBHome) ||
-             m.equals(getHandle) ||
-             m.equals(getPrimaryKey) ||
-             m.equals(isIdentical) ||
-             m.equals(remove)))
+      Method method = invocation.getMethod();
+      if(method == getEJBHome ||
+            method == getHandle ||
+            method == getPrimaryKey ||
+            method == isIdentical ||
+            method == remove)
       {
          return true;
       }
 
       // if this is a non-entrant message to the container let it through
-      Entrancy entrancy = (Entrancy)mi.getValue(Entrancy.ENTRANCY_KEY);
+      Entrancy entrancy = (Entrancy)invocation.getValue(Entrancy.ENTRANCY_KEY);
       if(entrancy == Entrancy.NON_ENTRANT)
       {
          log.trace("NON_ENTRANT invocation");
          return true;
       }
-  
       return false;
    }
-
 }

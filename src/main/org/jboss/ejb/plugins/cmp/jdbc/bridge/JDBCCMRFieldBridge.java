@@ -34,7 +34,6 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
@@ -66,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**

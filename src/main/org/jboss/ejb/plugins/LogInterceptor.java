@@ -37,36 +37,15 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
-public class LogInterceptor extends AbstractInterceptor
+public final class LogInterceptor extends AbstractInterceptor
 {
-   // Static --------------------------------------------------------
+   private String ejbName;
+   private boolean callLogging;
    
-   // Attributes ----------------------------------------------------
-   protected String ejbName;
-   protected boolean callLogging;
-   protected Container container;
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   public void setContainer(Container container)
+   public void create() throws Exception
    {
-      this.container = container;
-   }
-   
-   public Container getContainer()
-   {
-      return container;
-   }
-   
-   // Container implementation --------------------------------------
-   public void create()
-      throws Exception
-   {
-      super.start();
-      
       BeanMetaData md = getContainer().getBeanMetaData();
       ejbName = md.getEjbName();
 
@@ -83,84 +62,12 @@ public class LogInterceptor extends AbstractInterceptor
     * @return the return value of the invocation
     * @exception Exception if an exception during the invocation
     */
-   public Object invokeHome(Invocation invocation)
-      throws Exception
+   public Object invoke(Invocation invocation) throws Exception
    {
       NDC.push(ejbName);
 
       String methodName;
-      if (invocation.getMethod() != null) 
-      {
-         methodName = invocation.getMethod().getName();
-      }
-      else
-      {
-         methodName = "<no method>";
-      }
-      
-      boolean trace = log.isTraceEnabled();
-      if (trace)
-      {
-         log.trace("Start method=" + methodName);
-      }
-
-      // Log call details
-      if (callLogging)
-      {
-         StringBuffer str = new StringBuffer("InvokeHome: ");
-         str.append(methodName);
-         str.append("(");
-         Object[] args = invocation.getArguments();
-         if (args != null)
-         {
-            for (int i = 0; i < args.length; i++)
-            {
-               if (i > 0) 
-               {
-                  str.append(",");
-               }
-               str.append(args[i]);
-            }
-         }
-         str.append(")");
-         log.debug(str.toString());
-      }
-
-      try
-      {
-         return getNext().invokeHome(invocation);
-      }
-      catch(Throwable e)
-      {
-         throw handleException(e, invocation);
-      }
-      finally
-      {
-         if (trace)
-         {
-            log.trace("End method=" + methodName);
-         }
-         NDC.pop();
-         NDC.remove();
-      }
-   }
-
-   /**
-    * This method logs the method, calls the next invoker, and handles 
-    * any exception.
-    *
-    * @param invocation contain all infomation necessary to carry out the 
-    * invocation
-    * @return the return value of the invocation
-    * @exception Exception if an exception during the invocation
-    */
-   public Object invoke(Invocation invocation)
-      throws Exception
-   {
-      NDC.push(ejbName);
-
-      String methodName;
-      if (invocation.getMethod() != null) 
+      if(invocation.getMethod() != null) 
       {
          methodName = invocation.getMethod().getName();
       }
@@ -170,27 +77,27 @@ public class LogInterceptor extends AbstractInterceptor
       }
 
       boolean trace = log.isTraceEnabled();
-      if (trace)
+      if(trace)
       {
          log.trace("Start method=" + methodName);
       }
 
       // Log call details
-      if (callLogging)
+      if(callLogging)
       {
          StringBuffer str = new StringBuffer("Invoke: ");
-         if (invocation.getId() != null)
+         if(invocation.getId() != null)
          {
             str.append("[" + invocation.getId().toString() + "] ");
          }
          str.append(methodName);
          str.append("(");
          Object[] args = invocation.getArguments();
-         if (args != null)
+         if(args != null)
          {
-            for (int i = 0; i < args.length; i++)
+            for(int i = 0; i < args.length; i++)
             {
-               if (i > 0)
+               if(i > 0)
                {
                   str.append(",");
                }
@@ -211,7 +118,7 @@ public class LogInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (trace)
+         if(trace)
          {
             log.trace("End method=" + methodName);
          }
@@ -220,31 +127,26 @@ public class LogInterceptor extends AbstractInterceptor
       }
    }
 
-   // Private -------------------------------------------------------
    private Exception handleException(Throwable e, Invocation invocation)
    {
       
       InvocationType type = invocation.getType();
-      boolean isLocal = 
-            type == InvocationType.LOCAL ||
-            type == InvocationType.LOCALHOME;
-      
-      if (e instanceof TransactionRolledbackLocalException ||
+      if(e instanceof TransactionRolledbackLocalException ||
             e instanceof TransactionRolledbackException)
       {
          // If we got a remote TransactionRolledbackException for a local
          // invocation convert it into a TransactionRolledbackLocalException
-         if (isLocal && e instanceof TransactionRolledbackException) 
+         if(type.isLocal() && e instanceof TransactionRolledbackException) 
          {
             TransactionRolledbackException remoteTxRollback = 
                   (TransactionRolledbackException)e;
 
             Exception cause;
-            if (remoteTxRollback.detail instanceof Exception) 
+            if(remoteTxRollback.detail instanceof Exception) 
             {
                cause = (Exception)remoteTxRollback.detail;
             }
-            else if (remoteTxRollback.detail instanceof Error) 
+            else if(remoteTxRollback.detail instanceof Error) 
             {
                String msg = formatException(
                      "Unexpected Error", 
@@ -266,7 +168,8 @@ public class LogInterceptor extends AbstractInterceptor
 
          // If we got a local TransactionRolledbackLocalException for a remote
          // invocation convert it into a TransactionRolledbackException
-         if (!isLocal && e instanceof TransactionRolledbackLocalException) 
+         if(!type.isLocal() && 
+               e instanceof TransactionRolledbackLocalException) 
          {
             TransactionRolledbackLocalException localTxRollback = 
                   (TransactionRolledbackLocalException)e;
@@ -279,7 +182,7 @@ public class LogInterceptor extends AbstractInterceptor
          // get the data we need for logging
          Throwable cause = null;
          String exceptionType = null;
-         if (e instanceof TransactionRolledbackException)
+         if(e instanceof TransactionRolledbackException)
          {
             cause = ((TransactionRolledbackException)e).detail;
             exceptionType = "TransactionRolledbackException";
@@ -292,10 +195,10 @@ public class LogInterceptor extends AbstractInterceptor
          }
 
          // log the exception
-         if (cause != null)
+         if(cause != null)
          {
             // if the cause is an EJBException unwrap it for logging
-            if ((cause instanceof EJBException) &&
+            if((cause instanceof EJBException) &&
                   (((EJBException) cause).getCausedByException() != null))
             {
                cause = ((EJBException) cause).getCausedByException();
@@ -309,11 +212,11 @@ public class LogInterceptor extends AbstractInterceptor
          return (Exception)e;
       }
 
-      if (e instanceof NoSuchEntityException)
+      if(e instanceof NoSuchEntityException)
       {
          NoSuchEntityException noSuchEntityException = 
                (NoSuchEntityException) e;
-         if (noSuchEntityException.getCausedByException() != null)
+         if(noSuchEntityException.getCausedByException() != null)
          {
             log.error("NoSuchEntityException, causedBy:", 
                   noSuchEntityException.getCausedByException());
@@ -323,7 +226,7 @@ public class LogInterceptor extends AbstractInterceptor
             log.error("NoSuchEntityException:", noSuchEntityException);
          }
 
-         if (isLocal) 
+         if(type.isLocal()) 
          {
             return new NoSuchObjectLocalException(
                   noSuchEntityException.getMessage(),
@@ -338,10 +241,10 @@ public class LogInterceptor extends AbstractInterceptor
          }
       }
 
-      if (e instanceof EJBException)
+      if(e instanceof EJBException)
       {
          EJBException ejbException = (EJBException) e;
-         if (ejbException.getCausedByException() != null)
+         if(ejbException.getCausedByException() != null)
          {
             log.error("EJBException, causedBy:", 
                   ejbException.getCausedByException());
@@ -351,7 +254,7 @@ public class LogInterceptor extends AbstractInterceptor
             log.error("EJBException:", ejbException);
          }
 
-         if (isLocal) 
+         if(type.isLocal()) 
          {
             return ejbException;
          }
@@ -362,12 +265,12 @@ public class LogInterceptor extends AbstractInterceptor
          }
       }
 
-      if (e instanceof RuntimeException)
+      if(e instanceof RuntimeException)
       {
          RuntimeException runtimeException = (RuntimeException)e;
          log.error("RuntimeException:", runtimeException);
 
-         if (isLocal) 
+         if(type.isLocal()) 
          {
             return new EJBException("RuntimeException", runtimeException);
          } 
@@ -376,10 +279,10 @@ public class LogInterceptor extends AbstractInterceptor
             return new ServerException("RuntimeException", runtimeException);
          }
       }
-      if (e instanceof Error)
+      if(e instanceof Error)
       {
          log.error("Unexpected Error:", e);
-         if (isLocal) 
+         if(type.isLocal()) 
          {
             String msg = formatException("Unexpected Error", e);
             return new EJBException(msg);
@@ -392,18 +295,18 @@ public class LogInterceptor extends AbstractInterceptor
 
       // If we got a RemoteException for a local invocation wrap it
       // in an EJBException.
-      if (isLocal && e instanceof RemoteException)
+      if(type.isLocal() && e instanceof RemoteException)
       {
-         if (callLogging)
+         if(callLogging)
          {
             log.info("Remote Exception", e);
          }
          return new EJBException((RemoteException)e);
       }
 
-      if (e instanceof Exception)
+      if(e instanceof Exception)
       {
-         if (callLogging)
+         if(callLogging)
          {
             log.info("Application Exception", e);
          }
@@ -414,7 +317,7 @@ public class LogInterceptor extends AbstractInterceptor
          // The should not happen
          String msg = formatException("Unexpected Throwable", e);
          log.warn("Unexpected Throwable", e);
-         if (isLocal)
+         if(type.isLocal())
          {
             return new EJBException(msg);
          }
@@ -429,25 +332,12 @@ public class LogInterceptor extends AbstractInterceptor
    {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
-      if (msg != null)
+      if(msg != null)
          pw.println(msg);
-      if (t != null) 
+      if(t != null) 
       {
          t.printStackTrace(pw);
-      } // end of if ()
+      }
       return sw.toString();
-   }
-   
-   // Monitorable implementation ------------------------------------
-   public void sample(Object s)
-   {
-      // Just here to because Monitorable request it but will be removed soon
-   }
-   public Map retrieveStatistic()
-   {
-      return null;
-   }
-   public void resetStatistic()
-   {
    }
 }

@@ -7,8 +7,6 @@
 
 package org.jboss.ejb;
 
-
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.NoSuchObjectException;
@@ -34,27 +32,15 @@ import org.jboss.metadata.ConfigurationMetaData;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.51 $</tt>
+ * @version <tt>$Revision: 1.52 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- *
- * <p><b>Revisions</b>
- * <p><b>20010704</b>
- * <ul>
- * <li>Throw an exception when removing a bean in transaction (in remove)?
- *     (I dissagree) (marcf: who is the person writing this comment? please sign)
- * </ul>
- * <p><b>20011219 marc fleury</b>
- * <ul>
- * <li>moved to new invocation layer and Invocation usage
- * </ul>
  */
-public class StatefulSessionContainer
-   extends Container
-   implements EJBProxyFactoryContainer, InstancePoolContainer
+public class StatefulSessionContainer extends Container
+   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the home interface methods and the
@@ -68,49 +54,12 @@ public class StatefulSessionContainer
     */
    protected Map beanMapping;
    
-   /**
-    * This is the first interceptor in the chain. The last interceptor must
-    * be provided by the container itself.
-    */
-   protected Interceptor interceptor;
-   
-   /** This is the instancepool that is to be used */
-   protected InstancePool instancePool;
-   
    /** This is the persistence manager for this container */
    protected StatefulSessionPersistenceManager persistenceManager;
-   
-   /** The instance cache. */
-   protected InstanceCache instanceCache;
    
    public LocalProxyFactory getLocalProxyFactory()
    {
       return localProxyFactory;
-   }
-   
-   public void setInstanceCache(InstanceCache ic)
-   {
-      this.instanceCache = ic;
-      ic.setContainer(this);
-   }
-   
-   public InstanceCache getInstanceCache()
-   {
-      return instanceCache;
-   }
-   
-   public void setInstancePool(InstancePool ip)
-   {
-      if (ip == null)
-         throw new IllegalArgumentException("Null pool");
-      
-      this.instancePool = ip;
-      ip.setContainer(this);
-   }
-   
-   public InstancePool getInstancePool()
-   {
-      return instancePool;
    }
    
    public StatefulSessionPersistenceManager getPersistenceManager()
@@ -122,39 +71,6 @@ public class StatefulSessionContainer
    {
       persistenceManager = pm;
       pm.setContainer(this);
-   }
-   
-   public void addInterceptor(Interceptor in)
-   {
-      if (interceptor == null)
-      {
-         interceptor = in;
-      }
-      else
-      {
-         Interceptor current = interceptor;
-         while ( current.getNext() != null)
-         {
-            current = current.getNext();
-         }
-         
-         current.setNext(in);
-      }
-   }
-   
-   public Interceptor getInterceptor()
-   {
-      return interceptor;
-   }
-   
-   public Class getHomeClass()
-   {
-      return homeInterface;
-   }
-   
-   public Class getRemoteClass()
-   {
-      return remoteInterface;
    }
    
    // Container implementation --------------------------------------
@@ -196,10 +112,10 @@ public class StatefulSessionContainer
          }
 
          // Init instance cache
-         instanceCache.create();
+         getInstanceCache().create();
 
          // Initialize pool
-         instancePool.create();
+         getInstancePool().create();
 
          // Init persistence
          persistenceManager.create();
@@ -240,10 +156,10 @@ public class StatefulSessionContainer
          }
 
          // Start instance cache
-         instanceCache.start();
+         getInstanceCache().start();
 
          // Start pool
-         instancePool.start();
+         getInstancePool().start();
 
          // Start persistence
          persistenceManager.start();
@@ -283,16 +199,16 @@ public class StatefulSessionContainer
          }
 
          // Stop instance cache
-         instanceCache.stop();
+         getInstanceCache().stop();
 
          // Stop pool
-         instancePool.stop();
+         getInstancePool().stop();
 
          // Stop persistence
          persistenceManager.stop();
 
          // Stop the instance pool
-         instancePool.stop();
+         getInstancePool().stop();
 
          // Stop all interceptors in the chain
          Interceptor in = interceptor;
@@ -327,12 +243,12 @@ public class StatefulSessionContainer
          }
 
          // Destroy instance cache
-         instanceCache.destroy();
-         instanceCache.setContainer(null);
+         getInstanceCache().destroy();
+         getInstanceCache().setContainer(null);
 
          // Destroy pool
-         instancePool.destroy();
-         instancePool.setContainer(null);
+         getInstancePool().destroy();
+         getInstancePool().setContainer(null);
 
          // Destroy persistence
          persistenceManager.destroy();
@@ -355,24 +271,6 @@ public class StatefulSessionContainer
          // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
-   }
-   
-   public Object invokeHome(Invocation mi)
-      throws Exception
-   {
-      return getInterceptor().invokeHome(mi);
-   }
-   
-   /**
-    * This method retrieves the instance from an object table, and invokes
-    * the method on the particular instance through the chain of interceptors.
-    */
-   public Object invoke(Invocation mi)
-      throws Exception
-   {
-      
-      // Invoke through interceptors
-      return getInterceptor().invoke(mi);
    }
    
    // EJBObject implementation --------------------------------------
@@ -768,7 +666,6 @@ public class StatefulSessionContainer
       return new ContainerInterceptor();
    }
    
-   //Moved from EjbModule-------------------
    /**
     * Describe <code>typeSpecificInitialize</code> method here.
     * stateful session specific initialization.
@@ -794,80 +691,47 @@ public class StatefulSessionContainer
       
    }
 
-
-   //end moved from EjbModule---------------
-
-
    /**
     * This is the last step before invocation - all interceptors are done
     */
-   class ContainerInterceptor
-      extends AbstractContainerInterceptor
+   class ContainerInterceptor extends AbstractContainerInterceptor
    {
-      public Object invokeHome(Invocation mi) throws Exception
-      {
-         boolean trace = log.isTraceEnabled();
-         
-         if (trace)
-         {
-            log.trace("HOMEMETHOD coming in ");
-            log.trace(""+mi.getMethod());
-            log.trace("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
-            log.trace("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
-            log.trace("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
-         }
-         
-         Method m = (Method)homeMapping.get(mi.getMethod());
-         // Invoke and handle exceptions
-                  
-         if (trace)
-         {
-            log.trace("HOMEMETHOD m "+m);
-            java.util.Iterator iterator = homeMapping.keySet().iterator();
-            while(iterator.hasNext()) 
-            {
-               Method me = (Method) iterator.next();
-               
-               if (me.getName().endsWith("create")) 
-               {
-                  log.trace(me.toString());
-                  log.trace(""+me.hashCode());
-                  log.trace(""+me.getDeclaringClass().getClassLoader().hashCode());
-                  log.trace("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
-               }
-            }
-         }
-         
-         try
-         {
-            return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
-         }
-         catch (Exception e)
-         {
-            rethrow(e);
-         }
-
-         // We will never get this far, but the compiler does not know that
-         throw new org.jboss.util.UnreachableStatementException();         
-      }
-      
       public Object invoke(Invocation mi) throws Exception
       {
-         // wire the transaction on the context, this is how the instance remember the tx
-         // Unlike Entity beans we can't do that in the previous interceptors (ordering)
-         if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
-            ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
-            
-         // Get method
-         Method m = (Method)beanMapping.get(mi.getMethod());
-         
-         // log.info("METHOD coming in "+mi.getMethod());
-         // log.info("METHOD m "+m);
-         
-         // Select instance to invoke (container or bean)
-         if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
+         if(mi.getType().isHome())
          {
+            boolean trace = log.isTraceEnabled();
+
+            if (trace)
+            {
+               log.trace("HOMEMETHOD coming in ");
+               log.trace(""+mi.getMethod());
+               log.trace("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
+               log.trace("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
+               log.trace("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
+            }
+
+            Method m = (Method)homeMapping.get(mi.getMethod());
             // Invoke and handle exceptions
+
+            if (trace)
+            {
+               log.trace("HOMEMETHOD m "+m);
+               java.util.Iterator iterator = homeMapping.keySet().iterator();
+               while(iterator.hasNext()) 
+               {
+                  Method me = (Method) iterator.next();
+
+                  if (me.getName().endsWith("create")) 
+                  {
+                     log.trace(me.toString());
+                     log.trace(""+me.hashCode());
+                     log.trace(""+me.getDeclaringClass().getClassLoader().hashCode());
+                     log.trace("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
+                  }
+               }
+            }
+
             try
             {
                return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
@@ -876,25 +740,53 @@ public class StatefulSessionContainer
             {
                rethrow(e);
             }
-         }
-         else
-         {
-            // Invoke and handle exceptions
-            try
-            {
-               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
-            }
-            catch (Exception e)
-            {
-               rethrow(e);
-            }
-         }
 
-         // We will never get this far, but the compiler does not know that
-         throw new org.jboss.util.UnreachableStatementException();         
-      }
-      
-      public void retrieveStatistics( List container, boolean reset ) {
+            // We will never get this far, but the compiler does not know that
+            throw new org.jboss.util.UnreachableStatementException();         
+         }
+         else    
+         {
+            // wire the transaction on the context, this is how the instance 
+            // remember the tx. Unlike Entity beans we can't do that in the 
+            // previous interceptors (ordering)
+            if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
+               ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
+
+            // Get method
+            Method m = (Method)beanMapping.get(mi.getMethod());
+
+            // log.info("METHOD coming in "+mi.getMethod());
+            // log.info("METHOD m "+m);
+
+            // Select instance to invoke (container or bean)
+            if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
+            {
+               // Invoke and handle exceptions
+               try
+               {
+                  return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
+            }
+            else
+            {
+               // Invoke and handle exceptions
+               try
+               {
+                  return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
+            }
+
+            // We will never get this far, but the compiler does not know that
+            throw new org.jboss.util.UnreachableStatementException();         
+         }
       }
    }
 }

@@ -103,8 +103,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       localJndiName = metaData.getLocalJndiName();
    }
 
-   public void start()
-      throws Exception
+   public void start() throws Exception
    {
       BeanMetaData metaData = container.getBeanMetaData();
       EJBProxyFactoryContainer invokerContainer = 
@@ -268,7 +267,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
                getCredential());
          invocation.setType(InvocationType.LOCALHOME);
          
-         return container.invokeHome(invocation);
+         return container.invoke(invocation);
       }
       catch (AccessException ae)
       {
@@ -333,6 +332,8 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public Object invoke(Object id, Method m, Object[] args )
       throws Exception
    {
+      // FIXME: I think this is the same code as invokeHome
+      
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());

@@ -7,10 +7,6 @@
 
 package org.jboss.ejb;
 
-
-
-
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -41,11 +37,10 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
-public class MessageDrivenContainer
-   extends Container
-   implements EJBProxyFactoryContainer, InstancePoolContainer
+public class MessageDrivenContainer extends Container
+   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the remote interface methods
@@ -53,53 +48,9 @@ public class MessageDrivenContainer
     */
    protected Map beanMapping;
 
-   /** This is the instancepool that is to be used. */
-   protected InstancePool instancePool;
-
-   /**
-    * This is the first interceptor in the chain.
-    * The last interceptor must be provided by the container itself.
-    */
-   protected Interceptor interceptor;
-
    public LocalProxyFactory getLocalProxyFactory()
    {
       return localProxyFactory;
-   }
-
-   public void setInstancePool(final InstancePool instancePool)
-   {
-      if (instancePool == null)
-         throw new NullArgumentException("instancePool");
-
-      this.instancePool = instancePool;
-      this.instancePool.setContainer(this);
-   }
-
-   public InstancePool getInstancePool()
-   {
-      return instancePool;
-   }
-
-   public void addInterceptor(Interceptor in)
-   {
-      if (interceptor == null) {
-         interceptor = in;
-      }
-      else {
-         Interceptor current = interceptor;
-
-         while (current.getNext() != null) {
-            current = current.getNext();
-         }
-
-         current.setNext(in);
-      }
-   }
-
-   public Interceptor getInterceptor()
-   {
-      return interceptor;
    }
 
    /**
@@ -151,7 +102,7 @@ public class MessageDrivenContainer
          beanMapping = map;
 
          // Initialize pool
-         instancePool.create();
+         getInstancePool().create();
 
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
@@ -197,7 +148,7 @@ public class MessageDrivenContainer
          }
          
          // Start the instance pool
-         instancePool.start();
+         getInstancePool().start();
 
          // Start all interceptors in the chain
          Interceptor in = interceptor;
@@ -236,7 +187,7 @@ public class MessageDrivenContainer
          }
 
          // Stop the instance pool
-         instancePool.stop();
+         getInstancePool().stop();
 
          // Stop all interceptors in the chain
          Interceptor in = interceptor;
@@ -271,8 +222,8 @@ public class MessageDrivenContainer
          }
 
          // Destroy the pool
-         instancePool.destroy();
-         instancePool.setContainer(null);
+         getInstancePool().destroy();
+         getInstancePool().setContainer(null);
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
@@ -294,26 +245,13 @@ public class MessageDrivenContainer
    }
 
    /**
-    * @throws Error   Not valid for MDB
+    * @throws UnsupportedOperationException Not valid for MDB
     */
-   public Object invokeHome(Invocation mi)
-      throws Exception
+   public Object invokeHome(Invocation mi) throws Exception
    {
-      throw new Error("invokeHome not valid for MessageDriven beans");
+      throw new UnsupportedOperationException(
+            "invokeHome not valid for MessageDriven beans");
    }
-
-   /**
-    * This method does invocation interpositioning of tx and security,
-    * retrieves the instance from an object table, and invokes the method
-    * on the particular instance
-    */
-   public Object invoke(Invocation mi)
-      throws Exception
-   {
-      // Invoke through interceptors
-      return getInterceptor().invoke(mi);
-   }
-
 
    // EJBHome implementation ----------------------------------------
 
@@ -392,24 +330,14 @@ public class MessageDrivenContainer
    /**
     * This is the last step before invocation - all interceptors are done
     */
-   class ContainerInterceptor
-      extends AbstractContainerInterceptor
+   class ContainerInterceptor extends AbstractContainerInterceptor
    {
-      /**
-       * @throws Error   Not valid for MDB
-       */
-      public Object invokeHome(Invocation mi) throws Exception
-      {
-         throw new Error("invokeHome not valid for MessageDriven beans");
-      }
-      
       /**
        * FIXME Design problem, who will do the acknowledging for
        * beans with bean managed transaction?? Probably best done in the
        * listener "proxys"
        */
-      public Object invoke(Invocation mi)
-         throws Exception
+      public Object invoke(Invocation mi) throws Exception
       {
          EnterpriseContext ctx = (EnterpriseContext)mi.getEnterpriseContext();
          
@@ -432,9 +360,6 @@ public class MessageDrivenContainer
 
          // We will never get this far, but the compiler does not know that
          throw new org.jboss.util.UnreachableStatementException();         
-      }
-      
-      public void retrieveStatistics( List container, boolean reset ) {
       }
    }
 }

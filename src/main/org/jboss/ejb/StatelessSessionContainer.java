@@ -7,8 +7,6 @@
 
 package org.jboss.ejb;
 
-
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
@@ -36,16 +34,10 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.39 $
- * 
- * <p><b>2001219 marc fleury</b>
- * <ul>
- * <li> move to the new invocation layer and Invocation object
- * </ul>
+ * @version $Revision: 1.40 $
  */
-public class StatelessSessionContainer
-   extends Container
-   implements EJBProxyFactoryContainer, InstancePoolContainer
+public class StatelessSessionContainer extends Container
+   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the home interface methods and the
@@ -59,67 +51,10 @@ public class StatelessSessionContainer
     */
    protected Map beanMapping;
    
-   /** This is the instancepool that is to be used */
-   protected InstancePool instancePool;
-   
-   /**
-    * This is the first interceptor in the chain. The last interceptor must
-    * be provided by the container itself
-    */
-   protected Interceptor interceptor;
-   
    public LocalProxyFactory getLocalProxyFactory()
    {
       return localProxyFactory;
    }
-   
-   public void setInstancePool(InstancePool ip)
-   {
-      if (ip == null)
-         throw new IllegalArgumentException("Null pool");
-      
-      this.instancePool = ip;
-      ip.setContainer(this);
-   }
-   
-   public InstancePool getInstancePool()
-   {
-      return instancePool;
-   }
-   
-   public void addInterceptor(Interceptor in)
-   {
-      if (interceptor == null)
-      {
-         interceptor = in;
-      } else
-      {
-         Interceptor current = interceptor;
-         while ( current.getNext() != null)
-         {
-            current = current.getNext();
-         }
-         
-         current.setNext(in);
-      }
-   }
-   
-   public Interceptor getInterceptor()
-   {
-      return interceptor;
-   }
-   
-   public Class getHomeClass()
-   {
-      return homeInterface;
-   }
-   
-   public Class getRemoteClass()
-   {
-      return remoteInterface;
-   }
-   
-   // Container implementation --------------------------------------
    
    protected void createService() throws Exception
    {
@@ -149,7 +84,7 @@ public class StatelessSessionContainer
          setupMarshalledInvocationMapping();
 
          // Initialize pool
-         instancePool.create();
+         getInstancePool().create();
 
          // Init container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -195,7 +130,7 @@ public class StatelessSessionContainer
          }
 
          // Start the instance pool
-         instancePool.start();
+         getInstancePool().start();
 
          // Start all interceptors in the chain
          Interceptor in = interceptor;
@@ -232,7 +167,7 @@ public class StatelessSessionContainer
          }
 
          // Stop the instance pool
-         instancePool.stop();
+         getInstancePool().stop();
 
          // Stop all interceptors in the chain
          Interceptor in = interceptor;
@@ -267,8 +202,8 @@ public class StatelessSessionContainer
          }
 
          // Destroy the pool
-         instancePool.destroy();
-         instancePool.setContainer(null);
+         getInstancePool().destroy();
+         getInstancePool().setContainer(null);
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
@@ -287,23 +222,6 @@ public class StatelessSessionContainer
          // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
-   }
-   
-   public Object invokeHome(Invocation mi) throws Exception
-   {
-      return getInterceptor().invokeHome(mi);
-   }
-   
-   /**
-   * This method does invocation interpositioning of tx and security,
-   * retrieves the instance from an object table, and invokes the method
-   * on the particular instance
-   */
-   public Object invoke(Invocation mi)
-      throws Exception
-   {
-      // Invoke through interceptors
-      return getInterceptor().invoke(mi);
    }
    
    // EJBObject implementation --------------------------------------
@@ -348,7 +266,7 @@ public class StatelessSessionContainer
    }
    
    /**
-    * @return    Always false
+    * @return Always false
     */
    public boolean isIdentical(Invocation mi)
       throws RemoteException
@@ -356,14 +274,10 @@ public class StatelessSessionContainer
       return false; // TODO
    }
    
-   // EJBLocalObject implementation
-   
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
       return localProxyFactory.getEJBLocalHome();
    }
-   
-   // EJBLocalHome implementation
    
    public EJBLocalObject createLocalHome()
       throws CreateException
@@ -380,8 +294,6 @@ public class StatelessSessionContainer
    {
       // todo
    }
-   
-   // EJBHome implementation ----------------------------------------
    
    public EJBObject createHome()
       throws RemoteException, CreateException
@@ -432,8 +344,6 @@ public class StatelessSessionContainer
       return null;
    }
    
-   // StatisticsProvider implementation ------------------------------------
-   
    public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
       getInterceptor().retrieveStatistics( container, reset );
@@ -441,8 +351,6 @@ public class StatelessSessionContainer
          getInstancePool().retrieveStatistics( container, reset );
       }
    }
-   
-   // Protected  ----------------------------------------------------
    
    protected void setupHomeMapping()
       throws NoSuchMethodException
@@ -588,70 +496,68 @@ public class StatelessSessionContainer
    }
 
 
-   //end moved from EjbModule---------------
-   
    /**
     * This is the last step before invocation - all interceptors are done
     */
-   class ContainerInterceptor
-      extends AbstractContainerInterceptor
+   class ContainerInterceptor extends AbstractContainerInterceptor
    {
-      public Object invokeHome(Invocation mi) throws Exception
-      {
-         Method m = (Method)homeMapping.get(mi.getMethod());
-         
-         try
-         {
-            return m.invoke(StatelessSessionContainer.this, mi.getArguments());
-         }
-         catch (Exception e)
-         {
-            rethrow(e);
-         }
-         
-         // We will never get this far, but the compiler does not know that
-         throw new org.jboss.util.UnreachableStatementException();         
-      }
-      
       public Object invoke(Invocation mi) throws Exception
       {
-         // wire the transaction on the context, this is how the instance remember the tx
-         if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
-            ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
-            
-         // Get method and instance to invoke upon
-         Method m = (Method)beanMapping.get(mi.getMethod());
-         
-         //If we have a method that needs to be done by the container (EJBObject methods)
-         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+         if(mi.getType().isHome())
          {
-            try
-            {
-               return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
-            }
-            catch (Exception e)
-            {
-               rethrow(e);
-            }
-         }
-         else // we have a method that needs to be done by a bean instance
-         {
-            // Invoke and handle exceptions
-            try
-            {
-               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
-            }
-            catch (Exception e)
-            {
-               rethrow(e);
-            }
-         }
+            Method m = (Method)homeMapping.get(mi.getMethod());
 
-         // We will never get this far, but the compiler does not know that
-         throw new org.jboss.util.UnreachableStatementException();         
-      }
-      
-      public void retrieveStatistics( List container, boolean reset ) {
+            try
+            {
+               return m.invoke(StatelessSessionContainer.this, mi.getArguments());
+            }
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+
+            // We will never get this far, but the compiler does not know that
+            throw new org.jboss.util.UnreachableStatementException();         
+         }
+         else
+         {
+            // wire the transaction on the context, this is how the instance 
+            // remember the tx
+            if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
+               ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
+
+            // Get method and instance to invoke upon
+            Method m = (Method)beanMapping.get(mi.getMethod());
+
+            //If we have a method that needs to be done by the container 
+            // (EJBObject methods)
+            if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+            {
+               try
+               {
+                  return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
+            }
+            else // we have a method that needs to be done by a bean instance
+            {
+               // Invoke and handle exceptions
+               try
+               {
+                  return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
+            }
+
+            // We will never get this far, but the compiler does not know that
+            throw new org.jboss.util.UnreachableStatementException();         
+         }
       }
    }
 }

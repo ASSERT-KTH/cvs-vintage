@@ -13,7 +13,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.AbstractInterceptor;
-import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -26,93 +25,47 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
-public class JDBCRelationInterceptor extends AbstractInterceptor
+public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
-   // Attributes ----------------------------------------------------
-   
-   /**
-    *  The container of this interceptor.
-    */
-   private EntityContainer container;
-
-   /**
-    * The log.
-    */ 
-   private Logger log;
-   
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   public void setContainer(Container container)
-   {
-      this.container = (EntityContainer)container;
-
-      JDBCStoreManager manager = null;
-      if( container != null )
-      {
-         try
-         {
-            EntityContainer entityContainer = (EntityContainer)container;
-            CMPPersistenceManager cmpManager = 
-                 (CMPPersistenceManager)entityContainer.getPersistenceManager();
-            manager = (JDBCStoreManager) cmpManager.getPersistenceStore();
-         }
-         catch(ClassCastException e)
-         {
-            throw new EJBException("JDBCRealtionInteceptor can only be used " +
-                  "JDBCStoreManager", e);
-         }
-
-         log = Logger.getLogger(
-               this.getClass().getName() +
-               "." + 
-               container.getBeanMetaData().getEjbName());
-      }
-   }
-   
-   public Container getContainer()
-   {
-      return container;
-   }
-   
-   // Interceptor implementation --------------------------------------
-   
-   public Object invoke(Invocation mi) throws Exception
+   public Object invoke(Invocation invocation) throws Exception
    {
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx =
-            (EntityEnterpriseContext)mi.getEnterpriseContext();
+            (EntityEnterpriseContext)invocation.getEnterpriseContext();
 
       CMRMessage relationshipMessage = 
-            (CMRMessage)mi.getValue(CMRMessage.CMR_MESSAGE_KEY);
+            (CMRMessage)invocation.getValue(CMRMessage.CMR_MESSAGE_KEY);
 
-      if(relationshipMessage == null) {
+      if(relationshipMessage == null) 
+      {
          // Not a relationship message. Invoke down the chain
-         return getNext().invoke(mi);
-      } else if(CMRMessage.GET_RELATED_ID == relationshipMessage)
+         return getNext().invoke(invocation);
+      }
+      else if(CMRMessage.GET_RELATED_ID == relationshipMessage)
       {
          // call getRelateId
          JDBCCMRFieldBridge cmrField =
-               (JDBCCMRFieldBridge)mi.getArguments()[0];
-         if(log.isTraceEnabled()) {
+               (JDBCCMRFieldBridge)invocation.getArguments()[0];
+         if(log.isTraceEnabled())
+         {
             log.trace("Getting related id: field=" + cmrField.getFieldName() +
                   " id=" + ctx.getId());
          }
          return cmrField.getRelatedId(ctx);
          
-      } else if(CMRMessage.ADD_RELATION == relationshipMessage)
+      }
+      else if(CMRMessage.ADD_RELATION == relationshipMessage)
       {
          
          // call addRelation
          JDBCCMRFieldBridge cmrField =
-               (JDBCCMRFieldBridge)mi.getArguments()[0];
+               (JDBCCMRFieldBridge)invocation.getArguments()[0];
          
-         Object relatedId = mi.getArguments()[1];
-         if(log.isTraceEnabled()) {
+         Object relatedId = invocation.getArguments()[1];
+         if(log.isTraceEnabled())
+         {
             log.trace("Add relation: field=" + cmrField.getFieldName() +
                   " id=" + ctx.getId() +
                   " relatedId=" + relatedId);
@@ -128,15 +81,17 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
 
          return null;
          
-      } else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
+      }
+      else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
       {
          
          // call removeRelation
          JDBCCMRFieldBridge cmrField = 
-               (JDBCCMRFieldBridge)mi.getArguments()[0];
+               (JDBCCMRFieldBridge)invocation.getArguments()[0];
          
-         Object relatedId = mi.getArguments()[1];
-         if(log.isTraceEnabled()) {
+         Object relatedId = invocation.getArguments()[1];
+         if(log.isTraceEnabled())
+         {
             log.trace("Remove relation: field=" + cmrField.getFieldName() +
                   " id=" + ctx.getId() +
                   " relatedId=" + relatedId);
@@ -152,7 +107,8 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
 
          return null;
          
-      } else
+      }
+      else
       {
          // this should not be possible we are using a type safe enum
          throw new EJBException("Unknown cmp2.0-relationship-message=" +
@@ -166,7 +122,6 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       JDBCRelationMetaData relationMetaData = 
             cmrField.getMetaData().getRelationMetaData();
 
-      
       RelationData relationData = 
             (RelationData)manager.getApplicationTxData(relationMetaData);
 
@@ -178,7 +133,4 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       }
       return relationData;
    }
-
-   // Private  ----------------------------------------------------
 }
-

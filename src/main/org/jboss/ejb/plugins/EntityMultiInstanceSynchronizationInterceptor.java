@@ -1,11 +1,10 @@
 /**
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
-
 
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
@@ -15,7 +14,6 @@ import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstancePool;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -31,58 +29,73 @@ import org.jboss.metadata.ConfigurationMetaData;
  * here.
  *
  * <p><b>WARNING: critical code</b>, get approval from senior developers
- *    before changing.
+ * before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.7 $
- *
- * <p><b>Revisions:</b><br>
- * <p><b>2001/08/08: billb</b>
- * <ol>
- *   <li>Initial revision
- * </ol>
+ * @version $Revision: 1.8 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
    extends EntitySynchronizationInterceptor
 {
-   public void create()
-      throws Exception
+   public void create() throws Exception
    {
       super.create();
-      if (container.getInstancePool() instanceof EntityInstancePool)
+      InstancePool pool = getContainer().getInstancePool();
+      if(pool instanceof EntityInstancePool)
       {
-         ((EntityInstancePool)container.getInstancePool()).setReclaim(true);
+         ((EntityInstancePool)pool).setReclaim(true);
       }
+      // DAIN: if not an EntityInstancePool should we throw an exception?
    }
 
-   protected Synchronization createSynchronization(Transaction tx, EntityEnterpriseContext ctx)
+   protected Synchronization createSynchronization(
+         Transaction tx, 
+         EntityEnterpriseContext ctx)
    {
       return new MultiInstanceSynchronization(tx, ctx);
    } 
-   // Protected  ----------------------------------------------------
  
-   // Inner classes -------------------------------------------------
- 
-   protected class MultiInstanceSynchronization extends EntitySynchronizationInterceptor.InstanceSynchronization
+   private class MultiInstanceSynchronization implements Synchronization
    {
+      /**
+       *  The transaction we follow.
+       */
+      private Transaction tx;
+
+      /**
+       *  The context we manage.
+       */
+      private EntityEnterpriseContext ctx;
+
+      /**
+       * The context lock
+       */
+      private BeanLock lock;
+ 
       /**
        *  Create a new instance synchronization instance.
        */
       MultiInstanceSynchronization(Transaction tx, EntityEnterpriseContext ctx)
       {
-         super(tx, ctx);
+         this.tx = tx;
+         this.ctx = ctx;
+         this.lock = getContainer().getLockManager().getLock(ctx.getCacheKey());
       }
   
-      // Synchronization implementation -----------------------------
-  
+      public void beforeCompletion()
+      {
+         //synchronization is handled by GlobalTxEntityMap.
+      }
+
       public void afterCompletion(int status)
       {
-         boolean trace = log.isTraceEnabled();
+         EntityContainer container = (EntityContainer)getContainer();
    
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(container.getClassLoader());
+         Thread.currentThread().setContextClassLoader(
+               container.getClassLoader());
    
          try
          {
@@ -94,7 +107,7 @@ public class EntityMultiInstanceSynchronizationInterceptor
                   // If rolled back -> invalidate instance
                   if (status != Status.STATUS_ROLLEDBACK)
                   {
-                     switch (commitOption)
+                     switch (getCommitOption())
                      {
                         // Keep instance cached after tx commit
                      case ConfigurationMetaData.A_COMMIT_OPTION:
@@ -111,7 +124,7 @@ public class EntityMultiInstanceSynchronizationInterceptor
                   }
                   try
                   {
-                     container.getPersistenceManager().passivateEntity(ctx);
+                     container.passivateEntity(ctx);
                   }
                   catch (Exception ignored) {}
                   
@@ -119,15 +132,20 @@ public class EntityMultiInstanceSynchronizationInterceptor
                }
                finally
                {
-                  if( trace )
+                  boolean trace = log.isTraceEnabled();
+                  if(trace)
+                  {
                      log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
-                  
+                  }
+
                   lock.endTransaction(tx);
                   
-                  if( trace )
+                  if(trace)
+                  {
                      log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
+                  }
                }
-            } // synchronized(lock)
+            }
             finally
             {
                lock.releaseSync();
@@ -139,7 +157,5 @@ public class EntityMultiInstanceSynchronizationInterceptor
             log.error("Failed to lock.sync: " + ex);
          }
       }
- 
    }
- 
 }

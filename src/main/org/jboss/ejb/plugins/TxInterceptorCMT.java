@@ -6,8 +6,6 @@
  */
 package org.jboss.ejb.plugins;
 
-
-
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -21,6 +19,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
@@ -29,6 +28,7 @@ import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
+
 /**
  *  This interceptor handles transactions for CMT beans.
  *
@@ -37,27 +37,17 @@ import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  */
-public class TxInterceptorCMT
-extends AbstractTxInterceptor
+public final class TxInterceptorCMT extends AbstractTxInterceptor
 {
-   
-   // Attributes ----------------------------------------------------
-   
-   /** A cache mapping methods to transaction attributes. */
-   private HashMap methodTx = new HashMap();
-   
-   // Static --------------------------------------------------------
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();
 
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   
-
-   // Interceptor implementation --------------------------------------
+   /** 
+    * A cache mapping methods to transaction attributes. 
+    */
+   private HashMap methodTx = new HashMap();
    
    /**
     * Detects exception contains is or a ApplicationDeadlockException.
@@ -86,33 +76,6 @@ extends AbstractTxInterceptor
       return null;
    } 
 
-   public Object invokeHome(Invocation invocation) throws Exception
-   {
-      Transaction oldTransaction = invocation.getTransaction();
-      for (int i = 0; i < MAX_RETRIES; i++)
-      {
-         try
-         {
-            return runWithTransactions(invocation);
-         }
-         catch (Exception ex)
-         {
-            ApplicationDeadlockException deadlock = isADE(ex);
-            if (deadlock != null)
-            {
-               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
-               log.warn(deadlock.getMessage() + " retrying " + (i + 1));
-               Thread.sleep(random.nextInt(1 + i), random.nextInt(1000) + 10);
-            }
-            else
-            {
-               throw ex;
-            }
-         }
-      }
-      throw new RuntimeException("Unreachable");
-   }
-   
    /**
     *  This method does invocation interpositioning of tx management
     */
@@ -130,9 +93,14 @@ extends AbstractTxInterceptor
             ApplicationDeadlockException deadlock = isADE(ex);
             if (deadlock != null)
             {
-               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
+               if (!deadlock.retryable() || 
+                     oldTransaction != null || 
+                     i + 1 >= MAX_RETRIES) 
+               {      
+                  throw deadlock;
+               }
                log.warn(deadlock.getMessage() + " retrying " + (i + 1));
-               
+
                Thread.sleep(random.nextInt(1 + i), random.nextInt(1000));
             }
             else
@@ -143,9 +111,7 @@ extends AbstractTxInterceptor
       }
       throw new RuntimeException("Unreachable");
    }
-   
-   // Private  ------------------------------------------------------
-   
+
    private void printMethod(Method m, byte type)
    {
       String name;
@@ -174,33 +140,36 @@ extends AbstractTxInterceptor
       }
 
       String methodName;
-      if(m != null) {
+      if(m != null) 
+      {
          methodName = m.getName();
-      } else
+      } 
+      else
       {
          methodName ="<no method>";
       }
- 
-      if (log.isTraceEnabled())
+
+      if(log.isTraceEnabled()) 
+      {
          log.trace(name+" for " + methodName);
+      }
    }
-   
-    /*
-     *  This method does invocation interpositioning of tx management.
-     *
-     *  This is where the meat is.  We define what to do with the Tx based
-     *  on the declaration.
-     *  The Invocation is always the final authority on what the Tx
-     *  looks like leaving this interceptor.  In other words, interceptors
-     *  down the chain should not rely on the thread association with Tx but
-     *  on the Tx present in the Invocation.
-     *
-     *  @param remoteInvocation If <code>true</code> this is an invocation
-     *                          of a method in the remote interface, otherwise
-     *                          it is an invocation of a method in the home
-     *                          interface.
-     *  @param invocation The <code>Invocation</code> of this call.
-     */
+
+   /**
+    * This method does invocation interpositioning of tx management.
+    *
+    * This is where the meat is.  We define what to do with the Tx based
+    * on the declaration.
+    * The Invocation is always the final authority on what the Tx
+    * looks like leaving this interceptor.  In other words, interceptors
+    * down the chain should not rely on the thread association with Tx but
+    * on the Tx present in the Invocation.
+    *
+    * @param remoteInvocation If <code>true</code> this is an invocation
+    * of a method in the remote interface, otherwise it is an invocation of a 
+    * method in the home interface.
+    * @param invocation The <code>Invocation</code> of this call.
+    */
    private Object runWithTransactions(Invocation invocation) throws Exception
    {
       // Old transaction is the transaction that comes with the MI
@@ -209,22 +178,30 @@ extends AbstractTxInterceptor
       Transaction newTransaction = null;
       
       boolean trace = log.isTraceEnabled();
-      if( trace )
+      if(trace)
+      {
          log.trace("Current transaction in MI is " + oldTransaction);
-      
+      }
+
       InvocationType type = invocation.getType();
       byte transType = getTransactionMethod(invocation.getMethod(), type);
 
-      if ( trace )
+      if(trace)
+      {
          printMethod(invocation.getMethod(), transType);
+      }
 
       // Thread arriving must be clean (jboss doesn't set the thread
       // previously). However optimized calls come with associated
       // thread for example. We suspend the thread association here, and
       // resume in the finally block of the following try.
+      TransactionManager tm = getContainer().getTransactionManager();
       Transaction threadTx = tm.suspend();
-      if( trace )
+      if(trace)
+      {
          log.trace("Thread came in with tx " + threadTx);
+      }
+
       try
       {
          switch (transType)
@@ -274,7 +251,7 @@ extends AbstractTxInterceptor
                   else
                   {
                      tm.suspend();
-                  } // end of else
+                  }
                }
             } 
             case MetaData.TX_SUPPORTS:
@@ -316,7 +293,8 @@ extends AbstractTxInterceptor
                }
                finally
                {
-                  // We started the transaction for sure so we commit or roll back
+                  // We started the transaction for sure so we commit 
+                  // or roll back
                   endTransaction(invocation, newTransaction, oldTransaction);
                }
             }
@@ -367,13 +345,16 @@ extends AbstractTxInterceptor
       return null;
    }
 
-   private void endTransaction(final Invocation invocation, final Transaction tx, final Transaction oldTx) throws TransactionRolledbackException, SystemException
+   private void endTransaction(
+         final Invocation invocation, 
+         final Transaction tx, 
+         final Transaction oldTx) 
+         throws TransactionRolledbackException, SystemException
    {
       try 
       {
-                     
          // Marked rollback
-         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+         if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
          {
             tx.rollback();
          }
@@ -385,21 +366,19 @@ extends AbstractTxInterceptor
             // b) app. exception was thrown
             tx.commit();
          }
-                     
-                         
       }
       catch (RollbackException e)
       {
          throw new TransactionRolledbackException(e.getMessage());
-      } // end of try-catch
+      } 
       catch (HeuristicMixedException e)
       {
          throw new TransactionRolledbackException(e.getMessage());
-      } // end of try-catch
+      }
       catch (HeuristicRollbackException e)
       {
          throw new TransactionRolledbackException(e.getMessage());
-      } // end of try-catch
+      }
       catch (SystemException e)
       {
          throw new TransactionRolledbackException(e.getMessage());
@@ -408,6 +387,7 @@ extends AbstractTxInterceptor
       {
          // reassociate the oldTransaction with the Invocation (even null)
          invocation.setTransaction(oldTx);
+
          // Always drop thread association even if committing or
          // rolling back the newTransaction because not all TMs
          // will drop thread associations when commit() or rollback()
@@ -416,14 +396,10 @@ extends AbstractTxInterceptor
          // when commit() and rollback() are called through TransactionManager
          // interface)
          //tx has committed, so we can't throw txRolledbackException.
-         tm.suspend();
-      } // end of finally
-                     
+         getContainer().getTransactionManager().suspend();
+      }
    }
 
-   
-   // Protected  ----------------------------------------------------
-   
    // This should be cached, since this method is called very often
    protected byte getTransactionMethod(Method m, InvocationType iface)
    {
@@ -433,33 +409,28 @@ extends AbstractTxInterceptor
       }
 
       Byte b = (Byte)methodTx.get(m);
-      if (b != null) return b.byteValue();
+      if(b != null)  
+      {
+         return b.byteValue();
+      }
+
+      BeanMetaData bmd = getContainer().getBeanMetaData();
       
-      BeanMetaData bmd = container.getBeanMetaData();
+      //DEBUG 
+      //log.debug("Found metadata for bean '" + bmd.getEjbName() + "'" + 
+      //      " method is " + m.getName());
       
-      //DEBUG        log.debug("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
-      
-      byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), iface);
+      byte result = bmd.getMethodTransactionType(
+            m.getName(), 
+            m.getParameterTypes(), 
+            iface);
       
       // provide default if method is not found in descriptor
-      if (result == MetaData.TX_UNKNOWN) result = MetaData.TX_REQUIRED;
+      if(result == MetaData.TX_UNKNOWN) {
+         result = MetaData.TX_REQUIRED;
+      }
       
       methodTx.put(m, new Byte(result));
       return result;
-   }
-   
-   // Inner classes -------------------------------------------------
-   
-   // Monitorable implementation ------------------------------------
-   public void sample(Object s)
-   {
-      // Just here to because Monitorable request it but will be removed soon
-   }
-   public Map retrieveStatistic()
-   {
-      return null;
-   }
-   public void resetStatistic()
-   {
    }
 }

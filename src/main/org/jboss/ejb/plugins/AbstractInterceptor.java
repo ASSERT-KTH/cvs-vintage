@@ -19,78 +19,60 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
-public abstract class AbstractInterceptor
-   implements Interceptor
+public abstract class AbstractInterceptor implements Interceptor
 {
-   // Constants -----------------------------------------------------
+   /**
+    * The container for which this interceptor is intercepting calls.
+    */
+   private Container container;
 
-   // Attributes ----------------------------------------------------
+   /** 
+    * The next interceptor in the chain. 
+    */
+   private Interceptor nextInterceptor;
 
-   /** The next interceptor in the chain. */
-   protected Interceptor nextInterceptor;
-   /** Logging instance */
+   /** 
+    * Logging instance 
+    */
    protected Logger log = Logger.getLogger(this.getClass());
 
    protected Element config;
 
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-
-   // Interceptor implementation ------------------------------------
-   
-   public void setConfiguration(Element config) 
+   public final void setConfiguration(Element config) 
    { 
       this.config = config;
    }
 
-
-   public abstract void setContainer(Container container);
+   public final void setContainer(Container container)
+   {
+      this.container = container;
+   }
    
-   public abstract Container getContainer();
+   public final Container getContainer()
+   {
+      return container;
+   }
    
-   public void setNext(final Interceptor interceptor) {
-      // assert interceptor != null
+   public final void setNext(final Interceptor interceptor) {
       nextInterceptor = interceptor;
    }
    
-   public Interceptor getNext() {
+   public final Interceptor getNext() {
       return nextInterceptor;
    }
 
-   public void create() throws Exception {
-      // empty
-   }
-   
-   public void start() throws Exception {
-      // empty
-   }
-   
-   public void stop() {
-      // empty
+   public void create() throws Exception {}
+   public void start() throws Exception {}
+   public void stop() {}
+   public void destroy() {}
+
+   public Object invoke(final Invocation invocation) throws Exception {
+      return getNext().invoke(invocation);
    }
 
-   public void destroy() {
-      // empty
-   }
-
-   public Object invokeHome(final Invocation mi) throws Exception {
-      // assert mi != null;
-      return getNext().invokeHome(mi);
-   }
-
-   public Object invoke(final Invocation mi) throws Exception {
-      // assert mi != null;
-      return getNext().invoke(mi);
-   }
-   
    public void retrieveStatistics( List container, boolean reset ) {
       getNext().retrieveStatistics( container, reset );
    }
-   
-   // Protected -----------------------------------------------------
 }

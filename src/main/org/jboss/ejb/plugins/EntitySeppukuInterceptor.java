@@ -40,26 +40,18 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 
 import org.w3c.dom.Element;
+
 /**
- * The role of this interceptor is to register synchronizations with the transaction
- * manager when an Entity as changed.  The Synchronization will broadcast a seppuku
- * message through a JMS topic if the change successfully commits
+ * The role of this interceptor is to register synchronizations with the 
+ * transaction manager when an Entity as changed.  The Synchronization will 
+ * broadcast a seppuku message through a JMS topic if the change successfully 
+ * commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class EntitySeppukuInterceptor
-   extends AbstractInterceptor
+public class EntitySeppukuInterceptor extends AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-   /**
-    *  The container of this interceptor.
-    */
-   protected EntityContainer container;
-
    protected HashMap seppukuSynchs = new HashMap();
  
    protected TopicConnection  conn = null;
@@ -71,30 +63,28 @@ public class EntitySeppukuInterceptor
    protected boolean transacted = true;
    protected int acknowledgeMode = TopicSession.AUTO_ACKNOWLEDGE;
 
-   // Static --------------------------------------------------------
- 
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
- 
-   public void setContainer(Container container)
-   {
-      this.container = (EntityContainer)container;
-   }
-
    public void readConfiguration()
    {
       connectionFactoryName = config.getAttribute("connectionFactory");
-      if (connectionFactoryName == null || connectionFactoryName.trim().equals("")) connectionFactoryName = "java:/ConnectionFactory";
-      connectionFactoryName = connectionFactoryName.trim();
-      topicName = config.getAttribute("topic");
-      if (topicName == null || topicName.trim().equals(""))
+      if(connectionFactoryName == null || 
+            connectionFactoryName.trim().equals(""))
       {
-         topicName = "topic/" + container.getBeanMetaData().getEjbName() + "_seppuku";
+         connectionFactoryName = "java:/ConnectionFactory";
+      }
+      connectionFactoryName = connectionFactoryName.trim();
+
+      topicName = config.getAttribute("topic");
+      if(topicName == null || topicName.trim().equals(""))
+      {
+         topicName = "topic/" + 
+               getContainer().getBeanMetaData().getEjbName() + 
+               "_seppuku";
       }
       topicName = topicName.trim();
+      
       String strTransacted = config.getAttribute("transacted");
-      if (strTransacted == null || "true".equals(strTransacted.toLowerCase().trim()))
+      if(strTransacted == null || 
+            "true".equals(strTransacted.toLowerCase().trim()))
       {
          transacted = true;
       }
@@ -102,6 +92,7 @@ public class EntitySeppukuInterceptor
       {
          transacted = false;
       }
+
       String strAcknowledgeMode = config.getAttribute("acknowledgeMode");
       if (strAcknowledgeMode != null)
       {
@@ -118,15 +109,8 @@ public class EntitySeppukuInterceptor
             acknowledgeMode = TopicSession.DUPS_OK_ACKNOWLEDGE;
          }
       }
-      
    }
  
-   public void create()
-      throws Exception
-   {
-   }
-
-
    protected void initialize()
    {
       try
@@ -137,8 +121,7 @@ public class EntitySeppukuInterceptor
          TopicConnectionFactory tcf = (TopicConnectionFactory) tmp;
          conn = tcf.createTopicConnection();
          topic = (Topic) iniCtx.lookup(topicName);
-         session = conn.createTopicSession(transacted,
-                                           acknowledgeMode);
+         session = conn.createTopicSession(transacted, acknowledgeMode);
          conn.start();
          pub = session.createPublisher(topic);     
       }
@@ -166,6 +149,7 @@ public class EntitySeppukuInterceptor
       }
       catch (Exception ex)
       {
+         // DAIN: initialize can't throw an exception...
          log.error("Failed to start seppuku interceptor", ex);
       }
    }      
@@ -174,7 +158,7 @@ public class EntitySeppukuInterceptor
    {
       try
       {
-         if (pub != null)
+         if(pub != null)
          {
             pub.close();
             conn.stop();
@@ -188,39 +172,30 @@ public class EntitySeppukuInterceptor
       }
    }
  
-   public Container getContainer()
+   public Object invoke(Invocation mi) throws Exception
    {
-      return container;
-   }
- 
-   // Interceptor implementation --------------------------------------
- 
-   public Object invokeHome(Invocation mi)
-      throws Exception
-   {
-      Object rtn =  getNext().invokeHome(mi);  
-      return rtn;
-   }
+      if(mi.getType().isHome())
+      {
+         return getNext().invoke(mi);  
+      }
 
-
-   public Object invoke(Invocation mi)
-      throws Exception
-   {
-      // We are going to work with the context a lot
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
+      EntityContainer container = (EntityContainer)getContainer();
+      EntityEnterpriseContext ctx = (
+            EntityEnterpriseContext)mi.getEnterpriseContext();
       Object id = ctx.getId();
   
       // The Tx coming as part of the Method Invocation
       Transaction tx = mi.getTransaction();
   
-      if( log.isTraceEnabled() )
-         log.trace("invoke called for ctx "+ctx+", tx="+tx);
+      if(log.isTraceEnabled())
+      {
+         log.trace("invoke called for ctx " + ctx + ", tx=" + tx);
+      }
 
       // Invocation with a running Transaction
-      if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+      if(tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
-         //Invoke down the chain
-         Object retVal = getNext().invoke(mi);  
+         Object returnValue = getNext().invoke(mi);  
 
          // readonly does not synchronize, lock or belong with transaction.
          // nor does it modify data.
@@ -234,23 +209,22 @@ public class EntitySeppukuInterceptor
             }
          }
 
-         // return the return value
-         return retVal;
+         return returnValue;
       }
-      //
       else
-      { // No tx
-         Object result = getNext().invoke(mi);
+      {
+         // No tx
+         Object returnValue = getNext().invoke(mi);
          
-         if (ctx.getId() != null)
+         if(ctx.getId() != null)
          {
-            if (!container.isReadOnly())
+            if(!container.isReadOnly())
             {
                Method method = mi.getMethod();
                if(method == null ||
                   !container.getBeanMetaData().isMethodReadOnly(method.getName()))
                {
-                  if (container.getPersistenceManager().isModified(ctx))
+                  if(container.isModified(ctx))
                   {
                      sendSeppukuEvent(ctx.getCacheKey());
                   }
@@ -259,25 +233,24 @@ public class EntitySeppukuInterceptor
          }
          else
          {
-            sendSeppukuEvent(ctx.getCacheKey()); // a remove happened so broadcast seppuku msg
+            // a remove happened so broadcast seppuku msg
+            sendSeppukuEvent(ctx.getCacheKey());
          }
-         
-         return result;
-         
+         return returnValue;
       }
    }
- 
  
    protected void register(EntityEnterpriseContext ctx, Transaction tx)
       throws Exception
    {
-      if (ctx.getId() == null || container.getPersistenceManager().isModified(ctx))
+      EntityContainer container = (EntityContainer)getContainer();
+      if(ctx.getId() == null || container.isModified(ctx))
       {
          SeppukuSynchronization synch = null;
-         synchronized (seppukuSynchs)
+         synchronized(seppukuSynchs)
          {
             synch = (SeppukuSynchronization)seppukuSynchs.get(tx);
-            if (synch == null)
+            if(synch == null)
             {
                synch = new SeppukuSynchronization(tx);
                seppukuSynchs.put(tx, synch);
@@ -303,10 +276,7 @@ public class EntitySeppukuInterceptor
       sendSeppukuSet(ids);
    }
  
-   // Inner classes -------------------------------------------------
- 
-   protected class SeppukuSynchronization
-      implements Synchronization
+   protected class SeppukuSynchronization implements Synchronization
    {
       /**
        *  The transaction we follow.
@@ -331,9 +301,6 @@ public class EntitySeppukuInterceptor
          ids.add(key);
       }
   
-      // Synchronization implementation -----------------------------
-  
-      
       public void beforeCompletion()
       {
          // complete
@@ -344,7 +311,8 @@ public class EntitySeppukuInterceptor
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(container.getClassLoader());
+         Thread.currentThread().setContextClassLoader(
+               getContainer().getClassLoader());
          try
          {
             if (status != Status.STATUS_ROLLEDBACK)

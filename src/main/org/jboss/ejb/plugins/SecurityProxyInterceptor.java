@@ -29,26 +29,16 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
-public class SecurityProxyInterceptor
-   extends AbstractInterceptor
+public class SecurityProxyInterceptor extends AbstractInterceptor
 {
    /** 
     * The JNDI name of the SecurityProxyFactory used to wrap security
     * proxy objects that do not implement the SecurityProxy interface
     */
    public final String SECURITY_PROXY_FACTORY_NAME =
-      "java:/SecurityProxyFactory";
-
-   /** Instance logger. */
-   protected Logger log = Logger.getLogger(this.getClass());
-   
-   /**
-    * @clientCardinality 0..1
-    * @supplierCardinality 1 
-    */
-   protected Container container;
+         "java:/SecurityProxyFactory";
 
    protected AuthenticationManager securityManager;
 
@@ -59,121 +49,92 @@ public class SecurityProxyInterceptor
     */
    protected SecurityProxy securityProxy;
 
-   public SecurityProxyInterceptor()
+   public void start()
    {
-      super();
+      securityManager = getContainer().getSecurityManager();
+      Object secProxy = getContainer().getSecurityProxy();
+      if(secProxy != null)
+      {
+         // If this is not a SecurityProxy instance then use the default
+         // SecurityProxy implementation
+         if(!(secProxy instanceof SecurityProxy))
+         {
+            try
+            {
+               // Get default SecurityProxyFactory from JNDI at
+               InitialContext context = new InitialContext();
+               SecurityProxyFactory proxyFactory = (SecurityProxyFactory)
+                     context.lookup(SECURITY_PROXY_FACTORY_NAME);
+               securityProxy = proxyFactory.create(secProxy);
+            }
+            catch (Exception e)
+            {
+               log.error("Failed to initialze DefaultSecurityProxy", e);
+            }
+         }
+         else
+         {
+            securityProxy = (SecurityProxy) secProxy;
+         }
+
+         // Initialize the securityProxy
+         try
+         {
+            Class beanHome = getContainer().getHomeClass();
+            Class beanRemote = getContainer().getRemoteClass();
+            securityProxy.init(beanHome, beanRemote, securityManager);
+         }
+         catch(Exception e)
+         {
+            log.error("Failed to initialze SecurityProxy", e);
+         }
+
+         log.info("Initialized SecurityProxy=" + securityProxy);
+      }
    }
 
-   public void setContainer(Container container)
+   public Object invoke(Invocation invocation) throws Exception
    {
-      this.container = container;
-      if( container != null )
+      // Apply any custom security checks
+      if(securityProxy != null)
       {
-         securityManager = container.getSecurityManager();
-         Object secProxy = container.getSecurityProxy();
-         if( secProxy != null )
+         EnterpriseContext ctx = 
+               (EnterpriseContext)invocation.getEnterpriseContext();
+         if(ctx != null)
          {
-            // If this is not a SecurityProxy instance then use the default
-            // SecurityProxy implementation
-            if( (secProxy instanceof SecurityProxy) == false )
+            securityProxy.setEJBContext(ctx.getEJBContext());
+         }
+         else
+         {
+            securityProxy.setEJBContext(null);
+         }
+
+         try
+         {
+            if(invocation.getType().isHome()) 
             {
-               try
-               {
-                  // Get default SecurityProxyFactory from JNDI at
-                  InitialContext iniCtx = new InitialContext();
-                  SecurityProxyFactory proxyFactory =
-                     (SecurityProxyFactory)iniCtx.lookup(SECURITY_PROXY_FACTORY_NAME);
-                  securityProxy = proxyFactory.create(secProxy);
-               }
-               catch (Exception e)
-               {
-                  log.error("Failed to initialze DefaultSecurityProxy", e);
-               }
+               securityProxy.invokeHome(
+                     invocation.getMethod(), 
+                     invocation.getArguments());
             }
             else
             {
-               securityProxy = (SecurityProxy) secProxy;
+               securityProxy.invoke(
+                     invocation.getMethod(), 
+                     invocation.getArguments(),
+                     ctx.getInstance());
             }
-
-            // Initialize the securityProxy
-            try
-            {
-               EJBProxyFactoryContainer  ic =
-                  (EJBProxyFactoryContainer)container;
-               Class beanHome = ic.getHomeClass();
-               Class beanRemote = ic.getRemoteClass();
-               securityProxy.init(beanHome, beanRemote, securityManager);
-            }
-            catch(Exception e)
-            {
-               log.error("Failed to initialze SecurityProxy", e);
-            }
-            if (log.isInfoEnabled())
-               log.info("Initialized SecurityProxy=" + securityProxy);
-         }
-      }
-   }
-
-   public Container getContainer()
-   {
-      return container;
-   }
-
-   // Container implementation --------------------------------------
-   
-   public void start() throws Exception
-   {
-      super.start();
-   }
-
-   public Object invokeHome(Invocation mi) throws Exception
-   {
-      // Apply any custom security checks
-      if( securityProxy != null )
-      {
-         EJBContext ctx = null;
-         EnterpriseContext ectx = (EnterpriseContext)mi.getEnterpriseContext();
-         if( ectx != null )
-            ctx = ectx.getEJBContext();
-         Object[] args = mi.getArguments();
-         securityProxy.setEJBContext(ctx);
-         try
-         {
-            securityProxy.invokeHome(mi.getMethod(), args);
          }
          catch(SecurityException e)
          {
-            Principal principal = mi.getPrincipal();
-            String msg = "SecurityProxy.invokeHome exception, principal=" + principal;
+            Principal principal = invocation.getPrincipal();
+            String msg = "SecurityProxy.invoke exception, " +
+                  "principal=" + principal;
             log.error(msg, e);
             throw e;
          }
       }
-      return getNext().invokeHome(mi);
-   }
-   
-   public Object invoke(Invocation mi) throws Exception
-   {
-      // Apply any custom security checks
-      if( securityProxy != null )
-      {
-         Object bean = ((EnterpriseContext) mi.getEnterpriseContext()).getInstance();
-         EJBContext ctx = ((EnterpriseContext) mi.getEnterpriseContext()).getEJBContext();
-         Object[] args = mi.getArguments();
-         securityProxy.setEJBContext(ctx);
-         try
-         {
-            securityProxy.invoke(mi.getMethod(), args, bean);
-         }
-         catch(SecurityException e)
-         {
-            Principal principal = mi.getPrincipal();
-            String msg = "SecurityProxy.invoke exception, principal="+principal;
-            log.error(msg, e);
-            throw e;
-         }
-      }
-      return getNext().invoke(mi);
+      return getNext().invoke(invocation);
    }
 }
 

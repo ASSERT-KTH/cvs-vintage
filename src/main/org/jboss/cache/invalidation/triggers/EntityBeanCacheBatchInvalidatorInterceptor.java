@@ -15,35 +15,16 @@ package org.jboss.cache.invalidation.triggers;
  *
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.plugins.AbstractInterceptor
+public class EntityBeanCacheBatchInvalidatorInterceptor 
+      extends org.jboss.ejb.plugins.AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
    protected boolean doCacheInvalidations = true;
    protected org.jboss.cache.invalidation.InvalidationManagerMBean invalMgr = null;
    protected org.jboss.cache.invalidation.InvalidationGroup ig = null;
    protected org.jboss.ejb.EntityContainer container = null;
     
-   // Static --------------------------------------------------------
- 
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
- 
-   public void setContainer (org.jboss.ejb.Container container)
-   {
-      this.container = (org.jboss.ejb.EntityContainer)container;
-   }
-
-   public org.jboss.ejb.Container getContainer ()
-   {
-      return container;
-   }
-
    public void start() throws Exception
    {
       org.jboss.metadata.EntityMetaData emd = ((org.jboss.metadata.EntityMetaData)this.getContainer ().getBeanMetaData ());      
@@ -80,7 +61,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.pl
             if(method == null ||
                !container.getBeanMetaData().isMethodReadOnly(method.getName()))
             {
-               if (container.getPersistenceManager().isModified(ctx))
+               if (container.isModified(ctx))
                {
                   return true;
                }
@@ -89,8 +70,12 @@ public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.pl
       return false;
    }
 
-   public Object invoke (org.jboss.invocation.Invocation mi) throws Exception
+   public Object invoke(org.jboss.invocation.Invocation mi) throws Exception
    {
+      if(mi.getType().isHome()) {
+         return getNext().invoke(mi);
+      }
+
       if (doCacheInvalidations)
       {
          // We are going to work with the context a lot
@@ -105,6 +90,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.pl
          {
             //Invoke down the chain
             Object retVal = getNext().invoke(mi);  
+            //Object retVal = getNext().invoke(mi);  
 
             if (changed(mi, ctx))
             {
@@ -118,6 +104,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.pl
          else
          { // No tx
             Object result = getNext().invoke(mi);
+//            Object result = getNext().invoke(mi);
 
             if (changed(mi, ctx))
             {
@@ -129,8 +116,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor extends org.jboss.ejb.pl
       else
       {
          return getNext().invoke(mi);
+//         return getNext().invoke(mi);
       }
    }
- 
- 
 }

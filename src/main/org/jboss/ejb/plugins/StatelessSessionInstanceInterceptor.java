@@ -11,84 +11,66 @@ import java.rmi.RemoteException;
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.StatelessSessionContainer;
 
 /**
  * This container acquires the given instance. This must be used after
  * the EnvironmentInterceptor, since acquiring instances requires a proper
- * JNDI environment to be set
+ * JNDI environment to be set.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
-public class StatelessSessionInstanceInterceptor
-   extends AbstractInterceptor
+public class StatelessSessionInstanceInterceptor extends AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-
-   protected StatelessSessionContainer container;
-   
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-
-   public void setContainer(final Container container) 
-   { 
-      this.container = (StatelessSessionContainer)container; 
-   }
-
-   public Container getContainer()
+   public Object invoke(final Invocation invocation) throws Exception
    {
-      return container;
-   }
-	
-   // Interceptor implementation --------------------------------------
-   
-   public Object invokeHome(final Invocation mi) throws Exception
-   {
-      // We don't need an instance since the call will be handled by container
-      return getNext().invokeHome(mi);
-   }
+      if(invocation.getType().isHome()) 
+      {
+         getNext().invoke(invocation);
+      }
 
-   public Object invoke(final Invocation mi) throws Exception
-   {
       // Get context
-      EnterpriseContext ctx = container.getInstancePool().get();
+      EnterpriseContext ctx = getContainer().getInstancePool().get();
 
       // Set the current security information
-      ctx.setPrincipal(mi.getPrincipal());
+      ctx.setPrincipal(invocation.getPrincipal());
 
       // Use this context
-      mi.setEnterpriseContext(ctx);
+      invocation.setEnterpriseContext(ctx);
 
-      // There is no need for synchronization since the instance is always fresh also there should
-      // never be a tx associated with the instance.
-	 
+      // There is no need for synchronization since the instance is always
+      // fresh also there should never be a tx associated with the instance.
+
       try
       {
-         // Invoke through interceptors
-         return getNext().invoke(mi);
-      } catch (RuntimeException e) // Instance will be GC'ed at MI return
+         return getNext().invoke(invocation);
+      }
+      catch(RuntimeException e) 
       {
-         mi.setEnterpriseContext(null);
+         // Instance will be GC'ed at MI return 
+         invocation.setEnterpriseContext(null);
          throw e;
-      } catch (RemoteException e) // Instance will be GC'ed at MI return
+      }
+      catch(RemoteException e)
       {
-         mi.setEnterpriseContext(null);
+         // Instance will be GC'ed at MI return 
+         invocation.setEnterpriseContext(null);
          throw e;
-      } catch (Error e) // Instance will be GC'ed at MI return
+      }
+      catch(Error e)
       {
-         mi.setEnterpriseContext(null);
+         // Instance will be GC'ed at MI return 
+         invocation.setEnterpriseContext(null);
          throw e;
-      } finally
+      }
+      finally
       {
          // Return context
-         if ( mi.getEnterpriseContext() != null)
-            container.getInstancePool().free(((EnterpriseContext) mi.getEnterpriseContext()));
+         if(invocation.getEnterpriseContext() != null)
+         {
+            getContainer().getInstancePool().free(
+                  (EnterpriseContext)invocation.getEnterpriseContext());
+         }
       }
    }
 }

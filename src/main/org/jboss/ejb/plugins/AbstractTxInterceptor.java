@@ -39,43 +39,10 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
-abstract class AbstractTxInterceptor
-   extends AbstractInterceptor
+public abstract class AbstractTxInterceptor extends AbstractInterceptor
 {
-
-   /** 
-    * Local reference to the container's TransactionManager. 
-    */
-   protected TransactionManager tm;
-
-   /** 
-    * The container that we manage transactions for. 
-    */
-   protected Container container;
-
-   /**
-    * Get the container that we manage transactions for.
-    */
-   public void setContainer(Container container)
-   {
-      this.container = container;
-   }
-
-   /**
-    * Get the container that we manage transactions for.
-    */
-   public Container getContainer()
-   {
-      return container;
-   }
-
-   public void create() throws Exception
-   {
-      tm = (TransactionManager) getContainer().getTransactionManager();
-   }
-
    /**
     * This method calls the next interceptor in the chain.
     *
@@ -88,29 +55,20 @@ abstract class AbstractTxInterceptor
     *
     * @param invocation The <code>Invocation</code> of this call.
     *
-    * @param inheritedTx If <code>true</code> the transaction has just been started 
-    * in this interceptor.
+    * @param inheritedTx If <code>true</code> the transaction has just been 
+    * started in this interceptor.
     *
     * @throws Excetion if an exception occures in the interceptor chain.  The
     * actual exception throw is governed by the rules in the EJB 2.0 
     * specification section 18.3
     */
-   protected Object invokeNext(
-         Invocation invocation,
-         boolean inheritedTx)
+   protected Object invokeNext(Invocation invocation, boolean inheritedTx)
       throws Exception
    {
       InvocationType type = invocation.getType();
       try 
       {
-         if (type == InvocationType.REMOTE || type == InvocationType.LOCAL) 
-         {
-            return getNext().invoke(invocation);
-         }
-         else
-         {
-            return getNext().invokeHome(invocation);
-         }
+         return getNext().invoke(invocation);
       } 
       catch (Throwable e) 
       {
@@ -140,11 +98,6 @@ abstract class AbstractTxInterceptor
             }
          } 
 
-         // is this a local invocation
-         boolean isLocal = 
-               type == InvocationType.LOCAL ||
-               type == InvocationType.LOCALHOME;
-
          // if this transaction was NOT inherited from the caller we simply
          // rethrow the exception, and LogInterceptor will handle 
          // all exception conversions.
@@ -158,7 +111,7 @@ abstract class AbstractTxInterceptor
             }
 
             // we have some funky throwable, wrap it
-            if (isLocal) 
+            if(type.isLocal()) 
             {
                String msg = formatException("Unexpected Throwable", e);
                throw new EJBException(msg);
@@ -177,7 +130,7 @@ abstract class AbstractTxInterceptor
          if (e instanceof NoSuchEntityException) 
          {
             NoSuchEntityException nsee = (NoSuchEntityException)e;
-            if (isLocal) 
+            if (type.isLocal()) 
             {
                cause = new NoSuchObjectLocalException(
                      nsee.getMessage(),
@@ -192,7 +145,7 @@ abstract class AbstractTxInterceptor
          }
          else 
          {
-            if (isLocal) 
+            if (type.isLocal()) 
             {
                // local transaction rolled back exception can only wrap 
                // an exception so we create an EJBException for the cause
@@ -220,7 +173,7 @@ abstract class AbstractTxInterceptor
          }
          
          // We inherited tx: Tell caller we marked for rollback only.
-         if (isLocal) 
+         if (type.isLocal()) 
          {
             if(cause instanceof TransactionRolledbackLocalException) {
                throw (TransactionRolledbackLocalException)cause;
@@ -244,7 +197,7 @@ abstract class AbstractTxInterceptor
       }
    }
    
-   private String formatException(String msg, Throwable t)
+   private final String formatException(String msg, Throwable t)
    {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);

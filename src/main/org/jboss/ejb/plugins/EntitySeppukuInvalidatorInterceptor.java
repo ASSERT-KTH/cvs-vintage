@@ -1,9 +1,9 @@
 /**
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
@@ -43,61 +43,47 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 
 import org.w3c.dom.Element;
+
 /**
- * The role of this interceptor is to receive seppuku events and remove ids from cache
- * This really doesn't need to be an interceptor, but couldn't find a better way to
- * have access to the container's cache.
+ * The role of this interceptor is to receive seppuku events and remove ids 
+ * from cache
+ * This really doesn't need to be an interceptor, but couldn't find a better 
+ * way to have access to the container's cache.
  *
  * FIXME: make this an MBean instead.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class EntitySeppukuInvalidatorInterceptor
-   extends AbstractInterceptor
-   implements MessageListener
+public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
+      implements MessageListener
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-   /**
-    *  The container of this interceptor.
-    */
-   protected EntityContainer container;
-
    protected HashMap seppukuSynchs = new HashMap();
  
-   protected TopicConnection  conn = null;
-   protected TopicSession session = null;
-   protected Topic topic = null;
-   protected TopicSubscriber subscriber = null;
-   protected String connectionFactoryName = null;
-   protected String topicName = null;
-   protected boolean transacted = true;
+   protected TopicConnection conn;
+   protected TopicSession session;
+   protected Topic topic;
+   protected TopicSubscriber subscriber;
+   protected String connectionFactoryName;
+   protected String topicName;
+   protected boolean transacted;
    protected int acknowledgeMode = TopicSession.AUTO_ACKNOWLEDGE;
-
-   // Static --------------------------------------------------------
- 
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
- 
 
    /**
     * When receiving a seppuku message, remove all ids from cache
     */
-   public void onMessage(Message msg)
+   public void onMessage(Message message)
    {
       try
       {
+         // DAIN:  why is this an info message?
          log.info("Seppuku message received in Invalidator");
-         ObjectMessage objmsg = (ObjectMessage)msg;
-         HashSet ids = (HashSet)objmsg.getObject();
-         Iterator it = ids.iterator();
-         while (it.hasNext())
+
+         ObjectMessage objectMessage = (ObjectMessage)message;
+         HashSet ids = (HashSet)objectMessage.getObject();
+         for(Iterator iterator = ids.iterator(); iterator.hasNext(); )
          {
-            container.getInstanceCache().remove(it.next());
+            getContainer().getInstanceCache().remove(iterator.next());
          }
       }
       catch (JMSException ex)
@@ -106,25 +92,28 @@ public class EntitySeppukuInvalidatorInterceptor
       }
    }
 
-
-   public void setContainer(Container container)
-   {
-      this.container = (EntityContainer)container;
-   }
-
    protected void readConfiguration()
    {
       connectionFactoryName = config.getAttribute("connectionFactory");
-      if (connectionFactoryName == null || connectionFactoryName.trim().equals("")) connectionFactoryName = "java:/ConnectionFactory";
-      connectionFactoryName = connectionFactoryName.trim();
-      topicName = config.getAttribute("topic");
-      if (topicName == null || topicName.trim().equals(""))
+      if(connectionFactoryName == null || 
+            connectionFactoryName.trim().equals("")) 
       {
-         topicName = "topic/" + container.getBeanMetaData().getEjbName() + "_seppuku";
+         connectionFactoryName = "java:/ConnectionFactory";
+      }
+      connectionFactoryName = connectionFactoryName.trim();
+
+      topicName = config.getAttribute("topic");
+      if(topicName == null || topicName.trim().equals(""))
+      {
+         topicName = "topic/" + 
+               getContainer().getBeanMetaData().getEjbName() + 
+               "_seppuku";
       }
       topicName = topicName.trim();
+      
       String strTransacted = config.getAttribute("transacted");
-      if (strTransacted == null || "true".equals(strTransacted.toLowerCase().trim()))
+      if(strTransacted == null || 
+            "true".equals(strTransacted.toLowerCase().trim()))
       {
          transacted = true;
       }
@@ -132,8 +121,9 @@ public class EntitySeppukuInvalidatorInterceptor
       {
          transacted = false;
       }
+
       String strAcknowledgeMode = config.getAttribute("acknowledgeMode");
-      if (strAcknowledgeMode != null)
+      if(strAcknowledgeMode != null)
       {
          if (strAcknowledgeMode.equals("AUTO_ACKNOWLEDGE"))
          {
@@ -148,15 +138,8 @@ public class EntitySeppukuInvalidatorInterceptor
             acknowledgeMode = TopicSession.DUPS_OK_ACKNOWLEDGE;
          }
       }
-      
    }
  
-   public void create()
-      throws Exception
-   {
-   }
-
-
    protected synchronized void initialize()
    {
       try
@@ -167,8 +150,7 @@ public class EntitySeppukuInvalidatorInterceptor
          TopicConnectionFactory tcf = (TopicConnectionFactory) tmp;
          conn = tcf.createTopicConnection();
          topic = (Topic) iniCtx.lookup(topicName);
-         session = conn.createTopicSession(transacted,
-                                           acknowledgeMode);
+         session = conn.createTopicSession(transacted, acknowledgeMode);
          conn.start();
          subscriber = session.createSubscriber(topic);     
       }
@@ -186,6 +168,7 @@ public class EntitySeppukuInvalidatorInterceptor
       }
       catch (Exception ex)
       {
+         // DAIN: initialze can't throw an exception...
          log.error("Failed to start seppuku interceptor", ex);
       }
    }      
@@ -206,28 +189,5 @@ public class EntitySeppukuInvalidatorInterceptor
       {
          log.error("Failed to stop EntitySeppukuInterceptor: ", ex);
       }
-   }
- 
-   public Container getContainer()
-   {
-      return container;
-   }
- 
-   // Interceptor implementation --------------------------------------
- 
-   public Object invokeHome(Invocation mi)
-      throws Exception
-   {
-      Object rtn =  getNext().invokeHome(mi);  
-      return rtn;
-   }
-
-
-   public Object invoke(Invocation mi)
-      throws Exception
-   {
-      //Invoke down the chain
-      Object retVal = getNext().invoke(mi);  
-      return retVal;
    }
 }

@@ -18,15 +18,9 @@ import org.w3c.dom.Element;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.12 $
- *
- *<p><b>20011219 marc fleury:</b>
- * <ul>
- *  <li>Method Invocation is replaced by Invocation
- *</ul>
+ * @version $Revision: 1.13 $
  */
-public interface Interceptor
-   extends ContainerPlugin, StatisticsProvider
+public interface Interceptor extends ContainerPlugin, StatisticsProvider
 {
 
    void setConfiguration(Element config);
@@ -34,35 +28,25 @@ public interface Interceptor
    /**
     * Set the next interceptor in the chain.
     *
-    * @param interceptor        The next interceptor in the chain.
+    * @param interceptor The next interceptor in the chain.
     */
    void setNext(Interceptor interceptor);
 
    /**
     * Get the next interceptor in the chain.
     *
-    * @return   The next interceptor in the chain.
+    * @return The next interceptor in the chain.
     */
    Interceptor getNext();
    
    /**
-    * ???
+    * Invokes this interceptor.  This usually performs some small work and 
+    * hands off futher processing to the next interceptor.
     *
-    * @param mi         ???
-    * @return           ???
-    *
-    * @throws Exception ???
+    * @param invocation the invocation context
+    * @return the results of this invocation
+    * @throws Exception if a problem occures during the invocation
     */
-   Object invokeHome(Invocation mi) throws Exception;
-
-   /**
-    * ???
-    *
-    * @param mi         ???
-    * @return           ???
-    *
-    * @throws Exception ???
-    */
-   Object invoke(Invocation mi) throws Exception;
+   Object invoke(Invocation invocation) throws Exception;
 }
 
