@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!--
-This is the XML DTD for the JBoss 3.2 EJB deployment descriptor.
+This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.7 2004/06/16 11:44:29 loubyansky Exp $
+$Id: jboss_4_0.dtd,v 1.8 2004/06/16 18:52:52 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -535,9 +535,20 @@ Example:
     <service-ref>
         <service-ref-name>OrganizationService</service-ref-name>
         <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
-    </ejb-local-ref>
+    </service-ref>
+
+    <service-ref>
+        <service-ref-name>OrganizationService</service-ref-name>
+        <port-component-ref>
+          <service-endpoint-interface>com.dot.SEI</service-endpoint-interface>
+          <call-property>
+            <prop-name>X</prop-name>
+            <prop-value>Y</prop-value>
+          </call-property>
+        </port-component-ref>
+    </service-ref>
 -->
-<!ELEMENT service-ref (service-ref-name, wsdl-override?, call-property*)>
+<!ELEMENT service-ref (service-ref-name, port-component-ref*, wsdl-override?, call-property*)>
 
 <!-- The service-ref-name element gives the ENC relative name used
 in the ejb-jar.xml service-ref-name element.
@@ -546,12 +557,24 @@ Used in: service-ref
 -->
 <!ELEMENT service-ref-name (#PCDATA)>
 
+<!-- The port-component-ref element provides additional information about
+the standard j2ee service-reference/port-component-ref. Currently this includes
+properties that should be associated with the call/stub for the port.
+
+Used in: service-ref
+-->
+<!ELEMENT port-component-ref (service-endpoint-interface, call-property*)>
+
 <!-- The wsdl-override element the actual wsdl docuement the web service client
 uses to connect to the remote service. It overrides the value of wsdl-file in ejb-jar.xml.
 
 Used in: service-ref
 -->
 <!ELEMENT wsdl-override (#PCDATA)>
+
+<!-- Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
 
 <!-- Arbitrary jaxrpc property values that should be set on a Call object
 before it's returned to the web service client. The valid properties can be any
