@@ -63,7 +63,19 @@ public final class InvocationKey implements Serializable {
     * The arguments of the method to call. 
     */
    public static final InvocationKey ARGUMENTS = new InvocationKey("ARGUMENTS");
+
+   /** 
+    * The callback method that should be invoked on the implementation.
+    */
+   public static final InvocationKey CALLBACK_METHOD = 
+         new InvocationKey("CALLBACK_METHOD");
    
+   /** 
+    * The arguments of the callback method to call. 
+    */
+   public static final InvocationKey CALLBACK_ARGUMENTS = 
+         new InvocationKey("CALLBACK_ARGUMENTS");
+    
    /** 
     * Invocation context
     */
