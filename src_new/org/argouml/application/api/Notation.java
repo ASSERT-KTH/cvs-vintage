@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.33 2003/09/17 00:42:17 thierrylach Exp $
+// $Id: Notation.java,v 1.34 2003/09/17 14:19:10 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.33 2003/09/17 00:42:17 thierrylach Exp $
+// $Id: Notation.java,v 1.34 2003/09/17 14:19:10 thierrylach Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -75,7 +75,7 @@ import ru.novosoft.uml.model_management.MPackage;
 public final class Notation implements PropertyChangeListener {
 
     /** Define a static log4j category variable for ArgoUML notation.
-     * @deprecated in favor of {@link #getLogger() }
+     * @deprecated public access - will become private
      */
     public static final Logger cat =
         Logger.getLogger("org.argouml.application.notation");
@@ -749,13 +749,5 @@ public final class Notation implements PropertyChangeListener {
     public static void setDefaultShadowWidth(int width) {
         Configuration.setInteger(KEY_DEFAULT_SHADOW_WIDTH, width);
     }
-
-
-    /** Returns the logger.
-     * @return the logger.
-     */
-    public final static Logger getLogger() {
-        return cat;
-    }
-
+    
 } // END NOTATION
