@@ -1,0 +1,100 @@
+X-Account-Key: account1
+X-UIDL: 5AB3154C3CFE4212915CD0375DD098
+X-Mozilla-Status: 0013
+X-Mozilla-Status2: 00000000
+Received: from charlevoix.vervehosting.com ([209.50.239.249]) by omelas.net with MailEnable ESMTP; Tue, 09 Nov 2004 06:05:30 +0100
+Received: from 12-217-170-100.client.mchsi.com ([12.217.170.100] helo=MATT8500)
+	by charlevoix.vervehosting.com with esmtpa (Exim 4.43)
+	id 1CROCj-0003C6-Qw
+	for jorge.uriarte@omelas.net; Tue, 09 Nov 2004 00:06:06 -0500
+From: "Matt Kruse" <matt@mattkruse.com>
+To: "Jorge Uriarte" <jorge.uriarte@omelas.net>
+Subject: RE: Licensing calendar popup for Scarab project
+Date: Mon, 8 Nov 2004 23:06:05 -0600
+Message-ID: <MFEMIHICAEAIDNMAKMOPIEHDEDAB.matt@mattkruse.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+In-Reply-To: <418ACAA8.5060006@omelas.net>
+Importance: Normal
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - charlevoix.vervehosting.com
+X-AntiAbuse: Original Domain - omelas.net
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mattkruse.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+
+Hi Jorge,
+
+Sorry for the long delay in responding. Yes, you may include my javascript
+source in your project as you've described below.
+
+Good luck,
+
+Matt
+
+
+> -----Original Message-----
+> From: Jorge Uriarte [mailto:jorge.uriarte@omelas.net]
+> Sent: Thursday, November 04, 2004 6:35 PM
+> To: matt@mattkruse.com
+> Subject: Re: Licensing calendar popup for Scarab project
+>
+>
+> Hi, Matt.
+>
+> Just in case the message got lost, I send you my question again.
+>
+> Thanks,
+>
+> _
+> Jorge
+>
+> Jorge Uriarte wrote:
+>
+> > Hi Matt,
+> >
+> > My name is Jorge Uriarte. First, I'd like to tell you that your
+> > calendarpopup seems a great work (you already knew ;-) ).
+> > We intend to use it in the Scarab open source project
+> > (http://scarab.tigris.org), where it seems to integrate easily.
+> >
+> > Scarab is open source software, based on a Apache style license
+> > (http://scarab.tigris.org/servlets/LicenseDetails?licenseID=9).
+> > Although your files state that "you can include it in your product, or
+> > your web site" and "use for any purpose, commercial or private", it
+> > also says "you may *NOT* re-distribute [...] except through its use.
+> > [...] You may not put the plain javascript up on your site for download."
+> >
+> > I thought the license was open enough to use it, but we've bumped into
+> > a doubt still... how would this apply to ViewCVS or other online
+> > repos? Do you consider this to be a "re-distribute" case?
+> >
+> > Would it be possible that you grant permission to the Scarab project
+> > to include CalendarPopup in the distributions, and in project's
+> > repository?
+> > We'll off course respect your headers, and link to your site in the
+> > Scarab site if you wish, so your desire of keeping the users going "to
+> > the source" would be enforced.
+> >
+> > Thanks for your time (and for your nice work!)
+> >
+> > _
+> > Jorge
+> >
+> >
+>
+>
+>
+>
+
+
+
