@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.26 2000/12/27 19:52:52 costin Exp $
- * $Revision: 1.26 $
- * $Date: 2000/12/27 19:52:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.27 2000/12/28 00:46:14 nacho Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/12/28 00:46:14 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -65,10 +65,7 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.xml.*;
 import java.security.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.security.Principal;
 import java.io.File;
 import java.util.Enumeration;
@@ -101,7 +98,6 @@ public final class JDBCRealm extends BaseInterceptor {
 
     ContextManager cm;
     int reqRolesNote;
-    int reqRealmSignNote;
     int userNote;
     int passwordNote;
     // ----------------------------------------------------- Instance Variables
@@ -387,7 +383,7 @@ public final class JDBCRealm extends BaseInterceptor {
             if( (dbConnection == null) || dbConnection.isClosed() ) {
                 Class.forName(driverName);
                 log(sm.getString("jdbcRealm.checkConnectionDBClosed"));
-                if ((connectionName == null || connectionName.equals("")) &&
+                if ((connectionName == null || connectionName.equals("")) ||
                         (connectionPassword == null || connectionPassword.equals(""))) {
                         dbConnection = DriverManager.getConnection(connectionURL);
                 } else {
@@ -406,7 +402,7 @@ public final class JDBCRealm extends BaseInterceptor {
             return false;
         }
         catch( ClassNotFoundException ex ) {
-            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
+            throw new RuntimeException("JDBCRealm.checkConnection: " + ex);
         }
     }
 
@@ -487,6 +483,7 @@ public final class JDBCRealm extends BaseInterceptor {
             throws org.apache.tomcat.core.TomcatException {
       // Validate and update our current component state
       if (started) {
+        started=false;
         try {
             if( dbConnection != null && !dbConnection.isClosed())
                 dbConnection.close();
@@ -501,7 +498,7 @@ public final class JDBCRealm extends BaseInterceptor {
         String user=(String)req.getNote( userNote );
         String password=(String)req.getNote( passwordNote );
 	if( user==null) return 0;
-	
+
 	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
             Context ctx = req.getContext();
@@ -509,7 +506,7 @@ public final class JDBCRealm extends BaseInterceptor {
                 req.setAuthType(ctx.getAuthMethod());
 	    if( user!=null) {
 		req.setRemoteUser( user );
-		req.setNote(reqRealmSignNote,this);
+//		req.setNote(reqRealmSignNote,this);
 		String userRoles[] = getUserRoles( user );
 		req.setUserRoles( userRoles );
 	    }
@@ -517,9 +514,7 @@ public final class JDBCRealm extends BaseInterceptor {
 	return 0;
     }
 
-    // XXX XXX XXX Nacho, I think Digest should be part of the Credential
-    // module, so it's used by all Realms.
-    
+  
     /**
      * Digest password using the algorithm especificied and
      * convert the result to a corresponding hex string.
@@ -577,8 +572,6 @@ public final class JDBCRealm extends BaseInterceptor {
           // XXX make the name a "global" static - after everything is stable!
             reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
                 , "required.roles");
-            reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                , "realm.sign");
 	    userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
 				   "credentials.user");
 	    passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,

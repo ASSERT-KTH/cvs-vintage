@@ -88,9 +88,8 @@ import org.xml.sax.*;
 public class SimpleRealm extends  BaseInterceptor {
 
     MemoryRealm memoryRealm;
-    
+
     int reqRolesNote=-1;
-    int reqRealmSignNote=-1;
     int userNote=-1;
     int passwordNote=-1;
 
@@ -115,8 +114,6 @@ public class SimpleRealm extends  BaseInterceptor {
     {
 	reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 				     "required.roles");
-	reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-					 "realm.sign");
 	userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
 			       "credentials.user");
 	passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
@@ -153,7 +150,6 @@ public class SimpleRealm extends  BaseInterceptor {
             Context ctx = req.getContext();
 	    req.setAuthType(ctx.getAuthMethod());
 	    req.setRemoteUser( user );
-            req.setNote(reqRealmSignNote,this);
 	    if( user!=null ) {
 		String userRoles[] = memoryRealm.getUserRoles( user );
 		req.setUserRoles( userRoles );
