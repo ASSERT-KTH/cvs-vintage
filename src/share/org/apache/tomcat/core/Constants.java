@@ -118,7 +118,7 @@ public class Constants {
              *
              */
 	    public static final String Name = "Tomcat Web Server";
-	    public static final String Version = "2.2";
+	    public static final String Version = "1.0R1";
 	}
 
         public static class Attribute {
