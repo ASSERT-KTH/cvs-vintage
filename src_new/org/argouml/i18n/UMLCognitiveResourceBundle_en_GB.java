@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle_en_GB.java
 // Classes: UMLCognitiveResourceBundle_en_GB
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.2 2002/10/30 10:06:17 mkl Exp $
+// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.3 2003/04/29 13:58:33 jhraigniac Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -51,7 +51,6 @@
 
 package org.argouml.i18n;
 import java.util.*;
-import org.argouml.util.*;
 
 /**
  *   This class is the default member of a resource bundle that
@@ -104,8 +103,6 @@ public class UMLCognitiveResourceBundle_en_GB extends ListResourceBundle {
         {"todopane.label.item", " {0} Item "},
         {"todopane.label.items", " {0} Items "},
 
-        {"button.ok", "OK"},
-        {"button.cancel", "Cancel"},
         {"button.open", "Open"},
         {"button.back", "Back"},
         {"button.next", "Next"},
