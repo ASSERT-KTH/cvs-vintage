@@ -27,7 +27,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -98,7 +98,15 @@ public class ConfigurationService
 
 				String name = mbeanElement.getAttribute("name");
 				ObjectName objectName = new ObjectName(name);
-				MBeanInfo info = server.getMBeanInfo(objectName);
+				
+				MBeanInfo info;
+				try {
+					info = server.getMBeanInfo(objectName);
+				} catch (InstanceNotFoundException e) {
+					// the service is no longer available (removed from jboss.conf?)
+					// it's ok, skip to next one
+					continue;
+				}
 
 				NodeList attrs = mbeanElement.getElementsByTagName("attribute");
 				for (int j = 0; j < attrs.getLength(); j++)
