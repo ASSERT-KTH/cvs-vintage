@@ -144,7 +144,7 @@ import org.w3c.dom.Element;
 
  @author  Scott.Stark@jboss.org
  @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- @version $Revision: 1.69 $
+ @version $Revision: 1.70 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -636,6 +636,7 @@ public abstract class AbstractWebContainer
             parent = parent.getParent();
          }
          Thread.currentThread().setContextClassLoader(loader);
+         metaData.setENCLoader(loader);
          envCtx = (Context) iniCtx.lookup("java:comp");
 
          // Add a link to the global transaction manager
