@@ -61,7 +61,7 @@ import org.apache.torque.om.Persistent;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependManager.java,v 1.4 2002/07/02 18:56:31 jon Exp $
+ * @version $Id: DependManager.java,v 1.5 2002/09/27 20:11:22 jon Exp $
  */
 public class DependManager
     extends BaseDependManager
@@ -91,8 +91,3 @@ public class DependManager
         return oldOm;
     }
 }
-
-
-
-
-
