@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.39 2003/11/28 15:55:05 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.40 2003/12/06 07:56:44 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.39 2003/11/28 15:55:05 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.40 2003/12/06 07:56:44 mkl Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -108,6 +108,10 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
 	addSeperator();
 
+        addField(Translator.localize("UMLMenu", "label.association-ends"), 
+            getAssociationEndScroll());
+
+        
 
         new PropPanelButton(this, buttonPanel, _navUpIcon,
                 Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace",
