@@ -21,7 +21,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.ristretto.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 
 /**
  * @author fdietz
@@ -60,7 +60,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
 
 		for (int i = 0; i < uids.length; i++) {
 
-			HeaderInterface header = folder.getMessageHeader(uids[i]);
+			ColumbaHeader header = folder.getMessageHeader(uids[i]);
 			String sender = (String) header.get("From");
 
 			addSender(sender);

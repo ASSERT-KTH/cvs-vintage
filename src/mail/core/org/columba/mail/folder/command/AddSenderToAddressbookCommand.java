@@ -28,7 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.ristretto.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 
 /**
  * Add sender of the selected messages to addressbook.
@@ -93,7 +93,7 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 		for (int i = 0; i < uids.length; i++) {
 
 			// get header of message
-			HeaderInterface header = folder.getMessageHeader(uids[i]);
+			ColumbaHeader header = folder.getMessageHeader(uids[i]);
 
 			// get sender
 			String sender = (String) header.get("From");
@@ -110,7 +110,8 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 	 * <p>
 	 * TODO: This code should most probably moved to the addressbook component
 	 * 
-	 * @param sender		email address of sender
+	 * @param sender
+	 *            email address of sender
 	 */
 	public void addSender(String sender) {
 		if (sender == null)
