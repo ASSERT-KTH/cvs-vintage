@@ -54,10 +54,8 @@
   <p>$l10n.IssueAttributesP1</p>
   <p>$l10n.IssueAttributesP2</p>
   <p>$l10n.IssueAttributesP3</p>
-  <p>$l10n.IssueAttributesP4=On many results pages you can change which attributes appear on your screen. 
-    For information on customizing your interface see <a href="$link.setPage("help,Navigation.vm")#customizing">Customizing 
-    the interface</a>.</p>
-  <h3><a name="entry" id="entry">$l10n.IssueEntryScreen</a></h3>
+  <p>$l10n.IssueAttributesP4 <a href="$link.setPage("help,Navigation.vm")#customizing">$l10n.CustomizingTheScreen</a>.</p>
+  <h3><a name="entry" id="entry">$l10n.IssueEntryScreen</a>.</h3>
   <p>$l10n.IssueEntryScreenP1</p>
   <p>$l10n.IssueEntryScreenP2 <strong>$l10n.Next 
     </strong> $l10n.IssueEntryScreenP2S2</p>
