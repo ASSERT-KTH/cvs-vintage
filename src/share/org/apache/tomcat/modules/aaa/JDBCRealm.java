@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.6 2001/04/10 09:00:59 nacho Exp $
- * $Revision: 1.6 $
- * $Date: 2001/04/10 09:00:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.7 2001/07/14 03:20:37 nacho Exp $
+ * $Revision: 1.7 $
+ * $Date: 2001/07/14 03:20:37 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -62,11 +62,10 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.buf.HexUtils;
 import org.apache.tomcat.util.aaa.*;
 import java.security.*;
 import java.security.Principal;
+
 import java.util.Vector;
 import java.io.*;
 import java.net.*;
@@ -78,21 +77,15 @@ import java.sql.*;
  * See the JDBCRealm.howto for more details on how to set up the database and
  * for configuration options.
  *
- *
- * TODO: - Work on authentication with non-plaintext passwords
- *
- *
  * @author Craig R. McClanahan
  * @author Carson McDonald
  * @author Ignacio J. Ortega
  * @author Bip Thelin
  */
-public final class JDBCRealm extends BaseInterceptor {
-    int reqRolesNote;
-    int userNote;
-    int passwordNote;
+public class JDBCRealm extends RealmBase {
     // ----------------------------------------------------- Instance Variables
 
+    private boolean started=false;
     /** The connection to the database. */
     private Connection dbConnection = null;
 
@@ -103,47 +96,34 @@ public final class JDBCRealm extends BaseInterceptor {
     private PreparedStatement preparedRoles = null;
 
     /** The connection URL to use when trying to connect to the databse */
-    private String connectionURL = null;
+    protected String connectionURL = null;
 
     /** The connection URL to use when trying to connect to the databse */
-    private String connectionName = null;
+    protected String connectionName = null;
 
     /** The connection URL to use when trying to connect to the databse */
-    private String connectionPassword = null;
+    protected String connectionPassword = null;
 
     /** The table that holds user data. */
-    private String userTable = null;
+    protected String userTable = null;
 
     /** The column in the user table that holds the user's name */
-    private String userNameCol = null;
+    protected String userNameCol = null;
 
     /** The column in the user table that holds the user's credintials */
-    private String userCredCol = null;
+    protected String userCredCol = null;
 
     /** The table that holds the relation between user's and roles */
-    private String userRoleTable = null;
+    protected String userRoleTable = null;
 
     /** The column in the user role table that names a role */
-    private String roleNameCol = null;
+    protected String roleNameCol = null;
 
     /** The JDBC driver to use. */
-    private String driverName = null;
-
-    /** The string manager for this package. */
-    private static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
-
-    /** Has this component been started? */
-    private boolean started = false;
+    protected String driverName = null;
 
     /** Has the JDBC connection been started? */
-    private boolean JDBCstarted = false;
-
-    /**
-     * Digest algorithm used in passwords thit is same values accepted by MessageDigest  for algorithm
-     * plus "No" ( no encode ) that is the default
-     */
-    private String digest = "No";
-
+    protected boolean JDBCStarted = false;
     boolean connectOnInit = false;
     // ------------------------------------------------------------- Properties
 
@@ -220,26 +200,6 @@ public final class JDBCRealm extends BaseInterceptor {
     }
 
     /**
-     * Gets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No" that
-     * is the Default
-     * @return
-     */
-    public String getDigest() {
-        return digest;
-    }
-
-    /**
-     * Sets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No"
-     * that is the Default
-     * @param algorithm the Encode type
-     */
-    public void setDigest(String algorithm) {
-        digest = algorithm;
-    }
-
-    /**
      * When connectOnInit is true the JDBC connection is started at tomcat init
      * if false the connection is started the first times it is needed.
      * @param b
@@ -260,72 +220,55 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param username Username of the Principal to look up
      * @param credentials Password or other credentials to use in authenticating this username
      */
-    private synchronized boolean checkPassword(String username,String credentials) {
+    public synchronized String getCredentials(String username){
         try {
             if (!checkConnection())
-                return false;
+                return null;
             // Create the authentication search prepared statement if necessary
             if (preparedAuthenticate == null) {
-                String sql = "SELECT " + userCredCol
-                    + " FROM " + userTable
-                    + " WHERE " + userNameCol + " = ?";
-                if (debug >= 1)
-                    log("JDBCRealm.authenticate: " + sql);
-                preparedAuthenticate = dbConnection.prepareStatement(sql);
+                preparedAuthenticate=getPreparedAuthenticate(dbConnection);
             }
             // Perform the authentication search
             preparedAuthenticate.setString(1, username);
             ResultSet rs1 = preparedAuthenticate.executeQuery();
             if (rs1.next()) {
-                String dbCredentials=rs1.getString(1).trim();
-                if( digest.equals("") || digest.equalsIgnoreCase("No")){
-                    if (credentials.equals(dbCredentials)) {
-                        if (debug >= 2)
-                            log(sm.getString("jdbcRealm.authenticateSuccess", username));
-                        return true;
-                    }
-                } else {
-                    if (digest(credentials,digest).equals(dbCredentials)) {
-                        if (debug >= 2)
-                            log(sm.getString("jdbcRealm.authenticateSuccess", username));
-                        return true;
-                    }
-                }
+                return rs1.getString(1).trim();
             }
             rs1.close();
-            if (debug >= 2)
-                log(sm.getString("jdbcRealm.authenticateFailure", username));
-            return false;
+            return null;
         } catch (SQLException ex) {
             // Log the problem for posterity
-            log(sm.getString("jdbcRealm.checkPasswordSQLException", username), ex);
+            log(sm.getString("jdbcRealm.getCredentialsSQLException", username), ex);
             // Clean up the JDBC objects so that they get recreated next time
-            if (preparedAuthenticate != null) {
-                try {
-                    preparedAuthenticate.close();
-                } catch (Throwable t) {
-                    ;
-                }
-                preparedAuthenticate = null;
-            }
-            if (dbConnection != null) {
-                try {
-                    dbConnection.close();
-                } catch (Throwable t) {
-                    ;
-                }
-                dbConnection = null;
-            }
             // Return "not authenticated" for this request
-            return false;
+            close();
+            return null;
         }
     }
+
+    protected PreparedStatement getPreparedAuthenticate(Connection conn) throws SQLException {
+        String sql = "SELECT " + userCredCol
+            + " FROM " + userTable
+            + " WHERE " + userNameCol + " = ?";
+        if (debug >= 1)
+            log("JDBCRealm.authenticate: " + sql);
+        return conn.prepareStatement(sql);
+    }
+
+    protected PreparedStatement getPreparedRoles(Connection conn) throws SQLException {
+        String sql = "SELECT " + roleNameCol + " FROM " + userRoleTable
+                   + " WHERE " + userNameCol + " = ?";
+        if (debug >= 1)
+            log("JDBCRealm.roles: " + sql);
+        return conn.prepareStatement(sql);
+    }
+
 
     private boolean checkConnection() {
         try {
             if ((dbConnection == null) || dbConnection.isClosed()) {
                 Class.forName(driverName);
-                if( JDBCstarted )
+                if( JDBCStarted )
                         log(sm.getString("jdbcRealm.checkConnectionDBClosed"));
                 if ((connectionName == null || connectionName.equals("")) ||
                     (connectionPassword == null || connectionPassword.equals(""))) {
@@ -334,7 +277,7 @@ public final class JDBCRealm extends BaseInterceptor {
                     dbConnection = DriverManager.getConnection(connectionURL,
                         connectionName, connectionPassword);
                 }
-                JDBCstarted=true;
+                JDBCStarted=true;
                 if (dbConnection == null || dbConnection.isClosed()) {
                     log(sm.getString("jdbcRealm.checkConnectionDBReOpenFail"));
                     return false;
@@ -343,6 +286,7 @@ public final class JDBCRealm extends BaseInterceptor {
             return true;
         } catch (SQLException ex) {
             log(sm.getString("jdbcRealm.checkConnectionSQLException"), ex);
+            close();
             return false;
         }
         catch (ClassNotFoundException ex) {
@@ -361,11 +305,7 @@ public final class JDBCRealm extends BaseInterceptor {
             if (!checkConnection())
                 return null;
             if (preparedRoles == null) {
-                String sql = "SELECT " + roleNameCol + " FROM " + userRoleTable
-                           + " WHERE " + userNameCol + " = ?";
-                if (debug >= 1)
-                    log("JDBCRealm.roles: " + sql);
-                preparedRoles = dbConnection.prepareStatement(sql);
+                preparedRoles=getPreparedRoles(dbConnection);
             }
             preparedRoles.clearParameters();
             preparedRoles.setString(1, username);
@@ -389,148 +329,69 @@ public final class JDBCRealm extends BaseInterceptor {
             // Set the connection to null.
             // Next time we will try to get a new connection.
             log(sm.getString("jdbcRealm.getUserRolesSQLException", username));
-            if (preparedRoles != null) {
-                try {
-                    preparedRoles.close();
-                } catch (Throwable t) {
-                    ;
-                }
-                preparedRoles = null;
-            }
-            if (dbConnection != null) {
-                try {
-                    dbConnection.close();
-                } catch (Throwable t) {
-                    ;
-                }
-                dbConnection = null;
-            }
+            close();
         }
         return null;
     }
 
-    // -------------------- Tomcat hooks --------------------
-    public void contextInit(Context ctx) throws org.apache.tomcat.core.TomcatException {
-        super.contextInit(ctx);
-        init(ctx.getContextManager());
-        // Validate and update our current component state
-    }
-
-    public void contextShutdown(Context ctx) throws org.apache.tomcat.core.TomcatException {
-        shutdown();
-    }
-
-    public void shutdown() throws org.apache.tomcat.core.TomcatException {
-        // Validate and update our current component state
-        if (started) {
-            started = false;
-            try {
-                if (dbConnection != null && !dbConnection.isClosed())
-                    dbConnection.close();
-            } catch (SQLException ex) {
-                log("dbConnection.close Exception!!!", ex);
-            }
-        }
-    }
-
-    /** Authenticate hook implementation  */
-
-    public int authenticate(Request req, Response response) {
-        String user = (String)req.getNote(userNote);
-        String password = (String)req.getNote(passwordNote);
-        if (user == null) return DECLINED;
-        if (checkPassword(user, password)) {
-            if (debug > 0) log("Auth ok, user=" + user);
-            Context ctx = req.getContext();
-            if (ctx != null)
-                req.setAuthType(ctx.getAuthMethod());
-            if (user != null) {
-                req.setRemoteUser(user);
-		req.setUserPrincipal( new JdbcPrincipal( user ));
-                String userRoles[] = getUserRoles(user);
-                req.setUserRoles(userRoles);
-                return OK;
-            }
-        }
-        return DECLINED;
-    }
-
-    /**
-     * Digest password using the algorithm especificied and
-     * convert the result to a corresponding hex string.
-     * If exception, the plain credentials string is returned
-     * @param credentials Password or other credentials to use in authenticating this username
-     * @param algorithm Algorithm used to do th digest
-     */
-    public final static String digest(String credentials, String algorithm) {
-        try {
-            // Obtain a new message digest with MD5 encryption
-            MessageDigest md = (MessageDigest)MessageDigest.getInstance(algorithm).clone();
-            // encode the credentials
-            md.update(credentials.getBytes());
-            // obtain the byte array from the digest
-            byte[] dig = md.digest();
-            // convert the byte array to hex string
-            //            Base64 enc=new Base64();
-            //            return new String(enc.encode(HexUtils.convert(dig).getBytes()));
-            return HexUtils.convert(dig);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return credentials;
-        }
-    }
-
-    /**
-     * JDBCRealm can be used as a standalone tool for offline password digest
-     * @param args
-     */
-    public static void main(String args[]) {
-        if (args.length >= 2) {
-            if (args[0].equalsIgnoreCase("-a")) {
-                for (int i = 2; i < args.length; i++) {
-                    System.out.print(args[i] + ":");
-                    System.out.println(digest(args[i], args[1]));
-                }
-            }
-        }
-    }
-
-     /** Called when the ContextManager is started */
-    public void engineInit(ContextManager cm) throws TomcatException {
-        super.engineInit(cm);
-        init(cm);
-    }
-
-    void init(ContextManager cm) {
-        if (!started) {
-            started = true;
-            // set-up a per/container note for maps
-            try {
-                // XXX make the name a "global" static - after everything is stable!
-                reqRolesNote = cm.getNoteId(ContextManager.REQUEST_NOTE, "required.roles");
-                userNote = cm.getNoteId(ContextManager.REQUEST_NOTE, "credentials.user");
-                passwordNote = cm.getNoteId(ContextManager.REQUEST_NOTE, "credentials.password");
-                if (connectOnInit && !checkConnection())
-                        throw new RuntimeException("JDBCRealm cannot be started");
-            }
-            catch (TomcatException ex) {
-                log("setting up note for " + cm, ex);
-                throw new RuntimeException("Invalid state ");
-            }
-        }
-    }
-
-    public void engineShutdown(ContextManager cm) throws TomcatException {
-        shutdown();
-    }
-
-    // Nothing - except cary on the class name information 
+    // Nothing - except carry on the class name information
     public static class JdbcPrincipal extends SimplePrincipal {
-	private String name;
+        private String name;
 
-	JdbcPrincipal(String name) {
-	    super(name);
-	}
+        JdbcPrincipal(String name) {
+            super(name);
+        }
+              
     }
+
+    private void close() {
+        if (preparedRoles != null) {
+            try {
+                preparedRoles.close();
+            } catch (Throwable t) {
+                ;
+            }
+            preparedRoles = null;
+        }
+        if (preparedAuthenticate != null) {
+            try {
+                preparedAuthenticate.close();
+            } catch (Throwable t) {
+                ;
+            }
+            preparedAuthenticate = null;
+        }
+        if (dbConnection != null) {
+            try {
+                dbConnection.close();
+            } catch (Throwable t) {
+                ;
+            }
+            dbConnection = null;
+        }
+    }
+
+    protected void ContextShutdown(Context ctx) throws TomcatException {
+        if (started && JDBCStarted) close();
+    }
+
+    protected void ContextInit(Context ctx) throws TomcatException {
+        if (!started) {
+            if (connectOnInit && !checkConnection()) {
+                throw new RuntimeException("JDBCRealm cannot be started");
+            }
+            started=true;
+        }
+    }
+
+    /**
+     * getPrincipal
+     * @param username
+     * @return java.security.Principal
+     */
+    protected Principal getPrincipal(String username) {
+        return new JdbcPrincipal( username );
+    }
+
 }
 

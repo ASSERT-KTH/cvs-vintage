@@ -85,17 +85,12 @@ import org.xml.sax.*;
  *  specialized in extracting the information from the request.
  *
  */
-public class SimpleRealm extends  BaseInterceptor {
+public class SimpleRealm extends  RealmBase {
 
     MemoryRealm memoryRealm;
-
-    int reqRolesNote=-1;
-    int userNote=-1;
-    int passwordNote=-1;
-
     String filename="/conf/users/tomcat-users.xml";
 
-    
+
     public SimpleRealm() {
     }
 
@@ -109,17 +104,7 @@ public class SimpleRealm extends  BaseInterceptor {
     }
 
     // -------------------- Hooks --------------------
-    public void engineInit( ContextManager cm )
-	throws TomcatException
-    {
-	reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-				     "required.roles");
-	userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
-			       "credentials.user");
-	passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
-				   "credentials.password");
-    }
-    
+
     public void contextInit(Context ctx)
 	throws TomcatException
     {
@@ -135,37 +120,6 @@ public class SimpleRealm extends  BaseInterceptor {
 		memoryRealm=null;
 	    }
 	}
-    }
-
-    public int authenticate( Request req, Response response )
-    {
-	// This realm will use only username and password callbacks
-	String user=(String)req.getNote( userNote );
-	String password=(String)req.getNote( passwordNote );
-	if( user==null) return DECLINED; // we don't know about this 
-	
-	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
-	SimpleRealmPrincipal srp=memoryRealm.getPrincipal( user );
-	if( srp == null ) return DECLINED;
-	
-	if( srp.checkPassword( password ) ) {
-	    if( debug > 0 ) log( "Auth ok, user=" + user );
-            Context ctx = req.getContext();
-	    req.setAuthType(ctx.getAuthMethod());
-	    req.setRemoteUser( user );
-	    req.setUserPrincipal( srp );
-	    
-	    if( user!=null ) {
-		String userRoles[] = srp.getUserRoles( user );
-		req.setUserRoles( userRoles );
-	    }
-	    return OK; // the user is ok, - no need for more work
-	}
-	return DECLINED; // the user is not known to me - it may
-	// be in a different realm.
-
-	// XXX maybe we should add "realm-name" - the current behavior
-	// is to treat them as "global users"
     }
 
     class MemoryRealm {
@@ -192,7 +146,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	public void addPrincipal( String name, Principal p ) {
 	    principals.put( name, p );
 	}
-	
+
         public void addUser(String name, String pass, String groups ) {
             if( getDebug() > 0 )  log( "Add user " + name + " " +
 				       pass + " " + groups );
@@ -225,7 +179,7 @@ public class SimpleRealm extends  BaseInterceptor {
                                    String user=attributes.getValue("name");
                                    String pass=attributes.getValue("password");
                                    String group=attributes.getValue("roles");
-				   
+
                                    mr.addUser( user, pass, group );
                                }
                            }
@@ -249,11 +203,9 @@ public class SimpleRealm extends  BaseInterceptor {
 	private void addRole(String role ) {
 	    roles.addElement( role );
 	}
-	
-	boolean checkPassword( String s ) {
-	    if( s == pass ) return true; // interned or nulls?
-	    if( s==null ) return false; // if pass == null already true
-	    return s.equals( pass );
+
+	String getCredentials() {
+	    return pass;
 	}
 
 	// backward compat - bad XML format !!!
@@ -268,7 +220,7 @@ public class SimpleRealm extends  BaseInterceptor {
             }
 	}
 
-	String[] getUserRoles( String user ) {
+	String[] getUserRoles( ) {
             String rolesA[]=new String[roles.size()];
             for( int i=0; i<roles.size(); i++ ) {
                 rolesA[i]=(String)roles.elementAt( i );
@@ -280,6 +232,41 @@ public class SimpleRealm extends  BaseInterceptor {
 	//             return roles.indexOf( role ) >=0 ;
 	//         }
 
+    }
+
+    /**
+     * getPrincipal
+     * @param username
+     * @return java.security.Principal
+     */
+    protected Principal getPrincipal(String username) {
+        return memoryRealm.getPrincipal( username );
+    }
+
+    /**
+     * getCredentials
+     * @param username
+     * @return java.lang.String
+     */
+    protected String getCredentials(String username) {
+        SimpleRealmPrincipal sp=memoryRealm.getPrincipal( username );
+        if( sp!=null ) {
+            return sp.getCredentials();
+        }
+        return null;
+    }
+
+    /**
+     * getUserRoles
+     * @param username
+     * @return java.lang.String
+     */
+    protected String[] getUserRoles(String username) {
+        SimpleRealmPrincipal sp=memoryRealm.getPrincipal( username );
+        if( sp!=null ) {
+            return sp.getUserRoles();
+        }
+        return null;
     }
 
 
