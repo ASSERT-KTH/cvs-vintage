@@ -37,7 +37,7 @@ import java.util.Set;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -120,8 +120,11 @@ public abstract class BeanMetaData
    private ConfigurationMetaData configuration;
    /** The custom security proxy class */
    private String securityProxy;
+
    /** Is the bean marked as clustered */
    protected boolean clustered = false;
+   /** Should the bean use by value call semeantics */
+   protected boolean callByValue = false;
    /** Any object names for services the bean depends on */
    private Collection depends = new LinkedList();
 
@@ -473,7 +476,6 @@ public abstract class BeanMetaData
     *
     *  @return The Set<Principal> for the application domain roles that
     *     caller principal's are to be validated against.
-    *  @see org.jboss.ejb.Container#getMethodPermissions(Method, boolean)
     */
    public Set getMethodPermissions(String methodName, Class[] params,
                                    InvocationType iface)
@@ -527,10 +529,14 @@ public abstract class BeanMetaData
          }
       }
 
-      // If no permissions were assigned to the method return null to indicate no access
+      // If no permissions were assigned to the method, anybody can access it
       if (result.isEmpty())
       {
-         result = null;
+         // [todo] the CTS expects the default to be unchecked, rather than excluded
+         // do we need a flag for backward compatibility?
+         // result = null
+
+         result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
       }
 
       return result;
@@ -540,6 +546,11 @@ public abstract class BeanMetaData
    public boolean isClustered()
    {
       return this.clustered;
+   }
+
+   public boolean isCallByValue()
+   {
+      return callByValue;
    }
 
    public ClusterConfigMetaData getClusterConfigMetaData()
@@ -679,6 +690,11 @@ public abstract class BeanMetaData
       // bound (optional)
       localJndiName = getElementContent(getOptionalChild(element,
               "local-jndi-name"));
+
+      // Determine if the bean should use by value call semantics
+      String callByValueElt = getElementContent(getOptionalChild(element,
+              "call-by-value"), (callByValue ? "True" : "False"));
+      callByValue = callByValueElt.equalsIgnoreCase("True");
 
       // set the configuration (optional)
       configurationName = getElementContent(getOptionalChild(element,
