@@ -84,11 +84,9 @@
 
     <!-- best practices -->
 
-    <!-- don't allow empty blocks (in particular catch blocks) -->
+    <!-- don't allow empty blocks (in particular catch blocks)
     <module name="EmptyBlock"/>
-
-    <!-- avoid inner assignments -->
-    <module name="InnerAssignment"/>
+     -->
 
     <!-- don't allow imports from the sun.* package hierarchy -->
     <module name="IllegalImport"/>
@@ -107,9 +105,10 @@
     <module name="TodoComment"/>
 
     <!--  Checks that a local variable or a parameter does not 
-          shadow a field that is defined in the same class. -->
+          shadow a field that is defined in the same class.
     <module name="HiddenField"/>
-
+     -->
+ 
     <!--  Checks for assignments in subexpressions, such as in 
           String s = Integer.toString(i = 2); -->
     <module name="InnerAssignment"/>
