@@ -73,7 +73,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -411,6 +411,8 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // add the path to the list of paths to left join
          addLeftJoinPath(pathStr, path);
          forceDistinct = true;
+
+         addJoinPath(path);
 
          if(cmrField.getRelationMetaData().isForeignKeyMappingStyle())
          {
