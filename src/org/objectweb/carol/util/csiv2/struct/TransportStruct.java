@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.2 2004/12/15 15:18:44 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.3 2005/01/10 09:31:06 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -41,6 +41,16 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 public class TransportStruct implements Serializable {
 
     /**
+     * Default localhost ip address
+     */
+    private static final String LOCAL_IP = "127.0.0.1";
+
+    /**
+     * Default ssl port
+     */
+    private static final int DEFAULT_SSL_PORT = 2002;
+
+    /**
      * TransportAddress
      */
     private TransportAddress[] transportAdresses = null;
@@ -56,10 +66,10 @@ public class TransportStruct implements Serializable {
     private short targetRequires = 0;
 
     /**
-     * @return TransportAddress[] object for SSL connection
+     * Gets current SSL port
+     * @return the ssl port
      */
-    public TransportAddress[] getTransportAddress() {
-
+    public int getSslPort() {
         // SSL port is iiop port + 1 for now
         // TODO : change it ?
         RMIConfiguration rmiConfig = null;
@@ -69,21 +79,29 @@ public class TransportStruct implements Serializable {
             sslPort = rmiConfig.getPort() + 1;
         } catch (RMIConfigurationException rce) {
             TraceCarol.error("Cannot find current rmiconfiguration", rce);
-            return null;
+            return DEFAULT_SSL_PORT;
         }
+        return sslPort;
+    }
 
-        String host = null;
+    /**
+     * @return TransportAddress[] object for SSL connection
+     */
+    public TransportAddress[] getTransportAddress() {
 
-        //TODO : add in rmiconfiguration a getAddr
+        int sslPort = getSslPort();
+
+        String ipAddr = null;
+
         try {
             InetAddress addr = InetAddress.getLocalHost();
-            host = addr.getHostName();
+            ipAddr = addr.getHostAddress();
         } catch (UnknownHostException uhe) {
             TraceCarol.error("Cannot get current hostname", uhe);
-            return null;
+            ipAddr = LOCAL_IP;
         }
         transportAdresses = new TransportAddress[1];
-        transportAdresses[0] = new TransportAddress(host, (short) sslPort);
+        transportAdresses[0] = new TransportAddress(ipAddr, (short) sslPort);
         return transportAdresses;
     }
 
