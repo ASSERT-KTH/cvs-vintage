@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.35 2005/02/01 20:42:34 mvw Exp $
+// $Id: FigMessage.java,v 1.36 2005/02/08 17:43:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,7 @@ public class FigMessage extends FigNodeModelElement {
 	getNameFig().setFilled(false);
 	Dimension nameMin = getNameFig().getMinimumSize();
 	getNameFig().setBounds(10, 10, 90, nameMin.height);
+        getBigPort().setBounds(10, 10, 90, nameMin.height);
 
 	figPoly = new FigPoly(Color.black, Color.black);
 	int[] xpoints = {75, 75, 77, 75, 73, 75};
@@ -99,6 +100,7 @@ public class FigMessage extends FigNodeModelElement {
 	arrowDirections.addElement("West");
 
 	// add Figs to the FigNode in back-to-front order
+        addFig(getBigPort());
 	addFig(getNameFig());
 	addFig(figPoly);
 
@@ -271,6 +273,7 @@ public class FigMessage extends FigNodeModelElement {
 	    ht = (nameMin.height - figPoly.getHeight()) / 2;
 
 	getNameFig().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
+	getBigPort().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
 	figPoly.setBounds(x + getNameFig().getWidth(), y + ht,
 			   figPoly.getWidth(), figPoly.getHeight());
 

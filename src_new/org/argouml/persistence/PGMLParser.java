@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.16 2005/02/07 20:45:11 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.17 2005/02/08 17:43:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -791,20 +791,15 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
                 while(st2.hasMoreElements()) {
                     String t = st2.nextToken();
                     String v = st2.nextToken();
-                    if(t.equals("sourcePortFig")) {
-                        spf = findFig(v);
-                    }
-
-                    if(t.equals("destPortFig")) {
-                        dpf = findFig(v);
-                    }
 
                     if(t.equals("sourceFigNode")) {
-                        sfn = (FigNode)_figRegistry.get(v);
+                        sfn = (FigNodeModelElement)_figRegistry.get(v);
+                        spf = (Fig)sfn.getPortFigs().get(0);
                     }
 
                     if(t.equals("destFigNode")) {
-                        dfn = (FigNode)_figRegistry.get(v);
+                        dfn = (FigNodeModelElement)_figRegistry.get(v);
+                        dpf = (Fig)dfn.getPortFigs().get(0);
                     }
                 }
 
