@@ -65,20 +65,37 @@ import java.util.zip.*;
 import java.security.*;
 
 import org.apache.tomcat.util.compat.*;
+
+public class DependClassLoader12 implements DependClassLoader.DCLFactory {
+
+    public ClassLoader createDependLoader(DependManager depM, ClassLoader parent, Object pd, int debug ) {
+        return new DependClassLoader12Impl( depM, parent, pd, debug );
+    }
+}
+
 /** 
  * 1.2 support for DependClassLoader
  * 
  */
-public class DependClassLoader12 extends DependClassLoader {
-	
+class DependClassLoader12Impl extends URLClassLoader {
+
     private final static String FILE_PROTOCOL = "file:";
     private final static String BANG = "!";
-	
-    DependClassLoader12() {
-    }
+
+    protected ClassLoader parent;
+    protected ClassLoader parent2;
     
-    public DependClassLoader12( DependManager depM, ClassLoader parent, Object pd ) {
-	super(depM, parent, pd);
+    private static int debug=0;
+    DependManager dependM;
+    protected Object pd;
+
+    public DependClassLoader12Impl( DependManager depM, ClassLoader parent, Object pd, int debug ) {
+        super( new URL[0], parent );
+	this.parent=parent;
+	this.parent2=parent.getParent();
+	dependM=depM;
+	this.pd=pd;
+        this.debug=debug;
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
@@ -102,7 +119,6 @@ public class DependClassLoader12 extends DependClassLoader {
 	}
     }
 
-    
     protected Class defineClassCompat( String name, byte data[], int s, int end, URL res )
 	throws ClassNotFoundException
     {
@@ -155,6 +171,10 @@ public class DependClassLoader12 extends DependClassLoader {
         }
  	return defineClass(name, data, s, end, (ProtectionDomain)pd);
     }
+
+    public URL[] getURLs() {
+        return ((URLClassLoader)parent).getURLs();
+    }
     
     private String getAttribute(Attributes.Name key, Attributes main, Attributes pkg)
     {
@@ -168,8 +188,151 @@ public class DependClassLoader12 extends DependClassLoader {
       return value;
      }
 
-    protected Enumeration findResources(String name) 
+    public Enumeration findResources(String name) 
 	throws IOException {
 	return parent.getResources(name);
+    }
+
+    // debug only
+    final void log( String s ) {
+	System.out.println("DependClassLoader12: " + s );
+    }
+
+    /** Actual class loading. The name 'loadClassInternal' generates a warning,
+     *  as a private method with the same name exists int ClassLoader in JDK1.1 ( Sun impl ).
+     */
+    protected Class loadClassInternal1( String name, boolean resolve )
+	throws ClassNotFoundException
+    {
+	if( debug>9) log( "loadClass() " + name + " " + resolve);
+	// The class object that will be returned.
+        Class c = null;
+
+	// check if  we already loaded this class
+	c = findLoadedClass( name );
+	if (c!= null ) {
+	    if(resolve) resolveClass(c);
+	    return c;
+        }
+
+        String classFileName = name.replace('.', '/' ) + ".class";
+
+	URL res=getResource( classFileName );
+
+	// If it's in parent2, load it ( we'll not track sub-dependencies ).
+	try {
+	    c = parent2.loadClass(name);
+	    if (c != null) {
+		if (resolve) resolveClass(c);
+		// No need, we can't reload anyway
+		// dependency( c, res );
+		return c;
+	    }
+	} catch (Exception e) {
+	    c = null;
+	}
+
+	if( res==null ) 
+	    throw new ClassNotFoundException(name);
+
+	// This should work - SimpleClassLoader should be able to get
+	// resources from jar files. 
+	InputStream is=getResourceAsStream( classFileName );
+	if( is==null ) 
+	    throw new ClassNotFoundException(name);
+
+
+	// It's in our parent. Our task is to track all class loads, the parent
+	// should load anything ( otherwise the deps are lost ), but just resolve
+	// resources.
+	byte data[]=null;
+	try {
+	    data=readFully( is );
+	    if( data.length==0 ) data=null;
+	    is.close();
+	} catch(IOException ex ) {
+	    if( debug > 0 ) ex.printStackTrace();
+	    data=null;
+	    throw new ClassNotFoundException( name + " error reading " + ex.toString());
+	}
+	if( data==null ) 
+	    throw new ClassNotFoundException( name + " lenght==0");
+
+	c=defineClassCompat( name, data, 0, data.length, res );
+	dependency( c, res );
+	
+	if (resolve) resolveClass(c);
+
+	return c;
+    }
+
+    public URL getResource(String name) {
+	return parent.getResource(name);
+    }
+
+    public InputStream getResourceAsStream(String name) {
+	return parent.getResourceAsStream( name );
+    }
+
+    private void dependency( Class c, URL res ) {
+	if( res==null) return;
+	File f=null;
+	if( "file".equals( res.getProtocol() )) {
+	    f=new File( res.getFile());
+	    if( debug > 9 ) log( "File dep "  +f );
+	    if( ! f.exists()) f=null;
+	}
+	if( "jar".equals( res.getProtocol() )) {
+	    String fileN=res.getFile();
+	    int idx=fileN.indexOf( "!" );
+	    if( idx>=0 )
+		fileN=fileN.substring( 0, idx) ;
+	    // Bojan Smojver <bojan@binarix.com>: remove jar:
+	    if( fileN.startsWith( "file:" ))
+		fileN=fileN.substring( 5 );
+	    // If the standard URL parser is used ( jdk1.1 compat )
+	    if( fileN.startsWith( "/file:" ))
+		fileN=fileN.substring( 6 );
+	    f=new File(fileN);
+	    if( debug > 9 ) log( "Jar dep "  +f + " " + f.exists() );
+	    if( ! f.exists()) f=null;
+	}
+
+	if( f==null ) return;
+	Dependency dep=new Dependency();
+	dep.setLastModified( f.lastModified() );
+	dep.setTarget( c );
+	dep.setOrigin( f );
+
+	dependM.addDependency( dep );
+    }
+
+    private byte[] readFully( InputStream is )
+	throws IOException
+    {
+	byte b[]=new byte[1024];
+	int count=0;
+
+	int available=1024;
+	
+	while (true) {
+	    int nRead = is.read(b,count,available);
+	    if( nRead== -1 ) {
+		// we're done reading
+		byte result[]=new byte[count];
+		System.arraycopy( b, 0, result, 0, count );
+		return result;
+	    }
+	    // got a chunk
+	    count += nRead;
+            available -= nRead;
+	    if( available == 0 ) {
+		// buffer full
+		byte b1[]=new byte[ b.length * 2 ];
+		available=b.length;
+		System.arraycopy( b, 0, b1, 0, b.length );
+		b=b1;
+	    }
+        }
     }
 }

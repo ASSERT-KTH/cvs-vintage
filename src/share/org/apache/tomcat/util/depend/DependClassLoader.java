@@ -92,16 +92,18 @@ public class DependClassLoader extends ClassLoader {
     protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
 
-    public static DependClassLoader getDependClassLoader( DependManager depM,
-							  ClassLoader parent,
-							  Object pd, int debug ) {
+    public static interface DCLFactory {
+        public ClassLoader createDependLoader(  DependManager depM, ClassLoader parent, Object pd, int debug );
+    }
+    
+    public static ClassLoader getDependClassLoader( DependManager depM,
+                                                    ClassLoader parent,
+                                                    Object pd, int debug ) {
 	if( jdkCompat.isJava2() ) {
 	    try {
 		Class c=Class.forName( "org.apache.tomcat.util.depend.DependClassLoader12");
-		DependClassLoader dcl=(DependClassLoader)c.newInstance();
-		dcl.init( depM, parent, pd );
-		dcl.debug=debug;
-		return dcl;
+		DCLFactory dcl=(DCLFactory)c.newInstance();
+                return dcl.createDependLoader( depM, parent, pd, debug );
 	    } catch(Exception ex ) {
 		ex.printStackTrace();
 	    }
