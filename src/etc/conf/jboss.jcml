@@ -28,7 +28,7 @@
        <attribute name="GCEnabled">false</attribute>
        <attribute name="InvalidateOnError">false</attribute>
        <attribute name="TimestampUsed">false</attribute>
-       <attribute name="Blocking">false</attribute>
+       <attribute name="Blocking">true</attribute>
        <attribute name="GCInterval">120000</attribute>
        <attribute name="IdleTimeout">1800000</attribute>
        <attribute name="IdleTimeoutEnabled">false</attribute>
@@ -46,7 +46,7 @@
        <attribute name="GCEnabled">false</attribute>
        <attribute name="InvalidateOnError">false</attribute>
        <attribute name="TimestampUsed">false</attribute>
-       <attribute name="Blocking">false</attribute>
+       <attribute name="Blocking">true</attribute>
        <attribute name="GCInterval">120000</attribute>
        <attribute name="IdleTimeout">1800000</attribute>
        <attribute name="IdleTimeoutEnabled">false</attribute>
