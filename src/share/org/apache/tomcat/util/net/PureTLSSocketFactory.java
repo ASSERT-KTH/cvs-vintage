@@ -136,7 +136,7 @@ public class PureTLSSocketFactory
 	    String keyPass=(String)attributes.get("keypass");
 	    if(keyPass==null) keyPass=defaultKeyPass;
 	    
-	    String rootFile=(String)attributes.get("randomfile");
+	    String rootFile=(String)attributes.get("rootfile");
 	    if(rootFile==null) rootFile=defaultRootFile;
 
 	    String randomFile=(String)attributes.get("randomfile");
