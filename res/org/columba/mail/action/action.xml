@@ -80,7 +80,6 @@
  <action name="CloseComposer" class="org.columba.mail.gui.composer.action.CloseComposerAction"/>
  <action name="EncryptMessage" class="org.columba.mail.gui.composer.action.EncryptMessageAction"/>
  <action name="ExternalEditor" class="org.columba.mail.gui.composer.action.ExternalEditorAction"/>
- <action name="NewMessage" class="org.columba.mail.gui.composer.action.NewMessageAction"/>
  <action name="SaveAsDraft" class="org.columba.mail.gui.composer.action.SaveAsDraftAction"/>
  <action name="SaveAsTemplate" class="org.columba.mail.gui.composer.action.SaveAsTemplateAction"/>
  <action name="SaveMessage" class="org.columba.mail.gui.composer.action.SaveMessageAction"/>
