@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  * expanded to include other cluster configuration parameters later on.
 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ClusterConfigMetaData extends MetaData
 {
@@ -42,7 +42,7 @@ public class ClusterConfigMetaData extends MetaData
 
    public String getBeanLoadBalancePolicy()
    {
-      return homeLoadBalancePolicy;
+      return beanLoadBalancePolicy;
    }
    
    // SFSB only
@@ -83,7 +83,6 @@ public class ClusterConfigMetaData extends MetaData
       partitionName = getElementContent(getOptionalChild(element, "partition-name"), DEFAULT_PARTITION);
       homeLoadBalancePolicy = getElementContent(getOptionalChild(element, "home-load-balance-policy"), homeLoadBalancePolicy);
       beanLoadBalancePolicy = getElementContent(getOptionalChild(element, "bean-load-balance-policy"), beanLoadBalancePolicy);
-
 
       // SFSB settings only
       //
