@@ -11,7 +11,15 @@ import org.jboss.system.ServiceMBeanSupport;
 
 /** The ContainerRelectionMBean implementation.
  * @author  Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
+ *
+ * <p><b>Revisions:</b>
+ * <p><b>2001030 Marc Fleury:</b>
+ * <ul>
+ * <li>I wonder if this class is needed now that we are moving to an MBean per EJB. 
+ * <li>In the new design the target EJB (interceptors are detached) should do this logic. 
+ *  FIXME: integrate this logic in the target MBean per EJB
+ * </ul>
  */
 public class ContainerRelection extends ServiceMBeanSupport implements ContainerRelectionMBean
 {
