@@ -1,4 +1,4 @@
-// $Id: ClAttributeCompartment.java,v 1.9 2004/08/29 11:48:45 mvw Exp $
+// $Id: ClAttributeCompartment.java,v 1.10 2004/08/29 14:31:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 
 /**
- * Class that represents the clarifier attribute compartment (?).
+ * Class that represents the clarifier (red wavy line) 
+ * for a attribute compartment.
  *
  */
 public class ClAttributeCompartment implements Clarifier {
