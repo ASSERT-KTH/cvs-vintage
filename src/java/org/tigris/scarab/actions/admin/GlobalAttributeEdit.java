@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.44 2003/04/25 03:58:27 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.45 2003/05/02 00:16:16 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -103,13 +103,13 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             {
                 // new attribute
                 attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
+                attr.setCreatedDate(new Date());
             }
             else
             {
                 attrGroup = intake.get("Attribute", attr.getQueryKey());
             }
-            attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
-            attr.setCreatedDate(new Date());
             attributeName = attrGroup.get("Name");
             description = attrGroup.get("Description");
             isDupe = Attribute.checkForDuplicate(attributeName.toString(), attr);
