@@ -268,16 +268,15 @@ class Ajp12 {
 					return;
 				    }
 				}
-				req.getContextManager().stop();
-				req.getContextManager().log("Exiting" );
-				req.getContextManager().getLog().getLogger().
-				    flush();
+                                ContextManager cm=req.getContextManager();
+				cm.shutdown();
+				cm.log("Exiting" );
+				cm.getLog().getLogger().flush();
 				// same behavior as in past, because it seems
 				// that stopping everything doesn't work -
 				// need to figure
 				// out what happens with the threads ( XXX )
 				System.exit(0);
-
 				shutdown=true;
 				return;
 			    }
