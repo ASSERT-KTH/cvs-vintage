@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @see org.jboss.ejb.EntityPersistenceStore
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
@@ -246,7 +246,12 @@ public class CMPInMemoryPersistenceManager
          throw new javax.ejb.CreateException ("Could not create entity: "+e);
       }
    }
-   
+
+   public Object postCreateEntity(Method m, Object[] args, EntityEnterpriseContext ctx) throws Exception
+   {
+      return null;
+   }
+
    /**
     * This method is called when single entities are to be found. The
     * persistence manager must find out whether the wanted instance is

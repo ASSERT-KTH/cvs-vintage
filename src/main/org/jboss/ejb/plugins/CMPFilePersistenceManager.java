@@ -64,7 +64,7 @@ import org.jboss.util.file.FilenameSuffixFilter;
  * jason: disabled because XDoclet can not handle \u0000 right now
  * _@_jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.19 $</tt>
+ * @version <tt>$Revision: 1.20 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -350,6 +350,14 @@ public class CMPFilePersistenceManager
       {
          throw new CreateException("Could not create entity: "+e);
       }
+   }
+
+   public Object postCreateEntity(final Method m,
+                                  final Object[] args,
+                                  final EntityEnterpriseContext ctx)
+      throws Exception
+   {
+      return null;
    }
 
    public Object findEntity(final Method finderMethod,

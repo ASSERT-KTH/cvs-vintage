@@ -26,7 +26,7 @@ import org.jboss.ejb.ContainerPlugin;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -68,6 +68,22 @@ public interface EntityPersistenceStore
    Object createEntity(Method m,
                        Object[] args,
                        EntityEnterpriseContext instance)
+      throws Exception;
+
+   /**
+    * This method is called after the createEntity method.
+    *
+    * @param m           the post-create method in the home interface that was
+    *                    called
+    * @param args        any parameters
+    * @param instance    the instance being used for this create call
+    * @return            null
+    * 
+    * @throws Exception
+    */
+   Object postCreateEntity(Method m,
+                           Object[] args,
+                           EntityEnterpriseContext instance)
       throws Exception;
 
    /**
