@@ -1,9 +1,9 @@
 @echo off
 echo Drop Scarab database...
-echo y |mysqladmin drop scarab
+mysqladmin --force drop scarab
 
 echo Create Scarab database...
-mysqladmin create scarab
+mysqladmin --force create scarab
 
 echo Importing mysql-scarab.sql...
 mysql scarab < mysql-scarab.sql
