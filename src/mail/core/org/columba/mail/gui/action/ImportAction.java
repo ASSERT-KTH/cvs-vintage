@@ -50,8 +50,6 @@ public class ImportAction extends FrameAction implements ActionListener {
 		// set small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_convert-16.png"));
 		
-		// TODO: Define mnemonic (using &)
-		
 	}
 
 	/* (non-Javadoc)

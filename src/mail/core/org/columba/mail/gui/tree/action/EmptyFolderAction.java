@@ -39,9 +39,6 @@ public class EmptyFolderAction
 		// action command
 		setActionCommand("EMPTY_FOLDER");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('E');
-
 		setEnabled(false);
 		// FIXME
 		//  -> uncomment to enable/disable action

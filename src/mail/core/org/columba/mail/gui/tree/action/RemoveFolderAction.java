@@ -55,9 +55,6 @@ public class RemoveFolderAction
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('D');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

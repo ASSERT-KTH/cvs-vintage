@@ -41,11 +41,6 @@ public class EncryptMessageAction extends CheckBoxAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("encrypt_small.png"));
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_message_encrypt"));
-
 		//setEnabled(false);
 	}
 

@@ -38,9 +38,9 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 	 */
 	public ShowContextSpecificHelpAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			GlobalResourceLoader.getString(null, null, "Context Specific Help"));
-			
+				frameController,
+				GlobalResourceLoader.getString(
+					null, null, "menu_help_context"));
 		
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_extended-help.png"));

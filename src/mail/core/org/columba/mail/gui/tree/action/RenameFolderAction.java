@@ -48,9 +48,6 @@ public class RenameFolderAction
 		// action command
 		setActionCommand("RENAME_FOLDER");
 
-		// TODO: USe & to define mnemonic
-		setMnemonic('R');
-		
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		

@@ -59,9 +59,6 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("reply.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('R');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

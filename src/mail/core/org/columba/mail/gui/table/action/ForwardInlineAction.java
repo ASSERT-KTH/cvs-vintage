@@ -52,8 +52,6 @@ public class ForwardInlineAction
 		// action command
 		setActionCommand("FORWARD_INLINE");
 		
-		// TODO: Define mnemonic (using &)
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

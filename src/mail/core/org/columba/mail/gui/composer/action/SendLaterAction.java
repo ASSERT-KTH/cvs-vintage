@@ -46,10 +46,6 @@ public class SendLaterAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("send-later-16.png"));
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_file_sendlater"));
 	}
 
 	/* (non-Javadoc)

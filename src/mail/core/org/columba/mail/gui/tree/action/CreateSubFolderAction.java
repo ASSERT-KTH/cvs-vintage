@@ -52,9 +52,6 @@ public class CreateSubFolderAction
 		setSmallIcon(ImageLoader.getSmallImageIcon("folder.png"));
 		setLargeIcon(ImageLoader.getImageIcon("folder.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('N');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

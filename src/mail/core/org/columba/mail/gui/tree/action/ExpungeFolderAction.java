@@ -48,9 +48,6 @@ public class ExpungeFolderAction
 		// action command
 		setActionCommand("EXPUNGE_FOLDER");
 
-		// TODO: Use & to define mnemonic
-		setMnemonic('P');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

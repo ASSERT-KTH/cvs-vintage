@@ -31,6 +31,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.mail.util.MailResourceLoader;
@@ -63,14 +64,19 @@ class IdentityStep extends AbstractStep {
                                     "identity_text")));
 		component.add(Box.createVerticalStrut(40));
 		WizardTextField middlePanel = new WizardTextField();
+		/*
 		JLabel nameLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
                                     "name"));
 		nameLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "accountwizard",
-                                    "name"));
+									"dialog",
+									"accountwizard",
+									"name"));
+		*/
+        LabelWithMnemonic nameLabel = new LabelWithMnemonic(
+        		MailResourceLoader.getString(
+        			"dialog", "accountwizard", "name"));
 		middlePanel.addLabel(nameLabel);
 		nameTextField = new JTextField();
                 Method method = null;
@@ -110,6 +116,7 @@ class IdentityStep extends AbstractStep {
                                     "accountwizard",
                                     "example") + "Bill Gates");
 		middlePanel.addExample(exampleLabel);
+		/*
 		JLabel addressLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -118,6 +125,10 @@ class IdentityStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "address"));
+		*/
+		LabelWithMnemonic addressLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "accountwizard", "address"));
 		middlePanel.addLabel(addressLabel);
 		addressTextField = new JTextField();
 		data.registerDataLookup("Identity.address", new DefaultDataLookup(addressTextField, method, null));
@@ -128,6 +139,7 @@ class IdentityStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "example") + "BillGates@microsoft.com"));
+                /*
                 JLabel accountNameLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -136,6 +148,10 @@ class IdentityStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "accountname"));
+                */
+				LabelWithMnemonic accountNameLabel = new LabelWithMnemonic(
+						MailResourceLoader.getString(
+							"dialog", "accountwizard", "accountname"));
                 middlePanel.addLabel(accountNameLabel);
                 accountNameTextField = new JTextField();
                 data.registerDataLookup("Identity.accountName", new DefaultDataLookup(accountNameTextField, method, null));

@@ -76,9 +76,6 @@ public class ForwardAction
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 				
-		// TODO: Use & to define mnemonic
-		setMnemonic('F');
-
 		setEnabled(false);
 		(
 			(

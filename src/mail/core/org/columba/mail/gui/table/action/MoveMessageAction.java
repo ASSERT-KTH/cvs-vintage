@@ -65,9 +65,6 @@ public class MoveMessageAction
 		setSmallIcon(ImageLoader.getSmallImageIcon("movemessage_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("move-message.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('M');
-		
 		// disable toolbar text
 		enableToolBarText(false);
 

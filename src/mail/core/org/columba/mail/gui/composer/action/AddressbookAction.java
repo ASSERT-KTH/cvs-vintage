@@ -56,11 +56,6 @@ public class AddressbookAction extends FrameAction {
 		// disable text in toolbar
 		enableToolBarText(false);
 
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_message_addressbook"));
-		
 	}
 
 	/* (non-Javadoc)

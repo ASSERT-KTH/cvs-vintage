@@ -80,9 +80,6 @@ public class DeleteMessageAction
 		// disable toolbar text
 		enableToolBarText(false);
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('D');
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -52,9 +52,6 @@ public class ShowBugDatabaseAction extends FrameAction {
 		// action command
 		setActionCommand("BUGREPORT");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('B');
-		
 	}
 
 	/* (non-Javadoc)

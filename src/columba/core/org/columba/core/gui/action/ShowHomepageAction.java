@@ -46,9 +46,6 @@ public class ShowHomepageAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_home_16.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('P');
-		
 	}
 
 	/* (non-Javadoc)

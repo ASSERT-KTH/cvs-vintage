@@ -53,8 +53,6 @@ public class FindAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		
-		// TODO: Define mnemonic (using &)
-		
 		setEnabled(false);
 	}
 }

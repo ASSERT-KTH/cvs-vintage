@@ -37,7 +37,9 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ChooseViewerDialog implements ActionListener {
@@ -65,11 +67,17 @@ public class ChooseViewerDialog implements ActionListener {
 
 	private void init(boolean save) {
 		JPanel contentPane = new JPanel(new BorderLayout(0, 0));
-		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		contentPane.setBorder(
+				BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		JPanel viewerPanel = new JPanel();
 		viewerPanel.setLayout(new BoxLayout(viewerPanel, BoxLayout.X_AXIS));
+		/*
 		JLabel label = new JLabel(MailResourceLoader.getString("dialog", "mimetypeviewer", "viewer_label"));
                 label.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer", "viewer_label"));
+        */
+		LabelWithMnemonic label = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "mimetypeviewer", "viewer_label"));
 		viewerPanel.add(label);
 		viewerPanel.add(Box.createHorizontalStrut(5));
 		viewerName = new JTextField(15);
@@ -98,8 +106,14 @@ public class ChooseViewerDialog implements ActionListener {
 		searchButton.setActionCommand(CMD_SEARCH);
 		viewerPanel.add(searchButton);
 		contentPane.add(viewerPanel, BorderLayout.NORTH);
+		/*
 		saveCButton = new JCheckBox(MailResourceLoader.getString("dialog", "mimetypeviewer", "save_viewer"), save);
                 saveCButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer", "save_viewer"));
+        */
+        saveCButton = new CheckBoxWithMnemonic(
+        		MailResourceLoader.getString(
+					"dialog", "mimetypeviewer", "save_viewer"));
+		saveCButton.setSelected(save);
 		saveCButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 17, 0));
 		contentPane.add(saveCButton, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));

@@ -28,6 +28,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Opens Folder Options Dialog.
@@ -43,8 +44,12 @@ public class FolderOptionsAction
 	 * @param name
 	 */
 	public FolderOptionsAction(AbstractFrameController frameController) {
-		super(frameController, "Folder Options...");
+		super(
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_folderoptions"));
 
+		// icon for menu
 		setSmallIcon( ImageLoader.getSmallImageIcon("16_configure_folder.png"));
 		
 		setEnabled(false);

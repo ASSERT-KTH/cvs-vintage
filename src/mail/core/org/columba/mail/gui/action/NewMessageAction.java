@@ -43,7 +43,6 @@ public class NewMessageAction extends FrameAction {
 		setActionCommand("NEW_MESSAGE");
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
-		setMnemonic('N');
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
 						KeyEvent.VK_M, ActionEvent.CTRL_MASK));		

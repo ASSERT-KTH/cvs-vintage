@@ -42,16 +42,6 @@ public class SaveMessageBodyAsAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/* Parameters for the super constructor used
-	 * 		@param frameController
-	 * 		@param name
-	 * 		@param longDescription
-	 * 		@param actionCommand
-	 * 		@param small_icon
-	 * 		@param big_icon
-	 * 		@param mnemonic
-	 * 		@param keyStroke
-	 */
 	public SaveMessageBodyAsAction(AbstractFrameController frameController) {
 		super(frameController,
 				MailResourceLoader.getString(
@@ -62,7 +52,6 @@ public class SaveMessageBodyAsAction
 		setActionCommand("SAVE");
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
-		setMnemonic('S');
 
 		// *20030614, karlpeder* only enabled when message(s) selected
 		setEnabled(false);

@@ -63,9 +63,6 @@ public class MarkAsReadAction
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke("M"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('R');
-		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

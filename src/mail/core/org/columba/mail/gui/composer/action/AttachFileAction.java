@@ -46,11 +46,6 @@ public class AttachFileAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_attach-16.png"));
 
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_message_attachFile"));
-
 	}
 
 	

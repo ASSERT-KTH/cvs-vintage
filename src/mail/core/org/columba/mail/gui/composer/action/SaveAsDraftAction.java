@@ -52,10 +52,6 @@ public class SaveAsDraftAction extends FrameAction {
 		// action command
 		setActionCommand("SAVEDRAFT");
 
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu",	"composer",	"menu_file_savedraft"));
 	}
 
 	/* (non-Javadoc)

@@ -57,9 +57,6 @@ public class SearchMessageAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
-		// TODO: Use & to define mnemonic
-		setMnemonic('S');
-		
 	}
 
 	/* (non-Javadoc)

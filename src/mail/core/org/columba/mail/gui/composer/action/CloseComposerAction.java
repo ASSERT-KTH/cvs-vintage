@@ -50,11 +50,6 @@ public class CloseComposerAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_file_close"));
-
 	}
 
 	/* (non-Javadoc)

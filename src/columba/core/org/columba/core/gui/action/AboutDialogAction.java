@@ -44,9 +44,6 @@ public class AboutDialogAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_about-16.png"));
 
-		// TODO: Use & to define mnemonic
-		setMnemonic('A');
-				
 	}
 
 	/* (non-Javadoc)

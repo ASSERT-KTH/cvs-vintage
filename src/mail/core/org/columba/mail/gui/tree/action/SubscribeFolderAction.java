@@ -29,17 +29,6 @@ public class SubscribeFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public SubscribeFolderAction(AbstractFrameController frameController) {
 		super(
 				frameController,

@@ -60,9 +60,6 @@ public class MarkAsFlaggedAction
 		// icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("mark-as-important-16.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('F');
-		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -32,6 +32,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.mail.util.MailResourceLoader;
@@ -65,6 +66,7 @@ class IncomingServerStep extends AbstractStep {
                                     "incomingserver_text")));
                 component.add(Box.createVerticalStrut(40));
                 WizardTextField middlePanel = new WizardTextField();
+                /*
                 JLabel nameLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -73,6 +75,10 @@ class IncomingServerStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "login")); //$NON-NLS-1$
+                */
+				LabelWithMnemonic nameLabel = new LabelWithMnemonic(
+						MailResourceLoader.getString(
+							"dialog", "accountwizard", "login"));
                 middlePanel.addLabel(nameLabel);
                 loginTextField = new JTextField();
                 Method method = null;
@@ -104,6 +110,7 @@ class IncomingServerStep extends AbstractStep {
                                     "accountwizard",
                                     "example") + "billgates");
                 middlePanel.addExample(exampleLabel);
+                /*
                 addressLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -112,6 +119,10 @@ class IncomingServerStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "host")); //$NON-NLS-1$)
+                */
+				addressLabel = new LabelWithMnemonic(
+						MailResourceLoader.getString(
+							"dialog", "accountwizard", "host"));
                 middlePanel.addLabel(addressLabel);
                 hostTextField = new JTextField();
                 data.registerDataLookup("IncomingServer.host", new DefaultDataLookup(hostTextField, method, null));
@@ -124,6 +135,7 @@ class IncomingServerStep extends AbstractStep {
                                     "example") + "mail.microsoft.com");
                 middlePanel.addExample(addressExampleLabel);
 
+                /*
                 JLabel typeLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -132,6 +144,10 @@ class IncomingServerStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "type"));
+                */
+				LabelWithMnemonic typeLabel = new LabelWithMnemonic(
+						MailResourceLoader.getString(
+							"dialog", "accountwizard", "type"));
                 middlePanel.addLabel(typeLabel);
                 typeComboBox = new JComboBox();
                 typeLabel.setLabelFor(typeComboBox);

@@ -31,6 +31,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.mail.util.MailResourceLoader;
@@ -63,6 +64,7 @@ class OutgoingServerStep extends AbstractStep {
                                     "outgoingserver_text")));
                 component.add(Box.createVerticalStrut(40));
                 WizardTextField middlePanel = new WizardTextField();
+                /*
                 JLabel addressLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
@@ -71,6 +73,10 @@ class OutgoingServerStep extends AbstractStep {
                                     "dialog",
                                     "accountwizard",
                                     "host"));
+                */
+				LabelWithMnemonic addressLabel = new LabelWithMnemonic(
+						MailResourceLoader.getString(
+							"dialog", "accountwizard", "host"));
                 middlePanel.addLabel(addressLabel);
                 hostTextField = new JTextField();
                 Method method = null;

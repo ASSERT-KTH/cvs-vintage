@@ -42,9 +42,6 @@ public class DeleteAction extends FrameAction {
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_paste-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('D');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

@@ -42,9 +42,6 @@ public class ShowFAQAction extends FrameAction {
 		// action command
 		setActionCommand("FAQ");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('F');
-		
 	}
 
 	/* (non-Javadoc)

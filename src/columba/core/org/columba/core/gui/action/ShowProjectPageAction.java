@@ -42,9 +42,6 @@ public class ShowProjectPageAction extends FrameAction {
 		// action command
 		setActionCommand("SOURCEFORGE");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('S');
-		
 	}
 
 	/* (non-Javadoc)

@@ -37,11 +37,6 @@ public class ExternalEditorAction extends FrameAction {
 		// action command
 		setActionCommand("EXTERNEDIT");
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_edit_extern_edit"));
-
 	}
 
 	/* (non-Javadoc)

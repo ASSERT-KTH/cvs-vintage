@@ -32,6 +32,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.main.MainInterface;
@@ -76,28 +77,38 @@ class LocationStep extends AbstractStep implements ActionListener {
                                     "location_text")));
 		component.add(Box.createVerticalStrut(40));
 		WizardTextField middlePanel = new WizardTextField();
+		/*
 		JLabel sourceLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "mailboximport",
                                     "source"));
-                sourceLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "mailboximport",
-                                    "source"));
+        sourceLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
+                            "dialog",
+                            "mailboximport",
+                            "source"));
+		*/
+		LabelWithMnemonic sourceLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "mailboximport", "source"));
 		middlePanel.addLabel(sourceLabel);
 		sourceButton = new JButton("...");
                 sourceLabel.setLabelFor(sourceButton);
 		sourceButton.addActionListener(this);
 		middlePanel.addTextField(sourceButton);
 		middlePanel.addExample(new JLabel());
+		/*
 		JLabel destinationLabel = new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "mailboximport",
                                     "destination"));
-                destinationLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "mailboximport",
-                                    "destination"));
+        destinationLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
+                            "dialog",
+                            "mailboximport",
+                            "destination"));
+		*/
+		LabelWithMnemonic destinationLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog", "mailboximport", "destination"));
 		middlePanel.addLabel(destinationLabel);
 		destinationButton = new JButton("...");
                 destinationLabel.setLabelFor(destinationButton);

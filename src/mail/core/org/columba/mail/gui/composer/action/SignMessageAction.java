@@ -36,11 +36,6 @@ public class SignMessageAction extends CheckBoxAction {
 		// action command
 		setActionCommand("SIGN");
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_message_sign"));
-
 		//setEnabled(false);
 	}
 

@@ -42,9 +42,6 @@ public class ShowLicenseAction extends FrameAction {
 		// action command
 		setActionCommand("LICENSE");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('L');
-		
 	}
 
 	/* (non-Javadoc)

@@ -45,11 +45,6 @@ public class SpellcheckAction extends FrameAction {
 		// disable text in toolbar
 		enableToolBarText(false);
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu", "composer", "menu_message_spellCheck"));
-
 	}
 
 	/* (non-Javadoc)

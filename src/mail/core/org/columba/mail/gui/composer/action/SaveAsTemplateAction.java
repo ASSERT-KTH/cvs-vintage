@@ -52,10 +52,6 @@ public class SaveAsTemplateAction extends FrameAction {
 		// action command
 		setActionCommand("SAVETEMPLATE");
 		
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu",	"composer",	"menu_file_savetemplate"));
 	}
 
 	/* (non-Javadoc)

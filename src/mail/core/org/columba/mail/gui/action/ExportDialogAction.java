@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.config.export.ExportDialog;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -22,8 +23,10 @@ public class ExportDialogAction extends FrameAction {
 
 	public ExportDialogAction(AbstractFrameController frameController) {
 
-		// TODO: LOCALIZE
-		super(frameController, "Export Mail...");
+		super(
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_utilities_exportmail"));
 
 	}
 

@@ -60,9 +60,6 @@ public class MarkAsExpungedAction
 		// icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('E');
-		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

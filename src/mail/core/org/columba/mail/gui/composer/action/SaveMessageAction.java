@@ -43,11 +43,6 @@ public class SaveMessageAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_W, ActionEvent.CTRL_MASK));		
 
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu",	"mainframe", "menu_file_save"));
-
 	}
 
 	/* (non-Javadoc)

@@ -72,7 +72,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				ImageLoader.getImageIcon("stock_undo.png"));
 		undoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		// TODO: Use & to define mnemonic (why is 'T' use as mnemonic??)
 		undoAction.setMnemonic('T');
 
 		undoAction.setEnabled(false);
@@ -89,7 +88,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				ImageLoader.getImageIcon("stock_redo.png"));
 		redoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-		// TODO: Use & to define mnemonic (why is T use as mnemonic??)
 		redoAction.setMnemonic('T');
 
 		redoAction.setEnabled(false);

@@ -44,9 +44,6 @@ public class ShowHelpAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_help_16.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('D');
-		
 	}
 
 	/* (non-Javadoc)

@@ -36,8 +36,6 @@ public class FindAgainAction extends FrameAction {
 		// action command
 		setActionCommand("FIND_AGAIN");
 		
-		// TODO: Define mnemonic (using &)
-		
 		setEnabled(false);
 	}
 }

@@ -85,8 +85,14 @@ public class ExceptionDialog implements ActionListener {
 		closeButton.setActionCommand(CMD_CLOSE);
                 closeButton.addActionListener(this);
 
+		/*
 		JButton reportBugButton = new JButton(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
                 reportBugButton.setMnemonic(GlobalResourceLoader.getMnemonic(RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
+		*/
+		ButtonWithMnemonic reportBugButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
+		
 		reportBugButton.setActionCommand(CMD_REPORT_BUG);
                 reportBugButton.addActionListener(this);
 

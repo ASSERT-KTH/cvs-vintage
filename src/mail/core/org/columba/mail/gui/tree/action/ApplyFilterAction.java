@@ -52,9 +52,6 @@ public class ApplyFilterAction
 		// icon
 		setSmallIcon(ImageLoader.getSmallImageIcon("apply-filters-16.png"));
 
-		// TODO: Use & to define mnemonic
-		setMnemonic('F');
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));

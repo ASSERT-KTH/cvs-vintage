@@ -69,10 +69,6 @@ public class SendAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
 	
-		// TODO: Use & to define mnemonic instead
-		setMnemonic(
-				MailResourceLoader.getMnemonic(
-					"menu",	"composer",	"menu_file_send"));
 	}
 
 	/* (non-Javadoc)

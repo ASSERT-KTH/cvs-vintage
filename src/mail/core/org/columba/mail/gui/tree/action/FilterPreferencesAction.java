@@ -43,9 +43,6 @@ public class FilterPreferencesAction
 		// action command
 		setActionCommand("FILTER_PREFERENCES");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('U');
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);

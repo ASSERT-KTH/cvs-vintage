@@ -68,9 +68,6 @@ public class CopyMessageAction
 		// disable toolbar text
 		enableToolBarText(false);
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('C');
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
