@@ -1,0 +1,504 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Mel Martinez">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>Jasper34 Refactoring Proposal: JasperToolkit</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<h2>
+Jasper34 Refactoring Proposal: JasperToolkit</h2>
+
+<p><br>$Id: JasperToolkit.html,v 1.1 2001/04/18 10:37:00 melaquias Exp $
+<p>by Mel Martinez, melaquias@yahoo.com
+<br>&nbsp;
+<h3>
+Standard Disclaimer</h3>
+This document should be considered organic - it requires feeding and care
+to grow in the way that you want.&nbsp; If you have a good/better idea
+about any or all of the subject matter(s) discussed here, please feel free
+to share through the tomcat developer's list: tomcat-dev@jakarta.apache.org.&nbsp;
+In particular, suggestions for additional service types that should be
+in the base JasperToolkit implementation and improved names for the various
+packages, classes, methods and other tokens mentioned here are encouraged.&nbsp;
+Not necessarily listened to, but encouraged!&nbsp; :-)
+<h3>
+Introduction</h3>
+The purpose of this document is to propose a refactoring of the Jasper
+API to provide better decoupling between the basic JSP compilation services
+of Jasper from the particular adapter implementation used to access those
+services.&nbsp; This decoupling should make it easier to apply Jasper to
+new adapter implementations and ultimately to upgrade and replace the various
+features of Jasper itself.&nbsp; This effort is based primarily around
+the Jasper implementation in the Tomcat 3.3 code-base as that is the most
+mature.&nbsp; However, the basic pattern used could be applied/extended
+to the Jasper implementation in the tomcat 4 base as well.
+<p>Jasper is currently used in a variety of ways.&nbsp; Primarily, it is
+the JSP compiler/container for the Tomcat Servlet Engine.&nbsp; The default
+entry mechanism used for this is the JspInterceptor class.&nbsp; In addition,
+Jasper is also used as a standalone JSP command-line compiler, via the
+'jspc' implementation.&nbsp; Finally, Jasper can also be used as a portable,
+plug-in JSP compiler in any compatible servlet engine via JspServlet.&nbsp;
+The latter adapter is used to plug Jasper into a variety of servlet engine
+products from commercial servlet engines such as WebLogic Server to open-source
+alternative servlet engines such as Jetty.&nbsp; The motivation for using
+Jasper portably like this is to either replace a known, defective COTS
+JSP compiler that can not be repaired due to lack of source code availability,
+or to provide JSP compilation services for a servlet engine that does not
+provide it's own.
+<p>These disparate implementations have different requirements for such
+services such as class-loading, name mangling, java compilation, etc.&nbsp;
+Currently, the JSP API tightly couples many of these services together
+in ways that are not the most flexible, and that make it difficult to optimize
+Jasper usage for different implementations.&nbsp; For example, in the current
+scheme, the name Mangler and JSP Compiler are implemented in the same class,
+making it difficult to separately modify either's behavior.&nbsp; Further,
+the Java compiler access and utilization is performed by the JSP Compiler,
+making it dificult to separate out that service.
+<p>This particular proposed refactoring attempts to address these and other
+issues by implementing the Abstract Factory pattern using a 'Toolkit' metaphor.&nbsp;
+Implementation classes for various services used by Jasper and Jasper Adapter
+Implementations will be provided via factory methods in a base toolkit
+class or it's subclasses.&nbsp; This decouples the user of each service
+from having to have knowledge about the instantiation or initialization
+of that service, except where necessary to provide customization specific
+to a particular implementation.
+<p>Factories provide several benefits and are used frequently in many standard
+Java APIs, including java.lang.Runtime, java.util.Calendar, the AWT Toolkit
+and, of course the Java Foundation Classes (Swing) API.&nbsp; Thus, the
+use of factories is familiar to most Java developers.&nbsp; In particular,
+a factory pattern is very easy to retrofit into existing code gracefully
+since in many cases the only thing needed is to replace a direct constructor
+instantiation (i.e. use of 'new') with a factory method invocation.&nbsp;
+Also, a particular adapter implementation can make use of just the services
+provided by the toolkit that it finds useful and that won't break current
+functionality.
+<br>&nbsp;
+<h3>
+High-Level Goals</h3>
+
+<h4>
+Primary goals:</h4>
+
+<ul>
+<li>
+Decouple the Tomcat 3.3 Jasper parser/compiler from the Jasper adapter
+implementation.</li>
+
+<li>
+Use a 'toolkit' metaphor to provide this decoupling.</li>
+
+<li>
+Provide a refactored JspServlet implementation using the new toolkit pattern.</li>
+
+<li>
+Implement the toolkit API as a separate-but-parallel endeavor ('revolution
+and then merge', as Costin puts it) so as to not impact negatively the
+current API or development schedules.&nbsp; Hence the name 'jasper34' for
+the refactoring effort will be used as the package name as well during
+development.</li>
+
+<li>
+Re-use existing code and solutions as much as possible.</li>
+</ul>
+
+<h4>
+Secondary Goals:</h4>
+
+<ul>
+<li>
+Enhance some of the basic services to have extra features such as recursive
+modification checking, configurable name mangling, dynamic reloading, etc.</li>
+
+<li>
+Refactor other adapter implementations such as JspInterceptor or JspC.</li>
+
+<li>
+Possibly add some JSP 1.2 specification features.</li>
+</ul>
+
+<h3>
+Overall Architecture:</h3>
+
+<p><br>The refactoring will be done, for now, via a package hierarchy under
+'org.apache.jasper34' to avoid conflict with the existing API.&nbsp;&nbsp;
+At some future point, we may vote to merge the refactored code back under
+'org.apache.jasper'.&nbsp;&nbsp; Thus, everywhere within this proposal,
+and the accompanying uml model and code snippets, the use of the string&nbsp;
+'jasper34' may at some point be replaced with 'jasper'.&nbsp; Within this
+hierarchy, we introduce the package 'org.apache.jasper34.toolkit'.&nbsp;
+This package contains the base JasperToolkit class which is the basis for
+the abstract factory pattern we want to use.
+<p>The JasperToolkit class provides two public, static methods: getProperty(String)
+and createToolkit(String).&nbsp; The getProperty() method provides useful
+configuration control by facilitating easy access to configuration properties
+in the following order of precedence:
+<ol>
+<li>
+System configuration properties set via the -D option at the java runtime
+startup or via a load of properties into the System.getProperties() collection.</li>
+
+<li>
+From a .properties resource file indicated using the configuration property:
+-Dorg.apache.jasper.resources.toolkit_properties=some/path/to/my.properties</li>
+
+<li>
+Finally, if not set via the above mechanisms, the getProperty() method
+will look inside the default Toolkit.properties file stored inside the
+org.apache.jasper34.resources package.</li>
+</ol>
+Thus, the JasperToolkit.getProperty(String) method provides a flexible
+means to set configuration properties at the start of the runtime.&nbsp;&nbsp;&nbsp;
+This mechanism is used by the default, base class implementations of the
+various service factories.&nbsp; It is left up to subclasses of JasperToolkit
+to make use of run-time data, such as init-params, for dynamic changes
+to factory behavior.
+<p>Second, the JasperToolkit.createToolkit(String) method provides a factory
+for accessing the relevant JasperToolkit subclass implementation.&nbsp;
+A particular implementation is referenced by a String <i>name</i> parameter
+used to map configuration properties a particular subclass implementation.&nbsp;
+That is, for a given JasperToolkit subclass, a <i>name</i> is assigned
+and, using a simple naming convention, various implementation classes can
+be specified in order to override the defaults used for the various services
+provided by the base class.&nbsp; This mechanism allows the choice of which
+implementation class to be used for a given service to be changed by simply
+setting a configuration property or alternatively, to specify a whole family
+of service implementation classes by specifying a particular <i>name</i>
+for the family.&nbsp; In the case of all services provided by the base
+JasperToolkit, in the absence of a specified implementation for a given
+<i>name</i>,
+the factory method will always default to returning a default implementation.&nbsp;
+If this is not desirable for a particular implementation, then that factory
+should be overridden in a toolkit subclass.
+<p>In addition to the two static methods described above, the base JasperToolkit
+implementation provides default instance method factories for various services
+common to most Jasper implementations.&nbsp; The following sorts of services
+have been identified as useful for most Jasper implementations and thus
+are accessible through the base JasperToolkit class:
+<br>&nbsp;
+<table BORDER CELLSPACING=0 CELLPADDING=0 WIDTH="100%" >
+<tr BGCOLOR="#CCFFFF">
+<td>service</td>
+
+<td>description</td>
+
+<td>configuration property syntax</td>
+</tr>
+
+<tr>
+<td>toolkit</td>
+
+<td>&nbsp;The JasperToolkit subclass used by the implementation.</td>
+
+<td>&nbsp;org.apache.jasper34.toolkit.toolkit.<i>name</i></td>
+</tr>
+
+<tr>
+<td>jspfactory</td>
+
+<td>The JspFactory implementation used by the engine.</td>
+
+<td>org.apache.jasper34.toolkit.jspfactory.<i>name</i></td>
+</tr>
+
+<tr>
+<td>pagehandler</td>
+
+<td>The object responsible for life-cycle of one JSP.</td>
+
+<td>org.apache.jasper34.toolkit.pagehandler.<i>name</i></td>
+</tr>
+
+<tr>
+<td>requesthandler</td>
+
+<td>The object responsible for the life-cycle of one request/response interaction
+with a JSP</td>
+
+<td>org.apache.jasper34.toolkit.pagehandler.<i>name</i></td>
+</tr>
+
+<tr>
+<td>jspcompiler</td>
+
+<td>Compiles JSP source to .java source.</td>
+
+<td>org.apache.jasper34.toolkit.jspcompiler.<i>name</i></td>
+</tr>
+
+<tr>
+<td>javacompiler</td>
+
+<td>Compiles .java source to .class bytecode</td>
+
+<td>org.apache.jasper34.toolkit.javaompiler.<i>name</i></td>
+</tr>
+
+<tr>
+<td>jspmangler</td>
+
+<td>Creates names for the .java and .class files and packages generated
+from the jsp.</td>
+
+<td>org.apache.jasper34.toolkit.jspmangler.<i>name</i></td>
+</tr>
+
+<tr>
+<td>modificationchecker</td>
+
+<td>Ascertains whether a JSP needs to be recompiled into it's target .class
+form or not.</td>
+
+<td>org.apache.jasper34.toolkit.modificationchecker.<i>name</i></td>
+</tr>
+
+<tr>
+<td>cache</td>
+
+<td>A commonly-used performance optimization.&nbsp;</td>
+
+<td>org.apache.jasper34.toolkit.cache.<i>name</i></td>
+</tr>
+</table>
+
+<p>The syntax for specifying each configuration property is thus fairly
+straightforward:
+<pre>org.apache.jasper34.toolkit.&lt;service>.&lt;name> = &lt;fully-qualified class name></pre>
+where the value must specify a fully-qualified class name for a Java class
+that implements all requirements (interface, initialization) for the particular
+service.&nbsp; The particular requirements expected of each service are
+documented with the factory method responsible for instantiating the particular
+service.
+<p>For example, the <i>servlet</i>-based Jasper adapter implementation
+might require particular&nbsp; implementation of the page handler and request
+handler services.&nbsp; The name used for the implementation would be "JspServlet".&nbsp;
+Because JspServlet also requires additional services not listed above (for
+example, class loading), we will also require a new implementation of the
+JasperToolkit itself.&nbsp; Let us presume that we will put all our special,
+JspServlet-specific implementation classes into the package: <tt>org.apache.jasper34.servlet.*</tt>.&nbsp;&nbsp;
+Further, let us decide to use some special Cache implementation that is
+known to be super spiffy and happens to satisfy the Cache interface.&nbsp;
+Then our configuration properties (specified in the Toolkit.properties
+file) become like so:
+<br>&nbsp;
+<pre># setup Jasper Toolkit for use by JspServlet implementation.</pre>
+
+<pre>org.apache.jasper34.toolkit.toolkit.JspServlet = \</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.apache.jasper34.servlet.JspServletToolkit</pre>
+
+<pre>org.apache.jasper34.toolkit.pagehandler.JspServlet = \</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.apache.jasper34.servlet.JspServletPageHandler</pre>
+
+<pre>org.apache.jasper34.toolkit.requesthandler.JspServlet = \</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.apache.jasper34.servlet.JspServletRequestHandler</pre>
+
+<pre>org.apache.jasper34.toolkit.cache.JspServlet = \</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.somegroup.somepackage.util.SuperDuperCache</pre>
+
+<pre># ... and so on</pre>
+
+<p><br>Any services not specified to use a particular class will result
+in use of whatever the default base JasperToolkit methods instantiate.&nbsp;
+Thus it is not necessary to specify every service for every implementation
+family.&nbsp; In fact, it is not even necessary to specify a subclass of
+JasperToolkit if the base toolkit class suffices and all you need to override
+is one or two of the services it provides.&nbsp; It is only necessary to
+use a subclass of JasperToolkit when the implementation requires additional
+services beyond those provided by JasperToolkit or if it needs to change
+the initialization contract for a particular service.
+<p>This approach provides a simple, cleanly-demarked boundary between the
+base JasperToolkit, which provides static configuration of it's services
+and sub-classes like JspServletToolkit, which can optionally override factory
+methods to utilitize run-time data for configuration of services.&nbsp;
+For example, the JspServletToolkit is to be initialized with the ServletConfig
+object so that it can access runtime init-parameters and use those, where
+appropriate, to resolve service configuration information.
+<p>Toolkit utilization will generally be like so:&nbsp; A particular Jasper
+adapter implementation, such as JspServlet or JspInterceptor, will ask
+the toolkit factory for&nbsp; an instance of the appropriate JasperToolkit
+by <i>name</i>.
+<br>&nbsp;
+<pre>public void init(ServletConfig cfg){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; super.init(cfg);</pre>
+
+<pre>}</pre>
+
+<pre>private JspServletToolkit getToolkit(){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; if(toolkit==null){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; toolkit = (JspServletToolkit)JasperToolkit.createJasperToolkit(</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "JspServlet",getServletConfig());</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; return toolkit;</pre>
+
+<pre>}</pre>
+&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>The toolkit factory will cache and return the same instance of a toolkit
+for a given <i>name</i>, so it is not generally necessary to preserve a
+reference to a toolkit in the client code but that may help performance
+slightly.&nbsp; Note that this is NOT a true singleton pattern since the
+same class can be instantiated with multiple names.&nbsp; The reason for
+this is to allow true mix-and-match configuration of different service
+implementation classes together under a given toolkit <i>name</i> by simply
+building an appropriate set of properties to describe the implementation.&nbsp;
+For the developer, the only concern is to avoid careless use of statics.
+<p>Once the appropriate toolkit has been accessed, it can be used to access
+the various services as needed.&nbsp; For example, in the JspServlet implementation,
+it could be used to create a cache for storing frequently used jsp page
+handlers like so:
+<br>&nbsp;
+<pre>&nbsp;&nbsp;&nbsp; public Cache getCache(){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(jsps == null){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int cache_size = CacheDefaults.JSP_CACHE_SIZE;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String sz = cfg.getParameter(JSP_CACHE_SIZE_PARAM);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(sz!=null){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try{</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cache_size = Integer.parseInt(sz);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }catch(NumberFormatException e){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cache_size = CacheDefaults.JSP_CACHE_SIZE;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jsps = getToolkit().createCache(cache_size, cache_size/4);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return jsps;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; }</pre>
+
+<p><br>Given the above Cache, the service() method of JspServlet becomes
+as simple as:
+<br>&nbsp;
+<br>&nbsp;
+<pre>&nbsp;&nbsp;&nbsp; public void service(HttpServletRequest request,</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HttpServletResponse response)</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throws ServletException, IOException {</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String includeUri = (String) request.getAttribute(</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JspConstants.INC_SERVLET_PATH);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String jspUri;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(includeUri == null){</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jspUri = request.getServletPath();</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }else{</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jspUri = includeUri;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JspServletPageHandler jph = (JspServletPageHandler)</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getCache().get(jspUri);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (jph == null) {</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jph = (JspServletPageHandler)</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getToolkit().createJspPageHandler(jspUri);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getCache().put(jspUri, jph);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jph.setParent(this);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jph.service(request, response);</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Throwable t) {</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //deal with exceptions, blah blah...;</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; }</pre>
+
+<p><br>That is about the extent of the JspServlet implementation's scope
+of responsibility, barring a few details here and there.
+<br>&nbsp;
+<h3>
+Additional Details</h3>
+
+<p><br>The proposal currently calls for the creation of the following packages,
+in addition to the org.apache.jasper34.toolkit package described above:
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER CELLSPACING=0 CELLPADDING=0 COLS=2 WIDTH="100%" >
+<tr BGCOLOR="#99FF99">
+<td>package</td>
+
+<td>description</td>
+</tr>
+
+<tr>
+<td>org.apache.jasper34.resources</td>
+
+<td>contains the default Toolkit.properties file</td>
+</tr>
+
+<tr>
+<td>org.apache.jasper34.servlet</td>
+
+<td>contains the JspServlet implementation</td>
+</tr>
+
+<tr>
+<td>org.apache.jasper34.util</td>
+
+<td>contains various utility classes and interfaces.</td>
+</tr>
+</table>
+
+<p>Currently, the <i>util</i> package contains both classes specific to
+Jasper implementations, such as JspMangler, and more generalized utilities
+such as the Cache interface and some Cache implementations.&nbsp; The latter
+classes may be good candidates for the jakarta <i>commons</i> project.&nbsp;
+I am welcome to suggestions on package rearranging.
+<br>&nbsp;
+<h3>
+UML Model</h3>
+
+<p><br>This effort is being developed in Together and&nbsp; the start of
+a UML class model in javadoc form is available to look at <a href="model/index.html">here</a>.&nbsp;
+This should&nbsp; (hopefully) reveal many details of the strategy that
+are not yet explained clearly in this document.&nbsp; The classes stubbed
+out via the model, including some actual implemented code are in the <a href="../../src/jasper34/org/apache/jasper34/">src/jasper34</a>
+directory of the tomcat 3.3 cvs distribution.&nbsp; None of this code is
+yet in the compilable state yet, as many of the interfaces are still being
+developed.&nbsp; More than a few constants are currently in flux as to
+where (in what class) they will ultimately reside.
+<br>&nbsp;
+</body>
+</html>
