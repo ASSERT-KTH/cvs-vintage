@@ -1,4 +1,4 @@
-// $Id: OpenException.java,v 1.1 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: OpenException.java,v 1.2 2004/08/18 15:49:08 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,30 @@ package org.argouml.kernel;
  */
 public class OpenException extends PersistenceException {
 
+    /**
+     * The constructor.
+     *  
+     * @param message the message to show
+     */
     public OpenException(String message) {
         super(message);
     }
     
+    /**
+     * The constructor.
+     * 
+     * @param message the message to show
+     * @param cause the cause for the exception
+     */
     public OpenException(String message, Throwable cause) {
         super(message, cause);
     }
     
+    /**
+     * The constructor.
+     * 
+     * @param cause the cause for the exception
+     */
     public OpenException(Throwable cause) {
         super(cause);
     }

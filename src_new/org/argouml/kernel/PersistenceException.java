@@ -1,4 +1,4 @@
-// $Id: PersistenceException.java,v 1.1 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: PersistenceException.java,v 1.2 2004/08/18 15:52:36 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,6 @@ public class PersistenceException extends Exception {
     }
 
     /**
-     * @param message the message
      * @param c the cause of the exception
      */
     public PersistenceException(Throwable c) {

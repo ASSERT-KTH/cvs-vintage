@@ -1,4 +1,4 @@
-// $Id: IllegalFormatException.java,v 1.3 2003/06/29 23:53:44 linus Exp $
+// $Id: IllegalFormatException.java,v 1.4 2004/08/18 15:52:36 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: IllegalFormatException.java,v 1.3 2003/06/29 23:53:44 linus Exp $
+// $Id: IllegalFormatException.java,v 1.4 2004/08/18 15:52:36 mvw Exp $
 package org.argouml.kernel;
 
 /**
@@ -41,7 +41,7 @@ public class IllegalFormatException extends Exception {
 
     /**
      * Constructor for IllegalFormatException.
-     * @param message
+     * @param message the message to show
      */
     public IllegalFormatException(String message) {
         super(message);
