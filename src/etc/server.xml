@@ -134,7 +134,7 @@
           -->
         <RequestInterceptor 
             className="org.apache.tomcat.request.StaticInterceptor" 
-            debug="0" />
+            debug="0" listings="true" />
 
         <!-- Plug a session manager. You can plug in more advanced session
              modules.

@@ -83,6 +83,16 @@ public class StaticInterceptor extends BaseInterceptor {
     public StaticInterceptor() {
     }
 
+    /**
+     * Should directory listings be generated when there is
+     * no welcome file present?
+     */
+    private boolean listings = true;
+
+    public void setListings(boolean listings) {
+	this.listings = listings;
+    }
+
     public void engineInit(ContextManager cm) throws TomcatException {
 	super.engineInit( cm );
 	
@@ -104,7 +114,8 @@ public class StaticInterceptor extends BaseInterceptor {
 	dirHandler.setNoteId( realFileNote );
 	debug=0;
 	ctx.addServlet( fileHandler );
-	ctx.addServlet( dirHandler);
+	if (listings)
+	    ctx.addServlet( dirHandler );
 	fileHandler.setDebug( debug );
 	dirHandler.setDebug( debug );
     }
