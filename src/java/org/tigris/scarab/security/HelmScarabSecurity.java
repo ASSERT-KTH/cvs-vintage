@@ -64,14 +64,14 @@ import org.tigris.helm.security.AccessControlList;
 import org.tigris.helm.security.ACLException;
 */
 
-import org.tigris.scarab.om.Module;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 
 /**
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.1 2001/05/16 05:15:15 jmcnally Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.2 2001/05/31 01:18:38 jmcnally Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity
@@ -98,7 +98,7 @@ public class HelmScarabSecurity
         boolean hasPermission = false;
         try
         {
-            Module module = ((ScarabUser)data.getUser()).getCurrentModule();
+            ModuleEntity module = ((ScarabUser)data.getUser()).getCurrentModule();
             hasPermission = hasPermission(permission, module);
         }
         catch (Exception e)
@@ -115,11 +115,11 @@ public class HelmScarabSecurity
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, Module module)
+    public boolean hasPermission(String permission, ModuleEntity module)
     {
         boolean hasPermission = false;
         try
@@ -141,12 +141,12 @@ public class HelmScarabSecurity
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
      * @param user a <code>ScarabUser</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
     public boolean hasPermission(String permission, 
-                                 ScarabUser user, Module module)
+                                 ScarabUser user, ModuleEntity module)
     {
         boolean hasPermission = false;
         /*
@@ -183,10 +183,10 @@ public class HelmScarabSecurity
      * permission in the given module.
      *
      * @param permission a <code>String</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return null
      */
-    public ScarabUser[] getUsers(String permission, Module module)
+    public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         /*
         //assumes Module's db pk will be same as helm Project

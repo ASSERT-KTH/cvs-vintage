@@ -54,7 +54,7 @@ import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.TurbineException;
 
-import org.tigris.scarab.om.Module;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 
 /**
@@ -63,7 +63,7 @@ import org.tigris.scarab.om.ScarabUser;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.1 2001/05/16 05:15:15 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.2 2001/05/31 01:18:38 jmcnally Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity, InitableRecyclable, ApplicationTool
@@ -98,11 +98,11 @@ public class DefaultScarabSecurity
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, Module module)
+    public boolean hasPermission(String permission, ModuleEntity module)
     {
         return false;
     }
@@ -113,12 +113,12 @@ public class DefaultScarabSecurity
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
      * @param user a <code>ScarabUser</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
     public boolean hasPermission(String permission, 
-                                 ScarabUser user, Module module)
+                                 ScarabUser user, ModuleEntity module)
     {
         return false;
     }
@@ -128,10 +128,10 @@ public class DefaultScarabSecurity
      * permission in the given module.
      *
      * @param permission a <code>String</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return null
      */
-    public ScarabUser[] getUsers(String permission, Module module)
+    public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         return null;
     }

@@ -67,7 +67,7 @@ import org.tigris.scarab.om.ScarabUserPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.3 2001/05/27 06:38:02 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.4 2001/05/31 01:18:38 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -170,6 +170,7 @@ public class TurbineDBScarabSecurity
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         Criteria crit = new Criteria();
+        crit.setDistinct();
         crit.add(PermissionPeer.NAME, permission);
         crit.addJoin(PermissionPeer.PERMISSION_ID, 
                      RolePermissionPeer.PERMISSION_ID);
