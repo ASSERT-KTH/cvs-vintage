@@ -58,6 +58,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -67,7 +68,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import javax.swing.filechooser.FileFilter;
 
 /**
  * JDialog that displays Filter actions for one message folder.
@@ -167,51 +168,42 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         getContentPane().add(mainPanel);
 
         addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "add_filter"));
+					"dialog", "filter", "add_filter"));
         addButton.setActionCommand("ADD");
         addButton.addActionListener(this);
 
         removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "remove_filter"));
+					"dialog", "filter", "remove_filter"));
         removeButton.setActionCommand("REMOVE");
         removeButton.setEnabled(false);
         removeButton.addActionListener(this);
 
         editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "edit_filter"));
+					"dialog", "filter", "edit_filter"));
         editButton.setActionCommand("EDIT");
         editButton.setEnabled(false);
         editButton.addActionListener(this);
 
-        /*
-        enableButton.setText("Enable");
-        enableButton.setActionCommand("ENABLE");
-        enableButton.addActionListener( this );
-
-        disableButton.setText("Disable");
-        disableButton.setActionCommand("DISABLE");
-        disableButton.addActionListener( this );
-        */
         moveupButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "moveup"));
+					"dialog", "filter", "moveup"));
         moveupButton.setActionCommand("MOVEUP");
         moveupButton.setEnabled(false);
         moveupButton.addActionListener(this);
 
         movedownButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "movedown"));
+					"dialog", "filter", "movedown"));
         movedownButton.setActionCommand("MOVEDOWN");
         movedownButton.setEnabled(false);
         movedownButton.addActionListener(this);
 
         importButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "import"));
+					"dialog", "filter", "import"));
         importButton.setActionCommand("IMPORT");
         importButton.setEnabled(true);
         importButton.addActionListener(this);
 
         exportButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "filter", "export"));
+					"dialog", "filter", "export"));
         exportButton.setActionCommand("EXPORT");
         exportButton.setEnabled(false);
         exportButton.addActionListener(this);
@@ -279,21 +271,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
-        /*
-        gridBagLayout.setConstraints( enableButton, c );
-        eastPanel.add( enableButton );
-
-        strut = Box.createRigidArea( new Dimension(30,10) );
-        gridBagLayout.setConstraints( strut, c );
-        eastPanel.add( strut );
-
-        gridBagLayout.setConstraints( disableButton, c );
-        eastPanel.add( disableButton );
-
-        strut = Box.createRigidArea( new Dimension(30,20) );
-        gridBagLayout.setConstraints( strut, c );
-        eastPanel.add( strut );
-        */
         gridBagLayout.setConstraints(moveupButton, c);
         eastPanel.add(moveupButton);
 
@@ -323,14 +300,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         c.weighty = 1.0;
         gridBagLayout.setConstraints(glue, c);
         eastPanel.add(glue);
-
-        /*
-        c.gridheight = GridBagConstraints.REMAINDER;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        gridBagLayout.setConstraints( closeButton, c );
-        eastPanel.add( closeButton );
-        */
 
         // centerpanel
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -495,62 +464,86 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
             listView.setRowSelection(selectedRows);
         } else if (action.equals("EXPORT")) {
-            int[] selectedRows = listView.getSelectedRows();
-            FilterList newFilterList = new FilterList();
-
-            for (int i = 0; i < selectedRows.length; i++) {
-                newFilterList.add(filterList.get(i));
-            }
-
-            // ask the user about the destination file
-            JFileChooser chooser = new JFileChooser();
-            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setMultiSelectionEnabled(false);
-
-            int result = chooser.showSaveDialog(this);
-
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
-
-                XmlIO xmlIO = new XmlIO(newFilterList.getRoot());
-
-                try {
-                    xmlIO.write(new FileOutputStream(file));
-                } catch (FileNotFoundException fnfe) {
-                    DialogFacade.showExceptionDialog(fnfe);
-                } catch (IOException ioe) {
-                    DialogFacade.showExceptionDialog(ioe);
-                }
-            }
+               exportFilterList();
         } else if (action.equals("IMPORT")) {
-            // ask the user about the destination file
-            JFileChooser chooser = new JFileChooser();
-            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setMultiSelectionEnabled(false);
+            importFilterList();
+        }
+    }
 
-            int result = chooser.showOpenDialog(this);
+    /**
+     * Exports the selected filters into a user selected file.
+     */
+    private void exportFilterList() {
+        int[] selectedRows = listView.getSelectedRows();
+        FilterList newFilterList = new FilterList();
 
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
-                XmlIO xmlIO;
+        for (int i = 0; i < selectedRows.length; i++) {
+            newFilterList.add(filterList.get(i));
+        }
 
-                try {
-                    xmlIO = new XmlIO(file.toURL());
+        // ask the user about the destination file
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileFilter(new XmlFileFilter());
 
-                    if (xmlIO.load()) {
-                        XmlElement root = xmlIO.getRoot().getElement("filterlist");
+        int result = chooser.showSaveDialog(this);
 
-                        if (root.getName().equals("filterlist")) {
-                            FilterList newFilterList = new FilterList(root);
-                            filterList.addAll(newFilterList);
-                            listView.update();
-                        } else {
-                            System.out.println(root.getName());
-                        }
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+
+            XmlIO xmlIO = new XmlIO(newFilterList.getRoot());
+
+            try {
+                xmlIO.write(new FileOutputStream(file));
+            } catch (FileNotFoundException fnfe) {
+                DialogFacade.showExceptionDialog(fnfe);
+            } catch (IOException ioe) {
+                DialogFacade.showExceptionDialog(ioe);
+            }
+        }
+    }
+
+    /**
+     * Imports filters from a File.
+     * This method pops up a dialog asking which file it should import
+     * filters from.
+     */
+    private void importFilterList() {
+        // ask the user about the destination file
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileFilter(new XmlFileFilter());
+
+        int result = chooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            XmlIO xmlIO;
+
+            try {
+                xmlIO = new XmlIO(file.toURL());
+
+                if (xmlIO.load()) {
+                    XmlElement root = xmlIO.getRoot().getElement(FilterList.XML_NAME);
+
+                    if (root != null) {
+                        FilterList newFilterList = new FilterList(root);
+                        filterList.addAll(newFilterList);
+                        listView.update();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Could not import filters from the selected file. Make sure it"
+                            + " contains Columba filters.", "Error while importing filters",
+                            JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (MalformedURLException mue) {
-                    DialogFacade.showExceptionDialog(mue);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Could not parse the selected file. Make sure it"
+                        + " is an XML file containing Columba filters.", "Error while parsing file",
+                        JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (MalformedURLException mue) {
+                DialogFacade.showExceptionDialog(mue);
             }
         }
     }
@@ -583,6 +576,29 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
                     (e.getClickCount() >= 2)) {
                 editSelectedFilter();
             }
+        }
+    }
+
+    /**
+     * File filter that only accepts XML files (or those ending with it).
+     * @author redsolo
+     */
+    private class XmlFileFilter extends FileFilter {
+
+        /** {@inheritDoc} */
+        public boolean accept(File f) {
+            boolean fileIsOk = false;
+            if (f.isDirectory()) {
+                fileIsOk = true;
+            } else {
+                fileIsOk = f.getName().toLowerCase().endsWith("xml");
+            }
+            return fileIsOk;
+        }
+
+        /** {@inheritDoc} */
+        public String getDescription() {
+            return "XML file filter";
         }
     }
 }
