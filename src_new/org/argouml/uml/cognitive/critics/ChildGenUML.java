@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.15 2003/12/29 16:26:40 bobtarling Exp $
+// $Id: ChildGenUML.java,v 1.16 2004/08/29 11:48:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.15 2003/12/29 16:26:40 bobtarling Exp $
+// $Id: ChildGenUML.java,v 1.16 2004/08/29 11:48:45 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,16 +55,18 @@ import org.tigris.gef.util.EnumerationSingle;
 
 public class ChildGenUML implements ChildGenerator {
 
-    private static Logger cat = Logger.getLogger(ChildGenUML.class);
+    private static final Logger LOG = Logger.getLogger(ChildGenUML.class);
     
     /** Reply a java.util.Enumeration of the children of the given Object 
-     * TODO GEF has moved away from vectors to collections
+     * TODO: GEF has moved away from vectors to collections
      * returning an iterator would now seem better.
+     *
+     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
      */
     public Enumeration gen(Object o) {
         
-        if (o == null) cat.debug("Object is null");
-        else cat.debug("Findin g children for " + o.getClass());
+        if (o == null) LOG.debug("Object is null");
+        else LOG.debug("Findin g children for " + o.getClass());
         
 	if (o instanceof Project) {
 	    Project p = (Project) o;
@@ -137,7 +139,7 @@ public class ChildGenUML implements ChildGenerator {
 	}
 
 	// tons more cases
-        cat.debug("No children found for: " +o.getClass());
+        LOG.debug("No children found for: " + o.getClass());
 
 	return EnumerationEmpty.theInstance();
     }

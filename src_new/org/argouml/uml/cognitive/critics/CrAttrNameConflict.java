@@ -1,4 +1,4 @@
-// $Id: CrAttrNameConflict.java,v 1.11 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrAttrNameConflict.java,v 1.12 2004/08/29 11:48:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAttrNameConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.11 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrAttrNameConflict.java,v 1.12 2004/08/29 11:48:45 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -56,6 +56,10 @@ import org.argouml.model.ModelFacade;
  */
 public class CrAttrNameConflict extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrAttrNameConflict() {
 	setHeadline("Revise MAttribute Names to Avoid Conflict");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -90,8 +94,11 @@ public class CrAttrNameConflict extends CrUML {
 	return NO_PROBLEM;
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#getClarifier()
+     */
     public Icon getClarifier() {
-	return ClAttributeCompartment.TheInstance;
+	return ClAttributeCompartment.getTheInstance();
     }
 
 } /* end class CrAttrNameConflict.java */

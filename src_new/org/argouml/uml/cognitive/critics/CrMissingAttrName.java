@@ -1,4 +1,4 @@
-// $Id: CrMissingAttrName.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrMissingAttrName.java,v 1.11 2004/08/29 11:48:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrMissingAttrName.java,v 1.11 2004/08/29 11:48:45 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,6 +44,10 @@ import org.argouml.model.ModelFacade;
  **/
 public class CrMissingAttrName extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrMissingAttrName() {
 	setHeadline("Choose a name");
 	addSupportedDecision(CrUML.decNAMING);
@@ -51,20 +55,30 @@ public class CrMissingAttrName extends CrUML {
 	addTrigger("name");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAAttribute(dm))) return NO_PROBLEM;
 	Object attr = /*(MAttribute)*/ dm;
 	String myName = ModelFacade.getName(attr);
-	if (myName == null || 
-            "".equals(myName)) return PROBLEM_FOUND;
+	if (myName == null 
+            || "".equals(myName)) return PROBLEM_FOUND;
 	if (myName.length() == 0) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }
     
+    /**
+     * @see org.argouml.cognitive.Poster#getClarifier()
+     */
     public Icon getClarifier() {
-	return ClAttributeCompartment.TheInstance;
+	return ClAttributeCompartment.getTheInstance();
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
@@ -75,13 +89,18 @@ public class CrMissingAttrName extends CrUML {
 		Object a = /*(MAttribute)*/ me;
 		int count = 1;
 		if (ModelFacade.getOwner(a) != null)
-		    count = ModelFacade.getFeatures(ModelFacade.getOwner(a)).size();
+		    count = ModelFacade.getFeatures(ModelFacade.getOwner(a))
+		            .size();
 		sug = "attr" + (count + 1);
 	    }
 	    ((WizMEName) w).setInstructions(ins);
 	    ((WizMEName) w).setSuggestion(sug);
 	}
     }
+    
+    /**
+     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
+     */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrMissingAttrName */
