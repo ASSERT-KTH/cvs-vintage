@@ -197,15 +197,35 @@ public class Transaction
            te.setTemplate(template);
         }
 
-        List associatedUsers = issue.getAssociatedUsers();
-        Iterator iter = associatedUsers.iterator();
+        // Get users for "to" field of email
+        // First add created User
+        ScarabUser createdByUser = issue.getCreatedBy();
+        if (createdByUser != null)
+        {
+            te.addTo(createdByUser.getEmail(),
+                     createdByUser.getFirstName() + " " 
+                     + createdByUser.getLastName());
+        }
+        // Then add users who are assigned to "email-to" attributes
+        List users = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
+        Iterator iter = users.iterator();
         while ( iter.hasNext() ) 
         {
             ScarabUser toUser = (ScarabUser)iter.next();
-            te.setTo(toUser.getFirstName() + " " + toUser.getLastName(), 
-                     toUser.getEmail());
-            te.send();
+            te.addTo(toUser.getEmail(),
+                     toUser.getFirstName() + " " + toUser.getLastName());
         }
+
+        // add users to cc field of email
+        users = issue.getUsersToEmail(AttributePeer.CC_TO);
+        iter = users.iterator();
+        while ( iter.hasNext() ) 
+        {
+            ScarabUser ccUser = (ScarabUser)iter.next();
+            te.addCc(ccUser.getEmail(),
+                     ccUser.getFirstName() + " " + ccUser.getLastName());
+        }
+        te.sendMultiple();
     }
 
     /** 
