@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.2 2004/12/10 18:44:03 mvw Exp $
+// $Id: FigAssociationClass.java,v 1.3 2005/01/07 11:05:05 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -229,7 +229,9 @@ public class FigAssociationClass
     public void figDamaged() {
         if (!damageLock) {
             damageLock = true;
-            Layer lay = getLayer();
+
+            Editor editor = Globals.curEditor();
+            Layer lay = editor.getLayerManager().getActiveLayer();
             if (!lay.equals(null) 
                     && lay instanceof LayerPerspective 
                     && fig != null && edge != null 

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.63 2005/01/05 23:10:02 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.64 2005/01/07 11:05:05 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,7 +266,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (containsNode(node)) {
 	    return false;
 	}
-        if (ModelFacade.isANaryAssociation(node)) {
+        if (ModelFacade.isAAssociation(node)) {
             Collection ends = ModelFacade.getConnections(node);
             Iterator iter = ends.iterator();
             boolean canAdd = true;
@@ -318,6 +318,14 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     } else if (ModelFacade.isAAssociationEnd(edge)) {
         end0 = ModelFacade.getAssociation(edge);
         end1 = ModelFacade.getType(edge);
+            if (end0 != null
+                    && end1 != null
+                    && (containsEdge(end0) || containsNode(end0))
+                    && containsNode(end1)) {
+                return true;
+            } else {
+                return false;
+            }
 	} else if (ModelFacade.isAGeneralization(edge)) {
 	    end0 = ModelFacade.getChild(edge);
 	    end1 = ModelFacade.getParent(edge);
@@ -349,10 +357,10 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (end0 == null || end1 == null) {
 	    return false;	
 	}
-        if (ModelFacade.isANode(end0) && !containsNode(end0)) {
+        if (!containsNode(end0)) {
 	    return false;
 	}
-        if (ModelFacade.isANode(end1) && !containsNode(end1)) {
+        if (!containsNode(end1)) {
 	    return false;	
 	}
         
