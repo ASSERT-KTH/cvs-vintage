@@ -71,18 +71,17 @@
   <!-- Create the EJX plugin BeanInfo classes                              -->
   <!-- =================================================================== -->
   <target name="xmlbeans" depends="compile">
-    <xmlbean destdir="${src.dir}"
+    <xmlbean destdir="${build.classes.dir}"
              srcdir="${etc.dir}/beaninfo"
              includes="**"
     />
-    <javac srcdir="${src.dir}"
+    <javac srcdir="${build.classes.dir}"
            destdir="${build.classes.dir}"
            classpath="${classpath}"
            debug="on"
            deprecation="off"
            optimize="off"
 			  includes="**/*BeanInfo.java"
-           excludes="**/tomcat/**,**/activation/**"
     />
   </target>
   

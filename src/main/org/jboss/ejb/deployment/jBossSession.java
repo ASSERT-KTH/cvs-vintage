@@ -22,7 +22,7 @@ import com.dreambean.ejx.xml.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class jBossSession
    extends com.dreambean.ejx.ejb.Session
@@ -110,7 +110,7 @@ public class jBossSession
                Iterator enum = getResourceReferences();
                while(enum.hasNext())
                {
-                  ResourceReference ref = (ResourceReference)enum.next();
+                  jBossResourceReference ref = (jBossResourceReference)enum.next();
                   if (ref.getName().equals(resName))
                   {
                      ref.importXml((Element)n);

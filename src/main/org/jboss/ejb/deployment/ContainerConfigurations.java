@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ContainerConfigurations
    extends BeanContextSupport
@@ -93,7 +93,7 @@ public class ContainerConfigurations
    public void importXml(Element elt)
       throws Exception
    {
-      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JBOSS_DOCUMENT))
+      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(jBossEjbJar.JBOSS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
          for (int i = 0; i < nl.getLength(); i++)

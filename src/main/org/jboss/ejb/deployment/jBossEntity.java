@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class jBossEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -115,7 +115,7 @@ public class jBossEntity
                Iterator enum = getResourceReferences();
                while(enum.hasNext())
                {
-                  ResourceReference ref = (ResourceReference)enum.next();
+                  jBossResourceReference ref = (jBossResourceReference)enum.next();
                   if (ref.getName().equals(resName))
                   {
                      ref.importXml((Element)n);

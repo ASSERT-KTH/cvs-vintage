@@ -29,8 +29,8 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.naming.Name;
 
-import org.jboss.ejb.deployment.Entity;
-import org.jboss.ejb.deployment.Session;
+import org.jboss.ejb.deployment.jBossEntity;
+import org.jboss.ejb.deployment.jBossSession;
 import org.jboss.ejb.deployment.ContainerConfiguration;
 import org.jboss.ejb.deployment.JRMPContainerInvokerConfiguration;
 
@@ -52,7 +52,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.4 $
+ *      @version $Revision: 1.5 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -187,13 +187,13 @@ public abstract class JRMPContainerInvoker
       }
       
       // Create metadata
-      if (con.getMetaData() instanceof Entity)
+      if (con.getMetaData() instanceof jBossEntity)
       {
-         ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), con.getClassLoader().loadClass(((Entity)con.getMetaData()).getPrimaryKeyClass()), false, false, getEJBHome());
+         ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), con.getClassLoader().loadClass(((jBossEntity)con.getMetaData()).getPrimaryKeyClass()), false, false, getEJBHome());
       }
       else
       {
-         if (((Session)con.getMetaData()).getSessionType().equals("Stateless"))
+         if (((jBossSession)con.getMetaData()).getSessionType().equals("Stateless"))
             ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), null, true, false, getEJBHome());
          else
             ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), null, true, true, getEJBHome());

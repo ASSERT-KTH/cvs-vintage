@@ -32,13 +32,13 @@ import javax.management.MBeanRegistration;
 import javax.management.ObjectName;
 import javax.transaction.TransactionManager;
 
-import org.jboss.ejb.deployment.EjbJar;
+import org.jboss.ejb.deployment.jBossEjbJar;
 import org.jboss.ejb.deployment.jBossFileManager;
 import org.jboss.ejb.deployment.jBossFileManagerFactory;
-import org.jboss.ejb.deployment.EnterpriseBean;
-import org.jboss.ejb.deployment.EnterpriseBeans;
-import org.jboss.ejb.deployment.Session;
-import org.jboss.ejb.deployment.Entity;
+import org.jboss.ejb.deployment.jBossEnterpriseBean;
+import org.jboss.ejb.deployment.jBossEnterpriseBeans;
+import org.jboss.ejb.deployment.jBossSession;
+import org.jboss.ejb.deployment.jBossEntity;
 import org.jboss.ejb.deployment.ContainerConfiguration;
 
 import org.jboss.logging.Log;
@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -128,8 +128,8 @@ public class ContainerFactory
          beanCtx.add(efm);
          
          // Load XML
-         EjbJar jar = efm.load(url);
-         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), ((EnterpriseBeans)jar.getEnterpriseBeans()).isSecure());
+         jBossEjbJar jar = efm.load(url);
+         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), ((jBossEnterpriseBeans)jar.getEnterpriseBeans()).isSecure());
          
          Iterator beans = jar.getEnterpriseBeans().iterator();
          
@@ -140,11 +140,11 @@ public class ContainerFactory
          while(beans.hasNext())
          {
             Container con = null;
-            EnterpriseBean bean = (EnterpriseBean)beans.next();
+            jBossEnterpriseBean bean = (jBossEnterpriseBean)beans.next();
             log.log("Deploying "+bean.getEjbName());
-            if (bean instanceof Session) // Is session?
+            if (bean instanceof jBossSession) // Is session?
             {
-               if (((Session)bean).getSessionType().equals("Stateless")) // Is stateless?
+               if (((jBossSession)bean).getSessionType().equals("Stateless")) // Is stateless?
                {
                   con = new StatelessSessionContainer();
                   

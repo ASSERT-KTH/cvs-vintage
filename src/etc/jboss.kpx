@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Fri May 19 07:12:55 2000">
+<kawaproject timestamp="Fri May 19 07:31:25 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -164,6 +164,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"beaninfo\jBossResourceReference.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"1265"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"beaninfo\jBossSession.xml"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -208,14 +216,6 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"105750976"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"beaninfo\jBossResourceReference.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1265"</userinteger>
 </scmstatus>
 </file>
 <file>
@@ -650,6 +650,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\jBossResourceReference.java"</relativepath>
+<scmstatus id="2">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\jBossSession.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -702,14 +710,6 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"1816403032"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\deployment\jBossResourceReference.java"</relativepath>
-<scmstatus id="2">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>

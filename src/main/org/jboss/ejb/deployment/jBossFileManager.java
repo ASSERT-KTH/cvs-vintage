@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -43,7 +43,7 @@ public class jBossFileManager
    File file;
    Component comp;
    
-   EjbJar ejbJar;
+   jBossEjbJar ejbJar;
    
    jBossFileManagerFactory fact;
    
@@ -58,12 +58,12 @@ public class jBossFileManager
    }
    
    // Public --------------------------------------------------------
-   public EjbJar getEjbJar()
+   public jBossEjbJar getEjbJar()
    {
       return ejbJar;
    }
 
-   public EjbJar load(URL file)
+   public jBossEjbJar load(URL file)
       throws Exception
    {
          
@@ -78,7 +78,7 @@ public class jBossFileManager
          
       Document doc;
       
-      ejbJar = new EjbJar();
+      ejbJar = new jBossEjbJar();
       add(ejbJar);
 
       // XML file
@@ -201,7 +201,7 @@ public class jBossFileManager
    
    public void createNew()
    {
-      ejbJar = new EjbJar();
+      ejbJar = new jBossEjbJar();
 		
       // Load default jBoss XML
       InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
