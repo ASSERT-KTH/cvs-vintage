@@ -40,8 +40,6 @@ import org.columba.mail.util.AddressCollector;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +58,6 @@ public class ComposerController
 		CharsetListener,
 		CharsetOwnerInterface,
 		ComponentListener,
-		WindowListener,
 		Observer {
 	private IdentityInfoPanel identityInfoPanel;
 	private AttachmentController attachmentController;
@@ -87,7 +84,6 @@ public class ComposerController
 				MailConfig.get("composer_options").getElement(
 					"/options/gui/view")));
 
-		getView().addWindowListener(this);
 		getView().loadWindowPosition();
 		headerController.view.initFocus(subjectController.view);
 		getView().setVisible(true);
@@ -204,28 +200,6 @@ public class ComposerController
 	}
 
 	public void componentShown(ComponentEvent e) {
-	}
-
-	public void windowIconified(WindowEvent e) {
-	}
-
-	public void windowActivated(WindowEvent e) {
-	}
-
-	public void windowClosed(WindowEvent e) {
-	}
-
-	public void windowClosing(WindowEvent e) {
-		close();
-	}
-
-	public void windowDeactivated(WindowEvent e) {
-	}
-
-	public void windowDeiconified(WindowEvent e) {
-	}
-
-	public void windowOpened(WindowEvent e) {
 	}
 
 	/* (non-Javadoc)
