@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.io.DiskIO;
@@ -80,8 +81,6 @@ public abstract class AbstractMenuGenerator {
 
 	public void extendMenu(XmlElement menuExtension) {
 
-
-
 		XmlElement menu, extension;
 		String menuName = menuExtension.getAttribute("name");
 		String extensionName = menuExtension.getAttribute("extensionpoint");
@@ -97,11 +96,12 @@ public abstract class AbstractMenuGenerator {
 		while (iterator.hasNext()) {
 			menu = ((XmlElement) iterator.next());
 			if (menu.getAttribute("name").equals(menuName)) {
-				createExtension(menu, (XmlElement) menuExtension.clone(), extensionName);
+				createExtension(
+					menu,
+					(XmlElement) menuExtension.clone(),
+					extensionName);
 			}
 		}
-
-
 
 	}
 
@@ -143,112 +143,123 @@ public abstract class AbstractMenuGenerator {
 		}
 	}
 
-protected JMenu createMenu(XmlElement menuElement) {
-	List childs = menuElement.getElements();
-	ListIterator it = childs.listIterator();
+	protected JMenu createMenu(XmlElement menuElement) {
+		List childs = menuElement.getElements();
+		ListIterator it = childs.listIterator();
 
-	JMenu menu =
-		new JMenu(
-			getString("menu", "mainframe", menuElement.getAttribute("name")));
+		JMenu menu =
+			new JMenu(
+				getString(
+					"menu",
+					"mainframe",
+					menuElement.getAttribute("name")));
 
-	createMenuEntries(menu, it);
+		createMenuEntries(menu, it);
 
-	return menu;
-}
+		return menu;
+	}
 
-protected void createMenuEntries(JMenu menu, ListIterator it) {
-	boolean lastWasSeparator = false;
+	protected void createMenuEntries(JMenu menu, ListIterator it) {
+		boolean lastWasSeparator = false;
 
-	while (it.hasNext()) {
-		XmlElement next = (XmlElement) it.next();
-		String name = next.getName();
-		if (name.equals("menuitem")) {
+		while (it.hasNext()) {
+			XmlElement next = (XmlElement) it.next();
+			String name = next.getName();
+			if (name.equals("menuitem")) {
 
-			if (next.getAttribute("action") != null) {
-				try {
-					BasicAction action =
-						(
-							(
-								ActionPluginHandler) MainInterface
-									.pluginManager
-									.getHandler(
-								"org.columba.core.action")).getAction(
-							next.getAttribute("action"),
-							frameController);
-                    if(action != null){
-                      menu.add(action);
-                      lastWasSeparator = false;
-                    }
-
-				} catch (Exception e) {
-                  ColumbaLogger.log.error(e);
-				}
-			} else if (next.getAttribute("checkboxaction") != null) {
-				try {
-					CheckBoxAction action =
-						(CheckBoxAction)
+				if (next.getAttribute("action") != null) {
+					try {
+						BasicAction action =
 							(
 								(
 									ActionPluginHandler) MainInterface
 										.pluginManager
 										.getHandler(
 									"org.columba.core.action")).getAction(
-							next.getAttribute("checkboxaction"),
-							frameController);
-                    if(action != null){
-                      JCheckBoxMenuItem menuitem =
-                        new JCheckBoxMenuItem(action);
-                      menu.add(menuitem);
-                      action.setCheckBoxMenuItem(menuitem);
-                      lastWasSeparator = false;
-                    }
-				} catch (Exception e) {
-                  ColumbaLogger.log.error(e);
-				}
-			} else if (next.getAttribute("imenu") != null) {
-				try {
-					menu.add(
-						(
+								next.getAttribute("action"),
+								frameController);
+						if (action != null) {
+							menu.add(action);
+							lastWasSeparator = false;
+						}
+
+					} catch (Exception e) {
+						ColumbaLogger.log.error(e);
+					}
+				} else if (next.getAttribute("checkboxaction") != null) {
+					try {
+						CheckBoxAction action =
+							(CheckBoxAction)
+								(
+									(
+										ActionPluginHandler) MainInterface
+											.pluginManager
+											.getHandler(
+										"org.columba.core.action")).getAction(
+								next.getAttribute("checkboxaction"),
+								frameController);
+						if (action != null) {
+							JCheckBoxMenuItem menuitem =
+								new JCheckBoxMenuItem(action);
+							menu.add(menuitem);
+							action.setCheckBoxMenuItem(menuitem);
+							lastWasSeparator = false;
+						}
+					} catch (Exception e) {
+						ColumbaLogger.log.error(e);
+					}
+				} else if (next.getAttribute("imenu") != null) {
+					try {
+						IMenu imenu =
 							(
-								ActionPluginHandler) MainInterface
-									.pluginManager
-									.getHandler(
-								"org.columba.core.action")).getIMenu(
-							next.getAttribute("imenu"),
-							frameController));
+								(
+									ActionPluginHandler) MainInterface
+										.pluginManager
+										.getHandler(
+									"org.columba.core.action")).getIMenu(
+								next.getAttribute("imenu"),
+								frameController);
+					
+						if ( imenu != null )
+							menu.add(imenu);
 
-					lastWasSeparator = false;
+						lastWasSeparator = false;
 
-				} catch (Exception e) {
-					ColumbaLogger.log.error(e);
+					} catch (Exception e) {
+						e.printStackTrace();
+						ColumbaLogger.log.error(e);
+					}
 				}
+
+			} else if (name.equals("separator")) {
+				if (!lastWasSeparator)
+					menu.addSeparator();
+
+				lastWasSeparator = true;
+			} else if (name.equals("menu")) {
+				menu.add(createSubMenu(next));
+				lastWasSeparator = false;
 			}
-
-		} else if (name.equals("separator")) {
-			if( !lastWasSeparator ) menu.addSeparator();
-
-			lastWasSeparator = true;
-		} else if (name.equals("menu")) {
-			menu.add(createSubMenu(next));
-			lastWasSeparator = false;
+		}
+		if (lastWasSeparator) {
+			menu.remove(menu.getMenuComponentCount() - 1);
 		}
 	}
-	if( lastWasSeparator ) {
-		menu.remove(menu.getMenuComponentCount()-1);
+
+	protected JMenu createSubMenu(XmlElement menuElement) {
+		List childs = menuElement.getElements();
+		ListIterator it = childs.listIterator();
+
+		CMenu menu =
+			new CMenu(
+				getString(
+					"menu",
+					"mainframe",
+					menuElement.getAttribute("name")));
+
+		createMenuEntries(menu, it);
+
+		return menu;
 	}
-}
-
-protected JMenu createSubMenu(XmlElement menuElement) {
-	List childs = menuElement.getElements();
-	ListIterator it = childs.listIterator();
-
-	CMenu menu =
-		new CMenu(
-			getString("menu", "mainframe", menuElement.getAttribute("name")));
-
-	createMenuEntries(menu, it);
-
-	return menu;
-}
 
 }

@@ -138,7 +138,7 @@ public class POP3Server {
 		return false;
 	}
 
-	protected Vector synchronize(Vector newList) throws Exception {
+	public Vector synchronize(Vector newList) throws Exception {
 		Vector result = new Vector();
 		HeaderList headerList = headerCache.getHeaderList();
 

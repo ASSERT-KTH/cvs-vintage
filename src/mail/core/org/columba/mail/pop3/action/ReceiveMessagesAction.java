@@ -14,59 +14,67 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.smtp;
+package org.columba.mail.pop3.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ListIterator;
 
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.outbox.OutboxFolder;
+import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.pop3.POP3ServerController;
+import org.columba.mail.pop3.command.*;
 import org.columba.mail.util.MailResourceLoader;
 
-public class SendAllMessagesAction extends FrameAction {
+public class ReceiveMessagesAction extends FrameAction {
 
-	public SendAllMessagesAction(AbstractFrameController controller) {
+	public ReceiveMessagesAction(AbstractFrameController controller) {
 		super(
 			controller,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_file_sendunsentmessages"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_sendunsentmessages_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_sendunsentmessages_tooltip"),
-			"SENDALL",
+				"menu_file_receive"),
+			null,null,
+			"RECEIVE",
 			null,
-			ImageLoader.getImageIcon("send-24.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+			null,
+			0,
+			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		OutboxFolder folder =
-			(OutboxFolder) MainInterface.treeModel.getFolder(103);
+		
+		// Select INBOX
+		FolderCommandReference[] refs = new FolderCommandReference[1];
+		refs[0] = new FolderCommandReference(MainInterface.treeModel.getFolder(101));
+		getFrameController().getSelectionManager().setSelection("mail.tree", refs);
+		
+		// Fetch Messages
+		
+		ListIterator iterator = MainInterface.popServerCollection.getServerIterator();
 
-		r[0] = new FolderCommandReference(folder);
+		while( iterator.hasNext() ) {
+			POP3ServerController controller =
+				(POP3ServerController) iterator.next();
 
-		SendAllMessagesCommand c =
-			new SendAllMessagesCommand(frameController, r);
+			POP3CommandReference[] r = new POP3CommandReference[1];
+			r[0] = new POP3CommandReference(controller.getServer());
 
-		MainInterface.processor.addOp(c);		
+			FetchNewMessagesCommand c =
+				new FetchNewMessagesCommand(r);
+
+			
+			MainInterface.processor.addOp(c);
+		}		
 	}
 
 }

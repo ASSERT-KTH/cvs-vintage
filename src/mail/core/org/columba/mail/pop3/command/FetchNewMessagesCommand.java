@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.pop3;
+package org.columba.mail.pop3.command;
 
 import java.util.Vector;
 
@@ -33,6 +33,7 @@ import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
+import org.columba.mail.pop3.POP3Server;
 
 /**
  * @author freddy
@@ -132,7 +133,7 @@ public class FetchNewMessagesCommand extends Command {
 				inboxFolder,
 				headerList);
 
-			MailFrameController.tableChanged(ev);
+		MailFrameController.tableChanged(ev);
 
 		FilterList list = inboxFolder.getFilterList();
 		for (int j = 0; j < list.count(); j++) {

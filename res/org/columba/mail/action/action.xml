@@ -6,10 +6,10 @@
  <!-- file menu -->
  <action name="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
  <action name="ReceiveSend" class="org.columba.mail.gui.action.ReceiveSendAction"/>
- <action name="SendAll" class="org.columba.mail.smtp.SendAllMessagesAction"/>
- <action name="Receive" class="org.columba.mail.pop3.ReceiveMessagesAction"/>
- <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
- <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
+ <action name="SendAll" class="org.columba.mail.smtp.action.SendAllMessagesAction"/>
+ <action name="Receive" class="org.columba.mail.pop3.action.ReceiveMessagesAction"/>
+ <action name="ReceiveMenu" class="org.columba.mail.pop3.menu.FetchMessageSubMenu"/>
+ <action name="ManageServerMenu" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
  
  <!-- edit menu -->
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 

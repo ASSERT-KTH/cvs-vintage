@@ -32,10 +32,7 @@ public class FindAction extends FrameAction {
 		super(
 			controller,
 			MailResourceLoader.getString("menu", "mainframe", "menu_edit_find"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_find_toolbar"),
+			null,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",

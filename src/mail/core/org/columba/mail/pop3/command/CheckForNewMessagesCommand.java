@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.pop3;
+package org.columba.mail.pop3.command;
 
 import java.net.URL;
 import java.util.Vector;
@@ -27,6 +27,7 @@ import org.columba.core.util.PlaySound;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
+import org.columba.mail.pop3.POP3Server;
 
 /**
  * @author freddy
@@ -50,7 +51,7 @@ public class CheckForNewMessagesCommand extends Command {
 	public void execute(Worker worker) throws Exception {
 
 		FetchNewMessagesCommand command =
-			new FetchNewMessagesCommand( getReferences());
+			new FetchNewMessagesCommand(getReferences());
 
 		POP3CommandReference[] r =
 			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);

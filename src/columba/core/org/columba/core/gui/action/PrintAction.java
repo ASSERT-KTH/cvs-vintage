@@ -38,10 +38,7 @@ public class PrintAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_message_print"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_print_toolbar"),
+			null,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
@@ -51,6 +48,8 @@ public class PrintAction extends FrameAction {
 			ImageLoader.getImageIcon("stock_print.png"),
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+			
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)

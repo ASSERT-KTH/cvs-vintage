@@ -22,8 +22,6 @@ package org.columba.core.xml;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-
-import org.columba.core.logging.ColumbaLogger;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
 /////////////////////////////////////////////////////////////////////////////
@@ -199,7 +197,6 @@ public class XmlElement {
 		XmlElement parent = getParent();
 		if( parent == null) return;
 		
-		ColumbaLogger.log.debug("element="+parent.getName());
 		parent.removeElement(this);
 	}
 	

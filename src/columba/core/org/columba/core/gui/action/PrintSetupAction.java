@@ -41,6 +41,8 @@ public class PrintSetupAction extends FrameAction {
 			null,
 			'0',
 			null);
+		
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)

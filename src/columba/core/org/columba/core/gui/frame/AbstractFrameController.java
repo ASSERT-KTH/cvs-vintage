@@ -59,6 +59,9 @@ public abstract class AbstractFrameController {
 		window.addAttribute("height", "480");
 		window.addAttribute("maximized", "true");
 		defaultView.addElement(window);
+		XmlElement toolbars = new XmlElement("toolbars");
+		toolbars.addAttribute("main","true");
+		defaultView.addElement(toolbars);
 
 		if (viewItem == null)
 			this.viewItem = new ViewItem(createDefaultConfiguration(id));

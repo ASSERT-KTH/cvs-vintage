@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.pop3;
+package org.columba.mail.pop3.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.pop3.POP3Server;
 
 /**
  * @author freddy
@@ -33,7 +34,7 @@ public class FetchMessagesCommand extends Command {
 
 	POP3Server server;
 	Object[] uids;
-	
+
 	/**
 	 * Constructor for FetchCommand.
 	 * @param frameController
@@ -49,11 +50,12 @@ public class FetchMessagesCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION); 
-		
+		POP3CommandReference[] r =
+			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);
+
 		server = r[0].getServer();
 		uids = r[0].getUids();
-		
+
 		//server.getMessages(uids);
 	}
 

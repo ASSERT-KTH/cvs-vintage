@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.smtp;
+package org.columba.mail.smtp.command;
 
 import java.util.Vector;
 
@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
@@ -31,7 +32,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
-import org.columba.core.main.MainInterface;
+import org.columba.mail.smtp.SMTPException;
+import org.columba.mail.smtp.SMTPServer;
 
 /**
  * @author freddy

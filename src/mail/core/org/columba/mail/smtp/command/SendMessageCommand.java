@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.smtp;
+package org.columba.mail.smtp.command;
 
 import javax.swing.JOptionPane;
 
@@ -29,6 +29,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.smtp.SMTPException;
+import org.columba.mail.smtp.SMTPServer;
 
 /**
  * @author freddy
@@ -58,13 +60,13 @@ public class SendMessageCommand extends FolderCommand {
 
 		ComposerController composerController = r[0].getComposerController();
 
-		AccountItem item = ((ComposerModel)composerController.getModel()).getAccountItem();
+		AccountItem item =
+			((ComposerModel) composerController.getModel()).getAccountItem();
 		Folder sentFolder =
 			(Folder) MainInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
 		SendableMessage message =
-			composerController.getMessageComposer().compose(
-				worker);
+			composerController.getMessageComposer().compose(worker);
 
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();

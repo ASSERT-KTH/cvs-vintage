@@ -29,10 +29,7 @@ public class FindAgainAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_edit_findagain"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_findagain_toolbar"),
+			null,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",

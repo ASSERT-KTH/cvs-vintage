@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.pop3;
+package org.columba.mail.pop3.menu;
 
 import java.util.ListIterator;
 
@@ -23,20 +23,22 @@ import org.columba.core.event.ModelChangeListener;
 import org.columba.core.event.ModelChangedEvent;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.pop3.POP3ServerCollection;
+import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
+public class FetchMessageSubMenu extends IMenu implements ModelChangeListener {
 	
 	private POP3ServerCollection popServer;
 
 	/**
 	 * 
 	 */
-	public ManageServerSubMenu(AbstractFrameController controller) {
+	public FetchMessageSubMenu(AbstractFrameController controller) {
 		super(controller, MailResourceLoader.getString(
 		"menu",
 		"mainframe",
-		"menu_file_manage"));
+		"menu_file_checkmessage"));
 		
 		popServer = MainInterface.popServerCollection; 
 		popServer.addModelListener(this);
@@ -51,7 +53,7 @@ public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
 	public void modelChanged(ModelChangedEvent e) {
 		switch( e.getMode() ) {
 			case  ModelChangedEvent.ADDED  : {				
-				add( ((POP3ServerController)e.getData()).getManageAction() );				
+				add( ((POP3ServerController)e.getData()).getCheckAction() );				
 				break;
 			}
 			
@@ -66,7 +68,7 @@ public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
 	protected void createMenu() {
 		ListIterator it = popServer.getServerIterator();
 		while( it.hasNext() ) {
-			add(((POP3ServerController)it.next()).getManageAction());
+			add(((POP3ServerController)it.next()).getCheckAction());
 		}
 	}
 	

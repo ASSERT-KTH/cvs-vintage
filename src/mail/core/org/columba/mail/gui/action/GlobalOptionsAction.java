@@ -34,10 +34,7 @@ public class GlobalOptionsAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_edit_generaloptions"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_generaloptions_toolbar"),
+			null,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",

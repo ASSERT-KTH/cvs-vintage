@@ -25,6 +25,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
+import org.columba.mail.pop3.command.*;
 import org.columba.core.main.MainInterface;
 
 /**

@@ -32,7 +32,6 @@ import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.JTreeTable;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.plugins.BooleanRenderer;
@@ -336,7 +335,7 @@ public class TableView extends JTreeTable {
 		int position) {
 		TableColumn tc = null;
 
-		ColumbaLogger.log.debug("name=" + name);
+		//ColumbaLogger.log.debug("name=" + name);
 
 		try {
 			tc = getColumn(name);
@@ -358,7 +357,7 @@ public class TableView extends JTreeTable {
 			tc.setMaxWidth(size);
 			tc.setMinWidth(size);
 		} else {
-			ColumbaLogger.log.debug("setting size =" + size);
+			//ColumbaLogger.log.debug("setting size =" + size);
 
 			tc.setPreferredWidth(size);
 		}

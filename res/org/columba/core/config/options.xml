@@ -13,7 +13,7 @@
   <viewlist>
    <view id="Mail" >
     <window x="0" y="0" width="900" height="700" maximized="true"/> 
-    <toolbars show_main="true" show_filter="true" show_folderinfo="true" />  
+    <toolbars main="true"/>  
     <splitpanes main="200" header="200" attachment="100" />
    </view>
   </viewlist>

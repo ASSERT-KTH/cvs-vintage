@@ -18,7 +18,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.smtp.SendMessageCommand;
+import org.columba.mail.smtp.command.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
