@@ -97,12 +97,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.122 2002/04/13 04:52:13 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.123 2002/05/07 04:46:13 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
     /** list of invalid characters when doing searches */
-    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
+    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>\\";
     
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
