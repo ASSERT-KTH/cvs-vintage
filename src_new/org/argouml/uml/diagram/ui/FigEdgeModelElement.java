@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.7 2001/12/10 13:13:21 thierrylach Exp $
+// $Id: FigEdgeModelElement.java,v 1.8 2002/04/02 04:41:03 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -444,8 +444,17 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	super.delete();
     }
 
- /** This default implementation simply requests the default notation.
-  */
+
+    /** delete just this object.
+     * The owner is preserved.
+     */
+    public void remove() {
+        super.delete();
+    }
+
+
+   /** This default implementation simply requests the default notation.
+   */
     public NotationName getContextNotation() { return null; }
 
     public void notationChanged(ArgoNotationEvent event) {
