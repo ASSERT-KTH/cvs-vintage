@@ -66,7 +66,7 @@ $page.setTitle("Enter issue")
 <input type="reset" value="Reset form" />&#160;
 <input type="reset" value="Cancel" />
 </p>
-	
+    
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
     <h3>$group.Name</h3>
@@ -144,11 +144,6 @@ $page.setTitle("Enter issue")
       </td>
      </tr>    </table>
 </div>
-
-<div class="functnbar3">
-     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
-</div>
-
 
 
 <div class="axial">
