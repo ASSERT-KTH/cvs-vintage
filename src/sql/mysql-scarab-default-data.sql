@@ -40,7 +40,7 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
  *       values(13, 'Total Votes', 9, 'Total Votes')
  */
 
-update SCARAB_ATTRIBUTE set CREATED_BY='1';
+update SCARAB_ATTRIBUTE set CREATED_BY='0';
 
 /*
  * Attribute Options

@@ -44,7 +44,7 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
  * Remember to set a good password for this user in a production system!
  */
 INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
-    VALUES (0, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
+    VALUES (1, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
 
 
 /* create a temporary table. */

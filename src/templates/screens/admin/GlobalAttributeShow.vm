@@ -54,8 +54,14 @@ This page is for selecting an Attribute to edit which is defined in a global sca
   </td>
   <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
   <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
+<td>
+#if ($attribute.CreatedBy.toString() == "0")
+    Default
+#else
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+<a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+#end
+</td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
   </tr>
   #end
