@@ -426,6 +426,12 @@ in ServerXmlReader to use a simpler syntax.
 </module>
 
 
+<module name="DecodeInterceptor" javaClass="org.apache.tomcat.modules.mappers.DecodeInterceptor">
+<category name="mappers"/>
+<doc>Not yet</doc>
+</module>
+
+
 <module name="SimpleMapper1" javaClass="org.apache.tomcat.modules.mappers.SimpleMapper1">
 <category name="mappers"/>
 <doc>Not yet</doc>

@@ -29,8 +29,6 @@
         <PolicyLoader securityManagerClass="java.lang.SecurityManager"
 		      policyFile="conf/tomcat.policy" />
 
-        <SessionId cookiesFirst="true" noCookies="false" /> 
-
         <SimpleMapper1 debug="0" />
 
         <SessionExpirer checkInterval="60" />
@@ -40,6 +38,7 @@
 
 
         <!-- ========== context processing modules ========== -->
+
         <!-- This will be the "default" profile 
              ( all except the "global" modules can be set per context )
           -->
@@ -142,6 +141,13 @@
 
         <TagPoolManagerInterceptor debug="0"/>
         -->
+
+        <!-- Request processing -->
+
+        <DecodeInterceptor debug="0" /> 
+
+        <SessionId cookiesFirst="true" noCookies="false" /> 
+
 
 
       <!-- ==================== Connectors ==================== -->
