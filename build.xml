@@ -72,7 +72,17 @@
   <target name="compile" description="Compiles carol">
     <condition property="jeremie.jar.present">
       <available file="${jeremie.jar}"/>
-    </condition>   
+    </condition>
+  <condition property="stub.already.compiled">
+    <and>
+      <uptodate property="JNDIResourceWrapper.done"
+                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper_OWStub.class"
+                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+      <uptodate property="JNDIReferenceWrapper.done"
+                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper_OWStub.class"
+                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.java" />
+    </and>
+  </condition>
     <antcall target="compile.base"/>
     <antcall target="compile.stub"/>
     <antcall target="compile.stub.jeremie"/> 
@@ -143,25 +153,16 @@
     </javac> 
   </target>
 
-  <condition property="stub.already.compiled">
-    <and>
-      <uptodate property="JNDIResourceWrapper.done"
-                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
-                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
-      <uptodate property="JNDIResourceWrapper.done"
-                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.class"
-                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.java" />
-    </and>
-  </condition>
 
   <target name="compile.stub.jeremie"
       description="build stub and skeleton "
-      unless="stub.already.compiled" > 
+      unless="stub.already.compiled">
     <!-- for jeremie -->
       <echo message="stub ${stub.jeremie.done}"/>
       <java classname="${compiler.jeremie}" fork="true" failonerror="true">
       <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
+
       <arg value="-owext"/>
       <arg value="-d"/>
       <arg path="${build}/classes"/>
