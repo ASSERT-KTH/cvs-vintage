@@ -78,6 +78,9 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 		MouseListener popupListener = new PopupListener();
 		addMouseListener(popupListener);
+
+		// set double-click action for attachment viewer
+		setDoubleClickAction(new OpenAttachmentAction(mediator));
 	}
 
 	/**
@@ -184,8 +187,6 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		menu = new ColumbaPopupMenu(mediator,
 				"org/columba/mail/action/attachment_contextmenu.xml");
 
-		// set double-click action for attachment viewer
-		setDoubleClickAction(new OpenAttachmentAction(mediator));
 	}
 
 	private JPopupMenu getPopupMenu() {
