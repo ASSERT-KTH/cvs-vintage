@@ -53,6 +53,13 @@ public class Tomcat {
 	xh.addRule( "ContextManager/Connector", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Connector", xh.addChild( "addServerConnector", "org.apache.tomcat.core.ServerConnector") );
 
+	
+	xh.addRule("ContextManager/Logger", 
+		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+	xh.addRule("ContextManager/Logger", xh.setProperties());
+	xh.addRule("ContextManager/Logger", 
+		   xh.addChild("addLogger", "org.apache.tomcat.logging.Logger") );
+
 	xh.addRule( "ContextManager/Connector/Parameter", xh.methodSetter("setProperty",2) );
 	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(0, "name") );
 	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(1, "value") );
