@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.*;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -167,7 +167,11 @@ public class ContainerFactory
 					  
 					 log.log("Using default configuration");
 					 
+					 // Get the container default configuration
 					 conf =  jar.getContainerConfigurations().getContainerConfiguration("Default Stateless SessionBean");
+					 
+					 // Make sure this bean knows the configuration he is using
+					 bean.setConfigurationName("Default Stateless SessionBean");
 				  }
 				  
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
@@ -201,17 +205,23 @@ public class ContainerFactory
 				  // Make sure we have a default configuration
 				  if (conf == null) {
 					  
-					 log.log("Using default configuration");
-					 if (((jBossEntity) bean).getPersistenceType().equalsIgnoreCase("bean")) {
+					  log.log("Using default configuration");
+					  if (((jBossEntity) bean).getPersistenceType().equalsIgnoreCase("bean")) {
 						 
 						 // BMP case
 						 conf =  jar.getContainerConfigurations().getContainerConfiguration("BMP EntityBean");
-				     }
+				     
+						 // Make sure this bean knows the configuration he is using
+					 	 bean.setConfigurationName("BMP EntityBean");
+					 }
 					 else { 
 					 
 					     // CMP case
 						 conf =  jar.getContainerConfigurations().getContainerConfiguration("CMP EntityBean");
-				     }
+				     
+					 	// Make sure this bean knows the configuration he is using
+					 	bean.setConfigurationName("CMP EntityBean");
+					 }
 				  }
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
