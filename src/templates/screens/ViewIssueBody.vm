@@ -1,0 +1,62 @@
+#set ($module = $currentIssue.Module)
+#set ($issueType = $currentIssue.IssueType)
+#set ($fullHistory = $data.Parameters.getString("fullhistory",""))
+#set ($fullComments = $data.Parameters.getString("fullcomments",""))
+#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
+#set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+#set ($currentIssueId = $currentIssue.UniqueId)
+#set ($copyToModules = $data.User.getCopyToModules($module))
+#set ($moveToModules = $data.User.getMoveToModules($module))
+
+<input type="hidden" name="action" value="ModifyIssue" />
+<input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
+<input type="hidden" name="id" value="$currentIssueId" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
+<input type="hidden" name="tab" value="$tab" />
+
+<div class="functnbar">
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+    <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
+#end
+#if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+    <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
+#end
+</div>
+
+#asterisk()
+
+## PRIMARY INFO
+#if ($tab.equals("1") || $tab.equals("all"))
+  $renderer.render("screens", "ViewIssueTab1.vm")
+#end
+
+### PERSONNEL
+#if ($tab.equals("2") || $tab.equals("all"))
+  $renderer.render("screens", "ViewIssueTab2.vm")
+#end 
+
+## COMMENTS
+#if ($tab.equals("3") || $tab.equals("all"))
+  $renderer.render("screens", "ViewIssueTab3.vm")
+#end
+
+## URL/Attachment/Dependency Tab
+#if ($tab.equals("4") || $tab.equals("all"))
+  $renderer.render("screens", "ViewIssueTab4Url.vm")
+  $renderer.render("screens", "ViewIssueTab4Att.vm")
+  $renderer.render("screens", "ViewIssueTab4Dep.vm")
+#end
+
+## ISSUE HISTORY
+#if ($tab.equals("5") || $tab.equals("all"))
+  $renderer.render("screens", "ViewIssueTab5.vm")
+#end
+
+<div class="functnbar2">
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+    <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
+#end
+#if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+    <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
+#end
+</div>

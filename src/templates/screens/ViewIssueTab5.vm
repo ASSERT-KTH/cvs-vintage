@@ -1,0 +1,68 @@
+#set ($activity = $scarabG.reverse($currentIssue.getActivity(true)))
+#if (!$fullHistory.equals("true"))
+  #set ($activity = $scarabG.subset($activity, 0, $currentIssue.HistoryLimit))
+#end
+
+#if (!$activity.isEmpty())
+<h3>$l10n.ChangeHistory</h3>
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">
+  <tr>
+    <th>$l10n.DateStamp</th>
+    <th>$l10n.Action</th>
+    <th>$l10n.Reason</th>
+    <th>$l10n.By</th>
+  </tr>
+  #foreach ($act in $activity)
+    #indexedRows($velocityCount)
+     <td>
+     #set ($activitySet = $act.ActivitySet)
+     #if ($activitySet)
+       $format.getDate($scarabR.DateFormat, $activitySet.CreatedDate)
+     #end
+     </td>
+     <td>$act.Description</td>
+
+     <td>
+     #if ($activitySet && $activitySet.Attachment)
+       #if ($activitySet.Attachment.Data && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
+         $activitySet.Attachment.Data
+       #else $l10n.NotProvided #end
+     #elseif ($act.Attachment)
+       #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
+          $act.Attachment.Data 
+       #else $l10n.NotProvided #end     
+     #elseif ($activitySet && $activitySet.ActivitySetType.Name.equals("Create Issue"))
+           $l10n.InitialEntry
+     #else $l10n.NotProvided
+     #end
+     </td>
+     <td>
+     #set ($user = $scarabR.getUser($activitySet.CreatedBy))
+     <a href="mailto:$user.Email">$!user.Name</a>
+     </td>
+    </tr>
+  #end
+ </table>
+
+#if ($currentIssue.isHistoryLong())
+  #if ($fullHistory.equals("true"))
+    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false"))
+    #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+      #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
+    #end
+    #if ($resultsPerPage)
+      #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
+    #end
+    <p><a href="$historyLink">$l10n.HideCompleteHistory</a></p>
+  #else
+    #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true"))
+    #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+      #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
+    #end
+    #if ($resultsPerPage)
+      #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
+    #end
+    <p><a href="$historyLink">$l10n.ShowCompleteHistory</a></p>
+  #end
+#end
+#end

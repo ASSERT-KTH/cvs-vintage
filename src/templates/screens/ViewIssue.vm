@@ -74,7 +74,7 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 </div>
 #end
 
-#viewIssue($currentIssue)
+$renderer.render("screens", "ViewIssueBody.vm")
 
  $intake.declareGroups()
  </form>

@@ -1,0 +1,120 @@
+<h3>$l10n.Dependencies</h3>
+#set ($issueChildren = $currentIssue.Children)
+#set ($issueParents = $currentIssue.Parents)
+
+#if ($issueChildren.isEmpty() && $issueParents.isEmpty() && !$canEdit)
+$l10n.NoDependencies
+#else
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#if ($canEdit && (!$issueParents.isEmpty() || !$issueChildren.isEmpty()))
+ <th>$l10n.Select</th>
+#end
+ <th>$l10n.Issue $l10n.ID #</th>
+ <th>$l10n.Relationship</th>
+ <th>$l10n.Type</th>
+</tr>
+
+#foreach ($depend in $issueParents)
+  #set ($parent = $scarabR.getIssueByPk($depend.ObservedId.toString()))
+  #set ($dependGroup = $intake.Depend.mapTo($depend))
+  #indexedRows($velocityCount)
+#if ($canEdit && !$issueParents.isEmpty())
+  <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#end
+<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
+<td>$l10n.Parent</td>
+<td>
+#if ($canEdit)
+<select name="$dependGroup.TypeId.Key" class="select">
+  #foreach ($dependType in $currentIssue.AllDependencyTypes)
+    #set ($selected = false)
+    #if ($depend.TypeId.toString().equals($dependType.DependTypeId.toString()))
+      #set ($selected = true)
+    #end
+    <option#selected($selected) value="$dependType.DependTypeId">
+        $dependType.Name</option>
+  #end
+</select>
+#else
+  $depend.DependType.Name
+#end
+</td>
+</tr>
+#end
+
+#foreach ($depend in $issueChildren)
+  #set ($child = $scarabR.getIssueByPk($depend.ObserverId.toString()))
+  #set ($dependGroup = $intake.Depend.mapTo($depend))
+  #indexedRows($velocityCount)
+#if ($canEdit && !$issueChildren.isEmpty())
+    <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#end
+<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
+<td>$l10n.Child</td>
+<td> 
+#if ($canEdit)
+<select name="$dependGroup.TypeId.Key" class="select">
+#foreach ($dependType in $currentIssue.AllDependencyTypes)
+  #set ($selected = false)
+  #if ($depend.TypeId.toString().equals($dependType.DependTypeId.toString()))
+    #set ($selected = true)
+  #end
+  <option#selected($selected) value="$dependType.DependTypeId">
+        $dependType.Name</option>
+#end
+</select>
+#else
+ $depend.DependType.Name
+#end
+</td>
+</tr>
+#end
+
+
+#if ($canEdit)
+#set ($newDependGroup = $intake.Depend.Default)
+<tr class="a">
+#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
+<td>&nbsp;</td>
+#end
+<td> 
+ <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
+ #if (!$newDependGroup.ObserverUniqueId.Message.equals(""))
+  <p class="alert">$newDependGroup.ObserverUniqueId.Message</p>
+ #end
+    <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
+</td>
+<td>$l10n.Child</td>
+<td> 
+ #if (!$newDependGroup.TypeId.Message.equals(""))
+  <p class="alert">$newDependGroup.TypeId.Message</p>
+ #end
+ <select name="$newDependGroup.TypeId.Key" class="select">
+   <option value="">$l10n.ChooseDependencyType</option>
+ #foreach ($dependType in $currentIssue.AllDependencyTypes)
+   #set ($selected = false)
+   #if ($dependType.DependTypeId.toString().equals($newDependGroup.TypeId.toString()))
+      #set ($selected = true)
+   #end
+   <option#selected($selected) value="$dependType.DependTypeId" >$dependType.Name</option>
+ #end
+ </select>
+</td>
+</tr>
+#end
+</table>
+
+#if ($canEdit)
+<div class="functnbar3">
+#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
+   <input type="submit" value="$l10n.SaveChanges"  name="eventSubmit_doUpdatedependencies" />&nbsp;
+#end
+   <input type="submit" value="$l10n.AddNewChild" name="eventSubmit_doAdddependency" />&nbsp;
+#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
+  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doUpdatedependencies" />
+#end
+</div>
+#end
+
+#end
