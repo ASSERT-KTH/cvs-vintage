@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.4 2004/12/21 23:18:43 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.5 2004/12/22 00:17:22 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
@@ -212,14 +210,12 @@ public class UmlFilePersister extends AbstractFilePersister {
                         new XmlInputStream(url.openStream(), "argo");
 
             ArgoParser parser = new ArgoParser();
-            parser.readProject(url, inputStream);
+            Project p = new Project(url);
+            parser.readProject(p, inputStream);
             inputStream.close();
             
             List memberList = parser.getMemberList();
-            Project p = parser.getProject();
             
-            parser.setProject(null); // clear up project refs
-
             LOG.info(memberList.size() + " members");
             
             HashMap instanceCountByType = new HashMap();
@@ -251,8 +247,6 @@ public class UmlFilePersister extends AbstractFilePersister {
                 instanceCount.increment();
                 instanceCountByType.put(type, instanceCount);
             }
-            
-        
             p.postLoad();
             return p;
         } catch (IOException e) {
@@ -260,9 +254,6 @@ public class UmlFilePersister extends AbstractFilePersister {
             throw new OpenException(e);
         } catch (SAXException e) {
             LOG.error("SAXException", e);
-            throw new OpenException(e);
-        } catch (ParserConfigurationException e) {
-            LOG.error("ParserConfigurationException", e);
             throw new OpenException(e);
         }
     }

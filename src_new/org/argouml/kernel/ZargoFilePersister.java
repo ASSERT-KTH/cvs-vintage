@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.21 2004/12/21 23:18:43 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.22 2004/12/22 00:17:22 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -238,10 +238,8 @@ public class ZargoFilePersister extends AbstractFilePersister {
                 // the "false" means that members should not be added,
                 // we want to do this by hand from the zipped stream.
                 ArgoParser parser = new ArgoParser();
-                parser.readProject(url, zis);
-                p = parser.getProject();
-                // clear up project refs:
-                parser.setProject(null); 
+                p = new Project(url);
+                parser.readProject(p, zis);
                 zis.close();
             } catch (IOException e) {
                 // exception can occur both due to argouml code as to J2SE
@@ -255,8 +253,6 @@ public class ZargoFilePersister extends AbstractFilePersister {
         } catch (IOException e) {
             throw new OpenException(e);
         } catch (SAXException e) {
-            throw new OpenException(e);
-        } catch (ParserConfigurationException e) {
             throw new OpenException(e);
         }
     }
