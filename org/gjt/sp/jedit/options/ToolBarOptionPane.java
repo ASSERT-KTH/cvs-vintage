@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.12 2003/04/14 22:43:17 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.13 2003/12/15 19:44:57 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -330,6 +330,13 @@ public class ToolBarOptionPane extends AbstractOptionPane
 			{
 				int index = list.getSelectedIndex();
 				listModel.removeElementAt(index);
+				if(listModel.getSize() != 0)
+				{
+					if(listModel.getSize() == index)
+						list.setSelectedIndex(index-1);
+					else
+						list.setSelectedIndex(index);
+				}
 				updateButtons();
 			}
 			else if(source == moveUp)

@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.296 2003/11/22 20:32:29 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.297 2003/12/15 19:44:57 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3303,8 +3303,12 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 		}
 		else
 		{
-			lastVisible = getScreenLineEndOffset(visibleLines
-				- electricScroll - 1) - 1;
+			lastVisible = visibleLines - electricScroll - 1;
+			if(lastLinePartial)
+				lastVisible--;
+			if(lastVisible < 0)
+				lastVisible = 0;
+			lastVisible = getScreenLineEndOffset(lastVisible) - 1;
 			if(lastVisible == -1)
 			{
 				lastVisible = getLineEndOffset(displayManager
