@@ -244,8 +244,9 @@ public class MessageComposer {
 		if (needQPEncoding(body))
 			bodyPart.getHeader().setContentTransferEncoding("quoted-printable");
 
+		// to allow empty messages
 		if (body.length() == 0) {
-			return null;
+			body = " ";
 		}
 
 		bodyPart.setBody(body);
