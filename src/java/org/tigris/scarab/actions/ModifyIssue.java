@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.89 2002/04/30 05:35:16 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.90 2002/05/02 18:11:49 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -391,10 +391,19 @@ public class ModifyIssue extends BaseModifyIssue
                     {
                         // Generate description of modification
                         String comment = dataField.toString();
-                        String desc = new StringBuffer(comment.length() + 12)
-                            .append("added comment '").append(comment)
-                            .append('\'').toString();
-                        registerActivity(desc, "Your comment was saved", 
+                        StringBuffer descBuf = new StringBuffer(60);
+                        descBuf.append("added comment '");
+                        if (comment.length() > 50)
+                        { 
+                            descBuf.append(comment.substring(1,50)).append("...");
+                        }
+                        else
+                        {
+                            descBuf.append(comment);
+                        }
+                        descBuf.append('\'').toString();
+                        registerActivity(descBuf.toString(),
+                            "Your comment was saved", 
                             issue, user, null, context, data, "", comment); 
                     }
                     intake.remove(group);    
