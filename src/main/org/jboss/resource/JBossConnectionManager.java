@@ -7,6 +7,7 @@
 package org.jboss.resource;
 
 import javax.resource.ResourceException;
+import javax.resource.spi.ConnectionManager;
 
 /**
  *   Custom extensions to the standard ConnectionManager interface.  This
@@ -15,9 +16,9 @@ import javax.resource.ResourceException;
  *
  *   @author Toby Allsopp (toby.allsopp@peace.com)
  *   @author Aaron Mulder <ammulder@alumni.princeton.edu>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
-public interface JBossConnectionManager {
+public interface JBossConnectionManager extends ConnectionManager {
     /**
      * Reuses connections for different transactions.  This call tells the
      * ConnectionManager that a connection generated previously under a
