@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.15 2005/02/18 08:50:15 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.16 2005/03/03 16:06:40 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -53,9 +53,24 @@ public class CarolDefaultValues {
     public static final String  SERVER_IIOP_PORT = CAROL_PREFIX + ".iiop.server.port";
 
     /**
+     * Port number to use in server mode case (jrmp)
+     */
+    public static final String  SERVER_JRMP_PORT = CAROL_PREFIX + ".jrmp.server.port";
+
+    /**
+     * Port number to use in server mode case (jeremie)
+     */
+    public static final String  SERVER_JEREMIE_PORT = CAROL_PREFIX + ".jeremie.server.port";
+
+    /**
      * Ssl Port number to use in server mode case (iiop)
      */
     public static final String  SERVER_SSL_IIOP_PORT = CAROL_PREFIX + ".iiop.server.sslport";
+
+    /**
+     * Default ssl port value
+     */
+    public static final int DEFAULT_SSL_PORT = 2003;
 
     /**
      * JNDI Prefix
@@ -147,10 +162,6 @@ public class CarolDefaultValues {
      */
     public static final String INTERCEPTOR_VALUES_PREFIX = "interceptors";
 
-    /**
-     * System port property
-     */
-    public static final String PORT_NUMBER_PROPERTY = "rmi.server.port";
 
     /**
      * Hashtable mapping between default en rmi name
