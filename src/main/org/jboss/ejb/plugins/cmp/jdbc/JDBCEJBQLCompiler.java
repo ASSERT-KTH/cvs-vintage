@@ -88,7 +88,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -769,7 +769,10 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          setTypeFactory(selectField.getManager().getJDBCTypeFactory());
          selectObject = selectField;
 
-         path.jjtAccept(this, buf);
+         joinPaths.add(path);
+         String alias = aliasManager.getAlias(
+               (String)path.getPath(path.size()-2));
+         buf.append(SQLUtil.getColumnNamesClause(selectField, alias));
       } else {
          JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
 
