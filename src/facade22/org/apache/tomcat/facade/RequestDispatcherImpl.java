@@ -369,6 +369,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	}
 
 	Request old_child = realRequest.getChild();
+	subRequest.setParent( old_child );
 	realRequest.setChild( subRequest );
 	
  	// now it's really strange: we call the wrapper on the subrequest
