@@ -1,4 +1,4 @@
-// $Id: AbstractModelEntity.java,v 1.1 2003/09/09 18:01:04 thierrylach Exp $
+// $Id: AbstractModelEntity.java,v 1.2 2003/09/17 21:13:52 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,26 +32,26 @@ package org.argouml.model;
  */
 public abstract class AbstractModelEntity implements ModelEntity {
     
-    private String name;
+    private String _name;
 
     /**
      * @param string name of entity
      */
     public AbstractModelEntity(String string) {
-        name = string;
+        _name = string;
     }
 
     /** Returns the name
      * @return the name
      */
     public String getName() {
-        return name;
+        return _name;
     }
 
     /** @see java.lang.Object#toString()
      */
     public String toString() {
-        return name;
+        return _name;
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.17 2003/09/01 00:59:52 bobtarling Exp $
+// $Id: ProjectMemberDiagram.java,v 1.18 2003/09/17 21:23:07 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public class ProjectMemberDiagram extends ProjectMember {
     }
 
     public void load() {
-        cat.debug("Reading " + getURL());
+        _cat.debug("Reading " + getURL());
         PGMLParser.SINGLETON.setOwnerRegistry(getProject().getUUIDRefs());
         ArgoDiagram d =
 	    (ArgoDiagram) PGMLParser.SINGLETON.readDiagram(getURL());

@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.14 2003/09/04 20:11:50 thierrylach Exp $
+// $Id: ProjectMember.java,v 1.15 2003/09/17 21:13:00 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.net.URL;
 import org.apache.log4j.Logger;
 
 public abstract class ProjectMember {
-    protected static Logger cat = 
+    private static Logger _cat = 
         Logger.getLogger(ProjectMember.class);
 
     ////////////////////////////////////////////////////////////////
