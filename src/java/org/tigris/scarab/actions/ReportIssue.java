@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.101 2002/01/24 22:24:02 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.102 2002/01/24 22:32:39 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -370,48 +370,47 @@ public class ReportIssue extends RequireLoginFirstAction
 
                 if (saveIssue) 
                 {                
-                issue.save();
+                    issue.save();
                 
-                List files = issue.getAttachments();
-                for (int k = 0; k < files.size(); k++)
-                {
-                    Attachment attachment = (Attachment)files.get(k);
-                    if (attachment.getData() != null 
-                        && attachment.getData().length > 0)
+                    List files = issue.getAttachments();
+                    for (int k = 0; k < files.size(); k++)
                     {
-                        FileItem file = attachment.getFile();
-                        String fileNameWithPath =file.getFileName();
-                        String fileName = fileNameWithPath
-                            .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
-                        
-                        attachment.setData(null);
-                        attachment.setCreatedBy(user.getUserId());
-                        attachment.setAttachmentType(AttachmentType
-                                                         .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
-                        attachment.setIssue(issue);
-                        // FIXME! this duplicates setAttachmentType from two
-                        // lines above, it should not be needed.
-                        attachment.setTypeId(new NumberKey(1));
-                        attachment.save();    
-                        
-                        String uploadFile = attachment
+                        Attachment attachment = (Attachment)files.get(k);
+                        if (attachment.getData() != null 
+                            && attachment.getData().length > 0)
+                        {
+                            FileItem file = attachment.getFile();
+                            String fileNameWithPath =file.getFileName();
+                            String fileName = fileNameWithPath
+                                .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
+                            
+                            attachment.setData(null);
+                            attachment.setCreatedBy(user.getUserId());
+                            attachment.setAttachmentType(AttachmentType
+                                .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
+                            attachment.setIssue(issue);
+                            // FIXME! this duplicates setAttachmentType from two
+                            // lines above, it should not be needed.
+                            attachment.setTypeId(new NumberKey(1));
+                            attachment.save();    
+                            
+                            String uploadFile = attachment
                             .getRepositoryDirectory(scarabR.getIssue().getModule().getCode())
-                            + File.separator + fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-                            + attachment.getPrimaryKey().toString() 
-                            + fileName.substring(fileName.lastIndexOf('.')); 
+                                + File.separator + 
+                                fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
+                                + attachment.getPrimaryKey().toString() 
+                                + fileName.substring(fileName.lastIndexOf('.')); 
                         
-                        file.write(uploadFile);
-						String relativePath = scarabR.getIssue().getModule().getCode()
-							+ '/'+ fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
-							+ attachment.getPrimaryKey().toString() 
-							+ fileName.substring(fileName.lastIndexOf('.')); 
-						
-						attachment.setFilePath(relativePath);
-
-                        attachment.save();
-                        
+                            file.write(uploadFile);
+                            String relativePath = scarabR.getIssue().getModule().getCode()
+                                + '/'+ fileName.substring(0, fileName.lastIndexOf('.')) + "_" 
+                                + attachment.getPrimaryKey().toString() 
+                                + fileName.substring(fileName.lastIndexOf('.')); 
+                            
+                            attachment.setFilePath(relativePath);
+                            
+                            attachment.save();
                     }
-                    
                 }
 
                 // save the comment
