@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.16 2002/01/25 04:50:24 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.17 2002/01/28 04:20:54 spestov Exp $
  */
 public class ChunkCache
 {
@@ -238,27 +238,27 @@ public class ChunkCache
 
 		while(chunks != null)
 		{
+			Font font = chunks.style.getFont();
+			Color bgColor = chunks.style.getBackgroundColor();
+			if(bgColor != null)
+			{
+				float x2 = (chunks.next == null ? width
+					: _x + chunks.width);
+
+				//LineMetrics lm = font.getLineMetrics(
+				//	chunks.text,gfx.getFontRenderContext());
+				gfx.setXORMode(background);
+				gfx.setColor(bgColor);
+
+				gfx.fill(new Rectangle2D.Float(
+					_x,y - forBackground.getAscent(),
+					x2 - _x,forBackground.getHeight()));
+
+				gfx.setPaintMode();
+			}
+
 			if(chunks.text != null)
 			{
-				Font font = chunks.style.getFont();
-				Color bgColor = chunks.style.getBackgroundColor();
-				if(bgColor != null)
-				{
-					float x2 = (chunks.next == null ? width
-						: x + chunks.width);
-
-					//LineMetrics lm = font.getLineMetrics(
-					//	chunks.text,gfx.getFontRenderContext());
-					gfx.setXORMode(background);
-					gfx.setColor(bgColor);
-
-					gfx.fill(new Rectangle2D.Float(
-						_x,y - forBackground.getAscent(),
-						x2 - _x,forBackground.getHeight()));
-
-					gfx.setPaintMode();
-				}
-
 				gfx.setFont(font);
 				gfx.setColor(chunks.style.getForegroundColor());
 

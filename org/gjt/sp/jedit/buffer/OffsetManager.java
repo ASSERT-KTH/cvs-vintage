@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.19 2002/01/15 11:01:33 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.20 2002/01/28 04:20:54 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -299,7 +299,8 @@ public class OffsetManager
 			{
 				for(int i = startLine; i > 0; i--)
 				{
-					if(buffer.isFoldStart(i - 1) && buffer.getFoldLevel(i) <= foldLevel)
+					if(/* buffer.isFoldStart(i - 1)
+						&& */ buffer.getFoldLevel(i) <= foldLevel)
 					{
 						visible = (lineInfo[i] & VISIBLE_MASK);
 						break;
