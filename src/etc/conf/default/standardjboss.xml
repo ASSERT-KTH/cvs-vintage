@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.33 2002/01/15 23:30:34 dsundstrom Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.34 2002/03/10 02:38:48 d_jencks Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -27,6 +27,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
@@ -73,6 +93,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
@@ -120,6 +160,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
@@ -166,6 +226,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
@@ -212,6 +292,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
@@ -261,6 +361,20 @@
 	    <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
 	 <instance-cache></instance-cache>
 	 <persistence-manager></persistence-manager>
@@ -295,6 +409,20 @@
 	    <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
 	 <instance-cache></instance-cache>
 	 <persistence-manager></persistence-manager>
@@ -329,6 +457,20 @@
 	    <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
 	 <instance-cache></instance-cache>
 	 <persistence-manager></persistence-manager>
@@ -363,6 +505,20 @@
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
@@ -411,6 +567,20 @@
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
@@ -460,6 +630,20 @@
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.StatefulHASessionSynchronisationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.StatefulHASessionPersistenceManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
@@ -505,6 +689,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
@@ -551,6 +755,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
@@ -597,6 +821,26 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
@@ -646,6 +890,20 @@
 	    <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
 	    <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
 	 </container-interceptors>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>new org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
 	 <instance-cache></instance-cache>
 	 <persistence-manager></persistence-manager>
