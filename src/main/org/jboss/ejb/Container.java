@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.81 $
+* @version $Revision: 1.82 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -97,6 +97,10 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * <ul>
 * <li> Moved to new Invocation layer and detached invokers.  
 *  <li> Use the method mappings for MarshalledInvocation.
+* </ul>
+* <p><b>2002/03/10 francisco reverbel:</b>
+* <ul>
+* <li> Added getCodebase/setCodebase methods.
 * </ul>
 */
 public abstract class Container implements MBeanRegistration, DynamicMBean
@@ -175,6 +179,9 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    
    /** Maps for MarshalledInvocation mapping */
    protected Map marshalledInvocationMapping = new HashMap();
+   
+   /** This Container's codebase, a sequence of URLs separated by spaces */
+   protected String codebase = "";
    
    /** ObjectName of the JSR-77 EJB representation **/
    protected String mEJBObjectName;
@@ -457,7 +464,29 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       return getBeanClass().newInstance();
    }
    
+   /**
+    * Sets the codebase of this container.
+    * 
+    * @param   codebase a possibly empty, but non null String with 
+    *                   a sequence of URLs separated by spaces
+    */
+   public void setCodebase(String codebase) 
+   { 
+      if (codebase != null) 
+         this.codebase = codebase;
+   }
 
+   /**
+    * Gets the codebase of this container.
+    * 
+    * @return    this container's codebase String, a sequence of URLs 
+    *            separated by spaces 
+    */
+   public String getCodebase() 
+   { 
+      return codebase; 
+   }
+ 
    public ObjectName getJmxName()
    {
       String jndiName = getBeanMetaData().getJndiName(); 
