@@ -25,9 +25,14 @@
 
 package org.columba.core.util;
 
-import java.util.Hashtable;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.io.File;
+import java.io.FileFilter;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import java.util.*;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -52,15 +57,66 @@ import org.columba.core.main.MainInterface;
 */
 public class GlobalResourceLoader {
 
+        protected static ClassLoader classLoader;
 	protected static Hashtable htBundles = new Hashtable(80);
 	protected static ResourceBundle globalBundle;
 	protected static final String FIX_ME = "FIX ME!";
+        private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
         
         static {
                 try{
-                        globalBundle = ResourceBundle.getBundle("org.columba.core.i18n.global.global");
+                        initClassLoader();
+                        globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH, Locale.getDefault(), classLoader);
                 } catch(MissingResourceException mre) {
                         throw new RuntimeException("Global resource bundle not found, Columba cannot start.");
+                }
+        }
+        
+        public static Locale[] getAvailableLocales() {
+                File[] langpacks = new File(".").listFiles(new FileFilter() {
+                        public boolean accept(File file) {
+                                String name = file.getName().toLowerCase();
+                                return file.isFile() && name.startsWith("langpack_") && name.endsWith(".jar");
+                        }
+                });
+                String name, language, country, variant;
+                StringTokenizer tokenizer;
+                LinkedList locales = new LinkedList();
+                for (int i=0; i<langpacks.length; i++) {
+                        name = langpacks[i].getName();
+                        name = name.substring(9, name.length() - 4);
+                        tokenizer = new StringTokenizer(name, "_");
+                        if (tokenizer.hasMoreElements()) {
+                                language = tokenizer.nextToken();
+                                if (tokenizer.hasMoreElements()) {
+                                        country = tokenizer.nextToken();
+                                        if (tokenizer.hasMoreElements()) {
+                                                variant = tokenizer.nextToken();
+                                        } else {
+                                                variant = "";
+                                        }
+                                } else {
+                                        country = "";
+                                        variant = "";
+                                }
+                        } else {
+                            language = "";
+                            country = "";
+                            variant = "";
+                        }
+                        locales.add(new Locale(language, country, variant));
+                }
+                return (Locale[])locales.toArray(new Locale[0]);
+        }
+        
+        protected static void initClassLoader() {
+                File langpack = new File("langpack_" + Locale.getDefault().toString() + ".jar");
+                if (langpack.exists() && langpack.isFile()) {
+                        try {
+                                classLoader = new URLClassLoader(new URL[]{ langpack.toURL() });
+                        } catch (MalformedURLException mue) {} //does not occur
+                } else {
+                        classLoader = ClassLoader.getSystemClassLoader();
                 }
         }
 
@@ -92,7 +148,7 @@ public class GlobalResourceLoader {
 		ResourceBundle bundle = (ResourceBundle) htBundles.get(sBundlePath);
                 if (bundle == null) {
                         try {
-                                bundle = ResourceBundle.getBundle(sBundlePath);
+                                bundle = ResourceBundle.getBundle(sBundlePath, Locale.getDefault(), classLoader);
                                 htBundles.put(sBundlePath, bundle);
                         } catch (MissingResourceException mre) {}
                 }
@@ -123,4 +179,25 @@ public class GlobalResourceLoader {
 			return 0;
                 }
 	}
+        
+        public static void reload() {
+                initClassLoader();
+                try {
+                        globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH, Locale.getDefault(), classLoader);
+                } catch(MissingResourceException mre) {} //should not occur, otherwise the static initializer should have thrown a RuntimeException
+                
+                String bundlePath;
+                ResourceBundle bundle;
+                for (Enumeration entries = htBundles.keys(); entries.hasMoreElements();) {
+                        try {
+                                bundlePath = (String)entries.nextElement();
+                                
+                                //retrieve new bundle
+                                bundle = ResourceBundle.getBundle(bundlePath, Locale.getDefault(), classLoader);
+                                
+                                //overwrite old bundle
+                                htBundles.put(bundlePath, bundle);
+                        } catch (MissingResourceException mre) {} //should not occur, otherwise the bundlePath would not be in the hashtable
+                }
+        }
 }
