@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.39 2004/08/01 18:00:57 mvw Exp $
+// $Id: FigUseCase.java,v 1.40 2004/08/04 20:07:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1091,6 +1091,7 @@ public class FigUseCase extends FigNodeModelElement {
      *
      * @param ft  The text that has been edited.
      * @throws PropertyVetoException
+     *
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEdited(org.tigris.gef.presentation.FigText)
      */
     protected void textEdited(FigText ft) throws PropertyVetoException {
