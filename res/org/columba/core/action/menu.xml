@@ -12,6 +12,8 @@
 		<menuitem action="Print"/>	
 		<menuitem action="PrintSetup"/>			
 		<separator/>
+		<menuitem action="Close"/>
+		<separator/>
 		<menuitem action="Exit"/>			
 	</menu>
 	<menu name="menu_edit">

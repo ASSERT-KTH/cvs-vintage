@@ -15,6 +15,7 @@
  <action name="SelectAll" class="org.columba.core.gui.action.SelectAllAction"/>
  <action name="PrintSetup" class="org.columba.core.gui.action.PrintSetupAction"/> 
  <action name="Print" class="org.columba.core.gui.action.PrintAction"/> 
+ <action name="Close" class="org.columba.core.gui.action.CloseAction"/> 
  <action name="Exit" class="org.columba.core.gui.action.ExitAction"/> 
  <action name="Undo" class="org.columba.core.gui.action.UndoAction"/> 
  <action name="Redo" class="org.columba.core.gui.action.RedoAction"/> 

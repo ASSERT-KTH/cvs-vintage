@@ -49,7 +49,8 @@ public class ViewToolbarAction extends CheckBoxAction {
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	public void actionPerformed(ActionEvent evt) {		
+	public void actionPerformed(ActionEvent evt) {	
+			
 		frameController.getView().showToolbar(getState());
 	}
 

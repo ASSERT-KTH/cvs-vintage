@@ -130,13 +130,16 @@ public abstract class FrameView extends JFrame implements WindowListener {
 	}
 
 	public void showToolbar(boolean b) {
+		
+		// TODO fix configuration changes
+		
 		if( toolbar == null) return;
 		if (b) {
 			toolbarPane.add(toolbar);
-			frameController.getItem().set("toolbar", "visible", "true");
+			//frameController.getItem().set("toolbar", "visible", "true");
 		} else {
 			toolbarPane.removeAll();
-			frameController.getItem().set("toolbar", "visible", "false");
+			//frameController.getItem().set("toolbar", "visible", "false");
 		}
 		
 		validate();
