@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: shutdown.sh,v 1.8 2003/08/27 04:31:52 patriot1burke Exp $ ###
+### $Id: shutdown.sh,v 1.9 2003/12/03 16:32:33 pilhuhn Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -18,6 +18,14 @@ die() {
     echo "${PROGNAME}: $*"
     exit 1
 }
+
+# Read an optional running configuration file
+if [ "x$RUN_CONF" = "x" ]; then
+    RUN_CONF="$DIRNAME/run.conf"
+fi
+if [ -r $RUN_CONF ]; then
+    . $RUN_CONF
+fi
 
 # OS specific support (must be 'true' or 'false').
 cygwin=false;
