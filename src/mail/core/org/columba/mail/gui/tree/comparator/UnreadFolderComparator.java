@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.comparator;
 
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -34,19 +33,14 @@ public class UnreadFolderComparator extends FolderComparator {
     }
 
     /** {@inheritDoc} */
-    protected int compareFolders(AbstractFolder folder1, AbstractFolder folder2) {
+    protected int compareFolders(MessageFolder folder1, MessageFolder folder2) {
         int compValue;
 
-        if ((folder1 instanceof MessageFolder) && (folder1 instanceof MessageFolder)) {
+        MessageFolderInfo info1 = ((MessageFolder) folder1).getMessageFolderInfo();
+        MessageFolderInfo info2 = ((MessageFolder) folder2).getMessageFolderInfo();
 
-            MessageFolderInfo info1 = ((MessageFolder) folder1).getMessageFolderInfo();
-            MessageFolderInfo info2 = ((MessageFolder) folder2).getMessageFolderInfo();
-
-            if (info1.getUnseen() != info2.getUnseen()) {
-                compValue = info2.getUnseen() - info1.getUnseen();
-            } else {
-                compValue = super.compareFolders(folder1, folder2);
-            }
+        if (info1.getUnseen() != info2.getUnseen()) {
+            compValue = info2.getUnseen() - info1.getUnseen();
         } else {
             compValue = super.compareFolders(folder1, folder2);
         }

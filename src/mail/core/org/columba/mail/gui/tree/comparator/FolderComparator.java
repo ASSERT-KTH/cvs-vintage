@@ -18,8 +18,7 @@ package org.columba.mail.gui.tree.comparator;
 import java.util.Comparator;
 
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.imap.IMAPFolder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -42,38 +41,34 @@ public class FolderComparator implements Comparator {
     public FolderComparator(boolean ascending) {
         isAscending = ascending;
     }
-    /**
-     * Returns true if the node is an Inbox folder.
-     * @param folder the folder to check.
-     * @return true if the node is an Inbox folder; false otherwise.
-     */
-    private boolean isInboxFolder(AbstractFolder folder) {
-        boolean isInbox = false;
-        if (folder instanceof LocalFolder) {
-            isInbox = ((LocalFolder) folder).isInboxFolder();
-        } else if (folder instanceof IMAPFolder) {
-            isInbox = ((IMAPFolder) folder).isInboxFolder();
-        }
-        return isInbox;
-    }
 
     /** {@inheritDoc} */
     public int compare(Object o1, Object o2) {
-        int compValue = 0;
+        int compValue;
 
         if ((o1 instanceof AbstractFolder) && (o2 instanceof AbstractFolder)) {
-            AbstractFolder folder1 = (AbstractFolder) o1;
-            AbstractFolder folder2 = (AbstractFolder) o2;
-            if (isInboxFolder(folder1)) {
-                compValue = -1;
-            } else if (isInboxFolder(folder2)) {
-                compValue = 1;
-            } else if (isInboxFolder(folder2) && isInboxFolder(folder1)) {
+            // If it isnt a message folder, then it must be a root, and those
+            // should not be sorted.
+            if (!(o1 instanceof MessageFolder)) {
                 compValue = 0;
             } else {
-                compValue = compareFolders(folder1, folder2);
-                if (!isAscending) {
-                    compValue *= -1;
+                MessageFolder folder1 = (MessageFolder) o1;
+                MessageFolder folder2 = (MessageFolder) o2;
+
+                boolean folder1IsInbox = folder1.isInboxFolder();
+                boolean folder2IsInbox = folder2.isInboxFolder();
+
+                if (folder1IsInbox) {
+                    compValue = -1;
+                } else if (folder2IsInbox) {
+                    compValue = 1;
+                } else if (folder2IsInbox && folder1IsInbox) {
+                    compValue = 0;
+                } else {
+                    compValue = compareFolders(folder1, folder2);
+                    if (!isAscending) {
+                        compValue *= -1;
+                    }
                 }
             }
         } else {
@@ -94,7 +89,7 @@ public class FolderComparator implements Comparator {
      * @return a negative integer, zero, or a positive integer as the first argument is
      *      less than, equal to, or greater than the second.
      */
-    protected int compareFolders(AbstractFolder folder1, AbstractFolder folder2) {
+    protected int compareFolders(MessageFolder folder1, MessageFolder folder2) {
         return folder1.getName().toLowerCase().compareTo(folder2.getName().toLowerCase());
     }
 
