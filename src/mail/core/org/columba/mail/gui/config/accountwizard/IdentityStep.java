@@ -34,6 +34,7 @@ class IdentityStep extends AbstractStep {
         protected DataModel data;
         protected JTextField nameTextField;
         protected JTextField addressTextField;
+        protected JTextField accountNameTextField;
 
 	public IdentityStep(DataModel data) {
 		super(MailResourceLoader.getString(
@@ -84,7 +85,8 @@ class IdentityStep extends AbstractStep {
                         protected void checkFields() {
                                 String s = addressTextField.getText();
                                 setCanGoNext(nameTextField.getDocument().getLength() > 0
-                                            && s.length() > 0 && isEmailAddress(s));
+                                        && s.length() > 0 && isEmailAddress(s)
+                                        && accountNameTextField.getDocument().getLength() > 0);
                         }
                         
                         protected boolean isEmailAddress(String s) {
@@ -117,11 +119,28 @@ class IdentityStep extends AbstractStep {
                 addressTextField.getDocument().addDocumentListener(fieldListener);
 		addressLabel.setLabelFor(addressTextField);
 		middlePanel.addTextField(addressTextField);
-		JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString(
+		middlePanel.addExample(new JLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "accountwizard",
-                                    "example") + "BillGates@microsoft.com");
-		middlePanel.addExample(addressExampleLabel);
+                                    "example") + "BillGates@microsoft.com"));
+                JLabel accountNameLabel = new JLabel(MailResourceLoader.getString(
+                                    "dialog",
+                                    "accountwizard",
+                                    "accountname"));
+                accountNameLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
+                                    "dialog",
+                                    "accountwizard",
+                                    "accountname"));
+                middlePanel.addLabel(accountNameLabel);
+                accountNameTextField = new JTextField();
+                data.registerDataLookup("Identity.accountName", new DefaultDataLookup(accountNameTextField, method, null));
+                accountNameTextField.getDocument().addDocumentListener(fieldListener);
+                accountNameLabel.setLabelFor(accountNameTextField);
+                middlePanel.addTextField(accountNameTextField);
+		middlePanel.addExample(new JLabel(MailResourceLoader.getString(
+                                    "dialog",
+                                    "accountwizard",
+                                    "example") + "Bill's private mail"));
 		component.add(middlePanel);
                 return component;
 	}

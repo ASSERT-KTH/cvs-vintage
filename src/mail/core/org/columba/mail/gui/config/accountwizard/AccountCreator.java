@@ -39,6 +39,7 @@ class AccountCreator implements WizardModelListener {
             //this should not happen, the templates seem to be missing
             throw new RuntimeException("Account templates missing!");
         }
+        account.setName((String)data.getData("Identity.accountName"));
         IdentityItem identity = account.getIdentityItem();
         identity.set("name", (String)data.getData("Identity.name"));
         identity.set("address", (String)data.getData("Identity.address"));
