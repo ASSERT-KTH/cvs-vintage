@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.33 2003/03/16 05:37:50 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.34 2003/05/02 00:38:20 spestov Exp $
  */
 public class BeanShell
 {
@@ -394,6 +394,8 @@ public class BeanShell
 		try
 		{
 			setupDefaultVariables(namespace,view);
+			if(Debug.BEANSHELL_DEBUG)
+				Log.log(Log.DEBUG,BeanShell.class,command);
 			return interp.eval(command);
 		}
 		catch(Exception e)

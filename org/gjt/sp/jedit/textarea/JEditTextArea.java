@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.250 2003/05/01 22:43:28 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.251 2003/05/02 00:38:21 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6250,7 +6250,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			else
 				extraEndVirt = 0;
 
-			if(control)
+			if(control || isRectangularSelectionEnabled())
 			{
 				int screenLine = (evt.getY() / getPainter()
 					.getFontMetrics().getHeight());

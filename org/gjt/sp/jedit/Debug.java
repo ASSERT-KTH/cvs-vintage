@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.8 2003/04/29 01:13:48 spestov Exp $
+ * @version $Id: Debug.java,v 1.9 2003/05/02 00:38:20 spestov Exp $
  */
 public class Debug
 {
@@ -98,4 +98,9 @@ public class Debug
 	 * Paint strings instead of glyph vectors.
 	 */
 	public static boolean DISABLE_GLYPH_VECTOR = false;
+
+	/**
+	 * Logs messages when BeanShell code is evaluated.
+	 */
+	public static boolean BEANSHELL_DEBUG = false;
 }
