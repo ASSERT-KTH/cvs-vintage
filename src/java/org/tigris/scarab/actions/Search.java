@@ -94,7 +94,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.92 2002/10/07 22:52:18 jmcnally Exp $
+ * @version $Id: Search.java,v 1.93 2002/10/09 03:48:44 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -461,6 +461,11 @@ public class Search extends RequireLoginFirstAction
                 }
             }
             queryString = buf.toString();
+            if (queryString.length() == 0) 
+            {
+                queryString = 
+                    ((ScarabUser)data.getUser()).getMostRecentQuery();
+            }
         }
         return queryString;
     }
