@@ -1,5 +1,3 @@
-<div>$link.setPage("SelectArtifactType.vm").setLabel("Select issue type")</div>
-
 #if ($scarabR.CurrentIssueType)
   #set ($issueType = $scarabR.CurrentIssueType)
   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
