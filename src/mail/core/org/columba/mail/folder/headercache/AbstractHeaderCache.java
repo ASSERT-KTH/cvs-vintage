@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import java.io.File;
@@ -24,6 +25,8 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
@@ -75,10 +78,14 @@ public abstract class AbstractHeaderCache {
 	}
 
 	public void remove(Object uid) throws Exception {
-		ColumbaLogger.log.debug("trying to remove message UID=" + uid);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("trying to remove message UID=" + uid);
+                }
 
 		if (headerList.containsKey(uid)) {
-			ColumbaLogger.log.debug("remove UID=" + uid);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("remove UID=" + uid);
+                        }
 
 			headerList.remove(uid);
 		}
@@ -110,9 +117,7 @@ public abstract class AbstractHeaderCache {
 					folder.getDataStorageInstance().recreateHeaderList(worker);
 
 				headerCacheAlreadyLoaded = true;
-
 			}
-
 		}
 
 		//System.out.println("headerList=" + headerList);
@@ -122,13 +127,17 @@ public abstract class AbstractHeaderCache {
 
 	public void load(WorkerStatusController worker) throws Exception {
 
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+                }
 
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
 
 		int capacity = p.readInt();
-		ColumbaLogger.log.info("capacity=" + capacity);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + capacity);
+                }
 
 		if (capacity != folder.getDataStorageInstance().getMessageCount()) {
 			// messagebox headercache-file is corrupted
@@ -179,7 +188,9 @@ public abstract class AbstractHeaderCache {
 		}
 
 		nextUid++;
-		ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
+                }
 		folder.setNextMessageUid(nextUid);
 
 		// close stream
@@ -192,7 +203,9 @@ public abstract class AbstractHeaderCache {
 		if (isHeaderCacheAlreadyLoaded() == false)
 			return;
 
-		ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+                }
 		// this has to called only if the uid becomes higher than Integer allows
 		//cleanUpIndex();
 
@@ -203,7 +216,9 @@ public abstract class AbstractHeaderCache {
 
 		//int count = getMessageFileCount();
 		int count = headerList.count();
-		ColumbaLogger.log.info("capacity=" + count);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + count);
+                }
 		p.writeInt(count);
 
 		ColumbaHeader h;
