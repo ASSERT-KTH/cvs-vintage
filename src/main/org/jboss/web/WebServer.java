@@ -42,7 +42,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * It is configured by calling any methods programmatically prior to startup.
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @see WebClassLoader
  */
 public class WebServer
@@ -192,7 +192,7 @@ public class WebServer
    /**
     * Start the web server on port and begin listening for requests.
     */
-   public void start() throws IOException
+   public void start() throws Exception
    {
       if (threadPool == null)
          threadPool = new BasicThreadPool("ClassLoadingPool");
@@ -202,6 +202,10 @@ public class WebServer
          if (log.isDebugEnabled())
             log.debug("Started server: " + server);
          listen();
+      }
+      catch(java.net.BindException be)
+      {
+          throw new Exception("Port "+port+" already in use.",be);
       }
       catch (IOException e)
       {

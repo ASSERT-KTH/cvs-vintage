@@ -50,7 +50,7 @@ import org.jboss.tm.TransactionPropagationContextUtil;
  * 
  *
  * @author    <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -171,7 +171,12 @@ public class PooledInvoker extends ServiceMBeanSupport
       clientpool = new LRUPool(2, maxPoolSize);
       clientpool.create();
       threadpool = new LinkedList();
-      serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
+      try{
+            serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
+      }catch( java.net.BindException be)
+       {
+            throw new Exception("Port "+serverBindPort+" is already in use",be);
+       }
       serverBindPort = serverSocket.getLocalPort();
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
