@@ -31,12 +31,17 @@ import org.gjt.sp.util.Log;
 /**
  * Interface for obtaining the fold level of a specified line.<p>
  *
- * Plugins can add and remove fold handlers using the
- * {@link #registerFoldHandler(FoldHandler)} and
- * {@link #unregisterFoldHandler(FoldHandler)} methods.
+ * Plugins can add and remove fold handlers by defining entries in their
+ * <code>services.xml</code> files like so:
+ *
+ * <pre>&lt;SERVICE CLASS="org.gjt.sp.jedit.buffer.FoldHandler" NAME="<i>name</i>"&gt;
+ *    new <i>MyFoldHandler<i>();
+ *&lt;/SERVICE&gt;</pre>
+ *
+ * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.8 2003/04/24 01:32:29 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.9 2003/04/24 02:29:41 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
