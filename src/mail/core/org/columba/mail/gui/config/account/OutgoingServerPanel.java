@@ -22,6 +22,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -46,6 +48,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.main.MailInterface;
@@ -88,11 +91,13 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private AccountItem accountItem;
     private JButton checkAuthMethods;
     
-    public OutgoingServerPanel(AccountItem accountItem) {
+    private JDialog dialog;
+    public OutgoingServerPanel(JDialog parent,AccountItem accountItem) {
         super();
         this.accountItem = accountItem;
         item = accountItem.getSmtpItem();
-
+				dialog = parent;
+				
         initComponents();
         updateComponents(true);
     }
@@ -321,6 +326,9 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "store_password_in_configuration_file"));
 
+				storePasswordCheckBox.setActionCommand("SAVE");
+				storePasswordCheckBox.addActionListener(this);
+        
         secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "use_SSL_for_secure_connection"));
 
@@ -400,6 +408,26 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             checkAuthMethods.setEnabled(enabled);
         } else if (action.equals("CHECK_AUTHMETHODS")) {
             fetchSupportedAuthenticationMechanisms();
+        }
+        else if (action.equals("SAVE"))
+        {
+            if (!storePasswordCheckBox.isSelected()) {
+                return;
+            } else {
+                File configPath = MainInterface.config.getConfigDirectory();
+                File defaultConfigPath = MainInterface.config.getDefaultConfigPath();
+                while (!configPath.equals(defaultConfigPath)) {
+                    configPath = configPath.getParentFile();
+                    if (configPath == null) {
+                        JOptionPane.showMessageDialog(dialog, MailResourceLoader.getString(
+                                    "dialog","password", "warn_save_msg"),
+                                MailResourceLoader.getString(
+                                    "dialog", "password", "warn_save_title"),
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+            }
         }
     }
 

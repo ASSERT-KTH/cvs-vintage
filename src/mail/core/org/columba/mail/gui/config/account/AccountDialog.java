@@ -91,7 +91,7 @@ public class AccountDialog extends JDialog implements ActionListener {
         incomingServerPanel = new IncomingServerPanel(this, accountItem,
                 receiveOptionsPanel);
 
-        outgoingServerPanel = new OutgoingServerPanel(accountItem);
+        outgoingServerPanel = new OutgoingServerPanel(this, accountItem);
 
         securityPanel = new SecurityPanel(accountItem.getPGPItem());
 
