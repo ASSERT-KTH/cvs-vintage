@@ -27,7 +27,10 @@ import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.FramePluginHandler;
 
 /**
  * @author fdietz
@@ -45,6 +48,9 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	private JRadioButtonMenuItem chatMenu;
 	
+	private ButtonGroup group;
+	
+	private FramePluginHandler handler;
 	/**
 	 * @param controller
 	 * @param caption
@@ -58,41 +64,40 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		// -> if so create submenu to switch perspectives
 		// -> otherwise, don't create submenu
 		boolean isManagedFrame = false;
-		if ( id.equals(MAIL_PERSPECTIVE)) isManagedFrame = true;
-		if ( id.equals(ADDRESSBOOK_PERSPECTIVE)) isManagedFrame = true;
-		if ( id.equals(CHAT_PERSPECTIVE)) isManagedFrame = true;
+		
+		try {
+			handler = (FramePluginHandler) PluginManager.getInstance().getHandler("org.columba.core.frame");
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		String[] managedFrames = handler.getManagedFrames();
+		for ( int i=0; i<managedFrames.length; i++) {
+			if ( id.equals(managedFrames[i])) isManagedFrame = true;
+		}
 		
 		if ( !isManagedFrame ) return;
 		
-		ButtonGroup group = new ButtonGroup();
-		JRadioButtonMenuItem mailMenu = new JRadioButtonMenuItem("Mail");
-		group.add(mailMenu);
-		mailMenu.setActionCommand("MAIL");
-		mailMenu.addActionListener(this);
-		add(mailMenu);
-
-		addressbookMenu = new JRadioButtonMenuItem("Addressbook");
-		//addressbookMenu.setIcon(ImageLoader.getSmallImageIcon("stock_book-16.png"));
-		group.add(addressbookMenu);
-		addressbookMenu.setActionCommand("ADDRESSBOOK");
-		addressbookMenu.addActionListener(this);
-		add(addressbookMenu);
-
+		group = new ButtonGroup();
 		
-		chatMenu = new JRadioButtonMenuItem("Chat");
-		//chatMenu.setIcon(ImageLoader.getSmallImageIcon("stock_book-16.png"));
-		group.add(chatMenu);
-		chatMenu.setActionCommand("CHAT");
-		chatMenu.addActionListener(this);
-		add(chatMenu);
-
+		for ( int i=0; i<managedFrames.length; i++) {
+			JRadioButtonMenuItem menu = createMenu(managedFrames[i], managedFrames[i]);
+			if ( id.equals(managedFrames[i])) menu.setSelected(true);
+			
+			add(menu);
+		}
 		
-		if (id.equals(MAIL_PERSPECTIVE))
-			mailMenu.setSelected(true);
-		else if ( id.equals(ADDRESSBOOK_PERSPECTIVE))
-			addressbookMenu.setSelected(true);
-		else
-			chatMenu.setSelected(true);
+	}
+
+	/**
+	 * @return
+	 */
+	private JRadioButtonMenuItem createMenu(String name, String actionCommand) {
+		JRadioButtonMenuItem menu = new JRadioButtonMenuItem(name);
+		group.add(menu);
+		menu.setActionCommand(actionCommand);
+		menu.addActionListener(this);
+		return menu;
 	}
 
 	/**
@@ -105,26 +110,11 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 		Container container = mediator.getContainer();
 
-		if (action.equals("MAIL")) {
-			try {
-				FrameModel.getInstance().switchView(container, MAIL_PERSPECTIVE);
-			} catch (PluginLoadingFailedException e) {
-				e.printStackTrace();
-			}
-		} else if (action.equals("ADDRESSBOOK")) {
-			try {
-				FrameModel.getInstance().switchView(container, ADDRESSBOOK_PERSPECTIVE);
-			} catch (PluginLoadingFailedException e) {
-				e.printStackTrace();
-			}
-		} else if (action.equals("CHAT")) {
-			try {
-				FrameModel.getInstance().switchView(container, CHAT_PERSPECTIVE);
-			} catch (PluginLoadingFailedException e) {
-				e.printStackTrace();
-			}
+		try {
+			FrameModel.getInstance().switchView(container, action);
+		} catch (PluginLoadingFailedException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 }

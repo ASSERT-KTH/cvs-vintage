@@ -25,6 +25,7 @@ import org.apache.commons.cli.CommandLine;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.xml.XmlElement;
 
 /**
  * Handler provides access to main entrypoint of components like addressbook and
@@ -126,4 +127,18 @@ public class ComponentPluginHandler extends AbstractPluginHandler implements
 		}
 	}
 
+	/**
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+	 */
+	public void addExtension(String id, XmlElement extension) {
+		super.addExtension(id, extension);
+		
+		// init plugin
+		XmlElement child = extension.getElement(0);
+		String name = child.getAttribute("name");
+		
+		IComponentPlugin plugin = getPlugin(name);
+		plugin.registerCommandLineArguments();
+		plugin.init();
+	}
 }

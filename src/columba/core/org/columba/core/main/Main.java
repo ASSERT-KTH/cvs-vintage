@@ -245,11 +245,6 @@ public class Main {
 		// set application wide font
 		FontProperties.setFont();
 
-		// hide splash screen
-		if (frame != null) {
-			frame.setVisible(false);
-		}
-
 		// handle the commandline arguments of the modules
 		handler.handleCommandLineParameters(ColumbaCmdLineParser.getInstance()
 				.getParsedCommandLine());
@@ -262,6 +257,11 @@ public class Main {
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
 		handler.postStartup();
+		
+		// hide splash screen
+		if (frame != null) {
+			frame.setVisible(false);
+		}
 	}
 
 	/**

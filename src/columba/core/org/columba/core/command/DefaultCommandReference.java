@@ -26,7 +26,7 @@ public class DefaultCommandReference implements ICommandReference {
 	/**
 	 * a lock to claim access on some resource
 	 */
-	protected Lock lock;
+	protected Lock lock = new Lock();
 
 	/**
 	 * Try to get lock.

@@ -15,22 +15,37 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import org.columba.core.plugin.AbstractPluginHandler;
+import java.util.ArrayList;
 
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 /**
- * Frames found in package org.columba.core.gui.frame are loaded
- * dynamically.
+ * Frames found in package org.columba.core.gui.frame are loaded dynamically.
  * <p>
- * This makes it possible to write a plugin, for the mail component
- * where the frame has a completely different layout.
- *
+ * This makes it possible to write a plugin, for the mail component where the
+ * frame has a completely different layout.
+ * 
  * @author fdietz
  */
 public class FramePluginHandler extends AbstractPluginHandler {
-    public FramePluginHandler() {
-        super("org.columba.core.frame", "org/columba/core/plugin/frame.xml");
+	public FramePluginHandler() {
+		super("org.columba.core.frame", "org/columba/core/plugin/frame.xml");
 
-        parentNode = getConfig().getRoot().getElement("framelist");
-    }
+		parentNode = getConfig().getRoot().getElement("framelist");
+	}
+
+	public String[] getManagedFrames() {
+		ArrayList list = new ArrayList();
+		for (int i = 0; i < parentNode.count(); i++) {
+			XmlElement child = parentNode.getElement(i);
+			String managed = child.getAttribute("managed");
+			if  (managed == null ) managed = "false";
+			
+			if (managed.equals("true")) {
+				list.add(child.getAttribute("name"));
+			}
+		}
+		return (String[]) list.toArray(new String[0]);
+	}
 }
