@@ -4,7 +4,7 @@
     #set ( $module = $attrValue.Issue.Module )
 
         <select name="$attrInput.get($optionFieldName).Key" 
-                #if($size.length())size="$size"#end>
+                #if($size.length())size="$size"#end class="select">
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end
@@ -26,7 +26,7 @@
     #set ( $module = $attrValue.Issue.Module )
 
         <select name="$attrInput.get($optionFieldName).Key" 
-                #if($size.length() != 1)size="$size"#end>
+                #if($size.length() != 1)size="$size"#end class="select">
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end
@@ -72,7 +72,7 @@
 
 #macro ( numericSelect $name $first $last $selected $size )
 
-    <select name="$name" size="$size">
+    <select name="$name" size="$size" class="select">
     #foreach ( $i in [$first..$last] )
         <option value="$i" #if ($i==$selected)selected #end>$i</option>
     #end          
@@ -103,7 +103,7 @@
     #set ( $module = $attrValue.Issue.Module )
 
         <select name="$attrInput.UserId.Key" 
-                #if($size.length())size="$size"#end>
+                #if($size.length())size="$size"#end class="select">
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end

@@ -4,26 +4,40 @@
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
+<h1>Enter Issue</h1>
+<div class="grouper">
 <form name="ReportForm" method="post" action="$action">
 
-<p>
+<div class="datatitle">
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+            <td>Input Your Issue:</td>
+        </tr>
+    </table>
+</div>
 
-    #set ( $attrValue = $attrValues.get("SUMMARY") )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #attrValueErrorMsg( $attrValue "Value" )<br>
-    Summary:
-   <input name= "$attrInput.Value.Key"
-        value="$!attrInput.Value" size="20" type="text">
-    <br>
-    A short description of the issue.<br>
-    <br>
-
-
+<div class="listtable">
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+            <td width="120" class="a">
+            #set ( $attrValue = $attrValues.get("SUMMARY") )
+            #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+            #attrValueErrorMsg( $attrValue "Value" )<br/>
+            <strong>issue summary:</strong></td>
+            <td class="b">
+                <textarea name="$attrInput.Value.Key" rows="4" cols="40" class="text">
+                $!attrInput.Value
+                </textarea><br/>
+                A short description of the issue.
+            </td>
+        </tr>
+    
 #foreach ( $attKey in $attrValues )
-
+  
   #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
   #if ( $attVal.isDedupeAttribute())
-
+     <tr>
+        <td width="120" class="a">
      ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
@@ -35,25 +49,39 @@
         ## $attrInput.get($field).setRequired(true)
         <b>*</b>
      #end
-
-    $attVal.Attribute.Name:
+     
+     <strong>
+     $attVal.Attribute.Name:
+     </strong>
+     
 
     <font color="red">
         #attrValueErrorMsg ( $attVal $field )
     </font>
-    <br>
+    </td>
+    <td class="b">
     #attrValueLeafSelect ($attVal $field "")
-
-<br><br>
+    </td>
+    </tr>
   #end
 #end
+    </table>
+</div>
 
-<p>
-            <input type="submit" 
-                name="eventSubmit_doSubmitattributes" value="Next ->">
+<table width="100%" cellpadding="3" cellspacing="2" border="0">
+    <tr>
+    <td>
+        <input type="submit" 
+            name="eventSubmit_doSubmitattributes" value="Next ->" class="button"/>
+            &#160;<input type="reset" value="reset" class="button"/>
+    </td>
+    </tr>
+</table>
+
 
 $intake.declareGroups()
 </form>
+</div>
 
 
 
