@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.57 2003/07/28 14:41:21 thierrylach Exp $
+ * @version $Id: IssueType.java,v 1.58 2003/08/07 01:05:24 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -120,6 +120,9 @@ public  class IssueType
     // this will not change, so only look it up once.
     private IssueType templateIssueType;
 
+    // this will not change, so only look it up once.
+    private IssueType parentIssueType;
+
     /**
      * Gets the IssueType template for this IssueType. The template
      * is a special type of IssueType.
@@ -142,6 +145,30 @@ public  class IssueType
             }
         }
         return templateIssueType;
+    }
+
+    /**
+     * Gets the parent IssueType for this template IssueType. The template
+     * is a special type of IssueType.
+     */
+    public IssueType getParentIssueType()
+        throws Exception
+    {
+        if (parentIssueType == null) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(IssueTypePeer.ISSUE_TYPE_ID, getParentId());
+            List results = IssueTypePeer.doSelect(crit);
+            if (results.isEmpty() || results.size()>1)
+            {
+                throw new ScarabException("There has been an error.");
+            }
+            else
+            {
+                parentIssueType = (IssueType)results.get(0);
+            }
+        }
+        return parentIssueType;
     }
 
 

@@ -4,6 +4,9 @@
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
   #set ($issueType = $attrValue.Issue.IssueType)
+  #if ($issueType.ParentId > 0)
+     #set ($issueType = $issueType.ParentIssueType)
+  #end
   ## Initialize $newValues in case the second #set has a null RHS.
   #set ($newValues = '')
   #set ($newValues = $attrInput.get($optionFieldName).Value)
