@@ -358,7 +358,7 @@
 #end
 
 ## ATTACHMENT
-#set ($attachments = $currentIssue.Attachments)
+#set ($attachments = $currentIssue.ExistingAttachments)
 #if ($attachments.size() > 0 )
     <h3>Attachment</h3>
     <div>
@@ -371,7 +371,7 @@
         <th>File Name</th>
         <th>File Description</th>
        </tr> 
-       #foreach ($file in $currentIssue.Attachments)
+       #foreach ($file in $currentIssue.ExistingAttachments)
            #indexedRows($velocityCount)
            #if ($file.TypeId.toString().equals("1"))
                <tr>
