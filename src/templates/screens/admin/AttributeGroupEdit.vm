@@ -113,11 +113,15 @@
 #end
 
 <div class="functnbar3">
+#if (!$group.Attributes.isEmpty())
 <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+#end
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 ##<input type="submit" value="Copy selected" />&#160;
+#if (!$group.Attributes.isEmpty())
 <input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributes" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />
+#end
 </div>
 
 
