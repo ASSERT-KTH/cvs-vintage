@@ -283,7 +283,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
          }
 
          // execute statement
-         int rowsAffected = executeInsert(ps, ctx);
+         int rowsAffected = executeInsert(index, ps, ctx);
          if(rowsAffected != 1)
          {
             throw new CreateException("Expected one affected row but update returned" + rowsAffected +
@@ -323,7 +323,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       return c.prepareStatement(sql);
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       return ps.executeUpdate();
    }

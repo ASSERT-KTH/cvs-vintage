@@ -30,6 +30,11 @@ import org.jboss.deployment.DeploymentException;
  */
 public class JDBCInformixCreateCommand extends JDBCIdentityColumnCreateCommand
 {
+   private static final String NAME = "class-name";
+   private static final String DEFAULT_CLASS = "com.informix.jdbc.IfxStatement";
+   private static final String METHOD = "method";
+   private static final String DEFAULT_METHOD = "getSerial";
+
    private String className;
    private String methodName;
    private Method method;
@@ -55,30 +60,30 @@ public class JDBCInformixCreateCommand extends JDBCIdentityColumnCreateCommand
    protected void initEntityCommand(JDBCEntityCommandMetaData entityCommand) throws DeploymentException
    {
       super.initEntityCommand(entityCommand);
-      className = entityCommand.getAttribute("class-name");
+      className = entityCommand.getAttribute(NAME);
       if(className == null)
       {
-         className = "com.informix.jdbc.IfxStatement";
+         className = DEFAULT_CLASS;
       }
-      methodName = entityCommand.getAttribute("method");
+      methodName = entityCommand.getAttribute(METHOD);
       if(methodName == null)
       {
-         methodName = "getSerial";
+         methodName = DEFAULT_METHOD;
       }
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       int rows = ps.executeUpdate();
 
       // remove any JCA wrappers
       while(ps instanceof WrappedStatement)
       {
-         ps = (PreparedStatement) ((WrappedStatement) ps).getUnderlyingStatement();
+         ps = (PreparedStatement)((WrappedStatement)ps).getUnderlyingStatement();
       }
       try
       {
-         Number pk = (Number) method.invoke(ps, null);
+         Number pk = (Number)method.invoke(ps, null);
          pkField.setInstanceValue(ctx, pk);
          return rows;
       }

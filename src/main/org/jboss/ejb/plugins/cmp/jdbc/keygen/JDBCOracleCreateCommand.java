@@ -24,13 +24,12 @@ import org.jboss.deployment.DeploymentException;
 /**
  * Create command for use with Oracle that uses a sequence in conjuction with
  * a RETURNING clause to generate keys in a single statement
- *
+ * 
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
 {
    private String sequence;
-   private int pkIndex;
    private int jdbcType;
 
    public void init(JDBCStoreManager manager) throws DeploymentException
@@ -42,15 +41,13 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
    {
       super.initEntityCommand(entityCommand);
       sequence = entityCommand.getAttribute("sequence");
-      if(sequence == null)
-      {
+      if (sequence == null) {
          throw new DeploymentException("Sequence must be specified");
       }
    }
 
    protected void initInsertSQL()
    {
-      pkIndex = 1 + insertFields.length;
       jdbcType = pkField.getJDBCType().getJDBCTypes()[0];
 
       StringBuffer sql = new StringBuffer();
@@ -58,17 +55,19 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
       sql.append(" (");
       SQLUtil.getColumnNamesClause(pkField, sql)
          .append(", ");
-      SQLUtil.getColumnNamesClause(insertFields, sql)
-         .append(")");
+
+      SQLUtil.getColumnNamesClause(insertFields, sql);
+
+      sql.append(")");
       sql.append(" VALUES (");
-      sql.append(sequence + ".NEXTVAL, ");
+      sql.append(sequence+".NEXTVAL, ");
       SQLUtil.getValuesClause(insertFields, sql);
       sql.append(")");
       sql.append(" RETURNING ");
-      SQLUtil.getColumnNamesClause(pkField, sql).append(" INTO ? }");
+      SQLUtil.getColumnNamesClause(pkField, sql)
+         .append(" INTO ? }");
       insertSQL = sql.toString();
-      if(debug)
-      {
+      if (debug) {
          log.debug("Insert Entity SQL: " + insertSQL);
       }
    }
@@ -78,12 +77,12 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
       return c.prepareCall(sql);
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       CallableStatement cs = (CallableStatement) ps;
-      cs.registerOutParameter(pkIndex, jdbcType);
+      cs.registerOutParameter(paramIndex, jdbcType);
       cs.execute();
-      Object pk = JDBCUtil.getParameter(log, cs, pkIndex, jdbcType, pkField.getFieldType());
+      Object pk = JDBCUtil.getParameter(log, cs, paramIndex, jdbcType, pkField.getFieldType());
       pkField.setInstanceValue(ctx, pk);
       return 1;
    }

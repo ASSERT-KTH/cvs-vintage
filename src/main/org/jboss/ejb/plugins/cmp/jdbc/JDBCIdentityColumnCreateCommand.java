@@ -46,7 +46,7 @@ public abstract class JDBCIdentityColumnCreateCommand extends JDBCAbstractCreate
       pkField = getGeneratedPKField();
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       int rows = ps.executeUpdate();
       Connection c;

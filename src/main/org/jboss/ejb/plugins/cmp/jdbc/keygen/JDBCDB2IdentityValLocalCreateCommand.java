@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 public class JDBCDB2IdentityValLocalCreateCommand extends JDBCIdentityColumnCreateCommand {
     private static final String SQL = "values (identity_val_local())";
 
-    protected int executeInsert( PreparedStatement ps, EntityEnterpriseContext ctx ) throws SQLException {
+    protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx ) throws SQLException {
         int rows = ps.executeUpdate();
         ResultSet results = null;
         try {

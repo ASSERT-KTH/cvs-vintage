@@ -26,7 +26,7 @@ import org.jboss.deployment.DeploymentException;
 /**
  * Create command for MySQL that uses the driver's getGeneratedKeys method
  * to retrieve AUTO_INCREMENT values.
- *
+ * 
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public class JDBCMySQLCreateCommand extends JDBCIdentityColumnCreateCommand
@@ -38,18 +38,13 @@ public class JDBCMySQLCreateCommand extends JDBCIdentityColumnCreateCommand
    public void init(JDBCStoreManager manager) throws DeploymentException
    {
       super.init(manager);
-      try
-      {
+      try {
          Class psClass = Thread.currentThread().getContextClassLoader().loadClass(className);
          method = psClass.getMethod(methodName, null);
-      }
-      catch(ClassNotFoundException e)
-      {
-         throw new DeploymentException("Could not load driver class: " + className, e);
-      }
-      catch(NoSuchMethodException e)
-      {
-         throw new DeploymentException("Driver does not have method: " + methodName + "()");
+      } catch (ClassNotFoundException e) {
+         throw new DeploymentException("Could not load driver class: "+className, e);
+      } catch (NoSuchMethodException e) {
+         throw new DeploymentException("Driver does not have method: "+methodName+"()");
       }
    }
 
@@ -57,48 +52,37 @@ public class JDBCMySQLCreateCommand extends JDBCIdentityColumnCreateCommand
    {
       super.initEntityCommand(entityCommand);
       className = entityCommand.getAttribute("class-name");
-      if(className == null)
-      {
+      if (className == null) {
          className = "com.mysql.jdbc.PreparedStatement";
       }
       methodName = entityCommand.getAttribute("method");
-      if(methodName == null)
-      {
+      if (methodName == null) {
          methodName = "getGeneratedKeys";
       }
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int paramIndex, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       int rows = ps.executeUpdate();
 
       // remove any JCA wrappers
-      while(ps instanceof WrappedStatement)
-      {
-         ps = (PreparedStatement) ((WrappedStatement) ps).getUnderlyingStatement();
+      while (ps instanceof WrappedStatement) {
+         ps = (PreparedStatement) ((WrappedStatement)ps).getUnderlyingStatement();
       }
 
       ResultSet rs = null;
-      try
-      {
+      try {
          rs = (ResultSet) method.invoke(ps, null);
-         if(!rs.next())
-         {
+         if (!rs.next()) {
             throw new EJBException("getGeneratedKeys returned an empty ResultSet");
          }
          pkField.loadInstanceResults(rs, 1, ctx);
-      }
-      catch(RuntimeException e)
-      {
+      } catch (RuntimeException e) {
          throw e;
-      }
-      catch(Exception e)
-      {
+      } catch (Exception e) {
          // throw EJBException to force a rollback as the row has been inserted
          throw new EJBException("Error extracting generated keys", e);
-      }
-      finally
-      {
+      } finally {
          JDBCUtil.safeClose(rs);
       }
       return rows;
