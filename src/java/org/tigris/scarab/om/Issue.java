@@ -1425,7 +1425,8 @@ public class Issue
                         // throw the original
                         throw new ScarabException(
                             "Error retrieving an id for the new issue.  " + 
-                            "Please check turbine.log for reasons.");
+                            "Please check turbine.log for reasons.", 
+                            badException);
                     }
                 }
             }
