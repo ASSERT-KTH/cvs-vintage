@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.36 $
+ *   @version $Revision: 1.37 $
  */
 public abstract class Container
 {
@@ -101,6 +101,9 @@ public abstract class Container
 
    // This is the realm mapping
    protected RealmMapping rm;
+
+   /** The custom security proxy used by the SecurityInterceptor */
+   protected Object securityProxy;
 
    // This is a cache for method permissions
    private HashMap methodPermissionsCache = new HashMap();
@@ -149,6 +152,14 @@ public abstract class Container
       return rm;
    }
 
+   public void setSecurityProxy(Object proxy)
+   {
+       this.securityProxy = proxy;
+   }
+   public Object getSecurityProxy()
+   {
+       return securityProxy;
+   }
 
    /**
    * Sets the application deployment unit for this container. All the bean

@@ -77,8 +77,9 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
+*   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.66 $
+*   @version $Revision: 1.67 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -541,38 +542,11 @@ public class ContainerFactory
     // Stolen from Stateless deploy
     // Create container
     MessageDrivenContainer container = new MessageDrivenContainer();
+    int transType = ((MessageDrivenMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
 
-    initializeContainer( container, conf, bean, cl, localCl );
+    initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
-    // Create interceptors
-    container.addInterceptor( new LogInterceptor() );
-    container.addInterceptor( new SecurityInterceptor() );
-
-    if( ( (MessageDrivenMetaData) bean ).isContainerManagedTx() )
-      {
-      // CMT
-      container.addInterceptor( new TxInterceptorCMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-
-      container.addInterceptor( new MessageDrivenInstanceInterceptor() );
-      }
-    else
-      {
-      // BMT
-      container.addInterceptor( new MessageDrivenInstanceInterceptor() );
-      // FIXME. should we have a special BMT tx interceptor
-      // to place ACK there???
-      container.addInterceptor( new MessageDrivenTxInterceptorBMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-      }
-
-    // Finally we add the last interceptor from the container
-    container.addInterceptor( container.createContainerInterceptor() );
 
     return container;
     }
@@ -585,37 +559,11 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatelessSessionContainer container = new StatelessSessionContainer();
-
-    initializeContainer( container, conf, bean, cl, localCl );
+    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+    initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
-    // Create interceptors
-    container.addInterceptor( new LogInterceptor() );
-    container.addInterceptor( new SecurityInterceptor() );
-
-    if( ( (SessionMetaData) bean ).isContainerManagedTx() )
-      {
-      // CMT
-      container.addInterceptor( new TxInterceptorCMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-
-      container.addInterceptor( new StatelessSessionInstanceInterceptor() );
-      }
-    else
-      {
-      // BMT
-      container.addInterceptor( new StatelessSessionInstanceInterceptor() );
-      container.addInterceptor( new TxInterceptorBMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-      }
-
-    // Finally we add the last interceptor from the container
-    container.addInterceptor( container.createContainerInterceptor() );
-
+    
     return container;
     }
 
@@ -627,39 +575,14 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatefulSessionContainer container = new StatefulSessionContainer();
-
-    initializeContainer( container, conf, bean, cl, localCl );
+    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+    initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstanceCache( createInstanceCache( conf, m_beanCacheJMSMonitoring, cl ) );
     // No real instance pool, use the shadow class
     container.setInstancePool( new StatefulSessionInstancePool() );
     // Set persistence manager
     container.setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
-    // Create interceptors
-    container.addInterceptor( new LogInterceptor() );
-
-    if( ( (SessionMetaData) bean ).isContainerManagedTx() )
-      {
-      // CMT
-      container.addInterceptor( new TxInterceptorCMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-
-      container.addInterceptor( new StatefulSessionInstanceInterceptor() );
-      }
-    else
-      {
-      // BMT : the tx interceptor needs the context from the instance interceptor
-      container.addInterceptor( new StatefulSessionInstanceInterceptor() );
-      container.addInterceptor( new TxInterceptorBMT() );
-
-      if( metricsEnabled )
-        container.addInterceptor( new MetricsInterceptor() );
-      }
-
-    container.addInterceptor( new SecurityInterceptor() );
-    container.addInterceptor( container.createContainerInterceptor() );
 
     return container;
     }
@@ -672,8 +595,8 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     EntityContainer container = new EntityContainer();
-
-    initializeContainer( container, conf, bean, cl, localCl );
+    int transType = ContainerInterceptors.CMT;
+    initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstanceCache( createInstanceCache( conf, m_beanCacheJMSMonitoring, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
@@ -695,19 +618,6 @@ public class ContainerFactory
       container.setPersistenceManager( persistenceManager );
       }
 
-    // Create interceptors
-    container.addInterceptor( new LogInterceptor() );
-    container.addInterceptor( new SecurityInterceptor() );
-    // entity beans are always CMT
-    container.addInterceptor( new TxInterceptorCMT() );
-
-    if( metricsEnabled )
-      container.addInterceptor( new MetricsInterceptor() );
-
-    container.addInterceptor( new EntityInstanceInterceptor() );
-    container.addInterceptor( new EntitySynchronizationInterceptor() );
-    container.addInterceptor( container.createContainerInterceptor() );
-
     return container;
     }
 
@@ -715,7 +625,7 @@ public class ContainerFactory
   // Helper Methods
   // **************
 
-  private static void initializeContainer( Container container, ConfigurationMetaData conf, BeanMetaData bean, ClassLoader cl, ClassLoader localCl )
+  private void initializeContainer( Container container, ConfigurationMetaData conf, BeanMetaData bean, int transType, ClassLoader cl, ClassLoader localCl )
     throws NamingException, DeploymentException
     {
     // Create classloader for this container
@@ -727,36 +637,64 @@ public class ContainerFactory
     // Set metadata
     container.setBeanMetaData( bean );
     // Set transaction manager
-    container.setTransactionManager( (TransactionManager) new InitialContext().lookup( "java:/TransactionManager" ) );
+    InitialContext iniCtx = new InitialContext();
+    container.setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
 
-    // Set security manager & role mapping manager
-    String securityManagerJNDIName = conf.getAuthenticationModule();
-    String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+        // Set security manager & role mapping manager
+        String securityDomain = bean.getApplicationMetaData().getSecurityDomain();
+        String securityManagerJNDIName = conf.getAuthenticationModule();
+        String roleMappingManagerJNDIName = conf.getRoleMappingManager();
 
-    if( ( securityManagerJNDIName != null ) && ( roleMappingManagerJNDIName != null ) )
-      {
-      try
-        {
-        EJBSecurityManager ejbS = (EJBSecurityManager) new InitialContext().lookup( securityManagerJNDIName );
+        if( securityDomain != null && securityDomain.startsWith("java:/jaas") == false )
+            securityDomain = "java:/jaas/" + securityDomain;
+        if( securityDomain != null || ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null)) )
+        {   // Either the application has a security domain or the container has security setup
+            try
+            {
+                if( securityManagerJNDIName == null )
+                    securityManagerJNDIName = securityDomain;
+                System.out.println("lookup securityManager name: "+securityManagerJNDIName);
+                EJBSecurityManager ejbS = (EJBSecurityManager)iniCtx.lookup(securityManagerJNDIName);
+                container.setSecurityManager( ejbS );
+            }
+            catch (NamingException ne)
+            {
+                throw new DeploymentException( "Could not find the Security Manager specified for this container, name="+securityManagerJNDIName, ne);
+            }
 
-        container.setSecurityManager( ejbS );
+            try
+            {
+                if( roleMappingManagerJNDIName == null )
+                    roleMappingManagerJNDIName = securityDomain;
+                RealmMapping rM = (RealmMapping)iniCtx.lookup(roleMappingManagerJNDIName);
+                container.setRealmMapping( rM );
+            }
+            catch (NamingException ne)
+            {
+                throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+            }
         }
-      catch( NamingException ne )
+
+        // Set security proxies
+        String securityProxyClassName = bean.getSecurityProxy();
+        if( securityProxyClassName != null )
         {
-        throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+            try
+            {
+                Class proxyClass = cl.loadClass(securityProxyClassName);
+                Object proxy = proxyClass.newInstance();
+                container.setSecurityProxy(proxy);
+                System.out.println("setSecurityProxy, "+proxy);
+            }
+            catch(Exception e)
+            {
+                throw new DeploymentException("Missing SecurityProxy (in jboss.xml or standardjboss.xml): " + conf.getContainerInvoker() +" - " + e);
+            }
         }
 
-      try
-        {
-        RealmMapping rM = (RealmMapping) new InitialContext().lookup( roleMappingManagerJNDIName );
+       // Create interceptors
+       ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
 
-        container.setRealmMapping( rM );
-        }
-      catch( NamingException ne )
-        {
-        throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
-        }
-      }
     }
 
   private static ContainerInvoker createContainerInvoker( ConfigurationMetaData conf, ClassLoader cl )
@@ -827,5 +765,3 @@ public class ContainerFactory
     }
   }
 
-
-/*------ Formatted by Jindent 3.23 Basic 1.0 --- http://www.jindent.de ------*/
