@@ -59,6 +59,7 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.system.*;
 import org.tigris.scarab.util.*;
 
 /**
@@ -68,15 +69,19 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.2 2001/01/04 03:02:10 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.3 2001/01/15 07:50:39 jon Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
     /**
         This manages clicking the Register confirm button
     */
-    public void doRegisterconfirm( RunData data, Context context ) throws Exception
+    public void doConfirmregistration( RunData data, Context context ) throws Exception
     {
+        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
         try
         {
             // pull the user object from the session
@@ -85,28 +90,36 @@ public class RegisterConfirm extends VelocityAction
                 throw new Exception ("Unable to retrive user object from session.");
             // attempt to create a new user!
             su.createNewUser();
+            setTemplate (data, nextTemplate);
         }
         catch (Exception e)
         {
+            setTemplate (data, template);
             data.setMessage (e.getMessage());
-            setTemplate (data, "Register.vm");
             return;
         }
     }
     /**
         returns you to Register.vm
     */
-    public void doCancel( RunData data, Context context ) throws Exception
+    public void doBack( RunData data, Context context ) throws Exception
     {
-        // FIXME: put form fields from data.getUser().getTemp(ScarabConstants.SESSION_REGISTER)
-        //        into data.getParameters() so that they show up filled in on Register.vm
-        setTemplate(data, "Register.vm");
+        // grab the ScarabSystem object so that we can populate the internal User object
+        // for redisplay of the form data on the screen
+        ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
+        if (ss != null)
+        {
+            ss.setUser((User)data.getUser().getTemp(ScarabConstants.SESSION_REGISTER));
+        }
+        // set the template to the template that we should be going back to
+        setTemplate(data, data.getParameters().getString(
+                ScarabConstants.CANCEL_TEMPLATE, "Register.vm"));
     }
     /**
         calls doRegisterConfirm()
     */
     public void doPerform( RunData data, Context context ) throws Exception
     {
-        doRegisterconfirm(data, context);
+        doConfirmregistration(data, context);
     }
 }
