@@ -16,40 +16,20 @@
 
 package org.columba.mail.gui.config.search;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.border.AbstractBorder;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.wizard.WizardBottomBorder;
+import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -131,7 +111,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-
 	}
 
 	private JPanel createCenterPanel() {
@@ -161,8 +140,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		selectButton.addActionListener(this);
 		folderPanel.add(selectButton);
 		folderPanel.add(Box.createHorizontalGlue());
-		includeSubfolderButton =
-			new JCheckBox(
+		includeSubfolderButton = new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -177,21 +155,19 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		JPanel middleIfPanel = new JPanel();
 		middleIfPanel.setLayout(new BorderLayout());
-		Border border =
-			BorderFactory.createTitledBorder(
-				BorderFactory.createEtchedBorder(),
-				"If");
-		middleIfPanel.setBorder(
-			BorderFactory.createCompoundBorder(
-				border,
+		middleIfPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(
+                                        MailResourceLoader.getString(
+                                                "dialog",
+                                                "filter",
+                                                "if")),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		JPanel ifPanel = new JPanel();
 		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
-		addButton =
-			new JButton(
+		addButton = new JButton(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -210,8 +186,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		ifPanel.add(Box.createHorizontalGlue());
 
-		nameLabel =
-			new JLabel(
+		nameLabel = new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -225,8 +200,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		String[] cond =
-			{
+		String[] cond =	{
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -241,9 +215,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
 
-		criteriaList =
-			new CriteriaList(				
-				destFolder.getFilter());
+		criteriaList = new CriteriaList(destFolder.getFilter());
 		criteriaList.setPreferredSize(new Dimension(500, 100));
 		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
 
@@ -314,11 +286,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 					.get("property", "include_subfolders")))
 					.booleanValue();
 
-			boolean value2 = isInclude;
-			if (value2 == true)
-				includeSubfolderButton.setSelected(true);
-			else
-				includeSubfolderButton.setSelected(false);
+                        includeSubfolderButton.setSelected(isInclude);
 
 			int uid =
 				destFolder.getFolderItem().getInteger("property", "source_uid");
@@ -366,7 +334,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			criteriaList.updateComponents(b);
 		}
-
 	}
 
 	public void setSourceFolder(Folder f) {
@@ -415,48 +382,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 			}
 
 			frameController.treeController.setSelected(destFolder);
-			
-			
-		}
-
-	}
-
-	public class WizardBottomBorder extends AbstractBorder {
-		protected Insets borderInsets = new Insets(0, 0, 0, 2);
-		public void paintBorder(
-			Component c,
-			Graphics g,
-			int x,
-			int y,
-			int w,
-			int h) {
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y + h - 2, x + w - 1, y + h - 2);
-			g.setColor(Color.white);
-			g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
-		}
-		public Insets getBorderInsets(Component c) {
-			return borderInsets;
 		}
 	}
-
-	public class WizardTopBorder extends AbstractBorder {
-		protected Insets borderInsets = new Insets(2, 0, 0, 0);
-		public void paintBorder(
-			Component c,
-			Graphics g,
-			int x,
-			int y,
-			int w,
-			int h) {
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y, x + w - 1, y);
-			g.setColor(Color.white);
-			g.drawLine(x, y + 1, x + w - 1, y + 1);
-		}
-		public Insets getBorderInsets(Component c) {
-			return borderInsets;
-		}
-	}
-
 }
