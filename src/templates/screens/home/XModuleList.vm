@@ -35,10 +35,12 @@
  #set($checked2 = $list.QueryKey == $data.Parameters.getString($key, ""))
  #set($list = $manager.AllModulesAllIssueTypesList)
  #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
- <div><input type="radio" name="$key" value="$list.QueryKey"
-     #if($checked) checked="checked"#end />$list.Name</div>
- <div><input type="radio" name="$key" value="$list2.QueryKey"
-     #if($checked2) checked="checked"#end />$list2.Name</div>
+ <div class="colbar">
+   <p><input type="radio" name="$key" value="$list.QueryKey"
+     #if($checked) checked="checked"#end />$list.Name</p>
+   <p><input type="radio" name="$key" value="$list2.QueryKey"
+     #if($checked2) checked="checked"#end />$list2.Name</p>
+ </div>
 
  <div class="functnbar2">
   <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="$l10n.DefineQuery" />
