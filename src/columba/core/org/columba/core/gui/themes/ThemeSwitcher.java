@@ -20,92 +20,54 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.DefaultMetalTheme;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
-import org.columba.core.config.ThemeItem;
-import org.columba.core.gui.themes.thincolumba.ThinColumbaTheme;
+import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
-
+import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.xml.XmlElement;
 
 public class ThemeSwitcher {
 	public static void setTheme() {
-		ThemeItem item = Config.getOptionsConfig().getThemeItem();
-		try {
-			switch (item.getInteger("id")) {
-				case 0 :
-					{
-						break;
-					}
-				case 1 :
-					{
-						MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-                                                UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-						break;
-					}
-				case 2 :
-					{
-						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem()));
-                                                UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-                                                break;
-					}
-				/*
-				case 3 :
-					{
-						mainInterface.columbaTheme =
-							new ContrastColumbaTheme(mainInterface.themeItem);
-						mainInterface.lookAndFeel = new MetalLookAndFeel();
-						mainInterface.lookAndFeel.setCurrentTheme(
-							mainInterface.columbaTheme);
-						UIManager.setLookAndFeel(mainInterface.lookAndFeel);
+		// get configuration
+		XmlElement themeConfig = Config.get("options").getElement("/options/gui/theme");
 
-						break;
-					}
-				*/
-				case 3 :
-					{
-						try {
-							UIManager.setLookAndFeel(
-								 "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
-						} catch (Exception e) {
-							//e.printStackTrace();
-							UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-						}
-						break;
-					}
-				case 4 :
-					{
-						try {
-							UIManager.setLookAndFeel(
-								  "javax.swing.plaf.mac.MacLookAndFeel"  );
-						} catch (Exception e) {
-							//e.printStackTrace();
-							UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-						}
-						break;
-					}
-				case 5 :
-					{
-						try {
-							UIManager.setLookAndFeel(
-								   "com.sun.java.swing.plaf.motif.MotifLookAndFeel"   );
-						} catch (Exception e) {
-							//e.printStackTrace();
-							UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-						}
-						break;
-					}
+		try {
+			// get plugin-handler
+			ThemePluginHandler handler =
+				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.theme");
+			// if no theme available -> set ThinColumba as default
+			String pluginName = themeConfig.getAttribute("name", "ThinColumba");
+			if ( pluginName == null )
+			{
+				themeConfig.addAttribute("name","ThinColumba");
+				pluginName = "ThinColumba";
 			}
+
+			AbstractThemePlugin theme = null;
+
+			// instanciate theme
+			theme = (AbstractThemePlugin) handler.getPlugin(pluginName, null);
+
+			// apply theme
+			theme.setLookAndFeel();
+
 		} catch (Exception ex) {
-			System.out.println(
-				"failure while trying to load theme: " + ex.getMessage());
+			ex.printStackTrace();
+			
+			NotifyDialog dialog = new NotifyDialog();
+			dialog.showDialog(ex);
+
+			try {
+
+				// fall-back
+				UIManager.setLookAndFeel(
+					UIManager.getCrossPlatformLookAndFeelClassName());
+			} catch (Exception e) {
+			}
 		}
 		setFonts(Config.getOptionsConfig().getGuiItem());
 	}

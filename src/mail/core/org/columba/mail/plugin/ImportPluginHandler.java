@@ -26,7 +26,7 @@ public class ImportPluginHandler extends AbstractPluginHandler {
 	 * @param config
 	 */
 	public ImportPluginHandler() {
-		super("org.columba.mail.import", "org/columba/mail/folder/import.xml");
+		super("org.columba.mail.import", "org/columba/mail/plugin/import.xml");
 
 		parentNode = getConfig().getRoot().getElement("importlist");
 	}

@@ -13,10 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Insets;
 
-
+import javax.swing.border.AbstractBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 /**
  * @author freddy
@@ -26,21 +30,29 @@ package org.columba.mail.plugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
+public class ThinDefaultBorder extends AbstractBorder {
+	protected Insets editorBorderInsets = new Insets(1, 1, 1, 0);
 
-	
+	public void paintBorder(
+		Component c,
+		Graphics g,
+		int x,
+		int y,
+		int w,
+		int h) {
+		g.translate(x, y);
 
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
+		g.setColor(MetalLookAndFeel.getControlDarkShadow());
+		g.drawLine(w - 1, 0, w - 1, h - 1);
+		g.drawLine(1, h - 1, w - 1, h - 1);
+		g.setColor(MetalLookAndFeel.getControlHighlight());
+		g.drawLine(0, 0, w - 2, 0);
+		g.drawLine(0, 0, 0, h - 2);
 
-		
+		g.translate(-x, -y);
 	}
-	
-	
 
+	public Insets getBorderInsets(Component c) {
+		return editorBorderInsets;
+	}
 }

@@ -16,17 +16,8 @@
 
 package org.columba.core.main;
 
-import java.awt.Event;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.KeyStroke;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Keymap;
 
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.action.ActionPluginHandler;
@@ -42,6 +33,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
@@ -108,7 +100,6 @@ public class Main {
 
     Config.init();
 
-    ThemeSwitcher.setTheme();
 
     MainInterface.clipboardManager = new ClipboardManager();
 
@@ -123,7 +114,10 @@ public class Main {
     MainInterface.pluginManager.registerHandler(new MenuPluginHandler("org.columba.core.menu"));
 
     MainInterface.pluginManager.registerHandler(new FramePluginHandler());
-
+    
+    MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
+	ThemeSwitcher.setTheme();
+	
     MainInterface.shutdownManager = new ShutdownManager();
 
     MainInterface.shutdownManager.register(new SaveConfigPlugin());

@@ -22,7 +22,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -41,6 +40,8 @@ import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
 
 public class ThemePanel extends JPanel implements ActionListener {
@@ -60,13 +61,24 @@ public class ThemePanel extends JPanel implements ActionListener {
 	private JButton installpulsatorButton;
 
 	private int status = -1;
-	private int theme = -1;
+	private String theme = null;
 
 	private JFrame frame;
 
 	//private ThemeItem item;
 
+	private ThemePluginHandler handler;
+
 	public ThemePanel() {
+
+		try {
+			// get plugin-handler
+			handler =
+				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.theme");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
 		init();
 	}
@@ -83,15 +95,10 @@ public class ThemePanel extends JPanel implements ActionListener {
 		JLabel themeLabel = new JLabel("Choose Theme:");
 		themePanel.add(themeLabel);
 		themePanel.add(Box.createHorizontalStrut(5));
-		Vector list = new Vector();
-		list.add("no theme");
-		list.add("Java Look And Feel");
-		list.add("Thin Columba");
-		//list.add("Contrast Columba");
-		list.add("Windows Look And Feel");
-		list.add("MacOS Look And Feel");
-		list.add("Motif Look And Feel");
-		selectorComboBox = new JComboBox(list);
+
+		String[] plugins = handler.getPluginIdList();
+		
+		selectorComboBox = new JComboBox(plugins);
 		selectorComboBox.setActionCommand("THEME");
 		selectorComboBox.addActionListener(this);
 		themePanel.add(selectorComboBox);
@@ -185,14 +192,14 @@ public class ThemePanel extends JPanel implements ActionListener {
 
 		XmlElement themeElement =
 			Config.get("options").getElement("options/gui/theme");
-		theme = Integer.parseInt(themeElement.getAttribute("id"));
+		theme = themeElement.getAttribute("name");
 
 		if (b == true) {
-			selectorComboBox.setSelectedIndex(theme);
+			selectorComboBox.setSelectedItem(theme);
 		} else {
-			themeElement.addAttribute("id", new Integer(getTheme()).toString());
+			themeElement.addAttribute("name", (String) selectorComboBox.getSelectedItem());
 		}
-		
+
 		// FIXME
 		/*
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();

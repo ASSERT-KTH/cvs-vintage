@@ -33,7 +33,7 @@ public class FilterActionPluginHandler extends AbstractFilterPluginHandler {
 	public FilterActionPluginHandler() {
 		super(
 			"org.columba.mail.filteraction",
-			"org/columba/mail/filter/filter_actions.xml",
+			"org/columba/mail/plugin/filter_actions.xml",
 			"actionlist");
 
 	}

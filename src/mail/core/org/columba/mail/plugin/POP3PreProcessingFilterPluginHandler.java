@@ -28,7 +28,7 @@ public class POP3PreProcessingFilterPluginHandler
 	public POP3PreProcessingFilterPluginHandler() {
 		super(
 			"org.columba.mail.pop3preprocessingfilter",
-			"org/columba/mail/filter/pop3preprocessingfilter.xml");
+			"org/columba/mail/plugin/pop3preprocessingfilter.xml");
 
 		parentNode =
 			getConfig().getRoot().getElement("pop3preprocessingfilterlist");

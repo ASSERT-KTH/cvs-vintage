@@ -13,10 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Graphics;
 
-
+import javax.swing.JComponent;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.metal.MetalTabbedPaneUI;
 
 /**
  * @author freddy
@@ -26,21 +29,14 @@ package org.columba.mail.plugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
-
+public class ThinTabbedPaneUI extends MetalTabbedPaneUI {
 	
-
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
-
-		
+	public static ComponentUI createUI(JComponent c) {
+		return new ThinTabbedPaneUI();
 	}
-	
-	
 
+	public void paint(Graphics g, JComponent c) {
+		ThinUtilities.enableAntiAliasing(g);
+		super.paint(g, c);
+	}
 }

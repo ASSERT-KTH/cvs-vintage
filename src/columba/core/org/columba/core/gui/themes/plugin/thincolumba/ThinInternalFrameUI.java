@@ -13,10 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Graphics;
 
-
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.metal.MetalInternalFrameUI;
 
 /**
  * @author freddy
@@ -26,21 +30,17 @@ package org.columba.mail.plugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
-
-	
-
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
-
-		
+public class ThinInternalFrameUI extends MetalInternalFrameUI {
+	public ThinInternalFrameUI(JInternalFrame c) {
+		super(c);
 	}
-	
-	
 
+	public static ComponentUI createUI(JComponent c) {
+		return new ThinInternalFrameUI((JInternalFrame) c);
+	}
+
+	public void paint(Graphics g, JComponent c) {
+		ThinUtilities.enableAntiAliasing(g);
+		super.paint(g, c);
+	}
 }

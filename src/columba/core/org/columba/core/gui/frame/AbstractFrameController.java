@@ -18,7 +18,6 @@ package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
 
-import org.columba.core.charset.CharsetManager;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.selection.SelectionManager;
@@ -208,9 +207,6 @@ public abstract class AbstractFrameController {
 		this.selectionManager = selectionManager;
 	}
 
-	public void executeCutAction() {}
-	public void executeCopyAction() {}
-	public void executePasteAction() {}
 	
 
 }

@@ -13,34 +13,24 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
-
-
-
+package org.columba.core.plugin;
 
 /**
- * @author freddy
+ * @author frd
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
-
-	
+public class ThemePluginHandler extends AbstractPluginHandler {
 
 	/**
-	 * Constructor for LocalFilterPluginHandler.
 	 * @param id
 	 * @param config
 	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
+	public ThemePluginHandler() {
+		super("org.columba.core.theme", "org/columba/core/plugin/theme.xml");
 
-		
+		parentNode = getConfig().getRoot().getElement("themelist");
 	}
-	
-	
 
 }

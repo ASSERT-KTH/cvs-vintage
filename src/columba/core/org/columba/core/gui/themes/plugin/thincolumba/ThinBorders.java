@@ -13,10 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Component;
+import java.awt.Graphics;
 
-
+import javax.swing.border.Border;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.basic.BasicBorders;
+import javax.swing.plaf.metal.MetalBorders;
 
 /**
  * @author freddy
@@ -26,21 +31,30 @@ package org.columba.mail.plugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
+public class ThinBorders extends MetalBorders {
 
-	
+	private static Border border;
 
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
-
-		
+	public static class ButtonBorder extends MetalBorders.ButtonBorder {
+		public void paintBorder(
+			Component c,
+			Graphics g,
+			int x,
+			int y,
+			int w,
+			int h) {
+			ThinUtilities.enableAntiAliasing(g);
+			super.paintBorder(c, g, x, y, w, h);
+		}
 	}
-	
-	
 
+	public static Border getButtonBorder() {
+		if (border == null)
+			border =
+				new BorderUIResource.CompoundBorderUIResource(
+					new ThinBorders.ButtonBorder(),
+					new BasicBorders.MarginBorder());
+
+		return border;
+	}
 }

@@ -13,10 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
-
+import javax.swing.UIManager;
 
 /**
  * @author freddy
@@ -26,21 +29,19 @@ package org.columba.mail.plugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FilterPluginHandler extends AbstractFilterPluginHandler {
+public class ThinUtilities {
 
-	
+	public static void enableAntiAliasing(Graphics g) {
+		if (UIManager.get("antialiasing").equals(new Integer(1))) {
+			Graphics2D g2 = (Graphics2D) g;
 
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
+			g2.setRenderingHint(
+				RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		
+			g2.setRenderingHint(
+				RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		}
 	}
-	
-	
-
 }
