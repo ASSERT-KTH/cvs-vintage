@@ -212,13 +212,17 @@ public class ScarabRequestTool
      */
     private Report reportGenerator = null;
 
-    /**
-     * A AttributeOption object for use within the Scarab API.
-     */
     private int nbrPages = 0;
     private int prevPage = 0;
     private int nextPage = 0;
     
+    /**
+     * Constructor does initialization stuff
+     */    
+    public ScarabRequestTool()
+    {
+    }
+
     /**
      * This method expects to get a RunData object
      */
@@ -232,16 +236,28 @@ public class ScarabRequestTool
      */
     public void refresh()
     {
-        this.user = null;
-        this.issue = null;
-    }
-
-    /**
-     * Constructor does initialization stuff
-     */    
-    public ScarabRequestTool()
-    {
-        //intake = new IntakeSystem();
+        user = null;
+        issue = null;
+        attribute = null;
+        attachment = null;
+        depend = null;
+        query = null;
+        templateInfo = null;
+        issueType = null;
+        group = null;
+        currentModule = null;
+        currentIssueType = null;
+        reportingIssue = null;
+        currentQuery = null;
+        module = null;
+        attributeOption = null;
+        roo = null;
+        pcao = null;
+        issueList = null;
+        reportGenerator = null;
+        nbrPages = 0;
+        prevPage = 0;
+        nextPage = 0;
     }
 
     /**
@@ -1515,10 +1531,7 @@ try{
     public void dispose()
     {
         super.dispose();
-
         data = null;
-        user = null;
-        issue = null;
-        attribute = null;
+        refresh();
     }
 }
