@@ -168,7 +168,7 @@ public class JasperMangler implements Mangler{
 	// Fix for invalid characters. From CommandLineCompiler
 	StringBuffer modifiedClassName = new StringBuffer();
 	char c='/';
-	if( Character.isDigit( className.charAt( 0 )  )) {
+	if( className.length() > 0 && Character.isDigit( className.charAt( 0 )  )) {
 	    className="_" +className;
 	}
 	for (int i = 0; i < className.length(); i++) {
