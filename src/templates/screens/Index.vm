@@ -25,14 +25,11 @@ href="$link.setPage("Register.vm")">create an account</a>.
 </p>
 </td>
 
-<p>
-</p>
-
 #elseif (!$scarabR.CurrentModule)
-
 
 <td>
 <p><strong>Step 2:</strong></p>
+
 <p>
 <img src="$data.Request.ContextPath/images/module.gif" alt="What is a
 module?" width="260" height="105" /></p> Select a <a
@@ -40,6 +37,7 @@ href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPL
 A module is the unit of work space representing a unique set of
 "artifact types" (issues). Each new module also has the following unique
 details:
+</p>
 
 <ul>
 <li><small>a set of users</small></li>
@@ -65,6 +63,7 @@ contact the administrator.
 height="105" /></p> Select an <strong>artifact type</strong> from the
 left side navigation. An artifact type encapsulates a unique set of
 attributes and attribute options:
+</p>
 
 <ul>
 <li><small>a customizable set of attributes</small></li>
