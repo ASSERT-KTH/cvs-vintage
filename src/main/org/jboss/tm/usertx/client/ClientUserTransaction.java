@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import java.util.LinkedList;
+import java.util.Hashtable;
 
 import javax.naming.InitialContext;
 import javax.naming.Reference;
@@ -28,40 +29,42 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.tm.TransactionPropagationContextUtil;
 
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
+import org.jboss.naming.NamingContextFactory;
 
 /**
- *  The client-side UserTransaction implementation.
- *  This will delegate all UserTransaction calls to the server.
+ * The client-side UserTransaction implementation. This will delegate all
+ * UserTransaction calls to the server.
  *
- *  <em>Warning:</em> This is only for stand-alone clients that do
- *  not have their own transaction service. No local work is done in
- *  the context of transactions started here, only work done in beans
- *  at the server. Instantiating objects of this class outside the server
- *  will change the JRMP GenericProxy so that outgoing calls use the
- *  propagation contexts of the transactions started here.
- *
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.8 $
+ * <em>Warning:</em> This is only for stand-alone clients that do not have their
+ * own transaction service. No local work is done in the context of transactions
+ * started here, only work done in beans at the server. Instantiating objects of
+ * this class outside the server will change the JRMP GenericProxy so that
+ * outgoing calls use the propagation contexts of the transactions started
+ * here.
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.9 $
  */
 public class ClientUserTransaction
    implements UserTransaction,
-              TransactionPropagationContextFactory,
-              Referenceable,
-              Serializable
+   TransactionPropagationContextFactory,
+   Referenceable,
+   Serializable
 {
    // Static --------------------------------------------------------
+   /** @since at least jboss-3.2.0 */
+   private static final long serialVersionUID = 1747989355209242872L;
 
    /**
-    *  Our singleton instance.
+    * Our singleton instance.
     */
    private static ClientUserTransaction singleton = null;
 
    /**
-    *  Return a reference to the singleton instance.
+    * Return a reference to the singleton instance.
     */
    public static ClientUserTransaction getSingleton()
    {
@@ -74,7 +77,7 @@ public class ClientUserTransaction
    // Constructors --------------------------------------------------
 
    /**
-    *  Create a new instance.
+    * Create a new instance.
     */
    private ClientUserTransaction()
    {
@@ -91,97 +94,141 @@ public class ClientUserTransaction
    {
       ThreadInfo info = getThreadInfo();
 
-      try {
+      try
+      {
          Object tpc = getSession().begin(info.getTimeout());
          info.push(tpc);
-      } catch (SystemException e) {
+      }
+      catch (SystemException e)
+      {
          throw e;
-      } catch (RemoteException e) {
+      }
+      catch (RemoteException e)
+      {
          // destroy session gone bad.
          destroySession();
          throw new SystemException(e.toString());
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          throw new SystemException(e.toString());
       }
    }
 
    public void commit()
       throws RollbackException,
-             HeuristicMixedException,
-             HeuristicRollbackException,
-             SecurityException,
-             IllegalStateException,
-             SystemException
+      HeuristicMixedException,
+      HeuristicRollbackException,
+      SecurityException,
+      IllegalStateException,
+      SystemException
    {
       ThreadInfo info = getThreadInfo();
 
-      try {
+      try
+      {
          getSession().commit(info.getTpc());
          info.pop();
-      } catch (RollbackException e) {
+      }
+      catch (RollbackException e)
+      {
          info.pop();
          throw e;
-      } catch (HeuristicMixedException e) {
+      }
+      catch (HeuristicMixedException e)
+      {
          throw e;
-      } catch (HeuristicRollbackException e) {
+      }
+      catch (HeuristicRollbackException e)
+      {
          throw e;
-      } catch (SecurityException e) {
+      }
+      catch (SecurityException e)
+      {
          throw e;
-      } catch (SystemException e) {
+      }
+      catch (SystemException e)
+      {
          throw e;
-      } catch (IllegalStateException e) {
+      }
+      catch (IllegalStateException e)
+      {
          throw e;
-      } catch (RemoteException e) {
+      }
+      catch (RemoteException e)
+      {
          // destroy session gone bad.
          destroySession();
          throw new SystemException(e.toString());
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          throw new SystemException(e.toString());
       }
    }
 
    public void rollback()
       throws SecurityException,
-             IllegalStateException,
-             SystemException
+      IllegalStateException,
+      SystemException
    {
       ThreadInfo info = getThreadInfo();
 
-      try {
+      try
+      {
          getSession().rollback(info.getTpc());
          info.pop();
-      } catch (SecurityException e) {
+      }
+      catch (SecurityException e)
+      {
          throw e;
-      } catch (SystemException e) {
+      }
+      catch (SystemException e)
+      {
          throw e;
-      } catch (IllegalStateException e) {
+      }
+      catch (IllegalStateException e)
+      {
          throw e;
-      } catch (RemoteException e) {
+      }
+      catch (RemoteException e)
+      {
          // destroy session gone bad.
          destroySession();
          throw new SystemException(e.toString());
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          throw new SystemException(e.toString());
       }
    }
 
    public void setRollbackOnly()
       throws IllegalStateException,
-             SystemException
+      SystemException
    {
       ThreadInfo info = getThreadInfo();
 
-      try {
+      try
+      {
          getSession().setRollbackOnly(info.getTpc());
-      } catch (SystemException e) {
+      }
+      catch (SystemException e)
+      {
          throw e;
-      } catch (IllegalStateException e) {
+      }
+      catch (IllegalStateException e)
+      {
          throw e;
-      } catch (RemoteException e) {
+      }
+      catch (RemoteException e)
+      {
          // destroy session gone bad.
          destroySession();
          throw new SystemException(e.toString());
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          throw new SystemException(e.toString());
       }
    }
@@ -197,15 +244,22 @@ public class ClientUserTransaction
          return Status.STATUS_NO_TRANSACTION;
       }
 
-      try {
+      try
+      {
          return getSession().getStatus(tpc);
-      } catch (SystemException e) {
+      }
+      catch (SystemException e)
+      {
          throw e;
-      } catch (RemoteException e) {
+      }
+      catch (RemoteException e)
+      {
          // destroy session gone bad.
          destroySession();
          throw new SystemException(e.toString());
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          throw new SystemException(e.toString());
       }
    }
@@ -225,7 +279,7 @@ public class ClientUserTransaction
    {
       return getThreadInfo().getTpc();
    }
- 
+
    public Object getTransactionPropagationContext(Transaction tx)
    {
       // No need to implement in a stand-alone client.
@@ -241,8 +295,8 @@ public class ClientUserTransaction
       throws NamingException
    {
       Reference ref = new Reference("org.jboss.tm.usertx.client.ClientUserTransaction",
-                                    "org.jboss.tm.usertx.client.ClientUserTransactionObjectFactory", 
-                                    null);
+         "org.jboss.tm.usertx.client.ClientUserTransactionObjectFactory",
+         null);
 
       return ref;
    }
@@ -251,19 +305,18 @@ public class ClientUserTransaction
    // Private -------------------------------------------------------
 
    /**
-    *  The RMI remote interface to the real tx service
-    *  session at the server.
+    * The RMI remote interface to the real tx service session at the server.
     */
    private UserTransactionSession session = null;
 
    /**
-    *  Storage of per-thread information used here.
+    * Storage of per-thread information used here.
     */
    private transient ThreadLocal threadInfo = new ThreadLocal();
 
 
    /**
-    *  Create a new session.
+    * Create a new session.
     */
    private synchronized void createSession()
    {
@@ -271,35 +324,44 @@ public class ClientUserTransaction
       if (session != null)
          destroySession();
 
-      try {
+      try
+      {
          // Get a reference to the UT session factory.
          UserTransactionSessionFactory factory;
-         factory = (UserTransactionSessionFactory)new InitialContext().lookup("UserTransactionSessionFactory");
+         Hashtable env = (Hashtable) NamingContextFactory.lastInitialContextEnv.get();
+         InitialContext ctx = new InitialContext(env);
+         factory = (UserTransactionSessionFactory) ctx.lookup("UserTransactionSessionFactory");
          // Call factory to get a UT session.
          session = factory.newInstance();
-      } catch (Exception ex) {
-         throw new RuntimeException("UT factory lookup failed: " + ex);
+      }
+      catch (Exception ex)
+      {
+         throw new RuntimeException("UT factory lookup failed", ex);
       }
    }
 
    /**
-    *  Destroy the current session.
+    * Destroy the current session.
     */
    private synchronized void destroySession()
    {
-      if (session != null) {
-         try {
+      if (session != null)
+      {
+         try
+         {
             session.destroy();
-         } catch (RemoteException ex) {
-           // Ignore.
+         }
+         catch (RemoteException ex)
+         {
+            // Ignore.
          }
          session = null;
       }
    }
 
    /**
-    *  Get the session. This will create a session,
-    *  if one does not already exist.
+    * Get the session. This will create a session, if one does not already
+    * exist.
     */
    private synchronized UserTransactionSession getSession()
    {
@@ -310,13 +372,14 @@ public class ClientUserTransaction
 
 
    /**
-    *  Return the per-thread information, possibly creating it if needed.
+    * Return the per-thread information, possibly creating it if needed.
     */
    private ThreadInfo getThreadInfo()
    {
-      ThreadInfo ret = (ThreadInfo)threadInfo.get();
+      ThreadInfo ret = (ThreadInfo) threadInfo.get();
 
-      if (ret == null) {
+      if (ret == null)
+      {
          ret = new ThreadInfo();
          threadInfo.set(ret);
       }
@@ -328,52 +391,57 @@ public class ClientUserTransaction
    // Inner classes -------------------------------------------------
 
    /**
-    *  Per-thread data holder class.
-    *  This stores the stack of TPCs for the transactions started by
-    *  this thread.
+    * Per-thread data holder class. This stores the stack of TPCs for the
+    * transactions started by this thread.
     */
    private class ThreadInfo
    {
       /**
-       *  A stack of TPCs for transactions started by this thread.
-       *  If the underlying service does not support nested
-       *  transactions, its size is never greater than 1.
-       *  Last element of the list denotes the stack top.
+       * A stack of TPCs for transactions started by this thread. If the
+       * underlying service does not support nested transactions, its size is
+       * never greater than 1. Last element of the list denotes the stack top.
        */
       private LinkedList tpcStack = new LinkedList();
 
       /**
-       *  The timeout value (in seconds) for new transactions started
-       *  by this thread.
+       * The timeout value (in seconds) for new transactions started by this
+       * thread.
        */
       private int timeout = 0;
 
       /**
-       *  Override to terminate any transactions that the
-       *  thread may have forgotten.
+       * Override to terminate any transactions that the thread may have
+       * forgotten.
        */
       protected void finalize()
          throws Throwable
       {
-         try {
-            while (!tpcStack.isEmpty()) {
+         try
+         {
+            while (!tpcStack.isEmpty())
+            {
                Object tpc = getTpc();
                pop();
 
-               try {
+               try
+               {
                   getSession().rollback(tpc);
-               } catch (Exception ex) {
+               }
+               catch (Exception ex)
+               {
                   // ignore
                }
             }
-         } catch (Throwable t) {
+         }
+         catch (Throwable t)
+         {
             // ignore
          }
          super.finalize();
       }
 
       /**
-       *  Push the TPC of a newly started transaction on the stack.
+       * Push the TPC of a newly started transaction on the stack.
        */
       void push(Object tpc)
       {
@@ -381,7 +449,7 @@ public class ClientUserTransaction
       }
 
       /**
-       *  Pop the TPC of a newly terminated transaction from the stack.
+       * Pop the TPC of a newly terminated transaction from the stack.
        */
       void pop()
       {
@@ -389,7 +457,7 @@ public class ClientUserTransaction
       }
 
       /**
-       *  Get the TPC at the top of the stack.
+       * Get the TPC at the top of the stack.
        */
       Object getTpc()
       {
@@ -397,10 +465,9 @@ public class ClientUserTransaction
       }
 
       /**
-       *  Return the default transaction timeout in seconds to use for
-       *  new transactions started by this thread.
-       *  A value of <code>0</code> means that a default timeout value
-       *  should be used.
+       * Return the default transaction timeout in seconds to use for new
+       * transactions started by this thread. A value of <code>0</code> means
+       * that a default timeout value should be used.
        */
       int getTimeout()
       {
@@ -408,8 +475,8 @@ public class ClientUserTransaction
       }
 
       /**
-       *  Set the default transaction timeout in seconds to use for
-       *  new transactions started by this thread.
+       * Set the default transaction timeout in seconds to use for new
+       * transactions started by this thread.
        */
       void setTimeout(int seconds)
       {
