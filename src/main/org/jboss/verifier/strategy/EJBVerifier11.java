@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.25 2001/01/03 08:28:48 tobias Exp $
+ * $Id: EJBVerifier11.java,v 1.26 2001/06/04 22:06:46 docodan Exp $
  */
 
 
@@ -54,7 +54,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -156,6 +156,8 @@ public class EJBVerifier11 extends AbstractVerifier {
         boolean status = true;
 
         String name = session.getHome();
+        if (name == null)
+           return false;
 
         try {
             Class home = classloader.loadClass(name);
@@ -363,6 +365,8 @@ public class EJBVerifier11 extends AbstractVerifier {
         boolean status = true;
 
         String  name   = session.getRemote();
+        if (name == null)
+           return false;
 
 
         try {
@@ -723,6 +727,8 @@ public class EJBVerifier11 extends AbstractVerifier {
         boolean status = true;
 
         String name = entity.getHome();
+        if (name == null)
+           return false;
 
         try {
             Class home = classloader.loadClass(name);
@@ -975,6 +981,8 @@ public class EJBVerifier11 extends AbstractVerifier {
         boolean status = true;
 
         String  name   = entity.getRemote();
+        if (name == null)
+           return false;
 
 
         try {
