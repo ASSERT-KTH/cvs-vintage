@@ -35,16 +35,12 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 	protected Vector workerStatusChangeListeners;
 
-	private GuiUpdater guiUpdater;
-
 	private int timeStamp;
 
 	public Worker(DefaultProcessor parent) {
 		super();
 		this.op = op;
 		this.boss = parent;
-
-		guiUpdater = parent.getGuiUpdater();
 
 		displayText = "";
 		progressBarValue = 0;
@@ -106,11 +102,11 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	public void finished() {
 
 		try {
-			op.updateGUI();
-
+			op.finish();
+/*
 			if (guiUpdater.amIGuiUpdater(this) && !cancelled())
 				op.updateSelectedGUI();
-
+*/
 			//setDisplayText(displayText + " done");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor

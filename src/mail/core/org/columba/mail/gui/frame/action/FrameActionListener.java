@@ -415,7 +415,7 @@ public class FrameActionListener implements ActionListener {
 			worker.register(MainInterface.taskManager);
 			worker.start();
 			*/
-			frameController.closeColumba();
+			frameController.close();
 
 		} else if (action.equals("NEW_MESSAGE")) {
 

@@ -36,7 +36,7 @@ public class ApplyFilterCommand extends Command{
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateSelectedGUI() throws Exception {
+	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController) frameController;
 	}
 

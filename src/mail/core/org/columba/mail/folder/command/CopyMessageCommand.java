@@ -37,20 +37,12 @@ public class CopyMessageCommand extends FolderCommand {
 		commandType = Command.UNDOABLE_OPERATION;
 	}
 	
-	public void updateSelectedGUI() throws Exception {
+	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController) frameController;
 		
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, destFolder);
 		 
 		frame.tableController.tableChanged(ev);
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController)frameController;
-		
 		
 		MainInterface.treeModel.nodeChanged(destFolder);
 	}

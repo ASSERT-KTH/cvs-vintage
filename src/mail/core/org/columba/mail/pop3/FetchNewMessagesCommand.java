@@ -46,11 +46,6 @@ public class FetchNewMessagesCommand extends Command {
 		server = r[0].getServer();
 	}
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateSelectedGUI() throws Exception {
-	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)

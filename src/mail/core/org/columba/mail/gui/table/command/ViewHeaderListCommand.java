@@ -16,6 +16,7 @@ package org.columba.mail.gui.table.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommandReference;
@@ -28,7 +29,7 @@ import org.columba.main.MainInterface;
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public class ViewHeaderListCommand extends Command {
+public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 	private HeaderList headerList;
 	private Folder folder;
@@ -43,7 +44,7 @@ public class ViewHeaderListCommand extends Command {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateSelectedGUI() throws Exception {
+	public void updateGUI() throws Exception {
 		((MailFrameController)frameController).tableController.getHeaderTableModel().setHeaderList(headerList);
 		
 		((MailFrameController)frameController).tableController.getView().clearSelection();

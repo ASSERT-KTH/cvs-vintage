@@ -10,7 +10,7 @@ import org.columba.core.gui.statusbar.StatusBar;
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public class FrameController {
+public abstract class FrameController {
 
 	protected StatusBar statusBar;
 	protected MouseAdapter mouseTooltipHandler;
@@ -28,8 +28,6 @@ public class FrameController {
 		return statusBar;
 	}
 
-
-
 	/**
 	 * Returns the mouseTooltipHandler.
 	 * @return MouseAdapter
@@ -37,5 +35,7 @@ public class FrameController {
 	public MouseAdapter getMouseTooltipHandler() {
 		return mouseTooltipHandler;
 	}
+	
+	abstract public void close();	
 
 }

@@ -32,12 +32,6 @@ public class CheckForNewMessagesCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateSelectedGUI() throws Exception {
-	}
-
-	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {

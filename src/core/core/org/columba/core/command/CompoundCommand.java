@@ -42,22 +42,12 @@ public class CompoundCommand extends Command {
 				referenceList.add(commandRefs[i].getFolder());
 		}
 	}
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateSelectedGUI() throws Exception {
-		Command c;
-		for (int i = 0; i < commandList.size(); i++) {
-			c = (Command) commandList.get(i);
-			c.updateSelectedGUI();
-		}
-	}
 	
-	public void updateGUI() throws Exception {
+	public void finish() throws Exception {
 		Command c;
 		for (int i = 0; i < commandList.size(); i++) {
 			c = (Command) commandList.get(i);
-			c.updateGUI();
+			c.finish();
 		}
 	}
 

@@ -34,11 +34,6 @@ public class SendMessageCommand extends FolderCommand {
 		super(frameController, references);
 	}
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateSelectedGUI() throws Exception {
-	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)

@@ -89,7 +89,7 @@ public abstract class Command {
 	}
 	
 	public void process(Worker worker, int operationMode) throws Exception {		
-		timeStamp = worker.getTimeStamp();
+		setTimeStamp( worker.getTimeStamp() );
 		
 		switch( operationMode ) {
 			case FIRST_EXECUTION : 
@@ -107,19 +107,6 @@ public abstract class Command {
 	public void updateGUI() throws Exception
 	{
 	}
-	
-	/**
-	 * Commands must implement this method.
-	 * Updates the GUI in a thread-safe way after the Command finished
-	 * 
-	 * @throws Exception
-	 */
-	public void updateSelectedGUI() throws Exception
-	{
-	}
-	
-		
-	
 	
 	/**
 	 * Command must implement this method
@@ -256,6 +243,10 @@ public abstract class Command {
 	 */
 	public DefaultCommandReference[] getUndoReferences() {
 		return undoReferences;
+	}
+	
+	public void finish() throws Exception{
+		updateGUI();	
 	}
 
 }

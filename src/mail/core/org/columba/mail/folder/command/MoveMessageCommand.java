@@ -37,7 +37,7 @@ public class MoveMessageCommand extends FolderCommand {
 		super(frameController, references);
 	}
 	
-	public void updateSelectedGUI() throws Exception {
+	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController) frameController;
 		
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, destFolder);
@@ -47,15 +47,6 @@ public class MoveMessageCommand extends FolderCommand {
 		TableChangedEvent ev2 = new TableChangedEvent( TableChangedEvent.UPDATE, srcFolder);
 		 
 		frame.tableController.tableChanged(ev2);
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController)frameController;
-		
-		
 		
 		MainInterface.treeModel.nodeChanged(destFolder);
 		MainInterface.treeModel.nodeChanged(srcFolder);

@@ -14,5 +14,7 @@ public class AddressbookController extends FrameController {
 	public AddressbookController() {
 		super();
 	}
+	
+	public void close() {}
 
 }

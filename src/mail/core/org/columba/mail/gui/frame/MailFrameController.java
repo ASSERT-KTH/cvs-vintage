@@ -118,7 +118,7 @@ public class MailFrameController extends FrameController {
 				worker.start();
 				*/
 
-				closeColumba();
+				close();
 
 			}
 		});
@@ -141,7 +141,7 @@ public class MailFrameController extends FrameController {
 
 	}
 
-	public void closeColumba() {
+	public void close() {
 		view.saveWindowPosition();
 
 		tableController.saveColumnConfig();

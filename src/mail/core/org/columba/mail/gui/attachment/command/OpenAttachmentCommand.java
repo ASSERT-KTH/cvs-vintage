@@ -46,7 +46,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateSelectedGUI() throws Exception {
+	public void updateGUI() throws Exception {
 		MainInterface.frameController.attachmentController.open(part, tempFile);
 	}
 

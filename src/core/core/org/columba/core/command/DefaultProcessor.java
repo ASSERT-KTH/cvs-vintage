@@ -36,13 +36,10 @@ public class DefaultProcessor extends Thread {
 	
 	private TaskManager taskManager;
 	
-	private GuiUpdater guiUpdater;
-	
 	private int timeStamp;
 
 	public DefaultProcessor() {
 		operationQueue = new Vector();
-		guiUpdater = new GuiUpdater();
 
 		worker = new Vector();
 
@@ -179,7 +176,6 @@ public class DefaultProcessor extends Thread {
 				waitForNotify();
 
 			ColumbaLogger.log.debug( "Found Worker for new Operation" );
-			guiUpdater.setGuiUpdater(worker);
 			worker.process(opItem.operation, opItem.operationMode, timeStamp++);
 			ColumbaLogger.log.debug( "Worker initilized" );
 			worker.register(taskManager);
@@ -211,14 +207,6 @@ public class DefaultProcessor extends Thread {
 	 */
 	public UndoManager getUndoManager() {
 		return undoManager;
-	}
-
-	/**
-	 * Returns the guiUpdater.
-	 * @return GUIUpdater
-	 */
-	public GuiUpdater getGuiUpdater() {
-		return guiUpdater;
 	}
 
 	/**
