@@ -1,3 +1,6 @@
+     
+<div id="projectlist" class="app">
+
 $page.setTitle("Assign users to artifact")
 
 <div class="app" id="assignissue">
@@ -18,20 +21,24 @@ $page.setTitle("Assign users to artifact")
  #set ( $reentry = true )
 #end
 
-#if ($reentry)
-
- <p><strong class="alert">
-  Remember to add note and submit, when ready to save changes.
- </strong></p>
-
-#end
-
 #if (!$actionLink)
   #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
 #end
+
+#set ($addedUsers = $data.Parameters.getStrings("addedusers"))
+#set ($removedUsers = $data.Parameters.getStrings("removedUsers"))
+#set ($assignedUsers =  $issue.AssigneeAttributeValues)
+
+#if ($addedUsers || $removedUsers)
+ <p><strong class="alert">
+  Remember to add note and submit, when ready to save changes.
+ </strong></p>
+#end
+
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+<input type="hidden" name="$scarabG.Constant.CURRENT_TEMPLATE" value="ViewIssue.vm" />
 
 #set ($issueGroup = $intake.Issue.Default)
 #if ($multiple)
@@ -52,87 +59,155 @@ $page.setTitle("Assign users to artifact")
  <input type="hidden" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
 #end
 
+
 <div class="functnbar">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
-  <input type="reset" value="Reset" />
-  </td>
- </tr>
- </table>
+#if ($addedUsers || $removedUsers)
+ <input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
+#end
+<input type="submit" value="Cancel" />
 </div>
+		
 
-<div class="sidebyside">
- <table cellpadding="3" cellspacing="2" border="1" width="100%">
- <tr>
-  <th>Users</th>
-  <th>Assignees</th>
- </tr>
- <tr>
-  <td>
+## Determine if there are any users to show up in the added/assigned list
+#set ($noAddedUsers = false)
+#if ((!$reentry && !$addedUsers && $assignedUsers.isEmpty())
+     || ($reentry && !$addedUsers))
+  #set ($noAddedUsers = true)
+#end
+
+#if ($noAddedUsers)
+     <p><strong class="alert">None assigned.</strong></P>
+#else
+		<h3>Assignee list</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap"><a href="#"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+		<th>Name</th>
+		<th><a href="#" title="sort">email</a></th>
+		</tr>
+
   #if (!$reentry)
-   #foreach ($userAssignee in $issue.EligibleAssignees)
-    <input type="hidden" name="removedusers" value="$userAssignee.UserName" />
-   #end
-  #end
-  <select name="newaddusers" size="8" multiple="multiple">
-  #if (!$reentry)
-   #foreach ($userAssignee in $issue.EligibleAssignees)
-    <option value="$userAssignee.UserName">$userAssignee.UserName</option>
-   #end
+    #foreach ($assignee in $assignedUsers)
+      #set ($assignedUser = $scarabR.getUserByUserName($assignee.Value))
+      <input type="hidden" name="addedusers" value="$assignee.Value" />
+		<tr class="a">
+		<td><input type="checkbox" name="newremoveusers" value="$assignedUser.UserName" /></td>
+		<td><strong>$assignedUser.FirstName $assignedUser.LastName</strong></td>
+		<td><a href="mailto:$assignedUser.UserName">$assignedUser.UserName</a></td>
+		</tr>
+    #end
   #else
-   #foreach ($username in $data.Parameters.getStrings("removedusers"))
-    <option value="$username">$username</option>
+   #foreach ($addedUserId in $addedUsers)
+      #set ($addedUser = $scarabR.getUserByUserName($addedUserId))
+      <input type="hidden" name="addedusers" value="$addedUser.UserName" />
+		<tr class="a">
+		<td><input type="checkbox" name="newremoveusers" value="$addedUser.UserName"/></td>
+		<td><strong>$addedUser.FirstName $addedUser.LastName</strong></td>
+		<td><a href="mailto:$addedUser.UserName">$addedUser.UserName</a></td>
+		</tr>
    #end
   #end
-  </select>
-  <input type="submit" name="eventSubmit_doAdd" value="Add" />
-  </td>
-  <td>
-  #if (!$reentry)
-   #foreach ($assignee in $issue.AssigneeAttributeValues)
-   <input type="hidden" name="addedusers" value="$assignee.Value" />
-   #end
+		
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doRemove" value="Remove selected from assignee list" />
+</div>
   #end
-  <select name="newremoveusers" size="8" multiple="multiple">
-  #if (!$reentry)
-   #foreach ($assignee in $issue.AssigneeAttributeValues)
-   <option value="$assignee.Value">$assignee.Value</option>
-   #end
-  #else
-   #foreach ($username in $data.Parameters.getStrings("addedusers"))
-   <option value="$username">$username</option>
-   #end
-  #end
-  </select>
-  <input type="submit" name="eventSubmit_doRemove" value="Remove" />
-  </td>
+
+## ATTACHMENT
+#if ($addedUsers || $removedUsers)
+ #set ($atch = $scarabR.Attachment)
+ #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+ <h4>Message to assignees</h4>
+ <div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+             <tr>
+       <th>Message contents</td>
+       <td>
+                This message is emailed to the assignees, and is appended as a note on the issue's change history
+                <p>
+                <textarea name="$intakeAttachment.DataAsString.Key" rows="2" cols="35">$!intakeAttachment.DataAsString</textarea>
+       </td>
+     </tr>
+      </table>
+</div>
+#end
+
+#set ($searchString = $data.Parameters.getString("searchString"))
+
+		<h3>Users</h3>
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>Filter string</th>
+   <td><input type="text" name="searchString" />&nbsp;
+     <select name="searchField" >
+      <option value="First Name">First Name</option>
+      <option value="Last Name">Last Name</option>
+      <option value="Email">Email</option>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="filter" /></td>
   </tr>
- </table>
-</div>
-
-#set ($atch = $scarabR.Attachment)
-#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-
-<h3>Note #fieldErrorMsg($intakeAttachment.DataAsString "")</h3>
-<p>
-<textarea name="$intakeAttachment.DataAsString.Key" rows="4" cols="40">$!intakeAttachment.DataAsString</textarea>
-</p>
-
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
-  <input type="reset" value="Reset" />
-  </td>
- </tr>
- </table>
+</table>
 </div>
 
+## USER SEARCH
+#if ($searchString && $searchString.length() > 0)
+   #set ($searchResults = $scarabR.UserSearchResults) 
+   #if ( $searchResults.isEmpty())
+      <p class="alert">No users match your criteria.</p>
+   #else
+        ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap"><a href="#"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+		<th>Name</th>
+		<th><a href="#" title="sort">email</a></th>
+		</tr>
+		
+       #foreach ($user in $searchResults)
+		<tr class="a">
+		<td><input type="checkbox" name="newaddusers" value="$user.UserName" /></td>
+		<td><strong>$user.UserName</strong></td>
+		<td><a href="mailTo:$user.Email">$user.UserName</td>
+		</tr>
+       #end
+   #end   
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
+</div>
+
+		
+#*
+##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+             <tr>
+       <th>Max items per page</td>
+       <td><input type="radio" name="foo" checked="checked" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100&#160;<input type="submit" value="refresh" /></p>
+</td>
+     </tr>
+      </table>
+</div>
+*#
+#end
+
+
+<div class="functnbar">
+#if ($addedUsers || $removedUsers)
+ <input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
+#end
+<input type="submit" value="Cancel" />
+</div>
+
+    </td>
+   </tr>
+  </table>
 $intake.declareGroups()
 </form>
-</div>
