@@ -22,9 +22,7 @@
                 </ul>
               </li>
               <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
-              <li><a href="UserIssueAssign.vm">Assigning issues</a></li>
-              <li><a href="UserTemplates.vm">Using templates</a></li>
-              <li><a href="UserIssueView.vm">Viewing issues</a></li>
+              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
               <li><a href="UserIssueModify.vm">Modifying issues</a></li>
             </ul>
           <li><a href="UserQuery.vm">Searching the database </a></li>

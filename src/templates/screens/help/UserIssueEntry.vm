@@ -1,122 +1,165 @@
-<html>
-<head>
-<title>UserIssueEntry</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-</head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
 
-<body bgcolor="#FFFFFF">
-<h3>Entering an issue</h3>
-<p><!--<h3>Selecting a module</h3>
-<p>Before opening a new issue, you must first determine to what module the issue 
-  belongs. The &quot;Current Module&quot; link in the upper right corner of your 
-  screen identifies the module in which you are currently working. To change modules, 
-  click on the name of your current module. The <b>Select Module </b>screen will 
-  appear. To help identify which module you need, read the descriptions provided 
-  directly to the right of the module name. To select a module, click on it's 
-  name. The <b>Artifact type</b> screen will appear.</p>
-<p><i>Define module; how does one get to the module selection screen? </i></p>
- --></p>
-<h3>Selecting an issue (artifact) type</h3>
-Artifacts refer to the categories of issues available in your current module. 
-Be careful to assign your issue to the appropriate artifact category. The default 
-types are defect, patch, task, feature, and enhancements. 
-<ul>
-  <li><b>Defects</b> are issues identified within existing feature/functionality.</li>
-  <li><b>Patches</b> are edits submitted as fixes to defects.</li>
-  <li><b>Tasks</b> describe undertakings required for the support of a Feature 
-    or enhancement. Tasks can be upgrading software to support new functionality, 
-    reviewing similar projects to discover how similar problems were solved, or 
-    reading up on a new technology.</li>
-  <li><b>Features</b> are new functionality to be incorporated into the project</li>
-  <li><b>Enhancements</b> are improvements to existing features.</li>
-</ul>
-<p>Once you have selected the artifact type that best describes your issue, click 
-  on the name of the artifact. The <b>Enter issue</b> screen will appear.</p>
-<h3>Entering an issue, long format</h3>
-<p>Entering an issue is a three step process. </p>
-<ol>
-  <li>Enter brief descriptive information about your issue</li>
-  <li>Check the database for duplicates of your issue. </li>
-  <li>Enter a full description and save the issue to the database.</li>
-</ol>
-<p><b>Step 1: Enter descriptive information.</b></p>
-<ul>
-  <li>Summary: a brief statement describing the issue. Considering using keywords 
-    in this field.</li>
-  <li>Platform: select the affected platform from the drop down list.</li>
-  <li>Operating system: select the affected platform from the drop down list.</li>
-</ul>
-<p>Click the &quot;Check for duplicates&quot; button to continue.</p>
-<p><b>Step2: Check for duplicates</b></p>
-<p>Once you've clicked the &quot;Check for duplicates&quot; button the database 
-  is scanned for similar issues <i>how deeply in depth should we go with the process 
-  by which this is done?</i> </p>
-<p>If duplicates are found a report of similar issues will be presented with your 
-  issue listed at the top. Review the issues listed for fit. You can do a number 
-  of things at this point:</p>
-<ul>
-  <li>Review individual issues by clicking on their id. The full issue description 
-    will appear. </li>
-  <li>Sort issues by each of the categories. Click on the name of the category 
-    to change the sort order</li>
-  <li>Alter one or more issues at the same time. Click on the check box to the 
-    left of the issue ids that you would like to manipulate. You can then enter 
-    a note in the <b>note</b> field and click the <b>submit note only</b> button 
-    to add a note to the comments section of all issues selected. Additionally, 
-    you can add a vote to the issues you've selected by clicking the <b>add vote 
-    to selected</b> button.</li>
-  <li>Skip this process by clicking on the <b>bypass duplicates</b> button.</li>
-</ul>
-<p><b>Step 3: Enter a full description - Verbose form</b></p>
-<p>The Verbose Info screen allows you to add detailed information about your issue. 
-  Required fields have an * (astrick) beside their title. You should be as descriptive 
-  as possible. Use all of the attributes to describe your issue.</p>
-<dl> 
-  <dt>&nbsp;&nbsp;<!--<dt><b>Description</b> - enter a description of the issue. Descriptions should 
-    be <b><i>enter guidelines</i></b></dt>
-  <dt><b>Status</b> - select from the pull down menu</dt>
-  <dt><b>Resolution</b> - choose from the pull down menu</dt>
-  <dt><b>Vote -</b></dt>
-  <dt><b>Severity - </b></dt>
-  <dt><b>Functional Area -</b></dt>
- --></dt>
-</dl>
-<p><b>Setting dependencies</b></p>
-<p>Issues often have dependencis on other issues. One issue may require a resolution 
-  from another before any work can be done. Two issues may have parellel resolutions 
-  and need to be tracked together, though they have no direct influence on one 
-  another. Dependencies are defined as parent/child relationships within Scarab. 
-  Child issues are those with defined dependencies on other issues. </p>
-<p>There are three levels of dependencies within Scarab: blocking ,duplicating 
-  and non-blocking. Blocking issues prevent the issue being blocked, from being 
-  resolved. The blocking issue must be addressed before the blocked issue can 
-  be resolved.</p>
-<p>Sometime duplicate issues may be entered and need to be tracked seperately. 
-  Marking an issue as a duplicate allows users to track efforts on both issues. 
-  Duplicates may be in different modules or the same module.</p>
-<p>Marking issues as non-blocking dependencies also allows users to simultaneously 
-  track efforts on two or more issues.</p>
-<p>You can track the progress of interrelated issues by using the <b>Dependencies</b> 
-  section of the issue and clicking on either the issue id or the Issue summary 
-  links to the issues. In this area you can also redefine the Dependency type.</p>
-<p><b>Issue attachments</b></p>
-<p>You can include an attachment for the issue. To do so, enter a brief description 
-  of the attachement and use the browse button to navigate to the file on your 
-  local system or enter a path for the file.</p>
-<p><b>Where to go from here</b></p>
-<p>After completing the issue entry process you can select where to go from there. 
-</p>
-<ul>
-  <li>Enter new issue</li>
-  <li>Start page</li>
-  <li>Assign issue</li>
-</ul>
-<p><!--a Verbose info - Short form - this is a full issue entry screen - each of these 
-  items is customizable? required fields can be changed? a. enter description 
-  : need guidelines for descriptions b. select assigned to. not required c. select 
-  status; need guidelines d. select resolution; need guidelines e. select priority, 
-  vote, severity, and functional area.\ f. add attachment; need guidelines g. 
-  select workflow options; this redirects user after issue is saved. can Enter 
-  new issue, return to start page, assign issue h. click &quot;save&quot;  --></p>
-</body>
-</html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+<title>UserIssueEntry</title>
+</head>
+<div class="docs" id="userissueentry"> 
+  <h2>Entering issues</h2>
+  <div id="toc"> 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="Introduction.vm">Introduction to Scarab</a></li>
+          <li><a href="UserIssues.vm">Managing Issues</a> 
+            <ul>
+              <li><a href="Introduction.vm>Introduction to Scarab</a> </li>
+        <li><strong>Managing Issues</strong>
+        <ul>
+          <li><a href="UserIssueOverview.vm">Overview</a> </li>
+              <li><strong>Entering Issues </strong> 
+                <ul>
+                  <li><a href="UserIssueComposing.vm">Composing effective issues</a></li>
+                  <li><a href="UserDuplicate.vm">Entering an issue</a> 
+                    <ul>
+                      <li><a href="#dependencies">Setting dependencies</a></li>
+                      <li><a href="#attachments">Issue attachments</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#duplicates">Handling duplicates</a> 
+                    <ul>
+                      <li><a href="#reviewing">Reviewing duplicates</a></li>
+                      <li><a href="#commenting">Commenting on like issues</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
+              <li><a href="UserIssueModify.vm">Modifying issues</a></li>
+            </ul>
+          </li>
+          <li><a href="UserQuery.vm">Searching the database</a></li>
+          <li><a href="UserReports.vm">Reports</a> 
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a> </li>
+          <li><a href="ScarabGlossary.vm">Glossary</a> </li>
+        </ul>
+    </ul>
+  </div>
+  <h3><a id="top" name="top">Composing effective issues</a></h3>
+  <p>Effective issue reports assist in the process of refining projects and reaching 
+    the ultimate goal of completion. A useful issue report normally has two qualities:</p>
+  <ol>
+    <li><strong>Reproducible.</strong> Issues that cannot be duplicated are generally 
+      marked invalid. Provide detailed instructions for duplicating your issue. 
+    </li>
+    <li><strong>Specific.</strong> The more details you provide the easier it 
+      is for the engineer to identify the problem and solution. </li>
+  </ol>
+  <p>For example: you're testing a web browser. You crash at site.com, and want 
+    to write up an issue report:</p>
+  <p><strong>Inappropriate:</strong> </p>
+  "My browser crashed. I think I was on site.com. My computer uses Windows. I 
+  think that this is a really bad problem and you should fix it now. By the way, 
+  I don't like the icons. Nobody will use your software if you keep those ugly 
+  icons. Oh, and my grandmother's home page doesn't look right, either, it's all 
+  messed up. Good luck." 
+  <p><strong>More appropriate:</strong> </p>
+  <p>"I crashed each time when I went to site.com, using the 10.28.99 build on 
+    a Win NT 4.0 (Service Pack 5) system. I also rebooted into Linux, and reproduced 
+    this problem using the 10.28.99 Linux build.</p>
+  <p>It again crashed each time upon drawing the banner at the top of the page. 
+    I broke apart the page, and discovered that the following image link will 
+    crash the application reproducibly, unless you remove the "border=0" attribute:</p>
+  <p><em>&lt;emMG SRC="http://site.com/images/topics/topicfoos.gif" width=34 height=44 
+    border=0 alt="News"&gt;"</em></p>
+  <h3><a name="entering"></a>Entering an issue</h3>
+  <p>Because of it's highly customizable nature, entering issues in Scarab can 
+    be as individual as the person entering the issue. There are some basic principles 
+    that apply to all issues being entered in the database: for each issue entered 
+    you will define the issue and add supporting information. You may also be 
+    able to check the database for duplicates.</p>
+  <p><strong>Defining issues</strong></p>
+  <p>Each issue type has a unique set of attributes specific to the needs of the 
+    issue type. When entering the issue you will want to add values for as many 
+    attributes as possible. Remember, when creating effective issues you want 
+    to be as specific and detailed as possible. Attributes allow you to add meaningful 
+    information that can be easily used for tracking and searching purposes.</p>
+  <p>While creating the issue, use the textual fields to add as much specific 
+    information for the issue. Your administrator may have defined attributes 
+    to track specific generic information, but the more details you can add into 
+    the text fields the better issue you will have created.</p>
+  <p><strong>Adding supporting information</strong></p>
+  <p>In the issue entry process you can add additional relevant information; you 
+    can include dependencies on other issues as well as attaching appropriate 
+    files (like patches, emails, etc.).</p>
+  <p><strong><a name="dependencies"></a>Setting dependencies: </strong>Issues 
+    often have dependencies on other issues. One issue may require a resolution 
+    from another before any work can be done. Two issues may have parallel resolutions 
+    and need to be tracked together, though they have no direct influence on one 
+    another</p>
+  <p>There are three levels of dependencies within Scarab: blocking, duplicating 
+    and non-blocking. Blocking issues prevent the issue being blocked, from being 
+    resolved. The blocking issue must be addressed before the blocked issue can 
+    be resolved.</p>
+  <p>Sometimes duplicate issues may be entered and need to be tracked separately. 
+    Marking an issue as a duplicate allows users to track efforts on both issues. 
+    Duplicates may be in different modules or the same module.</p>
+  <p>Marking issues as non-blocking dependencies also allows users to simultaneously 
+    track efforts on two or more issues.</p>
+  <p>You can track the progress of interrelated issues by using the <strong>Dependencies</strong> 
+    section of the issue and clicking on either the issue id or the Issue summary 
+    links to the issues. In this area you can also redefine the Dependency type.</p>
+  <p><strong><a name="attachments"></a>Issue attachments: </strong>Keeping track 
+    of information relating to an issue is simplified using the issue attachment 
+    feature. You can include email conversations, relevant documentation, patch 
+    files, or any other supporting file. If you need to include a url, you can 
+    add that into any text field. To add a file, use the <strong>Add Attachment 
+    </strong> section in the <strong>Enter New</strong> form (if you have duplication 
+    active, this will appear after the duplication checking process). To do so, 
+    enter a brief description of the attachment and use the browse button to navigate 
+    to the file on your local system or enter a path for the file and click the 
+    <strong>Add file</strong> button. You can repeat this process to add multiple 
+    files.</p>
+  <h3><a name="duplicates"></a>Handling Duplicates</h3>
+  <p>If you have duplication checking active, Scarab will use a subset of attributes 
+    to check for possible duplicates in the database. If duplicates are found 
+    a report of similar issues will be presented with your issue listed at the 
+    top. Review the issues listed for fit. You can do a number of things at this 
+    point:</p>
+  <ul>
+    <li>Review individual issues by clicking on their id. The full issue description 
+      will appear. </li>
+    <li>Sort issues by each of the categories. Click on the name of the category 
+      to change the sort order</li>
+    <li>Alter one or more issues at the same time. Click on the check box to the 
+      left of the issue ids that you would like to manipulate. You can then enter 
+      a note in the <strong>note</strong> field and click the <strong>submit note 
+      only</strong> button to add a note to the comments section of all issues 
+      selected.</li>
+    <li>Skip this process by clicking on the <strong>bypass duplicates</strong> 
+      button.</li>
+  </ul>
+  <p><strong><a name="reviewing"></a>Reviewing duplicates</strong></p>
+  <p>For each item in the database that has been identified as a possible duplicate 
+    for the criteria you entered, an entry appears in the <strong>Identified as 
+    duplicate</strong> screen. You can change the sort order by clicking on the 
+    title of the column. Each column represents an attribute used in the search 
+    for duplicates. </p>
+  <p>Each module has a set of assigned attributes. The values entered for each 
+    of the attributes is parsed into a search string so that each value becomes 
+    a searchable string. Use this page to compare your potential new issue with 
+    those in the database. </p>
+  <p><strong><a name="commenting"></a>Commenting on like issues</strong></p>
+  <p>The note box under the list of like issues allows you to add comments to 
+    issues without going to the issue. You may want to comment that you are experiencing 
+    similar problems, recommend a solution for a similar issue or add to the information 
+    in an attribute. Information entered in the <em>Notes</em> box will be added 
+    to the <em>Comments</em> section in the issue. To add comments, enter text 
+    in the <em>Note</em> box and click the <em>Submit note</em> button. Once your 
+    entry has been processed a message will appear at the top of the screen letting 
+    you know that hat your comment has been added.</p>
+  <p><a href="#Top">Top</a> </p>
+  </div>
+ </html>
