@@ -1,5 +1,8 @@
      <div class="app" id="divselect_module">
-        <h3>Issue types: The '$scarabR.CurrentModule.RealName' module</h3>
+
+<h2>Issue tracking: $scarabR.CurrentModule.RealName</h2>
+
+        <h3>$page.Title</h3>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
