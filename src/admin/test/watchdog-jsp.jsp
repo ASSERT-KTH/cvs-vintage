@@ -18,8 +18,8 @@ You can see the context log <a href="/jsp-tests/context_log.txt">here</a>
 <ant:ant>
   <ant:target name="main" />
   <ant:property name="ant.file" 
-		location="/WEB-INF/jsp-gtest.xml" 
-		webApp="/jsp-tests" />
+		location="/WEB-INF/scripts/watchdog-jsp.xml" 
+		webApp="/admin" />
   <ant:property name="wgdir" 
 		location="/Golden" 
 		webApp="/jsp-tests" />

@@ -1,0 +1,34 @@
+<project name="Watchdog-moo" default="main" basedir=".">
+
+  <property name="tomcat.home" value="../../../.."/>
+  <property name="ant-file" 
+   value="${tomcat.home}/webapps/jsp-tests/WEB-INF/jsp-gtest.xml"/>
+  <property name="stests.home" 
+	    value="${tomcat.home}/webapps/jsp-tests"/>
+  
+
+  <target name="main" >
+    <java classname="org.apache.tools.ant.Main" 
+	  fork="true" dir="../../../..">
+      <classpath>
+	<pathelement
+	        path="../classes" />
+	<pathelement 
+		path="../lib/ant.jar" />
+	<pathelement 
+		path="${stests.home}/WEB-INF/classes" />
+	<pathelement 
+		path="${tomcat.home}/lib/container/tomcat_util.jar" />
+	<pathelement 
+		path="${tomcat.home}/lib/container/jaxp.jar" />
+	<pathelement 
+		path="${tomcat.home}/lib/container/crimson.jar" />
+      </classpath>
+      <arg value="-Dwgdir" />
+      <arg value="${wgdir}" />
+      <arg value="-f" />
+      <arg value="${stests.home}/WEB-INF/jsp-gtest.xml" />
+    </java>
+  </target>
+
+</project>
