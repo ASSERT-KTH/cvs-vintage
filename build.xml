@@ -2,6 +2,7 @@
 <project name="Tomcat" default="main" basedir=".">
 
   <!-- Compilation properties -->
+  <property file="${user.home}/.ant.properties"  />
 
   <property name="optimize" value="false"/>
   <property name="debug" value="on"/>
@@ -626,7 +627,8 @@
    
   <!-- The self-test app should be removed in the release, but it's 
        useful to have it builded by default -->
-  <target name="tomcat" depends="prepare,tomcat-jars-new">
+  <target name="tomcat" depends="prepare,tomcat-jars-new"
+          description="Build tomcat core only" >
   </target>
 
   <target name="clean-classes" depends="init">
