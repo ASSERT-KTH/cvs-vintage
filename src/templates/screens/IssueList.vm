@@ -1,16 +1,19 @@
-##set ( $action = $link.setPage("IssueList.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "IssueList.vm") )
+#set ( $action = $link.setPage("IssueList.vm").setAction("Search") )
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
+#set($search = $scarabR.Search)
+#set ( $searchGroup = $intake.SearchIssue.mapTo($search) ) 
 
 	<h3>Search Results</h3>
 	
 	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 	
-<form>
+<form name="IssueListForm" action="$action" method="post">
+<input type="hidden" name="queryString" value="$queryString">
       <div class="functnbar">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
-         <td><input type="submit" value="bulk edit selected issues" class="buttonfunc" />&#160;<input type="submit" value="bulk reassign" class="buttonfunc" /></td>
+         <td><input type="submit" name="eventSubmit_doEditissues" value="bulk edit selected issues" class="buttonfunc" />&#160;<input type="submit" value="bulk reassign" class="buttonfunc" />&#160;<input type="submit" value="save query" class="buttonfunc" name="eventSubmit_doSavequery"/></td>
         </tr>
        </table>
       </div>
@@ -30,6 +33,7 @@
 #end
 		</tr>
 		
+#set( $issueList = $user.getTemp("issueList") )
 #foreach ($issue in $issueList)
 
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
@@ -52,9 +56,9 @@
 	<div class="functnbar">
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>
-		<td><input type="submit" value="bulk edit selected issues" />&nbsp;<input type="submit" value="bulk reassign" /></td>
+		<td><input type="submit" value="bulk edit selected issues" class="button" name="eventSubmit_doEditissues"/>&nbsp;<input type="submit" value="bulk reassign" class="button" /></td>
 		</tr>
 		</table>
 	</div>
-
+$intake.declareGroups()
 </form>
