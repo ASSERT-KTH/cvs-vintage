@@ -101,7 +101,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.57 2003/03/16 05:37:51 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.58 2003/03/22 20:00:45 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -879,7 +879,7 @@ public class DockableWindowManager extends JPanel
 		caption.setEnabled(false);
 		popup.add(caption);
 		popup.addSeparator();
-		String currentPos = jEdit.getProperty(dockable + ".dock-position");
+		String currentPos = jEdit.getProperty(dockable + ".dock-position",FLOATING);
 		if(!clone)
 		{
 			String[] positions = { FLOATING, TOP, LEFT, BOTTOM, RIGHT };

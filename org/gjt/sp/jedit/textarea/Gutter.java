@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.32 2003/03/17 03:05:50 spestov Exp $
+ * @version $Id: Gutter.java,v 1.33 2003/03/22 20:00:50 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -742,6 +742,8 @@ public class Gutter extends JComponent implements SwingConstants
 		//{{{ mousePressed() method
 		public void mousePressed(MouseEvent e)
 		{
+			textArea.grabFocus();
+
 			if(GUIUtilities.isPopupTrigger(e)
 				|| e.getX() >= getWidth() - borderWidth * 2)
 			{
@@ -842,8 +844,13 @@ public class Gutter extends JComponent implements SwingConstants
 							if(line >= caretLine
 								&& line <= bracketLine)
 							{
-								if(e.isControlDown())
+								if(e.isShiftDown())
 									textArea.selectToMatchingBracket();
+								else if(e.isControlDown())
+								{
+									foldVisibilityManager.narrow(
+										caretLine,bracketLine);
+								}
 								else
 									textArea.goToMatchingBracket();
 								return;
