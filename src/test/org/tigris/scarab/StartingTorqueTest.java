@@ -59,7 +59,7 @@ import junit.framework.TestCase;
  * connection issues
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: StartingTorqueTest.java,v 1.1 2004/02/03 13:15:32 dep4b Exp $
+ * @version $Id: StartingTorqueTest.java,v 1.2 2004/10/27 11:20:31 dep4b Exp $
  */
 public class StartingTorqueTest extends TestCase {
 
@@ -69,8 +69,8 @@ public class StartingTorqueTest extends TestCase {
 				new PropertiesConfiguration("src/test/TestTurbineResources.properties");
 
 			Torque.init(config);
+			assertTrue(Torque.isInit());
 
-			System.out.println("Success Initing Torque!");
 			Activity activity = ActivityManager.getInstance(new Long(1));
 			assertNotNull(activity);
 			assertEquals(1,activity.getActivityId().intValue());
