@@ -109,6 +109,19 @@ public class Ajp12Interceptor extends PoolTcpConnector
         ajpidFile=( path==null?null:new File(path));
     }
     
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
+        super.engineInit( cm );
+        String ajpid12 = cm.getProperty("ajpid12");
+        if( ajpid12 != null ) {
+            if( ajpidFile != null ) {
+                log( "Overriding ajpidFile with " + ajpid12 );
+            }
+            ajpidFile = new File(ajpid12);
+        }
+    }
+
     public void engineState(ContextManager cm, int state )
 	throws TomcatException
     {
