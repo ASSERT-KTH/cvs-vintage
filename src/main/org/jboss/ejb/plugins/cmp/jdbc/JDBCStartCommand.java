@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCStartCommand {
 
@@ -118,7 +118,9 @@ public class JDBCStartCommand {
             addForeignKeyConstraint(cmrField);
 
             // Create related fk constraint
-            addForeignKeyConstraint(cmrField.getRelatedCMRField());
+            if(!entity.equals(cmrField.getRelatedJDBCEntity())) {
+               addForeignKeyConstraint(cmrField.getRelatedCMRField());
+            }
          }
       }
    }
@@ -166,7 +168,7 @@ public class JDBCStartCommand {
       } catch(Exception e) {
          log.debug("Could not create table " + tableName);
          try {
-            manager.getContainer().getTransactionManager().rollback ();
+            manager.getContainer().getTransactionManager().rollback();
          } catch(Exception _e) {
             log.error("Could not roll back transaction: ", e);
          }

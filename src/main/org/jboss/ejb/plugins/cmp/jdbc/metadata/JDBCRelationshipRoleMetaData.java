@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -305,7 +305,11 @@ public final class JDBCRelationshipRoleMetaData {
       
          String columnName;
          if(relationMetaData.isTableMappingStyle()) {
-            columnName = entity.getName();
+            if(entity.equals(relatedRole.getEntity())) {
+               columnName = getCMRFieldName();
+            } else {
+               columnName = entity.getName();
+            }
          } else {
             columnName = relatedRole.getCMRFieldName();
          }
