@@ -176,7 +176,7 @@ function initializeAll() {
       <tr >
         <td>$scarabG.SiteName</td>
         <td>
-          #if($scarabG.SiteLogo)
+          #if($scarabG.SiteLogo != "")
             <img hspace="10"
                  src="$staticLink.setPath("$scarabG.SiteLogo")"
                  border="0"/>
@@ -185,13 +185,6 @@ function initializeAll() {
       </tr>
     </table>
   </td>
-    #if (!$data.User.hasLoggedIn() || $data.User.isUserAnonymous())
-    <td>
-    <div align="right" id="login">
-    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Login")
-    </div>
-    </td>
-    #end
   </tr>
   </table>
  </div>
@@ -221,10 +214,12 @@ function initializeAll() {
 <td>
   <div align="right">
    <div>
-    #if (!$data.User.isUserAnonymous())
+    #if ($data.User.isUserAnonymous())
+    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Login")
+    #else
     $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
     <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
-    #end
+    #end    
    </div>
   </div>
 </td>
