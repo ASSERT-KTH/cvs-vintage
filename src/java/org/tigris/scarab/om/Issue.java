@@ -600,6 +600,35 @@ public class Issue
     }
     
     /**
+     * Returns users assigned to user attributes that get emailed 
+     * When issue is modified.
+     */
+    public List getUsersToEmail(String action) throws Exception
+    {
+       List users = new ArrayList();
+       Criteria crit = new Criteria()
+          .add(AttributeValuePeer.ISSUE_ID, getIssueId())
+          .addJoin(AttributeValuePeer.ATTRIBUTE_ID,
+                   AttributePeer.ATTRIBUTE_ID)
+          .add(AttributePeer.ACTION, action);
+       List userAttVals = AttributeValuePeer.doSelect(crit);
+       for (int i=0;i<userAttVals.size();i++)
+       {
+           AttributeValue attVal = (AttributeValue)userAttVals.get(i);
+           try
+           {
+               ScarabUser su = UserManager.getInstance(attVal.getUserId());
+               users.add(su);
+           }
+           catch (Exception e)
+           {
+                throw new Exception("Error in retrieving users.");
+           }
+       }
+       return users;
+    }
+
+    /**
      * Returns users assigned to all user attributes.
      */
     public List getAssociatedUsers() throws Exception
