@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.7 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.8 2003/12/12 10:55:27 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.7 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.8 2003/12/12 10:55:27 d00mst Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
      * @param horizontal
      */
     public UMLStructuralFeatureChangeabilityRadioButtonPanel(String title, boolean horizontal) {
-        super(title, labelTextsAndActionCommands, "visibility", ActionSetChangeability.SINGLETON, horizontal);
+        super(title, labelTextsAndActionCommands, "changeability", ActionSetChangeability.SINGLETON, horizontal);
     }
 
     /**
