@@ -12,7 +12,7 @@
         <connectionfactory-impl-class>org.jboss.jms.ra.JmsConnectionFactoryImp</connectionfactory-impl-class>
         <connection-interface>javax.jms.Session</connection-interface>
         <connection-impl-class>org.jboss.jms.ra.JmsSession</connection-impl-class>
-        <transaction-support>xa_transaction</transaction-support>
+        <transaction-support>XATransaction</transaction-support>
         <config-property>
             <config-property-name>JmsProviderAdapterJNDI</config-property-name>
             <config-property-type>java.lang.String</config-property-type>
