@@ -24,18 +24,21 @@ import org.jboss.pool.jdbc.xa.XAPoolDataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Log;
+import java.sql.Connection;
 
 /**
  * Service that loads a JDBC 2 std. extension-compliant connection pool.  This
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * 
  * Revision:<br>
  * 20010701 danch added support for timeout in blocking.
+ * 20010703 bill added support for transaction isolation and ps cache size.
  */
 public class XADataSourceLoader
    extends ServiceMBeanSupport
@@ -61,6 +64,8 @@ public class XADataSourceLoader
    boolean invalidateOnError;
    boolean timestampUsed;
    int blockingTimeout;
+   int transactionIsolation = -1; // use default of driver
+   int psCacheSize = 10;
 
    XAPoolDataSource source;
 
@@ -182,6 +187,52 @@ public class XADataSourceLoader
       return blockingTimeout;
    }
    
+   public void setTransactionIsolation(String iso) 
+   {
+      if (iso.equals("TRANSACTION_NONE"))
+      {
+         this.transactionIsolation = Connection.TRANSACTION_NONE;
+      }
+      else if (iso.equals("TRANSACTION_READ_COMMITTED"))
+      {
+         this.transactionIsolation = Connection.TRANSACTION_READ_COMMITTED;
+      }
+      else if (iso.equals("TRANSACTION_READ_UNCOMMITTED"))
+      {
+         this.transactionIsolation = Connection.TRANSACTION_READ_UNCOMMITTED;
+      }
+      else if (iso.equals("TRANSACTION_REPEATABLE_READ"))
+      {
+         this.transactionIsolation = Connection.TRANSACTION_REPEATABLE_READ;
+      }
+      else if (iso.equals("TRANSACTION_SERIALIZABLE"))
+      {
+         this.transactionIsolation = Connection.TRANSACTION_SERIALIZABLE;
+      }
+      else
+      {
+         throw new IllegalArgumentException("Setting Isolation level to unknown state: " + iso);
+      }
+   }
+   
+   public String getTransactionIsolation() {
+      switch (this.transactionIsolation)
+      {
+      case Connection.TRANSACTION_NONE:
+         return "TRANSACTION_NONE";
+      case Connection.TRANSACTION_READ_COMMITTED:
+         return "TRANSACTION_READ_COMMITTED";
+      case Connection.TRANSACTION_READ_UNCOMMITTED:
+         return "TRANSACTION_READ_UNCOMMITTED";
+      case Connection.TRANSACTION_REPEATABLE_READ:
+         return "TRANSACTION_REPEATABLE_READ";
+      case Connection.TRANSACTION_SERIALIZABLE:
+         return "TRANSACTION_SERIALIZABLE";
+      default:
+         return "DEFAULT";
+      }
+   }
+   
    public void setGCEnabled(boolean gcEnabled)
    {
       this.gcEnabled = gcEnabled;
@@ -262,6 +313,16 @@ public class XADataSourceLoader
       return timestampUsed;
    }
 
+   public int getPSCacheSize()
+   {
+      return psCacheSize;
+   }
+   
+   public void setPSCacheSize(int size)
+   {
+      psCacheSize = size;
+   }
+
    // ServiceMBeanSupport implementation ----------------------------
    public ObjectName getObjectName(MBeanServer server, ObjectName objectName)
       throws javax.management.MalformedObjectNameException
@@ -320,6 +381,8 @@ public class XADataSourceLoader
       getSource().setMaxIdleTimeoutPercent(maxIdleTimeoutPercent);
       getSource().setInvalidateOnError(invalidateOnError);
       getSource().setTimestampUsed(timestampUsed);
+      getSource().setTransactionIsolation(transactionIsolation);
+      getSource().setPSCacheSize(psCacheSize);
 
       // Initialize pool
       Context ctx = null;
