@@ -226,7 +226,7 @@
     <target name="schema-check">
         <echo message="checking: ${src.sql.dir}/scarab-schema.sql"/>
         <uptodate property="schema.uptodate"
-            targetfile="${src.sql.dir}/scarab-schema.sql">
+            targetfile="${src.sql.dir}/mysql-${project}.sql">
             <srcfiles dir="${src.dir}" includes="scarab-schema.xml"/>
         </uptodate>
     </target>
