@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.23 2003/01/05 18:40:08 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.24 2003/01/05 18:41:00 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.23 2003/01/05 18:40:08 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.24 2003/01/05 18:41:00 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -69,7 +69,6 @@ public class PropPanelAttribute extends PropPanelModelElement {
         super("Attribute", ConfigLoader.getTabPropsOrientation());
         
         
-        /*
 
         Class mclass = MAttribute.class;
 
@@ -118,7 +117,6 @@ public class PropPanelAttribute extends PropPanelModelElement {
         new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
         new PropPanelButton(this,buttonPanel,_addAttrIcon, Argo.localize("UMLMenu", "button.add-attribute"),"newAttribute",null);
         new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-attribute"),"removeElement",null);
-        */
     }
 
 
