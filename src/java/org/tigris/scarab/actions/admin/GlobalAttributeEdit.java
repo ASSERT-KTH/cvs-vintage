@@ -46,11 +46,14 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
@@ -59,6 +62,7 @@ import org.apache.fulcrum.intake.model.Field;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeType;
 import org.tigris.scarab.om.AttributeTypeManager;
 import org.tigris.scarab.om.ROptionOption;
@@ -68,6 +72,8 @@ import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.Transition;
+import org.tigris.scarab.om.TransitionPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -78,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.68 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.69 2004/10/11 23:11:55 jorgeuriarte Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -164,6 +170,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (success)
                 {
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                    AttributeManager.clear();
                 }
             }
         }
@@ -351,6 +358,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (somethingSaved)
                 {
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                    AttributeManager.clear();
                 }
 
                 // handle adding the new line.
@@ -578,4 +586,102 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             super.doCancel(data, context);
         }
     }
+
+    /**
+     * Saves (creates or updates) transition data.
+     * 
+     * @param data
+     * @param context
+     * @return true if the operation gets done successfuly, false otherwise
+     * @throws Exception
+     */
+    public boolean doSavetransitiondata(RunData data, TemplateContext context)
+            throws Exception
+    {
+        boolean bRdo = false;
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Attribute attr = scarabR.getAttribute();
+        Integer attributeId = attr.getAttributeId();
+        Integer roleId = data.getParameters().getInteger("trans_new_RoleId");
+        Integer fromId = data.getParameters().getInteger("trans_new_FromId");
+        Integer toId = data.getParameters().getInteger("trans_new_ToId");
+
+        if (roleId.intValue() == -1)
+            roleId = null;
+        if (fromId.intValue() == -1)
+            fromId = null;
+        if (toId.intValue() == -1)
+            toId = null;
+        try
+        {
+            Transition transition = new Transition();
+            transition.setRoleId(roleId);
+            transition.setFromOptionId(fromId);
+            transition.setToOptionId(toId);
+            transition.setAttributeId(attributeId);
+            attr.addTransition(transition);
+            attr.save();
+            transition.save();
+            bRdo = true;
+        }
+        catch (TorqueException te)
+        {
+            this.log().error("doSavetransitiondata(): " + te);
+        }
+        return bRdo;
+    }
+
+    /**
+     * Deletes the transitions selected in the form.
+     * 
+     * @param data
+     * @param context
+     * @return true if the operation gets done successfuly, false otherwise
+     * @throws Exception
+     */
+    public boolean doDeletetransitiondata(RunData data, TemplateContext context)
+            throws Exception
+    {
+        boolean bRdo = false;
+        boolean bChanges = false;
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Attribute attr = scarabR.getAttribute();
+        List transitions = attr.getTransitions();
+        Iterator iter = transitions.iterator();
+
+        // Will store the transitions to delete in order to avoid the
+        // ConcurrentModificationException??
+        List toDelete = new ArrayList();
+        try
+        {
+            while (iter.hasNext())
+            {
+                Transition trans = (Transition) iter.next();
+                boolean bDelete = data.getParameters().getBoolean(
+                        "trans_delete_" + trans.getTransitionId());
+                if (bDelete)
+                {
+                    bChanges = true;
+                    toDelete.add(trans);
+                    AttributeManager.clear();
+                }
+            }
+            iter = toDelete.iterator();
+            while (iter.hasNext())
+            {
+                Transition trans = (Transition) iter.next();
+                transitions.remove(trans);
+                TransitionPeer.doDelete(trans);
+            }
+            bRdo = true;
+        }
+        catch (TorqueException te)
+        {
+            this.log().error("doDeleteTransition(): " + te);
+        }
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        return bRdo;
+    }
+
 }

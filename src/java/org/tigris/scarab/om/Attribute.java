@@ -56,6 +56,8 @@ import java.util.Date;
 import com.workingdogs.village.Record;
 
 // Turbine classes
+import org.apache.torque.NoRowsException;
+import org.apache.torque.TooManyRowsException;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
@@ -76,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.78 2004/05/10 21:04:45 dabbous Exp $
+  * @version $Id: Attribute.java,v 1.79 2004/10/11 23:11:55 jorgeuriarte Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -883,4 +885,29 @@ public class Attribute
         return systemDefined;
     }
 
+    /**
+     * Gets the attributeOption that will force this attribute to be required, in case of being set.
+     * @return
+     */
+    public AttributeOption getRequiredOption()
+    {
+        AttributeOption option = null;
+        try
+        {
+            option = AttributeOptionPeer.retrieveByPK(this.getRequiredOptionId());
+        }
+        catch (NoRowsException e)
+        {
+            // Nothing to do. Ignore.
+        }
+        catch (TooManyRowsException e)
+        {
+            // Nothing to do. Ignore.
+        }
+        catch (TorqueException e)
+        {
+            e.printStackTrace();
+        }
+        return option;
+    }
 }

@@ -7,6 +7,40 @@ performing any of the operations outlined by this document,
 		    ******************************
 
 ------------------------------------------------------------------------
+Upgrading from b19 to b20 with basic workflow functionalities
+------------------------------------------------------------------------
+
+The basic workflow functionalities need a new table (SCARAB_TRANSITION)
+and a new field in another (SCARAB_R_MODULE_ATTRIBUTE).
+
+This means that you will have to rebuid your code so Torque rebuilds the
+Base objects around the tables, without getting compile errors.
+
+The upgrade procedure is easy, and should cause no problem. It will not
+change/delete any data, but in case you didn't notice the top of this
+file... BACKUP YOUR DATA FIRST!
+
+0. Change to Scarab's root directory
+
+1. Run the database migration procedure.
+
+  $ ant migrate-workflow
+
+2. Clean the current codebase to avoid compile errors due to the changes.
+
+  $ ant clean
+
+3. Rebuild the project
+
+  $ ant
+
+In case there is any problem with the script, the migration scripts are
+in the src/sql/upgrade/ directory, and are named as follows:
+
+ [database]-upgrade-1.0b19-workflow-?.sql
+
+
+------------------------------------------------------------------------
 Upgrading from b18 & b18-1 to b19
 ------------------------------------------------------------------------
 

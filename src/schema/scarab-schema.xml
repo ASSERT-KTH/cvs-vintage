@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://db.apache.org/torque/dtd/database_3_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.1 2004/05/13 15:02:17 thierrylach Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.2 2004/10/11 23:11:56 jorgeuriarte Exp $ -->
 
 <database name="scarab" defaultJavaType="object">
 <!--
@@ -1042,6 +1042,10 @@
     <column name="REQUIRED" required="true" type="BOOLEANINT" 
         default="0" size="1" javaType="primitive"/>
     <!--
+        A required option for this attribute to be active in this module
+    -->
+    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
+    <!--
         Column order.
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER" javaType="primitive"/>
@@ -1066,6 +1070,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="REQUIRED_OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
 
     <index name="IX_MOD_ATTR_REQ">
@@ -1762,6 +1769,42 @@
     <column name="MODULE_ID" required="false" type="INTEGER"/>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+</table>
+
+<!--
+       Transition table for the Workflow engine
+-->
+<table name="SCARAB_TRANSITION" idMethod="idbroker" javaName="Transition">
+    <!--
+        Unique identifier.
+    -->
+    <column name="TRANSITION_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Role id
+    -->
+    <column name="ROLE_ID"  javaName="RoleId" required="false" type="INTEGER"></column><!---->
+    <!--
+        attribute id
+    -->
+    <column name="ATTRIBUTE_ID" javaName="AttributeId" required="true" type="INTEGER"></column>
+    <!--
+        from attribute option id
+    -->
+    <column name="FROM_OPTION_ID" javaName="FromOptionId" required="false" type="INTEGER"></column>
+    <!--
+        to attribute option id
+    -->
+    <column name="TO_OPTION_ID" javaName="ToOptionId" required="false" type="INTEGER"></column>
+
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE">
+        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="FROM_OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="TO_OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
 </table>
 

@@ -47,9 +47,12 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 // Turbine Stuff 
@@ -69,6 +72,8 @@ import org.apache.fulcrum.localization.Localization;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
+import org.tigris.scarab.om.AttributeOptionPeer;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
@@ -90,13 +95,15 @@ import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.184 2004/05/07 05:48:08 dabbous Exp $
+ * @version $Id: ReportIssue.java,v 1.185 2004/10/11 23:11:55 jorgeuriarte Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -309,13 +316,15 @@ public class ReportIssue extends RequireLoginFirstAction
      * @exception Exception if an error occurs
      */
     private void setRequiredFlags(Issue issue, IntakeTool intake,
-                                  SequencedHashMap avMap)
+                                  SequencedHashMap avMap, TemplateContext context)
         throws Exception
     {
         if (issue == null)
         {
             throw new Exception(Localization.getString("IssueNoLongerValid")); //EXCEPTION
         }
+        Set selectedOptions = new HashSet();
+        Map conditionallyRequiredFields = new HashMap(); 
         IssueType issueType = issue.getIssueType();
         List requiredAttributes = issueType
             .getRequiredAttributes(issue.getModule());
@@ -331,6 +340,12 @@ public class ReportIssue extends RequireLoginFirstAction
                 if (aval instanceof OptionAttribute) 
                 {
                     field = group.get("OptionId");
+                    // Will store the selected optionId, for later query.
+                    Object fieldValue = field.getValue();
+                    if (null != fieldValue)
+                    {
+                        selectedOptions.add(fieldValue);
+                    }                    
                 }
                 else if (aval instanceof UserAttribute) 
                 {
@@ -340,6 +355,22 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     field = group.get("Value");
                 }
+
+                /**
+                 * If the field has any conditional constraint, will be added to the collection
+                 * in the hash.
+                 */ 
+                if (aval.getRModuleAttribute().getRequiredOptionId() != null)
+                {
+                    Integer id = aval.getRModuleAttribute().getRequiredOptionId();
+                    List fields = (List)conditionallyRequiredFields.get(id);
+                    if (fields == null)
+                    {
+                        fields = new ArrayList();
+                    }
+                    fields.add(field);
+                    conditionallyRequiredFields.put(id, fields);
+                }                
                 
                 for (int j=requiredAttributes.size()-1; j>=0; j--) 
                 {
@@ -353,6 +384,27 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
             }
         }
+        /**
+         * Now that we have all the info, we will force the 'required' status of any field
+         * whose requiredOptionId has been set in the issue.
+         */
+        for (Iterator requiredIds = conditionallyRequiredFields.keySet().iterator(); requiredIds.hasNext(); )
+        {
+            Integer attributeId= (Integer)requiredIds.next();
+            if (selectedOptions.contains(attributeId))
+            {
+                List fields = (List)conditionallyRequiredFields.get(attributeId);
+                for (Iterator iter = fields.iterator(); iter.hasNext(); )
+                {
+                    Field field = (Field)iter.next();
+            	    if (field.getValue().toString().length() == 0)
+            	    {
+            	       field.setRequired(true);
+            	       field.setMessage("ConditionallyRequiredAttribute");
+            	    }
+                }
+            }
+        }        
     }
     
     /**
@@ -370,7 +422,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         boolean success = false;
         // set any required flags on attribute values
-        setRequiredFlags(issue, intake, avMap);
+        setRequiredFlags(issue, intake, avMap, context);
         if (intake.isAllValid()) 
         {
             for (Iterator i = avMap.iterator();i.hasNext();) 

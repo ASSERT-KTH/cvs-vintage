@@ -103,7 +103,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.121 2004/09/10 09:28:25 legout Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.122 2004/10/11 23:11:55 jorgeuriarte Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -948,6 +948,7 @@ public abstract class AbstractScarabModule
         rma.setIssueTypeId(issueType.getIssueTypeId());
         rma.setAttributeId(attribute.getAttributeId());
         rma.setOrder(getLastAttribute(issueType, attributeType) + 1);
+        rma.setRequiredOptionId(attribute.getRequiredOptionId());
         rma.save();
         getRModuleAttributes(issueType, false, attributeType).add(rma);
 

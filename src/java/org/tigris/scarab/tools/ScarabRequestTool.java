@@ -80,6 +80,7 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
 
 // Scarab
+import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
@@ -3141,6 +3142,10 @@ e.printStackTrace();
         }
         
         return result;
+    }
+    
+    public List getSortedAttributeOptions() {
+        return AttributeOptionPeer.getSortedAttributeOptions();
     }
 
     // ****************** Recyclable implementation ************************

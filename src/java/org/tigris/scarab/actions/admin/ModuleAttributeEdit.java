@@ -46,8 +46,10 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Date;
 import java.util.List;
 
+import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
@@ -62,6 +64,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -69,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.32 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.33 2004/10/11 23:11:55 jorgeuriarte Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -97,6 +100,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             return;
         }
 
+        
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
@@ -149,8 +153,26 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 }
             }
         }
+        RModuleAttribute rma =  module.getRModuleAttribute(scarabR.getAttribute(), scarabR.getIssueType());
+        Group group = intake.get("RModuleAttribute", rma.getQueryKey(), false);
+        Field f = group.get("RequiredOptionId");
+        rma.setRequiredOptionId((Integer)f.getValue());
+        //scarabR.getAttribute().setRequiredOptionId((Integer)f.getValue());
+        rma.save();
+        ScarabCache.clear();
     }
 
+    public synchronized void doSaveRequiredOption (RunData data, TemplateContext context)
+    throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IntakeTool intake = getIntakeTool(context);
+        RModuleAttribute rma = scarabR.getRModuleAttribute();
+        Group attrGroup = intake.get("RModuleAttribute", IntakeTool.DEFAULT_KEY);
+        Field requiredOptionId = attrGroup.get("RequiredOptionId");
+    }
+    
     /**
      * Unmaps attribute options to modules.
      */

@@ -1,5 +1,12 @@
 package org.tigris.scarab.om;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.torque.TorqueException;
+import org.apache.torque.util.Criteria;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -58,5 +65,27 @@ package org.tigris.scarab.om;
 public class AttributeOptionPeer 
     extends org.tigris.scarab.om.BaseAttributeOptionPeer
 {
+    /**
+     * Returns an ordered attribute_options list
+     * @return
+     */
+    public static List getSortedAttributeOptions() {
+      List attributeOptions = null;
+      try
+      {
+          Criteria crit = new Criteria();
+          crit.addAscendingOrderByColumn(AttributeOptionPeer.ATTRIBUTE_ID);
+          crit.addAscendingOrderByColumn(AttributeOptionPeer.OPTION_ID);
+          attributeOptions = doSelect(new Criteria());
+          attributeOptions.remove(0);
+      }
+      catch (TorqueException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return attributeOptions;  
+    }
+
 }
 

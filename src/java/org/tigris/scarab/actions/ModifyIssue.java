@@ -46,9 +46,13 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -96,7 +100,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.186 2004/09/03 13:24:51 legout Exp $
+ * @version $Id: ModifyIssue.java,v 1.187 2004/10/11 23:11:55 jorgeuriarte Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -146,14 +150,15 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         // Set any other required flags
+        Set selectedOptions = new HashSet();
+        Map conditionallyRequiredFields = new HashMap(); 
         IssueType issueType = issue.getIssueType();
         List requiredAttributes = issueType
             .getRequiredAttributes(issue.getModule());
         AttributeValue aval = null;
         Group group = null;
         SequencedHashMap modMap = issue.getModuleAttributeValuesMap();
-        Iterator iter = modMap.iterator();
-        while (iter.hasNext()) 
+        for (Iterator iter = modMap.iterator(); iter.hasNext(); ) 
         {
             aval = (AttributeValue)modMap.get(iter.next());
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
@@ -164,12 +169,32 @@ public class ModifyIssue extends BaseModifyIssue
                 if (aval instanceof OptionAttribute) 
                 {
                     field = group.get("OptionId");
+                    // Will store the selected optionId, for later query.
+                    Object fieldValue = field.getValue();
+                    if (null != fieldValue)
+                    {
+                        selectedOptions.add(fieldValue);
+                    }                     
                 }
                 else
                 {
                     field = group.get("Value");
                 }
-            
+                /**
+                 * If the field has any conditional constraint, will be added to the collection for later query.
+                 */ 
+                if (aval.getRModuleAttribute().getRequiredOptionId() != null)
+                {
+                    Integer id = aval.getRModuleAttribute().getRequiredOptionId();
+                    List fields = (List)conditionallyRequiredFields.get(id);
+                    if (fields == null)
+                    {
+                        fields = new ArrayList();
+                    }
+                    fields.add(field);
+                    conditionallyRequiredFields.put(id, fields);
+                }
+                
                 for (int j=requiredAttributes.size()-1; j>=0; j--) 
                 {
                     if (aval.getAttribute().getPrimaryKey().equals(
@@ -180,7 +205,28 @@ public class ModifyIssue extends BaseModifyIssue
                     }                    
                 }
             } 
-        } 
+        }
+        /**
+         * Now that we have all the info, we will force the 'required' status of any field
+         * whose requiredOptionId has been set in the issue.
+         */
+        for (Iterator requiredIds = conditionallyRequiredFields.keySet().iterator(); requiredIds.hasNext(); )
+        {
+            Integer attributeId= (Integer)requiredIds.next();
+            if (selectedOptions.contains(attributeId))
+        	{
+                List fields = (List)conditionallyRequiredFields.get(attributeId);
+                for (Iterator iter = fields.iterator(); iter.hasNext(); )
+                {
+                	Field field = (Field)iter.next();
+					if (field.getValue().toString().length() == 0)
+					{
+					    field.setRequired(true);
+					    field.setMessage("ConditionallyRequiredAttribute");
+					}
+                }
+        	}
+        }         
 
         if (intake.isAllValid()) 
         {

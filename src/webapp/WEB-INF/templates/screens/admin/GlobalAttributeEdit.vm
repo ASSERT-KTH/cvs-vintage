@@ -6,6 +6,7 @@
 #if($immutable)
 <p class="infomark"><strong>$l10n.SystemSpecifiedAttribute</strong></p>
 #end
+
 #if ($deleting)
    <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
@@ -124,6 +125,29 @@
   #end
  </tr>
 #end
+<tr>
+  <th>$l10n.RequiredIf:</th>
+  <td>
+<select name="$attgroup.RequiredOptionId.Key">
+  	<option value="0">$l10n.RequiredNone</option>
+    #set ($attributeIdPrev = -1)
+	#foreach ($opt in $scarabR.sortedAttributeOptions)
+	  #set ($attributeId = $opt.attributeId)
+	  #if ($attributeId != $attributeIdPrev)
+		<optgroup label="$opt.attribute.name">
+	  #end
+	  <option value="$opt.optionId" #if ($attribute.requiredOptionId == $opt.optionId) selected #end>$opt.name</option>
+	  #set ($attributeIdPrev = $attributeId)
+	  #if ($!attributeId != $attributeIdPrev)
+	    </optgroup>
+	  #end
+	#end
+</select>
+<p><em>$l10n.RequiredIfExplanation</em></p>
+  </td>
+</tr> 
+
+
 </table>
 </div>
 
@@ -249,7 +273,94 @@
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />
 </div>
 
+## Transition management
+##
+#datatitle ($l10n.TransitionsTitle)
+
+<div class="colbar">
+$l10n.TransitionsExplanation1<br/>
+$l10n.TransitionsExplanation2
+</div>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+#set ($transitions = $attribute.transitions)
+	<tr><th>$l10n.Delete</th><th>$l10n.TransitionsFrom</th><th>$l10n.TransitionsTo</th><th>$l10n.TransitionsRoleNeeded</th></tr>
+#foreach ($transition in $transitions)
+	#set ($transitionId = $transition.transitionId)
+	<tr>
+	#indexedRows($velocityCount)	
+	<td><input type="checkbox" name="trans_delete_$transition.transitionId"></td>	
+	<td>
+          #if ($transition.from.optionId == 0)
+            $l10n.TransitionsEmptyOption
+          #else 
+	    #if ($transition.from.Name)
+              $transition.from.Name
+            #else
+              $l10n.TransitionsAnyOption
+            #end
+          #end
+	</td>
+	<td>
+		#if ($transition.to.Name)
+		  $transition.to.Name
+		#else
+		  $l10n.TransitionsAnyOption
+		#end
+	</td>
+	<td>
+	#if ($transition.Role.Name)
+	  $transition.Role.Name
+	#else
+	  $l10n.TransitionsAnyRole
+	#end
+	</td>
+	</tr>
 #end
+	<tr>
+	#indexedRows($velocityCount)
+	<td>$l10n.New</td>
+	<td>
+       	#set ($froms = $scarabR.Attribute.AttributeOptions)
+        <select name="trans_new_FromId">
+       	  <option value="0" >$l10n.TransitionsEmptyOption</option>
+       	  <option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
+    	#foreach ($f in $froms)
+    	  #if ($f.deleted == false)
+	  <option value="$f.OptionId">$f.Name</option>
+ 	  #end
+    	#end
+	</select>
+	</td>
+	<td>
+       	#set ($tos = $scarabR.Attribute.AttributeOptions)
+       	<select name="trans_new_ToId">
+       		<option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
+    	#foreach ($t in $tos)
+    		#if ($t.deleted == false)
+      			<option value="$t.OptionId">$t.Name</option>
+      		#end
+    	#end
+		</select>
+	</td>
+	<td>
+	<select name="trans_new_RoleId">
+	<option selected="selected" value="-1" >$l10n.TransitionsAnyRole</option>
+	#foreach ($role in $securityAdmin.Roles)
+		<option value="$role.RoleId">$role.Name</option>
+	#end
+	</select>
+	</td>
+	</tr>
+</table>
+<div class="functnbar3">
+   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavetransitiondata" />
+   <input type="submit" value="$l10n.Delete"  name="eventSubmit_doDeletetransitiondata" />   
+</div>
+
+## End of transition management
+
+#end
+
 
 <div class="functnbar2">
 #if (!$createNew)
@@ -262,3 +373,4 @@ $intake.declareGroups()
 </div>
 #end
 </form>
+

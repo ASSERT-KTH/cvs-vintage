@@ -38,6 +38,9 @@
             <rule name="maxLength" value="255">intake_ActionMustBeLessThan255Characters</rule>
         </field>
         <field name="Deleted" key="del" type="boolean" />
+        <field name="RequiredOptionId" key="requiredoptionid" type="int">
+            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>                 
 </group>
 
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
@@ -160,6 +163,9 @@
                 mapToProperty="Order">
            <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
         </field>
+        <field name="RequiredOptionId" key="requiredoptionid" type="int">
+            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
+        </field>                 
 </group>
 
 <group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">
