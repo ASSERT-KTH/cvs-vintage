@@ -40,7 +40,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.72 $
+ * @version $Revision: 1.73 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -968,7 +968,8 @@ public abstract class BeanMetaData
             String txTimeout = getOptionalChildContent(maNode, "transaction-timeout");
             try
             {
-               ma.txTimeout = Integer.parseInt(txTimeout);
+               if( txTimeout != null && txTimeout.length() > 0 )
+                  ma.txTimeout = Integer.parseInt(txTimeout);
             }
             catch (Exception ignore)
             {
