@@ -3,7 +3,7 @@
 # Author: Kunle Odutola
 #         May 2001
 #
-# $Id: build.sh,v 1.4 2002/10/08 20:04:11 kataka Exp $
+# $Id: build.sh,v 1.5 2002/10/19 06:42:43 linus Exp $
 #
  
 # +-------------------------------------------------------------------------+
@@ -75,6 +75,6 @@ echo
 echo Starting Ant...
 echo
 
-$ANT_HOME/bin/$ANT $*
+$ANT_HOME/bin/ant $*
 
 exit
