@@ -78,7 +78,7 @@
 	<!-- pack the files into one jar file with automatic manifest file -->
 	<target name="jar" depends="compile">
 		<delete file="${dest}/columba.jar"/>
-		<echo message="the jar file are going to ${dest}/columba.jar "/> 
+		<echo message="the jar file is going to ${dest}/columba.jar "/> 
 		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
 			<include name="**"/>
 			<exclude name="columba.jar"/>
