@@ -6,7 +6,7 @@
     <default-entity>
        <create-table>true</create-table>
        <remove-table>false</remove-table>
-       <tuned-updates>true</tuned-updates>
+       <tuned-updates>false</tuned-updates>
        <read-only>false</read-only>
        <time-out>300</time-out>
     </default-entity>
