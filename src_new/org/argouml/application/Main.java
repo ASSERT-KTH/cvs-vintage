@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.115 2005/02/06 19:36:32 linus Exp $
+// $Id: Main.java,v 1.116 2005/02/21 22:16:26 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -441,11 +441,12 @@ public class Main {
         // check if we are using a supported java version
         String javaVersion = System.getProperty("java.version", "");
         // exit if unsupported java version.
-        if (javaVersion.startsWith("1.2")
-	    || javaVersion.startsWith("1.1")) {
+        if (javaVersion.startsWith("1.3")
+            || javaVersion.startsWith("1.2")
+            || javaVersion.startsWith("1.1")) {
 
 	    System.err.println("You are using Java " + javaVersion + ", "
-			       + "Please use Java 1.3 or later with ArgoUml");
+			       + "Please use Java 1.4 or later with ArgoUml");
 	    System.exit(0);
         }
     }

@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.46 2005/02/20 21:55:18 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.47 2005/02/21 22:16:26 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -373,8 +373,7 @@ public class ClassGenerationDialog
     private void doBrowse() {
         try {
             // Show Filechooser to select OuputDirectory
-            JFileChooser chooser =
-                FileChooserFactory.getFileChooser(
+            JFileChooser chooser = new JFileChooser(
                     (String) outputDirectoryComboBox
                         .getModel()
                         .getSelectedItem());
