@@ -16,7 +16,7 @@ public class SavePOP3CachePlugin implements ShutdownPluginInterface {
 	/**
 	 * @see org.columba.core.gui.ShutdownPluginInterface#run()
 	 */
-	public void run() {
+	public void shutdown() {
 		MainInterface.popServerCollection.saveAll();
 	}
 

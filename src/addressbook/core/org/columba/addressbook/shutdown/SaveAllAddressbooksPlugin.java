@@ -26,7 +26,7 @@ public class SaveAllAddressbooksPlugin implements ShutdownPluginInterface {
 	/**
 	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
 	 */
-	public void run() {
+	public void shutdown() {
 		saveFolders(
 			(AddressbookTreeNode) MainInterface
 				.addressbookInterface

@@ -19,8 +19,12 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+import org.columba.core.shutdown.ShutdownPluginInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
@@ -37,12 +41,13 @@ import org.columba.mail.parser.Rfc822Parser;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LuceneSearchEngine implements SearchEngineInterface {
+public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPluginInterface {
 
 	Folder folder;
 	IndexWriter indexWriter;
 	IndexReader indexReader;
 	File indexDir;
+	Directory luceneIndexDir;
 
 	Analyzer analyzer;
 
@@ -52,11 +57,13 @@ public class LuceneSearchEngine implements SearchEngineInterface {
 	public LuceneSearchEngine(Folder folder) {
 		this.folder = folder;
 
+		MainInterface.shutdownManager.register(this);
+
 		analyzer = new SimpleAnalyzer();
 
 		File folderDir = folder.getDirectoryFile();
 
-		indexDir = new File(folderDir.getAbsolutePath() + "/.index");
+		indexDir = new File(folderDir,".index");
 
 		try {
 			if (!indexDir.exists()) {
@@ -65,6 +72,13 @@ public class LuceneSearchEngine implements SearchEngineInterface {
 				indexWriter.close();
 				indexWriter = null;
 			}
+			
+			// If there is an existing lock then it must be from a
+			// previous crash -> remove it!
+			luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
+			if( IndexReader.isLocked(luceneIndexDir))
+				IndexReader.unlock(luceneIndexDir);
+				
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -275,6 +289,23 @@ public class LuceneSearchEngine implements SearchEngineInterface {
 				e.getMessage(),
 				"Error while removing Message from Lucene Index",
 				JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	/**
+	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
+	 */
+	public void shutdown() {		
+		try {
+			if( indexWriter != null) {
+				indexWriter.close();
+			}
+			
+			if( indexReader != null){
+				indexReader.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

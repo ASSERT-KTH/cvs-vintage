@@ -19,7 +19,7 @@ import org.columba.mail.folder.outbox.OutboxFolder;
  */
 public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
 
-	public void run() {
+	public void shutdown() {
 		saveAllFolders();
 	}
 

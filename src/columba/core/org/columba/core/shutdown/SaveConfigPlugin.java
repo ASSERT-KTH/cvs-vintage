@@ -16,7 +16,7 @@ public class SaveConfigPlugin implements ShutdownPluginInterface {
 	/**
 	 * @see org.columba.core.gui.ShutdownPluginInterface#run()
 	 */
-	public void run() {
+	public void shutdown() {
 		try {
 
 			Config.save();

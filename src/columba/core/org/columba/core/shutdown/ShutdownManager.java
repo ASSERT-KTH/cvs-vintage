@@ -30,7 +30,7 @@ public class ShutdownManager {
 		{
 			ShutdownPluginInterface plugin = (ShutdownPluginInterface) list.get(i);
 			
-			plugin.run();
+			plugin.shutdown();
 		}
 		
 		System.exit(1);

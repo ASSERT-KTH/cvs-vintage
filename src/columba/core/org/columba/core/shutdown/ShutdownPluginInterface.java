@@ -10,5 +10,5 @@ package org.columba.core.shutdown;
  */
 public interface ShutdownPluginInterface {
 
-	public void run();
+	public void shutdown();
 }
