@@ -24,7 +24,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: ChildGenFind.java,v 1.2 2002/10/10 18:48:28 kataka Exp $
 
 package org.argouml.uml.cognitive;
 
@@ -56,7 +56,7 @@ public class ChildGenFind implements ChildGenerator {
     if (o instanceof Project) {
       Project p = (Project) o;
 	  Vector res = new Vector();
-	  res.addAll(p.getModels());
+	  res.addAll(p.getUserDefinedModels());
 	  res.addAll(p.getDiagrams());
 	  return res.elements();
       // return new EnumerationComposite(p.getModels().elements(),

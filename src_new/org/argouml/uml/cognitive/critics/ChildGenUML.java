@@ -24,7 +24,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.2 2001/09/27 03:18:34 thierrylach Exp $
+// $Id: ChildGenUML.java,v 1.3 2002/10/10 18:48:27 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,7 +54,7 @@ public class ChildGenUML implements ChildGenerator {
   public java.util.Enumeration gen(Object o) {
     if (o instanceof Project) {
       Project p = (Project) o;
-      return new EnumerationComposite(p.getModels().elements(),
+      return new EnumerationComposite(p.getUserDefinedModels().elements(),
 				      p.getDiagrams().elements());
     }
 
