@@ -33,14 +33,14 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.16 2002/09/02 23:07:42 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.17 2002/09/18 19:57:05 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
 {
 	public OptionsDialog(View view, String name)
 	{
-		super(view, jEdit.getProperty("options.title"), true);
+		super(view, jEdit.getProperty(name + ".title"), true);
 
 		view.showWaitCursor();
 
@@ -116,7 +116,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 		view.hideWaitCursor();
 
 		pack();
-		GUIUtilities.loadGeometry(this,name);
+		setLocationRelativeTo(view);
 		show();
 	}
 
@@ -157,10 +157,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 
 		// get rid of this dialog if necessary
 		if(dispose)
-		{
-			GUIUtilities.saveGeometry(this,name);
 			dispose();
-		}
 	}
 
 	public void actionPerformed(ActionEvent evt)
