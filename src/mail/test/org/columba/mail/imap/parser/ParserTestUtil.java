@@ -27,11 +27,19 @@ public class ParserTestUtil {
 			list.add((String) tok.nextToken());
 		}
 
-		IMAPResponse[] r = new IMAPResponse[list.size()];
-		for (int i = 0; i < list.size(); i++) {
-			r[i] = new IMAPResponse((String) list.get(i));
+		if (list.isEmpty()) {
+			IMAPResponse[] r = new IMAPResponse[1];
+			r[0] = new IMAPResponse(s);
+
+			return r;
+		} else {
+
+			IMAPResponse[] r = new IMAPResponse[list.size()];
+			for (int i = 0; i < list.size(); i++) {
+				r[i] = new IMAPResponse((String) list.get(i));
+			}
+			return r;
 		}
 
-		return r;
 	}
 }

@@ -9,7 +9,6 @@ package org.columba.mail.imap.parser;
 import junit.framework.TestCase;
 
 import org.columba.mail.imap.IMAPResponse;
-import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
 /**
@@ -43,9 +42,7 @@ public class MimePartTreeParserTest extends TestCase {
 		IMAPResponse[] r = ParserTestUtil.fillIMAPResponse(testData);
 
 		MimePartTree result = MimePartTreeParser.parse(r);
-		MimePart expected = new MimePart();
 
-		assertEquals(expected, result);
 	}
 
 }

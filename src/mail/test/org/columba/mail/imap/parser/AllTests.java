@@ -34,6 +34,15 @@ public class AllTests {
 			new TestSuite("Test for org.columba.modules.mail.parser");
 		//$JUnit-BEGIN$
 		suite.addTest(new TestSuite(UIDParserTest.class));
+		suite.addTest(new TestSuite(FlagsParserTest.class));
+		suite.addTest(new TestSuite(SearchResultParserTest.class));
+		suite.addTest(new TestSuite(MessageSetTest.class));
+		suite.addTest(new TestSuite(MessageSourceParserTest.class));
+		suite.addTest(new TestSuite(MimePartParserTest.class));
+		suite.addTest(new TestSuite(MimePartTreeParserTest.class));
+		suite.addTest(new TestSuite(ListInfoTest.class));
+		suite.addTest(new TestSuite(MessageFolderInfoParserTest.class));
+		suite.addTest(new TestSuite(LSubParserTest.class));
 		//$JUnit-END$
 		return suite;
 	}

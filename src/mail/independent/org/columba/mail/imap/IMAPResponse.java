@@ -213,6 +213,8 @@ public class IMAPResponse {
 
 		// start with beginning of string
 		int endOfAtom = skipSpaces(source, 0);
+		if ( endOfAtom == -1) return;
+		
 		nextAtom = source.substring(0, endOfAtom);
 		index = endOfAtom + 1;
 
