@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -193,12 +193,14 @@ static int JK_METHOD service(jk_endpoint_t *e,
              */
             *is_recoverable_error = JK_FALSE;
 
+/* 	    printf( "Prepare to call \n"); */
             rc = (*(p->env))->CallIntMethod(p->env,
                                             p->worker->jk_java_bridge_object,
                                             p->worker->jk_service_method,
                                             (jlong)s,
                                             (jlong)l);
 
+/* 	    printf( "RC %d\n", rc); */
             return rc == 0 ? JK_FALSE : JK_TRUE;
         }
         *is_recoverable_error = JK_TRUE;
