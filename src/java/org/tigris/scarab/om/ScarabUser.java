@@ -65,7 +65,7 @@ import org.tigris.scarab.om.peer.ScarabUserPeer;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.3 2000/12/28 22:27:34 jon Exp $
+    @version $Id: ScarabUser.java,v 1.4 2001/01/03 01:41:21 jon Exp $
 */
 public class ScarabUser extends TurbineUser
 {    
@@ -99,16 +99,23 @@ public class ScarabUser extends TurbineUser
         String password_confirm = data.getParameters().getString("password_confirm", null);
         setUserName(data.getParameters().getString("Email"));
 
+        System.out.println ("getPassword(): [" + data.getParameters().getString("password") + "]");
+
+        if (getPassword() == null || getPassword().length() == 0)
+            System.out.println ("passwd null || 0 length: [" + getPassword() + "]");
+        else
+            System.out.println ("passwd not null: [" + getPassword() + "]");
+
         // FIXME: add better email address checking to catch stupid mistakes up front
         // FIXME: add better form validation all around, make sure we don't have
         //        bad data as well as the right length.
-        if (getUserName() == null)
+        if (getUserName() == null || getUserName().length() == 0)
             throw new Exception ("The email address you entered is empty!");
-        if (getFirstName() == null)
+        if (getFirstName() == null || getFirstName().length() == 0)
             throw new Exception ("The first name you entered is empty!");
-        if (getLastName() == null)
+        if (getLastName() == null || getLastName().length() == 0)
             throw new Exception ("The last name you entered is empty!");
-        if (getPassword() == null)
+        if (getPassword() == null || getPassword().length() == 0)
             throw new Exception ("The password you entered is empty!");
         if (password_confirm == null)
             throw new Exception ("The password confirm you entered is empty!");
