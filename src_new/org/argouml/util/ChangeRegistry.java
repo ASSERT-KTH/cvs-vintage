@@ -1,4 +1,4 @@
-// $Id: ChangeRegistry.java,v 1.5 2003/08/27 19:51:03 jjones Exp $
+// $Id: ChangeRegistry.java,v 1.6 2003/08/30 20:43:35 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,14 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.5 2003/08/27 19:51:03 jjones Exp $
+// $Id: ChangeRegistry.java,v 1.6 2003/08/30 20:43:35 alexb Exp $
 
 package org.argouml.util;
 
-import org.tigris.gef.graph.*;
-
 import org.argouml.kernel.ProjectManager;
+
+import org.tigris.gef.graph.GraphEvent;
+import org.tigris.gef.graph.GraphListener;
 
 /** This class holds the information about the saving state of the current project.
  *  The state is changed by every change made to its diagrams.

@@ -1,4 +1,4 @@
-// $Id: OsUtil.java,v 1.5 2003/06/30 19:23:20 linus Exp $
+// $Id: OsUtil.java,v 1.6 2003/08/30 20:43:35 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,8 @@
 
 package org.argouml.util.osdep;
 
-import java.io.*;
-import javax.swing.*;
-import org.argouml.util.osdep.win32.*;
+import javax.swing.JFileChooser;
+import org.argouml.util.osdep.win32.Win32FileSystemView;
 
 /** Utility class providing hooks to
  *  operating-system-specific functionality.

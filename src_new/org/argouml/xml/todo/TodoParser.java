@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.4 2003/06/29 23:53:45 linus Exp $
+// $Id: TodoParser.java,v 1.5 2003/08/30 20:43:35 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,19 +24,20 @@
 
 package org.argouml.xml.todo;
 
-import org.argouml.application.api.*;
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-
+import java.util.Vector;
+import org.apache.log4j.Category;
 import org.argouml.cognitive.Designer;
-import org.argouml.cognitive.ToDoItem;
+
 import org.argouml.cognitive.ResolvedCritic;
-import org.tigris.gef.util.VectorSet;
+import org.argouml.cognitive.ToDoItem;
+import org.xml.sax.SAXException;
+
 import org.argouml.xml.SAXParserBase;
 import org.argouml.xml.XMLElement;
-import org.xml.sax.*;
-import org.apache.log4j.Category;
+import org.tigris.gef.util.VectorSet;
 
 // Needs-more-work: Reuse the offender Vector.
 
