@@ -121,7 +121,7 @@ $page.setTitle("Attribute Editor")
 
 #end
 
-<div class="functnbar3"><input type="submit" value="Add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute group</small>&#160;
+<div class="functnbar3"><input type="submit" value="add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" />&#160;<small>attribute group</small>&#160;
 </div>
 
 <div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doModifyissuetype" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        

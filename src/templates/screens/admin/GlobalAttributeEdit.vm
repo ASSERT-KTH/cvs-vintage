@@ -70,14 +70,8 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-        <td class="firstchild">
-        <input type="submit" name="eventSubmit_doModifyattributedata" value="Save" /> 
-        </td>
-    </tr>
-</table>
+<div class="functnbar3">
+<input type="submit" value="save"  name="eventSubmit__doModifyattributedata" />
 </div>
 
 $intake.declareGroups()
@@ -177,15 +171,10 @@ show up in the list above (but will not show up in the application
 itself). Therefore, please use caution when creating new Attribute
 Options because you can quickly end up with a mess.</strong></p>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-  <tr>
-    <td class="firstchild">
-    <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" value="Save" /> 
-    </td>
-  </tr>
-</table>
+<div class="functnbar3">
+<input type="submit" value="save"  name="eventSubmit_doAddormodifyattributeoptions" />
 </div>
+<div class="functnbar2">
 
 #end #* if select-one *#
 $intake.declareGroups()

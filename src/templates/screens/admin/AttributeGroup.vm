@@ -92,7 +92,7 @@
 #end
 
 <div class="functnbar3">
-<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute</small>&#160;
+<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" />&#160;<small>attribute</small>&#160;
 </div>
 
 <div class="functnbar2">
