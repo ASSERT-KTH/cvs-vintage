@@ -19,6 +19,7 @@ import java.sql.DatabaseMetaData;
 
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
 /**
  * JAWSPersistenceManager JDBCInitCommand
@@ -29,7 +30,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -54,18 +55,21 @@ public class JDBCInitCommand
                 cmpField.getColumnName() + " " +
                 cmpField.getSQLType();
                 
-		 // if primary key defined in ejb-jar.xml
-         if (jawsEntity.getPrimKeyField() != null)  {
-	                // If the current field is the primary key field,
-	                // add the constraint that this field is primary key.
-	                // This is useful for some dbase editors like MS Access 97
-	                // that require this information for better editing.
-	                sql += (jawsEntity.getPrimKeyField().equals(cmpField.getColumnName())?
-	                	" CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY":"");
-         }
          
          first = false;
       }
+
+  	// If there is a primary key field,
+	// and the bean has explicitly <pk-constraint>true</pk-constraint> in jaws.xml
+	// add primary key constraint.
+       if (jawsEntity.getPrimKeyField() != null && jawsEntity.hasPkConstraint())  {
+		sql += ",CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY (";
+		for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
+			sql += ((PkFieldMetaData)i.next()).getName();
+			sql += i.hasNext()?",":"";
+		}
+		sql +=")";
+         }
 
       sql += ")";
 

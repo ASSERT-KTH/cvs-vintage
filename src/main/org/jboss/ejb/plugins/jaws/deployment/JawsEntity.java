@@ -29,7 +29,7 @@ import com.dreambean.ejx.ejb.CMPField;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JawsEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -44,6 +44,7 @@ public class JawsEntity
    boolean tunedUpdates = true;
 	boolean readOnly = false;
 	int timeOut = 5*60; // 5 minute timeout on read-only state
+   boolean pkConstraint = false;
 
    Customizer c;
    
@@ -69,6 +70,9 @@ public class JawsEntity
 	
    public void setTimeOut(int t) { timeOut = t; }
    public int getTimeOut() { return timeOut; }
+	
+   public void setPkConstraint(boolean pkConstraint) { this.pkConstraint = pkConstraint; }
+   public boolean getPkConstraint() { return pkConstraint; }
 	
    public com.dreambean.ejx.ejb.CMPField addCMPField()
       throws Exception
@@ -117,6 +121,7 @@ public class JawsEntity
       XMLManager.addElement(entity,"tuned-updates",new Boolean(getTunedUpdates()).toString());
       XMLManager.addElement(entity,"read-only",new Boolean(getReadOnly()).toString());
       XMLManager.addElement(entity,"time-out",new Integer(getTimeOut()).toString());
+      XMLManager.addElement(entity,"pk-constraint",new Boolean(getPkConstraint()).toString());
       
       for (Iterator enum = getCMPFields(); enum.hasNext();)
       {
@@ -177,7 +182,10 @@ public class JawsEntity
             } else if (name.equals("finder"))
             {
                addFinder().importXml((Element)n);
-            } 
+            } else if (name.equals("pk-constraint"))
+	    {
+		setPkConstraint(new Boolean(n.hasChildNodes() ? XMLManager.getString(n) : "").booleanValue());
+	    }
 	      }
    	} else // EJB-JAR XML
    	{

@@ -30,7 +30,7 @@ import org.jboss.metadata.XmlLoadable;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -59,6 +59,9 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// is the bean read-only?
 	private boolean readOnly;
 	private int timeOut;
+
+	// should the table have a primary key constraint?
+	private boolean pkConstraint;
 	
 	// is the bean's primary key a composite object
 	private boolean compositeKey;
@@ -153,6 +156,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	
 	public boolean hasTunedUpdates() { return tunedUpdates; }
 	
+	public boolean hasPkConstraint() { return pkConstraint; }
+
 	public int getReadOnlyTimeOut() { return timeOut; }
 	
 	public boolean hasCompositeKey() { return compositeKey; }
@@ -212,6 +217,10 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 		String toStr = getElementContent(getOptionalChild(element, "time-out"));
 		if (toStr != null) timeOut = Integer.valueOf(toStr).intValue();
 			
+		// primary key constraint?  If not provided, keep default.
+		String pkStr = getElementContent(getOptionalChild(element, "pk-constraint"));
+	    if (pkStr != null) pkConstraint = Boolean.valueOf(pkStr).booleanValue();
+
 		// cmp fields
 		Iterator iterator = getChildrenByTagName(element, "cmp-field");
 
