@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.1 1999/10/09 00:30:20 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.2 1999/10/15 00:34:30 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:34:30 $
  *
  * ====================================================================
  *
@@ -140,11 +140,11 @@ implements ServletContext {
     }
 
     public int getMajorVersion() {
-        return Constants.Context.JSDK.MajorVersion;
+        return Constants.Context.Servlet.MajorVersion;
     }
 
     public int getMinorVersion() {
-        return Constants.Context.JSDK.MinorVersion;
+        return Constants.Context.Servlet.MinorVersion;
     }
 
     public String getMimeType(String filename) {

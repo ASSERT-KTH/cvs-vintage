@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/Constants.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/Constants.java,v 1.2 1999/10/15 00:34:32 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:34:32 $
  *
  * ====================================================================
  *
@@ -91,8 +91,8 @@ public class Constants {
 	}
 
         public static class JSWDK {
-	    public static final String Name = "Java Server Web Dev Kit";
-	    public static final String Version = "1.0 EA";
+	    public static final String Name = "Tomcat Web Server";
+	    public static final String Version = "2.2";
 	}
 
         public static class Attribute {

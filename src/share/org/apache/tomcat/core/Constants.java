@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.1 1999/10/09 00:30:00 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.2 1999/10/15 00:34:29 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:34:29 $
  *
  * ====================================================================
  *
@@ -97,10 +97,10 @@ public class Constants {
         };
 
         public static final String EngineHeader =
-	    JSWDK.Name + "/" + JSWDK.Version + " (" + JSP.Name + " " +
-	    JSP.Version + "; " + JSDK.Name + " " + JSDK.Version;
+            Tomcat.Name + "/" + Tomcat.Version + " (" + JSP.Name + " " +
+	    JSP.Version + "; " + Servlet.Name + " " + Servlet.Version;
 
-        public static class JSDK {
+        public static class Servlet {
             public static final String Name = "Servlet";
 	    public static final String Version = "2.2";
             public static final int MajorVersion = 2;
@@ -109,10 +109,10 @@ public class Constants {
 
         public static class JSP {
 	    public static final String Name = "JSP";
-	    public static final String Version = "1.0";
+	    public static final String Version = "1.1";
 	}
 
-        public static class JSWDK {
+        public static class Tomcat {
             /**
              * Name of the Engine. If you change this string, ALSO
              * CHANGE the string used in: 
@@ -121,8 +121,8 @@ public class Constants {
              *                                             - akv
              *
              */
-	    public static final String Name = "Java Server Web Dev Kit";
-	    public static final String Version = "1.0";
+	    public static final String Name = "Tomcat Web Server";
+	    public static final String Version = "2.2";
 	}
 
         public static class Attribute {

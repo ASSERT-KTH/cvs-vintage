@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.1 1999/10/09 00:30:04 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.2 1999/10/15 00:34:30 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:34:30 $
  *
  * ====================================================================
  *
@@ -676,9 +676,9 @@ public class DefaultServlet extends HttpServlet {
 	buf.append("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
 	buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
 	buf.append("<font size=-1>");
-	buf.append(Constants.Context.JSWDK.Name);
+	buf.append(Constants.Context.Tomcat.Name);
 	buf.append(" v");
-	buf.append(Constants.Context.JSWDK.Version);
+	buf.append(Constants.Context.Tomcat.Version);
 	buf.append("</font></td></tr></table>");
 
 	if (! inInclude) {
