@@ -12,13 +12,11 @@ import java.lang.reflect.Method;
 
 import java.util.Iterator;
 
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
 import java.sql.PreparedStatement;
 
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
@@ -37,7 +35,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -93,7 +91,7 @@ public class JDBCCreateEntityCommand
    public Object execute(Method m,
                        Object[] args,
                        EntityEnterpriseContext ctx)
-      throws RemoteException, CreateException
+      throws CreateException
    {
       try
       {
@@ -108,7 +106,7 @@ public class JDBCCreateEntityCommand
                id = jawsEntity.getPrimaryKeyClass().newInstance();
             } catch (InstantiationException e)
             {
-               throw new ServerException("Could not create primary key",e);
+               throw new EJBException("Could not create primary key",e);
             }
             
             while (it.hasNext())

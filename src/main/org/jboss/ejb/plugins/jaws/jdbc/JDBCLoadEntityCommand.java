@@ -10,13 +10,10 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.util.Iterator;
 import java.util.HashMap;
-
 import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
@@ -37,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -141,7 +138,6 @@ public class JDBCLoadEntityCommand
    // JPMLoadEntityCommand implementation ---------------------------
 
    public void execute(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       if ( !jawsEntity.isReadOnly() || isTimedOut(ctx) )
       {
@@ -160,7 +156,7 @@ public class JDBCLoadEntityCommand
             }
          } catch (Exception e)
          {
-            throw new ServerException("Load failed", e);
+            throw new EJBException("Load failed", e);
          }
       } 
    }

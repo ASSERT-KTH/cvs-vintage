@@ -14,12 +14,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
 import java.sql.ResultSet;
 
 import javax.ejb.FinderException;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
@@ -36,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -109,7 +107,7 @@ public abstract class JDBCFinderCommand
    public Collection execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws FinderException
    {
       try
       {
@@ -150,7 +148,7 @@ public abstract class JDBCFinderCommand
             }
          } catch (Exception e)
          {
-            throw new ServerException("Finder failed",e);
+            throw new EJBException("Finder failed",e);
          }
       } else
       {

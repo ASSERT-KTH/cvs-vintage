@@ -7,13 +7,9 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-
-import java.util.Iterator;
-
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
 import java.sql.PreparedStatement;
+import java.util.Iterator;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
@@ -29,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
@@ -56,7 +52,6 @@ public class JDBCStoreEntityCommand
     * if not a tuned or untuned update is issued.
     */
    public void execute(EntityEnterpriseContext ctx)
-      throws RemoteException
    {
       // Check for read-only
       // JF: Shouldn't this throw an exception?
@@ -97,7 +92,7 @@ public class JDBCStoreEntityCommand
             
          } catch (Exception e)
          {
-            throw new ServerException("Store failed", e);
+            throw new EJBException("Store failed", e);
          }
       }
    }
