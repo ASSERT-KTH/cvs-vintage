@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.15 $" />  
+     <property name="revision" value="$Revision: 1.16 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -39,8 +39,16 @@
 	      classname="org.apache.tomcat.util.test.Cookie" />
      <taskdef name="body" 
 	      classname="org.apache.tomcat.util.test.Body" />
-     <taskdef name="defaultMatcher" 
-	      classname="org.apache.tomcat.util.test.DefaultMatcher" />
+     <taskdef name="goldenMatch" 
+	      classname="org.apache.tomcat.util.test.matchers.GoldenMatch" />
+     <taskdef name="headerMatch" 
+	      classname="org.apache.tomcat.util.test.matchers.HeaderMatch" />
+     <taskdef name="httpStatusMatch" 
+	   classname="org.apache.tomcat.util.test.matchers.HttpStatusMatch" />
+     <taskdef name="responseMatch" 
+	      classname="org.apache.tomcat.util.test.matchers.ResponseMatch" />
+     <taskdef name="responseMatchFile" 
+        classname="org.apache.tomcat.util.test.matchers.ResponseMatchFile" />
      <taskdef name="comment" 
 	      classname="org.apache.tomcat.util.test.Body" />
 
@@ -96,9 +104,9 @@
              <param name="c" value="l" />
              <param name="a" value="m" />
           </httpRequest>
-          <defaultMatcher returnCode="200" />
-          <defaultMatcher responseMatch="a = [ k , m ]" />
-          <defaultMatcher responseMatch="c = [ l ]"/>
+          <httpStatusMatch match="200" />
+          <responseMatch match="a = [ k , m ]" />
+          <responseMatch match="c = [ l ]"/>
       </httpClient>
 
       <httpClient>
@@ -108,9 +116,9 @@
              <param name="a" value="b" />
              <param name="c" value="d" />
           </httpRequest>
-          <defaultMatcher returnCode="200" />
-          <defaultMatcher  responseMatch="a = [ b ]"/>
-          <defaultMatcher responseMatch="c = [ d ]"/>
+          <httpStatusMatch match="200" />
+          <responseMatch match="a = [ b ]"/>
+          <responseMatch match="c = [ d ]"/>
       </httpClient>
 
       <httpClient>
@@ -123,14 +131,14 @@
              <param name="a" value="b" type="POST" />
              <param name="c" value="d" type="POST" />
           </httpRequest>
-          <defaultMatcher returnCode="200" />
-          <defaultMatcher  responseMatch="a = [ x , b ]"/>
-          <defaultMatcher responseMatch="m = [ n ]"/>
-          <defaultMatcher responseMatch="c = [ d ]"/>
+          <httpStatusMatch match="200" />
+          <responseMatch match="a = [ x , b ]"/>
+          <responseMatch match="m = [ n ]"/>
+          <responseMatch match="c = [ d ]"/>
       </httpClient>
     
       <httpClient>
-          <comment>The POST data can't be read before getParameter</comment>
+          <comment>The POST data is not read before getParameter</comment>
           <httpRequest 
               path="/test/servlet/params.InputStreamParams" 
               method="POST">
@@ -139,14 +147,13 @@
              <param name="a" value="b" type="POST" />
              <param name="c" value="d" type="POST" />
           </httpRequest>
-          <defaultMatcher returnCode="200" />
-          <defaultMatcher  responseMatch="a = [ x ]" />
-          <defaultMatcher responseMatch="m = [ n ]"/>
-          <defaultMatcher responseMatch="c = [ d ]"/>
+          <responseMatch match="a = [ x ]" />
+          <responseMatch match="m = [ n ]"/>
+          <responseMatch match="c = [ d ]" magnitude="false" />
       </httpClient>
     
       <httpClient>
-          <comment>The POST data can't be read before getParameter</comment>
+          <comment>No data after the params are read</comment>
           <httpRequest 
               path="/test/servlet/params.ParamsInputStream" 
               method="POST">
@@ -155,10 +162,9 @@
              <param name="a" value="b" type="POST" />
              <param name="c" value="d" type="POST" />
           </httpRequest>
-          <defaultMatcher returnCode="200" />
-          <defaultMatcher  responseMatch="a = [ x ]" />
-          <defaultMatcher responseMatch="m = [ n ]"/>
-          <defaultMatcher responseMatch="c = [ dxx ]"/>
+          <responseMatch match="a = [ x ]" />
+          <responseMatch match="m = [ n ]"/>
+          <responseMatch match="c = [ dxx ]"/>
       </httpClient>
     
 
