@@ -11,17 +11,28 @@ package org.jboss.invocation.remoting;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import javax.management.ObjectName;
+import javax.transaction.Transaction;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationResponse;
+import org.jboss.invocation.InvocationResponse;
+import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.ServerID;
+import org.jboss.invocation.ServerID;
 import org.jboss.remoting.Client;
+import org.jboss.remoting.ClientInterceptor;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.ident.Identity;
 import org.jboss.remoting.ident.Identity;
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.client.ClientServiceMBeanSupport;
+import org.jboss.tm.DTXAResourceInterceptor;
 import org.jboss.util.jmx.ObjectNameFactory;
 
 
@@ -36,42 +47,22 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @version 1.0
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
+ *            name="jboss.ejb:service=RemotingAdapter"
  */
 public class RemotingAdapter
    extends ClientServiceMBeanSupport
    implements Invoker, RemotingAdapterMBean, Serializable
 {
 
-   /**
-    * The field <code>connectorName</code> links to the remoting
-    * connector, used primarily on the server side to discover what
-    * our locatorURI is.
-    *
-    */
-   private transient ObjectName connectorName;
+
+   private ObjectName nextInterceptorName;
 
    /**
-    * The field <code>locatorURI</code> holds the locatorURI that is
-    * used on the client to connect to the appropriate server using
-    * the appropriate transport.
+    * The field <code>clientInterceptor</code> holds the next client remoting interceptor
     *
     */
-   private String locatorURI;
+   private ClientInterceptor next;
 
-   /**
-    * The field <code>client</code> holds the remoting client used as
-    * the client side endpoint of the transport/subsystem combination.
-    *
-    */
-   private transient Client client;
-
-   /**
-    * The field <code>identity</code> holds the remoting identity of
-    * the server we are connecting to.  It is used to name the client
-    * side mbean and to determine if we are on the client or server.
-    *
-    */
-   private Identity identity;
 
    public RemotingAdapter()
    {
@@ -80,73 +71,38 @@ public class RemotingAdapter
 
    protected void startService() throws Exception
    {
-      //don't overwrite deserialized identity
-      if (identity == null)
+      if (next == null)
       {
-         identity = Identity.get(getServer());
-      } // end of if ()
-      if (locatorURI == null)
-      {
-         locatorURI = (String)getServer().getAttribute(connectorName, "InvokerLocator");
+         next = (ClientInterceptor)getManagedResource(nextInterceptorName);
       } // end of if ()
 
-      InvokerLocator locator = new InvokerLocator(locatorURI);
-      client = new Client(locator, "EJB");
    }
 
    protected void stopService() throws Exception
    {
-      client = null;
    }
 
    /**
-    * Get the ConnectorName value.
-    * @return the ConnectorName value.
+    * Get the NextInterceptorName value.
+    * @return the NextInterceptorName value.
     *
     * @jmx.managed-attribute
     */
-   public ObjectName getConnectorName()
+   public ObjectName getNextInterceptorName()
    {
-      return connectorName;
+      return nextInterceptorName;
    }
 
    /**
-    * Set the ConnectorName value.
-    * @param connectorName The new ConnectorName value.
+    * Set the NextClientInterceptorName value. Changing it will have
+    * no effect after the mbean is started.
+    * @param newNextInterceptorName The new NextInterceptorName value.
     *
     * @jmx.managed-attribute
     */
-   public void setConnectorName(ObjectName connectorName)
+   public void setNextInterceptorName(ObjectName nextInterceptorName)
    {
-      this.connectorName = connectorName;
-   }
-
-
-
-
-   // Implementation of org.jboss.invocation.Invoker
-
-   /**
-    * The <code>getServerID</code> method is obsolete and not used with remoting
-    *
-    * @return a <code>ServerID</code> value
-    * @exception Exception if an error occurs
-    */
-   public ServerID getServerID() throws Exception
-   {
-      return null;
-   }
-
-   /**
-    * The <code>getIdentity</code> method returns the remoting server
-    * identity, used to identify all parts of the invoker chain for
-    * ejb invocation.
-    *
-    * @return an <code>Identity</code> value
-    */
-   public Identity getIdentity()
-   {
-      return identity;
+      this.nextInterceptorName = nextInterceptorName;
    }
 
 
@@ -161,24 +117,16 @@ public class RemotingAdapter
     */
    public InvocationResponse invoke(Invocation invocation) throws Throwable
    {
-
-      Object result = client.invoke("",
-                                    new MarshalledInvocation(invocation),
-                                    null);
+      Map sendParams = new HashMap();
+      InvokerLocator locator = (InvokerLocator)invocation.getInvocationContext().getValue(InvocationKey.LOCATOR);
+      Transaction tx = invocation.getTransaction();
+      sendParams.put(DTXAResourceInterceptor.TX_KEY, tx);
+      Object result = next.invoke(locator, "EJB", "",
+                                  new MarshalledInvocation(invocation),
+                                  sendParams);
       return (InvocationResponse)result;
    }
 
-   /**
-    * The <code>getIdentityNameClause</code> method converts the
-    * remoting identity into two name-value pairs for inclusion in the
-    * client-side object name of this invoker.
-    *
-    * @return a <code>String</code> value
-    */
-   private String getIdentityNameClause()
-   {
-      return "domain=" + identity.getDomain() + ",instanceid=" + identity.getInstanceId();
-   }
 
    /**
     * The <code>internalSetServiceName</code> method sets the client
@@ -188,7 +136,7 @@ public class RemotingAdapter
     */
    protected void internalSetServiceName() throws Exception
    {
-      serviceName = ObjectNameFactory.create("jboss.client:service=RemotingAdapter," + getIdentityNameClause());
+      serviceName = ObjectNameFactory.create("jboss.ejb:service=RemotingAdapter");
       getLog().info("internalSetServiceName called: " + serviceName);
    }
 
@@ -216,6 +164,24 @@ public class RemotingAdapter
       } // end of else
 
       startService();
+   }
+
+   // Implementation of org.jboss.invocation.Invoker
+
+   public ServerID getServerID() throws Exception
+   {
+      return null;
+   }
+
+   /**
+    * The <code>getIdentity</code> method
+    *
+    * @return an <code>Identity</code> value
+    * @exception Exception if an error occurs
+    */
+   public Identity getIdentity() throws Exception
+   {
+      return null;
    }
 
 

@@ -5,13 +5,14 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.62 2003/04/26 01:59:51 d_jencks Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.63 2003/05/02 19:20:23 d_jencks Exp $ -->
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
     <invoker-proxy-binding>
       <name>entity-remoting-socket-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=socket</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -38,7 +39,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>entity-remoting-rmi-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=rmi</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -65,7 +67,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>entity-remoting-soap-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=soap</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -93,6 +96,7 @@
     <invoker-proxy-binding>
       <name>entity-rmi-invoker</name>
       <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -146,7 +150,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateless-remoting-socket-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=socket</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -167,7 +172,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateless-remoting-rmi-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=rmi</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -188,7 +194,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateless-remoting-soap-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=soap</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -210,6 +217,7 @@
     <invoker-proxy-binding>
       <name>stateless-rmi-invoker</name>
       <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -251,7 +259,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateful-remoting-socket-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=socket</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -272,7 +281,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateful-remoting-rmi-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=rmi</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -293,7 +303,8 @@
     </invoker-proxy-binding>
     <invoker-proxy-binding>
       <name>stateful-remoting-soap-invoker</name>
-      <invoker-mbean>jboss.ejb:service=InvokerXAResource,type=soap</invoker-mbean>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -315,6 +326,7 @@
     <invoker-proxy-binding>
       <name>stateful-rmi-invoker</name>
       <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>

@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.6 2003/04/30 17:13:01 starksm Exp $
-$Revision: 1.6 $
+$Id: jboss_3_2.dtd,v 1.7 2003/05/02 19:20:26 d_jencks Exp $
+$Revision: 1.7 $
 
 Overview of the architecture of jboss.xml
 
@@ -192,7 +192,7 @@ the ejb container configurations.
 <!ELEMENT invoker-proxy-bindings (invoker-proxy-binding*)>
 <!-- The invoker-proxy-binding defines an invoker service and proxy factory
 -->
-<!ELEMENT invoker-proxy-binding (name, invoker-mbean, proxy-factory, proxy-factory-config)>
+<!ELEMENT invoker-proxy-binding (name, invoker-mbean, container-mbean?, proxy-factory, proxy-factory-config)>
 <!-- The name gives a unique name for the invoker-proxy-binding
 -->
 <!ELEMENT name (#PCDATA)>

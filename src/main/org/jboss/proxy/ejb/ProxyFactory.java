@@ -7,39 +7,44 @@
 
 package org.jboss.proxy.ejb;
 
+
+
+
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
+import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.rmi.ServerException;
-
 import javax.ejb.EJBHome;
-import javax.ejb.EJBObject;
 import javax.ejb.EJBMetaData;
-
-import javax.naming.InitialContext;
-import javax.naming.Context;
+import javax.ejb.EJBObject;
+import javax.management.MBeanException;
 import javax.management.ObjectName;
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.EJBProxyFactoryContainer;
-import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.Invoker;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MetaData;
-import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
-import org.jboss.util.naming.Util;
-import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ClientContainer;
+import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
+import org.jboss.remoting.InvokerLocator;
 import org.jboss.system.Registry;
 import org.jboss.util.NestedRuntimeException;
+import org.jboss.util.jmx.JMXExceptionDecoder;
+import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.util.naming.Util;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -64,7 +69,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -176,9 +181,12 @@ public class ProxyFactory
    protected void setupInvokers() throws Exception
    {
       ObjectName oname = new ObjectName(invokerMetaData.getInvokerMBean());
-      Invoker invoker = (Invoker)Registry.lookup(oname);
+      Invoker invoker = (Invoker)container.getManagedResource(oname);
+
+      //Invoker invoker = (Invoker)Registry.lookup(oname);
       if (invoker == null)
          throw new RuntimeException("invoker is null: " + oname);
+
 
       homeInvoker = beanInvoker = invoker;
    }
@@ -483,6 +491,23 @@ public class ProxyFactory
       // The behavior for home proxying should be isolated in an interceptor FIXME
       context.setInvoker(invoker);
       context.setInvokerProxyBinding(invokerMetaData.getName());
+      String connectorName = invokerMetaData.getConnectorMBean();
+      if (connectorName != null)
+      {
+         ObjectName connector = ObjectNameFactory.create(connectorName);
+
+         try
+         {
+            InvokerLocator locator = (InvokerLocator)container.getServer().getAttribute(connector, "Locator");
+            context.setValue(InvocationKey.LOCATOR, locator);
+         }
+         catch (Exception me)
+         {
+            throw new RuntimeException(JMXExceptionDecoder.decode(me));
+         } // end of try-catch
+
+      } // end of if ()
+
 
       context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
       if (context.getMethodHashToTxSupportMap().isEmpty())

@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.143 2003/04/24 18:09:20 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.144 2003/05/02 19:20:22 d_jencks Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -404,6 +404,7 @@
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/invocation/*.class"/>
+        <include name="org/jboss/invocation/remoting/*.class"/>
 	<include name="org/jboss/invocation/trunk/client/**/*.class"/>
         <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>

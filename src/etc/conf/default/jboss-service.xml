@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.79 2003/04/26 01:59:50 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.80 2003/05/02 19:20:23 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -11,9 +11,6 @@
 <server>
 
 
-  <mbean code="org.jboss.aop.AspectManagerService"
-	 name="jboss.aop:service=AspectManager">
-  </mbean>
 
   <!-- Load all jars from the JBOSS_DIST/server/<config>/lib directory. This
     can be restricted to specific jars by specifying them in the archives
@@ -21,6 +18,9 @@
    -->
   <classpath codebase="lib" archives="*"/>
 
+  <mbean code="org.jboss.aop.AspectManagerService"
+	 name="jboss.aop:service=AspectManager">
+  </mbean>
  
   <mbean code="org.jboss.aop.AspectDeployer" name="jboss.aop:service=AspectDeployer">
   </mbean>
@@ -236,82 +236,29 @@
   <!-- ==================================================================== -->
 
   <!-- remoting framework invokers -->
-  <!--at the moment this is used only for direct calls, no asynchronous calls.-->
-  <mbean code="org.jboss.resource.work.BaseWorkManager" 
-         name="jboss.ejb:service=WorkManager">
-    <depends optional-attribute-name="TransactionManager">jboss.tm:service=TransactionManagerService</depends>
-    <attribute name="MinThreads">0</attribute>
-    <attribute name="MaxThreads">0</attribute>
-    <attribute name="KeepAliveTime">10000</attribute>
-  </mbean>
 
   <!--remoting framework socket transport-->
-  <mbean code="org.jboss.remoting.transport.Connector"
-         name="jboss.remoting:service=Connector,type=Socket">
-    <attribute name="InvokerLocator">socket://localhost:8084</attribute>
-  </mbean>
 
   <mbean code="org.jboss.invocation.remoting.EJBSubsystemInvocationHandler"
-         name="jboss.ejb:service=invocationhandler,type=socket">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=Socket</depends>
-    <depends optional-attribute-name="WorkManagerName">jboss.ejb:service=WorkManager</depends>
+         name="jboss.ejb:service=SubsystemInvocationHandler">
   </mbean>
 
   <mbean code="org.jboss.invocation.remoting.RemotingAdapter"
-         name="jboss.ejb:service=RemotingAdapter,type=socket">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=Socket</depends>
+         name="jboss.ejb:service=RemotingAdapter">
+    <depends optional-attribute-name="NextInterceptorName">jboss.tm:service=DTXAResourceInterceptor</depends>
   </mbean>
 
-  <mbean code="org.jboss.invocation.InvokerXAResource"
-         name="jboss.ejb:service=InvokerXAResource,type=socket">
-    <depends optional-attribute-name="InvokerName">jboss.ejb:service=RemotingAdapter,type=socket</depends>
+  <mbean code="org.jboss.remoting.ServerInterceptorChain"
+         name="jboss.ejb:service=EJBServerInterceptorChain,transport=Socket">
+    <attribute name="Subsystem">EJB</attribute>
+    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,transport=Socket</depends>
+    <depends-list optional-attribute-name="InterceptorNames">
+      <depends-list-element>jboss.tm:service=XAWorkInterceptor</depends-list-element>
+      <depends-list-element>jboss.ejb:service=SubsystemInvocationHandler</depends-list-element>
+    </depends-list>
   </mbean>
 
-  <!--remoting framework rmi transport-->
-  <mbean code="org.jboss.remoting.transport.Connector"
-         name="jboss.remoting:service=Connector,type=rmi">
-    <attribute name="InvokerLocator">rmi://localhost:8085</attribute>
-  </mbean>
 
-  <mbean code="org.jboss.invocation.remoting.EJBSubsystemInvocationHandler"
-         name="jboss.ejb:service=invocationhandler,type=rmi">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=rmi</depends>
-    <depends optional-attribute-name="WorkManagerName">jboss.ejb:service=WorkManager</depends>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.remoting.RemotingAdapter"
-         name="jboss.ejb:service=RemotingAdapter,type=rmi">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=rmi</depends>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.InvokerXAResource"
-         name="jboss.ejb:service=InvokerXAResource,type=rmi">
-    <depends optional-attribute-name="InvokerName">jboss.ejb:service=RemotingAdapter,type=rmi</depends>
-  </mbean>
-
-  <!--remoting framework soap transport-->
-<!--
-  <mbean code="org.jboss.remoting.transport.Connector"
-         name="jboss.remoting:service=Connector,type=Soap">
-    <attribute name="InvokerLocator">soap://localhost:8086</attribute>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.remoting.EJBSubsystemInvocationHandler"
-         name="jboss.ejb:service=invocationhandler,type=soap">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=Soap</depends>
-    <depends optional-attribute-name="WorkManagerName">jboss.ejb:service=WorkManager</depends>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.remoting.RemotingAdapter"
-         name="jboss.ejb:service=RemotingAdapter,type=soap">
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,type=Soap</depends>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.InvokerXAResource"
-         name="jboss.ejb:service=InvokerXAResource,type=soap">
-    <depends optional-attribute-name="InvokerName">jboss.ejb:service=RemotingAdapter,type=soap</depends>
-  </mbean>
--->
 
 
   <!-- RMI/JRMP invoker -->
