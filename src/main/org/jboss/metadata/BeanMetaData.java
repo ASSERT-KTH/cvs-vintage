@@ -24,7 +24,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -148,8 +148,10 @@ public abstract class BeanMetaData extends MetaData {
                result.add (i.next ());
          }
 		}
-		// not found
-		return result;
+		if (result.isEmpty ()) // no method-permission specified
+         return null;
+      else
+         return result;
 	}
 
 	public void importEjbJarXml(Element element) throws DeploymentException {
