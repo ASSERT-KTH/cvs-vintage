@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.2 2003/01/03 16:44:25 kataka Exp $
+// $Id: UMLListCellRenderer2.java,v 1.3 2003/01/03 22:11:22 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -84,6 +84,9 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
                 Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(value);
                 if (icon != null)
                     label.setIcon(icon);
+            } else {
+                // hack to make sure that the right hight is applied when no icon is used.
+                label = (JLabel) super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
             }
 
         }

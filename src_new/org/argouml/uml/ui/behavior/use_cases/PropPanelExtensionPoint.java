@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.12 2003/01/01 18:37:58 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.13 2003/01/03 22:11:22 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,6 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 
 /**
@@ -67,16 +65,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         // representation (we use the same as dependency) and requesting 2
         // columns 
 
-        super("ExtensionPoint", _extensionPointIcon, ConfigLoader.getTabPropsOrientation());
-
-        // This will cause the components on this property panel to be notified
-        // anytime a stereotype, namespace or use case has its name changed
-        // or is removed anywhere in the model.
-
-        Class[] namesToWatch = { MStereotype.class,
-                                 MNamespace.class,
-                                 MUseCase.class };
-        setNameEventListening(namesToWatch);
+        super("ExtensionPoint", ConfigLoader.getTabPropsOrientation());
 
         // First column
 
