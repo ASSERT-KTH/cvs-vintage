@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.qlog.*;
 import org.apache.tomcat.util.io.FileUtil;
 import java.io.*;
 import java.net.*;
@@ -192,6 +193,15 @@ public class LogSetter extends  BaseInterceptor {
     {
 	if( module!=this ) return;
 
+	LogManager logManager=(LogManager)cm.getNote("tc.LogManager");
+	
+	// Log will redirect all Log.getLog to us
+	if( logManager==null ) {
+	    logManager=new TomcatLogManager();
+	    cm.setNote("tc.LogManager", logManager);
+	    Log.setLogManager( logManager );
+	}
+	
 	if( name==null ) {
 	    if( servletLogger )
 		name="org/apache/tomcat/facade";
@@ -220,7 +230,6 @@ public class LogSetter extends  BaseInterceptor {
 	
 	// construct a queue logger
 	QueueLogger ql=new QueueLogger();
-	ql.setName(name);
 	if( ! timestamps )
 	    ql.setTimestamp( "false" );
 	if( tsFormat!=null )
@@ -233,7 +242,7 @@ public class LogSetter extends  BaseInterceptor {
 
 	ql.open();
 
-	Logger.putLogger( ql );
+	logManager.addChannel( name, ql );
 
 	if( "org/apache/tomcat/core".equals( name ) ) {
 	    // this will be the Log interface to the log we just created
@@ -252,8 +261,18 @@ public class LogSetter extends  BaseInterceptor {
 
     }
 
+    /** Adapter and registry for QueueLoggers
+     */
+    static class TomcatLogManager extends LogManager {
 
+	void addChannel( String name, Log log ) {
+	    
+	}
+
+    }
+    
+
+    
     // XXX Flush the buffers on shutdown !!!!!!
-
 
 }

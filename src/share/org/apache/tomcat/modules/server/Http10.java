@@ -86,7 +86,7 @@ public class Http10 {
     protected int oBufferCount = 0;
 
     static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
-    Log loghelper = new Log("tc_log", this);
+    Log loghelper = Log.getLog("tc_log", this);
     
     public Http10() {
         super();

@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.qlog.Logger;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -245,12 +246,12 @@ public final class ErrorHandler extends BaseInterceptor {
 	} else if( t instanceof IOException ) {
             if( "Broken pipe".equals(t.getMessage()))
 	    {
-		ctx.log("Broken pipe in " + req, t, Logger.DEBUG);  // tuneme
+		ctx.log("Broken pipe in " + req, t, Log.DEBUG);  // tuneme
 		return;
 	    }
             if( "Connection reset by peer".equals(t.getMessage()))
 	    {
-		ctx.log("Connection reset by peer in " + req, t, Logger.DEBUG);  // tuneme
+		ctx.log("Connection reset by peer in " + req, t, Log.DEBUG);  // tuneme
 		return;
 	    }
 
@@ -550,6 +551,8 @@ class ExceptionHandler extends Handler {
 	res.getBuffer().write( buf );
 	buf.setLength(0);
     }
+
+    
 }
 
 class StatusHandler extends Handler {

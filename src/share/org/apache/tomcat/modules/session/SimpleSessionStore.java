@@ -300,7 +300,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
  */
 class SimpleSessionManager  
 {
-    protected Log loghelper = new Log("tc_log", this);
+    protected Log loghelper = Log.getLog("tc_log", this);
     
     /** The set of previously recycled Sessions for this Manager.
      */

@@ -21,7 +21,7 @@ import org.apache.tomcat.util.collections.*;
  *
  * @author costin@dnt.ro
  */
-public class Tomcat extends Log {
+public class Tomcat {
 
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
@@ -38,9 +38,9 @@ public class Tomcat extends Log {
     // relative to TOMCAT_HOME
     static final String DEFAULT_CONFIG="conf/server.xml";
     SimpleHashtable attributes=new SimpleHashtable();;
-
+    static Log log=Log.getLog( "tc_log", "Tomcat" );
+    
     public Tomcat() {
-	super("tc_log");
     }
     //-------------------- Properties --------------------
     
@@ -72,8 +72,7 @@ public class Tomcat extends Log {
 	    tomcat.setArgs( args );
             tomcat.execute();
 	} catch(Exception ex ) {
-	    System.out.println(sm.getString("tomcat.fatal"));
-	    System.err.println(Logger.throwableToString(ex));
+	    log.log(sm.getString("tomcat.fatal"), ex);
 	    System.exit(1);
 	}
     }

@@ -583,7 +583,8 @@ public final class Context {
 	if( "/".equals(path) )
 	    path="";
 	this.path = path;
-	loghelper.setLogPrefix("Ctx("+ getId() +") ");
+	loghelper=Log.getLog("org/apache/tomcat/core",
+			     "Ctx("+ getId() +") ");
     }
 
     /**

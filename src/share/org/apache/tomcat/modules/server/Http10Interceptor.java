@@ -147,14 +147,14 @@ public class Http10Interceptor extends PoolTcpConnector
 	catch(java.net.SocketException e) {
 	    // SocketExceptions are normal
 	    log( "SocketException reading request, ignored", null,
-		 Logger.INFORMATION);
-	    log( "SocketException reading request:", e, Logger.DEBUG);
+		 Log.INFORMATION);
+	    log( "SocketException reading request:", e, Log.DEBUG);
 	}
 	catch (java.io.IOException e) {
 	    // IOExceptions are normal 
 	    log( "IOException reading request, ignored", null,
-		 Logger.INFORMATION);
-	    log( "IOException reading request:", e, Logger.DEBUG);
+		 Log.INFORMATION);
+	    log( "IOException reading request:", e, Log.DEBUG);
 	}
 	// Future developers: if you discover any other
 	// rare-but-nonfatal exceptions, catch them here, and log as
@@ -164,7 +164,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	    // with "ERROR" level, so it will show up even on
 	    // less-than-verbose logs.
 	    e.printStackTrace();
-	    log( "Error reading request, ignored", e, Logger.ERROR);
+	    log( "Error reading request, ignored", e, Log.ERROR);
 	} 
 	finally {
 	    // recycle kernel sockets ASAP

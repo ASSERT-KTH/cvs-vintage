@@ -77,7 +77,7 @@ public class NSConfig  extends BaseInterceptor {
     public static final String NS_CONFIG = "/conf/jk/obj.conf";
     public static final String JK_LOG_LOCATION = "/logs/netscape_redirect.log";
 
-    Log loghelper = new Log("tc_log", this);
+    Log loghelper = Log.getLog("tc_log", this);
     
     public NSConfig() 
     {

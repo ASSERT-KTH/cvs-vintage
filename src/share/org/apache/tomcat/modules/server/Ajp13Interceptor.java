@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.7 2001/02/07 07:01:25 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2001/02/07 07:01:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.8 2001/03/02 04:49:23 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/03/02 04:49:23 $
  *
  * ====================================================================
  *
@@ -164,7 +164,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
 		req.recycle();
 		res.recycle();
             }
-            log("Closing connection", Logger.DEBUG);
+            log("Closing connection", Log.DEBUG);
             con.close();
 	    socket.close();
         } catch (Exception e) {

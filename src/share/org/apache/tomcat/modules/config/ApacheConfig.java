@@ -119,7 +119,7 @@ public class ApacheConfig  extends BaseInterceptor {
 
 
     
-    Log loghelper = new Log("tc_log", this);
+    Log loghelper = Log.getLog("tc_log", this);
 
     public void execute(ContextManager cm) throws TomcatException {
 	try {

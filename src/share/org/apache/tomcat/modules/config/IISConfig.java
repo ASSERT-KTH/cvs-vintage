@@ -78,7 +78,7 @@ public class IISConfig extends BaseInterceptor  {
     public static final String JK_LOG_LOCATION = "/logs/iis_redirect.log";
     public static final String IIS_REG_FILE = "/conf/jk/iis_redirect.reg";    
 
-    Log loghelper = new Log("tc_log", "IISConfig");
+    Log loghelper = Log.getLog("tc_log", "IISConfig");
 
     public IISConfig() 
     {

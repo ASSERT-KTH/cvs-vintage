@@ -128,13 +128,13 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	    Object o=c.newInstance();
 	    System.setSecurityManager((SecurityManager)o);
 	    if (debug>0) log("Security Manager set to " +
-		securityManagerClass, Logger.DEBUG);
+		securityManagerClass, Log.DEBUG);
 	} catch( ClassNotFoundException ex ) {
 	    log("SecurityManager Class not found: " +
-			       securityManagerClass, Logger.ERROR);
+			       securityManagerClass, Log.ERROR);
 	} catch( Exception ex ) {
             log("SecurityManager Class could not be loaded: " +
-			       securityManagerClass, Logger.ERROR);
+			       securityManagerClass, Log.ERROR);
 	}
     }
 
