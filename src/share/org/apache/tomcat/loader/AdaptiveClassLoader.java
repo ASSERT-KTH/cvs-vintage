@@ -118,11 +118,12 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000/05/26 18:55:27 $
+ * @version $Revision: 1.6 $ $Date: 2000/06/10 17:09:04 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
-
+    private static final int debug=0;
+    
     /**
      * Instance of the SecurityManager installed.
      */
@@ -156,6 +157,14 @@ public class AdaptiveClassLoader extends ClassLoader {
     private Vector repository;
 
     /**
+     * A parent class loader for delegation of finding a class definition.
+     * JDK 1.2 contains parent class loaders as part of java.lang.ClassLoader, the parent
+     * being passed to a constructor, and retreived with getParent() method. For JDK 1.1
+     * compatibility, we'll duplicate the 1.2 private member var.
+     */
+    private ClassLoader parent;
+    
+    /**
      * Private class used to maintain information about the classes that
      * we loaded.
      */
@@ -185,7 +194,7 @@ public class AdaptiveClassLoader extends ClassLoader {
             return origin == null;
         }
     }
-
+    
     //------------------------------------------------------- Constructors
 
     /**
@@ -202,14 +211,35 @@ public class AdaptiveClassLoader extends ClassLoader {
     public AdaptiveClassLoader(Vector classRepository)
         throws IllegalArgumentException
     {
-        // Create the cache of loaded classes
-        cache = new Hashtable();
-
-        // Verify that all the repository are valid.
-        Enumeration e = classRepository.elements();
-        while(e.hasMoreElements()) {
-            ClassRepository cp = (ClassRepository) e.nextElement();
-            File file;
+	this(classRepository, null);
+    }
+    
+    /**
+     * Creates a new class loader that will load classes from specified
+     * class repositories, delegating first to the passed parent for definitions.
+     *
+     * @param classRepository An set of File classes indicating
+     *        directories and/or zip/jar files. It may be empty when
+     *        only system classes are loaded.
+     * @param theParent A containing class loader for initial delegation of class
+     *        definition serach.
+     * @throw java.lang.IllegalArgumentException if the objects contained
+     *        in the vector are not a file instance or the file is not
+     *        a valid directory or a zip/jar file.
+     */
+    public AdaptiveClassLoader(Vector classRepository, ClassLoader theParent)
+	throws IllegalArgumentException
+    {
+	this.parent = theParent;
+	
+	// Create the cache of loaded classes
+	cache = new Hashtable();
+	
+	// Verify that all the repository are valid.
+	Enumeration e = classRepository.elements();
+	while(e.hasMoreElements()) {
+	    ClassRepository cp = (ClassRepository) e.nextElement();
+	    File file;
             String[] files;
             int i;
 
@@ -251,6 +281,7 @@ public class AdaptiveClassLoader extends ClassLoader {
        // Install the SecurityManager if not already installed
        if( generationCounter == 0 && sm == null ) {
            sm = System.getSecurityManager();
+	   //	   System.out.println("XXX AdaptiveClassLoader: " + sm );
        }
 
         // Store the class repository for use
@@ -260,6 +291,14 @@ public class AdaptiveClassLoader extends ClassLoader {
         this.generation = generationCounter++;
     }
 
+    public void setParent( ClassLoader p ) {
+	parent=p;
+    }
+
+    void log( String s ) {
+	System.out.println("AdaptiveClassLoader: " + s );
+    }
+    
     //------------------------------------------------------- Methods
 
     /**
@@ -389,7 +428,8 @@ public class AdaptiveClassLoader extends ClassLoader {
     protected synchronized Class loadClass(String name, boolean resolve)
         throws ClassNotFoundException
     {
-        // The class object that will be returned.
+        if( debug>0) log( "loadClass() " + name);
+	// The class object that will be returned.
         Class c = null;
 
         // Use the cached value, if this class is already loaded into
@@ -410,7 +450,23 @@ public class AdaptiveClassLoader extends ClassLoader {
                 sm.checkPackageAccess(name.substring(0,i));
         }
 
+	if (parent != null) {
+	    try {
+		if( debug>0) log( "loadClass() from parent" + name);
+		c = parent.loadClass(name);
+		if (c != null) {
+		    if (resolve) resolveClass(c);
+		    return c;
+		}
+	    } catch (ClassNotFoundException e) {
+		c = null;
+	    } catch (Exception e) {
+		c = null;
+	    }
+	}
+
         // Attempt to load the class from the system
+	if( debug>0) log( "loadClass() from system" + name);
         try {
             c = loadSystemClass(name, resolve);
             if (c != null) {
@@ -427,6 +483,7 @@ public class AdaptiveClassLoader extends ClassLoader {
                 sm.checkPackageDefinition(name.substring(0,i));
         }
 
+		if( debug>0) log( "loadClass() from local repository " + name);
         // Try to load it from each repository
         Enumeration repEnum = repository.elements();
 
@@ -463,6 +520,7 @@ public class AdaptiveClassLoader extends ClassLoader {
                 // Define the class with a ProtectionDomain if using a SecurityManager
                 if( sm != null ) {
                 // Define the class
+		    //		    System.out.println("Defining class using PT ");
                     c = defineClass(name, classData, 0, classData.length, cp.getProtectionDomain());
                 } else {
                 c = defineClass(name, classData, 0, classData.length);
@@ -613,7 +671,8 @@ public class AdaptiveClassLoader extends ClassLoader {
      */
     public InputStream getResourceAsStream(String name) {
         // Try to load it from the system class
-        InputStream s = getSystemResourceAsStream(name);
+        if( debug > 0 ) log( "getResourceAsStream() " + name );
+	InputStream s = getSystemResourceAsStream(name);
 
         if (s == null) {
             // Try to find it from every repository
@@ -706,7 +765,7 @@ public class AdaptiveClassLoader extends ClassLoader {
      * @return  an URL on the resource, or null if not found.
      */
     public URL getResource(String name) {
-
+        if( debug > 0 ) log( "getResource() " + name );
         // First ask the primordial class loader to fetch it from the classpath
         URL u = getSystemResource(name);
         if (u != null) {
@@ -762,4 +821,9 @@ public class AdaptiveClassLoader extends ClassLoader {
         // Not found
         return null;
     }
+
+    public String toString() {
+	return "AdaptiveClassLoader(  )";
+    }
+
 }

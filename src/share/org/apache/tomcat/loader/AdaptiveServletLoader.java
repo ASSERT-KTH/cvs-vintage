@@ -72,7 +72,8 @@ import java.security.*;
 public class AdaptiveServletLoader  extends AdaptiveClassLoader implements ServletLoader  {
     AdaptiveClassLoader classL;
     Vector classP;
-
+    ClassLoader parent;
+    
     public AdaptiveServletLoader() {
 	super( new Vector() ); // dumy -
 	// this class will not be used as a class loader, it's just a trick for
@@ -80,6 +81,14 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
 	classP=new Vector();
     }
 
+    public void setParentLoader( ClassLoader p ) {
+	parent=p;
+    }
+
+    public ClassLoader getParentLoader() {
+	if( true || parent==null ) return getClassLoader();
+	return parent;
+    }
     
     /** Check if we need to reload one particular class.
      *  No check is done for dependent classes.
@@ -125,8 +134,7 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
      */
     public ClassLoader getClassLoader() {
 	if( classL==null )
-	    classL=new AdaptiveClassLoader( classP );
-	//	System.out.println("Get Class Loader");
+	    classL= new AdaptiveClassLoader( classP, parent );
 	return classL;
     }
 
@@ -166,11 +174,10 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
      *  Not all loaders can add resources dynamically -
      *  that may require a reload.
      */
-    public void addRepository( File f, ProtectionDomain pd ) {
-//      System.out.println("addRepository " + f.getAbsolutePath() );
+    public void addRepository( File f, Object pd ) {
 	try {
             classP.addElement(
-                new ClassRepository( new File(FileUtil.patch(f.getCanonicalPath())), pd )
+                new ClassRepository( new File(FileUtil.patch(f.getCanonicalPath())), (ProtectionDomain)pd )
                 );
 	} catch( IOException ex) {
             ex.printStackTrace();
@@ -184,6 +191,9 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
 	return;// no support for URLs in AdaptiveClassLoader
     }
 
+    public String toString() {
+	return "AdaptiveServletLoader( " + getClassPath()  + " ) using " + classL;
+    }
     
 }
 
