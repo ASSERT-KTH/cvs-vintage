@@ -120,18 +120,9 @@ public class SaveAttachmentCommand extends FolderCommand {
 		try {
 			decoder = CoderRouter.getDecoder(header.contentTransferEncoding);
 
-			/*
-			decoder.setupDecoder(
-				new StringReader(part.getBody()),
-				new FileWriter(tempFile));
-			*/
-			//setText("Running Decoder ... ");
-
 			decoder.decode(
-				new ByteArrayInputStream(part.getBody().getBytes("US-ASCII")),
+				new ByteArrayInputStream(part.getBody().getBytes("ISO_8859_1")),
 				new FileOutputStream(tempFile));
-
-			//decoder.run();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -97,7 +97,7 @@ public class OpenWithAttachmentCommand extends FolderCommand {
 
 				decoder.decode(
 					new ByteArrayInputStream(
-						part.getBody().getBytes("US-ASCII")),
+						part.getBody().getBytes("ISO_8859_1")),
 					new FileOutputStream(tempFile));
 
 				//decoder.run();
