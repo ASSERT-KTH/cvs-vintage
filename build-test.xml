@@ -1,0 +1,51 @@
+<!-- Build file for tomcat tests, to clean up main build.xml -->
+<project name="Tomcat" default="main" basedir=".">
+  <target name="init"> 
+    <property name="build.compiler" value="classic"/>
+    <property name="tomcat.build" value="../build/tomcat"/>
+    <property name="tomcat.home" value="../dist/tomcat"/>
+    <property name="package.dir" value="../pkg" />
+    <property name="test.classpath" value="${tomcat.build}/classes:../jakarta-tools/moo.jar" />
+  </target>
+
+  <!-- Create directories, copy static files -->
+  <target name="prepare">
+    <mkdir dir="${tomcat.build}/test"/>
+    <mkdir dir="${tomcat.build}/test/classes"/>
+    <mkdir dir="${tomcat.build}/test/lib"/>
+    <mkdir dir="${tomcat.build}/test/webpages"/>
+
+    <copydir src="src/tests/webpages"
+        dest="${tomcat.build}/test/webpages"/>
+
+    <copydir src="src/tests/bin" dest="${tomcat.build}/test"/>
+    <copyfile src="src/tests/server.xml"
+        dest="${tomcat.build}/test/server.xml"/>
+    <copyfile src="src/tests/testlist.txt"
+        dest="${tomcat.build}/test/testlist.txt"/>
+    <copyfile src="../jakarta-tools/moo.jar"
+        dest="${tomcat.build}/test/lib/moo.jar"/>
+    <copyfile src="../jakarta-tools/moo.jar"
+        dest="${tomcat.build}/test/webpages/WEB-INF/lib/moo.jar"/>
+  </target>
+
+  <target name="main" depends="prepare">
+    <javac srcdir="src/tests/share"
+        destdir="${tomcat.build}/test/classes"
+        classpath="${test.classpath}"/>
+    <javac srcdir="src/tests/webpages/WEB-INF/classes"
+        destdir="${tomcat.build}/test/webpages/WEB-INF/classes"
+        classpath="${test.classpath}"/>
+  </target>
+
+  <target name="dist" depends="main">
+  </target>
+
+  <target name="clean">
+    <deltree dir="${tomcat.build}/test"/>
+  </target>
+  
+
+  <target name="all" depends="clean,main,dist"/>
+  
+</project>

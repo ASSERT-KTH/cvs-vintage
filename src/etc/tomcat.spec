@@ -22,6 +22,7 @@ Develop Web applications in Java.
 %prep
 cd /usr/src/redhat/BUILD
 rm -rf jakarta-tomcat
+rm -rf jakarta-tools
 rm -rf build
 unzip -x ${RPM_SOURCE_DIR}/jakarta-tomcat.src.zip
 unzip -x ${RPM_SOURCE_DIR}/jakarta-tools.src.zip
@@ -37,6 +38,7 @@ ant -Dtomcat.home /opt/tomcat dist
 
 %clean
 rm -rf jakarta-tomcat 
+rm -rf jakarta-tools 
 rm -rf build
 
 %post

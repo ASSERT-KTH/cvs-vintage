@@ -1,11 +1,8 @@
 <project name="Tomcat" default="main" basedir=".">
-  <target name="init"> 
-    <property name="build.compiler" value="classic"/>
-    <property name="tomcat.build" value="../build/tomcat"/>
-    <property name="tomcat.home" value="../dist/tomcat"/>
-    <property name="package.dir" value="../pkg" />
-    <property name="test.classpath" value="${tomcat.build}/classes:../jakarta-tools/moo.jar" />
-  </target>
+  <property name="build.compiler" value="classic"/>
+  <property name="tomcat.build" value="../build/tomcat"/>
+  <property name="tomcat.home" value="../dist/tomcat"/>
+  <property name="test.classpath" value="${tomcat.build}/classes:../jakarta-tools/moo.jar" />
 
   <!-- Create directories, copy static files -->
   <target name="prepare">
@@ -174,12 +171,6 @@
   <target name="dist.clean">
     <deltree dir="${tomcat.home}"/>
   </target>
-
-  <target name="package" depends="dist" >
-     <mkdir dir="${package.dir}/tomcat" />
-     <zip zipfile="${package.dir}/tomcat/tomcat.zip" basedir="${tomcat.home}" 
-          items="FAQ,etc,shutdown.bat,startup.sh,webpages,README,examples,shutdown.sh,tomcat.bat,webserver.jar,ant,lib,src,tomcat.sh,env.tomcat,server.xml,startup.bat,tomcatEnv.bat" />
- </target>
 
   <target name="all" depends="clean,main,dist,test"/>
   
