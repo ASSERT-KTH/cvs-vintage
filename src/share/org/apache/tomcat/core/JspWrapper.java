@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/JspWrapper.java,v 1.2 2000/01/15 23:30:20 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/15 23:30:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/JspWrapper.java,v 1.3 2000/02/01 22:53:31 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/01 22:53:31 $
  *
  * ====================================================================
  *
@@ -154,7 +154,6 @@ public class JspWrapper extends ServletWrapper {
 			     Constants.JSP.Directive.Compile.Value );
 	
 	request.setContext(context);
-	request.updatePaths();
 	request.getSession(true);
 	
 	RequestDispatcher rd =

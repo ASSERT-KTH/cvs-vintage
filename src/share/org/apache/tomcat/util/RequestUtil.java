@@ -66,6 +66,7 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.text.*;
 
 /**
  * Usefull methods for request processing. Used to be in ServerRequest or Request,
@@ -445,4 +446,67 @@ public class RequestUtil {
         return l.elements();
     }
 
+
+
+    /* -------------------- From HttpDate -------------------- */
+    // Parse date - XXX This code is _very_ slow ( 3 parsers, GregorianCalendar,
+    // etc ). It was moved out to avoid creating 1 Calendar instance ( and
+    // a associated parsing ) per header ( the Calendar was created in HttpDate
+    // which was created for each HeaderField ).
+    // This also avoid passing HttpHeaders - which was required to access
+    // HttpHeaderFiled to access HttpDate to access the parsing code.
+    
+    // we force our locale here as all http dates are in english
+    private final static Locale loc = Locale.US;
+
+    // all http dates are expressed as time at GMT
+    private final static TimeZone zone = TimeZone.getTimeZone("GMT");
+
+    // format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
+    private final static String rfc1123Pattern ="EEE, dd MMM yyyyy HH:mm:ss z";
+
+    // format for RFC 1036 date string -- "Sunday, 06-Nov-94 08:49:37 GMT"
+    private final static String rfc1036Pattern ="EEEEEEEEE, dd-MMM-yy HH:mm:ss z";
+
+    // format for C asctime() date string -- "Sun Nov  6 08:49:37 1994"
+    private final static String asctimePattern ="EEE MMM d HH:mm:ss yyyyy";
+    
+    private final static SimpleDateFormat rfc1123Format =
+	new SimpleDateFormat(rfc1123Pattern, loc);
+    
+    private final static SimpleDateFormat rfc1036Format =
+	new SimpleDateFormat(rfc1036Pattern, loc);
+    
+    private final static SimpleDateFormat asctimeFormat =
+	new SimpleDateFormat(asctimePattern, loc);
+
+    public static long toDate( String dateString ) {
+	// XXX
+	Date date=null;
+	try {
+            date = rfc1123Format.parse(dateString);
+	} catch (ParseException e) { }
+	
+        if( date==null)
+	    try {
+		date = rfc1036Format.parse(dateString);
+	    } catch (ParseException e) { }
+	
+        if( date==null)
+	    try {
+		date = asctimeFormat.parse(dateString);
+	    } catch (ParseException pe) {
+	    }
+
+	if(date==null) {
+	    return -1;
+	}
+
+	// Original code was: 
+	//	Calendar calendar = new GregorianCalendar(zone, loc);
+	//calendar.setTime(date);
+	// calendar.getTime().getTime();
+	return date.getTime();
+    }
+    
 }

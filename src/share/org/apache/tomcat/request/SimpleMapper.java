@@ -111,7 +111,27 @@ public class SimpleMapper  implements  RequestInterceptor {
 	String pathInfo =path.substring(ctxPath.length(),
 					    path.length());
 	rrequest.setContext(ctx);
-	rrequest.updatePaths();
+
+	String lookupPath=rrequest.getLookupPath();
+
+	// do not set it if it is already set or we have no
+	// URI - the case of a sub-request generated internally
+	if( path!=null && lookupPath==null ) 
+	    lookupPath= path.substring(ctxPath.length(),
+				       path.length());
+
+	// check for ? string on lookuppath
+	int qindex = lookupPath.indexOf("?");
+	
+	if (qindex > -1) {
+	    lookupPath=lookupPath.substring(0, qindex);
+	}
+	
+	if (lookupPath.length() < 1) {
+	    lookupPath = "/";
+	}
+
+	rrequest.setLookupPath( lookupPath );
 	return OK;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.13 2000/02/01 07:37:38 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/02/01 07:37:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.14 2000/02/01 22:53:32 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/02/01 22:53:32 $
  *
  * ====================================================================
  *
@@ -130,7 +130,7 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 
 	    // resolve the server that we are for
 
-	    int contentLength = reqA.getIntHeader("content-length");
+	    int contentLength = reqA.getFacade().getIntHeader("content-length");
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
 		    (BufferedServletInputStream)reqA.getInputStream();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.11 2000/02/01 21:39:38 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/02/01 21:39:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.12 2000/02/01 22:53:31 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/02/01 22:53:31 $
  *
  * ====================================================================
  *
@@ -232,7 +232,7 @@ public class RequestImpl  implements Request {
 
     public int getContentLength() {
         if( contentLength > -1 ) return contentLength;
-	contentLength = getIntHeader("content-length");
+	contentLength = getFacade().getIntHeader("content-length");
 	return contentLength;
     }
 
@@ -280,19 +280,6 @@ public class RequestImpl  implements Request {
 	    return false;
 	return context.getRequestSecurityProvider().isSecure(context, getFacade());
     }
-
-    public RequestDispatcher getRequestDispatcher(String path) {
-        if (path == null)
-	    return null;
-
-	if (! path.startsWith("/")) {
-	    path= FileUtil.catPath( getLookupPath(), path );
-	    if( path==null) return null;
-	}
-
-	return context.getRequestDispatcher(path);
-    }
-
 
     public Principal getUserPrincipal() {
 	if( context.getRequestSecurityProvider() == null )
@@ -354,30 +341,6 @@ public class RequestImpl  implements Request {
     public void setContext(Context context) {
 	this.context = context;
     }
-
-    // Called after a Context is found, adjust all other paths.
-    // XXX XXX XXX
-    public void updatePaths() {
-	contextPath = context.getPath();
-	String requestURI = getRequestURI();
-	// do not set it if it is already set or we have no
-	// URI - the case of a sub-request generated internally
-	if( requestURI!=null && lookupPath==null ) 
-	    lookupPath = requestURI.substring(contextPath.length(),
-					      requestURI.length());
-
-	// check for ? string on lookuppath
-	int qindex = lookupPath.indexOf("?");
-
-	if (qindex > -1) {
-	    lookupPath = lookupPath.substring(0, qindex);
-	}
-
-	if (lookupPath.length() < 1) {
-	    lookupPath = "/";
-	}
-    }
-
 
     public Cookie[] getCookies() {
 	// XXX need to use Cookie[], Vector is not needed
@@ -559,20 +522,10 @@ public class RequestImpl  implements Request {
     // End Attributes
 
     // -------------------- Facade for MimeHeaders
-    public long getDateHeader(String name) {
-	//return reqA.getMimeHeaders().getDateHeader(name);
-	return getMimeHeaders().getDateHeader(name);
-    }
-
     public Enumeration getHeaders(String name) {
 	//	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
 	Vector v = getMimeHeaders().getHeadersVector(name);
 	return v.elements();
-    }
-
-    public int getIntHeader(String name)  {
-	//        return reqA.getMimeHeaders().getIntHeader(name);
-        return getMimeHeaders().getIntHeader(name);
     }
 
     // -------------------- Utils - facade for RequestUtil
@@ -675,12 +628,6 @@ public class RequestImpl  implements Request {
     // Hints = return null if you don't know,
     // and Tom will find the value. You can also use the static
     // methods in RequestImpl
-
-    /** Return the parsed Cookies
-     */
-    public String[] getCookieHeaders() {
-	return null;
-    }
 
     // server may have it pre-calculated - return null if
     // it doesn't

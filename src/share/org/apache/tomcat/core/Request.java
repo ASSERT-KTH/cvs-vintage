@@ -102,21 +102,13 @@ public interface Request  {
 
     public Enumeration getHeaderNames() ;
     
-    public MimeHeaders getMimeHeaders();
-
-    public long getDateHeader(String name) ;
-
     public Enumeration getHeaders(String name) ;
-
-    public int getIntHeader(String name)  ;
 
     //-------------------- "Computed" properties --------------------
     // ( directly derived from headers or request paths )
 
     /** Return the cookies
      */
-    public String[] getCookieHeaders();
-
     public Cookie[] getCookies() ;
 
     public int getContentLength() ;
@@ -134,6 +126,10 @@ public interface Request  {
     // -------------------- Mapping --------------------
     // Will be set by mappers
     
+    public void setContext(Context context) ;
+
+    public Context getContext() ;
+
     public String getContextPath();
 
     public String getServletName();
@@ -154,11 +150,10 @@ public interface Request  {
 
     public String getServletPath() ;
 
-    public void updatePaths() ;//XXX - not to be used, use RD
-
     public String getResolvedServlet() ;
 
     public void setResolvedServlet(String rs ) ;
+
     public ServletWrapper getWrapper() ;
     
     public void setWrapper(ServletWrapper handler) ;
@@ -176,6 +171,7 @@ public interface Request  {
 
     // -------------------- Security --------------------
     // Will be set by security interceptors
+
     public String getAuthType() ;
 
     public void setAuthType(String authType) ;
@@ -225,6 +221,7 @@ public interface Request  {
     
     // -------------------- Attributes --------------------
     public Object getAttribute(String name) ;
+
     public void setAttribute(String name, Object value) ;
 
     public void removeAttribute(String name) ;
@@ -247,21 +244,20 @@ public interface Request  {
     // inteface is to implement it on top of doRead(b[]).
     // Don't use this method if you can ( it is bad for performance !!)
     public int doRead() throws IOException;
-    
 
     // -------------------- Internal methods --------------------
+    /** Support for "pools"
+     */
     public void recycle() ;
 
+    /** One-to-One with Response
+     */
     public Response getResponse() ;
-
-    public void setContext(Context context) ;
-
-    public HttpServletRequestFacade getFacade() ;
 
     public void setResponse(Response response) ;
 
-    public Context getContext() ;
-
-    public RequestDispatcher getRequestDispatcher(String path);
-
+    /** One-to-One with Facade
+     */
+    public HttpServletRequestFacade getFacade() ;
+    
 }

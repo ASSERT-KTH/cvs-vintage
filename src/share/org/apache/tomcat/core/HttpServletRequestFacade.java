@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.5 2000/01/11 20:43:02 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/11 20:43:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.6 2000/02/01 22:53:30 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/01 22:53:30 $
  *
  * ====================================================================
  *
@@ -137,7 +137,15 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public long getDateHeader(String name) {
-        return request.getDateHeader(name);
+	String value=request.getHeader( name );
+	if( value==null) return -1;
+	
+	long date=RequestUtil.toDate(value);
+	if( date==-1) {
+	    String msg = sm.getString("httpDate.pe", value);
+	    throw new IllegalArgumentException(msg);
+	}
+	return date;
     }
     
     public String getHeader(String name) {
@@ -162,8 +170,14 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 	return request.getInputStream();
     }
 
-    public int getIntHeader(String name) {
-        return request.getIntHeader(name);
+    public int getIntHeader(String name)
+	throws  NumberFormatException
+    {
+	String value=request.getHeader( name );
+	if( value==null) return -1;
+
+	int valueInt=Integer.parseInt(value);
+	return valueInt;
     }
     
     public String getMethod() {
@@ -254,7 +268,15 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-	return request.getRequestDispatcher(path);
+        if (path == null)
+	    return null;
+
+	if (! path.startsWith("/")) {
+	    path= FileUtil.catPath( request.getLookupPath(), path );
+	    if( path==null) return null;
+	}
+
+	return request.getContext().getRequestDispatcher(path);
     }
 
     public boolean isSecure() {
