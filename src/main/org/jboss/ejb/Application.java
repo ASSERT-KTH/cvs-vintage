@@ -18,14 +18,17 @@ import javax.ejb.EJBLocalHome;
 import org.jboss.util.Service;
 
 /**
- *   An Application represents a collection of beans that are deployed as a unit.
- *	  The beans may use the Application to access other beans within the same deployment unit 
- *      
- *   @see Container
- *   @see ContainerFactory
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.16 $
+ * An Application represents a collection of beans that are deployed as a
+ * unit.
  *
+ * <p>The beans may use the Application to access other beans within the same
+ *    deployment unit.
+ *      
+ * @see Container
+ * @see ContainerFactory
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.17 $
  */
 public class Application
    implements Service
@@ -34,35 +37,34 @@ public class Application
     
    // Attributes ----------------------------------------------------
    
-   // stores the containers for this application unit
+   /** Stores the containers for this application unit. */
    HashMap containers = new HashMap();
    HashMap localHomes = new HashMap();
    
-   // class loader of this application
+   /** Class loader of this application. */
    ClassLoader classLoader = null;
    
-   // name of this application
+   /** Name of this application. */
    String name = "";
    
-   // url where this application was deployed from
+   /** Url where this application was deployed from. */
    URL url;
    
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------
 
-
-	/**
-	 * Add a container to this application. This is called by the ContainerFactory.
-	 *
-	 * @param   con  
-	 */
+   /**
+    * Add a container to this application. This is called by the
+    * ContainerFactory.
+    *
+    * @param   con  
+    */
    public void addContainer(Container con)
    {
       containers.put(con.getBeanMetaData().getEjbName(), con);
       con.setApplication(this);
    }
-   
 
    /**
     * Remove a container from this application.
@@ -74,49 +76,47 @@ public class Application
       containers.remove(con.getBeanMetaData().getEjbName());
    }
    
-   public void addLocalHome( Container con, EJBLocalHome localHome )
+   public void addLocalHome(Container con, EJBLocalHome localHome)
    {
-      localHomes.put( con.getBeanMetaData().getEjbName(), localHome );
+      localHomes.put(con.getBeanMetaData().getEjbName(), localHome);
    }
    
-   public void removeLocalHome( Container con )
+   public void removeLocalHome(Container con)
    {
-      localHomes.remove( con.getBeanMetaData().getEjbName() );
+      localHomes.remove(con.getBeanMetaData().getEjbName());
    }
    
-   public EJBLocalHome getLocalHome( Container con )
+   public EJBLocalHome getLocalHome(Container con)
    {
-      return (EJBLocalHome) localHomes.get( con.getBeanMetaData().getEjbName() );
+      return (EJBLocalHome)localHomes.get(con.getBeanMetaData().getEjbName());
    }
-   
 
    /**
     * Get a container from this Application that corresponds to a given name
     *
     * @param   name  ejb-name name defined in ejb-jar.xml
     *
-    * @return  container for the named bean, or null if the container was not found   
+    * @return  container for the named bean, or null if the container was
+    *          not found   
     */
    public Container getContainer(String name)
    {
       return (Container)containers.get(name);
    }
-   
 
    /**
     * Get all containers in this Application.
     *
-    * @return  a collection of containers for each enterprise bean in this application
-    *          unit.
+    * @return  a collection of containers for each enterprise bean in this 
+    *          application unit.
     */
    public Collection getContainers()
    {
       return containers.values();
    }
-   
 
    /**
-    *	Get the class loader of this Application. 
+    * Get the class loader of this Application. 
     *
     * @return     
     */
@@ -124,10 +124,9 @@ public class Application
    {
       return classLoader;
    }
-   
 
    /**
-    *	Set the class loader of this Application
+    * Set the class loader of this Application
     *
     * @param   name  
     */
@@ -135,45 +134,41 @@ public class Application
    {
       this.classLoader = cl;
    }
-   
 
    /**
-    *	Get the name of this Application. 
+    * Get the name of this Application. 
     *
-    * @return     
+    * @return    The name of this application.
     */
    public String getName()
    {
       return name;
    }
-   
 
    /**
-    *	Set the name of this Application
+    * Set the name of this Application
     *
-    * @param   name  
+    * @param name    The name of this application.
     */
    public void setName(String name)
    {
       this.name = name;
    }
    
-
    /**
-    *	Get the URL from which this Application was deployed
+    * Get the URL from which this Application was deployed
     *
-    * @return     
+    * @return    The URL from which this Application was deployed.
     */
    public URL getURL()
    {
       return url;
    }
-   
 
    /**
-    *	Set the URL that was used to deploy this Application
+    * Set the URL that was used to deploy this Application
     *
-    * @param   url  
+    * @param url    The URL that was used to deploy this Application  
     */
    public void setURL(URL url)
    {
@@ -189,13 +184,12 @@ public class Application
 	
    // Service implementation ----------------------------------------
     
-    /**
-     * Initializes all the containers of this application.
-     *
-     * @exception Exception
-     */
-   public void init()
-      throws Exception
+   /**
+    * Initializes all the containers of this application.
+    *
+    * @exception Exception
+    */
+   public void init() throws Exception
    {
       Iterator enum = containers.values().iterator();
       while (enum.hasNext())
@@ -206,12 +200,11 @@ public class Application
    }
    
    /**
-     * Starts all the containers of this application.
-     *
-     * @exception Exception
-     */
-   public void start()
-      throws Exception
+    * Starts all the containers of this application.
+    *
+    * @exception Exception
+    */
+   public void start() throws Exception
    {
       Iterator enum = containers.values().iterator();
       while (enum.hasNext())
@@ -222,8 +215,8 @@ public class Application
    }
 	
    /**
-     * Stops all the containers of this application.
-     */
+    * Stops all the containers of this application.
+    */
    public void stop()
    {
       Iterator enum = containers.values().iterator();
@@ -235,8 +228,8 @@ public class Application
    }
 	
    /**
-     * Destroys all the containers of this application.
-     */
+    * Destroys all the containers of this application.
+    */
    public void destroy()
    {
       Iterator enum = containers.values().iterator();
