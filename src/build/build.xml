@@ -70,6 +70,7 @@
         </fileset>
         <fileset dir="${src.lib.dir}">
             <include name="**/*.jar"/>
+            <exclude name="jbosssx.jar"/>
         </fileset>
   </path>
 
@@ -227,9 +228,20 @@
     <jar jarfile="${build.lib.dir}/ext/jboss.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
-         includes="org/jboss/**"
-         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/security/SecurityAssociation.class,org/jboss/security/SimplePrincipal.class,org/jboss/security/SimpleGroup.class,org/jboss/ejb/plugins/jaws/deployment/**,org/jboss/dependencies/**,org/jboss/security/**/*LoginModule.class,org/jboss/tm/GlobalId.class,org/jboss/jms/ra/META-INF*"
-    />
+    >
+        <include name="org/jboss/**" />
+        <exclude name="org/jboss/Main*" />
+        <exclude name="org/jboss/dependencies/**" />
+        <exclude name="org/jboss/ejb/deployment/**" />
+        <exclude name="org/jboss/ejb/plugins/jaws/deployment/**" />
+        <exclude name="org/jboss/jms/ra/META-INF*" />
+        <!-- Exclude the security classes that must be on the classpath -->
+        <exclude name="org/jboss/security/SecurityAssociation.class" />
+        <exclude name="org/jboss/security/AnybodyPrincipal.class" />
+        <exclude name="org/jboss/security/NobodyPrincipal.class" />
+        <exclude name="org/jboss/security/SimplePrincipal.class" />
+        <exclude name="org/jboss/tm/GlobalId.class" />
+    </jar>
 
 
     <mkdir dir="${build.dir}/client"/>
