@@ -73,7 +73,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.80 $
+ * @version $Revision: 1.81 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -830,7 +830,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          }
          catch(ArrayStoreException e)
          {
-            new IllegalArgumentException("The elements in the collection must be of type " +
+            throw new IllegalArgumentException("The elements in the collection must be of type " +
                relatedEntity.getLocalInterface().getName());
          }
       }
@@ -845,7 +845,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             }
             catch(ArrayStoreException e)
             {
-               new IllegalArgumentException("The value must be of type " + relatedEntity.getLocalInterface().getName());
+               throw new IllegalArgumentException("The value must be of type " +
+                  relatedEntity.getLocalInterface().getName());
             }
          }
          else
