@@ -40,32 +40,29 @@ public class MarkAsFlaggedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public MarkAsFlaggedAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasflagged"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasflagged_tooltip"),
-			"MARK_AS_FLAGGED",
-			ImageLoader.getSmallImageIcon("mark-as-important-16.png"),
-			ImageLoader.getImageIcon("mark-as-important-16.png"),
-			'F',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasflagged"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasflagged_tooltip"));
+					
+		// action command
+		setActionCommand("MARK_AS_FLAGGED");
+		
+		// icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
+		
+		// icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("mark-as-important-16.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('F');
+		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

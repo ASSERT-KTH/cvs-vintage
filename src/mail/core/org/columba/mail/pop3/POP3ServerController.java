@@ -63,6 +63,13 @@ public class POP3ServerController implements ActionListener {
 		uid = accountItem.getUid();
 		checkAction =
 			new BasicAction(
+					accountItem.getName()
+						+ " ("
+						+ accountItem.getIdentityItem().get("address")
+						+ ")");
+		checkAction.setActionCommand("CHECK");
+			/*
+			new BasicAction(
 				accountItem.getName()
 					+ " ("
 					+ accountItem.getIdentityItem().get("address")
@@ -74,9 +81,17 @@ public class POP3ServerController implements ActionListener {
 				null,
 				0,
 				null);
+			*/
 		checkAction.addActionListener(this);
 
 		manageAction =
+			new BasicAction(
+					accountItem.getName()
+						+ " ("
+						+ accountItem.getIdentityItem().get("address")
+						+ ")");
+		manageAction.setActionCommand("MANAGE");
+			/*
 			new BasicAction(
 				accountItem.getName()
 					+ " ("
@@ -89,6 +104,7 @@ public class POP3ServerController implements ActionListener {
 				null,
 				0,
 				null);
+			*/
 		manageAction.addActionListener(this);
 		manageAction.setEnabled(false);
 		

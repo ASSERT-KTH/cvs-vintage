@@ -40,32 +40,26 @@ public class OpenMessageWithComposerAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public OpenMessageWithComposerAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_openwithcomposer"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_openwithcomposer_tooltip"),
-			"OPEN_MESSAGE",
-			ImageLoader.getSmallImageIcon("openmessage_small.png"),
-			ImageLoader.getImageIcon("compose-message.png"),
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_openwithcomposer"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_message_openwithcomposer_tooltip"));
+		
+		// action command
+		setActionCommand("OPEN_MESSAGE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("openmessage_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("compose-message.png"));
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

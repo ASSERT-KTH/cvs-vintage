@@ -40,37 +40,31 @@ public class PreviousMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public PreviousMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_prevmessage"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_prevmessage_tooltip"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_prevmessage_tooltip"),
-			"PREV_MESSAGE",
-			null,
-			ImageLoader.getSmallImageIcon("previous-message.png"),
-			'M',
-			KeyStroke.getKeyStroke("B"),
-			false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_prevmessage"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_prevmessage_tooltip"));
+
+		// action command
+		setActionCommand("PREV_MESSAGE");
+		
+		// icons
+		setLargeIcon(ImageLoader.getSmallImageIcon("previous-message.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('M');
+		
+		// shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke("B"));
+		
+		// disable toolbar text
+		enableToolBarText(false);
 			
 		setEnabled(false);
 		// uncomment to enable action

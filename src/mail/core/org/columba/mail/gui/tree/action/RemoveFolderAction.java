@@ -37,37 +37,32 @@ public class RemoveFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public RemoveFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_removefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_removefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_removefolder"),
-			"REMOVE_FOLDER",
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete.png"),
-			'D',
-			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_removefolder"));
+
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_removefolder"));
+
+		// action command
+		setActionCommand("REMOVE_FOLDER");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('D');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_D, ActionEvent.ALT_MASK));
+					
 		setEnabled(false);
 		(
 			(

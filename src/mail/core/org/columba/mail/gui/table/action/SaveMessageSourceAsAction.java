@@ -42,19 +42,22 @@ public class SaveMessageSourceAsAction
 
 	public SaveMessageSourceAsAction(AbstractFrameController controller) {
 		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_save"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_save_tooltip"),
-			"SAVE_SOURCE",
-			ImageLoader.getSmallImageIcon("stock_save_as-16.png"),
-			ImageLoader.getImageIcon("stock_save.png"),
-			'0', null);
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_save"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_save_tooltip"));
+		
+		// action command
+		setActionCommand("SAVE_SOURCE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController)
 				.registerTableSelectionListener(this);

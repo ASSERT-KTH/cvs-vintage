@@ -29,37 +29,23 @@ public class FilterPreferencesAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public FilterPreferencesAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_filterconfig"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_filterconfig"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_filterconfig"),
-			"FILTER_PREFERENCES",
-			null,
-			null,
-			'U',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_filterconfig"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_filterconfig"));
+		
+		// action command
+		setActionCommand("FILTER_PREFERENCES");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('U');
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);

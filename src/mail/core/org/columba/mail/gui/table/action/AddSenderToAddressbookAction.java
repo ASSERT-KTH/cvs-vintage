@@ -39,32 +39,20 @@ public class AddSenderToAddressbookAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AddSenderToAddressbookAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_addsender"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_addsender_tooltip"),
-			"ADD_SENDER",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_addsender"));
+
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_addsender_tooltip"));
+		
+		// action command
+		setActionCommand("ADD_SENDER");
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

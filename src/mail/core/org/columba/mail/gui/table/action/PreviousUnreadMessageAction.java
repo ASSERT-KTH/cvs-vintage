@@ -37,32 +37,23 @@ public class PreviousUnreadMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public PreviousUnreadMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_prevunreadmessage"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_prevunreadmessage_tooltip"),
-			"PREV_UNREAD_MESSAGE",
-			null,
-			null,
-			'U',
-			KeyStroke.getKeyStroke("P"));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_prevunreadmessage"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe","menu_view_prevunreadmessage_tooltip"));
+		
+		// action command
+		setActionCommand("PREV_UNREAD_MESSAGE");
+
+		// shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke("P"));
+
 		setEnabled(false);
 		// uncomment to enable action
 		/*

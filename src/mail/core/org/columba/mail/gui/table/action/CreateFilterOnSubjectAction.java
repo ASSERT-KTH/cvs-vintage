@@ -39,34 +39,22 @@ public class CreateFilterOnSubjectAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CreateFilterOnSubjectAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_filteronsubject"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_filteronsubject_tooltip"),
-			"FILTER_ON_SUBJECT",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_filteronsubject"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_filteronsubject_tooltip"));
+		
+		// action command
+		setActionCommand("FILTER_ON_SUBJECT");
+
 		setEnabled(false);
-		// *20030620, karlpeder*
+
 		((AbstractMailFrameController) frameController)
 				.registerTableSelectionListener(this);
 	}

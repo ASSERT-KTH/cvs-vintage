@@ -42,24 +42,26 @@ public class SubscribeFolderAction
 	 */
 	public SubscribeFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_subscribe"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_subscribe"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_subscribe"),
-			"SUBSCRIBE",
-			ImageLoader.getSmallImageIcon("remotehost.png"),
-			ImageLoader.getImageIcon("remotehost.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_subscribe"));
+
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_subscribe"));
+		
+		// action command
+		setActionCommand("SUBSCRIBE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("remotehost.png"));
+		setLargeIcon(ImageLoader.getImageIcon("remotehost.png"));
+
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+		
 		setEnabled(false);
 		// FIXME
 		//  -> uncomment to enable/disable action

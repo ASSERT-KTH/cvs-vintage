@@ -39,34 +39,22 @@ public class CreateFilterOnFromAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CreateFilterOnFromAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_filteronfrom"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_filteronfrom_tooltip"),
-			"FILTER_ON_FROM",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_filteronfrom"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_filteronfrom_tooltip"));
+		
+		// action command
+		setActionCommand("FILTER_ON_FROM");
+
 		setEnabled(false);
-		// *20030620, karlpeder*
+
 		((AbstractMailFrameController) frameController)
 				.registerTableSelectionListener(this);
 	}

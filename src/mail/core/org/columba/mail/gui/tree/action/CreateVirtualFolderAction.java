@@ -34,37 +34,28 @@ public class CreateVirtualFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CreateVirtualFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newvirtualfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newvirtualfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newvirtualfolder"),
-			"CREATE_VIRTUAL_SUBFOLDER",
-			ImageLoader.getSmallImageIcon("virtualfolder.png"),
-			ImageLoader.getImageIcon("virtualfolder.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_newvirtualfolder"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_newvirtualfolder"));
+
+		// action command
+		setActionCommand("CREATE_VIRTUAL_SUBFOLDER");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
+		setLargeIcon(ImageLoader.getImageIcon("virtualfolder.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_V, ActionEvent.ALT_MASK));
 
 		setEnabled(false);
 		(

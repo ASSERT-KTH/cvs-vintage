@@ -40,32 +40,24 @@ public class ReplyToAllAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ReplyToAllAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replytoall"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replytoall_tooltip"),
-			"REPLY_TO_ALL",
-			ImageLoader.getSmallImageIcon("replytoall_small.png"),
-			ImageLoader.getImageIcon("reply-to-all.png"),
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_replytoall"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_replytoall_tooltip"));
+		
+		// action command
+		setActionCommand("REPLY_TO_ALL");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("replytoall_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("reply-to-all.png"));
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -52,32 +52,32 @@ public class ForwardAction
 	private XmlElement forward;
 	private String forwardStyle;
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ForwardAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_tooltip"),
-			"FORWARD",
-			ImageLoader.getSmallImageIcon("forward_small.png"),
-			ImageLoader.getImageIcon("forward.png"),
-			'F',
-			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_forward"));
+					
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_forward_tooltip"));
+					
+		// action command
+		setActionCommand("FORWARD");
+		
+		// icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("forward_small.png"));
+		
+		// icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("forward.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+				
+		// TODO: Use & to define mnemonic
+		setMnemonic('F');
 
 		setEnabled(false);
 		(

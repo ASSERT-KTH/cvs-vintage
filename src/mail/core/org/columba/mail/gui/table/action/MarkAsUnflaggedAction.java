@@ -38,17 +38,13 @@ public class MarkAsUnflaggedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public MarkAsUnflaggedAction(AbstractFrameController frameController) {
+		
+		// TODO: i18n missing here
+		
+		super(frameController, "Not Flagged");
+		setActionCommand("MARK_AS_UNFLAGGED");
+		/*
 		super(
 			frameController,
 			"Not Flagged",
@@ -58,6 +54,7 @@ public class MarkAsUnflaggedAction
 			null,
 			'0',
 			null);
+		*/
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -46,39 +46,41 @@ public class DeleteMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
 	public DeleteMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_delete"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_delete_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_delete_tooltip"),
-			"DELETE_MESSAGE",
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete.png"),
-            'D',
-            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK),
-            false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_delete"));
+					
+		// toolbar text
+		setToolBarName(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_delete_toolbar"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_delete_tooltip"));
+		
+		// action command
+		setActionCommand("DELETE_MESSAGE");
+		
+		// icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		
+		// icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('D');
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

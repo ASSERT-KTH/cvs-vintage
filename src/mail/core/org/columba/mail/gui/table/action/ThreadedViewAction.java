@@ -51,30 +51,25 @@ public class ThreadedViewAction
 	/**
 	 * Constructor for ThreadedViewAction.
 	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
 	 */
 	public ThreadedViewAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_viewthreaded"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_viewthreaded_tooltip"),
-			"VIEW_THREADED",
-			null,
-			null,
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_viewthreaded"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_viewthreaded_tooltip"));
+					
+		// action command
+		setActionCommand("VIEW_THREADED");
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
 		(
 			(

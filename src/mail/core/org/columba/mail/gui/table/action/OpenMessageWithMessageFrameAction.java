@@ -40,32 +40,19 @@ public class OpenMessageWithMessageFrameAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public OpenMessageWithMessageFrameAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_opennew"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_opennew_tooltip"),
-			"OPEN_MESSAGE_IN_NEW_WINDOW",
-			null,
-			null,
-			0,
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_opennew"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_opennew_tooltip"));
+		
+		// action command
+		setActionCommand("OPEN_MESSAGE_IN_NEW_WINDOW");
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

@@ -25,37 +25,23 @@ public class EmptyFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public EmptyFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_emptyfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_emptyfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_emptyfolder"),
-			"EMPTY_FOLDER",
-			null,
-			null,
-			'E',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_emptyfolder"));
+					
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_emptyfolder"));
+		
+		// action command
+		setActionCommand("EMPTY_FOLDER");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('E');
+
 		setEnabled(false);
 		// FIXME
 		//  -> uncomment to enable/disable action

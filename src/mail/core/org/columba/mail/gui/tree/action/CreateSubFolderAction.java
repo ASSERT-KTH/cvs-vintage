@@ -34,37 +34,31 @@ public class CreateSubFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CreateSubFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newfolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newfolder"),
-			"CREATE_SUBFOLDER",
-			ImageLoader.getSmallImageIcon("folder.png"),
-			ImageLoader.getImageIcon("folder.png"),
-			'N',
-			KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_newfolder"));
+					
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_newfolder"));
+					
+		// action command
+		setActionCommand("CREATE_SUBFOLDER");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("folder.png"));
+		setLargeIcon(ImageLoader.getImageIcon("folder.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('N');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_N, ActionEvent.ALT_MASK));
 			
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(

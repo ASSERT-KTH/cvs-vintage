@@ -42,32 +42,30 @@ public class MarkAsReadAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public MarkAsReadAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasread"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasread_tooltip"),
-			"MARK_AS_READ",
-			ImageLoader.getSmallImageIcon("mail-read.png"),
-			ImageLoader.getImageIcon("mail-read.png"),
-			'R',
-			KeyStroke.getKeyStroke("M"));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasread"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasread_tooltip"));
+		
+		// action command
+		setActionCommand("MARK_AS_READ");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("mail-read.png"));
+		setLargeIcon(ImageLoader.getImageIcon("mail-read.png"));
+		
+		// shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke("M"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('R');
+		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

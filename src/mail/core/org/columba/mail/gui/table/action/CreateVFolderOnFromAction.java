@@ -39,34 +39,22 @@ public class CreateVFolderOnFromAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/*
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CreateVFolderOnFromAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_vfolderonfrom"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_vfolderonfrom_tooltip"),
-			"VFOLDER_ON_FROM",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_vfolderonfrom"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_vfolderonfrom_tooltip"));
+		
+		// action command
+		setActionCommand("VFOLDER_ON_FROM");
+
 		setEnabled(false);
-		// *20030621, karlpeder*
+
 		((AbstractMailFrameController) frameController)
 				.registerTableSelectionListener(this);
 	}

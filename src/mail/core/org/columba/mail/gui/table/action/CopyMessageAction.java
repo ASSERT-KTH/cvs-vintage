@@ -42,39 +42,35 @@ public class CopyMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
 	public CopyMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_copy"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_copy_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_copy_tooltip"),
-			"COPY_MESSAGE",
-			ImageLoader.getSmallImageIcon("copymessage_small.png"),
-			ImageLoader.getImageIcon("copy-message.png"),
-			'C',
-			null,
-			false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_copy"));
+		
+		// toolbar text
+		setToolBarName(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_copy_toolbar"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_copy_tooltip"));
+		
+		// action command
+		setActionCommand("COPY_MESSAGE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("copymessage_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("copy-message.png"));
+		
+		// disable toolbar text
+		enableToolBarText(false);
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('C');
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

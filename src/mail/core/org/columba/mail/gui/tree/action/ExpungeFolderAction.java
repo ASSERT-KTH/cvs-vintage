@@ -34,37 +34,28 @@ public class ExpungeFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ExpungeFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_expungefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_expungefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_expungefolder"),
-			"EXPUNGE_FOLDER",
-			null,
-			null,
-			'P',
-			KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_expungefolder"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_expungefolder"));
+		
+		// action command
+		setActionCommand("EXPUNGE_FOLDER");
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('P');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_E, ActionEvent.ALT_MASK));
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);

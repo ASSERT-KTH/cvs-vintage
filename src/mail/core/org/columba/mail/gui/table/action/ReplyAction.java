@@ -41,32 +41,31 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ReplyAction extends FrameAction implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ReplyAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply_tooltip"),
-			"REPLY",
-			ImageLoader.getSmallImageIcon("reply_small.png"),
-			ImageLoader.getImageIcon("reply.png"),
-			'R',
-			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_reply"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_reply_tooltip"));
+		
+		// action command
+		setActionCommand("REPLY");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("reply.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('R');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

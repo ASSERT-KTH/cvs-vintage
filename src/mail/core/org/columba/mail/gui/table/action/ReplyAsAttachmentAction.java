@@ -39,32 +39,22 @@ public class ReplyAsAttachmentAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ReplyAsAttachmentAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replyasattachment"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replyasattachment_tooltip"),
-			"REPLY_AS_ATTACHMENT",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_replyasattachment"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", 
+					"mainframe",
+					"menu_message_replyasattachment_tooltip"));
+					
+		// action command
+		setActionCommand("REPLY_AS_ATTACHMENT");
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

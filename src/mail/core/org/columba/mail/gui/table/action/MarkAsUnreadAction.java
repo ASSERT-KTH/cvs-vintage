@@ -50,6 +50,14 @@ public class MarkAsUnreadAction
 	 * @param keyStroke
 	 */
 	public MarkAsUnreadAction(AbstractFrameController frameController) {
+		
+		// TODO: i18n missing here
+		
+		super(frameController, "As Unread");
+		setActionCommand("MARK_AS_UNREAD");
+		setSmallIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
+		setLargeIcon(ImageLoader.getImageIcon("mail-new.png"));
+		/*
 		super(
 			frameController,
 			"As Unread",
@@ -59,6 +67,7 @@ public class MarkAsUnreadAction
 			ImageLoader.getImageIcon("mail-new.png"),
 			'0',
 			null);
+		*/
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -42,38 +42,35 @@ public class MoveMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public MoveMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_move"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_move_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_move_tooltip"),
-			"MOVE_MESSAGE",
-			ImageLoader.getSmallImageIcon("movemessage_small.png"),
-			ImageLoader.getImageIcon("move-message.png"),
-			'M',
-			null,
-			false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_move"));
+		
+		// toolbar text
+		setToolBarName(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_move_toolbar"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_move_tooltip"));
+		
+		// action command
+		setActionCommand("MOVE_MESSAGE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("movemessage_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("move-message.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('M');
+		
+		// disable toolbar text
+		enableToolBarText(false);
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

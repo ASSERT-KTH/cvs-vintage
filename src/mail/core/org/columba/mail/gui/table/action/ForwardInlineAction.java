@@ -38,32 +38,22 @@ public class ForwardInlineAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ForwardInlineAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forwardinline"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forwardinline_tooltip"),
-			"FORWARD_INLINE",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_forwardinline"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_forwardinline_tooltip"));
+		
+		// action command
+		setActionCommand("FORWARD_INLINE");
+		
+		// TODO: Define mnemonic (using &)
+
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

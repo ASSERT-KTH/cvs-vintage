@@ -40,32 +40,29 @@ public class MarkAsExpungedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public MarkAsExpungedAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasexpunged"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasexpunged_tooltip"),
-			"MARK_AS_EXPUNGED",
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete-16.png"),
-			'E',
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasexpunged"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_markasexpunged_tooltip"));
+		
+		// action command
+		setActionCommand("MARK_AS_EXPUNGED");
+		
+		// icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		
+		// icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('E');
+		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

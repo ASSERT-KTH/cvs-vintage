@@ -34,37 +34,26 @@ public class RenameFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public RenameFolderAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"),
-			"RENAME_FOLDER",
-			null,
-			null,
-			'R',
-			KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_renamefolder"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_renamefolder"));
+		
+		// action command
+		setActionCommand("RENAME_FOLDER");
+
+		// TODO: USe & to define mnemonic
+		setMnemonic('R');
+		
+		// shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		
 		setEnabled(false);
 		(
 			(

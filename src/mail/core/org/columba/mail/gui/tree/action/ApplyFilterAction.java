@@ -33,37 +33,32 @@ public class ApplyFilterAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ApplyFilterAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_applyfilter"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_applyfilter"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_applyfilter"),
-			"APPLYFILTER",
-			ImageLoader.getSmallImageIcon("apply-filters-16.png"),
-			null,
-			'F',
-			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+				frameController,
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_folder_applyfilter"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_folder_applyfilter"));
+
+		// action command
+		setActionCommand("APPLYFILTER");
+		
+		// icon
+		setSmallIcon(ImageLoader.getSmallImageIcon("apply-filters-16.png"));
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('F');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);

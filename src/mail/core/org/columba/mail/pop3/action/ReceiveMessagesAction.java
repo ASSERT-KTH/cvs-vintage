@@ -35,6 +35,15 @@ public class ReceiveMessagesAction extends FrameAction {
 
 	public ReceiveMessagesAction(AbstractFrameController controller) {
 		super(
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_receive"));
+		setActionCommand("RECEIVE");
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+		/*
+		super(
 			controller,
 			MailResourceLoader.getString(
 				"menu",
@@ -46,6 +55,7 @@ public class ReceiveMessagesAction extends FrameAction {
 			null,
 			0,
 			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+		*/
 	}
 
 	/* (non-Javadoc)

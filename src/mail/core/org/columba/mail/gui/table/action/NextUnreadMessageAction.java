@@ -50,21 +50,25 @@ public class NextUnreadMessageAction
 	 * @param keyStroke
 	 */
 	public NextUnreadMessageAction(AbstractFrameController frameController) {
+
 		super(
-			frameController,
-		MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextunreadmessage"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextunreadmessage_tooltip"),
-			"NEXT_UNREAD_MESSAGE",
-			null,
-			null,
-			'U',
-			KeyStroke.getKeyStroke("N"));
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_nextunreadmessage"));
+					
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_nextunreadmessage_tooltip"));
+		
+		// action command
+		setActionCommand("NEXT_UNREAD_MESSAGE");
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('U');
+		
+		// Shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke("N"));
 			
 		setEnabled(false);
 		// uncomment to enable action

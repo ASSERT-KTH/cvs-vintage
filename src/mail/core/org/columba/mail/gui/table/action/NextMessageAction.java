@@ -43,37 +43,32 @@ public class NextMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public NextMessageAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextmessage"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextmessage_tooltip"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextmessage_tooltip"),
-			"NEXT_MESSAGE",
-			null,
-			ImageLoader.getSmallImageIcon("next-message.png"),
-			'M',
-			KeyStroke.getKeyStroke("F"),
-			false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_nextmessage"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_nextmessage_tooltip"));
+
+		// action command
+		setActionCommand("NEXT_MESSAGE");
+		
+		// icons
+		setLargeIcon(ImageLoader.getSmallImageIcon("next-message.png"));
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('M');
+		
+		// shortcut key
+		setAcceleratorKey(KeyStroke.getKeyStroke("F"));
+		
+		// disable toolbar text
+		enableToolBarText(false);
+
 		setEnabled(false);
 		
 		// uncomment to enable action

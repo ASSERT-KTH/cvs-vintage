@@ -39,34 +39,20 @@ public class AddAllSendersToAddressbookAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AddAllSendersToAddressbookAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_addallsenders"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_addallsenders"),
-			"ADD_ALLSENDERS",
-			null,
-			null,
-			'0',
-			null);
-
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_addallsenders"));
 		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_message_addallsenders"));
+		
+		// action command
+		setActionCommand("ADD_ALLSENDERS");
+
 		setEnabled(false);
 		((AbstractMailFrameController)frameController).registerTableSelectionListener(this);
 	}

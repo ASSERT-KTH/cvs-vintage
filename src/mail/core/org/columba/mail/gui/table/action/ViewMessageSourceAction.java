@@ -38,21 +38,23 @@ public class ViewMessageSourceAction
 
 	public ViewMessageSourceAction(AbstractFrameController controller) {
 		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_source"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_source_tooltip"),
-			"View Message Source",
-			"VIEW_SOURCE",
-			null,
-			null,
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_source"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_source_tooltip"));
+		
+		// action command
+		setActionCommand("VIEW_SOURCE");
+
+		// short cut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
