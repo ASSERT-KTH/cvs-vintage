@@ -96,8 +96,10 @@ public class SessionId extends  BaseInterceptor
     boolean noCookies=false;
     boolean cookiesFirst=true;
     boolean checkSSLSessionId=false;
+    boolean ignoreCase=false;
     
     public SessionId() {
+	ignoreCase= (File.separatorChar  == '\\');
     }
 
     public void setCookiesFirst( boolean b ) {
@@ -110,6 +112,16 @@ public class SessionId extends  BaseInterceptor
 
     public void setCheckSSLSessionId(boolean checkSSLSessionId) {
         this.checkSSLSessionId = checkSSLSessionId;
+    }
+
+    /** Is the path case-insenitive.
+     */
+    public void setIgnoreCase(boolean ic) {
+	ignoreCase = ic;
+    }
+
+    public boolean getIgnoreCase() {
+	return ignoreCase;
     }
 
     
@@ -326,7 +338,12 @@ public class SessionId extends  BaseInterceptor
         String sessionPath = rrequest.getContext().getPath();
         if(sessionPath.length() == 0) {
             sessionPath = "/";
-        }
+        } else if( ignoreCase ) {
+	    if(! rrequest.requestURI().startsWith( sessionPath )){
+		sessionPath = rrequest.requestURI().toString()
+		    .substring(0,sessionPath.length());
+	    }
+	}
 
 //         // GS, piggyback the jvm route on the session id.
 //  //        if(!sessionPath.equals("/")) {
