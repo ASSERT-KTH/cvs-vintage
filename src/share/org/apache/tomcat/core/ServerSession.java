@@ -61,7 +61,6 @@ package org.apache.tomcat.core;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -85,7 +84,7 @@ import org.apache.tomcat.util.buf.TimeStamp;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author Costin Manolache
  */
-public class ServerSession  implements  Serializable {
+public class ServerSession {
 
     public static final int STATE_NEW=0;
 
