@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.22 $</tt>
+ * @version <tt>$Revision: 1.23 $</tt>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -228,43 +228,58 @@ public class EJBDeployer
       if (!urlStr.endsWith("jar") && !urlStr.endsWith("jar/")) return false;
          
       // However the jar must also contain at least one ejb-jar.xml
-      
+      boolean accepts = false;
       try 
       {
-         URL dd = di.localCl.getResource("META-INF/ejb-jar.xml");
-         
-         if (dd != null) {
-            return true;
-         }
+         URL dd = di.localCl.findResource("META-INF/ejb-jar.xml");
+         if (dd == null)
+            return false;
+
+         /* If the DD url is not a subset of the urlStr then this is coming
+          from a jar referenced by the deployment jar manifest and the
+          this deployment jar it should not be treated as an ejb-jar
+         */
+         if( di.localUrl != null )
+            urlStr = di.localUrl.toString();
+         String ddStr = dd.toString();
+         if ( ddStr.indexOf(urlStr) >= 0 )
+            accepts = true;
       }
-      catch (Exception ignore) {}
-      
-      return false;
+      catch (Exception ignore)
+      {
+      }
+
+      return accepts;
    }
-   
+
    public void init(DeploymentInfo di) 
       throws DeploymentException
    {
-      try {
+      try
+      {
          if (di.url.getProtocol().equalsIgnoreCase("file"))
          {
-            File file = new File (di.url.getFile());
+            File file = new File(di.url.getFile());
             
             // If not directory we watch the package
-            if (!file.isDirectory()) {
+            if (!file.isDirectory())
+            {
                di.watch = di.url;
             }
             // If directory we watch the xml files
-            else {
+            else
+            {
                di.watch = new URL(di.url, "META-INF/ejb-jar.xml");
             }
          }
-         else {
+         else
+         {
             // We watch the top only, no directory support
             di.watch = di.url;
          }
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          if (e instanceof DeploymentException)
             throw (DeploymentException)e;
          throw new DeploymentException("failed to initialize", e);
@@ -289,7 +304,8 @@ public class EJBDeployer
          // Load XML
          di.metaData = efm.load();
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          if (e instanceof DeploymentException)
             throw (DeploymentException)e;
          throw new DeploymentException("Failed to load metadata", e);
@@ -324,9 +340,7 @@ public class EJBDeployer
                   }
                });
             
-            if (debug) {
-               log.debug("Verifying " + di.url);
-            }
+            log.debug("Verifying " + di.url);
             
             verifier.verify(di.url, (ApplicationMetaData) di.metaData, di.ucl);
          }
@@ -354,9 +368,7 @@ public class EJBDeployer
                             new String[] {di.getClass().getName()});
          di.deployedObject = ejbModule;
       
-         if (debug) {
-            log.debug( "Deploying: " + di.url );
-         }
+         log.debug( "Deploying: " + di.url );
          
          // Init application
          serviceController.create(ejbModule);
@@ -446,4 +458,3 @@ public class EJBDeployer
       return deployments.get(url) != null;
    }
 }
-
