@@ -683,7 +683,6 @@ class StatusHandler extends Handler {
 	String msg=(String)req.getAttribute("javax.servlet.error.message");
 	String errorURI = res.getErrorURI();
 	
-	res.setContentType("text/html");
 	// res is reset !!!
 	// status is already set
 	int sc=res.getStatus();
@@ -691,6 +690,11 @@ class StatusHandler extends Handler {
 	if( sc == 304 ) {
 	    //NotModified must not return a body
 	    return;
+	} else {
+	    // don't set a content type if we are answering If-Modified-Since.
+	    // Proxy caches might update their cached content-type with this
+	    // info (mod_proxy does it). Martin Algesten 15th Oct, 2002.
+	    res.setContentType("text/html");
 	}
 
 	if( sbNote==0 ) {
