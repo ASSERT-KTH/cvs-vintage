@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.41 2004/04/07 21:18:34 dabbous Exp $
+ * @version $Id: Email.java,v 1.42 2004/04/28 22:28:16 dabbous Exp $
  */
 public class Email extends TemplateEmail
 {

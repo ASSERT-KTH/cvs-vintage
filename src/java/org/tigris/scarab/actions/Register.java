@@ -82,7 +82,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.41 2004/04/07 21:18:33 dabbous Exp $
+ * @version $Id: Register.java,v 1.42 2004/04/28 22:28:14 dabbous Exp $
  */
 public class Register extends ScarabTemplateAction
 {

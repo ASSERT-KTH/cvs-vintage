@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.60 2004/04/15 19:43:17 dabbous Exp $
+ * @version $Id: TemplateList.java,v 1.61 2004/04/28 22:28:14 dabbous Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {

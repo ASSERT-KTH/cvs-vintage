@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.35 2004/04/15 19:43:18 dabbous Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.36 2004/04/28 22:28:15 dabbous Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {

@@ -59,7 +59,7 @@ import org.tigris.scarab.om.Module;
  * of EmailLink.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: EmailLinkFactory.java,v 1.4 2004/04/07 21:18:34 dabbous Exp $
+ * @version $Id: EmailLinkFactory.java,v 1.5 2004/04/28 22:28:16 dabbous Exp $
  */
 public class EmailLinkFactory
 {
