@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.28 2002/08/13 16:38:47 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.29 2002/08/14 15:25:46 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -321,7 +321,6 @@ public class BufferIORequest extends WorkRequest
 
 		// only true if the file size is known
 		boolean trackProgress = (!buffer.isTemporary() && length != 0);
-		File file = buffer.getFile();
 
 		if(trackProgress)
 		{

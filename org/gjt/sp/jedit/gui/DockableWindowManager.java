@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.35 2002/08/12 20:08:01 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.36 2002/08/14 15:25:46 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -695,7 +695,7 @@ public class DockableWindowManager extends JPanel
 		}
 
 		getToolkit().beep();
-	}
+	} //}}}
 
 	//{{{ close() method
 	/**
@@ -800,8 +800,6 @@ public class DockableWindowManager extends JPanel
 	} //}}}
 
 	//{{{ Private members
-
-	//{{{ Instance variables
 	private View view;
 	private Hashtable windows;
 	private boolean alternateLayout;
@@ -809,8 +807,6 @@ public class DockableWindowManager extends JPanel
 	private PanelWindowContainer right;
 	private PanelWindowContainer top;
 	private PanelWindowContainer bottom;
-	//}}}
-
 	//}}}
 
 	//}}}
