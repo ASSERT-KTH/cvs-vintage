@@ -305,6 +305,21 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	if( "CONFIDENTIAL".equalsIgnoreCase(transp) || 
 	    "INTEGRAL".equalsIgnoreCase(transp) ) {
 	    if( ! req.scheme().equals("https")) {
+		Integer rp = (Integer)req.getAttribute("org.apache.tomcat.request.redirectPort");
+		if(rp != null && rp.intValue() > 0) {
+		    StringBuffer rsb = new StringBuffer();
+		    rsb.append("https://").append(req.serverName());
+		    if(rp.intValue() != 443) {
+			rsb.append(':').append(rp);
+		    }
+		    rsb.append(req.requestURI());
+		    if(!req.query().isNull()) {
+			rsb.append('?').append(req.query());
+		    }
+		    req.setAttribute("javax.servlet.error.message",
+		    		     rsb.toString());
+		    return 301;
+		}
 		// We could redirect or do something advanced - but the spec
 		// only requires us to deny access. A nice error handler
 		// would also be nice
