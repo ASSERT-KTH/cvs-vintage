@@ -202,15 +202,15 @@ public class JspServlet extends HttpServlet {
     }
 	
 	
-    ServletContext context = null;
-    Hashtable jsps = new Hashtable();
-    Hashtable loadedJSPs = new Hashtable();
-    ServletConfig config;
-    JspLoader loader;
-    Options options;
-    ClassLoader parentClassLoader;
-    ServletEngine engine;
-    String serverInfo;
+    protected ServletContext context = null;
+    protected Hashtable jsps = new Hashtable();
+    protected Hashtable loadedJSPs = new Hashtable();
+    protected ServletConfig config;
+    protected JspLoader loader;
+    protected Options options;
+    protected ClassLoader parentClassLoader;
+    protected ServletEngine engine;
+    protected String serverInfo;
 
     static boolean firstTime = true;
     static boolean jdk12=false;
@@ -462,7 +462,7 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    boolean doLoadJSP(String name, String classpath, 
+    protected boolean doLoadJSP(String name, String classpath, 
 	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
@@ -490,7 +490,6 @@ public class JspServlet extends HttpServlet {
         } catch (JasperException ex) {
             throw ex;
         } catch (Exception ex) {
-	    ex.printStackTrace();
 	    throw new JasperException(Constants.getString("jsp.error.unable.compile"),
                                       ex);
 	}
