@@ -58,6 +58,7 @@ $canMakeTransition
 
   #if ($count.trim() == "0" )
       <input type="hidden" name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>  
+      $newValues
   #elseif ($count.trim() == "1" )
 
     #foreach ($option in $module.getOptionTree($attr, $issueType, false))
