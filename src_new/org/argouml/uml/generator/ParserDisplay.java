@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.15 2002/05/03 19:17:07 jeremybennett Exp $
+// $Id: ParserDisplay.java,v 1.16 2002/07/14 18:50:29 linus Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -344,7 +344,7 @@ public class ParserDisplay extends Parser {
   public MOperation parseOperation(String s) {
     s = s.trim();
     if (s.endsWith(";")) s = s.substring(0, s.length()-1);
-    MOperation res = new MOperationImpl();
+    MOperation res = MMUtil.SINGLETON.buildOperation();
     s = parseOutVisibility(res, s);
     s = parseOutKeywords(res, s);
     s = parseOutName(res, s);
@@ -367,7 +367,7 @@ public class ParserDisplay extends Parser {
       if (s.endsWith(";")) {
           s = s.substring(0, s.length()-1);
       }
-      MAttribute newAttribute = new MAttributeImpl();
+      MAttribute newAttribute = MMUtil.SINGLETON.buildAttribute();
       s = parseOutVisibility(newAttribute, s);
       s = parseOutKeywords(newAttribute, s);
       s = parseOutName(newAttribute, s);
@@ -449,7 +449,7 @@ public class ParserDisplay extends Parser {
     MClassifier rt = p.findType(rtStr);
 
     //System.out.println("setting return type: " + rtStr +" "+rt);
-    MParameter param = new MParameterImpl();
+    MParameter param = MMUtil.SINGLETON.buildParameter();
     param.setType(rt);
     MMUtil.SINGLETON.setReturnParameter(op,param);
     //return s.substring(firstSpace+1);
@@ -536,7 +536,7 @@ public class ParserDisplay extends Parser {
     if (st.hasMoreTokens()) typeStr = st.nextToken();
     Project p = ProjectBrowser.TheInstance.getProject();
     MClassifier cls = p.findType(typeStr);
-    MParameter param = new MParameterImpl();
+    MParameter param = MMUtil.SINGLETON.buildParameter();
     param.setType(cls);
     param.setKind(MParameterDirectionKind.IN);
     param.setName(paramNameStr);
