@@ -370,6 +370,10 @@
            returnCode="HTTP/1.0 200 OK"
     />
 
+   <gtest request="GET /test/jsp/extend1.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
    </target>
 
   <target name="wrong_request">
