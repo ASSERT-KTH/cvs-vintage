@@ -31,6 +31,8 @@ New features:
 - cleanup of message-builder package (fdietz)
 - added spam column, spam filters, filter actions, mark as spam/not spam actions (fdietz)
 - refactored Config framework (javaprog)
+- refactored startup process and session management (javaprog)
+- improved mnemonic handling in resource loading framework
 
 Fixed bugs:
 - fixed error in printing when no character set is specified
@@ -44,7 +46,8 @@ Fixed bugs:
   should be used instead of the sender
 - fixed bug in security panel, now the settings are saved and remember 
   correct (waffel)
-- fixed bug when hit Alt+D to delete a message (waffel)  
+- fixed bug when hit Alt+D to delete a message (waffel)
+- made AboutDialog non-modal and singleton to be able to use email links (javaprog)
 
 
   
