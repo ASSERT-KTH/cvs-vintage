@@ -39,7 +39,7 @@ module.</p>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap"></th>
+<th width="70">Select</th>
 <th>Name</th>
 <th>Description</th>
 <th>Input type</th>
