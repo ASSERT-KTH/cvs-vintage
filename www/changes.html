@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.95 2002/03/26 20:56:50 dlr Exp $ -->
+<!-- $Id: changes.html,v 1.96 2002/03/26 23:03:49 maartenc Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -65,6 +65,11 @@
                 <li>The XSLT for transforming from Bugzilla to Scarab now
                     outputs XML which can be properly validated. More work is needed
                     still though to get things to import properly. (JSS)</li>
+                <li>Fixed a caching bug where after entering a new comment or url to an issue, 
+                    the screen didn't show this new comment or url (but they were inserted
+                    into the database correctly). For more info, see Bug Report:
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=230">230</a>
+                    (MC)</li>
             </ul>
         </td>
     </tr>
