@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -185,10 +185,11 @@ public final class JDBCEntityMetaData {
     */
    private final int fetchSize;
 
-   /**
-    * entity command meta data
-    */
+   /** entity command meta data */
    private final JDBCEntityCommandMetaData entityCommand;
+
+   /** optimistic locking metadata */
+   private final JDBCOptimisticLockingMetaData optimisticLocking;
 
    /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
@@ -334,9 +335,11 @@ public final class JDBCEntityMetaData {
       // Create no relationship roles for this entity, will be added 
       // by the relation meta data
 
-
       readAhead = JDBCReadAheadMetaData.DEFAULT;
       entityCommand = null;
+
+      // set optimistic locking group to null
+      optimisticLocking = null;
    }
 
    /**
@@ -602,6 +605,19 @@ public final class JDBCEntityMetaData {
          eagerLoadGroup = defaultValues.getEagerLoadGroup();
       }
 
+      // optimistic locking group
+      Element optimisticLockingEl = MetaData.getOptionalChild(
+            element, "optimistic-locking");
+      if(optimisticLockingEl != null) {
+
+
+         optimisticLocking = new JDBCOptimisticLockingMetaData(
+            this, optimisticLockingEl);
+
+      } else {
+         optimisticLocking = defaultValues.getOptimisticLocking();
+      }
+
       // lazy-loads
       lazyLoadGroups.addAll(defaultValues.lazyLoadGroups);
       loadLazyLoadGroupsXml(element);
@@ -621,7 +637,7 @@ public final class JDBCEntityMetaData {
       // update all existing queries with the new read ahead value
       for(Iterator queriesIterator = defaultValues.queries.values().iterator();
             queriesIterator.hasNext(); ) {
-         
+
          JDBCQueryMetaData query = queryFactory.createJDBCQueryMetaData(
                (JDBCQueryMetaData)queriesIterator.next(),
                readAhead);
@@ -629,8 +645,8 @@ public final class JDBCEntityMetaData {
       }
 
       // apply new configurations to the queries
-      for(Iterator queriesIterator = 
-            MetaData.getChildrenByTagName(element, "query"); 
+      for(Iterator queriesIterator =
+            MetaData.getChildrenByTagName(element, "query");
             queriesIterator.hasNext(); ) {
 
          Element queryElement = (Element)queriesIterator.next();
@@ -644,7 +660,7 @@ public final class JDBCEntityMetaData {
       }
 
       // get the entity command for this entity
-      Element entityCommandEl = 
+      Element entityCommandEl =
             MetaData.getOptionalChild(element, "entity-command");
 
       if(entityCommandEl != null) {
@@ -905,7 +921,23 @@ public final class JDBCEntityMetaData {
    public String getEagerLoadGroup() {
       return eagerLoadGroup;
    }
-   
+
+   /**
+    * Gets the name of the optimistic locking load group.
+    * This name can be used to look up the load group.
+    * @return the name of the optimistic locking group
+    */
+   public String getOptimisticLockingGroup() {
+      return optimisticLocking == null ? null : optimisticLocking.getGroupName();
+   }
+
+   /**
+    * Returns optimistic locking metadata
+    */
+   public JDBCOptimisticLockingMetaData getOptimisticLocking() {
+      return optimisticLocking;
+   }
+
    /**
     * Gets the collection of lazy load group names.
     * @return an unmodifiable collection of load group names
