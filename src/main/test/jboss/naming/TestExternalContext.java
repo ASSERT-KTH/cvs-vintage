@@ -13,13 +13,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** A test of the ExternalContext naming mbean. To test there needs to be
 one or more ExternalContex mbeans setup. An example filesystem context
 setup would be:
 
-  <mbean code="org.jboss.naming.ExternalContext" name="DefaultDomain:service=ExternalContext,jndiName=external/fs/tmp">
+  <mbean code="org.jboss.naming.ExternalContext" name="JBOSS-SYSTEM:service=ExternalContext,jndiName=external/fs/tmp">
     <attribute name="JndiName">external/fs/Scott</attribute>
     <attribute name="Properties">tmp.fs</attribute>
   </mbean>
@@ -30,7 +30,7 @@ java.naming.factory.initial=com.sun.jndi.fscontext.RefFSContextFactory
 java.naming.provider.url=file:/tmp
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class TestExternalContext extends ServiceMBeanSupport implements TestExternalContextMBean
 {
