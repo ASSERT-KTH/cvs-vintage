@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.29 2002/02/08 18:50:17 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.30 2002/02/08 19:52:43 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -135,10 +135,18 @@ public abstract class AbstractScarabModule
     private Map activeRModuleOptionsMap = new HashMap();
     */
     private List parentModules;
-
-
-    private String domain;
     
+    private String domain;
+
+
+    /**
+     * Should be called when the parentage is modified.
+     */
+    protected void resetAncestors()
+    {
+        parentModules = null;
+    }
+
     /**
      * Get the value of domain.
      * @return value of domain.

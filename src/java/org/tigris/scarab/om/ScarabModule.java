@@ -102,7 +102,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.90 2002/02/08 18:18:20 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.91 2002/02/08 19:52:42 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -232,6 +232,19 @@ public class ScarabModule
     public ModuleEntity getParent() throws Exception
     {
         return (ModuleEntity) super.getScarabModuleRelatedByParentId();
+    }
+
+    /**
+     * Override method to make sure the module name gets recalculated.
+     *
+     * @param id a <code>NumberKey</code> value
+     */
+    public void setParentId(NumberKey id)
+        throws Exception
+    {
+        super.setParentId(id);
+        setName(null);
+        resetAncestors();
     }
 
     protected List getRModuleAttributesThisModuleOnly(Criteria crit)
@@ -448,20 +461,6 @@ public class ScarabModule
     {
         return Turbine.getConfiguration()
             .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
-    }
-
-    public String toString()
-    {
-        String name = getName();
-        if (name == null)
-        {
-            name = getRealName();
-        }
-        if (name == null)
-        {
-            name = getClass().getName();
-        }
-        return name;
     }
 }
 
