@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -59,16 +59,7 @@ public class NamingService
    {
       return naming.getRmiPort();
    }
-   
-   public void setLogging(boolean l)
-   {
-   }
-   
-   public boolean getLogging()
-   {
-       return false;
-   }
-   
+
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
