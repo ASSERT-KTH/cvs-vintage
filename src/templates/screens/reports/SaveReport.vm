@@ -1,0 +1,76 @@
+#set ( $report = $scarabR.Report )
+#set ($module = $scarabR.CurrentModule)
+#set ($action = "$link.setPage("Links.vm").setAction("GenerateReport")")
+
+$page.setTitle("Save Report")
+<div id="savereport" class="app">
+
+<form method="post" action="$action" >
+##set ($queryString = $data.Parameters.getString("queryString"))
+## <input type="hidden" name="$intakeReport.QueryString.Key" value="$queryString" />
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" value="Save" name="eventSubmit_doSavereport" />&#160;
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
+  </td>
+  </tr>
+ </table>
+</div>
+
+#*
+<p>
+Go to your <a href="$link.setPage("ReportList.vm")">Stored Reports List</a>.
+</p>
+*#
+
+<h3>Save Your Report</h3>
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+
+  <tr>
+   <th width="120">Report name</th>
+   <td>#fieldErrorMsg($intakeReport.Name "")
+        <input type="text"  size="30" maxlength="255"
+            name="$intakeReport.Name.Key" value="$intakeReport.Name" />
+   </td>
+  </tr>
+  <tr>
+   <th width="120">Query description</th>
+   <td>
+        <textarea name="$intakeReport.Description.Key" rows="4" 
+            cols="30">$intakeReport.Description</textarea>
+   </td>
+  </tr>
+#*
+  <tr>
+   <th width="120">Availability</th>
+   <td>#reportTypeSelectBox ($query)
+   </td>
+  </tr>
+*#
+  <tr>
+   <th width="120">Module</th>
+   <td>$module.Name</td>
+##   <input type = "hidden" name="$intakeReport.ModuleId.Key" value = "$module.ModuleId" />
+  </tr>
+ </table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" value="Save" name="eventSubmit_doSavereport" />&#160;
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
+  </td>
+ </tr>
+</table>
+</div>
+
+#addReportHiddenInputs($report "reports,SaveReport.vm")
+$intake.declareGroups()
+</form>
+</div>

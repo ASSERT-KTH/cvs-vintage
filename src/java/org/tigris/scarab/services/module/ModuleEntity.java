@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.23 2001/10/15 22:55:34 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.24 2001/10/16 00:47:32 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -186,4 +186,36 @@ public interface ModuleEntity
         throws Exception;
 
     public ScarabUser[] getEligibleIssueReporters();
+
+    /**
+     * List of saved reports associated with this module and
+     * created by the given user.
+     */
+    public List getSavedReports(ScarabUser user)
+        throws Exception;
+
+    /**
+     * List of private queries associated with this module and
+     * created by the given user.
+     */
+    public List getPrivateQueries(ScarabUser user)
+        throws Exception;
+
+    /**
+     * List of global Query objects associated with this module.
+     */
+    public List getGlobalQueries()
+        throws Exception;
+
+    /**
+     * List of Issue Template objects associated with this module.
+     */
+    public List getPrivateTemplates(ScarabUser user)
+        throws Exception;
+
+    /**
+     * List of global Issue Template objects associated with this module.
+     */
+    public List getGlobalTemplates()
+        throws Exception;
 }

@@ -1,6 +1,24 @@
 #set ( $report = $scarabR.Report )
+#set ($action = '$link.setPage("Links.vm").setAction("GenerateReport")')
+
 <div class="app" id="div2-4-1-a-output">
+
+#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+#if ($reports.size() > 0)
+<h3>Saved reports</h3>
+<select name="report_id">
+    #foreach ( $report in $reports )
+        <option value="$report.ReportId">$report.Name</option>
+    #end
+</select>
+<input type="submit" value="Run" name="eventSubmit_doRunstoredreport"/>
+<input type="submit" value="Edit" name="eventSubmit_doEditstoredreport"/>
+#end
+
+
 <h2>$!report.Name</h2>
+<form method="get" action="$action">
+
 <div>
  <strong>Project:</strong> $report.Module.Name
 </div>
@@ -16,10 +34,10 @@
 #if ($report.Type == 0)
     <p>Report Date/Time: $report.GeneratedDate</p>
 #end
+
 #reportTable( $report.Model )
-<p>page 1 of 1</p>
-#set ($action = $link.setPage("Links.vm").setAction("GenerateReport").toString())
-<form method="get" action="$action">
+
+## <p>page 1 of 1</p>
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
@@ -31,4 +49,6 @@
 #addReportHiddenInputs($report "reports,Report_1.vm")
 $intake.declareGroups()
 </form>
+$report.QueryString
 </div>
+

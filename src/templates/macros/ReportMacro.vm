@@ -20,66 +20,8 @@
          <option value="$option.Value"$selected>$spaces$option.Name</option>
 #end
 #end
-#*
-#macro ( reportTable $model )
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
- <tr>
-#foreach ($heading in $model.Headings)
-    #if (!$heading.Label || $heading.Label.toString().length() == 0)
-        #set ($label = "&nbsp;")
-    #elseif ($model.isDate($column.Heading.Label))
-        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $heading.Label"))
-    #else
-        #set ($label = "$heading.Label")
-    #end
-    #set ($quote = '"')
-    #if ($heading.SubHeadings)
-        #set ($hasSubHeadings = true)
-        #set ($colspan = " colspan=$quote$heading.SubHeadings.size()$quote")
-    #else
-        #set ($colspan = "")
-    #end
-  <th$colspan>$label</th>
-#end
- </tr>
-#if ($hasSubHeadings)
- <tr>
-    #foreach ($superheading in $model.Headings)
-    #foreach ($heading in $superheading.SubHeadings)
-        #if (!$heading.Label || $heading.Label.toString().length() == 0)
-            #set ($label = "&nbsp;")
-        #elseif ($model.isDate($column.Heading.Label))
-            #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $heading.Label)")
-        #else
-            #set ($label = "$heading.Label")
-        #end
-        #set ($quote = '"')
-  <th>$label</th>
-    #end
-    #end
- </tr>
-#end
-    #foreach ( $row in $model.Rows )
-    #indexedRows($velocityCount)
-        #foreach ($cell in $row)
-            #if ( $model.isHeading($cell) )
-                #if ($cell.SubHeadings)
-                    #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
-                #else
-                    #set ($rowspan = "")
-                #end
-          <td$rowspan><strong>$cell.Label</strong></td>
-            #elseif ($model.isDate($cell))
-                <td>$format.getDate('MM/dd/yyyy HH:mm', $heading.Label)</td>
-            #else
-                <td>$cell</td>
-            #end
-        #end
-    </tr>
-    #end
-</table>
-#end
-*#
+
+
 ## the rowspan and colspan stuff below will not work as written.  We must
 ## track which cells to skip.  For now assume rowspan and colspan are always 1.
 #macro ( reportTable $model )
@@ -146,7 +88,10 @@
 #end
 </table>
 #end
+
+
 #macro ( addReportHiddenInputs $report $template)
+
 #set ( $ir = $intake.Report.mapTo($report) )
 #if ($template != "reports,Step1.vm")
 #if ($report.Name)
@@ -159,6 +104,7 @@
     <input type="hidden" name="$ir.Type.Key" value="$ir.Type" />
 #end
 #end
+
 #if ($template != "reports,Step2.vm")
 #if ($report.AttributesAndOptionsForGrouping)
     #foreach ($ao in $report.AttributesAndOptionsForGrouping)
@@ -166,6 +112,7 @@
     #end
 #end
 #end
+
 #if ($template != "reports,Step2b.vm")
 #if ($report.OptionGroups)
     #foreach ($group in $report.OptionGroups)
@@ -180,6 +127,7 @@
     #end
 #end
 #end
+
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
 #if ($report.Axis1Category != 0)
     <input type="hidden" name="$ir.Axis1Category.Key"
@@ -190,29 +138,22 @@
         value="$ir.Axis2Category" />
 #end
 #end
+
 #if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
-#if ($report.Axis1AttributesAndOptions)
-    #foreach ($ao in $report.Axis1AttributesAndOptions)
-    <input type="hidden" name="$ir.Axis1AttributesAndOptions.Key"
+#if ($report.Axis1Keys)
+    #foreach ($ao in $report.Axis1Keys)
+    <input type="hidden" name="$ir.Axis1Keys.Key"
         value="$ao" />
     #end
 #end
-#if ($report.Axis2AttributesAndOptions)
-    #foreach ($ao in $report.Axis2AttributesAndOptions)
-    <input type="hidden" name="$ir.Axis2AttributesAndOptions.Key"
+#if ($report.Axis2Keys)
+    #foreach ($ao in $report.Axis2Keys)
+    <input type="hidden" name="$ir.Axis2Keys.Key"
         value="$ao" />
     #end
 #end
 #end
-#*
-#if ($report.Dates)
-    #foreach ($date in $report.Dates)
-$date
-        <input type="hidden" name="$ir.Dates.Key"
-            value="$format.getDate("MM/dd/yy HH:mm", $date)" />
-    #end
-#end
-*#
+
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2b")
 #if ($report.ReportDates)
     #foreach ($date in $report.ReportDates)
@@ -222,4 +163,5 @@ $date
     #end
 #end
 #end
+
 #end

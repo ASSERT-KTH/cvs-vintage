@@ -41,7 +41,7 @@
       <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-        <option value="$option.Value">$option.Name</option>
+    #option($option)
 #end
   </select>
 </td>
@@ -53,7 +53,7 @@
       <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-        <option value="$option.Value"$option.Selected>$option.Name</option>
+    #option($option)
 #end
   </select>
 </td>

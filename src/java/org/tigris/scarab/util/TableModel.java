@@ -51,39 +51,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
-/*
-import org.apache.commons.util.ObjectUtils;
-import com.workingdogs.village.Record;
 
-// Turbine classes
-import org.apache.torque.om.Retrievable;
-import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
-import org.apache.torque.util.Criteria;
-import org.apache.torque.pool.DBConnection;
-
-import org.apache.fulcrum.cache.TurbineGlobalCacheService;
-import org.apache.fulcrum.cache.GlobalCacheService;
-import org.apache.fulcrum.cache.ObjectExpiredException;
-import org.apache.fulcrum.cache.CachedObject;
-
-import org.apache.fulcrum.TurbineServices;
-
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.user.UserManager;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.om.RModuleOption;
-import org.tigris.scarab.om.AttributeOption;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ActivityPeer;
-import org.tigris.scarab.om.TransactionPeer;
-*/
-
-/** 
- * serves as the model for ReportTable macro
+/**
+ * A model that provides for an application to present a set of tabular data.
+ * Can be used along with a velocity macro to create a table.
+ * 
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: TableModel.java,v 1.2 2001/10/16 00:47:32 jmcnally Exp $
  */
 public abstract class TableModel
     // implements Retrievable

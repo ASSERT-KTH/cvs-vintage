@@ -61,6 +61,7 @@ import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.pool.RecyclableSupport;
 import org.apache.fulcrum.util.parser.StringValueParser;
+import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.commons.util.SequencedHashtable;
 
 // Scarab
@@ -93,7 +94,8 @@ import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
-import org.tigris.scarab.util.ReportGenerator;
+import org.tigris.scarab.om.Report;
+import org.tigris.scarab.om.ReportPeer;
 
 /**
  * This class is used by the Scarab API
@@ -189,7 +191,7 @@ public class ScarabRequestTool
     /**
      * A ReportGenerator
      */
-    private ReportGenerator reportGenerator = null;
+    private Report reportGenerator = null;
 
     /**
      * A AttributeOption object for use within the Scarab API.
@@ -949,18 +951,50 @@ try{
     /**
      * a report helper class
      */
-    public ReportGenerator getReport()
+    public Report getReport()
+        throws Exception
     {
         if ( reportGenerator == null ) 
         {
-            reportGenerator = new ReportGenerator();
-            reportGenerator.setModule(getCurrentModule());
-            reportGenerator.setGeneratedBy((ScarabUser)data.getUser());
+            ValueParser parameters = data.getParameters();
+            String id = parameters.getString("report_id");
+            if ( id == null ) 
+            {
+                reportGenerator = new Report();
+                reportGenerator.setModule(getCurrentModule());
+                reportGenerator.setGeneratedBy((ScarabUser)data.getUser());
+                reportGenerator
+                    .setQueryString(getReportQueryString(parameters));
+            }
+            else 
+            {
+                reportGenerator = ReportPeer.retrieveByPK(new NumberKey(id));
+            }
         }
         
         return reportGenerator;
     }
     
+    private static String getReportQueryString(ValueParser params) 
+    {
+        StringBuffer query = new StringBuffer();
+        Object[] keys =  params.getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("rep") || key.startsWith("intake"))
+            {
+                String[] values = params.getStrings(key);
+                for (int j=0; j<values.length; j++)
+                {
+                    query.append('&').append(key);
+                    query.append('=').append(values[j]);
+                }
+            }
+         }
+         return query.toString();
+    }
+
     /**
      * Return a subset of the passed-in list.
      */

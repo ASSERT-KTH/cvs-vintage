@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.56 2001/10/16 00:24:43 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.57 2001/10/16 00:47:32 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -1301,6 +1301,48 @@
         Name.
     -->
     <column name="SCOPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+</table>
+
+
+<!--
+    A saved report.
+-->
+<table name="SCARAB_REPORT" idMethod="idbroker" javaName="Report">
+
+    <column name="REPORT_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" required="true" type="INTEGER"/>
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"/>
+    <!--
+        The name the report will be saved under.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255"/>
+
+    <!--
+        The description of the saved report.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"/>
+
+    <!--
+        The report string.
+    -->
+    <column name="QUERY_STRING" required="true" type="LONGVARCHAR"/>
+
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+            default="0" size="1"/>
+    <column name="CREATED_DATE" required="false" type="TIMESTAMP"/>
+
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
 </table>
 
 

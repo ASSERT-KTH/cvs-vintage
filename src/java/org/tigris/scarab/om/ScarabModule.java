@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.39 2001/10/16 00:28:17 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.40 2001/10/16 00:47:31 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -281,13 +281,28 @@ public class ScarabModule
     }
 
     /**
+     * List of saved reports associated with this module and
+     * created by this user.
+     */
+    public List getSavedReports(ScarabUser user)
+        throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(ReportPeer.MODULE_ID, getModuleId())
+            .add(ReportPeer.DELETED, 0)
+            .add(ReportPeer.USER_ID, user.getUserId());
+        return ReportPeer.doSelect(crit);
+    }
+
+
+    /**
      * List of private queries associated with this module.
      * Created by this user.
      */
-    public Vector getPrivateQueries(ScarabUser user)
+    public List getPrivateQueries(ScarabUser user)
         throws Exception
     {
-        Vector queries = null;
+        List queries = null;
         Criteria crit = new Criteria()
             .add(QueryPeer.MODULE_ID, getModuleId())
             .add(QueryPeer.DELETED, 0)
@@ -300,10 +315,10 @@ public class ScarabModule
     /**
      * List of global Query objects associated with this module.
      */
-    public Vector getGlobalQueries()
+    public List getGlobalQueries()
         throws Exception
     {
-        Vector queries = null;
+        List queries = null;
         Criteria crit = new Criteria()
             .add(QueryPeer.MODULE_ID, getModuleId())
             .add(QueryPeer.DELETED, 0)
@@ -315,10 +330,10 @@ public class ScarabModule
     /**
      * List of Issue Template objects associated with this module.
      */
-    public Vector getPrivateTemplates(ScarabUser user)
+    public List getPrivateTemplates(ScarabUser user)
         throws Exception
     {
-        Vector templates = null;
+        List templates = null;
         Criteria crit = new Criteria()
             .add(IssuePeer.MODULE_ID, getModuleId())
             .add(IssuePeer.DELETED, 0)
@@ -334,10 +349,10 @@ public class ScarabModule
     /**
      * List of global Issue Template objects associated with this module.
      */
-    public Vector getGlobalTemplates()
+    public List getGlobalTemplates()
         throws Exception
     {
-        Vector templates = null;
+        List templates = null;
         Criteria crit = new Criteria()
             .add(IssuePeer.MODULE_ID, getModuleId())
             .add(IssuePeer.DELETED, 0)

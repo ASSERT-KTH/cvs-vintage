@@ -1,50 +1,7 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.om;
 
-/* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- * 
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * 3. The end-user documentation included with the redistribution, if
- * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
- * Alternately, this acknowlegement may appear in the software itself, if
- * and wherever such third-party acknowlegements normally appear.
- * 
- * 4. The hosted project names must not be used to endorse or promote
- * products derived from this software without prior written
- * permission. For written permission, please contact info@collab.net.
- * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
- * 
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL COLLAB.NET OR ITS CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * ====================================================================
- * 
- * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
- */ 
+
+import org.apache.torque.om.UnsecurePersistent;
 
 // JDK classes
 import java.util.List;
@@ -56,6 +13,7 @@ import org.apache.commons.util.ObjectUtils;
 import com.workingdogs.village.Record;
 
 // Turbine classes
+import org.apache.turbine.Log;
 import org.apache.torque.om.Retrievable;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
@@ -69,10 +27,15 @@ import org.apache.fulcrum.cache.ObjectExpiredException;
 import org.apache.fulcrum.cache.CachedObject;
 
 import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.util.parser.StringValueParser;
+import org.apache.fulcrum.util.parser.ValueParser;
+import org.apache.fulcrum.intake.Intake;
+import org.apache.fulcrum.intake.model.Group;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
@@ -81,12 +44,17 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.util.OptionModel;
+import org.tigris.scarab.util.TableModel;
 
 /** 
- * generates reports
+ * You should add additional methods to this class to meet the
+ * application requirements.  This class will only be generated as
+ * long as it does not already exist in the output directory.
  */
-public class ReportGenerator
-    implements Retrievable
+public  class Report 
+    extends org.tigris.scarab.om.BaseReport
+    implements UnsecurePersistent
 {
     private static final String[] REPORT_TYPES = 
         {"comparative analysis (single date/time)", 
@@ -109,9 +77,9 @@ public class ReportGenerator
     private static final String TRAN_CREATED_BY;
     private static final String TRAN_TYPE_ID;
 
-    private ModuleEntity module;
-    private String name;    
-    private String description;
+    //private ModuleEntity module;
+    //private String name;    
+    //private String description;
     private int type;
     private ScarabUser generatedBy;
     private Date generatedDate;
@@ -131,13 +99,13 @@ public class ReportGenerator
         reportTypes = new ArrayList();
         for ( int i=0; i<REPORT_TYPES.length; i++ ) 
         {
-            reportTypes.add( new SimpleSelectOption(i, REPORT_TYPES[i]) );
+            reportTypes.add( new OptionModel(i, REPORT_TYPES[i]) );
         }
 
         axisCategories = new ArrayList();
         for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
         {
-            axisCategories.add(new SimpleSelectOption(i, AXIS_CATEGORIES[i]));
+            axisCategories.add(new OptionModel(i, AXIS_CATEGORIES[i]));
         }
 
         // column names only
@@ -178,8 +146,9 @@ public class ReportGenerator
      * @return value of module.
      */
     public ModuleEntity getModule() 
+        throws Exception
     {
-        return module;
+        return ModuleManager.getInstance(getModuleId());
     }
     
     /**
@@ -187,46 +156,48 @@ public class ReportGenerator
      * @param v  Value to assign to module.
      */
     public void setModule(ModuleEntity  v) 
+        throws Exception
     {
-        this.module = v;
+        setModuleId(v.getModuleId());
     }
     
-    /**
+    /* *
      * Get the value of name.
      * @return value of name.
-     */
+     * /
     public String getName() 
     {
         return name;
     }
     
-    /**
+    /* *
      * Set the value of name.
      * @param v  Value to assign to name.
-     */
+     * /
     public void setName(String  v) 
     {
         this.name = v;
     }
     
-    /**
+    /* *
      * Get the value of description.
      * @return value of description.
-     */
+     * /
     public String getDescription() 
     {
         return description;
     }
     
-    /**
+    /* *
      * Set the value of description.
      * @param v  Value to assign to description.
-     */
+     * / 
     public void setDescription(String  v) 
     {
         this.description = v;
     }
-    
+    */
+
     
     /**
      * Get the value of type.
@@ -252,7 +223,16 @@ public class ReportGenerator
      * @return value of generatedBy.
      */
     public ScarabUser getGeneratedBy() 
+        throws Exception
     {
+        if ( generatedBy == null ) 
+        {
+            if ( getUserId() != null ) 
+            {
+                generatedBy = UserManager.getInstance(getUserId());
+            }
+        }
+        
         return generatedBy;
     }
     
@@ -260,9 +240,11 @@ public class ReportGenerator
      * Set the value of generatedBy.
      * @param v  Value to assign to generatedBy.
      */
-    public void setGeneratedBy(ScarabUser  v) 
+    public void setGeneratedBy(ScarabUser  v)
+        throws Exception
     {
         this.generatedBy = v;
+        super.setUserId(v.getUserId());
     }
     
     
@@ -410,6 +392,7 @@ public class ReportGenerator
     private List getSelectedOptions(String[] keys)
         throws Exception
     {
+        ModuleEntity module = getModule();
         List rmas = module.getRModuleAttributes(true);
         List options = new ArrayList(7*rmas.size());
         int start = 0;
@@ -477,6 +460,7 @@ public class ReportGenerator
     private List getSelectedAttributeAndUsers(String[] keys)
         throws Exception
     {
+        ModuleEntity module = getModule();
         List rmas = module.getRModuleAttributes(true);
         List ausers = new ArrayList(7*rmas.size());
         int start = 0;
@@ -546,6 +530,7 @@ public class ReportGenerator
     private List getSelectedCommitters(String[] keys)
         throws Exception
     {
+        ModuleEntity module = getModule();
         List users = Arrays.asList(module.getEligibleIssueReporters());
         List committers = new ArrayList(users.size());
         int start = 0;
@@ -624,6 +609,7 @@ public class ReportGenerator
     public List getAllOptionsForGrouping()
         throws Exception
     {
+        ModuleEntity module = getModule();
         List rmas = module.getRModuleAttributes(true);
         List allOptions = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
@@ -631,12 +617,12 @@ public class ReportGenerator
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
             if ( rma.getAttribute().isOptionAttribute()) 
             {            
-                allOptions.add( new ReportKeyedSelectOption(rma) );
+                allOptions.add( new ReportOptionModel(rma) );
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
                 {
-                    allOptions.add( new ReportKeyedSelectOption(
+                    allOptions.add( new ReportOptionModel(
                         (RModuleOption)rmos.get(j) ));
                 }               
             }
@@ -761,6 +747,7 @@ public class ReportGenerator
     public List getOptionsMinusGroupedOptions()
         throws Exception
     {
+        ModuleEntity module = getModule();
         List rmas = module.getRModuleAttributes(true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
@@ -770,7 +757,7 @@ public class ReportGenerator
             if ( !isGroupedAttribute(rma) && 
                  rma.getAttribute().isOptionAttribute()) 
             {            
-                options.add( new ReportKeyedSelectOption(rma) );
+                options.add( new ReportOptionModel(rma) );
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
@@ -778,7 +765,7 @@ public class ReportGenerator
                     RModuleOption rmo = (RModuleOption)rmos.get(j);
                     if ( !isGroupedOption(rmo)) 
                     {
-                        options.add( new ReportKeyedSelectOption(rmo));
+                        options.add( new ReportOptionModel(rmo));
                     }   
                 }               
             }
@@ -789,6 +776,7 @@ public class ReportGenerator
     public List getUserOptions()
         throws Exception
     {
+        ModuleEntity module = getModule();
         List rmas = module.getRModuleAttributes(true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
@@ -797,14 +785,14 @@ public class ReportGenerator
             Attribute attribute = rma.getAttribute();
             if ( attribute.isUserAttribute()) 
             {            
-                options.add( new ReportKeyedSelectOption(rma) );
+                options.add( new ReportOptionModel(rma) );
                 List users = Arrays.asList(module.getEligibleUsers(attribute));
 
                 for ( int j=0; j<users.size(); j++ ) 
                 {
                     ScarabUser user = (ScarabUser)users.get(j);
                     options.add( 
-                        new ReportKeyedSelectOption(attribute, user) );
+                        new ReportOptionModel(attribute, user) );
                 }               
             }
         }
@@ -814,12 +802,12 @@ public class ReportGenerator
     public List getPossibleCommitters()
         throws Exception
     {
-        List users = Arrays.asList(module.getEligibleIssueReporters());
+        List users = Arrays.asList(getModule().getEligibleIssueReporters());
         List options = new ArrayList(users.size());
         for ( int j=0; j<users.size(); j++ ) 
         {
             ScarabUser user = (ScarabUser)users.get(j);
-            options.add( new ReportKeyedSelectOption(user) );
+            options.add( new ReportOptionModel(user) );
         }               
 
         return options;
@@ -1066,6 +1054,113 @@ public class ReportGenerator
         }
         return ((Record)records.get(0)).getValue(1).asInt();
     }
+
+    public void setQueryString(String v)
+    {
+        super.setQueryString(v);
+        StringValueParser parser = new StringValueParser();
+        // method is not allowed to pass exception, so Log it and convert.
+        try
+        {
+            parser.parse(v, '&', '=', true);
+            populate(parser);
+        }
+        catch (Exception e)
+        {
+            String mesg = "Could not populate the report using parameters: " + 
+                parser;
+            Log.error(mesg, e);
+            throw new RuntimeException("Check logs for error message. "+mesg);
+        }
+    }
+
+    private void populate(ValueParser parameters)
+        throws Exception
+    {
+        Intake intake = new Intake();
+        intake.init(parameters);
+
+        Group intakeReport = intake.get("Report", this.getQueryKey(), false);
+        if ( intakeReport == null ) 
+        {   
+            intakeReport = intake.get("Report", "", false);
+        }  
+        if ( intakeReport != null ) 
+        {   
+            intakeReport.setValidProperties(this);
+
+        // set up option groups
+        int i = 0;
+        List groups = new ArrayList();
+        Report.OptionGroup group = this.getNewOptionGroup();
+        group.setQueryKey(String.valueOf(i++));
+        Group intakeGroup = intake.get("OptionGroup", 
+                                       group.getQueryKey(), false);
+        while ( intakeGroup != null ) 
+        {
+            intakeGroup.setValidProperties(group);
+            groups.add(group);
+
+            group = this.getNewOptionGroup();
+            group.setQueryKey(String.valueOf(i++));
+            intakeGroup = intake.get("OptionGroup", 
+                                     group.getQueryKey(), false);
+        }
+        this.setOptionGroups(groups);
+
+        List options = this.getSelectedOptionsForGrouping();
+        for ( i=0; i<options.size(); i++ ) 
+        {
+            RModuleOption rmo = (RModuleOption)options.get(i);
+            String key = "ofg" + rmo.getQueryKey();
+            int groupIndex = parameters.getInt(key);
+            if ( groupIndex >= 0 && groupIndex < groups.size() ) 
+            {
+                ((Report.OptionGroup)groups.get(groupIndex))
+                    .addOption(rmo);
+            }
+        }
+
+        // set up dates
+        i = 0;
+        List dates = new ArrayList();
+        Report.ReportDate date = this.getNewReportDate();
+        date.setQueryKey(String.valueOf(i++));
+        Group intakeDate = intake.get("ReportDate", 
+                                       date.getQueryKey(), false);
+        while ( intakeDate != null ) 
+        {
+            if ( intakeDate.get("Date").isSet()) 
+            {
+                intakeDate.setValidProperties(date);
+                dates.add(date);                
+            }
+            
+            date = this.getNewReportDate();
+            date.setQueryKey(String.valueOf(i++));
+            intakeDate = intake.get("ReportDate", 
+                                     date.getQueryKey(), false);
+        }
+        if ( dates.size() > 0 ) 
+        {
+            // the intakeReport.setProperties call above may have added a date
+            // so we do not want to lose it. 
+            List reportDates = this.getReportDates();
+            if ( reportDates != null ) 
+            {
+                for ( int j=0; j<reportDates.size(); j++ ) 
+                {
+                    Report.ReportDate reportDate = 
+                        (Report.ReportDate)reportDates.get(j);
+                    date.setQueryKey(String.valueOf(i++));
+                    dates.add(reportDate);
+                }
+            }
+            this.setReportDates(dates);            
+        }
+        }
+    }
+
 
 
     public TableModel getModel()
@@ -1489,124 +1584,14 @@ public class ReportGenerator
     
     // *********************************************************
 
-    public static class SimpleSelectOption
-    {
-        protected String name;
-        protected String value;
-        protected boolean selected;
-
-        public SimpleSelectOption()
-        {
-        }
-
-        public SimpleSelectOption(String value, String name)
-        {
-            this(value, name, false);
-        }
-
-        public SimpleSelectOption(int value, String name)
-        {
-            this(String.valueOf(value), name);
-        }
-
-        public SimpleSelectOption(int value, String name, boolean selected)
-        {
-            this(String.valueOf(value), name, selected);
-        }
-
-        public SimpleSelectOption(String value, String name, boolean selected)
-        {
-            this.name = name;
-            this.value = value;
-            this.selected = selected;
-        }
-
-        /**
-         * Get the value of name.
-         * @return value of name.
-         */
-        public String getName() 
-        {
-            return name;
-        }
-        
-        /**
-         * Set the value of name.
-         * @param v  Value to assign to name.
-         */
-        public void setName(String  v) 
-        {
-            this.name = v;
-        }
-        
-        
-        /**
-         * Get the value of value.
-         * @return value of value.
-         */
-        public String getValue() 
-        {
-            return value;
-        }
-        
-        /**
-         * Set the value of value.
-         * @param v  Value to assign to value.
-         */
-        public void setValue(String  v) 
-        {
-            this.value = v;
-        }
-        
-        
-        /**
-         * Get the value of selected.
-         * @return value of selected.
-         */
-        public boolean isSelected() 
-        {
-            return selected;
-        }
-
-        /**
-         * returns a form string appropriate for the option.
-         * @return selected="selected" or "".
-         */
-        public String getSelected() 
-        {
-            String s = null;
-            if ( isSelected() ) 
-            {
-                s = " selected=\"selected\"";
-            }
-            else 
-            {
-                s = "";
-            }
-            
-            return s;
-        }
-        
-        /**
-         * Set the value of selected.
-         * @param v  Value to assign to selected.
-         */
-        public void setSelected(boolean  v) 
-        {
-            this.selected = v;
-        }
-        
-    }
-
-
     // *********************************************************
 
-    public static class ReportKeyedSelectOption
-        extends SimpleSelectOption
+    public static class ReportOptionModel
+        extends OptionModel
     {
         private boolean isAttribute;
 
-        ReportKeyedSelectOption(RModuleAttribute rma)
+        ReportOptionModel(RModuleAttribute rma)
             throws Exception
         {
             setIsAttribute(true);
@@ -1614,7 +1599,7 @@ public class ReportGenerator
             setValue( getKey(rma) );
         }
 
-        ReportKeyedSelectOption(RModuleOption rmo)
+        ReportOptionModel(RModuleOption rmo)
             throws Exception
         {
             setIsAttribute(false);
@@ -1622,7 +1607,7 @@ public class ReportGenerator
             setValue( getKey(rmo) );
         }
 
-        ReportKeyedSelectOption(Attribute a, ScarabUser user)
+        ReportOptionModel(Attribute a, ScarabUser user)
             throws Exception
         {
             setIsAttribute(false);
@@ -1630,7 +1615,7 @@ public class ReportGenerator
             setValue( getKey(a, user) );
         }
 
-        ReportKeyedSelectOption(ScarabUser user)
+        ReportOptionModel(ScarabUser user)
             throws Exception
         {
             setIsAttribute(false);
@@ -1748,7 +1733,5 @@ public class ReportGenerator
         }
         
     }
+
 }
-
-
- 

@@ -390,7 +390,7 @@
     </field>
 </group>
 
-<group name="Report" key="rep" mapToObject="util.ReportGenerator">
+<group name="Report" key="rep" mapToObject="om.Report">
         <field name="Type" key="type" type="int">
             <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>

@@ -205,6 +205,18 @@
  #indexedRows($velocityCount)
 #end
 
+
 #macro ( datatitle $title)
 <h3>$title</h3>
+#end
+
+
+#macro ( selected $boolean )
+#if ($boolean) selected="selected"#end
+#end
+
+
+#macro ( option $optionModel )
+<option #selected($optionModel.isSelected()) 
+    value="$optionModel.Value">$optionModel.Name</option>
 #end
