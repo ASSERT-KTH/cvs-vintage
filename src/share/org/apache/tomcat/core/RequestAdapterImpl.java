@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.1 1999/10/24 17:21:20 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/24 17:21:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.2 1999/10/25 18:56:22 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/25 18:56:22 $
  *
  * ====================================================================
  *
@@ -87,7 +87,25 @@ public class RequestAdapterImpl implements  RequestAdapter {
     protected String remoteAddr;
     protected String remoteHost;
 
+    // Hints 
     
+    protected Vector cookies;
+
+    protected String contextPath;
+    protected String lookupPath;
+    protected String servletPath;
+    protected String pathInfo;
+    protected String queryString;
+    
+    protected Hashtable parameters;
+    protected String reqSessionId;
+    protected int contentLength;
+    protected String contentType;
+    protected String charEncoding;
+    protected String authType;
+    protected String remoteUser;
+
+
     public RequestAdapterImpl() {
 	headers = new MimeHeaders();
 	recycle(); // XXX need better placement-super()

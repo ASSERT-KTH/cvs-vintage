@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.4 1999/10/24 17:34:01 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/24 17:34:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.5 1999/10/25 18:56:22 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/25 18:56:22 $
  *
  * ====================================================================
  *
@@ -93,6 +93,8 @@ public class Request  {
     protected String remoteHost;
     protected ServletInputStream in;
     // End RequestAdapterImpl
+
+
     //  RequestAdapterImpl Hints
     protected Vector cookies = new Vector();
 
@@ -109,7 +111,6 @@ public class Request  {
     protected String charEncoding = null;
     protected String authType;
     protected String remoteUser;
-
 
     // Request 
     protected Response response;
