@@ -11,7 +11,7 @@ import org.apache.tomcat.core.Request;
 import org.apache.tomcat.core.FacadeManager;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.core.ContextManager;
-import org.apache.tomcat.util.RequestUtil;
+import org.apache.tomcat.helper.RequestUtil;
 
 
 import javax.servlet.jsp.tagext.TagData;
