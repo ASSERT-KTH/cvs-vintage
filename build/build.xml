@@ -20,10 +20,10 @@
     <property name="src.html.dir" value="${src.dir}/html"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
-    <property name="src.sql.dir.scarab" value="${src.dir}/sql"/>
+    <property name="src.resources.dir" value="${src.dir}/resources"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
-    <property name="src.resources.dir" value="${src.dir}/resources"/>
+    <property name="src.test.dir" value="${src.dir}/test"/>
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
 
@@ -34,6 +34,7 @@
     <property name="build.src.scarab" value="${build.project.webinf}/src"/>
     <property name="build.dest.scarab"
              value="${build.project.webinf}/classes"/>
+
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
 
@@ -209,7 +210,7 @@
             <property name="lib.dir" value="${lib.dir}"/>
         </ant>
 
-        <move file="${src.sql.dir.scarab}/${project}-schema.sql"
+        <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${src.sql.dir}/mysql-${project}.sql"/>
     </target>
 
@@ -320,6 +321,25 @@
     <target name="compile" depends="om-peer,prepare">
         <mkdir dir="${build.dest.scarab}"/>
         <javac srcdir="${build.src.scarab}"
+            destdir="${build.dest.scarab}"
+            excludes="**/package.html,torque/**"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}">
+
+        <classpath refid="classpath"/>
+
+        <classpath>
+            <fileset dir="${build.project.webinf.lib}">
+                <include name="**/torque*.jar"/>
+            </fileset>
+        </classpath>
+
+        </javac>
+    </target>
+
+    <target name="compile-tests" depends="compile">
+        <javac srcdir="${src.test.dir}"
             destdir="${build.dest.scarab}"
             excludes="**/package.html,torque/**"
             debug="${debug}"

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<!-- Testcases for Scarab -->
+<project name="main" default="test-all" basedir=".">
+
+  <property name="build.dest" value="../target/webapps/scarab/WEB-INF/classes"/>
+  <property name="ant.home" value="."/>
+  <property name="test.home" value="../test"/>
+  <property name="junit.jar" value="../lib/junit-3.7.jar"/>
+
+  <!-- JUnit Testbed properties -->
+  <property name="test.runner" value="junit.textui.TestRunner"/>
+
+  <!-- Turns on/off overall failure if one test fails -->
+  <property name="testbed.failonerror" value="true"/>
+
+  <!-- Build classpath -->
+  <path id="classpath">
+    <fileset dir="../lib">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${build.dest}"/>
+  </path>
+
+  <target name="compile">
+    <exec executable="ant" dir="${basedir}">
+    <arg line="compile-tests"/>
+    </exec>  
+  </target>
+
+  <target name="test-all" depends="test-issue">
+  </target>
+
+  <target name="test-issue">
+    <echo>Running Issue tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <arg value="org.tigris.scarab.om.IssueTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+</project>
