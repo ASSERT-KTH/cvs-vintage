@@ -222,6 +222,7 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             // BUFF *bf = p->r->connection->client;
             size_t w = (size_t)l;
             size_t r = 0;
+	    long ll=l;
 
             if(!p->response_started) {
                 if(!s->start_response(s, 200, NULL, NULL, NULL, 0)) {
@@ -229,20 +230,29 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
                 }
             }
             
-	        
-            //ap_bwrite(bf, (const char *)b, w, &r);
-	    r = ap_rwrite((const char *)b, w, p->r );
-            if(w != r) {
-			    return JK_FALSE;
-            }
+	    // Debug - try to get around rwrite
+	    while( ll > 0 ) {
+		long toSend=(ll>2048) ? 2048 : ll;
+		r = ap_rwrite((const char *)b, toSend, p->r );
+		ll-=2048;
+		
+		// DEBUG 
+		ap_log_error(APLOG_MARK, APLOG_STARTUP | APLOG_NOERRNO, 0, 
+			     NULL, "mod_jk: writing %ld (%ld) out of %ld bytes \n",  
+			     toSend, r, ll );
+		if(toSend != r) { 
+		    return JK_FALSE; 
+		} 
 
-            /*
-             * To allow server push.
-             */
-	    //            if(ap_bflush(bf) != APR_SUCCESS) {
-            if(ap_rflush(p->r) != APR_SUCCESS) {
-                return JK_FALSE;
-            }
+		/*
+		 * To allow server push.
+		 */
+		if(ap_rflush(p->r) != APR_SUCCESS) {
+		    ap_log_error(APLOG_MARK, APLOG_STARTUP | APLOG_NOERRNO, 0, 
+				 NULL, "mod_jk: Error flushing \n"  );
+		    return JK_FALSE;
+		}
+	    }
         }
 
         return JK_TRUE;
