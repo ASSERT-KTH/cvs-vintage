@@ -54,10 +54,11 @@
  */
 
 /***************************************************************************
- * Description: Bi-directional protocol.                       *
+ * Description: Bi-directional protocol.                                   *
+ * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                           *
+ * Version:     $Revision: 1.6 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -74,6 +75,9 @@
 #define DEF_CACHE_SZ            (1)
 #define JK_INTERNAL_ERROR       (-2)
 #define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
+
+struct ajp13_operation;
+typedef struct ajp13_operation ajp13_operation_t;
 
 struct ajp13_endpoint;
 typedef struct ajp13_endpoint ajp13_endpoint_t;
@@ -109,6 +113,18 @@ struct ajp13_endpoint {
     jk_endpoint_t endpoint;
 
     unsigned left_bytes_to_send;
+};
+
+/* 
+ * little struct to avoid multiples ptr passing
+ * this struct is ready to hold upload file fd
+ * to add upload persistant storage
+ */
+struct ajp13_operation {
+	jk_msg_buf_t 	*request;	/* original request storage */
+	jk_msg_buf_t	*reply;		/* reply storage (chuncked by ajp13 */
+	int		uploadfd;	/* future persistant storage id */
+	int		recoverable;	/* if exchange could be conducted on another TC */
 };
 
 static void reset_endpoint(ajp13_endpoint_t *ep)
@@ -343,6 +359,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 		    len = 0;
 		}
 
+		/* the right place to add file storage for upload */
 		if(read_into_msg_buff(ep, r, msg, l, len)) {
 		    r->content_read += len;
 		    return JK_AJP13_HAS_RESPONSE;
@@ -530,122 +547,218 @@ static int JK_METHOD done(jk_endpoint_t **e,
     return JK_FALSE;
 }
 
+/*
+ * send request to Tomcat via Ajp13
+ * - first try to find reuseable socket
+ * - if no one available, try to connect
+ * - send request, but send must be see as asynchronous,
+ *   since send() call will return noerror about 95% of time
+ *   Hopefully we'll get more information on next read.
+ * 
+ * nb: reqmsg is the original request msg buffer
+ *     repmsg is the reply msg buffer which could be scratched
+ */
+static int send_request(jk_endpoint_t *e,
+						jk_ws_service_t *s,
+						jk_logger_t *l,
+						ajp13_endpoint_t *p,
+						ajp13_operation_t *op)
+{
+	/*
+	 * First try to reuse open connections...
+	*/
+	while((p->sd > 0) && !connection_tcp_send_message(p, op->request, l)) {
+		jk_log(l, JK_LOG_ERROR, "Error sending request try another pooled connection\n");
+		jk_close_socket(p->sd);
+		p->sd = -1;
+		reuse_connection(p, l);
+	}
+
+	/*
+	 * If we failed to reuse a connection, try to reconnect.
+	 */
+	if(p->sd < 0) {
+		connect_to_tomcat(p, l);
+		if(p->sd >= 0) {
+		/*
+		 * After we are connected, each error that we are going to
+		 * have is probably unrecoverable
+		 */
+		op->recoverable = JK_FALSE;
+		if(!connection_tcp_send_message(p, op->request, l)) {
+			jk_log(l, JK_LOG_ERROR, "Error sending request on a fresh connection\n");
+			return JK_FALSE;
+		}
+		} else {
+			jk_log(l, JK_LOG_ERROR, "Error connecting to the Tomcat process.\n");
+			return JK_FALSE;
+		}
+	}
+
+	/*
+	 * From now on an error means that we have an internal server error
+	 * or Tomcat crashed. In any case we cannot recover this.
+	 */
+	op->recoverable = JK_FALSE;
+
+	if(p->left_bytes_to_send > 0) {
+		unsigned len = p->left_bytes_to_send;
+		if(len > MAX_SEND_BODY_SZ) 
+			len = MAX_SEND_BODY_SZ;
+            	if(!read_into_msg_buff(p, s, op->reply, l, len)) 
+			return JK_FALSE;
+		s->content_read = len;
+		if(!connection_tcp_send_message(p, op->reply, l)) {
+			jk_log(l, JK_LOG_ERROR, "Error sending request body\n");
+			return JK_FALSE;
+		}  
+	}
+
+	return (JK_TRUE);
+}
+
+/*
+ * get replies from Tomcat via Ajp13
+ * We will know only at read time if the remote host closed
+ * the connection (half-closed state - FIN-WAIT2). In that case
+ * we must close our side of the socket and abort emission.
+ * We will need another connection to send the request
+ * There is need of refactoring here since we mix 
+ * reply reception (tomcat -> apache) and request send (apache -> tomcat)
+ * and everything using the same buffer (repmsg)
+ * ajp13 is async but handling read/send this way prevent nice recovery
+ * In fact if tomcat link is broken during upload (browser -> apache -> tomcat)
+ * we'll loose data and we'll have to abort the whole request.
+ */
+static int get_reply(jk_endpoint_t *e,
+                        jk_ws_service_t *s,
+                        jk_logger_t *l,
+			ajp13_endpoint_t *p,
+			ajp13_operation_t *op)
+{
+	/* Start read all reply message */
+	while(1) {
+		int rc = 0;
+
+		if(!connection_tcp_get_message(p, op->reply, l)) {
+			jk_log(l, JK_LOG_ERROR, "Error reading reply\n");
+			/* we just can't recover, unset recover flag */
+			return JK_FALSE;
+		}
+
+		rc = ajp13_process_callback(op->reply, p, s, l);
+
+		/* no more data to be sent, fine we have finish here */
+       		if(JK_AJP13_END_RESPONSE == rc)
+        		return JK_TRUE;
+        	else if(JK_AJP13_HAS_RESPONSE == rc) {
+        	/* 
+        	 * in upload-mode there is no second chance since
+        	 * we may have allready send part of uploaded data 
+        	 * to Tomcat.
+        	 * In this case if Tomcat connection is broken we must 
+        	 * abort request and indicate error.
+        	 * A possible work-around could be to store the uploaded
+        	 * data to file and replay for it
+        	 */
+ 			op->recoverable = JK_FALSE; 
+			rc = connection_tcp_send_message(p, op->reply, l);
+        		if (rc < 0) {
+				jk_log(l, JK_LOG_ERROR, "Error sending request data %d\n", rc);
+               	 		return JK_FALSE;
+			}
+		} else if(rc < 0) {
+			return (JK_FALSE); /* XXX error */
+		}
+	}
+}
+
+#define	JK_RETRIES 3
+
+/*
+ * service is now splitted in send_request and get_reply
+ * much more easier to do errors recovery
+ */
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
                              jk_logger_t *l,
                              int *is_recoverable_error)
 {
-    jk_log(l, 
-           JK_LOG_DEBUG, 
-           "Into jk_endpoint_t::service\n");
+	int i;
+	ajp13_operation_t	oper;
+	ajp13_operation_t	*op = &oper;
 
-    if(e && e->endpoint_private && s && is_recoverable_error) {
-        ajp13_endpoint_t *p = e->endpoint_private;
-        jk_msg_buf_t *msg = jk_b_new(&(p->pool));
+	jk_log(l, JK_LOG_DEBUG, "Into jk_endpoint_t::service\n");
 
-        jk_b_set_buffer_size( msg, DEF_BUFFER_SZ); 
-	    jk_b_reset(msg);
-        
-        p->left_bytes_to_send = s->content_length;
-        p->reuse = JK_FALSE;
-        *is_recoverable_error = JK_TRUE;
+	if(e && e->endpoint_private && s && is_recoverable_error) {
+		ajp13_endpoint_t *p = e->endpoint_private;
+       		op->request = jk_b_new(&(p->pool));
+		jk_b_set_buffer_size(op->request, DEF_BUFFER_SZ); 
+		jk_b_reset(op->request);
+       
+		op->reply = jk_b_new(&(p->pool));
+		jk_b_set_buffer_size(op->reply, DEF_BUFFER_SZ);
+		jk_b_reset(op->reply); 
+		
+		op->recoverable = JK_TRUE;
+		op->uploadfd	 = -1;		/* not yet used, later ;) */
 
-        if(!ajp13_marshal_into_msgb(msg, s, l)) {
-            *is_recoverable_error = JK_FALSE;                
-            return JK_FALSE;
-        }
+		p->left_bytes_to_send = s->content_length;
+		p->reuse = JK_FALSE;
+		*is_recoverable_error = JK_TRUE;
 
-        /*
-         * First try to reuse open connections...
-         */
-        while((p->sd > 0) && !connection_tcp_send_message(p, msg, l)) {
-    	    jk_log(l, JK_LOG_ERROR,
-			       "Error sending request try another pooled connection\n");
-		    jk_close_socket(p->sd);
-            p->sd = -1;
-            reuse_connection(p, l);
-        } 
+		/* 
+		 * We get here initial request (in reqmsg)
+		 */
+		if(!ajp13_marshal_into_msgb(op->request, s, l)) {
+			*is_recoverable_error = JK_FALSE;                
+			return JK_FALSE;
+		}
 
-        /*
-         * If we failed to reuse a connection, try to reconnect.
-         */
-        if(p->sd < 0) {
-            connect_to_tomcat(p, l);
-            if(p->sd >= 0) {
-                /*
-                 * After we are connected, each error that we are going to
-                 * have is probably unrecoverable
-                 */            
-                *is_recoverable_error = JK_FALSE;
-                if(!connection_tcp_send_message(p, msg, l)) {
-    	            jk_log(l, JK_LOG_ERROR,
-			               "Error sending request on a fresh connection\n");
-		            return JK_FALSE;
-                } 
-            } else {
-                jk_log(l, 
-                       JK_LOG_ERROR,
-			           "Error connecting to the Tomcat process.\n");
-		        return JK_FALSE;
-            }
-        } 
+		/* 
+		 * JK_RETRIES could be replaced by the number of workers in
+		 * a load-balancing configuration 
+		 */
+		for (i = 0; i < JK_RETRIES; i++)
+		{
+			/*
+			 * We're using reqmsg which hold initial request
+			 * if Tomcat is stopped or restarted, we will pass reqmsg
+			 * to next valid tomcat. 
+			 */
+			if (! send_request(e, s, l, p, op)) {
+				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, send_request failed in send loop %d\n", i);
+				continue;
+			}
 
-        /* 
-         * From now on an error means that we have an internal server error 
-         * or Tomcat crashed. In any case we cannot recover this.
-         */
-        *is_recoverable_error = JK_FALSE;
-        
+			/* Up to there we can recover */
+			*is_recoverable_error = JK_TRUE;
+			op->recoverable = JK_TRUE;
 
-        if(p->left_bytes_to_send > 0) {
-            unsigned len = p->left_bytes_to_send;
-            if(len > MAX_SEND_BODY_SZ) {
-                len = MAX_SEND_BODY_SZ;
-            }
-            if(!read_into_msg_buff(p, s, msg, l, len)) {
-                return JK_FALSE;
-            }                  
-            s->content_read = len;
-            if(!connection_tcp_send_message(p, msg, l)) {
-    	        jk_log(l, JK_LOG_ERROR,
-			           "Error sending request body\n");
-		        return JK_FALSE;
-            }   
-        }
+			if (get_reply(e, s, l, p, op))
+				return (JK_TRUE);
 
-        /*
-         * Enter the message pump.
-         */
-	    while(1) {
-            int rc = 0;
-            
-		    if(!connection_tcp_get_message(p, msg, l)) {
-		        jk_log(l, JK_LOG_ERROR,
-				       "Error reading request\n");
-		        return JK_FALSE;
-		    }
+			/* if we can't get reply, check if no recover flag was set 
+			 * if is_recoverable_error is cleared, we have started received 
+			 * upload data and we must consider that operation is no more recoverable
+			 */
+			if (! op->recoverable) {
+				*is_recoverable_error = JK_FALSE;
+				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed without recovery in send loop %d\n", i);
+				return JK_FALSE;
+			}
+				
+			jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed in send loop %d\n", i);
 
-            rc = ajp13_process_callback(msg, p, s, l);
-            if(JK_AJP13_END_RESPONSE == rc) {
-                return JK_TRUE;
-            } else if(JK_AJP13_HAS_RESPONSE == rc) {
-		        rc = connection_tcp_send_message(p, msg, l);
-		        if(rc < 0) {
-			        jk_log(l, JK_LOG_DEBUG,
-				           "Error reading response1 %d\n", rc);
-			        return JK_FALSE;
-		        }
-            } else if(rc < 0) {
-                break; /* XXX error */
-            }
-	    }        
-    } else {
-        jk_log(l, 
-               JK_LOG_ERROR, 
-               "In jk_endpoint_t::service, NULL parameters\n");
-    }
+			jk_close_socket(p->sd);
+			p->sd = -1;
+			reuse_connection(p, l);
+		}
+	} else {
+        	jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, NULL parameters\n");
+	}
 
-    return JK_FALSE;
+	return JK_FALSE;
 }
 
 static int JK_METHOD get_endpoint(jk_worker_t *pThis,
