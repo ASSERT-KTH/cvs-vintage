@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -235,7 +235,7 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
                 for(i = 0 , len_of_headers = 0 ; i < num_of_headers ; i++) {
                     len_of_headers += strlen(header_names[i]);
                     len_of_headers += strlen(header_values[i]);
-                    len_of_headers += 3; /* extra for : and crlf */
+                    len_of_headers += 4; /* extra for colon, space and crlf */
                 }
 
                 len_of_headers += 3;  /* crlf and terminating null char */
@@ -244,7 +244,7 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
 
                 for(i = 0 ; i < num_of_headers ; i++) {
                     strcat(headers_str, header_names[i]);
-                    strcat(headers_str, ":");
+                    strcat(headers_str, ": ");
                     strcat(headers_str, header_values[i]);
                     strcat(headers_str, crlf);
                 }
