@@ -4,34 +4,65 @@
   <!-- Compilation properties -->
 
   <property name="optimize" value="false"/>
-  <property name="debug" value="off"/>
+  <property name="debug" value="on"/>
 
   <!-- Directories -->
+  <!-- work.dir is the place where build places the work
+       files created in the build process, including the
+       build/ and dist/ dirs. 
+       Set it to ".." ( -D work.dir=.. ) to get the 
+       previous behavior. 
+    -->
+  <property name="work.dir" value="." /> 
 
-  <property name="tomcat.build" value="../build/tomcat"/>
-  <property name="tomcat.home" value="../dist/tomcat"/>
-  <property name="tomcat.dist" value="${tomcat.home}"/>
+  <property name="tomcat.build" value="${work.dir}/build/tomcat"/>
+  <property name="tomcat.dist" value="${work.dir}/dist/tomcat"/>
+
+  <!-- Location where various binaries are installed.
+       It can be "c:\Program Files" or /usr/share/java or 
+       /opt/java. The default is .. ( assuming jakarta-tomcat
+       is installed in the same directory ).
+       
+       Note that this assumes binary packages ( i.e. dists )
+   --
+  <property name="install.dir" value=".." /> 
 
 
   <!-- External packages we depend on -->
-  <!-- Tomcat depends on Ant, Watchdog, Jaxp.
-       You need to have the binaries ( in dist/ format ) 
-       available and set xxx.home to the install directory
+  <!-- Tomcat depends on:
+       - Ant ( latest binary install in jakarta-ant-1.3 )
+       - Jaxp ( optional, the jar files from ant can be used instead )
+       - Jsse ( optional )
     -->
 
-  <property name="ant.home" value="../jakarta-ant"/>
-  <property name="watchdog.home" value="../build/watchdog"/>
-  <property name="jaxp" value="../jaxp1.0.1"/>
-  <property name="jaxp.home" value="${jaxp}"/>
+  <!-- set by default if "ant" command is used -->
+  <property name="ant.home" value="${install.dir}/jakarta-ant-1.3"/>
+  <property name="jsse.home" value="${install.dir}/jsse1.0.2"/>
+  <property name="jaxp.home" value="${install.dir}/jaxp1.0.1"/>
 
+  <!-- Binaries checked in ( servlet.jar is not likely to change, 
+      the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
  
-  <property name="servlet.jar" value="${servlet22.jar}"/>
-
   <!-- ==================== Initialization - guessing config ========== -->
-  <target name="init">
-    <available property="jsse.present" classname="javax.net.ssl.SSLServerSocket"/>
-    <available property="jdk12.present" classname="java.security.PrivilegedAction"/>
+  <target name="detect">
+    <available property="jsse.present.runtime" 
+	       classname="javax.net.ssl.SSLServerSocket"/>
+    <available property="jsse.present" 
+	       file="${jsse.home}/lib/jsse.jar"/>
+    <available property="jdk12.present" 
+	       classname="java.security.PrivilegedAction"/>
+  </target>
+
+  <target name="msg.jdk12" if="jdk12.present" >
+    <echo message="Detected JDK1.2" />
+  </target>
+
+  <target name="msg.jsse" if="jsse.present" >
+    <echo message="Detected JSSE"/>
+  </target>
+
+  <target name="init" depends="detect,msg.jdk12,msg.jsse" >
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -83,13 +114,13 @@
 	  file="${jaxp.home}/parser.jar"/>
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${jaxp.home}/jaxp.jar"/>
-    <copy file ="src/build/readme.container"
+    <copy file ="src/build/readme/readme.container"
 	  tofile="${tomcat.build}/lib/container/README" />
 
-    <copy file ="src/build/readme.shared"
+    <copy file ="src/build/readme/readme.shared"
 	  tofile="${tomcat.build}/lib/apps/README" />
 
-    <copy file ="src/build/readme.common"
+    <copy file ="src/build/readme/readme.common"
 	  tofile="${tomcat.build}/lib/common/README" />
 
     
@@ -119,7 +150,11 @@
 	   optimize="${optimize}" 
 	   deprecation="off" 
 	   srcdir="src/share">
-      <!-- no dependencies -->
+      <classpath>
+	<pathelement location="${jsse.home}/lib/jsse.jar"/>
+	<pathelement location="${jsse.home}/lib/jnet.jar"/>
+	<pathelement location="${jsse.home}/lib/jcert.jar"/>
+      </classpath>
       <include name="org/apache/tomcat/util/**"/>    
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
       <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
@@ -157,7 +192,7 @@
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
-	 manifest="src/build/manifest"> 
+	 manifest="src/build/manifests/manifest"> 
       <include name="org/apache/tomcat/startup/Main.class"/> 
       <include name="org/apache/tomcat/startup/Main$*.class"/> 
       <include name="org/apache/tomcat/util/compat/**"/> 
@@ -184,7 +219,7 @@
 
     <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
-	 manifest="src/build/manifest.stop-tomcat"> 
+	 manifest="src/build/manifests/manifest.stop-tomcat"> 
       <include name="org/apache/tomcat/startup/StopTomcat.class"/> 
       <include name="org/apache/tomcat/util/res/StringManager.class"/> 
       <include name="org/apache/tomcat/resources/LocalStrings*"/> 
@@ -235,7 +270,7 @@
     </javac>
     <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar" 
 	 basedir="${tomcat.build}/classes"
-	 manifest="src/build/manifest.startup"> 
+	 manifest="src/build/manifests/manifest.startup"> 
       <include name="org/apache/tomcat/startup/**"/>    
     </jar>
   </target>
@@ -257,7 +292,7 @@
     </javac>
     <jar jarfile="${tomcat.build}/lib/container/facade22.jar" 
 	 basedir="${tomcat.build}/classes"
-	 manifest="src/build/manifest.facade22"> 
+	 manifest="src/build/manifests/manifest.facade22"> 
       <include name="org/apache/tomcat/facade/**"/> 
     </jar>
   </target>
@@ -381,11 +416,6 @@
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar" 
 	  file="${ant.home}/lib/ant.jar"/>
-    <!-- admin can test tomcat, it need the client side  -->
-    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/moo.jar" 
-	  file="${watchdog.home}/lib/moo.jar"/>
-    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/client.jar" 
-	  file="${watchdog.home}/lib/client.jar"/>
     <javac srcdir="src/admin/WEB-INF/classes" 
 	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 

@@ -3,10 +3,11 @@
   <property name="tomcat.home" value="../../../../.."/>
   <property name="ant-file" 
    value="${tomcat.home}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
+  <property name="stests.home" 
+	    value="${tomcat.home}/webapps/servlet-tests"/>
   
 
   <target name="main" >
-    <echo message="XXX ${ant-file} ${tomcat.home} " />
     <java classname="org.apache.tools.ant.Main" 
 	  fork="true" dir="../../../..">
       <classpath>
@@ -15,16 +16,18 @@
 	<pathelement 
 		path="../lib/ant.jar" />
 	<pathelement 
-		path="../lib/moo.jar" />
+		path="${stests.home}/WEB-INF/lib/moo.jar" />
 	<pathelement 
-		path="../lib/client.jar" />
+		path="${stests.home}/WEB-INF/lib/client.jar" />
 	<pathelement 
-		path="../../../../lib/container/jaxp.jar" />
+		path="${stests.home}/WEB-INF/classes" />
 	<pathelement 
-		path="../../../../lib/container/parser.jar" />
+		path="${tomcat.home}/lib/container/jaxp.jar" />
+	<pathelement 
+		path="${tomcat.home}/lib/container/parser.jar" />
       </classpath>
       <arg value="-f" />
-      <arg value="webapps/servlet-tests/WEB-INF/servlet-moo.xml" />
+      <arg value="${stests.home}/WEB-INF/servlet-moo.xml" />
     </java>
   </target>
 
