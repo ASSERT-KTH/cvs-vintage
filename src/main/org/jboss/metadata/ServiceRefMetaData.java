@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.2 2004/04/21 13:30:47 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.3 2004/04/22 09:22:12 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
@@ -22,11 +22,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /** The metdata data from service-ref in application-client.xml descriptor
  * 
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ServiceRefMetaData
 {
@@ -52,6 +54,9 @@ public class ServiceRefMetaData
    private String portComponentLink;
    /** The HashMap<HandlerMetaData> service-ref/handler element(s) */
    private HashMap handlers = new HashMap();
+
+   /** The URL of the actual WSDL to use */
+   private URL wsdlOverride;
 
    // derived properties
    private Document wsdlDocument;
@@ -97,6 +102,11 @@ public class ServiceRefMetaData
       return serviceInterface;
    }
 
+   public Class getServiceInterfaceClass() throws ClassNotFoundException
+   {
+      return localCl.loadClass(serviceInterface);
+   }
+
    public QName getServiceQName()
    {
       return serviceQName;
@@ -112,6 +122,11 @@ public class ServiceRefMetaData
       return wsdlFile;
    }
 
+   public URL getWsdlOverride()
+   {
+      return wsdlOverride;
+   }
+
    public Document getWsdlDocument()
    {
       if (wsdlDocument != null)
@@ -123,7 +138,10 @@ public class ServiceRefMetaData
          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
          factory.setNamespaceAware(true);
          builder = factory.newDocumentBuilder();
-         wsdlDocument = builder.parse(localCl.getResourceAsStream(wsdlFile));
+         if (wsdlOverride != null)
+            wsdlDocument = builder.parse(wsdlOverride.openStream());
+         else
+            wsdlDocument = builder.parse(localCl.getResourceAsStream(wsdlFile));
       }
       catch (Exception e)
       {
@@ -187,5 +205,15 @@ public class ServiceRefMetaData
 
    public void importJbossClientXml(Element element) throws DeploymentException
    {
+      String wsdlOverrideOption = MetaData.getOptionalChildContent(element, "wsdl-override");
+      try
+      {
+         if (wsdlOverrideOption != null)
+            wsdlOverride = new URL(wsdlOverrideOption);
+      }
+      catch (MalformedURLException e)
+      {
+         throw new DeploymentException("Invalid WSDL override: " + wsdlOverrideOption);
+      }
    }
 }
