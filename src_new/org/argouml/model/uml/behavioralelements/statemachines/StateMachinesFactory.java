@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.33 2004/06/23 07:02:41 linus Exp $
+// $Id: StateMachinesFactory.java,v 1.34 2004/07/18 07:01:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -326,13 +326,13 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
     }
     
     /**
-     * Builds a pseudostate initialized as a branch pseudostate. The
+     * Builds a pseudostate initialized as a choice pseudostate. The
      * pseudostate will be a subvertix of the given
      * compositestate. The parameter compositeState is of type Object
      * to decouple the factory and NSUML as much as possible from the
      * rest of ArgoUML.<p>
      *
-     * @param compositeState
+     * @param compositeState the parent
      * @return MPseudostate
      */
     public MPseudostate buildPseudoState(Object compositeState) {

@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.14 2004/06/26 06:54:43 mvw Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.15 2004/07/18 07:01:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public final class ResourceLoaderWrapper {
     private static ImageIcon joinIcon =
 	ResourceLoader.lookupIconResource("Join");
     private static ImageIcon branchIcon =
-	ResourceLoader.lookupIconResource("Branch");
+	ResourceLoader.lookupIconResource("Choice");
     private static ImageIcon junctionIcon =
         ResourceLoader.lookupIconResource("Junction"); 
     private static ImageIcon finalStateIcon =

@@ -1,4 +1,4 @@
-// $Id: CrNoTransitions.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrNoTransitions.java,v 1.12 2004/07/18 07:01:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoTransitions.java
 // Classes: CrNoTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTransitions.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrNoTransitions.java,v 1.12 2004/07/18 07:01:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,6 +38,8 @@ import org.argouml.model.ModelFacade;
 
 public class CrNoTransitions extends CrUML {
 
+    /** constructor 
+     */
     public CrNoTransitions() {
 	setHeadline("Add Transitions to <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
@@ -46,6 +48,13 @@ public class CrNoTransitions extends CrUML {
 	addTrigger("outgoing");
     }
 
+    /** This is the decision routine for the critic. 
+     * 
+     * @param dm is the UML entity (an NSUML object) that is being checked. 
+     * @param dsgr is for future development and can be ignored.
+     * 
+     * @return boolean problem found
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	Object sv = /*(MStateVertex)*/ dm;
@@ -58,7 +67,14 @@ public class CrNoTransitions extends CrUML {
 	boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
 	boolean needsIncoming = incoming == null || incoming.size() == 0;
 	if (ModelFacade.isAPseudostate(sv)) {
-	    if (ModelFacade.getKind(sv).equals(ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
+	    Object k = ModelFacade.getPseudostateKind(sv);
+	    if (k.equals(ModelFacade.BRANCH_PSEUDOSTATEKIND)) {
+	        return NO_PROBLEM;
+	    }
+	    if (k.equals(ModelFacade.JUNCTION_PSEUDOSTATEKIND)) {
+	        return NO_PROBLEM;
+	    }
+	    if (k.equals(ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
                 needsIncoming = false;
             }
 	}

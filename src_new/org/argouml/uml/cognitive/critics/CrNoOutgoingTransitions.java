@@ -1,4 +1,4 @@
-// $Id: CrNoOutgoingTransitions.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.10 2004/07/18 07:01:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoOutgoingTransitions.java
 // Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOutgoingTransitions.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.10 2004/07/18 07:01:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,12 +36,21 @@ import org.argouml.model.ModelFacade;
 
 public class CrNoOutgoingTransitions extends CrUML {
 
+    /** constructor
+     */
     public CrNoOutgoingTransitions() {
 	setHeadline("Add Outgoing Transitions from <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
 	addTrigger("outgoing");
     }
 
+    /** This is the decision routine for the critic. 
+     * 
+     * @param dm is the UML entity (an NSUML object) that is being checked. 
+     * @param dsgr is for future development and can be ignored.
+     * 
+     * @return boolean problem found
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	Object sv = /*(MStateVertex)*/ dm;
@@ -49,6 +58,15 @@ public class CrNoOutgoingTransitions extends CrUML {
 	    Object sm = ModelFacade.getStateMachine(sv);
 	    if (sm != null && ModelFacade.getTop(sm) == sv) return NO_PROBLEM;
 	}
+	if (ModelFacade.isAPseudostate(sv)) {
+	    Object k = ModelFacade.getPseudostateKind(sv);
+	    if (k.equals(ModelFacade.BRANCH_PSEUDOSTATEKIND)) {
+	        return NO_PROBLEM;
+	    }
+	    if (k.equals(ModelFacade.JUNCTION_PSEUDOSTATEKIND)) {
+	        return NO_PROBLEM;
+	    }
+	}    
 	Collection outgoing = ModelFacade.getOutgoings(sv);
 	boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
 	if (ModelFacade.isAFinalState(sv)) {
