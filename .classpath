@@ -10,6 +10,7 @@
     <classpathentry kind="src" path="/management"/>
     <classpathentry kind="src" path="/transaction"/>
     <classpathentry kind="src" path="/naming"/>
+    <classpathentry kind="src" path="/persistence"/>
     <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-pattern.jar"/>
     <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-util.jar"/>
     <classpathentry kind="lib" path="/thirdparty/gnu-getopt/lib/getopt.jar"/>

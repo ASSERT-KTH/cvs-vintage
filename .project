@@ -8,6 +8,7 @@
 		<project>jmx</project>
 		<project>management</project>
 		<project>naming</project>
+		<project>persistence</project>
 		<project>system</project>
 		<project>thirdparty</project>
 		<project>transaction</project>
