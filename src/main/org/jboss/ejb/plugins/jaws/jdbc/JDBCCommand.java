@@ -15,6 +15,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -44,7 +50,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class JDBCCommand
 {
@@ -229,12 +235,27 @@ public abstract class JDBCCommand
                    ((value == null) ? "NULL" : value));
       }
       
-      if (value == null)
-      {
+      if (value == null) {
          stmt.setNull(idx, jdbcType);
-      } else
-      {
-         stmt.setObject(idx, value, jdbcType);
+      } else {
+          if (jdbcType == Types.JAVA_OBJECT) {
+              ByteArrayOutputStream baos = new ByteArrayOutputStream();
+              
+              try {
+                  ObjectOutputStream oos = new ObjectOutputStream(baos);
+              
+                  oos.writeObject(value);
+                  
+                  oos.close();
+              
+              } catch (IOException e) {
+                  throw new SQLException("Can't write Java object type to DB: " + e);
+              }
+              byte[] bytes = baos.toByteArray();
+              stmt.setBytes(idx, bytes);
+          } else {
+              stmt.setObject(idx, value, jdbcType);
+          }
       }
    }
    
@@ -348,10 +369,41 @@ public abstract class JDBCCommand
     *        compatible with.
     */
    protected Object getResultObject(ResultSet rs, int idx, int jdbcType)
-      throws SQLException
-   {
-      Object result = rs.getObject(idx);
-      
+       throws SQLException{
+
+       Object result = null;
+
+       if (jdbcType != Types.JAVA_OBJECT) {
+           result = rs.getObject(idx);
+       } else {
+           // Also we should detect the EJB references here
+           
+           // Get the underlying byte[]
+           
+           byte[] bytes = rs.getBytes(idx);
+           
+           if( bytes == null ) {
+               result = null;
+           } else {
+               // We should really reuse these guys
+               
+               ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+               
+               // Use the class loader to deserialize
+               
+               try {
+                   ObjectInputStream ois = new ObjectInputStream(bais);
+                   result = ois.readObject();
+                   
+                   ois.close();
+               } catch (IOException e) {
+                   throw new SQLException("Can't read Java object try from DB: " + e);
+               } catch (ClassNotFoundException e) {
+                   throw new SQLException("Can't read Java object try from DB: " + e);
+               }
+           }
+       }
+       
       // Result transformation required by Oracle, courtesy of Jay Walters
       
       if (result instanceof BigDecimal)
@@ -381,7 +433,7 @@ public abstract class JDBCCommand
                break;
          }
       }
-      
+
       if (debug) {
          String className = result == null ? "null" : result.getClass().getName();
          log.debug("Got result: idx=" + idx +
