@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.29 2001/10/19 01:20:42 jmcnally Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.30 2001/10/19 23:59:11 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -330,9 +330,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
-System.out.println(rmit);
-System.out.println(rmit.getIssueTypeId());
-System.out.println(rmit.getDisplayName());
+//System.out.println(rmit);
+//System.out.println(rmit.getIssueTypeId());
+//System.out.println(rmit.getDisplayName());
         List attGroups = issueType.getAttributeGroups(module);
         List attributeGroups = issueType.getAttributeGroups(module);
 
@@ -392,7 +392,7 @@ System.out.println(rmit.getDisplayName());
             // Set properties for module-issue type info
             Group rmitGroup = intake.get("RModuleIssueType", 
                                         rmit.getQueryKey(), false);
-System.out.println(rmit);
+//System.out.println(rmit);
             rmitGroup.setProperties(rmit);
             rmit.save();
            
