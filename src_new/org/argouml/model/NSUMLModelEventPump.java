@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.4 2004/10/03 07:12:44 mvw Exp $
+// $Id: NSUMLModelEventPump.java,v 1.5 2004/11/30 20:38:38 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,7 @@ import ru.novosoft.uml.MElementListener;
  * @author Linus Tolke
  */
 class NSUMLModelEventPump 
-	extends AbstractModelEventPump 
-	implements ModelEventPump {
+	extends AbstractModelEventPump {
 
 
     private static final Logger LOG = 
