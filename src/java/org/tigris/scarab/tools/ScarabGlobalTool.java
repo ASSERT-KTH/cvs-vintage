@@ -50,9 +50,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.util.UnknownEntityException;
+import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
+import org.apache.fulcrum.security.util.UnknownEntityException;
 
 import org.apache.velocity.app.FieldMethodizer;
 
@@ -76,7 +79,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.9 2001/11/21 23:28:08 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.10 2001/11/26 23:56:09 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -109,9 +112,9 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public ScarabGlobalTool()
     {
         constant = new FieldMethodizer(
-                                       "org.tigris.scarab.util.ScarabConstants");
+            "org.tigris.scarab.util.ScarabConstants");
         security = new FieldMethodizer(
-                                       "org.tigris.scarab.services.security.ScarabSecurity");
+            "org.tigris.scarab.services.security.ScarabSecurity");
     }
     
     /**
@@ -225,7 +228,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             lSearchField = ScarabUserImplPeer.getTableName() + '.' + lSearchField;
             
             criteria = criteria.add(lSearchField,
-                                        (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
+                (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
         }
         
         // sort the results
@@ -295,4 +298,27 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return (user);
     }
     
+    /** 
+     * Gets a list of all Group's
+     */
+    public Group[] getGroups() throws Exception
+    {
+        return TurbineSecurity.getAllGroups().getGroupsArray();
+    }
+    
+    /** 
+     * Gets a list of all Roles's.
+     */
+    public Role[] getRoles() throws Exception
+    {
+        return TurbineSecurity.getAllRoles().getRolesArray();
+    }
+
+    /**
+     * Gets an ACL object for a user
+     */
+    public AccessControlList getACL(ScarabUser user) throws Exception
+    {
+        return TurbineSecurity.getACL(user);
+    }    
 }

@@ -1,48 +1,42 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+*#
+
 $page.setTitle("User Administration")
 
 #set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showadduser")
+#end
 
-
-<div id="edituser" class="app">
+<div id="adduser" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>Edit User</h3>
+<h3>Add New User</h3>
 
-<form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
-  <input type="hidden" name="action" value="admin.EditUser" />
-  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
-  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
-  <input type="hidden" name="state" value="execedituser">
+<form name="AddUserForm" action="$link.setPage("admin,AddUser.vm")" method="post">
+  <input type="hidden" name="action" value="admin.AddUser" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AddUser.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AdminIndex.vm" />
+  <input type="hidden" name="state" value="execadduser">
   <input type="hidden" name="lastAction" value="">
-  <input type="hidden" name="username" value="$data.Parameters.getString("username"))">
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
 
-#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
-#if ((!$user.FirstName) && ($state == "showedituser"))
-  #set ($user2 = $scarabG.getUserByUsername($data.Parameters.getString("username")))
-  #set ($regGroup = $intake.Register.Default)
-  #set ($firstNameData = $user2.FirstName)
-  #set ($lastNameData = $user2.LastName)
-  #set ($emailData = $user2.Email)
-  #set ($passwordData = "")
-#elseif ($user.FirstName)
-  #set ($regGroup = $intake.Register.mapTo($user))
-#else
-  #if (($lastAction) && ($lastAction =="addeduser"))
+
+#if (($lastAction) && ($lastAction =="addeduser"))
     #set ($regGroup = $intake.Register.Default)
     #set ($firstNameData = "")
     #set ($lastNameData = "")
     #set ($emailData = "")
     #set ($passwordData = "")
-  #else
+#else
     #set ($regGroup = $intake.Register.Default)
     #set ($firstNameData = $regGroup.FirstName)
     #set ($lastNameData = $regGroup.LastName)
     #set ($emailData = $regGroup.Email)
     #set ($passwordData = $regGroup.Password)
-  #end
 #end
 
 <div class="axial">
@@ -70,16 +64,11 @@ $page.setTitle("User Administration")
 </tr>
 <tr>
  <th>
- #if ($state != "showedituser")*#end
- Password
+  *Password
  </th>
  <td>
-  #if ($state != "showedituser")
   <input name="$regGroup.Password.Key" value="$passwordData" type="text" size="25" />
   #fieldErrorMsg($regGroup.Password "")
-  #else
-  <input name="editpassword" value="$passwordData" type="text" size="25" />
-  #end
  </td>
 </tr>
 </table>
@@ -91,8 +80,8 @@ $page.setTitle("User Administration")
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-   <input type="submit" name="eventSubmit_doEdituser" value="Save Changes" />
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doAdduser" value="Add New User" />
   </td>
  </tr>
 </table>

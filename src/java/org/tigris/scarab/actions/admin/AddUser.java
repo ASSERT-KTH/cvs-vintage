@@ -68,18 +68,17 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
- * This class is responsible for dealing with the EditUser
+ * This class is responsible for dealing with the AddUser
  * Action.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: EditUser.java,v 1.3 2001/11/26 23:56:09 jon Exp $
  */
-public class EditUser extends ScarabTemplateAction
+public class AddUser extends ScarabTemplateAction
 {
     /**
-     * This manages clicking the Edit User (save changes) button
+     * This manages clicking the Add User button
      */
-    public void doEdituser( RunData data, TemplateContext context ) throws Exception
+    public void doAdduser( RunData data, TemplateContext context ) throws Exception
     {
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
@@ -95,96 +94,69 @@ public class EditUser extends ScarabTemplateAction
             if (user != null && user instanceof ScarabUser)
             {
                 register = intake.get("Register",
-                              ((ScarabUser)user).getQueryKey(), false);
+                                          ((ScarabUser)user).getQueryKey(), false);
             }
             else
             {
                 register = intake.get("Register",
-                              IntakeTool.DEFAULT_KEY, false);
+                                      IntakeTool.DEFAULT_KEY, false);
             }
             
+            su  = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            //su.setUserName(data.getParameters().getString("UserName"));
+            su.setUserName(register.get("Email").toString());
+            su.setFirstName(register.get("FirstName").toString());
+            su.setLastName(register.get("LastName").toString());
+            su.setEmail(register.get("Email").toString());
+            su.setPassword(register.get("Password").toString().trim());
+            
+            if (ScarabUserImplPeer.checkExists(su))
+            {
+                setTarget(data, template);
+                data.setMessage("Sorry, a user with that email address already exists!");
+                data.getParameters().setString("errorLast","true");
+                data.getParameters().setString("state","showadduser");
+                return;
+            }
             
             // if we got here, then all must be good...
             try
             {
-                    su = (ScarabUser) TurbineSecurity
-                        .getUser(data.getParameters().getString("username"));
-                    if ((su != null) && (register != null))
-                    {
-                        // update the first name, last name, email and username
-                        su.setFirstName(register.get("FirstName").toString());
-                        su.setLastName(register.get("LastName").toString());
-                        
-                        String newEmail = register.get("Email").toString();
-                        if (!newEmail.equals(data.getParameters().getString("username")))
-                        {
-                            su.setEmail(newEmail);
-                            //su.setUserName(newEmail);
-                            
-                            if (!ScarabUserImplPeer.checkExists(su))
-                            {
-                                setTarget(data, template);
-                                data.setMessage(
-                                    "Sorry, a user with that email address [" + 
-                                    newEmail + "] already exists!");
-                            data.getParameters().setString("state","showedituser");
-                                return;
-                            }
-                        }
-    
-                        // only update their password if the field is non-empty, 
-                        // and then make sure they change the password at next login
-                        String password = data.getParameters()
-                            .getString("editpassword");
-                        if ((password != null) && (!password.trim().equals("")))
-                        {
-                        //su.setPassword(password.trim());
-                        TurbineSecurity.forcePassword(su, password);
-                            su.setPasswordExpire(Calendar.getInstance());                        
-                        }
-                        TurbineSecurity.saveUser(su);
-                        
-                        data.setMessage("SUCCESS: changes to the user have " + 
-                            " been saved [username: " + 
-                            register.get("Email").toString() +"]");
-                        data.getParameters().setString("state","showedituser");
-                        data.getParameters().setString("lastAction","editeduser");
-                        
-                        setTarget(data, nextTemplate);
-                        return;
-                    }
-                    else
-                    {
-                        data.setMessage("ERROR: couldn't retrieve the user " + 
-                            " from the DB [username: " + 
-                            register.get("Email").toString() +"]");
-                        data.getParameters().setString("state","showedituser");                    
-                    }
-                }
+                su.createNewUser();
+                ScarabUserImpl.confirmUser(register.get("Email").toString());
+                // force the user to change their password the first time they login
+                su.setPasswordExpire(Calendar.getInstance());
+                data.setMessage("SUCCESS: a new user was created [username: " + register.get("Email").toString() +"]");
+                data.getParameters().setString("state","showadduser");
+                data.getParameters().setString("lastAction","addeduser");
+                
+                setTarget(data, nextTemplate);
+                return;
+            }
             catch (Exception e)
             {
                 setTarget(data, template);
                 data.getParameters().setString("lastAction","");
                 data.setMessage (e.getMessage());
                 Log.error(e);
-                data.getParameters().setString("state","showedituser");
+                data.getParameters().setString("state","showadduser");
                 return;
             }
         }
         else
         {
-            data.getParameters().setString("state","showedituser");
+            data.getParameters().setString("state","showadduser");
             data.getParameters().setString("lastAction","");
         }
     }
-
+    
     /**
      This manages clicking the Cancel button
      */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         setTarget(data, data.getParameters()
-            .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
+                      .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
     }
     
     /**

@@ -1,0 +1,84 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+*#
+
+$page.setTitle("User Administration")
+
+#set ($username = $data.Parameters.getString("username"))
+#set ($user = $scarabG.getUserByUsername($username))
+#set ($acl = $scarabG.getACL($user))
+
+<div id="adduser" class="app">
+
+
+<h2>$page.Title</h2>
+
+<h3>User Roles</h3>
+
+<p>
+Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
+</p>
+
+<table>
+<tr>
+<td bgcolor="#000000">
+
+<table cellspacing="1" cellpadding="2">
+  <tr>
+    <td bgcolor="#ffffff">
+        &nbsp;
+    </td>
+      
+    #foreach ($role in $scarabG.Roles)
+    <td bgcolor="#ffffff">
+        <b>$role.Name</b>
+    </td>
+    #end
+  
+  </tr>
+
+  <form method="post" action="admin,EditUserRoles.vm">
+    <input type="hidden" name="action" value="admin.EditUserRoles">
+
+  #foreach ($group in $scarabG.Groups)
+  #indexedRows ($velocityCount)
+    <td bgcolor="#ffffff">
+        <b>$group.Name</b>
+    </td>
+
+    #foreach ($role in $scarabG.Roles)
+      #if ($acl.hasRole($role, $group))
+        #set ($checked = "checked")
+      #else
+        #set ($checked = "")
+      #end
+    
+    <td>
+      <center>
+      <input type="checkbox" name="${group.Name}${role.Name}" $checked>
+      <input type="hidden" name="username" value="$user.UserName">
+      </center>
+    </td>
+    #end    
+  </tr>
+  #end
+    
+</table>
+
+</td>
+</tr>
+</table>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doRoles" value="Update Roles" />
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+</div>

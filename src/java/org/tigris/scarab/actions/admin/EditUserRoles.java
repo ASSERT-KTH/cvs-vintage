@@ -47,83 +47,89 @@ package org.tigris.scarab.actions.admin;
  */
 
 
-// JDK classes
-import java.util.List;
-import java.util.ArrayList;
-
 // Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Log;
-import org.apache.turbine.Turbine;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
-import org.apache.torque.util.Criteria;
-import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.security.util.AccessControlList;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
-import org.tigris.scarab.tools.ScarabRequestTool;
 
 
 /**
- * This class is responsible for dealing with the ManageUserSearch
+ * This class is responsible for dealing with the EditUserRoles
  * Action.
  *
+ * At this point this is basically a rip off of the 'Flux' code.  This should
+ *   create a jump point from which to continue the development of the
+ *   management of user roles.
+ *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUserSearch.java,v 1.2 2001/11/26 23:56:09 jon Exp $
  */
-public class ManageUserSearch extends ScarabTemplateAction
+public class EditUserRoles extends ScarabTemplateAction
 {
     /**
-     * 
+     * This manages clicking the 'Update Roles' button
      */
-    public void doEdituser( RunData data, TemplateContext context )
+    public void doRoles( RunData data, TemplateContext context )
         throws Exception
     {
-        data.getParameters().setString("state","showedituser");
-        setTarget(data, "admin,EditUser.vm");
+        String username = data.getParameters().getString("username");
+        User user = TurbineSecurity.getUser(username);
+        
+        AccessControlList acl = TurbineSecurity.getACL(user);
+        
+        // Grab all the Groups and Roles in the system.
+        Group[] groups = TurbineSecurity.getAllGroups().getGroupsArray();
+        Role[] roles = TurbineSecurity.getAllRoles().getRolesArray();
+        
+        for (int i = 0; i < groups.length; i++)
+        {
+            String groupName = groups[i].getName();
+            
+            for (int j = 0; j < roles.length; j++)
+            {
+                String roleName = roles[j].getName();
+                String groupRole = groupName + roleName;
+                
+                String formGroupRole = data.getParameters().getString(groupRole);
+                
+                if ( formGroupRole != null && !acl.hasRole(roles[j], groups[i]))
+                {
+                    TurbineSecurity.grant(user, groups[i], roles[j]);
+                }
+                else if (formGroupRole == null && acl.hasRole(roles[j], groups[i]))
+                {
+                    TurbineSecurity.revoke(user, groups[i], roles[j]);
+                }
+            }
+        }
     }
     
     /**
-     * 
+     * This manages clicking the 'Cancel' button
      */
-    public void doEditroles( RunData data, TemplateContext context )
+    public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
-        System.out.println("doEditRoles()");
-        setTarget(data, "admin,EditUserRoles.vm");
+        setTarget(data, data.getParameters()
+                      .getString(ScarabConstants.CANCEL_TEMPLATE, 
+                                 "admin,ManageUserSearch.vm"));
     }
     
-    /**
-     * 
-     */
-    public void doDeleteuser( RunData data, TemplateContext context )
-        throws Exception
-    {
-        setTarget(data, "admin,DeleteUser.vm");
-    }
-    
-    /**
-     * 
-     */
-    public void doAdduser( RunData data, TemplateContext context )
-        throws Exception
-    {
-        setTarget(data, "admin,AddUser.vm");
-    }
-
     /**
      calls doCancel()
      */
-    public void doPerform( RunData data, TemplateContext context )
-        throws Exception
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
-        System.out.println("doPerform();");
+        doCancel(data, context);
     }
+    
 }
+

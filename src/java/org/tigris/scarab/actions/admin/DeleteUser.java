@@ -47,32 +47,23 @@ package org.tigris.scarab.actions.admin;
  */
 
 
-// JDK stuff
-import java.util.Calendar;
-
 // Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Log;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.User;
 
 
 // Scarab Stuff
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImpl;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
- * This class is responsible for dealing with the Register
+ * This class is responsible for dealing with the DeleteUser
  * Action.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: DeleteUser.java,v 1.2 2001/11/21 23:21:11 jon Exp $
+ * @version $Id: DeleteUser.java,v 1.3 2001/11/26 23:56:09 jon Exp $
  */
 public class DeleteUser extends ScarabTemplateAction
 {
@@ -103,3 +94,4 @@ public class DeleteUser extends ScarabTemplateAction
     	doCancel(data, context);
     }
 }
+

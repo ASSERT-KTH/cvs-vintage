@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.2 2001/11/21 23:28:08 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.3 2001/11/26 23:56:10 jon Exp $
 *#
 
 $page.setTitle("User Search")
@@ -34,7 +34,8 @@ Enter search criteria.
 </p>
 
 <form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
-  <input type="hidden" name="searchCommand" value="search">
+  <input type="hidden" name="action" value="admin.ManageUserSearch" />
+  <input type="hidden" name="searchCommand" value="search" />
 
 <table cellspacing="0" cellpadding="2">
 <tr>
@@ -72,6 +73,9 @@ Max results per page:
  <tr>
   <td class="firstchild">
    <input type="submit" value="Search" />
+   &#160;&#160;&#160;
+   <input type="submit" name="eventSubmit_doAdduser" value="Add User" />
+
   </td>
  </tr>
 </table>
@@ -146,9 +150,7 @@ Max results per page:
  <tr>
   <td class="firstchild">
  <input type="submit" name="eventSubmit_doEdituser" value="Edit User" />
- <!--
  <input type="submit" name="eventSubmit_doEditroles" value="Edit Roles" />
- -->
  <input type="submit" name="eventSubmit_doDeleteuser" value="Delete" />
   </td>
  </tr>
@@ -159,3 +161,4 @@ Max results per page:
 #end
 
 #end
+

@@ -40,7 +40,7 @@ $page.setTitle("Scarab Links")
  <a href="$link.setPage("admin,ManageModules.vm")">admin,ManageModules.vm</a>
 </li>
 <li>
- <a href="$link.setPage("FluxIndex.vm")">Flux</a>
+ <a href="$link.setPage("admin,AdminIndex.vm")">New Administrator Piece Index</a> (replacement for Flux)
 </li>
 </ul>
 
