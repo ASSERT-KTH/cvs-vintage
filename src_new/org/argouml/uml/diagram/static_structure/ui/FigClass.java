@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.92 2004/02/28 12:29:42 linus Exp $
+// $Id: FigClass.java,v 1.93 2004/03/18 01:21:43 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -731,6 +731,7 @@ public class FigClass extends FigNodeModelElement {
             ft.setHighlighted(true);
             highlightedFigText = ft;
         }
+        ie.consume();
     }
 
     protected CompartmentFigText unhighlight() {

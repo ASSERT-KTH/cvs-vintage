@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.33 2004/03/17 20:34:08 d00mst Exp $
+// $Id: FigUseCase.java,v 1.34 2004/03/18 01:21:42 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -990,6 +990,27 @@ public class FigUseCase extends FigNodeModelElement {
     }
 
     /**
+     * React to a mouse key being clicked.<p>
+     *
+     * @param me  The mouse action that caused us to be invoked.
+     */
+
+    public void mouseClicked(MouseEvent me) {
+	super.mouseClicked(me);
+
+	if (me.isConsumed())
+	    return;
+
+	if (!isExtensionPointVisible() || me.getY() < _epSep.getY1()) {
+	    _name.mouseClicked(me);
+	} else if (me.getClickCount() >= 2
+		   && !(me.isPopupTrigger()
+			|| me.getModifiers() == InputEvent.BUTTON3_MASK)) {
+	    createFeatureIn(_epVec, me);
+	}
+    }
+
+    /**
      * Deal with the mouse leaving the fig. Unhighlight the fig.<p>
      *
      * @param me  The mouse action that caused us to be invoked.
@@ -1244,6 +1265,7 @@ public class FigUseCase extends FigNodeModelElement {
 
             _highlightedFigText = ft;
         }
+        ie.consume();
     }
 
     /**

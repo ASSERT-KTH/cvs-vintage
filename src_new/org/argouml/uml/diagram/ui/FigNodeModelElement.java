@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.102 2004/02/28 12:29:43 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.103 2004/03/18 01:21:42 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -758,9 +758,9 @@ public abstract class FigNodeModelElement
             }
             Rectangle r = new Rectangle(me.getX() - 2, me.getY() - 2, 4, 4);
             Fig f = hitFig(r);
-            if (f instanceof MouseListener) {
+            if (f instanceof MouseListener && f.isVisible()) {
 		((MouseListener) f).mouseClicked(me);
-            } else if (f instanceof FigGroup) {
+            } else if (f instanceof FigGroup && f.isVisible()) {
                 //this enables direct text editing for sub figs of a
                 //FigGroup object:
                 Fig f2 = ((FigGroup) f).hitFig(r);
@@ -771,7 +771,6 @@ public abstract class FigNodeModelElement
                 }
             }
         }
-        me.consume();
     }
 
     public void keyPressed(KeyEvent ke) {
