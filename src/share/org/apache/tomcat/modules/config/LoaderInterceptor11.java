@@ -145,15 +145,6 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    } catch( MalformedURLException ex ) {
 	    }
 	}
-    }
-
-    /** Construct a class loader to be used with the context
-     */
-    public void contextInit( Context context)
-	throws TomcatException
-    {
-	if( debug>0 ) log( "Init context " + context.getPath());
-        ContextManager cm = context.getContextManager();
 
 	ClassLoader loader=constructLoader( context );
 	context.setClassLoader( loader );
