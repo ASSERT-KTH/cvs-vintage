@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.3 2003/01/11 07:19:47 linus Exp $
+// $Id: PropPanelButton2.java,v 1.4 2003/06/09 23:47:14 bobtarling Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,14 +85,8 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
             if (i != null)
                 setMnemonic(i.intValue());
         }
-        if (getIcon() != null) {
-            setPreferredSize(new Dimension(getIcon().getIconWidth()+6,getIcon().getIconHeight()+6));
-            setMaximumSize(new Dimension(getIcon().getIconWidth()+6,getIcon().getIconHeight()+6));
-            setMinimumSize(new Dimension(getIcon().getIconWidth()+6,getIcon().getIconHeight()+6));
-            setSize(new Dimension(getIcon().getIconWidth()+6,getIcon().getIconHeight()+6));
-        } else
-          setSize(new Dimension(20, 20));  
     }
+    
     /**
      * Returns the action.
      * @return Action
@@ -190,5 +184,4 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
     public void setContainer(UMLUserInterfaceContainer container) {
         _container = container;
     }
-
 }
