@@ -1,4 +1,4 @@
-// $Id: CustomSeparator.java,v 1.3 2003/06/29 23:48:17 linus Exp $
+// $Id: CustomSeparator.java,v 1.4 2004/06/29 00:14:03 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,6 +161,19 @@ public class CustomSeparator {
      */
     public boolean endChar(char c) {
 	return true;
+    }
+
+    /**
+     * Called to how many characters the CustomSeparator read after
+     * the end of the separator. This allows them to see beyond the
+     * end, but these characters will be fed to the separators again
+     * when looking for the next token so be careful.
+     *
+     * @return the number of characters that were read after the end
+     * of the token had been read.
+     */
+    public int getPeekCount() {
+	return 0;
     }
 }
 
