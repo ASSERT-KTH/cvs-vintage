@@ -9,9 +9,6 @@
 
   <depends>JBOSS-SYSTEM:service=Naming</depends>
 
-  <mbean code="org.jboss.jmx.server.JMXAdaptorService"
-	 name="JMX:name=Adaptor,type=RMI"/>
-
   <mbean code="com.sun.jdmk.comm.HtmlAdaptorServer" name="Adaptor:name=html">
     <attribute name="MaxActiveClientCount">10</attribute>
     <attribute name="Parser" />

@@ -34,7 +34,7 @@ import org.w3c.dom.Text;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class XMLAdaptorImpl {
   // Constants -----------------------------------------------------
@@ -63,7 +63,7 @@ public class XMLAdaptorImpl {
    // Constructors --------------------------------------------------
 
   /**
-  *  Constructor for the JMXAdaptorImpl object
+  *  Constructor for the XMLAdaptorImpl object
   *
   *@param pServer MBeanServer this adaptor executes its calls on
   */

@@ -1,11 +1,10 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
- 
-package org.jboss.jmx.client;
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
+package org.jboss.jmx.service;
 
 import java.io.File;
 import java.net.URL;
@@ -22,38 +21,63 @@ import javax.management.RuntimeErrorException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.interfaces.JMXAdaptor;
+import org.jboss.jmx.connector.rmi.JMXConnector;
 
 /**
- * A JMX client to deploy an application into a running JBoss server.
- *      
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.10 $
- */
+* A JMX client to deploy an application into a running JBoss server.
+*
+* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+* @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+* @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
+* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+* @version $Revision: 1.1 $
+*/
 public class Deployer
 {
    /**
     * A command line driven interface to the deployer.
+    * <BR>
+    * Attention: option -server tells the deployer which
+    * server to use if not the local one
     */
    public static void main(final String[] args)
       throws Exception {
+      // Check for option "-server"
+      String lServer = InetAddress.getLocalHost().getHostName();
+      for( int i = 0; i < args.length; i++ ) {
+         if( args[ i ].equals( "-server" ) && ( i + 1 ) < args.length ) {
+            lServer = args[ i + 1 ];
+         }
+      }
       for (int count=0;count<args.length;count++) {            
          if (!args[count].equalsIgnoreCase("-undeploy")) { 
             System.out.println("Deploying " + args[count]);
-            new Deployer().deploy(args[count]);
+            new Deployer( lServer ).deploy(args[count]);
             System.out.println(args[count] +
                                " has been deployed successfully");
          } else {
             System.out.println("Undeploying " + args[++count]);
-            new Deployer().undeploy(args[count]);
+            new Deployer( lServer ).undeploy(args[count]);
             System.out.println(args[count] +
                                " has been successfully undeployed");
          }
       }
    }
 
+   private String mServerName;
+   
+   /**
+   * Creates a deployer accessing the RMI Connector for
+   * the given server
+   *
+   * @param pServerName Name of the server (how it is registered on
+   *                    the JNDI server as second part of the name
+   *                    (name spec is: "jmx:<server name>:rmi").
+   **/
+   public Deployer( String pServerName ) {
+      mServerName = pServerName;
+   }
+   
    /**
     * Deploys the app under the given url spec.
     *
@@ -101,19 +125,18 @@ public class Deployer
    }
 
    /**
-    * Lookup of JMXadaptor factored out.
+    * Lookup of JMXConnector factored out.
     */
-   protected JMXAdaptor lookupAdaptor() throws NamingException {
-      JMXAdaptor adapter;
+   protected JMXConnector lookupConnector() throws NamingException {
+      JMXConnector connector = null;
       InitialContext ctx = new InitialContext();
       try {
-         adapter = (JMXAdaptor)ctx.lookup("jmx");
+         connector = (JMXConnector) ctx.lookup( "jmx:" + mServerName + ":rmi" );
       }
       finally {
          ctx.close();
       }
-      
-      return adapter;
+      return connector;
    }
    
    /**
@@ -130,7 +153,7 @@ public class Deployer
    {
       URL _url = createURL(url);
       // lookup the adapter to use
-      JMXAdaptor server = lookupAdaptor();
+      JMXConnector server = lookupConnector();
 
       // get the deployer name to use
       ObjectName name = getFactoryName();
