@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.82 2002/04/07 02:59:32 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.83 2002/04/14 04:31:57 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -483,6 +483,10 @@
 
     <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
     <property name="default.type.mapping" value="Hypersonic SQL"/>
+    <!--property name="default.type.mapping" value="InterBase"/-->
+    <!--property name="default.type.mapping" value="mySQL"/-->
+    <!--property name="default.type.mapping" value="Oracle"/-->
+    <!--property name="default.type.mapping" value="Postgres"/-->
 
     <!-- cmp1 persistence manager for standardjboss.xml -->
     <!--JAWS-->
