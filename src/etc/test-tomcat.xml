@@ -361,6 +361,14 @@
            returnCode="HTTP/1.0 200 OK"
            goldenFile="${gdir}/Include.txt"
     />
+ 
+    <gtest request="GET /test/jsp/chinese.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+   <gtest request="GET /test/jsp/japanese.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
 
    </target>
 
