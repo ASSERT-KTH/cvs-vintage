@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.236 2002/12/19 19:08:38 elicia Exp $
+ * @version $Id: Issue.java,v 1.237 2002/12/19 21:08:23 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -159,6 +159,9 @@ public class Issue
     protected static final String GET_DEFAULT_TEXT = 
         "getDefaultText";
 
+    /** storage for any attachments which have not been saved yet */
+    private List unSavedAttachments = null;
+    
     /**
      * new issues are created only when the issuetype and module are known
      * Or by the Peer when retrieving from db
@@ -530,58 +533,112 @@ public class Issue
             summary = desc + ": '" + summary + "'";
         }                
         
-        Activity activity = ActivityManager
+        ActivityManager
             .createTextActivity(this, activitySet,
                                 summary, attachment);
-        activity.setAttachment(attachment);
-        activity.save();
         return activitySet;
     }
 
     /**
-     * Adds an attachment file to this issue
+     * Adds an attachment file to this issue. Does not perform
+     * a save because the issue may not have been created yet.
+     * use the doSaveFileAttachment() to save the attachment
+     * after the issue has been created.
      */
-    public ActivitySet addFile(Attachment attachment, ScarabUser user)
+    public synchronized void addFile(Attachment attachment, 
+                                     ScarabUser user)
         throws Exception
     {
-        return addFile(null, attachment, user);
+        attachment.setTypeId(Attachment.FILE__PK);
+        attachment.setCreatedBy(user.getUserId());
+        if (unSavedAttachments == null)
+        {
+            unSavedAttachments = new ArrayList();
+        }
+        unSavedAttachments.add(attachment);
+    }
+
+    /**
+     * Overrides the super method in order to allow
+     * us to return the unSavedAttachments if they exist.
+     */
+    public synchronized List getAttachments()
+        throws TorqueException
+    {
+        if (unSavedAttachments != null && 
+            unSavedAttachments.size() > 0)
+        {
+            return unSavedAttachments;
+        }
+        else
+        {
+            return super.getAttachments();
+        }
+    }
+
+    /**
+     * Adds an attachment file to this issue. Does not perform
+     * a save because the issue may not have been created yet.
+     * use the doSaveFileAttachment() to save the attachment
+     * after the issue has been created.
+     */
+    public synchronized ActivitySet doSaveFileAttachments(ScarabUser user)
+        throws Exception
+    {
+        return doSaveFileAttachments(null, user);
     }
     
     /**
-     * Adds an attachment file to this issue
+     * Adds an attachment file to this issue. Does not perform
+     * a save because the issue may not have been created yet.
+     * use the doSaveFileAttachment() to save the attachment
+     * after the issue has been created.
      */
-    public ActivitySet addFile(ActivitySet activitySet, Attachment attachment, 
-                        ScarabUser user)
+    public synchronized ActivitySet doSaveFileAttachments(ActivitySet activitySet,
+                                                          ScarabUser user)
         throws Exception
     {
-        attachment.setIssue(this);
-        attachment.setTypeId(Attachment.FILE__PK);
-        attachment.setCreatedBy(user.getUserId());
-        super.addAttachment(attachment);
-        this.save();
-
-        // Generate description of modification
-        String name = attachment.getFileName();
-        String path = attachment.getRelativePath();
-        Object[] args = {name, path};
-        String desc = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "FileAddedDesc", args);
-
+        if (unSavedAttachments == null)
+        {
+            return activitySet;
+        }
         if (activitySet == null)
         {
             // Save activitySet record
             activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
             activitySet.save();
         }
-        // Save activity record
-        ActivityManager
-            .createTextActivity(this, activitySet,
-                                desc, attachment);
+        boolean hasAttachments = false;
+        Iterator itr = unSavedAttachments.iterator();
+        while (itr.hasNext())
+        {
+            Attachment attachment = (Attachment)itr.next();
+            // make sure we set the issue to the newly created issue
+            attachment.setIssue(this);
+            attachment.save();
+
+            // Generate description of modification
+            String name = attachment.getFileName();
+            Object[] args = {name};
+            String description = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "FileAddedDesc", args);
+
+            // Save activity record
+            ActivityManager
+                .createTextActivity(this, activitySet, description, attachment);
+
+            hasAttachments = true;
+        }
+        // reset the super method so that the query has to hit the database again
+        // so that all of the information is cleaned up and reset.
+        super.collAttachments = null;
+        // we don't need this one anymore either.
+        this.unSavedAttachments = null;
         return activitySet;
     }
-    
+
     /** 
      * Remove an attachment file
      * @param index starts with 1 because velocityCount start from 1
@@ -3040,7 +3097,7 @@ public class Issue
             }
         }
 
-        save();                
+        save();
         if (attachment.getData() != null 
              && attachment.getData().length() > 0) 
         {
@@ -3273,8 +3330,7 @@ public class Issue
 
         // Generate description of modification
         String name = attachment.getFileName();
-        String path = attachment.getRelativePath();
-        Object[] args = {name, path};
+        Object[] args = {name};
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
             Locale.getDefault(),
@@ -3293,7 +3349,6 @@ public class Issue
                                 desc, attachment, name, null);
         return activitySet;
     }
-
 
     /**
      * Returns users assigned to all user attributes.
