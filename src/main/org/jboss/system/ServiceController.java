@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.18 $ <p>
+* @version $Revision: 1.19 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -247,7 +247,7 @@ implements ServiceControllerMBean, MBeanRegistration
       
       // Get the fancy service proxy (for the lifecycle API)
       ctx.proxy = getServiceProxy(ctx.objectName, null);
-         
+      
       // If we are already created (can happen in dependencies) just return
       if (ctx.state == ServiceContext.CREATED || ctx.state == ServiceContext.RUNNING) return;
          
@@ -336,7 +336,7 @@ implements ServiceControllerMBean, MBeanRegistration
       // JSR 77
       ctx.state = ServiceContext.RUNNING;
       
-      installedServices.add(ctx);
+      if (!installedServices.contains(ctx)) installedServices.add(ctx);
       
       // Those that depend on me are waiting for my creation, recursively create them
       Iterator iterator2 = ctx.dependsOnMe.iterator();
