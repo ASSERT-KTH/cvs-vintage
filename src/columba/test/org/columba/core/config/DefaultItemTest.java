@@ -102,4 +102,13 @@ public class DefaultItemTest extends TestCase {
         assertEquals("The parent and the cloned object did not return the same hashcodes",
             item1.hashCode(), item2.hashCode());
     }
+    
+    public void testSet() {
+    	XmlElement root = new XmlElement("root");
+    	DefaultItem item = new DefaultItem(root);
+    	item.set("sub/path", "test", "value");
+    	
+    	assertTrue( root.getElement("sub/path")!= null ); 
+    	assertEquals( item.get("sub/path","test"), "value");
+    }
 }

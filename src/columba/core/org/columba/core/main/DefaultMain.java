@@ -18,5 +18,5 @@ public abstract class DefaultMain {
     // commandline arguments which can't be handled by the core
     // are passed along to other subcomponents
     public abstract void handleCommandLineParameters(String[] args);
-    
+   
 }

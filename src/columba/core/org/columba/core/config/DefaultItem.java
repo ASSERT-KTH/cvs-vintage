@@ -56,7 +56,13 @@ public class DefaultItem implements Cloneable {
     }
 
     public String get(String pathToElement, String key) {
-        return getElement(pathToElement).getAttribute(key);
+    	XmlElement element = getElement(pathToElement);
+    	
+    	if( element != null ) {
+    		return element.getAttribute(key);
+    	} else {
+    		return null;
+    	}
     }
 
     /*
@@ -71,7 +77,12 @@ public String get(String pathToElement, String key, String defaultValue) {
     }
 
     public void set(String pathToElement, String key, String newValue) {
-        getElement(pathToElement).addAttribute(key, newValue);
+    	XmlElement element = getElement(pathToElement);
+        if( element == null ) {
+        	element = root.addSubElement(pathToElement);
+        }
+    	
+    	element.addAttribute(key, newValue);
     }
 
     /**************************** helper classes ***************************/

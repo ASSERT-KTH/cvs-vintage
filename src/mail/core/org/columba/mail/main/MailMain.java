@@ -14,9 +14,17 @@
 //
 //All Rights Reserved.
 package org.columba.mail.main;
+import java.awt.BorderLayout;
+
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -26,14 +34,14 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
+import org.columba.mail.nativ.defaultmailclient.SystemDefaultMailClientHandler;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.composer.MimeTreeRenderer;
-
-
 /**
  * Main entrypoint for mail component.
  * 
@@ -44,7 +52,7 @@ public class MailMain extends DefaultMain {
     private static MailMain instance = new MailMain();
 	
 	public MailMain() {
-		MailInterface.config = new MailConfig(MainInterface.config);
+MailInterface.config = new MailConfig(MainInterface.config);
 		
 		 // Init PGP
         MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
@@ -84,19 +92,54 @@ public class MailMain extends DefaultMain {
 	}
 	
 	/**
-     * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
-     */
-    public void handleCommandLineParameters(String[] args) {
-    	
-    	if (MailInterface.config.getAccountList().count() == 0) {
-            new AccountWizardLauncher().launchWizard(true);
-        }
-    	
-    	 ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-         try {
-             cmdLineParser.parseCmdLine(args);
-         } catch (IllegalArgumentException e) {
-         }
-    }
+	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
+	 */
+	public void handleCommandLineParameters(String[] args) {
+		if (MailInterface.config.getAccountList().count() == 0) {
+			new AccountWizardLauncher().launchWizard(true);
+		}
+		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+		try {
+			cmdLineParser.parseCmdLine(args);
+		} catch (IllegalArgumentException e) {
+		}
+		// Check default mail client
+		checkDefaultClient();
+	}
+	private void checkDefaultClient() {
+		// Check if Columba is the default mail client
+		SystemDefaultMailClientHandler defaultClientHandler = new SystemDefaultMailClientHandler();
+		DefaultItem item = new DefaultItem(MailInterface.config.get("options"));
 
+		boolean checkDefault = item.getBoolean("options/defaultclient", "check", true);
+		
+		if (checkDefault
+				&& defaultClientHandler.platfromSupportsDefaultMailClient()) {
+			if (!defaultClientHandler.isDefaultMailClient()) {
+			
+			JPanel panel = new JPanel(new BorderLayout(0,10));
+			
+			panel.add(new MultiLineLabel(MailResourceLoader.getString("dialog", "defaultclient",
+					"make_default")), BorderLayout.NORTH);
+			
+			JCheckBox askAgain = new JCheckBox(MailResourceLoader.getString("dialog", "defaultclient",
+								"ask_no_more"));
+			panel.add(askAgain, BorderLayout.CENTER );
+			
+				// Some error in the client/server communication
+				//  --> fall back to default login process
+				int result = JOptionPane.showConfirmDialog(
+						FrameModel.getInstance().getActiveFrame(),
+						panel,
+						MailResourceLoader.getString("dialog", "defaultclient",
+								"title"),
+						JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					defaultClientHandler.setDefaultMailClient();
+				}
+				
+				item.set("options/defaultclient", "check", !askAgain.isSelected());
+			}
+		}
+	}
 }

@@ -336,15 +336,33 @@ public class XmlElement extends Observable implements Cloneable {
  * Adds a sub element to this one
  *
  * @return  XmlElement
- * @param Name The name of the sub element to add
+ * @param Name The subpath of the sub element to add
  *
  */
-    public XmlElement addSubElement(String name) {
-        XmlElement e = new XmlElement(name);
-        e.setParent(this);
-        subElements.add(e);
+    public XmlElement addSubElement(String path) {
+    	XmlElement parent = this;
+    	XmlElement child;
+    	String name;
+    	
+    	while(path.indexOf('/') != -1) {
+        	name = path.substring(0, path.indexOf('/'));
+        	path = path.substring(path.indexOf('/')+1);
+        	
+        	if( parent.getElement(name) != null ) {
+        		parent = parent.getElement(name);
+        	} else {
+        		child = new XmlElement(name);
+        	
+        		parent.addElement(child);
+        		parent = child;
+        	}
+			
+        }
+    	
+    	child = new XmlElement(path);
+    	parent.addElement(child);
 
-        return e;
+        return child;
     }
 
     /**

@@ -110,9 +110,6 @@ public class Main {
 
 	
 
-		// handle commandline parameters
-		handleCommandLineParameters(args);
-
 		if (frame != null) {
 			frame.setVisible(false);
 		}
@@ -124,6 +121,9 @@ public class Main {
 		// initialize native code wrapper
 		MainInterface.nativeWrapper = new NativeWrapperHandler(
 				FrameModel.getInstance().getOpenFrames()[0].getFrameMediator());
+
+		// handle commandline parameters
+		handleCommandLineParameters(args);
 
 	}
 

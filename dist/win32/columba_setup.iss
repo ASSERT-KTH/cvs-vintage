@@ -29,14 +29,10 @@ OutputDir=.
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; MinVersion: 4,4
 
 [Files]
-Source: lib\jargs.jar; DestDir: {app}\lib\
-Source: lib\lucene-1.3-final.jar; DestDir: {app}\lib\
-Source: lib\jwizz-0.1.2.jar; DestDir: {app}\lib\
-Source: lib\plastic-1.2.0.jar; DestDir: {app}\lib\
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
 Source: native\win32\launcher\columba.exe; DestDir: {app}
-Source: native\win32\launcher\columba.lap; DestDir: {app}
+Source: native\win32\launcher\columba.lap; DestDir: {app}; AfterInstall: updateLAPfile
 Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
@@ -44,15 +40,23 @@ Source: run.bat; DestDir: {app}
 Source: lib\ristretto-1.0_RC2.jar; DestDir: {app}\lib\
 Source: lib\jhall.jar; DestDir: {app}\lib\
 Source: lib\usermanual.jar; DestDir: {app}\lib\
-Source: lib\forms-1.0.3.jar; DestDir: {app}\lib\
-#ifdef BUNDLE_JRE
-Source: {#DOWNLOADED_JRE_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
-#endif
+Source: lib\forms-1.0.4.jar; DestDir: {app}\lib\
 Source: lib\macchiato-1.0pre1.jar; DestDir: {app}\lib\
 Source: lib\winpack.jar; DestDir: {app}\lib\
 Source: lib\jniwrap-2.4.jar; DestDir: {app}\lib\
 Source: lib\frappucino-1.0pre1.jar; DestDir: {app}\lib\
-Source: lib\jscf-0.1.jar; DestDir: {app}\lib\
+Source: lib\jscf-0.2.jar; DestDir: {app}\lib\
+Source: lib\jargs.jar; DestDir: {app}\lib\
+Source: lib\lucene-1.3-final.jar; DestDir: {app}\lib\
+Source: lib\jwizz-0.1.2.jar; DestDir: {app}\lib\
+Source: lib\plastic-1.2.0.jar; DestDir: {app}\lib\
+Source: lib\je.jar; DestDir: {app}\lib\
+Source: lib\jdom.jar; DestDir: {app}\lib\
+Source: lib\jpim.jar; DestDir: {app}\lib\
+Source: native\win32\JNI-wrapper\jniwrap.dll; DestDir: {app}\native\win32\JNI-wrapper\
+#ifdef BUNDLE_JRE
+Source: {#DOWNLOADED_JRE_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
+#endif
 
 [Icons]
 Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
@@ -73,11 +77,12 @@ UseAbsolutePaths=true
 
 [Registry]
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba; ValueType: string; ValueName: ; ValueData: Columba
-Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\FingerPrint; ValueType: string; ValueName: ColumbaHome; ValueData: {app}
-Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\FingerPrint; ValueType: string; ValueName: MakeDefault; ValueData: YES
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueName: URL Protocol; ValueData: 
-Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueName: ; ValueData: URL:MailTo-Protokoll
-Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\shell\open\command; ValueType: string; ValueData: {app}\columba --mailurl %1
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueData: {app}\columba --mailurl %1
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: binary; ValueName: EditFlags; ValueData: 20 00 00 00
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\DefaultIcon; ValueType: string; ValueData: {app}\columba.exe,3
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\shell\open\command; ValueType: string; ValueData: {app}\columba.exe --mailurl %1
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\shell\open\command; ValueType: string; ValueData: {app}\columba.exe
 
 
 [Code]
@@ -117,6 +122,17 @@ begin
      end;
 end;
 
+procedure updateLAPfile();
+var
+lapString : String;
+
+begin
+	LoadStringFromFile(ExpandConstant('{app}\columba.lap'), lapString);
+
+	StringChange(lapString, '{app}', ExpandConstant('{app}'));
+
+	SaveStringToFile(ExpandConstant('{app}\columba.lap'), lapString, false);
+end;
 
 procedure InstallJRE(Sender: TObject);
 var

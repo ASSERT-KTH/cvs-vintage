@@ -16,4 +16,5 @@
  <markasread delay="2" />
  <headerviewer headerfields="Subject Date Reply-To From To Cc Bcc" />
  <headercache/>
+ <defaultclient check="true" />
 </options>
