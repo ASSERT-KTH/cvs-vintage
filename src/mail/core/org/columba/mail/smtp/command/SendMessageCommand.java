@@ -17,6 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
+import java.text.MessageFormat;
+import java.util.regex.Pattern;
+
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -71,12 +74,66 @@ public class SendMessageCommand extends FolderCommand {
 		super(references);
 	}
 
+	private void showInvalidRecipientMessage(String recipient)
+	{
+	  
+	  String message = 
+	    MailResourceLoader.getString("dialog","error","invalid_recipient");
+	  
+	  String title = 
+	    MailResourceLoader.getString("dialog","error","invalid_recipient_title");
+	  message = MessageFormat.format(message,new Object[]{recipient});
+		JOptionPane.showMessageDialog(null,
+		                             	message,
+		                             	title,
+		                             	JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/*
+	 * validate command parameters.
+	 * At the moment only checks if there are any invalid email addresses
+	 * 
+	 * */
+	private boolean validArguments(ComposerCommandReference[] references)
+	{
+
+	  String invalidRecipient = null;		
+		for(int i=0;i<references.length;i++)
+		{
+		  
+			invalidRecipient = references[i].getComposerController().getModel()
+														.getInvalidRecipients();
+			
+		  if (invalidRecipient != null)
+			{
+
+		    //it would be really nice to highlight the invalid recipient
+				showInvalidRecipientMessage(invalidRecipient);
+				//AFAIK, there's no need to set showComposer to true because
+				//composer window is already displayed
+				//	open composer view
+				//showComposer = true;
+				
+				return false;
+
+			}
+			
+		}
+		
+		return true;
+		
+	}
+	
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
+	  ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
+
+		if (!validArguments(r)) 
+		  return;
+		
 		//	display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "send_message_compose"));
@@ -220,8 +277,13 @@ public class SendMessageCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-		// close send message dialog
-		sendMessageDialog.setVisible(false);
+	  
+	  //can no longer assume that sendMessageDialog has been displayed
+	  if (sendMessageDialog != null)
+	  {
+			// close send message dialog
+			sendMessageDialog.setVisible(false);
+	  }
 
 		if (showComposer == true
 				&& composerController.getView().getFrame() != null) {

@@ -92,7 +92,9 @@ if (str.equals("In Order Received")) {
         // get a list of MessageNode objects of the first
         // hierachy level	
         List v = rootNode.getVector();
-
+				if (v == null)
+				  return;
+				
         // do the sorting
         Collections.sort(v,
             new MessageHeaderComparator(getRealModel().getColumnNumber(getSortingColumn()),

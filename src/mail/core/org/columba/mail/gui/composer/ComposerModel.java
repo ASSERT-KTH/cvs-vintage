@@ -19,6 +19,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
 
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListBuilder;
@@ -63,6 +66,16 @@ public class ComposerModel {
 
 	private boolean encryptMessage;
 
+	/*
+	 * this regular expression should cover anything from
+	 * a@a.pt or a@a.com to a@a.info.
+	 * Permits usage of invalid top domains though.
+	 * */
+	private static final String emailRegExp = 
+	  			"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}+$";
+	
+	private static final Pattern emailPattern = Pattern.compile(emailRegExp);
+	
 	/**
 	 * source reference
 	 * <p>
@@ -387,5 +400,48 @@ public class ComposerModel {
 		output.addAll(l);
 
 		return output;
+	}
+	
+
+	/**
+	 * Checks if there are any invalid email address in the to,cc and bcc lists
+	 * 
+	 * @return null if there are no offending email addresses or the offending 
+	 * email address
+	 */
+	public String getInvalidRecipients()
+	{
+	  
+		/* 
+		  assert that email addresses are valid 
+		*/
+		
+		//validate TO: list		
+		for(int i=0;i<toList.size();i++)
+		{
+			if (!emailPattern.matcher((String)toList.get(i)).matches())
+				return (String)toList.get(i);
+
+		}
+		
+		//validate CC: list
+		for(int i=0;i<ccList.size();i++)
+		{
+			if (!emailPattern.matcher((String)ccList.get(i)).matches())
+				return (String)ccList.get(i);
+
+		}
+		
+		//validate BCC: list
+		for(int i=0;i<bccList.size();i++)
+		{
+
+		  if (!emailPattern.matcher((String)bccList.get(i)).matches())
+				return (String)bccList.get(i);
+
+		}
+			
+		return null;
+		
 	}
 }
