@@ -60,7 +60,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.helper.*;

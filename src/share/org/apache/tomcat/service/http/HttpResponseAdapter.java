@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.16 2000/08/14 18:40:33 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/08/14 18:40:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.17 2000/08/27 20:37:31 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/08/27 20:37:31 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.service.http;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
@@ -107,7 +108,7 @@ public class HttpResponseAdapter extends  Response {
     public void endHeaders()  throws IOException {
 	super.endHeaders();
 	
-	sendStatus( status, Response.getMessage( status ));
+	sendStatus( status, RequestUtil.getMessage( status ));
 
 	int count=headers.size();
 	for( int i=0; i<count; i++ ) {

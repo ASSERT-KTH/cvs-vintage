@@ -406,15 +406,21 @@ public class EmbededTomcat { // extends WebService
      */
     public static void main( String args[] ) {
 	try {
+	    File pwdF=new File(".");
+	    String pwd=pwdF.getCanonicalPath();
+
 	    EmbededTomcat tc=new EmbededTomcat();
-	    tc.setWorkDir( "/home/costin/src/jakarta/build/tomcat/work");
+	    tc.setWorkDir( pwd + "/work"); // relative to pwd
+
 	    ServletContext sctx;
 	    sctx=tc.addContext("", new URL
-		( "file:/home/costin/src/jakarta/build/tomcat/webapps/ROOT"));
+		( "file", null, pwd + "/webapps/ROOT"));
 	    tc.initContext( sctx );
+
 	    sctx=tc.addContext("/examples", new URL
-		("file:/home/costin/src/jakarta/build/tomcat/webapps/examples"));
+		("file", null, pwd + "/webapps/examples"));
 	    tc.initContext( sctx );
+
 	    tc.addEndpoint( 8080, null, null);
 	    tc.start();
 	} catch (Throwable t ) {

@@ -61,7 +61,6 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.facade.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;

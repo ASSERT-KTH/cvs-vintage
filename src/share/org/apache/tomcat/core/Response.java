@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.30 2000/08/25 22:35:57 alex Exp $
- * $Revision: 1.30 $
- * $Date: 2000/08/25 22:35:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.31 2000/08/27 20:37:29 costin Exp $
+ * $Revision: 1.31 $
+ * $Date: 2000/08/27 20:37:29 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.facade.*;
+//import org.apache.tomcat.facade.*;
 import org.apache.tomcat.logging.*;
 
 /**
@@ -86,10 +86,10 @@ public class Response {
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
     public static final String DEFAULT_CHAR_ENCODING = "8859_1";
     public static final String LOCALE_DEFAULT="en";
+    public static final Locale DEFAULT_LOCALE=new Locale(LOCALE_DEFAULT, "");
     
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
-    static final Locale DEFAULT_LOCALE=new Locale(LOCALE_DEFAULT, "");
 
     protected Request request;
     protected HttpServletResponse responseFacade;
@@ -123,10 +123,7 @@ public class Response {
     protected boolean usingWriter = false;
     protected boolean started = false;
     
-    boolean notIncluded=true;
-
-    // default implementation will just append everything here
-    StringBuffer body=null;
+    boolean included=false;
     
     public Response() {
     }
@@ -159,11 +156,11 @@ public class Response {
 
     // Included response behavior
     public boolean isIncluded() {
-	return ! notIncluded;
+	return included;
     }
 
     public void setIncluded( boolean incl ) {
-	notIncluded= ! incl;
+	included= incl;
 	if( incl ) {
 	    // included behavior, no header output,
 	    // no status change on errors.
@@ -193,45 +190,27 @@ public class Response {
 	usingStream = false;
 	sessionId=null;
 	writer=null;
-	//	sos=null;
 	started = false;
 	commited = false;
-	notIncluded=true;
-	// adapter
-	body=null;
-	// 	if( out != null ) out.recycle();
-	// 	if( bBuffer != null ) bBuffer.recycle();
+	included=false;
 	oBuffer.recycle();
 	headers.clear();
     }
 
     public void finish() throws IOException {
-	// 	if (usingWriter && (writer != null)) {
-	// 	    writer.flush();
-	// 	    writer.close();
-	// 	}
+	if (usingWriter && (writer != null)) {
+	    writer.flush();
+	    //writer.close();
+	}
 	oBuffer.flushChars();
 	oBuffer.flushBytes();
 
-	// 	if( bBuffer != null) {
-	// 	    bBuffer.flush();
-	// 	    request.getContextManager().doAfterBody(request, this);
-	// 	    return;
-	// 	}
-	
-	// 	out.flush();
-	// 	out.reallyFlush();
-	
 	request.getContextManager().doAfterBody(request, this);
-	//	out.close();
     }
 
     public boolean containsHeader(String name) {
 	return headers.containsHeader(name);
     }
-
-    // XXX
-    // mark whether or not we are being used as a stream our writer
 
     public boolean isUsingStream() {
 	return usingStream;
@@ -247,106 +226,20 @@ public class Response {
 
     public void setUsingWriter( boolean writer ) {
 	usingWriter=writer;
-	//	if( out!=null ) out.setUsingWriter(true);
     }
-
-//     public void setWriter( PrintWriter w ) {
-// 	this.writer=w;
-//     }
-    
-//     public PrintWriter getWriter() throws IOException {
-// 	// usingWriter
-// 	if( writer != null )
-// 	    return writer;
-
-// 	sos=getFacade().getOutputStream();
-	    
-// 	writer=getWriter( sos );
-
-// 	return writer;
-   
-// 	// 	if( out !=null )
-// 	// 	    return getWriter( out );
-	
-// 	// it will know what to do. This method is here
-// 	// just to keep old code happy ( internal error handlers)
-// 	//if( usingStream ) {
-// 	//    return getWriter( getFacade().getOutputStream());
-// 	//}
-// 	//return getFacade().getWriter();
-//     }
-
-//     public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
-	
-// 	if(writer!=null) return writer;
-// 	// it already did all the checkings
-	
-// 	started = true;
-// 	usingWriter = true;
-	
-// 	//	writer = new ServletWriterFacade( getConverter(outs), this);
-// 	writer = new ServletWriterFacade( oBuffer, this);
-// 	return writer;
-//     }
-
-//     public Writer getConverter( ServletOutputStream outs ) throws IOException {
-// 	String encoding = getCharacterEncoding();
-
-// 	if (encoding == null) {
-// 	    // use default platform encoding - is this correct ? 
-// 	    return  new OutputStreamWriter(outs);
-//         }  else {
-// 	    try {
-// 		return  new OutputStreamWriter(outs, encoding);
-// 	    } catch (java.io.UnsupportedEncodingException ex) {
-// 		log("Unsuported encoding: " + encoding, Logger.ERROR );
-
-// 		return new OutputStreamWriter(outs);
-// 	    }
-// 	}
-//     }
 
     public OutputBuffer getBuffer() {
 	return oBuffer;
     }
     
-//     public ByteBuffer getOutputBuffer() {
-// 	started=true;
-// 	return bBuffer;
-//     }
-
-//     public void setOutputBuffer(ByteBuffer buf) {
-// 	bBuffer=buf;
-// 	if( buf!= null) buf.setParent( this );
-//     }
-    
-    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
-	and implement doWrite();
-	@deprecated 
-     */
-//     public ServletOutputStream getOutputStream() throws IOException {
-// 	started = true;
-// // 	if( out!=null)
-// // 	    return out;
-// 	// neither writer or output stream used
-// 	if( sos == null )
-// 	    sos=getFacade().getOutputStream();
-
-// 	return sos;
-//     }
-
-//     public void setServletOutputStream( ServletOutputStream s ) {
-// 	sos=s;
-//     }
 
     // -------------------- Headers --------------------
     public MimeHeaders getMimeHeaders() {
 	return headers;
     }
 
-
     public void setHeader(String name, String value) {
-	if( ! notIncluded ) return; // we are in included sub-request
+	if( included ) return; // we are in included sub-request
 	char cc=name.charAt(0);
 	if( cc=='C' || cc=='c' ) {
 	    if( checkSpecialHeader(name, value) )
@@ -356,7 +249,7 @@ public class Response {
     }
 
     public void addHeader(String name, String value) {
-	if( ! notIncluded ) return; // we are in included sub-request
+	if( included ) return; // we are in included sub-request
 	char cc=name.charAt(0);
 	if( cc=='C' || cc=='c' ) {
 	    if( checkSpecialHeader(name, value) )
@@ -382,8 +275,9 @@ public class Response {
 		setContentLength( cL );
 		return true;
 	    } catch( NumberFormatException ex ) {
-		// We shouldn't set the header
-		log("Bogus Content-Length: " + value, Logger.WARNING);
+		// Do nothing - the spec doesn't have any "throws" 
+		// and the user might know what he's doing
+		return false;
 	    }
 	}
 	if( name.equalsIgnoreCase( "Content-Language" ) ) {
@@ -393,8 +287,6 @@ public class Response {
     }
 
     public int getBufferSize() {
-	// 	if( out!=null ) return out.getBufferSize();
-	// 	if( bBuffer != null ) return bBuffer.getBufferSize();
 	return oBuffer.getBufferSize();
     }
 
@@ -406,18 +298,6 @@ public class Response {
 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
 	}
 	oBuffer.setBufferSize( size );
-	// 	if( bBuffer != null ) {
-	// 	    if( bBuffer.getBytesWritten() >0  ) {
-	// 		throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
-	// 	    }
-	// 	    bBuffer.setBufferSize(size);
-	// 	    return;
-	// 	}
-	
-	// 	if (out.isContentWritten()  ) {
-	// 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
-	// 	}
-	// 	out.setBufferSize(size);
     }
 
     /*
@@ -443,23 +323,21 @@ public class Response {
 	contentLength = -1;
 	status = 200;
 
+	// XXX XXX What happens here ? flush() on writer will flush
+	// to client !!!!!!!!
 	if (usingWriter == true && writer != null)
 	    writer.flush();
 
-	body=null;
 	// Reset the stream
 	if( commited ) {
 	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
 	    throw new IllegalStateException(msg);
 	}
 	oBuffer.reset();
-	// 	if (bBuffer!=null ) bBuffer.reset();
-	// 	if( out!=null ) out.reset();
-
         // Clear the cookies and such
 
         // Clear the headers
-        if( notIncluded) headers.clear();
+        if( ! included) headers.clear();
     }
 
     // Reset the response buffer but not headers and cookies
@@ -472,21 +350,10 @@ public class Response {
 	    throw new IllegalStateException(msg);
 	}
 	oBuffer.reset();
-	// 	if (bBuffer!=null ) bBuffer.reset();
-	// 	if( out!=null ) out.reset();	// May throw IllegalStateException
-
     }
 
     public void flushBuffer() throws IOException {
-	//	if( notIncluded) {
-	// 	if (usingWriter == true && writer != null)
-	// 	    writer.flush();
-
       oBuffer.flush();
-
-	// 	if( out!=null ) out.reallyFlush();
-	// 	if(bBuffer!=null) bBuffer.flush();
-	    //} 
     }
 
 
@@ -504,13 +371,12 @@ public class Response {
      */
     public void notifyEndHeaders() throws IOException {
 	commited=true;
-	//	log("End headers " + request.getProtocol());
 	if(request.getProtocol()==null) // HTTP/0.9 
 	    return;
 
 	// let CM notify interceptors and give a chance to fix
 	// the headers
-	if(request.getContext() != null && notIncluded ) 
+	if(request.getContext() != null && ! included ) 
 	    request.getContext().getContextManager().doBeforeBody(request, this);
 
 	// No action.. 
@@ -527,7 +393,7 @@ public class Response {
 	    addHeader( CookieTools.getCookieHeaderName(c0),
 				CookieTools.getCookieHeaderValue(c0));
 	}
-	if( notIncluded ) userCookies.addElement(cookie);
+	if( ! included ) userCookies.addElement(cookie);
     }
 
     public Enumeration getCookies() {
@@ -535,7 +401,7 @@ public class Response {
     }
 
     public void setSessionId( String id ) {
-	if( notIncluded ) sessionId=id;
+	if( ! included ) sessionId=id;
     }
 
     public String getSessionId() {
@@ -546,8 +412,9 @@ public class Response {
         return locale;
     }
 
+    // XXX XXX Need rewrite
     public void setLocale(Locale locale) {
-        if (locale == null || ! notIncluded) {
+        if (locale == null || included) {
             return;  // throw an exception?
         }
 
@@ -559,30 +426,11 @@ public class Response {
 
         // Set the contentType for header output
         // Use the setContentType() method so encoding is set properly
-        String newType = constructLocalizedContentType(contentType, locale);
+        String newType = RequestUtil.constructLocalizedContentType(contentType, locale);
         setContentType(newType);
 
 	// only one header !
 	headers.putHeader("Content-Language", contentLanguage);
-    }
-
-    /** Utility method for parsing the mime type and setting
-     *  the encoding to locale. Also, convert from java Locale to mime encodings
-    */
-    private static String constructLocalizedContentType(String type, Locale loc) {
-        // Cut off everything after the semicolon
-        int semi = type.indexOf(";");
-        if (semi != -1) {
-            type = type.substring(0, semi);
-        }
-
-        // Append the appropriate charset, based on the locale
-        String charset = LocaleToCharsetMap.getCharset(loc);
-        if (charset != null) {
-            type = type + "; charset=" + charset;
-        }
-
-        return type;
     }
 
     public String getCharacterEncoding() {
@@ -590,7 +438,7 @@ public class Response {
     }
 
     public void setContentType(String contentType) {
-        if( ! notIncluded ) return;
+        if( included ) return;
 	this.contentType = contentType;
 	String encoding = RequestUtil.getCharsetFromContentType(contentType);
         if (encoding != null) {
@@ -604,9 +452,9 @@ public class Response {
     }
     
     public void setContentLength(int contentLength) {
-        if( ! notIncluded ) return;
+        if( included ) return;
 	this.contentLength = contentLength;
-	headers.putHeader("Content-Length", (new Integer(contentLength)).toString());
+	headers.putIntHeader("Content-Length", contentLength);
     }
 
     public int getContentLength() {
@@ -616,12 +464,11 @@ public class Response {
     public int getStatus() {
         return status;
     }
-
     
     /** Set the response status 
      */ 
     public void setStatus( int status ) {
-	if( ! notIncluded ) return;
+	if( included ) return;
 	this.status=status;
     }
 
@@ -630,56 +477,23 @@ public class Response {
      *  Headers and status will be written before this method is exceuted.
      */
     public void doWrite( byte buffer[], int pos, int count) throws IOException {
-        // XXX fix if charset is other than default.
-        if( body==null)
-	    body=new StringBuffer();
-	body.append(new String(buffer, pos, count, 
-			       DEFAULT_CHAR_ENCODING) );
+	// do nothing.
+	// This method must be overriden ( in the current setup ).
+
+	// This should call a hook and follow the same patterns with
+	// the rest of tomcat ( I'll do that - costin )
     }
 
-    public StringBuffer getBody() {
-	return body;
-    }
 
-    static String st_200=null;
-    static String st_302=null;
-    static String st_400=null;
-    static String st_404=null;
-    
-    // utility method - should be in a different class
-    public static String getMessage( int status ) {
-	// hotspot, the whole thing must be rewritten.
-	// Does HTTP requires/allow international messages or
-	// are pre-defined? The user doesn't see them most of the time
-	switch( status ) {
-	case 200:
-	    if( st_200==null ) st_200=sm.getString( "sc.200");
-	    return st_200;
-	case 302:
-	    if( st_302==null ) st_302=sm.getString( "sc.302");
-	    return st_302;
-	case 400:
-	    if( st_400==null ) st_400=sm.getString( "sc.400");
-	    return st_400;
-	case 404:
-	    if( st_404==null ) st_404=sm.getString( "sc.404");
-	    return st_404;
-	}
-	return sm.getString("sc."+ status);
-    }
+    /*
+      Changes:
 
-    // write log messages to correct log
-    
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
-    
-    protected void log(String s) {
-	log(s, Logger.INFORMATION);
-    }
-    protected void log(String s, int level) {
-	if (request != null && request.getContext() != null) {
-	    loghelper.setLogger(request.getContext().getLoggerHelper().getLogger());
-	}
-	loghelper.log(s, level);
-    }		       
+      - removed StringBuffer body. It was broken ( used DEFAULT_CHAR_ENCODING, the
+      output is already bytes... ). No known usage, it's easy to create a
+      response that stores the response.
+      
+      - replaced notIncluded with included, remove all ugly ! notIncluded
 
+
+     */
 }

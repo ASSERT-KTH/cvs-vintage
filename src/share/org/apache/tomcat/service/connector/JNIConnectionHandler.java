@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.14 2000/08/12 04:55:47 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/08/12 04:55:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.15 2000/08/27 20:37:30 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/08/27 20:37:30 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.service.connector;
 import java.io.IOException;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.helper.*;
 import javax.servlet.ServletInputStream;
 import java.util.Vector;
 import java.io.File;
@@ -370,7 +371,7 @@ class JNIResponseAdapter extends Response {
             headerValues[i] = h.getValue();
         }
 
-        if(h.startReasponse(s, l, status, getMessage(status), headerNames, headerValues, hcnt) <= 0) {
+        if(h.startReasponse(s, l, status, RequestUtil.getMessage(status), headerNames, headerValues, hcnt) <= 0) {
             throw new IOException("Error: JNI startReasponse implementation error");
         }
     }

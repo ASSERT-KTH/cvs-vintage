@@ -102,7 +102,10 @@ public class StartTomcat {
 	    task.execute();     
 	    return;
 	}
-	    
+	startTomcat();
+    }
+
+    public void startTomcat() throws Exception {
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
@@ -113,14 +116,15 @@ public class StartTomcat {
 	sxml.setConnectorHelper( xh );
 	sxml.setLogHelper( xh );
 
+	String tchome=sxml.getTomcatInstall();
+	cm.setInstallDir( tchome);
+
 	// load server.xml
 	File f = null;
 	if (configFile != null)
 	    f=new File(configFile);
-
-	String tchome=sxml.getTomcatInstall();
-	f=new File(tchome, DEFAULT_CONFIG);
-	cm.setInstallDir( tchome);
+	else
+	    f=new File(tchome, DEFAULT_CONFIG);
 
 	loadConfigFile(xh,f,cm);
 
