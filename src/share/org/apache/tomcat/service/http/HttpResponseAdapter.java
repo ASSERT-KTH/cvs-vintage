@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.15 2000/08/12 04:55:48 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/08/12 04:55:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.16 2000/08/14 18:40:33 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/08/14 18:40:33 $
  *
  * ====================================================================
  *
@@ -200,7 +200,6 @@ public class HttpResponseAdapter extends  Response {
 	    }
 	    buffer[bufferCount] = (byte)c;
 	    bufferCount++;
-	}	
-    }
-					
+	}
+    }    
 }

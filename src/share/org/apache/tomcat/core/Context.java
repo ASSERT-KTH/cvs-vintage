@@ -62,7 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.facade.*;
-import org.apache.tomcat.depend.*;
+import org.apache.tomcat.util.depend.*;
 import org.apache.tomcat.util.*;
 import java.security.*;
 import java.lang.reflect.*;

@@ -53,7 +53,7 @@
  *
  */
 
-package org.apache.tomcat.depend;
+package org.apache.tomcat.util.depend;
 
 import java.io.*;
 import java.lang.*;

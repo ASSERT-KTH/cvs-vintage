@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.7 2000/05/01 23:07:48 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/01 23:07:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.8 2000/08/14 18:40:34 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/08/14 18:40:34 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import java.io.IOException;
 
 public class URLUtil {
 
-    public static URL resolve(String s)
+    public static URL resolve(String s, String baseDir)
 	throws MalformedURLException
     {
         URL resolve = null;
@@ -98,10 +98,10 @@ public class URLUtil {
 	    // 	} else if (url != null) {
 	    // 	    resolve = new URL(url, s);
 	} else if (s.startsWith(File.separator) ||
-            s.startsWith("/") ||
-	    (s.length() >= 2 &&
-	     Character.isLetter(s.charAt(0)) &&
-	     s.charAt(1) == ':')) {
+		   s.startsWith("/") ||
+		   (s.length() >= 2 &&
+		    Character.isLetter(s.charAt(0)) &&
+		    s.charAt(1) == ':')) {
             String fName = s;
 
             try {
@@ -112,40 +112,14 @@ public class URLUtil {
 
 	    resolve = new URL("file", "", fName);
 	} else {
-            String path = System.getProperty("user.dir") +
-                File.separator + s;
+            String path = (baseDir.endsWith("/")) ?
+		baseDir + s :
+		baseDir + File.separator + s;
 
 	    resolve = new URL("file", "", path);
 	}
 	
-        if (! resolve.getProtocol().equalsIgnoreCase("war") &&
-            resolve.getFile().toLowerCase().endsWith(
-						     "." + "war")) {
-            URL u = new URL("war" + ":" +
-			    resolve.toString());
-	    
-            resolve = u;
-        }
-
-        resolve = new URL(trim(resolve.toString(), ".", ".."));
-        resolve = new URL(trim(resolve.toString(), "./"));
-	
 	return resolve;
-    }
-
-    private static String trim(String s, String t) {
-        return trim(s, t, null);
-    }
-
-    private static String trim(String s, String r, String t) {
-        while (s.endsWith(r) &&
-            ((t == null) ? true : (! s.endsWith(t)))) {
-            int i = s.length() - r.length();
-
-            s = s.substring(0, i);
-        }
-
-        return s;
     }
 
     public static String removeLast( String s) {
@@ -159,18 +133,6 @@ public class URLUtil {
 	    s = "";
 	}
 	return s;
-    }
-
-    public static String getFirst( String path ) {
-	if (path.startsWith("/")) 
-	    path = path.substring(1);
-	
-	int i = path.indexOf("/");
-	if (i > -1) {
-	    path = path.substring(0, i);
-	}
-
-	return  "/" + path;
     }
     
     public static String getExtension( String path ) {
