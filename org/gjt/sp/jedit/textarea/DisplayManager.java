@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.19 2003/04/09 00:50:55 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.20 2003/04/09 01:01:50 spestov Exp $
  */
 public class DisplayManager
 {
@@ -626,6 +626,7 @@ public class DisplayManager
 	class FirstLine extends OffsetManager.Anchor
 	{
 		int oldScrollLine;
+		int oldSkew;
 		int skew;
 
 		//{{{ FirstLine constructor
@@ -651,23 +652,27 @@ public class DisplayManager
 
 			int visibleLines = textArea.getVisibleLines();
 
-			if(oldScrollLine == scrollLine)
+			int _scrollLine = scrollLine + skew;
+			int _oldScrollLine = oldScrollLine + oldSkew;
+
+			if(_scrollLine == _oldScrollLine)
 				/* do nothing */;
-			else if(scrollLine >= oldScrollLine + visibleLines
-				|| scrollLine <= oldScrollLine - visibleLines)
+			else if(_scrollLine >= _oldScrollLine + visibleLines
+				|| _scrollLine <= oldScrollLine - visibleLines)
 			{
 				textArea.chunkCache.invalidateAll();
 			}
-			else if(scrollLine > oldScrollLine)
+			else if(_scrollLine > _oldScrollLine)
 			{
-				textArea.chunkCache.scrollDown(scrollLine - oldScrollLine);
+				textArea.chunkCache.scrollDown(_scrollLine - _oldScrollLine);
 			}
-			else if(scrollLine < oldScrollLine)
+			else if(_scrollLine < _oldScrollLine)
 			{
-				textArea.chunkCache.scrollUp(oldScrollLine - scrollLine);
+				textArea.chunkCache.scrollUp(_oldScrollLine - _scrollLine);
 			}
 
 			oldScrollLine = scrollLine;
+			oldSkew = skew;
 			textArea.updateScrollBars();
 			textArea.recalculateLastPhysicalLine();
 		} //}}}
