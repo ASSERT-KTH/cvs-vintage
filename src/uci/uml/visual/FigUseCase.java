@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.3 1998/07/03 21:00:17 abonner Exp $
+// $Id: FigUseCase.java,v 1.4 1998/07/03 21:06:35 abonner Exp $
 
 package uci.uml.visual;
 
@@ -100,7 +100,6 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     addFig(_useCase);
     addFig(_name);
 
-
     Object onlyPort = node;
     bindPort(onlyPort, _bigPort);
     setBlinkPorts(false); //make port invisble unless mouse enters
@@ -146,7 +145,6 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     endTrans();
   }
 
-  
 
   public void dispose() {
     if (!(getOwner() instanceof Element)) return;

@@ -26,8 +26,8 @@
 
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
-// Original Author: your email address here
-// $Id: UseCaseDiagramRenderer.java,v 1.3 1998/07/03 21:00:20 abonner Exp $
+// Original Author: abonner@ics.uci.edu
+// $Id: UseCaseDiagramRenderer.java,v 1.4 1998/07/03 21:06:36 abonner Exp $
 
 package uci.uml.visual;
 
@@ -39,7 +39,6 @@ import uci.uml.Foundation.Core.*;
 import uci.uml.Behavioral_Elements.Use_Cases.*;
 
 // could be singleton
-
 
 /** This class defines a renderer object for UML Use Case Diagrams. In a
  *  Class Diagram the following UML objects are displayed with the
@@ -63,8 +62,9 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     return null;
   }
 
-
   /** Return a Fig that can be used to represent the given edge */
+  /** Generally the same code as for the ClassDiagram, since its
+      very related to it. */
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
     System.out.println("making figedge for " + edge);
     if (edge instanceof Association) {
