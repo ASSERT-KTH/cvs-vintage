@@ -1,4 +1,4 @@
-/*
+ /*
  * jBoss, the OpenSource EJB server
  *
  * Distributable under GPL license.
@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *   @see Container
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -228,7 +228,55 @@ public class ContainerFactory
                   containers.add(con);
                } else // Stateful
                {
-					   // throw new Error("Stateful beans not yet implemented");
+				    boolean implemented = false;
+					
+					if (!implemented) throw new Error("Stateful Container not implemented yet");
+						
+				    // Create container
+					con = new StatefulSessionContainer();
+
+					// Create classloader for this container
+					con.setClassLoader(new BeanClassLoader(cl));
+					
+					// Set metadata
+					con.setMetaData(bean);
+					
+					// Get container configuration
+					ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+
+					// Make sure we have a default configuration
+					if (conf == null) 
+					{
+						log.warning("No configuration chosen. Using default configuration");
+						
+						conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_STATEFUL_CONFIGURATION);
+
+						// Make sure this bean knows the configuration he is using
+						bean.setConfigurationName(DEFAULT_STATEFUL_CONFIGURATION);	
+					}
+					
+					// Set container invoker
+					((StatefulSessionContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+					
+					// Set instance cache
+					((StatefulSessionContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+					
+					// Set persistence manager
+					((StatefulSessionContainer)con).setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+					     
+
+					// Create interceptors
+					con.addInterceptor(new LogInterceptor());
+					con.addInterceptor(new TxInterceptor());
+					//con.addInterceptor(new EntityInstanceInterceptor());
+					con.addInterceptor(new SecurityInterceptor());
+					//con.addInterceptor(new EntitySynchronizationInterceptor());
+
+					con.addInterceptor(con.createContainerInterceptor());
+
+					// Add container to application
+					containers.add(con);
+					
                }
             } else // Entity
             {
