@@ -16,7 +16,6 @@
 
 package org.columba.mail.gui.tree.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -38,138 +37,194 @@ import org.columba.ristretto.message.MailboxInfo;
  * This class is used for the mail folder tree.
  */
 public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
-    private static Icon expandedFolderIcon;
-    private static Icon collapsedFolderIcon;
-    private static Icon virtualFolderIcon;
-    private static Icon localRootFolderIcon;
-    private static Icon imapRootFolderIcon;
-    private static Icon inboxIcon;
-    private static Icon outboxIcon;
-    private static Icon trashIcon;
-    
-    static {
-        collapsedFolderIcon = ImageLoader.getSmallImageIcon("folder-closed.png");
-        expandedFolderIcon = ImageLoader.getSmallImageIcon("folder-open.png");
-        virtualFolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
-        localRootFolderIcon = ImageLoader.getSmallImageIcon("localhost.png");
-        imapRootFolderIcon = ImageLoader.getSmallImageIcon("stock_internet-16.png");
-        inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
-        outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
-        trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
-    }
-    
-    private Font plainFont;
-    private Font boldFont;
-    private Font italicFont;
+	private static Icon expandedFolderIcon;
 
-    /**
-     * Generates a new CellRenderer. In this contructor font and images are set
-     * to local variables. The fonts are depended on the current UIManager.
-     */
-    public FolderTreeCellRenderer() {
-        super();
+	private static Icon collapsedFolderIcon;
 
-        boldFont = UIManager.getFont("Tree.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
-        italicFont = UIManager.getFont("Tree.font");
-        italicFont = italicFont.deriveFont(Font.ITALIC);
-        plainFont = UIManager.getFont("Tree.font");
-    }
+	private static Icon virtualFolderIcon;
 
-    /**
-     * The tooltip text and unseen counter for the current folder component
-     * are set. If the folder has unseen Messages the folder self is show
-     * as bold and the unseen message counter is added to the folder label.
-     * The folder gets a tooltip where infos (unseen, recent, total) are
-     * set. If the folder is an IMAP folder and not selectable the folder is
-     * set to italic with a darkgrey background.
-     */
-    public Component getTreeCellRendererComponent(JTree tree, Object value,
-        boolean isSelected, boolean expanded, boolean leaf, int row,
-        boolean hasFocusVar) {
-        /* RIYAD: Even though we don't do anything with this value, what it
-         * is doing is setting up the selection colors and such as implemented
-         * per the default cell rendered.
-         */
-        super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
-            leaf, row, hasFocusVar);
+	private static Icon localRootFolderIcon;
 
-        // setting default Values
-        setFont(plainFont);
-        setToolTipText("");
+	private static Icon imapRootFolderIcon;
 
-        AbstractFolder treeNode = (AbstractFolder) value;
-        setText(treeNode.getName());
-        setIcon(getFolderIcon(treeNode, expanded));
+	private static Icon inboxIcon;
 
-        if (value instanceof MessageFolder) {
-            MessageFolder folder = (MessageFolder) value;
+	private static Icon outboxIcon;
 
-            // getting folder info
-            MailboxInfo info = folder.getMessageFolderInfo();
+	private static Icon trashIcon;
 
-            // getting unseen value
-            int unseen = info.getUnseen();
+	static {
+		collapsedFolderIcon = ImageLoader
+				.getSmallImageIcon("folder-closed.png");
+		expandedFolderIcon = ImageLoader.getSmallImageIcon("folder-open.png");
+		virtualFolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
+		localRootFolderIcon = ImageLoader.getSmallImageIcon("localhost.png");
+		imapRootFolderIcon = ImageLoader
+				.getSmallImageIcon("stock_internet-16.png");
+		inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
+		outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
+		trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
+	}
 
-            // mark name bold if folder contains any unseen messages
-            // the default is alrady set to plain
-            if (unseen > 0) {
-                setFont(boldFont);
-            }
+	private Font plainFont;
 
-            FolderItem item = folder.getConfiguration();
+	private Font boldFont;
 
-            if (item != null) {
-                String name;
-                name = item.get("property", "name");
+	private Font italicFont;
 
-                // append unseen count to folder name
-                if (unseen > 0) {
-                    name = name + " (" + unseen + ") ";
-                }
+	/**
+	 * Generates a new CellRenderer. In this contructor font and images are set
+	 * to local variables. The fonts are depended on the current UIManager.
+	 */
+	public FolderTreeCellRenderer() {
+		super();
 
-                // set tooltip text
-                StringBuffer buf = new StringBuffer();
-                buf.append("<html><body>&nbsp;Total: " + info.getExists());
-                buf.append("<br>&nbsp;Unseen: " + unseen);
-                buf.append("<br>&nbsp;Recent: " + info.getRecent());
-                buf.append("</body></html>");
-                setToolTipText(buf.toString());
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
+		italicFont = UIManager.getFont("Tree.font");
+		italicFont = italicFont.deriveFont(Font.ITALIC);
+		plainFont = UIManager.getFont("Tree.font");
+	}
 
-                setText(name);
+	/**
+	 * The tooltip text and unseen counter for the current folder component are
+	 * set. If the folder has unseen Messages the folder self is show as bold
+	 * and the unseen message counter is added to the folder label. The folder
+	 * gets a tooltip where infos (unseen, recent, total) are set. If the folder
+	 * is an IMAP folder and not selectable the folder is set to italic with a
+	 * darkgrey background.
+	 */
+	public Component getTreeCellRendererComponent(JTree tree, Object value,
+			boolean isSelected, boolean expanded, boolean leaf, int row,
+			boolean hasFocusVar) {
+		/*
+		 * RIYAD: Even though we don't do anything with this value, what it is
+		 * doing is setting up the selection colors and such as implemented per
+		 * the default cell rendered.
+		 */
+		super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
+				leaf, row, hasFocusVar);
 
-                // important for imap
-                // is this folder is not selectable 
-                if (!item.getBoolean("selectable", true)) {
-                    setFont(italicFont);
-                    setForeground(Color.darkGray);
-                }
-            }
-        }
-        return this;
-    }
-    
-    /**
-     * Returns an icon suitable for the given folder.
-     */
-    public static Icon getFolderIcon(AbstractFolder node, boolean expanded) {
-        if (node instanceof LocalRootFolder) {
-            return localRootFolderIcon;
-        } else if (node instanceof IMAPRootFolder) {
-            return imapRootFolderIcon;
-        } else if (node instanceof VirtualFolder) {
-            return virtualFolderIcon;
-        } else if (node instanceof MessageFolder) {
-            MessageFolder folder = (MessageFolder)node;
-            if (folder.isInboxFolder()) {
-                return inboxIcon;
-            } else if (folder.getUid() == 103) {
-                // outbox
-                return outboxIcon;
-            } else if (folder.isTrashFolder()) {
-                return trashIcon;
-            }
-        }
-        return expanded ? expandedFolderIcon : collapsedFolderIcon;
-    }
+		// setting default Values
+		setFont(plainFont);
+		setToolTipText("");
+
+		AbstractFolder treeNode = (AbstractFolder) value;
+		setText(treeNode.getName());
+		setIcon(getFolderIcon(treeNode, expanded));
+
+		if (value instanceof MessageFolder) {
+			MessageFolder folder = (MessageFolder) value;
+
+			// getting folder info
+			MailboxInfo info = folder.getMessageFolderInfo();
+
+			// get folder item configuration
+			FolderItem item = folder.getConfiguration();
+
+			if (item == null)
+				return this;
+
+			// set tooltip text
+			setToolTipText(createTooltipText(info));
+			
+			// set label text
+			setText(createLabelText(info, item));
+
+		}
+		return this;
+	}
+
+	/**
+	 * Create HTML label text
+	 * 
+	 * @param info			mailbox info (total/unread/recent count)
+	 * @param item			folderitem containing xml-configuration
+	 * @return				label
+	 */
+	private String createLabelText(MailboxInfo info, FolderItem item) {
+
+		// name of folder
+		String name = item.get("property", "name");
+		//	IMAP folder specific
+		// - Is this folder selectable (does it contain messages?)
+		boolean selectable = item.getBoolean("selectable", true) == false;
+
+		StringBuffer buf;
+		// set label text
+		buf = new StringBuffer("<html><body>");
+
+		//	if IMAP selectable folder
+		// -> lightgray font color and italic
+		if (selectable)
+			buf.append("<i><font color='lightgray'>");
+
+		if (info.getUnseen() > 0) {
+			// draw folder name and unseen count
+			// -> using bold font
+			buf.append("<b>");
+
+			//  append unseen count to folder name
+			name = name + " (" + info.getUnseen() + ")";
+			buf.append(name);
+
+			buf.append("</b>");
+		} else
+			buf.append(name);
+
+		//	if IMAP selectable folder
+		if (selectable)
+			buf.append("</i>");
+
+		if (info.getRecent() > 0) {
+			// append recent message count
+			// -> using blue font
+			buf.append("<font color='blue'> (");
+			buf.append(info.getRecent());
+			buf.append(")");
+		}
+		
+		buf.append("</body></html>");
+		
+		return buf.toString();
+	}
+
+	/**
+	 * Create HTML tooltip text.
+	 * 
+	 * @param info		mailboxinfo (total/unread/recent count)
+	 * @return			tooltip text
+	 */
+	private String createTooltipText(MailboxInfo info) {
+		StringBuffer buf = new StringBuffer();
+		buf.append("<html><body>&nbsp;Total: " + info.getExists());
+		buf.append("<br>&nbsp;Unseen: " + info.getUnseen());
+		buf.append("<br>&nbsp;Recent: " + info.getRecent());
+		buf.append("</body></html>");
+		return buf.toString();
+	}
+
+	/**
+	 * Returns an icon suitable for the given folder.
+	 */
+	public static Icon getFolderIcon(AbstractFolder node, boolean expanded) {
+		if (node instanceof LocalRootFolder) {
+			return localRootFolderIcon;
+		} else if (node instanceof IMAPRootFolder) {
+			return imapRootFolderIcon;
+		} else if (node instanceof VirtualFolder) {
+			return virtualFolderIcon;
+		} else if (node instanceof MessageFolder) {
+			MessageFolder folder = (MessageFolder) node;
+			if (folder.isInboxFolder()) {
+				return inboxIcon;
+			} else if (folder.getUid() == 103) {
+				// outbox
+				return outboxIcon;
+			} else if (folder.isTrashFolder()) {
+				return trashIcon;
+			}
+		}
+		return expanded ? expandedFolderIcon : collapsedFolderIcon;
+	}
 }

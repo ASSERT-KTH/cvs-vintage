@@ -377,8 +377,13 @@ public abstract class MessageFolder extends AbstractFolder implements
 				.toString());
 		property.addAttribute("unseen", new Integer(info.getUnseen())
 				.toString());
+		// on startup, there's shouldn't be any recent messages
+		// -> we simply remember 0 recent messages here
+		property.addAttribute("recent", "0");
+		/*
 		property.addAttribute("recent", new Integer(info.getRecent())
 				.toString());
+				*/
 
 		if (info.getUidNext() != -1) {
 			property.addAttribute("uidnext", new Integer(info.getUidNext())

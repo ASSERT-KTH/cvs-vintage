@@ -163,7 +163,10 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             headerList.add(h, (Integer) h.get("columba.uid"));
 
             if (h.getFlags().getRecent()) {
-                folder.getMessageFolderInfo().incRecent();
+            	// no recent messages should exist on startup
+            	// --> remove recent flag
+            	h.getFlags().setRecent(false);
+                //folder.getMessageFolderInfo().incRecent();
             }
 
             if (!h.getFlags().getSeen()) {
