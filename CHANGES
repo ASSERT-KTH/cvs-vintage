@@ -1,20 +1,22 @@
 Columba v1.0 RC3
 
 New features:
-- cleanup of message viewer component (fdietz)
-- added show attachments inline viewer for message viewer (fdietz)
-- added plugin-based viewers for various contents types (fdietz)
-- cleanup of table model for message list component (fdietz)
-- new filter toolbar for message list (fdietz)
-- moved concept of folders, filters and filter actions into core (fdietz)
-- improved plugin system exception handling (fdietz)
-- improved interpreter plugin support (fdietz)
+- cleanup of message viewer component
+- added show attachments inline viewer for message viewer
+- added plugin-based viewers for various contents types
+- cleanup of table model for message list component
+- new filter toolbar for message list
+- moved concept of folders, filters and filter actions into core 
+- improved plugin system exception handling 
+- improved interpreter plugin support 
 - new Groovy (http://groovy.codehaus.org/) interpreter plugin, allows
-  you to write plugins in the Groovy language (fdietz)
-- added a Groovy language Hello World plugin (fdietz)
-- cleanup of header-cache, performance improvements (fdietz)
-- cleanup of SpamAssassin plugin, added filter action (fdietz)
-
+  you to write plugins in the Groovy language 
+- added a Groovy language Hello World plugin 
+- cleanup of header-cache, performance improvements 
+- cleanup of SpamAssassin plugin, added filter action
+- integration of JDIC (https://jdic.dev.java.net/) for trayicon support
+  and opening attachments with the system's default application 
+  
 Fixed bugs:
 - #1097936, textviewer should be initialized empty
 - tablemodel didn't update if null, header-cache default fields were modified
@@ -30,6 +32,11 @@ Fixed bugs:
 - #1097751, inline attachment viewer "open" action
 - #1097935, double-click open-action in attachment list	
 - #1097756, online/offline mode doesn't as expected
+- #1098015, vFolder history grows too large
+- #1098057, scale image when showing attachments inline
+- #1098058, show controls, if showing rfc822message inline
+- #1098059, add hide/show button for inline viewer
+
 
 Columba v1.0 RC2
 
