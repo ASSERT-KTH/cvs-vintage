@@ -394,6 +394,28 @@ public final class ServletHandler extends Handler {
 	}
     }
 
+    /** Handle the case of a JSP servlet that JspInterceptor hasn't seen.
+     *  This shouldn't be any of our business, but for the moment we have
+     *  to help JspInterceptor out.
+     */
+     void loadJsp(  )  throws Exception{
+        BaseInterceptor ri[];
+	ContextManager cm=context.getContextManager();
+	String path=sw.getJspFile();
+	String requestURI = path + "?jsp_precompile=true";
+	Request request = cm.createRequest(context, requestURI);
+	Response response = request.getResponse();
+	request.setHandler(this);
+
+	ri=context.getContainer().
+	    getInterceptors(Container.H_requestMap);
+	for( int i=0; i< ri.length; i++ ) {
+	    if( debug > 1 )
+		log( "RequestMap " + ri[i] );
+	    int status=ri[i].requestMap( request );
+	    if( status!=0 ) return ;
+	}
+    }
     // Special hook
     protected void preInit() throws Exception
     {
@@ -406,7 +428,9 @@ public final class ServletHandler extends Handler {
 	    // remain in STATE_DELAYED_INIT state
 	    return;
 	}
-
+	if(sw.getJspFile() != null && 
+	   (servletClassName==null || servletClassName==name ))
+	    loadJsp();
 	// clear STATE_DELAYED_INIT if set
 	setState( STATE_ADDED );
 	
