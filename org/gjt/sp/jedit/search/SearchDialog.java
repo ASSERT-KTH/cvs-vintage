@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.18 2002/02/19 01:05:19 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.19 2002/03/14 09:22:41 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -734,7 +734,14 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	private void closeOrKeepDialog()
 	{
 		if(keepDialog.isSelected())
+		{
+			// Windows bug workaround in case a YES/NO confirm
+			// was shown
+			toFront();
+			requestFocus();
+			find.requestFocus();
 			return;
+		}
 		else
 		{
 			GUIUtilities.saveGeometry(this,"search");
