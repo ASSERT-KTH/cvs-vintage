@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.77 2003/10/09 00:00:31 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.78 2004/02/04 00:07:22 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -321,8 +321,19 @@ class BrowserView extends JPanel
 
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
 			{
-				int index = parentDirectories.getModel().getSize() - 1;
-				parentDirectories.setSelectedIndex(index);
+				// we use SwingUtilities.invokeLater()
+				// so that the action is executed before
+				// the popup is hidden.
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						int index = parentDirectories
+							.getModel()
+							.getSize() - 1;
+						parentDirectories.setSelectedIndex(index);
+					}
+				});
 			}
 		});
 		GUIUtilities.showPopupMenu(popup,comp,point.x,point.y);

@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.8 2003/07/14 23:00:54 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.9 2004/02/04 00:07:22 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -277,12 +277,12 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 
 		public void save()
 		{
-			Enumeration enum = bindings.elements();
-			while(enum.hasMoreElements())
+			Enumeration e = bindings.elements();
+			while(e.hasMoreElements())
 			{
 				GrabKeyDialog.KeyBinding binding[]
 					= (GrabKeyDialog.KeyBinding[])
-						enum.nextElement();
+						e.nextElement();
 				jEdit.setProperty(
 					binding[0].name + ".shortcut",
 					binding[0].shortcut);

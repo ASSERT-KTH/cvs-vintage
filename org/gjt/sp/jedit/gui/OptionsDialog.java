@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.36 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.37 2004/02/04 00:07:22 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -360,10 +360,10 @@ public abstract class OptionsDialog extends EnhancedDialog
 	{
 		path.add(node);
 
-		Enumeration enum = node.getMembers();
-		while(enum.hasMoreElements())
+		Enumeration e = node.getMembers();
+		while(e.hasMoreElements())
 		{
-			Object obj = enum.nextElement();
+			Object obj = e.nextElement();
 			if(obj instanceof OptionGroup)
 			{
 				OptionGroup grp = (OptionGroup)obj;

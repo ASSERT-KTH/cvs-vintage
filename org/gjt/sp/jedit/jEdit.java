@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.209 2004/01/30 01:55:58 spestov Exp $
+ * @version $Id: jEdit.java,v 1.210 2004/02/04 00:07:21 spestov Exp $
  */
 public class jEdit
 {
@@ -1849,11 +1849,18 @@ public class jEdit
 	 * Reloads all open buffers.
 	 * @param view The view
 	 * @param confirm If true, a confirmation dialog will be shown first
+	 *	if any buffers are dirty
 	 * @since jEdit 2.7pre2
 	 */
 	public static void reloadAllBuffers(final View view, boolean confirm)
 	{
-		if(confirm)
+		boolean hasDirty = false;
+		Buffer[] buffers = jEdit.getBuffers();
+
+		for(int i = 0; i < buffers.length && hasDirty == false; i++)
+			hasDirty = buffers[i].isDirty();
+
+		if(confirm && hasDirty)
 		{
 			int result = GUIUtilities.confirm(view,"reload-all",null,
 				JOptionPane.YES_NO_OPTION,
@@ -1875,7 +1882,6 @@ public class jEdit
 			_view = _view.next;
 		}
 
-		Buffer[] buffers = jEdit.getBuffers();
 		for(int i = 0; i < buffers.length; i++)
 		{
 			Buffer buffer = buffers[i];

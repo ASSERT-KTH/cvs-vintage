@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.30 2003/09/23 18:19:37 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.31 2004/02/04 00:07:22 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -463,6 +463,8 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 		ResultCellRenderer()
 		{
 			plainFont = UIManager.getFont("Tree.font");
+			if(plainFont == null)
+				plainFont = jEdit.getFontProperty("metal.secondary.font");
 			boldFont = new Font(plainFont.getName(),Font.BOLD,
 				plainFont.getSize());
 		} //}}}
