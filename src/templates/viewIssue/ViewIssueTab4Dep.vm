@@ -146,7 +146,7 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 #end
    <input type="submit" value="$l10n.AddNew" name="eventSubmit_doAdddependency" />&nbsp;
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doUpdatedependencies" />
+  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doDeletedependencies" />
 #end
 </div>
 #end
