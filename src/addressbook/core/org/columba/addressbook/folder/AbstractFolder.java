@@ -243,7 +243,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 * @see org.columba.addressbook.folder.ContactStorage#add(org.columba.addressbook.folder.Contact)
 	 */
 	public Object add(Contact contact) throws Exception {
-		Object uid = generateNextFolderUid();
+		Object uid = generateNextMessageUid();
 
 		ContactItem item = new ContactItem(contact);
 		item.setUid(uid);
