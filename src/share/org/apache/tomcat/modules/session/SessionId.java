@@ -93,7 +93,6 @@ public class SessionId extends  BaseInterceptor
 {
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
-    ContextManager cm;
     boolean noCookies=false;
     boolean cookiesFirst=true;
     
