@@ -192,12 +192,12 @@
 #else
       * 
 #end
-      $l10n.Reason
+      $l10n.IssueEntryComment
    </th>
    <td>
 #set ($intakeAttachment = $intake.Attachment.setKey("_1"))
 #if ($reasonOptional)
-    <small>$l10n.ReasonFieldDesc</small>
+    <small>$l10n.CommentFieldDesc</small>
 #else
     #fieldErrorMsg($intakeAttachment.DataAsString "")
     <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequire2</small>
