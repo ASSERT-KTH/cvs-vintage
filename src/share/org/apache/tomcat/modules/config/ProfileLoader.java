@@ -87,8 +87,6 @@ import org.xml.sax.*;
  */
 public class ProfileLoader extends BaseInterceptor {
     Hashtable profiles=new Hashtable();
-    ClassLoader parentLoader;
-    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
     public ProfileLoader() {
     }
@@ -155,8 +153,6 @@ public class ProfileLoader extends BaseInterceptor {
     {
 	if( this != module ) return;
 
-	parentLoader=cm.getParentLoader();
-
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
 
@@ -212,10 +208,10 @@ public class ProfileLoader extends BaseInterceptor {
 	}
 	
 	public void start(SaxContext ctx ) throws Exception {
-	    Profile p=new Profile();
+	    Profile p=new Profile(ploader.getContextManager() );
 	    AttributeList attributes = ctx.getCurrentAttributes();
 	    p.setName( attributes.getValue("name"));
-	    ploader.setLoaders(p);
+	    p.initClassLoaders();
 	    ctx.pushObject( p );
 	}
 	public void end(SaxContext ctx ) {
@@ -242,7 +238,7 @@ public class ProfileLoader extends BaseInterceptor {
 	    Class c=null;
 	    ClassLoader cl=profile.containerLoader;	
 	    try {
-			c=cl.loadClass( className );
+		c=cl.loadClass( className );
 	    } catch( ClassNotFoundException ex2 ) {
 		c=profile.commonLoader.loadClass(className);
 	    }
@@ -263,107 +259,27 @@ public class ProfileLoader extends BaseInterceptor {
 	}
     }
 
-    void setLoaders( Profile p ) {
-	String name=p.getName();
-	String home=cm.getHome();
-
-	System.out.println("XXXXX " + parentLoader );
-	p.commonClassPath=getClassPath(home + "/lib/common/" + name, false);
-	p.commonLoader=
-	    jdk11Compat.newClassLoaderInstance(p.commonClassPath ,
-					       parentLoader);
-	for( int i=0; i< p.commonClassPath.length; i++ ) {
-	    log( "Common " + name + " " + p.commonClassPath[i]);
-	}
-	
-	p.sharedClassPath=getClassPath(home + "/lib/apps/" + name, false);
-	p.appLoader=jdk11Compat.newClassLoaderInstance(p.sharedClassPath ,
-						       p.commonLoader);
-
-	URL[] serverClassPath=getClassPath(home + "/lib/container/" + name,
-					   true);
-	p.containerLoader=jdk11Compat.newClassLoaderInstance(serverClassPath ,
-							     p.commonLoader);
-	log( "CCL " + p.containerLoader + " " + p.commonLoader);
-	for( int i=0; i< serverClassPath.length; i++ ) {
-	    log( "Container " + name + " " + serverClassPath[i]);
-	}
-    }
-
-    private URL[] getClassPath(String p0, boolean javacInc)
-    {
-        Vector urlV=new Vector();
-        try{
-            String cpComp[]=getJarFiles(p0);
-            if (cpComp != null){
-                int jarCount=cpComp.length;
-                for( int i=0; i< jarCount ; i++ ) {
-                    urlV.addElement( getURL(  p0 , cpComp[i] ));
-                }
-            }
-	    if( javacInc ) {
-		urlV.addElement( new URL( "file", null ,
-					  System.getProperty( "java.home" ) +
-					  "/../lib/tools.jar"));
-	    }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return getURLs(urlV);
-    }
-
-    public static URL getURL( String base, String file ) {
-        try {
-            File baseF = new File(base);
-            File f = new File(baseF,file);
-            String path = f.getCanonicalPath();
-            if( f.isDirectory() ){
-                    path +="/";
-            }
-            return new URL( "file", null, path );
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public String[] getJarFiles(String ld) {
-	File dir = new File(ld);
-        String[] names=null;
-        if (dir.isDirectory()){
-            names = dir.list( new FilenameFilter(){
-            public boolean accept(File d, String name) {
-                if (name.endsWith(".jar")){
-                    return true;
-                }
-                return false;
-            }
-            });
-        }
-
-	return names;
-    }
-    
-    private URL[] getURLs(Vector v){
-        URL[] urls=new URL[ v.size() ];
-        for( int i=0; i<v.size(); i++ ) {
-            urls[i]=(URL)v.elementAt( i );
-        }
-        return urls;
-    }
-
 }
 
+/** Context profiles - set of modules, with separate class loaders used
+    to simplify configuration
+*/
 class Profile {
     String name;
     URL[] sharedClassPath;
     URL[] commonClassPath;
+    URL[] serverClassPath;
+    
     ClassLoader commonLoader;
     ClassLoader containerLoader;
     ClassLoader appLoader;
     Vector modules=new Vector();
+
+    ContextManager cm;
     
-    public Profile() {}
+    public Profile(ContextManager cm) {
+	this.cm=cm;
+    }
 
     public String getName() {
 	return name;
@@ -384,5 +300,49 @@ class Profile {
     ClassLoader getContainerLoader() {
 	return containerLoader;
     }
-    
+
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    /** init profile class loaders
+     */
+    public void initClassLoaders() {
+	String home=cm.getHome();
+	// Could check if no extra jars are added
+
+	
+	// Create common loader
+	Vector commonClassPathV=new Vector();
+	IntrospectionUtils.addToClassPath( commonClassPathV,
+					   home + "/lib/common/" + name);
+	//IntrospectionUtils.addToClassPath( commonClassPathV,
+	// 		         	   home + "/lib/common/");
+	commonClassPath=IntrospectionUtils.getClassPath(commonClassPathV);
+	commonLoader=
+	    jdk11Compat.newClassLoaderInstance(commonClassPath ,
+					       cm.getCommonLoader());
+
+	// Create app shared loader
+	Vector sharedClassPathV=new Vector();
+	IntrospectionUtils.addToClassPath( sharedClassPathV,
+					   home + "/lib/apps/" + name );
+	//IntrospectionUtils.addToClassPath( sharedClassPathV,
+	// home + "/lib/apps/");
+	sharedClassPath=IntrospectionUtils.getClassPath(sharedClassPathV);
+	
+	appLoader=jdk11Compat.newClassLoaderInstance(sharedClassPath ,
+						     cm.getAppsLoader());
+
+	// Create container loader
+	Vector serverClassPathV=new Vector();
+	IntrospectionUtils.addToClassPath( serverClassPathV,
+					   home + "/lib/container/" + name);
+	//IntrospectionUtils.addToClassPath( serverClassPathV,
+	// home + "/lib/container/");
+	IntrospectionUtils.addToolsJar( serverClassPathV );
+	
+	serverClassPath=IntrospectionUtils.getClassPath(serverClassPathV);
+	containerLoader=jdk11Compat.newClassLoaderInstance(serverClassPath ,
+					   cm.getContainerLoader());
+	
+    }
+
 }
