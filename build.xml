@@ -43,15 +43,15 @@
 	<target name="document" depends="init">
 		<delete dir="${dest}/docs/api/"/>
 		<mkdir dir="${dest}/docs/api/"/>
-		<javadoc destdir="${dest}/docs/api/" classpath="${ownclasspath}" doctitle="Columba ${version} API Documentation" link="http://java.sun.com/products/jdk/1.3/docs/api">
+		<javadoc destdir="${dest}/docs/api/" classpath="${ownclasspath}" doctitle="Columba ${version} API Documentation" windowtitle="Columba API Documentation" link="http://java.sun.com/products/jdk/1.3/docs/api">
 			<packageset dir="${src}/src/addressbook/core/"/>
 			<packageset dir="${src}/src/addressbook/independent/"/>
 			<packageset dir="${src}/src/columba/core/"/>
 			<packageset dir="${src}/src/mail/core/"/>
 			<packageset dir="${src}/src/mail/independent/"/>
-			<group title="Addressbook" packages="org.columba.addressbook.*"/>
-			<group title="Core" packages="org.columba.core.*"/>
-			<group title="Mail" packages="org.columba.mail.*"/>
+			<group title="Addressbook" packages="org.columba.addressbook*"/>
+			<group title="Core" packages="org.columba.core*"/>
+			<group title="Mail" packages="org.columba.mail*"/>
 		</javadoc>
 	</target>
 
