@@ -122,7 +122,7 @@ public class SQLTarget implements DeepCloneable {
 
       // is this a select object(o) style query?
       if(selectPathList.size() == 1) {
-         String identifier = (String)selectPathList.get(0);
+         String identifier = ((String)selectPathList.get(0)).toLowerCase();
          
          // verify that the abstract schema already exists
          // this method will throw an exception if the identifier
@@ -131,7 +131,7 @@ public class SQLTarget implements DeepCloneable {
          selectPath = identifier;
       } else {
          // select a.b.c.d style query            
-         String path = (String)selectPathList.get(0);
+         String path = ((String)selectPathList.get(0)).toLowerCase();
          for(int i=1; i < selectPathList.size(); i++) {
             // are we done yet?
             if(i<selectPathList.size()-1) {

@@ -247,7 +247,10 @@ public class EJBQLParser {
                SQLTarget target = (SQLTarget)a.getTarget();
                
                List clause = new ArrayList();
-               for(String s = a.pop().toString(); !"WHERE".equals(s); s = a.pop().toString()) {
+               for(String s = a.pop().toString(); 
+                     !"WHERE".equalsIgnoreCase(s); 
+                     s = a.pop().toString()) {
+
                   clause.add(s);
                }
                
@@ -975,24 +978,16 @@ public class EJBQLParser {
    }
 
    protected Parser identifier() {
-      return new Word();
-   }
-
-/*
-   protected Parser inputParameter() {
-      Parser inputParam = new InputParameter();
-      inputParam.setAssembler(new Assembler() {
+      Word identifier = new Word();
+      identifier.setAssembler(new Assembler() {
          public void workOn(Assembly a) {
-            SQLTarget target = (SQLTarget)a.getTarget();
-            InputParameterToken token = (InputParameterToken)a.pop();
-            
-            target.registerParameter(token);
-            a.push("?");
+            // convert identifier to lowercase
+            // identifiers are case insensitive
+            a.push(a.pop().toString().toLowerCase());
          }
       });
-      return inputParam;
+      return identifier;
    }
-*/
 
    protected Parser cmpField() {
       Word cmpFieldParser = new Word();
@@ -1056,7 +1051,9 @@ public class EJBQLParser {
       identificationVariable.setAssembler(new Assembler() {
          public void workOn(Assembly a) {
             SQLTarget target = (SQLTarget)a.getTarget();
-            String identifier = a.pop().toString();
+            // convert identifier to lowercase 
+            // identifiers are case insensitive
+            String identifier = a.pop().toString().toLowerCase();
 
             if(!target.isIdentifierRegistered(identifier)) {
                a.setInvalid();
