@@ -58,7 +58,7 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * only filter references that need to be filtered. But it is a start.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.6 2002/01/23 08:20:04 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.7 2002/02/02 18:00:29 jmcnally Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler
@@ -126,7 +126,14 @@ public class ReferenceInsertionFilter
                     result.append("&gt;");
                     break;
                 case '&':
-                    result.append("&amp;");
+                    if (content[i+1] == '#') 
+                    {
+                        result.append('&');
+                    }
+                    else 
+                    {
+                        result.append("&amp;");
+                    }
                     break;
                 case '"':
                     result.append("&quot;");
