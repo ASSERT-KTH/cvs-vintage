@@ -32,17 +32,11 @@ import javax.swing.text.Segment;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: ContentManager.java,v 1.10 2002/06/02 05:40:42 spestov Exp $
+ * @version $Id: ContentManager.java,v 1.11 2003/03/09 19:26:05 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ContentManager
 {
-	//{{{ ContentManager constructor
-	public ContentManager()
-	{
-		text = new char[1024];
-	} //}}}
-
 	//{{{ getLength() method
 	public final int getLength()
 	{

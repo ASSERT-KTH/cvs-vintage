@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.126 2003/02/23 04:05:21 spestov Exp $
+ * @version $Id: Buffer.java,v 1.127 2003/03/09 19:26:04 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -234,29 +234,28 @@ public class Buffer implements EBComponent
 				// For `reload' command
 				remove(0,getLength());
 
-				if(seg != null && endOffsets != null)
+				if(seg == null)
+					seg = new Segment(new char[1024],0,0);
+				try
 				{
-					// This is faster than Buffer.insert()
-					try
-					{
-						writeLock();
+					writeLock();
 
-						// theoretically a segment could
-						// have seg.offset != 0 but
-						// SegmentBuffer never does that
-						contentMgr._setContent(seg.array,seg.count);
+					// theoretically a segment could
+					// have seg.offset != 0 but
+					// SegmentBuffer never does that
+					contentMgr._setContent(seg.array,seg.count);
 
+					if(endOffsets != null)
 						contentInserted(0,seg.count,endOffsets);
-					}
-					catch(OutOfMemoryError oom)
-					{
-						Log.log(Log.ERROR,this,oom);
-						VFSManager.error(view,path,"out-of-memory-error",null);
-					}
-					finally
-					{
-						writeUnlock();
-					}
+				}
+				catch(OutOfMemoryError oom)
+				{
+					Log.log(Log.ERROR,this,oom);
+					VFSManager.error(view,path,"out-of-memory-error",null);
+				}
+				finally
+				{
+					writeUnlock();
 				}
 
 				setFlag(READ_ONLY,readOnly);
