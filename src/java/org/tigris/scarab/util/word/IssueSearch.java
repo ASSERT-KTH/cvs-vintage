@@ -1067,7 +1067,7 @@ public class IssueSearch
                 matchingIssueIds = searchIndex.getRelatedIssues();    
                 if ( matchingIssueIds.length != 0 )
                 { 
-                    crit.addIn(AttributeValuePeer.ISSUE_ID, matchingIssueIds);
+                    crit.addIn(IssuePeer.ISSUE_ID, matchingIssueIds);
                 }       
             }
         }
