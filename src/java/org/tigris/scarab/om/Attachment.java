@@ -72,6 +72,7 @@ public class Attachment
     public static final NumberKey FILE__PK = new NumberKey("1");
     public static final NumberKey COMMENT__PK = new NumberKey("2");
     public static final NumberKey URL__PK = new NumberKey("3");
+    public static final NumberKey MODIFICATION__PK = new NumberKey("4");
 
     /**
      * Returns the data field converted to a string
@@ -102,7 +103,7 @@ public class Attachment
     public String getFormattedCreatedDate() throws Exception
     {
         return FormatDate.format ("yyyy-MM-dd hh:mm:ss.S",
-                                 "MMM d, yyyy", getCreatedDate());
+                                 "M/d/yy", getCreatedDate());
     }
     
     /**
@@ -111,7 +112,7 @@ public class Attachment
     public String getFormattedModifiedDate() throws Exception
     {
         return FormatDate.format ("yyyy-MM-dd hh:mm:ss.S",
-                                 "MMM d, yyyy", getModifiedDate());
+                                 "M/d/yy", getModifiedDate());
     }
     
 
@@ -145,11 +146,21 @@ public class Attachment
     public void delete() throws Exception 
     { 
         //hasPermission(acl);
-        Criteria c = new Criteria()
-            .add(AttachmentPeer.ATTACHMENT_ID, getAttachmentId());
-        AttachmentPeer.doDelete(c);
+        setDeleted(true);
     }
 
+    /**
+     * Populates fields for a text (non-file) type of attachment.
+     */
+    public void setTextFields(ScarabUser user, Issue issue, NumberKey typeId) 
+        throws Exception
+    {
+        setIssue(issue);
+        setTypeId(new NumberKey(typeId));
+        setMimeType("text/plain");
+        //setCreatedDate(new Date());
+        setCreatedBy(user.getUserId());
+    }
 }
 
 
