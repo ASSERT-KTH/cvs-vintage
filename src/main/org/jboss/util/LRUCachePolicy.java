@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class LRUCachePolicy 
 	implements CachePolicy
@@ -102,10 +102,6 @@ public class LRUCachePolicy
 	 */
 	public void destroy() 
 	{
-		m_map = null;
-		m_list = null;
-		m_minCapacity = 0;
-		m_maxCapacity = 0;
 	}
 
 	public Object get(Object key) 
@@ -148,24 +144,23 @@ public class LRUCachePolicy
 	{
 		if (o == null) {throw new IllegalArgumentException("Cannot insert a null object in the cache");}
 		if (key == null) {throw new IllegalArgumentException("Cannot insert an object in the cache with null key");}
-		
 		Object obj = m_map.get(key);
 		if (obj == null) 
 		{
-			synchronized (m_list) 
-			{
-				m_list.demote();
-				LRUCacheEntry entry = createCacheEntry(key, o);
-				m_list.promote(entry);
-				m_map.put(key, entry);
-			}
+			m_list.demote();
+			LRUCacheEntry entry = createCacheEntry(key, o);
+			m_list.promote(entry);
+			m_map.put(key, entry);
 		}
-		else {throw new IllegalStateException("Attempt to put in the cache an object that is already there");}
+		else 
+		{
+			throw new IllegalStateException("Attempt to put in the cache an object that is already there");
+		}
 	}
 	public void remove(Object key) 
 	{
 		if (key == null) {throw new IllegalArgumentException("Removing an object using a null key");}
-		
+
 		Object value = m_map.get(key);
 		if (value != null) 
 		{
@@ -199,7 +194,7 @@ public class LRUCachePolicy
 	 */
 	protected void ageOut(LRUCacheEntry entry) 
 	{
-		remove(entry);
+		remove(entry.m_key);
 	}
 	/**
 	 * Callback method called when a cache miss happens.
@@ -254,7 +249,7 @@ public class LRUCachePolicy
 		 * @see #demote
 		 * @throws IllegalStateException if this method is called with a full cache
 		 */
-		protected synchronized void promote(LRUCacheEntry entry) 
+		protected void promote(LRUCacheEntry entry) 
 		{
 			if (entry == null) {throw new IllegalArgumentException("Trying to promote a null object");}
 			if (m_capacity < 1) {throw new IllegalStateException("Can't work with capacity < 1");}
@@ -322,11 +317,11 @@ public class LRUCachePolicy
 		 * If the cache is not full, does nothing.
 		 * @see #promote
 		 */
-		protected synchronized void demote() 
+		protected void demote() 
 		{
 			if (m_capacity < 1) {throw new IllegalStateException("Can't work with capacity < 1");}
-			if (m_count > m_capacity) {throw new IllegalStateException("Cache list entries number (" + m_count + ") > than the maximum allowed (" + m_capacity + ")");}
-			if (m_count == m_capacity) 
+			if (m_count > m_maxCapacity) {throw new IllegalStateException("Cache list entries number (" + m_count + ") > than the maximum allowed (" + m_maxCapacity + ")");}
+			if (m_count == m_maxCapacity) 
 			{
 				LRUCacheEntry entry = m_tail;
 				
@@ -338,7 +333,7 @@ public class LRUCachePolicy
 		/**
 		 * Removes from the cache list the specified entry.
 		 */		
-		protected synchronized void remove(LRUCacheEntry entry) 
+		protected void remove(LRUCacheEntry entry) 
 		{
 			if (entry == null) {throw new IllegalArgumentException("Cannot remove a null entry from the cache");}
 			if (m_count < 1) {throw new IllegalStateException("Trying to remove an entry from an empty cache");}
@@ -372,6 +367,16 @@ public class LRUCachePolicy
 			}
 			--m_count;
 		}
+		public String toString() 
+		{
+			String s = Integer.toHexString(super.hashCode());
+			s += " size: " + m_count;
+			for (LRUCacheEntry entry = m_head; entry != null; entry = entry.m_next)
+			{
+				s += "\n" + entry;
+			}
+			return s;
+		}
 	}
 	
 	/**
@@ -380,9 +385,9 @@ public class LRUCachePolicy
 	protected class LRUCacheEntry 
 	{
 		/** Reference to the next cell in the list */
-		protected LRUCacheEntry m_next;
+		public  LRUCacheEntry m_next;
 		/** Reference to the previous cell in the list */
-		protected LRUCacheEntry m_prev;
+		public LRUCacheEntry m_prev;
 		/** The key used to retrieve the cached object */
 		public Object m_key;
 		/** The cached object */
@@ -400,6 +405,10 @@ public class LRUCachePolicy
 			m_next = null;
 			m_prev = null;
 			m_time = 0; // Set when inserted in the list.
+		}
+		public String toString()
+		{
+			return "key: " + m_key + ", object: " + Integer.toHexString(m_object.hashCode()) + ", entry: " + Integer.toHexString(super.hashCode());
 		}
 	}
 }
