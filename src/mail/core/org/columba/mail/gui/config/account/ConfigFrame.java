@@ -16,17 +16,31 @@
 
 package org.columba.mail.gui.config.account;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
-import javax.swing.border.AbstractBorder;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,12 +48,11 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.Compatibility;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
@@ -111,7 +124,7 @@ public class ConfigFrame
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
-                dialog.setLocationRelativeTo(null);
+		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 
@@ -363,7 +376,14 @@ public class ConfigFrame
 				Folder folder =
 					(Folder) MainInterface.treeModel.getImapFolder(
 						item.getUid());
-				folder.removeFromParent();
+				try {
+
+					FolderTreeNode parentFolder = (FolderTreeNode) folder.getParent();
+					folder.removeFolder();
+					MainInterface.treeModel.nodeStructureChanged(parentFolder);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 
 			removeButton.setEnabled(false);
