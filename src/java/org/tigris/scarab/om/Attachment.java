@@ -27,6 +27,15 @@ public class Attachment
     extends BaseAttachment
     implements Persistent
 {
+
+    /**
+     * Returns the data field converted to a string
+     */
+    public String getDataAsString() throws Exception
+    {
+        return new String(getData());
+    }
+    
 }
 
 
