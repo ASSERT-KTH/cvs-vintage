@@ -28,7 +28,7 @@ import org.columba.ristretto.parser.ParserException;
 public class AccountItem extends DefaultItem {
   
   	private static final String 
-  		HOSTNAME_REGEXP = "^[a-zA-Z0-9]+\\.[a-zA-Z0-9\\.]+\\.[a-zA-Z]{2,4}+$",
+  		HOSTNAME_REGEXP = "^[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+\\.[a-zA-Z]{2,4}+$",
   		DOTTED_IPV4_REGEXP = 
   		  "^[1-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+\\.[1-9]{1,3}+$";
   	
