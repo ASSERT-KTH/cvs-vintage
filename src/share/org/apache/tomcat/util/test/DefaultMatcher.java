@@ -79,6 +79,8 @@ public class DefaultMatcher {
     String goldenFile;
     // Match the body against a string
     String responseMatch;
+    // Match the body against a list of strings in a file
+    String responseMatchFile;
     // the response should include the following headers
     Vector headerVector=new Vector(); // workaround for introspection problems
     Hashtable expectHeaders=new Hashtable();
@@ -179,6 +181,12 @@ public class DefaultMatcher {
 	this.responseMatch=s;
     }
 
+    /** Verify that response matches a list of strings in a file
+     */
+    public void setResponseMatchFile( String s ) {
+	this.responseMatchFile=s;
+    }
+
     /** Verify the response code
      */
     public void setReturnCode( String s ) {
@@ -198,8 +206,8 @@ public class DefaultMatcher {
 	if( getExpectHeaders().size() > 0 ) {
 	    Enumeration e=expectHeaders.keys();
 	    while( e.hasMoreElements()) {
-		if( ! needAND ) needAND=true;
 		if( needAND ) desc.append( " && " );
+		needAND=true;
 		String key=(String)e.nextElement();
 		Header h=(Header)expectHeaders.get(key);
 		desc.append("( responseHeader '" + h.getName() +
@@ -208,15 +216,23 @@ public class DefaultMatcher {
 	}
 
 	if( responseMatch != null ) {
-	    if( ! needAND ) needAND=true;
 	    if( needAND ) desc.append( " && " );
+	    needAND=true;
 
 	    desc.append("( responseBody matches '"+ responseMatch + "') ");
 	}
 
-	if( goldenFile != null ) {
-	    if( ! needAND ) needAND=true;
+	// if match file is specified
+	if( responseMatchFile != null ) {
 	    if( needAND ) desc.append( " && " );
+	    needAND=true;
+
+	    desc.append("( responseBody matches lines in '"+ responseMatchFile + "') ");
+        }
+
+	if( goldenFile != null ) {
+	    if( needAND ) desc.append( " && " );
+	    needAND=true;
 
 	    desc.append("( responseBody " );
 	    if( exactMatch )
@@ -303,6 +319,46 @@ public class DefaultMatcher {
 		log("ERROR: expecting match on " + responseMatch);
 		log("GOT: " );
 		log(responseBody );
+	    }
+	}
+
+	// if match file is specified
+	if( responseMatchFile != null ) {
+	    try {
+		boolean desiredResult = true;
+		BufferedReader br = new BufferedReader( new FileReader(responseMatchFile));
+
+		String expected = br.readLine();
+		while (expected != null) {
+		    if ( "!=".equals(expected) )
+			desiredResult = false;
+		    else {
+			boolean result = responseBody.indexOf( expected ) >= 0;
+			if( result != desiredResult ) {
+			    responseStatus = false;
+			    if ( desiredResult )
+				log("ERROR: expecting match on " + expected);
+			    else
+				log("ERROR: expecting no match on " + expected);
+			    log("In match file: " + responseMatchFile);
+			    log("====================Got:");
+			    log(responseBody );
+			    log("====================");
+			}
+		    }
+		    expected = br.readLine();
+		}
+		br.close();
+	    } catch (FileNotFoundException ex) {
+        	log("\tMatch file not found: " + responseMatchFile);
+		log("====================Got:");
+		log(responseBody );
+		log("====================");
+		responseStatus = false;
+	    } catch ( IOException ex ) {
+        	log("\tError reading match file: " + responseMatchFile);
+        	log(ex.toString());
+		responseStatus = false;
 	    }
 	}
 

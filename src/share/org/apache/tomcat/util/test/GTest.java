@@ -289,6 +289,12 @@ public class GTest  {
 	matcher.setResponseMatch( s );
     }
 
+    /** Verify that response matches a list of strings in a file
+     */
+    public void setResponseMatchFile( String s ) {
+	matcher.setResponseMatchFile( s );
+    }
+
     /** Verify the response code
      */
     public void setReturnCode( String s ) {
