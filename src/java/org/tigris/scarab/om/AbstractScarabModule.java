@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.66 2002/12/10 20:38:59 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.67 2002/12/10 20:47:31 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -174,7 +174,7 @@ public abstract class AbstractScarabModule
         "getDefaultTextAttribute";
 
     private List parentModules;
-    
+
     private String domain;
 
     /** set to true while the setInitialAttributesAndIssueTypes() method is in process */
@@ -205,7 +205,7 @@ public abstract class AbstractScarabModule
     {
         this.domain = v;
     }
-    
+
     /**
      * The 'long' name of the module, includes the parents.
      */
@@ -427,10 +427,10 @@ public abstract class AbstractScarabModule
     {
         List groups = null;
         Boolean activeBool = activeOnly ? Boolean.TRUE : Boolean.FALSE;
-        Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS, 
-                                           issueType, activeBool); 
-        if ( obj == null ) 
-        {        
+        Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS,
+                                           issueType, activeBool);
+        if ( obj == null )
+        {
             Criteria crit = new Criteria()
                 .add(AttributeGroupPeer.MODULE_ID, getModuleId())
                 .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
@@ -440,7 +440,7 @@ public abstract class AbstractScarabModule
                 crit.add(AttributeGroupPeer.ACTIVE, true);
             }
             groups = AttributeGroupPeer.doSelect(crit);
-            getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS, 
+            getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
                                   issueType, activeBool);
         }
         else 
@@ -461,8 +461,8 @@ public abstract class AbstractScarabModule
         AttributeGroup group = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUP, 
                                      issueType, attribute); 
-        if ( obj == null ) 
-        {        
+        if ( obj == null )
+        {
             Criteria crit = new Criteria()
                 .add(AttributeGroupPeer.MODULE_ID, getModuleId())
                 .add(AttributeGroupPeer.ISSUE_TYPE_ID, 
@@ -477,7 +477,7 @@ public abstract class AbstractScarabModule
                 group = (AttributeGroup)results.get(0);
                 ScarabCache.put(group, this, GET_ATTRIBUTE_GROUP, 
                                 issueType, attribute);
-            }   
+            }
         }
         else 
         {
@@ -2042,7 +2042,7 @@ try{
             rmit2.setModuleId(newModuleId);
             rmit2.save();
             IssueType issueType = rmit1.getIssueType();
-                
+
             // set attribute group defaults
             List attributeGroups = parentModule.getAttributeGroups(issueType);
             for (int j=0; j<attributeGroups.size(); j++)
@@ -2052,12 +2052,12 @@ try{
                 ag2.setModuleId(newModuleId);
                 ag2.getRAttributeAttributeGroups().clear();    // are saved later
                 ag2.save();
-                
+
                 List attributes = ag1.getAttributes();
                 for (int k=0; k<attributes.size(); k++)
                 {
                     Attribute attribute = (Attribute)attributes.get(k);
-                    
+
                     // set attribute-attribute group defaults
                     RAttributeAttributeGroup raag1 = ag1
                         .getRAttributeAttributeGroup(attribute);
@@ -2066,8 +2066,8 @@ try{
                     raag2.setAttributeId(raag1.getAttributeId());
                     raag2.setOrder(raag1.getOrder());
                     raag2.save();
-                 }
-             }        
+                }
+            }
 
             // set module-attribute defaults
             List rmas = parentModule.getRModuleAttributes(issueType);
@@ -2081,7 +2081,7 @@ try{
                     rma2.setAttributeId(rma1.getAttributeId());
                     rma2.setIssueTypeId(rma1.getIssueTypeId());
                     rma2.save();
-                            
+
                     // set module-option mappings
                     Attribute attribute = rma1.getAttribute();
                     if (attribute.isOptionAttribute())
