@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.180 2002/08/15 23:33:58 jon Exp $
+ * @version $Id: Issue.java,v 1.181 2002/08/20 21:30:46 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1494,9 +1494,27 @@ public class Issue
                                       NumberKey type)
         throws Exception
     {
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(type, user, attachment);
+        ActivitySet activitySet = null;
+        if (attachment == null)
+        {
+            activitySet = ActivitySetManager
+                .getInstance(type, user);
+        }
+        else
+        {
+            activitySet = ActivitySetManager
+                .getInstance(type, user, attachment);
+        }
         return activitySet;
+    }
+
+    /**
+     * Creates a new ActivitySet object for the issue.
+     */
+    public ActivitySet getActivitySet(ScarabUser user, NumberKey type)
+        throws Exception
+    {
+        return getActivitySet(user, null, type);
     }
 
     /**
@@ -2541,6 +2559,112 @@ public class Issue
         return msg;
     }
 
+    /**
+     * If the comment hasn't changed, it will return a valid ActivitySet
+     * otherwise it returns null.
+     */
+    public ActivitySet doEditComment(ActivitySet activitySet, String newComment, 
+                                     Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        String oldComment = attachment.getDataAsString();
+        if (!newComment.equals(oldComment)) 
+        {
+            attachment.setDataAsString(newComment);
+            attachment.save();
+           
+            // Generate description of modification
+            String from = "changed comment from '";
+            String to = "' to '";
+            int capacity = from.length() + oldComment.length() +
+                to.length() + newComment.length();
+            String description = new StringBuffer(capacity)
+                .append(from).append(oldComment).append(to)
+                .append(newComment).append('\'').toString();
+
+            if (activitySet == null)
+            {
+                 // Save activitySet record
+                activitySet = getActivitySet(user,
+                                          ActivitySetTypePeer.EDIT_ISSUE__PK);
+                activitySet.save();
+            }
+            // Save activity record
+            ActivityManager
+                .createTextActivity(this, null, activitySet,
+                                    description, attachment,
+                                    oldComment, newComment);
+                                    
+        }
+        return activitySet;
+    }
+
+    /**
+     * If the URL hasn't changed, it will return a valid ActivitySet
+     * otherwise it returns null.
+     */
+    public ActivitySet doDeleteUrl(ActivitySet activitySet, 
+                                     Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        String oldUrl = attachment.getDataAsString();
+        attachment.setDeleted(true);
+        attachment.save();
+
+        // Generate description of modification
+        String name = attachment.getName();
+        String description = new StringBuffer(name.length() + 14)
+            .append("deleted URL '").append(name).append("'")
+            .toString();
+
+        if (activitySet == null)
+        {
+             // Save activitySet record
+            activitySet = getActivitySet(user,
+                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
+        }
+        // Save activity record
+        ActivityManager
+            .createTextActivity(this, null, activitySet,
+                                description, attachment, oldUrl, 
+                                "Deleted url");
+        return activitySet;
+    }
+
+    /**
+     * If the File hasn't changed, it will return a valid ActivitySet
+     * otherwise it returns null.
+     */
+    public ActivitySet doDeleteFile(ActivitySet activitySet, 
+                                     Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        attachment.setDeleted(true);
+        attachment.save();
+
+        // Generate description of modification
+        String name = attachment.getFileName();
+        String path = attachment.getRelativePath();
+        String description = new StringBuffer(path.length()+name.length()+38)
+            .append("deleted attachment for file '").append(name)
+            .append("'; path=").append(path).toString();
+
+        if (activitySet == null)
+        {
+             // Save activitySet record
+            activitySet = getActivitySet(user,
+                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
+        }
+        // Save activity record
+        ActivityManager
+            .createTextActivity(this, null, activitySet,
+                                description, attachment, name, 
+                                "Deleted file");
+        return activitySet;
+    }
+    
     /**
      * Sets AttributeValues for an issue based on a hashmap of attribute values
      * This is data is saved to the database and the proper ActivitySet is 

@@ -111,7 +111,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.116 2002/08/15 20:12:50 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.117 2002/08/20 21:30:45 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -510,11 +510,6 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
         
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String attachmentId;
-        String newComment = null;
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = null;
@@ -528,37 +523,33 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        for (int i =0; i<keys.length; i++)
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        ActivitySet activitySet = null;
+        for (int i=0; i<keys.length; i++)
         {
-            key = keys[i].toString();
-            if (key.startsWith("edit_comment"))
+            String key = (String) keys[i];
+            if (key.startsWith("edit_comment_"))
             {
-                attachmentId = key.substring(13);
-                newComment = params.getString(key, "");
+                String attachmentId = key.substring(13);
+                String newComment = params.getString(key,"");
                 Attachment attachment = AttachmentManager
                     .getInstance(new NumberKey(attachmentId), false);
-                String oldComment = attachment.getDataAsString();
-                if (!newComment.equals(oldComment)) 
-                {
-                    attachment.setDataAsString(newComment);
-                    attachment.save();
-                   
-                    // Generate description of modification
-                    String from = "changed comment from '";
-                    String to = "' to '";
-                    int capacity = from.length() + oldComment.length() +
-                        to.length() + newComment.length();
-                    String desc = new StringBuffer(capacity)
-                        .append(from).append(oldComment).append(to)
-                        .append(newComment).append('\'').toString();
-                    registerActivity(desc, DEFAULT_MSG, issue, user, 
-                        attachment, context, data, oldComment, newComment);
-                }
+                activitySet = issue.doEditComment(activitySet, newComment, attachment, user);
             }
+        }
+        if (activitySet != null)
+        {
+            scarabR.setConfirmMessage(DEFAULT_MSG);  
+            sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
+        }
+        else
+        {
+            scarabR.setInfoMessage("No comments were changed.");
         }
     }
 
-    /**
+   /**
     *  Deletes an url.
     */
    public void doDeleteurl (RunData data, TemplateContext context)
@@ -569,11 +560,6 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
         
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String attachmentId;
-        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = null;
         try
@@ -586,33 +572,36 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        for (int i =0; i<keys.length; i++)
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        ActivitySet activitySet = null;
+        for (int i=0; i < keys.length; i++)
         {
-            key = keys[i].toString();
+            String key = (String) keys[i];
             if (key.startsWith("url_delete_"))
             {
-               attachmentId = key.substring(11);
-               Attachment attachment = AttachmentManager
-                   .getInstance(new NumberKey(attachmentId), false);
-               attachment.setDeleted(true);
-               attachment.save();
-
-               // Generate description of modification
-               String name = attachment.getName();
-               String desc = new StringBuffer(name.length() + 14)
-                   .append("deleted URL '").append(name).append("'")
-                   .toString();
-               registerActivity(desc, "Your link was deleted", 
-                                issue, user, attachment, context, data);
-               data.setMessage(DEFAULT_MSG);  
-            } 
+                String attachmentId = key.substring(11);
+                Attachment attachment = AttachmentManager
+                    .getInstance(new NumberKey(attachmentId), false);
+                activitySet = issue.doDeleteUrl(activitySet, attachment, user);
+            }
+        }
+        if (activitySet != null)
+        {
+            scarabR.setConfirmMessage(DEFAULT_MSG);
+            sendEmail(activitySet, issue, "Url was deleted", context, data);
+        }
+        else
+        {
+            scarabR.setInfoMessage("No urls were changed.");
         }
     }
     
-   /**
-    *  Deletes a file.
-    */
-   public void doDeletefile (RunData data, TemplateContext context)
+    /**
+     *  Deletes a file.
+     */
+    public void doDeletefile (RunData data, TemplateContext context)
         throws Exception
     {      
         if (isCollision(data, context)) 
@@ -620,11 +609,6 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
         
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String attachmentId;
-        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = null;
         try
@@ -637,26 +621,29 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        ScarabUser user = (ScarabUser)data.getUser();
+        ActivitySet activitySet = null;
         for (int i =0; i<keys.length; i++)
         {
-            key = keys[i].toString();
+            String key = (String) keys[i];
             if (key.startsWith("file_delete_"))
             {
-               attachmentId = key.substring(12);
-               Attachment attachment = AttachmentManager
-                   .getInstance(new NumberKey(attachmentId), false);
-               attachment.setDeleted(true);
-               attachment.save();
-
-               // Generate description of modification
-               String name = attachment.getFileName();
-               String path = attachment.getRelativePath();
-               String desc = new StringBuffer(path.length()+name.length()+38)
-                   .append("deleted attachment for file '").append(name)
-                   .append("'; path=").append(path).toString();
-               registerActivity(desc, "Your file was deleted", issue, user, 
-                                attachment, context, data);
+                String attachmentId = key.substring(12);
+                Attachment attachment = AttachmentManager
+                    .getInstance(new NumberKey(attachmentId), false);
+                activitySet = issue.doDeleteFile(activitySet, attachment, user);
             } 
+        }
+        if (activitySet != null)
+        {
+            scarabR.setConfirmMessage(DEFAULT_MSG);
+            sendEmail(activitySet, issue, "File was deleted", context, data);
+        }
+        else
+        {
+            scarabR.setInfoMessage("No files were changed.");
         }
     }
 
@@ -688,9 +675,9 @@ public class ModifyIssue extends BaseModifyIssue
     }
 
     /**
-    *  Modifies the dependency type between the current issue
-    *  And its parent or child issue.
-    */
+     *  Modifies the dependency type between the current issue
+     *  And its parent or child issue.
+     */
     public void doUpdatedependencies (RunData data, TemplateContext context)
         throws Exception
     {                          
@@ -770,7 +757,7 @@ public class ModifyIssue extends BaseModifyIssue
                         .toString();
                     registerActivity(desc, DEFAULT_MSG, currentIssue, 
                         user, null, context, data, oldValue, newValue);
-                    data.setMessage(DEFAULT_MSG);  
+                    scarabR.setConfirmMessage(DEFAULT_MSG);  
                 }
             }
         }
@@ -781,9 +768,9 @@ public class ModifyIssue extends BaseModifyIssue
     }
 
     /**
-    *  Adds a dependency between this issue and another issue.
-    *  This issue will be the child issue. 
-    */
+     *  Adds a dependency between this issue and another issue.
+     *  This issue will be the child issue. 
+     */
     public void doAdddependency (RunData data, TemplateContext context)
         throws Exception
     {                          
@@ -902,7 +889,7 @@ public class ModifyIssue extends BaseModifyIssue
                                     "", issue.getUniqueId());
             sendEmail(activitySet, issue, desc, context, data);
 
-            data.setMessage(DEFAULT_MSG);
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             intake.remove(group);
         }
         else
