@@ -93,20 +93,49 @@ public class ApacheConfig  extends BaseInterceptor {
 	return null;
     }
 
-    Log loghelper = new Log("tc_log", this);
+    /** Generate the apache configuration - only when the server is
+     *  completely initialized ( before starting )
+     */
+    public void engineState( ContextManager cm, int state )
+    	throws TomcatException
+    {
+	if( state != ContextManager.STATE_INIT )
+	    return;
+
+	execute( cm );
+    }
+
+    public void contextInit(Context ctx)
+	throws TomcatException
+    {
+	ContextManager cm=ctx.getContextManager();
+	if( cm.getState() >= ContextManager.STATE_INIT ) {
+	    // a context has been added after the server was started.
+	    // regenerate the config ( XXX send a restart signal to
+	    // the server )
+	    execute( cm );
+	}
+    }
+
 
     
-    public void engineStart(ContextManager cm) throws TomcatException {
+    Log loghelper = new Log("tc_log", this);
+
+    public void execute(ContextManager cm) throws TomcatException {
 	try {
 	    String tomcatHome = cm.getHome();
 	    String apacheHome = findApache();
 	    int jkConnector = AJP12;
 
-	    //log("Tomcat home= " + tomcatHome);
-
 	    FileWriter configW=new FileWriter(tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter(configW);
-        PrintWriter mod_jk = new PrintWriter(new FileWriter(tomcatHome + MOD_JK_CONFIG + "-auto"));
+
+
+	    PrintWriter mod_jk = new PrintWriter(new FileWriter(tomcatHome + MOD_JK_CONFIG + "-auto"));
+
+	    log("Generating apache config = " + tomcatHome +
+		MOD_JK_CONFIG + "-auto" );
+
 
         mod_jk.println("###################################################################");
         mod_jk.println("# Auto generated configuration. Dated: " +  new Date());
