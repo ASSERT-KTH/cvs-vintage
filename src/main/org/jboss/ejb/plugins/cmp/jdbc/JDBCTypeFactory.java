@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCTypeFactory
 {
@@ -262,6 +262,8 @@ public final class JDBCTypeFactory
          || clazz == Double.class
          || clazz == Character.class
          || clazz == String.class
+         || clazz == java.math.BigInteger.class
+         || clazz == java.math.BigDecimal.class
       )
       {
          result = true;
