@@ -20,9 +20,9 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
-import org.columba.mail.gui.action.BasicAction;
 
 public class ToolbarButton extends JButton {
 	String buttonText;

@@ -245,6 +245,7 @@ public class ThinColumbaTheme extends DefaultCTheme {
 			"OptionPane.questionIcon",
 			ImageLoader.getImageIcon("stock_dialog_question_48.png"));
 
+		/*
 		table.put(
 			"CheckBoxMenuItem.border",
 			BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -254,7 +255,12 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put(
 			"MenuItem.border",
 			BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		table.put("Menu.border", BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		table.put("Menu.border", BorderFactory.createEmptyBorder(1,1,1,1));
+		*/
+		table.put("CheckBoxMenuItem.borderPainted", Boolean.FALSE);
+		table.put("RadioButtonMenuItem.borderPainted", Boolean.FALSE);
+		table.put("MenuItem.borderPainted", Boolean.FALSE);
+		table.put("Menu.borderPainted", Boolean.FALSE);
 
 		/*
 		table.put(

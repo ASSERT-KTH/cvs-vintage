@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.*;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.frame.action.FrameActionListener;

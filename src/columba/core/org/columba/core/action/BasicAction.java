@@ -12,24 +12,33 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package org.columba.mail.gui.action;
-
-import java.awt.Component;
-import java.awt.Graphics;
+package org.columba.core.action;
 
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+/**
+ * @author frd
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
 public class BasicAction extends JAbstractAction {
 	boolean showToolbarText = true;
 
-	public BasicAction() {
-		super();
-
-	}
-
+	/**
+	 * Method BasicAction.
+	 * @param name
+	 * @param longDescription
+	 * @param actionCommand
+	 * @param small_icon
+	 * @param big_icon
+	 * @param mnemonic
+	 * @param keyStroke
+	 */
 	public BasicAction(
 		String name,
 		String longDescription,
@@ -48,12 +57,22 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
 		putValue(Action.ACCELERATOR_KEY, keyStroke);
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
-		
+
 		TOOLBAR_NAME = name;
 
-		setReplacementIcon();
 	}
-	
+
+	/**
+	 * Method BasicAction.
+	 * @param name
+	 * @param longDescription
+	 * @param actionCommand
+	 * @param small_icon
+	 * @param big_icon
+	 * @param mnemonic
+	 * @param keyStroke
+	 * @param showToolbarText
+	 */
 	public BasicAction(
 		String name,
 		String longDescription,
@@ -75,12 +94,22 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
 
 		this.showToolbarText = showToolbarText;
-		
+
 		TOOLBAR_NAME = name;
-		
-		setReplacementIcon();
+
 	}
 
+	/**
+	 * Method BasicAction.
+	 * @param name
+	 * @param tname
+	 * @param longDescription
+	 * @param actionCommand
+	 * @param small_icon
+	 * @param big_icon
+	 * @param mnemonic
+	 * @param keyStroke
+	 */
 	public BasicAction(
 		String name,
 		String tname,
@@ -97,18 +126,26 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.SMALL_ICON, small_icon);
 		LARGE_ICON = big_icon;
 
-		
 		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
 		putValue(Action.ACCELERATOR_KEY, keyStroke);
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
 
 		TOOLBAR_NAME = tname;
-		
-		setReplacementIcon();
-		
 
 	}
-	
+
+	/**
+	 * Method BasicAction.
+	 * @param name
+	 * @param tname
+	 * @param longDescription
+	 * @param actionCommand
+	 * @param small_icon
+	 * @param big_icon
+	 * @param mnemonic
+	 * @param keyStroke
+	 * @param showToolbarText
+	 */
 	public BasicAction(
 		String name,
 		String tname,
@@ -126,49 +163,22 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.SMALL_ICON, small_icon);
 		LARGE_ICON = big_icon;
 
-		
 		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
 		putValue(Action.ACCELERATOR_KEY, keyStroke);
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
 
 		TOOLBAR_NAME = tname;
-		
+
 		this.showToolbarText = showToolbarText;
-		
-		setReplacementIcon();
 
 	}
-	
-	public boolean isShowToolbarText()
-	{
+
+	/**
+	 * Method isShowToolbarText.
+	 * @return boolean
+	 */
+	public boolean isShowToolbarText() {
 		return this.showToolbarText;
 	}
 
-	protected void setReplacementIcon()
-	{
-		/*
-		if ( getSmallIcon() == null )
-		{
-			// no icon found - set empty icon as replacement
-			
-			putValue( Action.SMALL_ICON, new Replacement() );
-		}
-		*/
-	}
-	
-		
-	class Replacement implements Icon {
-
-		public int getIconWidth() {
-			return 16;
-		}
-		public int getIconHeight() {
-			return 16;
-		}
-
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			//g.setColor(Color.black);
-			//g.fillRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
-		}
-	}
 }

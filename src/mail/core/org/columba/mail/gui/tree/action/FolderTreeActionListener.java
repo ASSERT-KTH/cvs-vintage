@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
@@ -31,7 +32,6 @@ import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.util.EditFolderDialog;

@@ -26,14 +26,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.util.CCheckBoxMenuItem;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -335,14 +335,13 @@ public class MailMenu extends JMenuBar {
 
 		menuItem =
 			new CMenuItem(frameController.getStatusBar().getCancelAction());
-		
+
 		viewMenu.add(menuItem);
-		
 
 		menuItem = new CMenuItem("Refresh");
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		menuItem.setIcon(ImageLoader.getSmallImageIcon("stock_refresh-16.png"));
-		
+
 		viewMenu.add(menuItem);
 
 		viewMenu.addSeparator();
@@ -391,14 +390,21 @@ public class MailMenu extends JMenuBar {
 		viewMenu.addSeparator();
 
 		cbMenuItem =
-			new JCheckBoxMenuItem(
+			new CCheckBoxMenuItem(
 				frameController
 					.tableController
 					.getActionListener()
 					.viewThreadedAction);
 		cbMenuItem.setSelected(true);
-		cbMenuItem.setSelected(false);
-
+		
+		/*
+		frameController
+			.tableController
+			.getActionListener()
+			.viewThreadedAction
+			.addPropertyChangeListener(cbMenuItem);
+		*/
+		
 		viewMenu.add(cbMenuItem);
 
 		viewMenu.addSeparator();
@@ -1022,39 +1028,42 @@ public class MailMenu extends JMenuBar {
 	}
 
 	public void addMenuEntry(String id, BasicAction action) {
-		/*
-		CMenuItem menuItem = new CMenuItem( action );
+
+		CMenuItem menuItem = new CMenuItem(action);
 		menuItem.addMouseListener(handler);
-		
-		for ( int i=0; i<getMenuCount(); i++ )
-		{
+
+		JMenu menu = getMenu(id);
+		menu.add(menuItem);
+
+	}
+
+	public JMenu getMenu(String id) {
+
+		for (int i = 0; i < getMenuCount(); i++) {
 			JMenu menu = (JMenu) getComponent(i);
-		
-			if ( menu.getActionCommand().equalsIgnoreCase(id) )
-			{
+
+			if (menu.getActionCommand().equalsIgnoreCase(id)) {
 				// found the right menu
-		
-				menu.add(menuItem);
+
+				return menu;
 			}
 		}
-		*/
+
+		return null;
 	}
 
 	public void addMenuSeparator(String id) {
-		/*
-		
-		for ( int i=0; i<getMenuCount(); i++ )
-		{
+
+		for (int i = 0; i < getMenuCount(); i++) {
 			JMenu menu = (JMenu) getComponent(i);
-		
-			if ( menu.getActionCommand().equalsIgnoreCase(id) )
-			{
+
+			if (menu.getActionCommand().equalsIgnoreCase(id)) {
 				// found the right menu
-		
+
 				menu.addSeparator();
 			}
 		}
-		*/
+
 	}
 
 	public void updateSortMenu() {

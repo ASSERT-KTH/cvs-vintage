@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.core.main.MainInterface;
 
 /**

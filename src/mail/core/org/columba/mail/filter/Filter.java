@@ -1,161 +1,160 @@
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+// The contents of this file are subject to the Mozilla Public License Version 1.1
+// (the "License"); you may not use this file except in compliance with the 
+// License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Library General Public License for more details.
+// Software distributed under the License is distributed on an "AS IS" basis,
+// WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+// for the specific language governing rights and
+// limitations under the License.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+// The Original Code is "The Columba Project"
+//
+// The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+// Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+// All Rights Reserved.
 
 package org.columba.mail.filter;
-
-import java.util.Vector;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.core.main.MainInterface;
 
+/**
+ * 
+ * @author frd
+ *
+ * This is a wrapper for the filter xml configuration, which makes
+ * code easier to read in comparison to using the XmlElement stuff.
+ * 
+ */
+
+// example configuration (tree.xml):
+//
+// <filter description="gnome" enabled="true">
+//  <rules condition="matchany">
+//   <criteria criteria="contains" headerfield="To or Cc" pattern="gnome" type="To or Cc"></criteria>
+//  </rules>
+//  <actionlist>
+//   <action uid="120" type="Move Message"></action>
+//  </actionlist>
+// </filter>
+//
 public class Filter extends DefaultItem {
 
-	private Vector actionList;
-	private FilterRule rule;
-	private Folder folder;
-
-	/*
-	private AdapterNode actionListNode;
-	private AdapterNode nameNode;
-	private AdapterNode enabledNode;
-	*/
-
+	/**
+	 * 
+	 * Constructor for Filter
+	 * 
+	 * XmlElement should be "filter" in this case
+	 * 
+	 * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
+	 */
 	public Filter(XmlElement root) {
 		super(root);
 
-		actionList = new Vector();
-		//System.out.println("node: "+node);
-
 	}
 
-	/*
-	public AdapterNode getActionListNode() {
-		return actionListNode;
-	}
-	*/
-
-	/*
-	public void parseNode() {
-		AdapterNode child;
-	
-		for (int i = 0; i < node.getChildCount(); i++) {
-			child = node.getChild(i);
-	
-			if (child.getName().equals("actionlist")) {
-				actionListNode = child;
-	
-				for (int j = 0; j < child.getChildCount(); j++) {
-					AdapterNode subChild = child.getChild(j);
-					if (subChild.getName().equals("action"))
-						actionList.add(
-							new FilterAction(subChild, getDocument()));
-				}
-	
-			} else if (child.getName().equals("filterrule")) {
-				rule = new FilterRule(child, getDocument());
-			} else if (child.getName().equals("description")) {
-				nameNode = child;
-			} else if (child.getName().equals("enabled")) {
-				enabledNode = child;
-			}
-		}
-	
-	}
-	*/
-
+	/**
+	 * 
+	 * @return FilterActionList 	this is also a simple wrapper
+	 */
 	public FilterActionList getFilterActionList() {
 		return new FilterActionList(getRoot().getElement("actionlist"));
 	}
 
+	/**
+	 * 
+	 * 
+	 * @return FilterRule	this is also a simple wrapper
+	 */
 	public FilterRule getFilterRule() {
 		return new FilterRule(getRoot().getElement("rules"));
 	}
 
-	/*
-	public void addEmptyCriteria() {
-		rule.addEmptyCriteria();
-	}
-	
-	public void removeCriteria(int index) {
-		rule.remove(index);
-	}
-	
-	public void removeLastCriteria() {
-		rule.removeLast();
-	}
-	*/
-
-	public void setFolder(Folder f) {
-		this.folder = f;
-	}
-
+	/**
+	 * Is filter enabled?
+	 * 
+	 * @return boolean	true if enabled
+	 */
 	public boolean getEnabled() {
-		/*
-		String str = (String) getTextValue(enabledNode);
-		
-		Boolean b = new Boolean(str);
-		
-		return b;
-		*/
 
 		return getBoolean("enabled");
 	}
 
+	/**
+	 * 
+	 * enable Filter
+	 * 
+	 * @param bool	if true enable filter otherwise disable filter
+	 */
 	public void setEnabled(boolean bool) {
 		set("enabled", bool);
-		//setTextValue(enabledNode, bool.toString());
-	}
 
+	}
+	
+	/**
+	 * Set filter name
+	 * 
+	 * @param s		new filter name
+	 */
 	public void setName(String s) {
 		set("description", s);
-		//setTextValue(nameNode, s);
+
 	}
+	
+	/**
+	 * 
+	 *  return Name of Filter
+	 * 
+	 * @return String
+	 */
 	public String getName() {
 		return get("description");
 
 	}
 
-	public CompoundCommand getCommand(
-		Folder srcFolder,
-		Object[] uids)
+	/**
+	 * if filter matches we need to execute all actions 
+	 * 
+	 * For efficiency reasons all commands are packaged in
+	 * a compound command object. This compound command uses
+	 * only one worker to execute all commands, instead of 
+	 * creating new workers for every command
+	 * 
+	 * @param srcFolder				source folder
+	 * @param uids					message uid array
+	 * @return CompoundCommand		return Collection of Commands
+	 * @throws Exception
+	 */
+	public CompoundCommand getCommand(Folder srcFolder, Object[] uids)
 		throws Exception {
+			
+		// instanciate CompoundCommand
 		CompoundCommand c = new CompoundCommand();
 
-		/*
-		FilterActionPluginList actionListItem =
-			MailConfig.getFilterActionConfig().getFilterActionList();
-		*/
+		// get plugin handler for filter actions
 		FilterActionPluginHandler pluginHandler =
 			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
 				"filter_actions");
 
+		// get list of all filter actions
 		FilterActionList list = getFilterActionList();
 		for (int i = 0; i < list.getChildCount(); i++) {
+			// interate through all filter actions
 			FilterAction action = list.get(i);
 
+			// name is used to load plugin
 			String name = action.getAction();
 			AbstractFilterAction instance = null;
 
-			//Object[] args = { frameController, action, srcFolder, uids };
-
+			// try to get instance of FilterAction
 			try {
 				instance =
 					(AbstractFilterAction)
@@ -168,109 +167,17 @@ public class Filter extends DefaultItem {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			
-			Command command = instance.getCommand( action, srcFolder, uids);
-			
-			if ( command != null ) c.add(command);
 
-			/*
-			String className = actionListItem.getActionClassName(name);
-			Object[] args = { frameController, action, srcFolder, uids };
-			
-			try {
-				AbstractFilterAction instance =
-					(AbstractFilterAction) CClassLoader.instanciate(
-						className,
-						args);
-				c.add(instance.getCommand());
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			*/
+			// retrieve Command of filter action
+			Command command = instance.getCommand(action, srcFolder, uids);
 
-			/*
-			ClassLoader loader = ClassLoader.getSystemClassLoader();
-			try {
-				Class actClass = loader.loadClass(className);
-			
-				Constructor[] constructors = actClass.getConstructors();
-				Constructor constructor = constructors[0];
-			
-				Object[] args = { frameController, action, srcFolder, uids };
-				
-				AbstractFilterAction instance = (AbstractFilterAction) constructor.newInstance(args);
-				
-				c.add( instance.getCommand() );
-			
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			*/
-			/*
-			switch (action.getActionInt()) {
-			
-				case 0 :
-					{
-						// move
-			
-						System.out.println("moving messages");
-			
-						c.add(
-							new MoveMessageAction(
-								frameController,
-								action,
-								srcFolder,
-								uids)
-								.getCommand());
-			
-						break;
-					}
-				case 1 :
-					{
-						// copy
-						System.out.println("copying messages");
-			
-						//System.out.println("treepath: "+ treePath );
-			
-						c.add( new CopyMessageAction(
-							frameController,
-							action,
-							srcFolder,
-							uids)
-							.getCommand());
-			
-						break;
-					}
-				case 2 :
-					{
-						System.out.println("mark messages as read");
-						c.add(new MarkMessageAsReadFilterAction(
-							frameController,
-							action,
-							srcFolder,
-							uids)
-							.getCommand());
-			
-						break;
-					}
-				case 3 :
-					{
-						System.out.println("delete messages");
-						c.add(new DeleteMessageAction(
-							frameController,
-							action,
-							srcFolder,
-							uids)
-							.getCommand());
-			
-						break;
-					}
-					
-			}
-			*/
+			// add command to CompoundCommand
+			if (command != null)
+				c.add(command);
 
 		}
 
+		// return CompoundCommand
 		return c;
 	}
 

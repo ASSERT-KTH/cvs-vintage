@@ -37,8 +37,8 @@ import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.action.BasicAction;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.action.BasicAction;
 
 public class AddressbookActionListener implements ActionListener {
 	public BasicAction cutAction;

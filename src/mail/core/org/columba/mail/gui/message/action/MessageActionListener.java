@@ -17,7 +17,7 @@ package org.columba.mail.gui.message.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.mail.gui.action.BasicAction;
+import org.columba.core.action.BasicAction;
 import org.columba.mail.gui.message.MessageController;
 
 /**

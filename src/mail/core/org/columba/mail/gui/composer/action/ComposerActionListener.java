@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.addressbook.gui.SelectAddressDialog;
+import org.columba.core.action.BasicAction;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -31,7 +32,6 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.outbox.OutboxFolder;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerInterface;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;

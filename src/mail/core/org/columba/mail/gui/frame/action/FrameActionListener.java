@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.gui.util.ImageLoader;
@@ -29,7 +30,6 @@ import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.outbox.OutboxFolder;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.config.general.GeneralOptionsDialog;
 import org.columba.mail.gui.config.mailboximport.ImportWizard;

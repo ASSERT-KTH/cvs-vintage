@@ -18,10 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
 import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;

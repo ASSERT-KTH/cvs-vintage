@@ -33,6 +33,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
@@ -41,7 +42,6 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ToolbarButton;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.util.MailResourceLoader;
 
 public class StatusBar

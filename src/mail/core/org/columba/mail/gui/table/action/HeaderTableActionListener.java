@@ -17,9 +17,13 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.JMenu;
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.BasicAction;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -36,7 +40,6 @@ import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.command.PrintMessageCommand;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
 import org.columba.mail.gui.composer.command.OpenMessageWithComposerCommand;
@@ -51,7 +54,8 @@ import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.MailResourceLoader;
 
-public class HeaderTableActionListener implements ActionListener {
+public class HeaderTableActionListener
+	implements ActionListener {
 
 	public BasicAction markAsReadAction;
 	public BasicAction markAsFlaggedAction;
@@ -87,7 +91,7 @@ public class HeaderTableActionListener implements ActionListener {
 	public BasicAction vFolderFromAction;
 	public BasicAction vFolderToAction;
 
-	public BasicAction viewThreadedAction;
+	public ThreadedViewAction viewThreadedAction;
 
 	public BasicAction openMessageWithComposerAction;
 
@@ -486,7 +490,7 @@ public class HeaderTableActionListener implements ActionListener {
 				null,
 				null,
 				'0',
-		KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+				KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 
 		filterSubjectAction =
 			new BasicAction(
@@ -580,6 +584,10 @@ public class HeaderTableActionListener implements ActionListener {
 				'0',
 				null);
 
+		viewThreadedAction = new ThreadedViewAction( tableController.getMailFrameController() );
+		tableController.addTableChangedListener(viewThreadedAction);
+		
+		/*
 		viewThreadedAction =
 			new BasicAction(
 				MailResourceLoader.getString(
@@ -595,6 +603,10 @@ public class HeaderTableActionListener implements ActionListener {
 				null,
 				'0',
 				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+		viewThreadedAction.addPropertyChangeListener(this);
+		*/
+		
+
 		openMessageWithComposerAction =
 			new BasicAction(
 				MailResourceLoader.getString(
@@ -793,6 +805,35 @@ public class HeaderTableActionListener implements ActionListener {
 		return headerTableView.hasFocus();
 		*/
 	}
+
+	/*
+	public void propertyChange(PropertyChangeEvent e) {
+		if (e.getSource().equals(viewThreadedAction)) {
+			Boolean isEnabled = (Boolean) e.getNewValue();
+
+			Folder folder = (Folder) getFolder();
+			folder.getFolderItem().set(
+				"property",
+				"enable_threaded_view",
+				isEnabled.booleanValue());
+
+			tableController
+				.getHeaderTableModel()
+				.getTableModelThreadedView()
+				.toggleView(
+			isEnabled.booleanValue());
+
+			tableController.getView().enableThreadedView(
+				isEnabled.booleanValue());
+
+			if (isEnabled.equals(Boolean.TRUE))
+				tableController.getView().enableThreadedView(true);
+			else
+				tableController.getView().enableThreadedView(false);
+
+		}
+	}
+	*/
 
 	public void actionPerformed(ActionEvent evt) {
 		String command = evt.getActionCommand();
@@ -1313,8 +1354,12 @@ public class HeaderTableActionListener implements ActionListener {
 		}*/
 		else if (command.equals(viewThreadedAction.getActionCommand())) {
 
-			boolean isEnabled=false;// = viewThreadedAction.is
-			
+			JMenu viewMenu =
+				tableController.getMailFrameController().getMenu().getMenu(
+					"VIEW");
+
+			boolean isEnabled = false; // = viewThreadedAction.is
+
 			/*
 			boolean isEnabled =
 				tableController
@@ -1322,22 +1367,26 @@ public class HeaderTableActionListener implements ActionListener {
 					.getTableModelThreadedView()
 					.isEnabled();
 			*/
-			
+
 			/*
 			tableController
 				.getHeaderTableModel()
 				.getTableModelThreadedView()
 				.toggleView();
 			*/
-			
-			Folder folder = (Folder) getFolder();
-			folder.getFolderItem().set("property","enable_threaded_view", isEnabled);
-			
 
+			/*
+			Folder folder = (Folder) getFolder();
+			folder.getFolderItem().set(
+				"property",
+				"enable_threaded_view",
+				isEnabled);
+			
 			if (isEnabled)
 				tableController.getView().enableThreadedView(true);
 			else
 				tableController.getView().enableThreadedView(false);
+			*/
 
 			//headerTableView.getHeaderTableModel().setFolder( headerTableView.getFolder() );
 		} else if (

@@ -14,6 +14,8 @@
 
 package org.columba.mail.gui.table;
 
+import java.util.Vector;
+
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -42,6 +44,7 @@ import org.columba.mail.gui.table.menu.HeaderTableMenu;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.tree.FolderSelectionListener;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -99,6 +102,8 @@ public class TableController
 	protected Object[] newUidList;
 
 	protected MarkAsReadTimer markAsReadTimer;
+	
+	protected Vector tableChangedListenerList;
 
 	public TableController(MailFrameController mailFrameController) {
 
@@ -121,6 +126,8 @@ public class TableController
 		tableSelectionManager = new TableSelectionManager();
 		tableSelectionManager.addFolderSelectionListener(this);
 
+		tableChangedListenerList = new Vector();
+		
 		actionListener = new HeaderTableActionListener(this);
 
 		menu = new HeaderTableMenu(this);
@@ -146,42 +153,24 @@ public class TableController
 		getHeaderTableModel().getTableModelSorter().setSortingColumn( headerTableItem.get("selected") );
 		getHeaderTableModel().getTableModelSorter().setSortingOrder( headerTableItem.getBoolean("ascending"));
 		
-		/*
-		headerTableActionListener = new HeaderTableActionListener(this);
 		
 		
-		
-		initRenderer();
-		
-		
-		
-		headerTable.addTreeSelectionListener(this);
-		
-		
-		
-		scrollPane = new CScrollPane(headerTable.getTable());
-		scrollPane.getViewport().setBackground(Color.white);
-		//scrollPane.setPreferredSize( new java.awt.Dimension(300,200) );
-		
-		add(scrollPane, BorderLayout.CENTER);
-		
-		filterToolbar = new FilterToolbar(this);
-		//filterToolbar.setAlignmentX(1);
-		if (MailConfig.getMainFrameOptionsConfig().getWindowItem().isShowFilterToolbar() == true)
-		{
-			add(filterToolbar, BorderLayout.NORTH);
-			try
-			{
-				getTableModelFilteredView().setDataFiltering(true);
-			}
-			catch ( Exception ex )
-			{
-			}
-		}
-		
-		//MainInterface.focusManager.registerComponent( new HeaderTableFocusOwner(this) );
-		*/
 	}
+	
+	public void addTableChangedListener( TableChangeListener l )
+	{
+		tableChangedListenerList.add(l);
+	}
+	
+	public void fireTableChangedEvent(TableChangedEvent e)
+	{
+		for ( int i=0; i<tableChangedListenerList.size(); i++ )
+		{
+			TableChangeListener l = (TableChangeListener) tableChangedListenerList.get(i);
+			l.tableChanged(e);
+		}
+	}
+	
 
 	public TableView getView() {
 
@@ -506,13 +495,15 @@ public class TableController
 	// the method updates the model
 
 	public void tableChanged(TableChangedEvent event) throws Exception {
-
+		ColumbaLogger.log.info("event="+event);
+		
 		Folder folder = event.getSrcFolder();
 
 		if (folder == null) {
 			if (event.getEventType() == TableChangedEvent.UPDATE)
 				getHeaderTableModel().update();
 
+			fireTableChangedEvent(event);
 			return;
 		}
 
@@ -529,7 +520,12 @@ public class TableController
 			case TableChangedEvent.UPDATE :
 				{
 					getHeaderTableModel().update();
-
+					/*
+					HeaderInterface[] headerList = event.getHeaderList();
+					
+					getHeaderTableModel()
+								.setHeaderList(headerList);
+					*/			
 					break;
 				}
 			case TableChangedEvent.ADD :
@@ -552,6 +548,7 @@ public class TableController
 				}
 		}
 
+		fireTableChangedEvent(event);
 	}
 
 	/**
