@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.sql.DataSource;
 import javax.ejb.EJBException;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -39,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCStartCommand {
 
@@ -71,7 +72,7 @@ public class JDBCStartCommand {
       }
    }
 
-   public void execute() throws Exception {
+   public void execute() throws DeploymentException {
 
       // Create table if necessary
       if(!entity.getTableExists()) {
@@ -125,7 +126,7 @@ public class JDBCStartCommand {
    private void createTable(
          DataSource dataSource,
          String tableName,
-         String sql) {
+         String sql) throws DeploymentException {
 
       // does this table already exist
       if(tableExists(dataSource, tableName)) {
@@ -151,13 +152,14 @@ public class JDBCStartCommand {
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit ();
-      } catch (Exception e) {
-         log.debug("Could not create table " + tableName, e);
+      } catch(Exception e) {
+         log.debug("Could not create table " + tableName);
          try {
             manager.getContainer().getTransactionManager().rollback ();
-         } catch (Exception _e) {
+         } catch(Exception _e) {
             log.error("Could not roll back transaction: ", e);
          }
+         throw new DeploymentException("Error while creating table", e);
       } finally {
          JDBCUtil.safeClose(statement);
          JDBCUtil.safeClose(con);
@@ -171,7 +173,7 @@ public class JDBCStartCommand {
 
    private boolean tableExists(
          DataSource dataSource, 
-         String tableName) {
+         String tableName) throws DeploymentException {
 
       Connection con = null;
       ResultSet rs = null;
@@ -186,8 +188,8 @@ public class JDBCStartCommand {
       } catch(SQLException e) {
          // This should not happen. A J2EE compatiable JDBC driver is
          // required fully support metadata.
-         throw new EJBException("Error while checking if table aleady " +
-               "exists: ", e);
+         throw new DeploymentException("Error while checking if table aleady " +
+               "exists", e);
       } finally {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(con);
@@ -253,7 +255,8 @@ public class JDBCStartCommand {
       return sql.toString();
    }
 
-   private void addForeignKeyConstraint(JDBCCMRFieldBridge cmrField) {
+   private void addForeignKeyConstraint(JDBCCMRFieldBridge cmrField) 
+         throws DeploymentException {
       if(cmrField.getMetaData().hasForeignKeyConstraint()) {
       
          if(cmrField.getRelationMetaData().isTableMappingStyle()) {
@@ -288,7 +291,7 @@ public class JDBCStartCommand {
          String cmrFieldName,
          List fields,
          String referencesTableName,
-         List referencesFields) {
+         List referencesFields) throws DeploymentException {
 
       // can only alter tables we created
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
@@ -333,14 +336,15 @@ public class JDBCStartCommand {
 
          // success
          log.info("Added foreign key constriant to table '" + tableName);
-      } catch (Exception e) {
-         log.debug("Could not add foreign key constriant to table " + 
-               tableName, e);
+      } catch(Exception e) {
+         log.debug("Could not add foreign key constriant: table=" + tableName);
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
             log.error("Could not roll back transaction: ", e);
-         }
+         }  
+         throw new DeploymentException("Error while adding foreign key " +
+               "constraint", e);
       } finally {
          JDBCUtil.safeClose(statement);
          JDBCUtil.safeClose(con);
