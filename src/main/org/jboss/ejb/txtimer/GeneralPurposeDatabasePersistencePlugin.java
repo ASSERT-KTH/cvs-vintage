@@ -6,9 +6,10 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: GeneralPurposeDatabasePersistencePlugin.java,v 1.1 2004/09/22 09:33:42 tdiesler Exp $
+// $Id: GeneralPurposeDatabasePersistencePlugin.java,v 1.2 2004/11/20 03:46:43 starksm Exp $
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
@@ -20,12 +21,11 @@ import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,7 +49,6 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
 
    // The service attributes
    protected ObjectName dataSourceName;
-   protected String tableName;
 
    // The mbean server
    protected MBeanServer server;
@@ -59,11 +58,10 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
    protected ObjectName metaDataName;
 
    /** Initialize the plugin */
-   public void init(MBeanServer server, ObjectName dataSourceName, String tableName) throws SQLException
+   public void init(MBeanServer server, ObjectName dataSourceName) throws SQLException
    {
       this.server = server;
       this.dataSourceName = dataSourceName;
-      this.tableName = tableName;
 
       // Get the DataSource from JNDI
       try
@@ -89,15 +87,11 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
    {
       Connection con = null;
       Statement st = null;
-      ResultSet rs = null;
       try
-      {
-         con = ds.getConnection();
-         final DatabaseMetaData dbMD = con.getMetaData();
-         rs = dbMD.getTables(null, null, tableName, null);
-
-         if (!rs.next())
+      {        
+         if (!SQLUtil.tableExists(getTableName(), ds))
          {
+            con = ds.getConnection();
             JDBCTypeMappingMetaData typeMapping = (JDBCTypeMappingMetaData)server.getAttribute(metaDataName, "TypeMappingMetaData");
             if (typeMapping == null)
                throw new IllegalStateException("Cannot obtain type mapping from: " + metaDataName);
@@ -106,14 +100,14 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
             String objectType = typeMapping.getTypeMappingMetaData(Object.class).getSqlType();
             String longType = typeMapping.getTypeMappingMetaData(Long.class).getSqlType();
 
-            String createTableDDL = "create table " + tableName + " (" +
-                    "  " + TIMERID + " varchar(80) not null," +
-                    "  " + TARGETID + " varchar(80) not null," +
-                    "  " + INITIALDATE + " " + dateType + " not null," +
-                    "  " + INTERVAL + " " + longType + "," +
-                    "  " + INSTANCEPK + " " + objectType + "," +
-                    "  " + INFO + " " + objectType + "," +
-                    "  constraint " + tableName + "_PK primary key (" + TIMERID + "," + TARGETID + ")" +
+            String createTableDDL = "create table " + getTableName() + " (" +
+                    "  " + getColumnTimerID() + " varchar(80) not null," +
+                    "  " + getColumnTargetID() + " varchar(80) not null," +
+                    "  " + getColumnInitialDate() + " " + dateType + " not null," +
+                    "  " + getColumnTimerInterval() + " " + longType + "," +
+                    "  " + getColumnInstancePK() + " " + objectType + "," +
+                    "  " + getColumnInfo() + " " + objectType + "," +
+                    "  constraint " + getTableName() + "_PK primary key (" + getColumnTimerID() + "," + getColumnTargetID() + ")" +
                     ")";
 
             log.debug("Executing DDL: " + createTableDDL);
@@ -132,7 +126,6 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
       }
       finally
       {
-         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(st);
          JDBCUtil.safeClose(con);
       }
@@ -148,8 +141,8 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
       {
          con = ds.getConnection();
 
-         String sql = "insert into " + tableName + " " +
-                 "(" + TIMERID + "," + TARGETID + "," + INITIALDATE + "," + INTERVAL + "," + INSTANCEPK + "," + INFO + ") " +
+         String sql = "insert into " + getTableName() + " " +
+                 "(" + getColumnTimerID() + "," + getColumnTargetID() + "," + getColumnInitialDate() + "," + getColumnTimerInterval() + "," + getColumnInstancePK() + "," + getColumnInfo() + ") " +
                  "values (?,?,?,?,?,?)";
          st = con.prepareStatement(sql);
 
@@ -187,15 +180,15 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
          List list = new ArrayList();
 
          st = con.createStatement();
-         rs = st.executeQuery("select * from " + tableName);
+         rs = st.executeQuery("select * from " + getTableName());
          while (rs.next())
          {
-            String timerId = rs.getString(TIMERID);
-            TimedObjectId targetId = TimedObjectId.parse(rs.getString(TARGETID));
-            Date initialDate = rs.getTimestamp(INITIALDATE);
-            long interval = rs.getLong(INTERVAL);
-            Serializable pKey = (Serializable)deserialize(rs.getBytes(INSTANCEPK));
-            Serializable info = (Serializable)deserialize(rs.getBytes(INFO));
+            String timerId = rs.getString(getColumnTimerID());
+            TimedObjectId targetId = TimedObjectId.parse(rs.getString(getColumnTargetID()));
+            Date initialDate = rs.getTimestamp(getColumnInitialDate());
+            long interval = rs.getLong(getColumnTimerInterval());
+            Serializable pKey = (Serializable)deserialize(rs.getBytes(getColumnInstancePK()));
+            Serializable info = (Serializable)deserialize(rs.getBytes(getColumnInfo()));
 
             targetId = new TimedObjectId(targetId.getContainerId(), pKey);
             TimerHandleImpl handle = new TimerHandleImpl(timerId, targetId, initialDate, interval, info);
@@ -224,7 +217,7 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
       {
          con = ds.getConnection();
 
-         String sql = "delete from " + tableName + " where " + TIMERID + "=? and " + TARGETID + "=?";
+         String sql = "delete from " + getTableName() + " where " + getColumnTimerID() + "=? and " + getColumnTargetID() + "=?";
          st = con.prepareStatement(sql);
 
          st.setString(1, timerId);
@@ -252,7 +245,7 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
       try
       {
          con = ds.getConnection();
-         st = con.prepareStatement("delete from " + tableName);
+         st = con.prepareStatement("delete from " + getTableName());
          st.executeUpdate();
       }
       finally
@@ -261,6 +254,49 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
          JDBCUtil.safeClose(st);
          JDBCUtil.safeClose(con);
       }
+   }
+
+   /** Get the timer table name */
+   public String getTableName()
+   {
+      return "TIMERS";
+   }
+
+   /** Get the timer ID column name */
+   public String getColumnTimerID()
+   {
+      return "TIMERID";
+   }
+
+   /** Get the target ID column name */
+   public String getColumnTargetID()
+   {
+      return "TARGETID";
+   }
+
+   /** Get the initial date column name */
+   public String getColumnInitialDate()
+   {
+      return "INITIALDATE";
+   }
+
+   /** Get the timer interval column name */
+   public String getColumnTimerInterval()
+   {
+      // Note 'INTERVAL' is a reserved word in MySQL
+      return "TIMERINTERVAL";
+   }
+
+   /** Get the instance PK column name */
+   public String getColumnInstancePK()
+   {
+      return "INSTANCEPK";
+   }
+
+   /** Get the info column name */
+   public String getColumnInfo()
+   {
+      return "INFO";
    }
 
    /** Serialize an object */
@@ -315,7 +351,8 @@ public class GeneralPurposeDatabasePersistencePlugin implements DatabasePersiste
       ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
       try
       {
-         for (int b=0; (b = input.read(barr)) > 0;) {
+         for (int b = 0; (b = input.read(barr)) > 0;)
+         {
             baos.write(barr, 0, b);
          }
          return deserialize(baos.toByteArray());
