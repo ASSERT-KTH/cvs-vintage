@@ -173,10 +173,6 @@ public final class IntrospectionUtils {
 		System.getProperties().put( homeSysProp, install );
 	    return install;
 	}
-	if ( home != null ) {
-	    System.getProperties().put( installSysProp, home );
-	    return home;
-	}
 
 	// Find the directory where jarName.jar is located
 	
@@ -194,7 +190,7 @@ public final class IntrospectionUtils {
 		    install = f1.getCanonicalPath();
 		    if( installSysProp != null )
 			System.getProperties().put( installSysProp, install );
-		    if( homeSysProp != null )
+		    if( home == null && homeSysProp != null )
 			System.getProperties().put( homeSysProp, install );
 		    return install;
 		} catch( Exception ex ) {
@@ -210,7 +206,7 @@ public final class IntrospectionUtils {
 			if( installSysProp != null )
 			    System.getProperties().put( installSysProp,
 							install );
-			if( homeSysProp != null )
+			if( home == null && homeSysProp != null )
 			    System.getProperties().put( homeSysProp, install );
 			return install;
 		    } catch( Exception ex ) {
@@ -219,6 +215,13 @@ public final class IntrospectionUtils {
 		}
 	    }
 	}
+
+        // if install directory can't be found, use home as the default
+	if ( home != null ) {
+	    System.getProperties().put( installSysProp, home );
+	    return home;
+	}
+
 	return null;
     }
 
