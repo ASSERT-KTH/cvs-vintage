@@ -586,11 +586,11 @@ public final class IntrospectionUtils {
     {
 	Vector jarsV = new Vector();
 	if( dir!=null ) {
-	    addToClassPath( jarsV, dir );
-	    // Add dir/classes, if it exists
+	    // Add dir/classes first, if it exists
 	    URL url=getURL( dir, "classes");
 	    if( url!=null )
 		jarsV.addElement(url);
+	    addToClassPath( jarsV, dir );
 	}
 	
 	if( cpath != null )
