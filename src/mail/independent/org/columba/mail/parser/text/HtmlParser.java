@@ -47,6 +47,8 @@ public class HtmlParser {
 		Pattern.compile("\\</h\\d\\>", Pattern.CASE_INSENSITIVE);
 	private static final Pattern whiteSpaceRemovalPattern =
 		Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE);
+	private static final Pattern trimSpacePattern =
+		Pattern.compile("\n( )+", Pattern.CASE_INSENSITIVE);
 	private static final Pattern headerRemovalPattern = 
 		Pattern.compile("\\<html(.|\n|\r)*?\\<body(.|\n|\r)*?\\>", 
 			Pattern.CASE_INSENSITIVE);
@@ -170,6 +172,9 @@ public class HtmlParser {
 		// strip remaining tags
 		s = stripTagsPattern.matcher(s).replaceAll("");
 		
+		// tag stripping can leave some double spaces at line beginnings
+		s = trimSpacePattern.matcher(s).replaceAll("\n").trim();
+				
 		return s;
 	}
 
@@ -828,4 +833,30 @@ public class HtmlParser {
 
 	}
 
+	/**
+	 * Extracts the body of a html document, i.e. the html contents
+	 * between (and not including) body start and end tags.
+	 * 
+	 * @param	html	The html document to extract the body from
+	 * @param	The body of the html document
+	 *  
+	 * @author	Karl Peder Olesen (karlpeder)
+	 */
+	public static String getHtmlBody(String html) {
+		// locate body start- and end tags
+		String lowerCaseContent = html.toLowerCase();
+		int tagStart      = lowerCaseContent.indexOf("<body");
+		// search for closing bracket separately to account for attributes in tag
+		int tagStartClose = lowerCaseContent.indexOf(">", tagStart) + 1;
+		int tagEnd        = lowerCaseContent.indexOf("</body>");
+		
+		// correct limits if body tags where not found
+		if (tagStartClose < 0)
+			tagStartClose = 0;
+		if ((tagEnd < 0) || (tagEnd > lowerCaseContent.length()))
+			tagEnd = lowerCaseContent.length();
+		
+		// return body
+		return html.substring(tagStartClose, tagEnd);
+	}
 }
