@@ -7,6 +7,9 @@ insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
     values (3, 'jss@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Jon', 'Stevens', 'jon@latchkey.com', 'abcdef' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
     values (4, 'jmcnally@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'John', 'McNally', 'jmcnally@collab.net', 'CONFIRMED' );
+insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
+    values (5, 'elicia@collab.net', '', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
+
 
 /*
  * Sample Project
@@ -119,4 +122,9 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALU
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 7, 56, 'P3');
 /* severity is major */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 9, 66, 'major');
+insert into  SCARAB_ACTIVITY values (1, 4, 1, 1, 8,9);
+insert into SCARAB_TRANSACTION values (1, 100, "2001-05-21");
+insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (1, 1, 2, "this is my comment", ".txt", "2001-06-01", "2001-05-05");
+
+
 
