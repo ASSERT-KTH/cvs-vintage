@@ -29,7 +29,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * outstanding statements are closed, and the connection is rolled back.  This
  * class is also used by statements, etc. to update the last used time for the
  * connection.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ConnectionInPool implements PooledObject, ConnectionWrapper {
@@ -138,16 +138,14 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
      * rolled back.  No further SQL calls are possible once this is called.
      */
     public void reset() throws SQLException {
-        Connection local = con;
-
         Collection copy = (Collection)statements.clone();
         Iterator it = copy.iterator();
         while(it.hasNext())
             try {
                 ((Statement)it.next()).close();
             } catch(SQLException e) {}
-        if(!local.getAutoCommit())
-            local.rollback();
+        if(!con.getAutoCommit())
+            con.rollback();
         con = null;
     }
 
