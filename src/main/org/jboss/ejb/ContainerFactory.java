@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.33 $
+*   @version $Revision: 1.34 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -311,6 +311,7 @@ public class ContainerFactory
 			ApplicationMetaData metaData = efm.load();
 
             
+
 			// Check validity
             Log.setLog(new Log("Verifier"));
             
@@ -326,7 +327,12 @@ public class ContainerFactory
                     {
                        public void beanChecked(VerificationEvent event)
                        {
-                            Logger.log(event.getMessage());
+                           Logger.log(event.getName() + ": " + event.getMessage());
+                       }
+                       
+                       public void specViolation(VerificationEvent event)
+                       {
+                           Logger.log(event.getName() + ": " + event.getMessage());
                        }
                     });
     
@@ -337,12 +343,11 @@ public class ContainerFactory
                 }
             }
             catch (Throwable t) {
-                //DEBUG Logger.exception(t);
+                Logger.exception(t);
             }
             
             // unset verifier log
-            Log.unsetLog();
-            
+            Log.unsetLog();			
 
 			// Get list of beans for which we will create containers
 			Iterator beans = metaData.getEnterpriseBeans();
