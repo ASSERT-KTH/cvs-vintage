@@ -35,7 +35,7 @@ import org.jboss.metadata.XmlLoadable;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  *      Revisions:
  *      20010621 Bill Burke: made read-ahead defaultable in standardjboss.xml and jaws.xml
@@ -71,8 +71,8 @@ public class JawsEntityMetaData
    /** Do we use tuned updates? */
    private boolean tunedUpdates;
 
-   /** Do we use 'SELECT ... FOR UPDATE' syntax? */
-   private boolean selectForUpdate;
+   /** Do we use do row locking on ejb loads? */
+   private boolean rowLocking;
 
    /** Is the bean read-only? */
    private boolean readOnly;
@@ -254,7 +254,7 @@ public class JawsEntityMetaData
 
    public String getPrimKeyField() { return entity.getPrimKeyField(); }
 
-   public boolean hasSelectForUpdate() { return selectForUpdate; }
+   public boolean hasRowLocking() { return rowLocking; }
 
    public boolean hasReadAhead() { return readAhead; }
 
@@ -325,9 +325,9 @@ public class JawsEntityMetaData
       String raheadStr = getElementContent(getOptionalChild(element, "read-ahead"));
       if (raheadStr != null) readAhead = Boolean.valueOf(raheadStr).booleanValue();
 
-      String sForUpStr = getElementContent(getOptionalChild(element, "select-for-update"));
-      if (sForUpStr != null) selectForUpdate = (Boolean.valueOf(sForUpStr).booleanValue());
-      selectForUpdate = selectForUpdate && !readOnly;
+      String sForUpStr = getElementContent(getOptionalChild(element, "row-locking"));
+      if (sForUpStr != null) rowLocking = (Boolean.valueOf(sForUpStr).booleanValue());
+      rowLocking = rowLocking && !readOnly;
 
       // read only timeout?
       String toStr = getElementContent(getOptionalChild(element, "time-out"));

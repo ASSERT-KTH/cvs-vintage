@@ -38,7 +38,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -143,7 +143,7 @@ public class JDBCLoadEntitiesCommand
       FinderResults keys = (FinderResults)((Object[])argOrArgs)[0];
       JDBCFinderCommand finder = (JDBCFinderCommand)keys.getFinder();
       String sql = selectClause + " " + finder.getFromClause() + " " + finder.getWhereClause() + " " + finder.getOrderByClause();
-      if (jawsEntity.hasSelectForUpdate())
+      if (jawsEntity.hasRowLocking())
       {
 	  sql += " FOR UPDATE";
       }

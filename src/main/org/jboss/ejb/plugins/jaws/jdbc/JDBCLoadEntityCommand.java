@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -76,7 +76,7 @@ public class JDBCLoadEntityCommand
 
       String sql = createSelectClause() + " FROM " + jawsEntity.getTableName() 
                    + " WHERE " + getPkColumnWhereList();
-      if (jawsEntity.hasSelectForUpdate())
+      if (jawsEntity.hasRowLocking())
       {
          sql += " FOR UPDATE";
       }

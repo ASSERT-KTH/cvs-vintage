@@ -30,7 +30,7 @@ import org.apache.log4j.Category;
  * @see <related>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  *   <p><b>Revisions:</b>
  *
@@ -94,7 +94,7 @@ public class JDBCPreloadFinderCommand
          + finderDelegate.getFromClause() + " "
          + finderDelegate.getWhereClause() + " "
          + finderDelegate.getOrderByClause();
-      if (jawsEntity.hasSelectForUpdate())
+      if (jawsEntity.hasRowLocking())
       {
          sql += " FOR UPDATE";
       }
