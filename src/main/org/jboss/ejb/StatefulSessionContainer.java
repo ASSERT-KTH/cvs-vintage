@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.65 $</tt>
+ * @version <tt>$Revision: 1.66 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -311,6 +311,7 @@ public class StatefulSessionContainer
       finally
       {
          lock.releaseSync();
+         getLockManager().removeLockRef(id);
       }
 
       // Ok lets create the proxy
