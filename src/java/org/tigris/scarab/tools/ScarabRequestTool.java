@@ -1343,29 +1343,28 @@ try{
         {
             setInfoMessage("Please enter a query.");
             searchSuccess = false;
-            intake = new Intake();
         }
         else
         {
            intake = parseQuery(currentQueryString);
-        }
 
-        // If they have entered users to search on, and that returns no results
-        // Don't bother running search
-        StringValueParser parser = new StringValueParser();
-        parser.parse(currentQueryString, '&', '=', true);
-        String[] userList = parser.getStrings("user_list");
-        if ( userList != null && userList.length > 0)
-        {
+            // If they have entered users to search on, and that returns no results
+            // Don't bother running search
+            StringValueParser parser = new StringValueParser();
+            parser.parse(currentQueryString, '&', '=', true);
+            String[] userList = parser.getStrings("user_list");
+            if ( userList != null && userList.length > 0)
+            {
 
-            List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
-            if (issueIdsFromUserSearch.size() > 0)
-            {
-                search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
-            }
-            else
-            {
-               searchSuccess = false;
+                List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
+                if (issueIdsFromUserSearch.size() > 0)
+                {
+                    search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
+                }
+                else
+                {
+                   searchSuccess = false;
+                }
             }
         }
 
