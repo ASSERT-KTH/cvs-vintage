@@ -59,7 +59,7 @@
 <!-- Start body content -->
 <br>
 <form method="post" action="$link.setPage("admin,ModifyProject.vm").setAction("SetSelectedProject")">
-    My Projects: $ModuleManager.getProjectsBox($data, 1)
+    My Projects: FIXME: $!ModuleManager.getProjectsBox($data, 1)
     <INPUT TYPE="submit" name="eventSubmit_doSelect" VALUE="Refresh">
 </form>
 
