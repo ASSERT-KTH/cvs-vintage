@@ -84,8 +84,8 @@
   <property name="commons-pool.lib" location="${commons-pool.home}/dist"/>
   <property name="commons-pool.jar" location="${commons-pool.lib}/commons-pool.jar"/>
 
-  <property name="commons-logging.home" location="${jakarta-commons}/commons-logging-1.0" />
-  <property name="commons-logging.lib" location="${jakarta-logging.home}" />
+  <property name="commons-logging.home" location="${jakarta-commons}/commons-logging-1.0.1" />
+  <property name="commons-logging.lib" location="${commons-logging.home}" />
   <property name="commons-logging.jar" location="${commons-logging.lib}/commons-logging-api.jar" />
 
   <property name="commons-collections.home" location="${jakarta-commons}/collections"/>
