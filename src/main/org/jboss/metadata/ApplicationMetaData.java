@@ -8,9 +8,12 @@
 package org.jboss.metadata;
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.mx.util.MBeanServerLocator;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +31,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -62,6 +65,7 @@ public class ApplicationMetaData
    private String securityDomain;
    /** The  unauthenticated-principal value assigned to the application */
    private String unauthenticatedPrincipal;
+
    private boolean enforceEjbRestrictions;
    /** ClassLoader is needed for webservices service-ref to lookup wsdl and other required files */
    private ClassLoader classLoader;
@@ -634,6 +638,19 @@ public class ApplicationMetaData
       if (unauth != null)
       {
          unauthenticatedPrincipal = getElementContent(unauth);
+      }
+      else
+      {
+         try
+         {
+            MBeanServer server = MBeanServerLocator.locateJBoss();
+            ObjectName oname = new ObjectName("jboss.security:service=JaasSecurityManager");
+            unauthenticatedPrincipal = (String)server.getAttribute(oname, "DefaultUnauthenticatedPrincipal");
+         }
+         catch (Exception e)
+         {
+            log.error("Cannot obtain unauthenticated principal");
+         }
       }
 
       // find the invoker configurations
