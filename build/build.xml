@@ -303,6 +303,10 @@
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/>
+        <filter token="LOCALE_DEFAULT_LANGUAGE" 
+            value="${scarab.locale.default.language}"/>
+        <filter token="LOCALE_DEFAULT_COUNTRY" 
+            value="${scarab.locale.default.country}"/>
         
         <filter token="SCARAB_EMAIL_DEFAULT_FROMNAME" 
             value="${scarab.email.default.fromName}"/>
