@@ -1,4 +1,4 @@
-// $Id: JasonsHugeTheme.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: JasonsHugeTheme.java,v 1.4 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,12 @@ public class JasonsHugeTheme extends MetalTheme {
     private final ColorUIResource primary2 = new ColorUIResource(153, 153, 204);
     private final ColorUIResource primary3 = new ColorUIResource(204, 204, 255);
   
-    private final ColorUIResource secondary1 = new ColorUIResource(102, 102, 102);
-    private final ColorUIResource secondary2 = new ColorUIResource(153, 153, 153);
-    private final ColorUIResource secondary3 = new ColorUIResource(204, 204, 204);
+    private final ColorUIResource secondary1 =
+	new ColorUIResource(102, 102, 102);
+    private final ColorUIResource secondary2 =
+	new ColorUIResource(153, 153, 153);
+    private final ColorUIResource secondary3 =
+	new ColorUIResource(204, 204, 204);
   
     private final FontUIResource controlFont =
 	new FontUIResource("SansSerif", Font.BOLD, 16);

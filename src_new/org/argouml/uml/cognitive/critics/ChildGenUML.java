@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.6 2003/06/29 23:52:58 linus Exp $
+// $Id: ChildGenUML.java,v 1.7 2003/06/30 18:00:27 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.6 2003/06/29 23:52:58 linus Exp $
+// $Id: ChildGenUML.java,v 1.7 2003/06/30 18:00:27 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -65,7 +65,8 @@ public class ChildGenUML implements ChildGenerator {
 	}
 
 	if (o instanceof MPackage) {
-	    Vector ownedElements = new Vector(((MPackage) o).getOwnedElements());
+	    Vector ownedElements =
+		new Vector(((MPackage) o).getOwnedElements());
 	    if (ownedElements != null) return ownedElements.elements();
 	}
 
@@ -88,7 +89,8 @@ public class ChildGenUML implements ChildGenerator {
 
 	    Vector sms = new Vector(cls.getBehaviors());
 	    MStateMachine sm = null;
-	    if (sms != null && sms.size() > 0) sm = (MStateMachine) sms.elementAt(0);
+	    if (sms != null && sms.size() > 0)
+		sm = (MStateMachine) sms.elementAt(0);
 	    if (sm != null) res.addSub(new EnumerationSingle(sm));
 	    return res;
 	}

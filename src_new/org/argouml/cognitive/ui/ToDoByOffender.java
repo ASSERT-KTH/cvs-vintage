@@ -1,4 +1,4 @@
-// $Id: ToDoByOffender.java,v 1.5 2003/06/29 23:53:43 linus Exp $
+// $Id: ToDoByOffender.java,v 1.6 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,8 +50,9 @@ public class ToDoByOffender extends ToDoPerspective {
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	VectorSet allOffenders = Designer.TheDesigner.getToDoList().getOffenders();
-	java.util.Enumeration enum = allOffenders.elements();
+	VectorSet allOffenders =
+	    Designer.TheDesigner.getToDoList().getOffenders();
+	Enumeration enum = allOffenders.elements();
 	while (enum.hasMoreElements()) {
 	    Object off = enum.nextElement();
 	    path[1] = off;
@@ -85,8 +86,9 @@ public class ToDoByOffender extends ToDoPerspective {
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	VectorSet allOffenders = Designer.TheDesigner.getToDoList().getOffenders();
-	java.util.Enumeration enum = allOffenders.elements();
+	VectorSet allOffenders =
+	    Designer.TheDesigner.getToDoList().getOffenders();
+	Enumeration enum = allOffenders.elements();
 	while (enum.hasMoreElements()) {
 	    Object off = enum.nextElement();
 	    path[1] = off;
@@ -120,8 +122,9 @@ public class ToDoByOffender extends ToDoPerspective {
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	VectorSet allOffenders = Designer.TheDesigner.getToDoList().getOffenders();
-	java.util.Enumeration enum = allOffenders.elements();
+	VectorSet allOffenders =
+	    Designer.TheDesigner.getToDoList().getOffenders();
+	Enumeration enum = allOffenders.elements();
 	while (enum.hasMoreElements()) {
 	    Object off = enum.nextElement();
 	    //       boolean anyInOff = false;

@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.25 2003/06/29 23:52:22 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.26 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.25 2003/06/29 23:52:22 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.26 2003/06/30 18:00:35 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -42,12 +42,10 @@ package org.argouml.uml.diagram.use_case.ui;
 import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
-import javax.swing.JToolBar;
 
 import org.apache.log4j.Category;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.PopupToolBoxButton;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.UMLDiagram;

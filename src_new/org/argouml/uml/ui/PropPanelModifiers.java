@@ -1,4 +1,4 @@
-// $Id: PropPanelModifiers.java,v 1.4 2003/06/29 23:50:02 linus Exp $
+// $Id: PropPanelModifiers.java,v 1.5 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelModifiers.java
 // Classes: PropPanelModifiers
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelModifiers.java,v 1.4 2003/06/29 23:50:02 linus Exp $
+// $Id: PropPanelModifiers.java,v 1.5 2003/06/30 18:00:36 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to help with
 // writing PropPanels.
@@ -35,7 +35,6 @@ package org.argouml.uml.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import org.argouml.uml.ui.*;
 
 
 /**

@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.10 2003/06/29 23:47:02 linus Exp $
+// $Id: EmailExpertDialog.java,v 1.11 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.ui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -52,7 +51,8 @@ import org.argouml.swingext.LabelledLayout;
  * within argo.
  */
 public class EmailExpertDialog extends ArgoDialog {
-    protected static Category cat = Category.getInstance(EmailExpertDialog.class);
+    protected static Category cat =
+	Category.getInstance(EmailExpertDialog.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables

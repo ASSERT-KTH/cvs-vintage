@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.22 2003/06/29 23:52:19 linus Exp $
+// $Id: FigPackage.java,v 1.23 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.22 2003/06/29 23:52:19 linus Exp $
+// $Id: FigPackage.java,v 1.23 2003/06/30 18:00:34 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -87,7 +87,8 @@ public class FigPackage extends FigNodeModelElement {
     FigText _body;
 
     /**
-     * Flags that indicates if the stereotype should be shown even if it is specified or not.
+     * Flags that indicates if the stereotype should be shown even if
+     * it is specified or not.
      */
     protected boolean _showStereotype = true;
 
@@ -119,8 +120,11 @@ public class FigPackage extends FigNodeModelElement {
 		    // Draw the shadow                
 		    if (_shadowSize > 0) {
 			for (int i = 0; i < _shadowSize; ++i) {
-			    Color shadow = new Color(0.1f, 0.1f, 0.1f, 
-						     0.5f * (((float) _shadowSize - i) / (float) _shadowSize));                        
+			    Color shadow =
+				new Color(0.1f, 0.1f, 0.1f, 
+					  (0.5f
+					   * (((float) _shadowSize - i)
+					      / (float) _shadowSize)));
 			    g.setColor(shadow);
 
 			    g.drawLine(

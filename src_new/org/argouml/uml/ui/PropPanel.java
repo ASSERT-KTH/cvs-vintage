@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.64 2003/06/29 23:50:02 linus Exp $
+// $Id: PropPanel.java,v 1.65 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.64 2003/06/29 23:50:02 linus Exp $
+// $Id: PropPanel.java,v 1.65 2003/06/30 18:00:36 linus Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -68,7 +68,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.swingext.Orientation;
-import org.argouml.swingext.SerialLayout;
 import org.argouml.swingext.Toolbar;
 import org.argouml.swingext.Vertical;
 import org.argouml.ui.TabSpawnable;

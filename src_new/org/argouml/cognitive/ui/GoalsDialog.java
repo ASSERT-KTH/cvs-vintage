@@ -1,4 +1,4 @@
-// $Id: GoalsDialog.java,v 1.2 2003/06/29 23:53:43 linus Exp $
+// $Id: GoalsDialog.java,v 1.3 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,7 +157,8 @@ public class GoalsDialog extends JDialog
 	    decSlide.setPaintLabels(true);
 	    decSlide.addChangeListener(this);
 	    Dimension origSize = decSlide.getPreferredSize();
-	    Dimension smallSize = new Dimension(origSize.width / 2, origSize.height);
+	    Dimension smallSize =
+		new Dimension(origSize.width / 2, origSize.height);
 	    decSlide.setSize(smallSize);
 	    decSlide.setPreferredSize(smallSize);
 

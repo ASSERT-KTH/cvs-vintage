@@ -1,4 +1,4 @@
-// $Id: AttrKeyword.java,v 1.5 2003/06/29 23:52:57 linus Exp $
+// $Id: AttrKeyword.java,v 1.6 2003/06/30 18:00:26 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,8 @@ public class AttrKeyword implements java.io.Serializable {
 	MScopeKind sk = attr.getOwnerScope();
 	MChangeableKind ck = attr.getChangeability();
 	// TODO final?
-	if (MScopeKind.CLASSIFIER.equals(sk) && MChangeableKind.FROZEN.equals(ck))
+	if (MScopeKind.CLASSIFIER.equals(sk)
+	    && MChangeableKind.FROZEN.equals(ck))
 	    return STATFIN;
 	else if (MScopeKind.CLASSIFIER.equals(sk))
 	    return STATIC;

@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.6 2003/06/29 23:47:03 linus Exp $
+// $Id: CmdSetPreferredSize.java,v 1.7 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class CmdSetPreferredSize extends Cmd {
         case PREFERRED_SIZE: return "preferred";
         case MINIMUM_SIZE: return "minimum";
         }
-        throw new IllegalArgumentException("CmdSetPreferredSize invoked with incompatible mode: " + r);
+        throw new IllegalArgumentException("CmdSetPreferredSize invoked with "
+					   + "incompatible mode: " + r);
     }
     
     /** set the fig to be resized */
@@ -103,7 +104,10 @@ public class CmdSetPreferredSize extends Cmd {
             fi.startTrans();
             // only resize elements which the user would also be able 
             // to resize.
-            if (fi.isResizable() == true && (!((fi instanceof FigPackage) || (fi instanceof FigCompositeState)))) {
+            if (fi.isResizable() == true
+		&& (!((fi instanceof FigPackage)
+		      || (fi instanceof FigCompositeState))))
+	    {
                 if (_mode == PREFERRED_SIZE)
                     fi.setSize(fi.getPreferedSize());
                 else

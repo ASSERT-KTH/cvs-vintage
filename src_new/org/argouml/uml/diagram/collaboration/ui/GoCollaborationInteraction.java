@@ -1,4 +1,4 @@
-// $Id: GoCollaborationInteraction.java,v 1.9 2003/06/29 23:52:15 linus Exp $
+// $Id: GoCollaborationInteraction.java,v 1.10 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.collaboration.ui;
 
 import java.util.Collection;
-import java.util.Vector;
 
 import org.argouml.ui.AbstractGoRule;
 

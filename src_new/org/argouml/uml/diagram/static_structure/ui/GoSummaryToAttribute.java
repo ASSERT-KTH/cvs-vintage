@@ -1,4 +1,4 @@
-// $Id: GoSummaryToAttribute.java,v 1.3 2003/06/29 23:52:19 linus Exp $
+// $Id: GoSummaryToAttribute.java,v 1.4 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,19 +25,15 @@
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.AbstractGoRule;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  *
  * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18

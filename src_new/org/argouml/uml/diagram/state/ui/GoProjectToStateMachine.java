@@ -1,4 +1,4 @@
-// $Id: GoProjectToStateMachine.java,v 1.3 2003/06/29 23:52:18 linus Exp $
+// $Id: GoProjectToStateMachine.java,v 1.4 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,9 @@ public class GoProjectToStateMachine extends AbstractGoRule {
 	if (parent instanceof Project) {
 	    Iterator it = ((Project) parent).getUserDefinedModels().iterator();
 	    while (it.hasNext()) {
-		col.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(it.next(), MStateMachine.class));
+		col.addAll(ModelManagementHelper.getHelper()
+			   .getAllModelElementsOfKind(it.next(),
+						      MStateMachine.class));
 	    }
 	}
 	return col;

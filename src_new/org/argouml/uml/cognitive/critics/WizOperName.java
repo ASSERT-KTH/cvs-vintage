@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.6 2003/06/29 23:52:59 linus Exp $
+// $Id: WizOperName.java,v 1.7 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.6 2003/06/29 23:52:59 linus Exp $
+// $Id: WizOperName.java,v 1.7 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -185,9 +185,10 @@ public class WizOperName extends WizMEName {
 		    _oldStereotypeIsSet = true;
 		}
 
-                // We need to find the stereotype with the name "create" and 
-                // the base class BehavioralFeature in the model. If there is none
-                // then we create one and put it there.
+                // We need to find the stereotype with the name
+                // "create" and the base class BehavioralFeature in
+                // the model. If there is none then we create one and
+                // put it there.
 		MModel m = oper.getModel();
                 MStereotype theStereotype = null;
                 for (Iterator iter = m.getOwnedElements().iterator();
@@ -205,7 +206,9 @@ public class WizOperName extends WizMEName {
                     break;
                 }
                 if (theStereotype == null) {
-                    theStereotype = UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
+                    theStereotype =
+			UmlFactory.getFactory().getExtensionMechanisms()
+			.createStereotype();
 		    theStereotype.setName("create");
 		    // theStereotype.setStereotype(???);
 		    theStereotype.setBaseClass("BehavioralFeature");
@@ -240,7 +243,9 @@ public class WizOperName extends WizMEName {
     // TODO:
     // Move to MMUtil or some other common place and merge with 
     // UMLComboBoxEntry::findNamespace()
-    private static MNamespace findNamespace(MNamespace phantomNS, MModel targetModel) {
+    private static MNamespace findNamespace(MNamespace phantomNS,
+					    MModel targetModel)
+    {
         MNamespace ns = null;
         MNamespace targetParentNS = null;
         if (phantomNS == null) {

@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: Init.java,v 1.5 2003/06/30 18:00:26 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,9 @@ public class Init {
 
     /** static initializer, register all appropriate critics */
     public static void init(Locale locale) {
-	ResourceBundle bundle = ResourceBundle.getBundle("org.argouml.i18n.UMLCognitiveResourceBundle", locale);
+	ResourceBundle bundle =
+	    ResourceBundle
+	    .getBundle("org.argouml.i18n.UMLCognitiveResourceBundle", locale);
 	addChecklist(bundle,  MClass.class, "ChClass");
 	addChecklist(bundle,  MInterface.class, "ChInterface");
 	addChecklist(bundle,  MAttribute.class, "ChAttribute");
@@ -59,7 +61,8 @@ public class Init {
     private static void addChecklist(ResourceBundle bundle,
 				     Class cls, String key) {
         try {
-            UMLChecklist checklist = new UMLChecklist((String[][]) bundle.getObject(key));
+            UMLChecklist checklist =
+		new UMLChecklist((String[][]) bundle.getObject(key));
             CheckManager.register(cls, checklist);
         }
         catch (MissingResourceException e) {

@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.5 2003/06/29 23:52:59 linus Exp $
+// $Id: WizMEName.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.5 2003/06/29 23:52:59 linus Exp $
+// $Id: WizMEName.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -81,11 +81,11 @@ public class WizMEName extends Wizard {
 	return "";
     }
     public void setSuggestion(String s) { _origSuggest = _suggestion = s; }
-										       
+
     public void setInstructions(String s) { _instructions = s; }
-											   
+
     public void setMustEdit(boolean b) { _mustEdit = b; }
-											       
+
     /** Create a new panel for the given step.  */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
@@ -98,7 +98,7 @@ public class WizMEName extends Wizard {
 	}
 	return null;
     }
-												   
+
     /** Return false iff the user has not edited the text and they were
      *  required to. */
     public boolean canGoNext() {
@@ -109,7 +109,7 @@ public class WizMEName extends Wizard {
 	}
 	return true;
     }
-												       
+
     /** Take action at the completion of a step. For example, when the
      *  given step is 0, do nothing; and when the given step is 1, do
      *  the first action.  Argo non-modal wizards should take action as
@@ -130,6 +130,4 @@ public class WizMEName extends Wizard {
 	    }
 	}
     }
-													   
-													   
 } /* end class WizMEName */

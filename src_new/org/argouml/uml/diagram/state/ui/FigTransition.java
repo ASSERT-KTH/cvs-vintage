@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.16 2003/06/29 23:52:18 linus Exp $
+// $Id: FigTransition.java,v 1.17 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.16 2003/06/29 23:52:18 linus Exp $
+// $Id: FigTransition.java,v 1.17 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -85,7 +85,9 @@ public class FigTransition extends FigEdgeModelElement {
     }
 
     public FigTransition(Object edge) {
-	this(edge, ProjectManager.getManager().getCurrentProject().getActiveDiagram().getLayer());
+	this(edge,
+	     ProjectManager.getManager().getCurrentProject()
+	     .getActiveDiagram().getLayer());
     }
 
     ////////////////////////////////////////////////////////////////
@@ -127,7 +129,10 @@ public class FigTransition extends FigEdgeModelElement {
     }
   
     private double calculateLength(Point point1, Point point2) {
-  	return Math.sqrt(Math.abs(point1.x - point2.x) * Math.abs(point1.x - point2.x) + Math.abs(point1.y - point2.y) * Math.abs(point1.y - point2.y));
+  	return Math.sqrt((Math.abs(point1.x - point2.x)
+			  * Math.abs(point1.x - point2.x))
+			 + (Math.abs(point1.y - point2.y)
+			    * Math.abs(point1.y - point2.y)));
     }
   
   

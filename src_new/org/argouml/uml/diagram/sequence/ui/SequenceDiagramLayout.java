@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.4 2003/06/29 23:52:16 linus Exp $
+// $Id: SequenceDiagramLayout.java,v 1.5 2003/06/30 18:00:31 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,10 +40,7 @@ import java.awt.Rectangle;
 import java.awt.Color;
 
 import org.apache.log4j.Category;
-import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.LayerPerspective;
-import org.tigris.gef.base.Layer;
-import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.FigDynPort;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;

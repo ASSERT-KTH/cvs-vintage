@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.4 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.4 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -76,10 +76,10 @@ public class CrObjectWithoutClassifier extends CrUML {
     }
 
     /**
-     * If there are objects that are not inside a component or a component-instance
-     * the returned vector-set is not null. Then in the vector-set
-     * are the UMLDeploymentDiagram and all FigObjects with no
-     * enclosing FigComponent or FigComponentInstance
+     * If there are objects that are not inside a component or a
+     * component-instance the returned vector-set is not null. Then in
+     * the vector-set are the UMLDeploymentDiagram and all FigObjects
+     * with no enclosing FigComponent or FigComponentInstance
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 	Vector figs = dd.getLayer().getContents();

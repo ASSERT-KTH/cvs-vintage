@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.9 2003/06/29 23:52:18 linus Exp $
+// $Id: FigStateVertex.java,v 1.10 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigStateVertex.java
 // Classes: FigStateVertex
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigStateVertex.java,v 1.9 2003/06/29 23:52:18 linus Exp $
+// $Id: FigStateVertex.java,v 1.10 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -66,10 +66,14 @@ public abstract class FigStateVertex extends FigNodeModelElement {
             return;
         MStateVertex sv = (MStateVertex) getOwner();
         MCompositeState m = null;
-        if (encloser != null && (encloser.getOwner() instanceof MCompositeState)) {
+        if (encloser != null
+	    && (encloser.getOwner() instanceof MCompositeState))
+	{
             m = (MCompositeState) encloser.getOwner();
         } else {
-            m = (MCompositeState) StateMachinesHelper.getHelper().getTop(StateMachinesHelper.getHelper().getStateMachine(sv));
+            m = (MCompositeState)
+		StateMachinesHelper.getHelper()
+		.getTop(StateMachinesHelper.getHelper().getStateMachine(sv));
         }
         if (m != null)
             sv.setContainer(m);

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.19 2003/06/29 23:46:42 linus Exp $
+// $Id: CommonBehaviorFactory.java,v 1.20 2003/06/30 18:00:20 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,8 +339,8 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
      */
     public MCallAction buildCallAction(MOperation oper, String name) {
         if (oper == null) {
-            throw new IllegalArgumentException(
-					       "There should be an operation" + " with a callaction.");
+            throw new IllegalArgumentException("There should be an operation"
+					       + " with a callaction.");
         }
         MCallAction action = createCallAction();
         action.setName(name);
@@ -374,9 +374,13 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
         Object interaction = ModelFacade.getInteraction(message);  
         if (interaction != null
             && ModelFacade.getContext(interaction) != null) {
-	    ModelFacade.setNamespace(action, ModelFacade.getContext(interaction));
+	    ModelFacade.setNamespace(action,
+				     ModelFacade.getContext(interaction));
         } else
-            throw new IllegalStateException("In buildaction: message does not have an interaction or the interaction does not have a context");
+            throw new IllegalStateException("In buildaction: message does not "
+					    + "have an interaction or the "
+					    + "interaction does not have "
+					    + "a context");
         return action;
     }
 

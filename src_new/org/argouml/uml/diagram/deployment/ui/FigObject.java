@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.10 2003/06/29 23:52:15 linus Exp $
+// $Id: FigObject.java,v 1.11 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.10 2003/06/29 23:52:15 linus Exp $
+// $Id: FigObject.java,v 1.11 2003/06/30 18:00:30 linus Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -45,13 +45,11 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
-
 import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MComponent;
 import ru.novosoft.uml.foundation.core.MElementResidence;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 
 /** Class to display graphics for a UML Object in a diagram. */
@@ -62,7 +60,8 @@ public class FigObject extends FigNodeModelElement {
     // instance variables
 
     FigRect _cover;
-    public MElementResidence resident = UmlFactory.getFactory().getCore().createElementResidence();
+    public MElementResidence resident =
+	UmlFactory.getFactory().getCore().createElementResidence();
 
     // add other Figs here aes needed
 
@@ -178,7 +177,9 @@ public class FigObject extends FigNodeModelElement {
 	    MComponentInstance mcompInst = null;
 	    MComponent mcomp = null;
 
-	    if (encloser != null && (ModelFacade.isAComponentInstance(encloser.getOwner()))) {
+	    if (encloser != null
+		&& (ModelFacade.isAComponentInstance(encloser.getOwner())))
+	    {
 		mcompInst = (MComponentInstance) encloser.getOwner();
 		me.setComponentInstance(mcompInst);
 	    }
@@ -224,7 +225,8 @@ public class FigObject extends FigNodeModelElement {
 
 	    baseString += ((MClassifier) bases.elementAt(0)).getName();
 	    for (int i = 1; i < bases.size(); i++)
-		baseString += ", "  + ((MClassifier) bases.elementAt(i)).getName();
+		baseString +=
+		    ", "  + ((MClassifier) bases.elementAt(i)).getName();
 	}
 
 	if (_readyToEdit) {

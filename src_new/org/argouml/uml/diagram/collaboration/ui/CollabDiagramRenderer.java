@@ -1,4 +1,4 @@
-// $Id: CollabDiagramRenderer.java,v 1.8 2003/06/29 23:52:15 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.9 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CollabDiagramRenderer.java
 // Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramRenderer.java,v 1.8 2003/06/29 23:52:15 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.9 2003/06/30 18:00:30 linus Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -44,12 +44,15 @@ import org.argouml.uml.diagram.ui.*;
 public class CollabDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    protected static Category cat = Category.getInstance(CollabDiagramRenderer.class);
+    protected static Category cat =
+	Category.getInstance(CollabDiagramRenderer.class);
 
     /** Return a Fig that can be used to represent the given node */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
-	if (node instanceof MClassifierRole) return new FigClassifierRole(gm, lay, node);
-	if (node instanceof MMessage) return new FigMessage(gm, lay, node);
+	if (node instanceof MClassifierRole)
+	    return new FigClassifierRole(gm, lay, node);
+	if (node instanceof MMessage)
+	    return new FigMessage(gm, lay, node);
 	cat.debug("TODO CollabDiagramRenderer getFigNodeFor");
 	return null;
     }

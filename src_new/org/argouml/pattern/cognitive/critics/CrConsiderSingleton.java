@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.15 2003/04/11 21:46:18 kataka Exp $
+// $Id: CrConsiderSingleton.java,v 1.16 2003/06/30 18:00:22 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,9 @@ import org.argouml.model.ModelFacade;
  * itself of any subclasses), and thus whether it is suitable for declaration
  * as a Singleton (with stereotype &laquo;Singleton&raquo;.<p>
  *
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">ArgoUML User Manual: Singleton Violated</a>
+ * @see <a
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">
+ * ArgoUML User Manual: Singleton Violated</a>
  */
 public class CrConsiderSingleton extends CrUML {
 

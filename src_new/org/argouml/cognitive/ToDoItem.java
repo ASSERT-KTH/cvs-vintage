@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.8 2003/06/29 23:53:42 linus Exp $
+// $Id: ToDoItem.java,v 1.9 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.8 2003/06/29 23:53:42 linus Exp $
+// $Id: ToDoItem.java,v 1.9 2003/06/30 18:00:16 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -92,7 +92,9 @@ public class ToDoItem implements java.io.Serializable {
 
     ////////////////////////////////////////////////////////////////
     // constructors
-    public ToDoItem(Poster poster, String h, int p, String d, String m, VectorSet offs) {
+    public ToDoItem(Poster poster, String h, int p, String d, String m, 
+		    VectorSet offs) 
+    {
 	_poster = poster;
 	_headline = h;
 	_offenders = offs;
@@ -164,7 +166,8 @@ public class ToDoItem implements java.io.Serializable {
 
     public String getDescription() {
 	if (_cachedExpandedDescription == null) {
-	    _cachedExpandedDescription = _poster.expand(_description, _offenders);
+	    _cachedExpandedDescription = 
+		_poster.expand(_description, _offenders);
 	}
 	return _cachedExpandedDescription;
     }
@@ -313,7 +316,8 @@ public class ToDoItem implements java.io.Serializable {
 
     /** Reply a string for debugging. */
     public String toString() {
-	return this.getClass().getName() + "(" + getHeadline() + ") on " + getOffenders().toString();
+	return this.getClass().getName() 
+	    + "(" + getHeadline() + ") on " + getOffenders().toString();
     }
 
 } /* end class ToDoItem */

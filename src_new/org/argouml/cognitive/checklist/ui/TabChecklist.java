@@ -1,4 +1,4 @@
-// $Id: TabChecklist.java,v 1.11 2003/06/29 23:53:43 linus Exp $
+// $Id: TabChecklist.java,v 1.12 2003/06/30 18:00:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -221,12 +221,16 @@ class TableModelChecklist extends AbstractTableModel
 
     ////////////////
     // accessors
+    private UmlModelEventPump getPump() {
+	return UmlModelEventPump.getPump();
+    }
+
     public void setTarget(MModelElement t) {
 	if (_target instanceof MElement)
-	    UmlModelEventPump.getPump().removeModelEventListener(this, (MElement) _target);
+	    getPump().removeModelEventListener(this, (MElement) _target);
 	_target = t;
 	if (_target instanceof MElement)
-	    UmlModelEventPump.getPump().addModelEventListener(this, (MElement) _target);
+	    getPump().addModelEventListener(this, (MElement) _target);
 	fireTableStructureChanged();
     }
 

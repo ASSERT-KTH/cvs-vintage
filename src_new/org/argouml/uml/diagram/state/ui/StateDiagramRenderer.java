@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.8 2003/06/29 23:52:18 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.9 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.8 2003/06/29 23:52:18 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.9 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -70,7 +70,9 @@ import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
  *  </pre>
  */
 
-public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRenderer {
+public class StateDiagramRenderer
+    implements GraphNodeRenderer, GraphEdgeRenderer
+{
     protected static Category cat = 
         Category.getInstance(StateDiagramRenderer.class);
 
@@ -105,7 +107,8 @@ public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRendere
             else if (pState.getKind().equals(MPseudostateKind.JOIN)) {
                 return new FigJoinState(gm, node);
             }
-            else if (pState.getKind().equals(MPseudostateKind.SHALLOW_HISTORY)) {
+            else if (pState.getKind().equals(MPseudostateKind.SHALLOW_HISTORY))
+	    {
                 return new FigShallowHistoryState(gm, node);
             }
             else if (pState.getKind().equals(MPseudostateKind.DEEP_HISTORY)) {

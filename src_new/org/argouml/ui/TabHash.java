@@ -1,4 +1,4 @@
-// $Id: TabHash.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: TabHash.java,v 1.4 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui;
-
-import org.argouml.ui.targetmanager.TargetManager;
 
 
 public class TabHash extends TabText {

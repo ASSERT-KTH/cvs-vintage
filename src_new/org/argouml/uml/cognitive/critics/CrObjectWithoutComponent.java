@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutComponent.java,v 1.5 2003/06/30 15:08:22 linus Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutComponent.java,v 1.5 2003/06/30 15:08:22 linus Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -76,10 +76,10 @@ public class CrObjectWithoutComponent extends CrUML {
     }
 
     /**
-     * If there are objects that are not inside a component or a component-instance
-     * the returned vector-set is not null. Then in the vector-set
-     * are the UMLDeploymentDiagram and all FigObjects with no
-     * enclosing FigComponent or FigComponentInstance
+     * If there are objects that are not inside a component or a
+     * component-instance the returned vector-set is not null. Then in
+     * the vector-set are the UMLDeploymentDiagram and all FigObjects
+     * with no enclosing FigComponent or FigComponentInstance
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 	Vector figs = dd.getLayer().getContents();
@@ -90,8 +90,10 @@ public class CrObjectWithoutComponent extends CrUML {
 	    if (!(obj instanceof FigObject)) continue;
 	    FigObject fo = (FigObject) obj;
 	    if (fo.getEnclosingFig() == null ||
-		(!((fo.getEnclosingFig().getOwner() instanceof MComponent) || 
-		   (fo.getEnclosingFig().getOwner() instanceof MComponentInstance)))) {
+		(!((fo.getEnclosingFig().getOwner() instanceof MComponent)
+		   || (fo.getEnclosingFig().getOwner()
+		       instanceof MComponentInstance))))
+	    {
 		if (offs == null) {
 		    offs = new VectorSet();
 		    offs.addElement(dd);

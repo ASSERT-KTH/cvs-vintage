@@ -1,4 +1,4 @@
-// $Id: MMUtil.java,v 1.22 2003/06/29 23:52:57 linus Exp $
+// $Id: MMUtil.java,v 1.23 2003/06/30 18:00:26 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,13 +50,7 @@ import ru.novosoft.uml.behavior.common_behavior.*;
 
 import java.util.*;
 
-import org.argouml.ui.ProjectBrowser;
 import org.apache.log4j.Category;
-import org.argouml.application.api.Argo;
-import org.argouml.application.api.Notation;
-import org.argouml.application.api.NotationName;
-import org.argouml.application.notation.NotationProviderFactory;
-import org.argouml.kernel.Project;
 import org.argouml.model.uml.UmlFactory;
 
 /** Class with utility methods. Now mostly outdated.

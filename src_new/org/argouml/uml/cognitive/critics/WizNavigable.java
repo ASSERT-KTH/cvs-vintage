@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.5 2003/06/29 23:52:59 linus Exp $
+// $Id: WizNavigable.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.5 2003/06/29 23:52:59 linus Exp $
+// $Id: WizNavigable.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -126,8 +126,10 @@ public class WizNavigable extends Wizard {
 	    }
 	    try {
 		MAssociation asc = (MAssociation) getModelElement();
-		MAssociationEnd ae0 = (MAssociationEnd) asc.getConnections().get(0);
-		MAssociationEnd ae1 = (MAssociationEnd) asc.getConnections().get(1);
+		MAssociationEnd ae0 =
+		    (MAssociationEnd) asc.getConnections().get(0);
+		MAssociationEnd ae1 =
+		    (MAssociationEnd) asc.getConnections().get(1);
 		ae0.setNavigable(choice == 0 || choice == 2);
 		ae1.setNavigable(choice == 1 || choice == 2);
 	    }

@@ -1,4 +1,4 @@
-// $Id: DimensionUtility.java,v 1.4 2003/06/29 23:47:53 linus Exp $
+// $Id: DimensionUtility.java,v 1.5 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,38 +35,36 @@ import java.awt.*;
  * A collection of utility methods for Dimensions.
  *
  * @author Bob Tarling
+ * @stereotype utility
  */
 public class DimensionUtility {
     
-    /** 
-     * Creates a new instance of DimensionUtility
-     */
-    private DimensionUtility() {
-        throw new UnsupportedOperationException("DimensionUtility is just a container for static methods");
-    }
-
-    /** Create a new <code>Dimension</code> from an existing <code>Dimension</code> with its
-     * width and height increased by the width and height of another <code>Dimension</code>.
+    /** Create a new <code>Dimension</code> from an existing
+     * <code>Dimension</code> with its width and height increased by
+     * the width and height of another <code>Dimension</code>.
      *
      * @param original The <code>Dimension</code> to be added to.
-     * @param add      The <code>Dimension</code> whose length and breadth are to be taken as
-     *                     the added values.
+     * @param add The <code>Dimension</code> whose length and breadth
+     * are to be taken as the added values.
      * @return The resulting <code>Dimension</code>.
      */
     public static Dimension add(Dimension original, Dimension add) {
-        return new Dimension((int) (original.getWidth() + add.getWidth()), (int) (original.getHeight() + add.getHeight()));
+        return new Dimension((int) (original.getWidth() + add.getWidth()),
+			     (int) (original.getHeight() + add.getHeight()));
     }
 
-    /** Create a new <code>Dimension</code> from an existing <code>Dimension</code> with its
-     * width and height increased by the width and height of an <code>Insets</code> object.
+    /** Create a new <code>Dimension</code> from an existing
+     * <code>Dimension</code> with its width and height increased by
+     * the width and height of an <code>Insets</code> object.
      *
      * @param original The <code>Dimension</code> to be added to.
-     * @param add    The <code>Insets</code> object whose width and height are to be taken as
-     *                   the added values.
+     * @param add The <code>Insets</code> object whose width and
+     * height are to be taken as the added values.
      * @return The resulting <code>Dimension</code>.
      */
     public static Dimension add(Dimension original, Insets add) {
-        return new Dimension((int) original.getWidth() + add.right + add.left, (int) original.getHeight() + add.top + add.bottom);
+        return new Dimension((int) original.getWidth() + add.right + add.left,
+			     (int) original.getHeight() + add.top + add.bottom);
     }
     
     

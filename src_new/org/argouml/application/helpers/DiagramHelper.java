@@ -1,4 +1,4 @@
-// $Id: DiagramHelper.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: DiagramHelper.java,v 1.5 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public abstract class DiagramHelper extends ArgoDiagram
 
     /** Default localization key for diagrams
      */
-    public final static String DIAGRAM_BUNDLE = "DiagramType";
+    public static final String DIAGRAM_BUNDLE = "DiagramType";
 
     /** String naming the resource bundle to use for localization.
      */

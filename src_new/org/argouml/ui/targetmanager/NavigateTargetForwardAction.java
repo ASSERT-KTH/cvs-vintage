@@ -1,4 +1,4 @@
-// $Id: NavigateTargetForwardAction.java,v 1.1 2003/05/04 08:23:31 kataka Exp $
+// $Id: NavigateTargetForwardAction.java,v 1.2 2003/06/30 18:00:25 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,14 +50,16 @@ public class NavigateTargetForwardAction extends UMLAction {
     
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {        
         TargetManager.getInstance().navigateForward();
     }
 
     /**
-     * Action is possible as navigateForwardPossible on targetManager returns true
+     * Action is possible as navigateForwardPossible on targetManager
+     * returns true
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {        

@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.8 2003/06/29 23:50:15 linus Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.9 2003/06/30 18:00:37 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MNamespace;

@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: FigTextGroup.java,v 1.5 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.Graphics;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;

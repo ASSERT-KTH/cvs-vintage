@@ -1,4 +1,4 @@
-// $Id: UmlHelper.java,v 1.12 2003/06/29 23:46:41 linus Exp $
+// $Id: UmlHelper.java,v 1.13 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-import org.argouml.ui.ProjectBrowser;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.model_management.MModel;

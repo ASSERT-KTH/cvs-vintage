@@ -1,4 +1,4 @@
-// $Id: GoProjectToCollaboration.java,v 1.3 2003/06/29 23:52:15 linus Exp $
+// $Id: GoProjectToCollaboration.java,v 1.4 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,8 @@ public class GoProjectToCollaboration extends AbstractGoRule {
 	    Iterator it = ((Project) parent).getUserDefinedModels().iterator();
 	    while (it.hasNext()) {
 		col.addAll(ModelManagementHelper.getHelper()
-			   .getAllModelElementsOfKind(it.next(), MCollaboration.class));
+			   .getAllModelElementsOfKind(it.next(),
+						      MCollaboration.class));
 	    }
 	}
 	return col;

@@ -1,4 +1,4 @@
-// $Id: CrNoTriggerOrGuard.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNoTriggerOrGuard.java
 // Classes: CrNoTriggerOrGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTriggerOrGuard.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -58,7 +58,8 @@ public class CrNoTriggerOrGuard extends CrUML {
 	MStateVertex sv = tr.getSource();
 	if (!(sv instanceof MState)) return NO_PROBLEM;
 	if (((MState) sv).getDoActivity() != null) return NO_PROBLEM;
-	boolean hasTrigger = (t != null && t.getName() != null && t.getName().length() > 0);
+	boolean hasTrigger =
+	    (t != null && t.getName() != null && t.getName().length() > 0);
 	if (hasTrigger) return NO_PROBLEM;
 	boolean noGuard = (g == null || g.getExpression() == null ||
 			   g.getExpression().getBody() == null ||

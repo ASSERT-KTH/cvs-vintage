@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.7 2003/06/30 15:17:18 linus Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.8 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.7 2003/06/30 15:17:18 linus Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.8 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -129,10 +129,12 @@ public class CrUnconventionalAttrName extends CrUML {
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
-	    MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
+	    MModelElement me =
+		(MModelElement) item.getOffenders().elementAt(0);
 	    String sug = me.getName();
 	    if (sug.startsWith("_"))
-		sug = "_" + sug.substring(1, 2).toLowerCase() + sug.substring(2);
+		sug =
+		    "_" + sug.substring(1, 2).toLowerCase() + sug.substring(2);
 	    else
 		sug = sug.substring(0, 1).toLowerCase() + sug.substring(1);
 	    String ins = "Change the attribute name to start with a " +

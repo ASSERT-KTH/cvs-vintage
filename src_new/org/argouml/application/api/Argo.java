@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.18 2003/06/29 23:53:41 linus Exp $
+// $Id: Argo.java,v 1.19 2003/06/30 18:00:15 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,7 +201,8 @@ public class Argo
      */
     public static final String ARGO_CONSOLE_SUPPRESS = "argo.console.suppress";
 
-    /** Standard definition of system variable to add text prefix to console log.
+    /** Standard definition of system variable to add text prefix to
+     * console log.
      */
     public static final String ARGO_CONSOLE_PREFIX = "argo.console.prefix";
 
@@ -212,7 +213,7 @@ public class Argo
      *  custom <code>log4j</code> formatters
      *  to be used on objects displayed on the console log.
      */
-    public final static Logger log;
+    public static final Logger log;
 
     /** Don't let this class be instantiated. */
     private Argo() {

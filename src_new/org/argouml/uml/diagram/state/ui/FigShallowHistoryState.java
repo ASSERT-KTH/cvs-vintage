@@ -1,4 +1,4 @@
-// $Id: FigShallowHistoryState.java,v 1.9 2003/06/29 23:52:18 linus Exp $
+// $Id: FigShallowHistoryState.java,v 1.10 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigShallowHistoryState.java
 // Classes: FigShallowHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigShallowHistoryState.java,v 1.9 2003/06/29 23:52:18 linus Exp $
+// $Id: FigShallowHistoryState.java,v 1.10 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -97,7 +97,8 @@ public class FigShallowHistoryState extends FigStateVertex {
     }
 
     public Object clone() {
-	FigShallowHistoryState figClone = (FigShallowHistoryState) super.clone();
+	FigShallowHistoryState figClone =
+	    (FigShallowHistoryState) super.clone();
 	Vector v = figClone.getFigs();
 	figClone._bigPort = (FigCircle) v.elementAt(0);
 	figClone._head = (FigCircle) v.elementAt(1);

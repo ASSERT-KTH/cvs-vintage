@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramRenderer.java,v 1.7 2003/06/29 23:52:15 linus Exp $
+// $Id: DeploymentDiagramRenderer.java,v 1.8 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.deployment.ui;
 
 import java.util.*;
-import java.util.Enumeration;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
@@ -42,17 +41,22 @@ import org.argouml.uml.diagram.static_structure.ui.*;
 public class DeploymentDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    protected static Category cat = Category.getInstance(DeploymentDiagramRenderer.class);
+    protected static Category cat =
+	Category.getInstance(DeploymentDiagramRenderer.class);
 
     /** Return a Fig that can be used to represent the given node */
 
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
 	if (node instanceof MNode) return new FigMNode(gm, node);
-	else if (node instanceof MNodeInstance) return new FigMNodeInstance(gm, node);
-	else if (node instanceof MComponent) return new FigComponent(gm, node); 
-	else if (node instanceof MComponentInstance) return new FigComponentInstance(gm, node);
+	else if (node instanceof MNodeInstance)
+	    return new FigMNodeInstance(gm, node);
+	else if (node instanceof MComponent)
+	    return new FigComponent(gm, node); 
+	else if (node instanceof MComponentInstance)
+	    return new FigComponentInstance(gm, node);
 	else if (node instanceof MClass) return new FigClass(gm, node); 
-	else if (node instanceof MInterface) return new FigInterface(gm, node); 
+	else if (node instanceof MInterface)
+	    return new FigInterface(gm, node); 
 	else if (node instanceof MObject) return new FigObject(gm, node);
 	cat.debug("TODO DeploymentDiagramRenderer getFigNodeFor");
 	return null;
@@ -88,8 +92,10 @@ public class DeploymentDiagramRenderer
 	    MDependency dep = (MDependency) edge;
 	    FigDependency depFig = new FigDependency(dep);
 
-	    MModelElement supplier = (MModelElement) (((dep.getSuppliers().toArray())[0]));
-	    MModelElement client = (MModelElement) (((dep.getClients().toArray())[0]));
+	    MModelElement supplier =
+		(MModelElement) (((dep.getSuppliers().toArray())[0]));
+	    MModelElement client =
+		(MModelElement) (((dep.getClients().toArray())[0]));
 
 	    FigNode supFN = (FigNode) lay.presentationFor(supplier);
 	    FigNode cliFN = (FigNode) lay.presentationFor(client);

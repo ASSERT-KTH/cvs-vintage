@@ -1,4 +1,4 @@
-// $Id: ClassdiagramEdge.java,v 1.3 2003/06/29 23:52:18 linus Exp $
+// $Id: ClassdiagramEdge.java,v 1.4 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,8 @@ import org.argouml.uml.diagram.layout.*;
 import org.argouml.uml.diagram.ui.*;
 import org.tigris.gef.presentation.*;
 
-/** This class is an abstract implementation of all edges which are layoutable in the classdiagram.
+/** This class is an abstract implementation of all edges which are
+ *  layoutable in the classdiagram.
  *  @author Markus Klink
  *  @since 0.11.1
  */

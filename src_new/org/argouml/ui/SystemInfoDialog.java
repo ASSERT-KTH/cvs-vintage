@@ -1,4 +1,4 @@
-// $Id: SystemInfoDialog.java,v 1.2 2003/06/29 23:47:02 linus Exp $
+// $Id: SystemInfoDialog.java,v 1.3 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,8 @@ public class SystemInfoDialog extends JDialog {
     JTabbedPane _tabs = new JTabbedPane();
     JTextArea   _info = new JTextArea();
     JButton     _runGCButton = new JButton("Run GC");
-    JButton     _copyButton = new JButton("Copy Information to System Clipboard");
+    JButton     _copyButton =
+	new JButton("Copy Information to System Clipboard");
     JButton     _cancelButton = new JButton("Cancel");
     JPanel      _buttons = new JPanel();
 
@@ -158,7 +159,8 @@ public class SystemInfoDialog extends JDialog {
 	_info.setText(info.toString());
     } //end updateInfo()
 
-    private static ClipboardOwner defaultClipboardOwner = new ClipboardObserver();
+    private static ClipboardOwner defaultClipboardOwner =
+	new ClipboardObserver();
 
     static class ClipboardObserver implements ClipboardOwner {
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {

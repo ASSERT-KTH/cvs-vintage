@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.5 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoEventTypes.java,v 1.6 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,20 +33,20 @@ import java.util.*;
  */
 public interface ArgoEventTypes {
 
-    public final static int ANY_EVENT                 =  1000;
-
-    public final static int ANY_MODULE_EVENT          =  1100;
-    public final static int MODULE_LOADED             =  1101;
-    public final static int MODULE_UNLOADED           =  1102;
-    public final static int MODULE_ENABLED            =  1103;
-    public final static int MODULE_DISABLED           =  1104;
-
-    public final static int ANY_NOTATION_EVENT        =  1200;
-    public final static int NOTATION_CHANGED          =  1201;
-    public final static int NOTATION_ADDED            =  1202;
-    public final static int NOTATION_REMOVED          =  1203;
-    public final static int NOTATION_PROVIDER_ADDED   =  1204;
-    public final static int NOTATION_PROVIDER_REMOVED =  1205;
-
-    public final static int ARGO_EVENT_END            = 99999;
+    public static final int ANY_EVENT                 =  1000;
+		  		 
+    public static final int ANY_MODULE_EVENT          =  1100;
+    public static final int MODULE_LOADED             =  1101;
+    public static final int MODULE_UNLOADED           =  1102;
+    public static final int MODULE_ENABLED            =  1103;
+    public static final int MODULE_DISABLED           =  1104;
+		  		 
+    public static final int ANY_NOTATION_EVENT        =  1200;
+    public static final int NOTATION_CHANGED          =  1201;
+    public static final int NOTATION_ADDED            =  1202;
+    public static final int NOTATION_REMOVED          =  1203;
+    public static final int NOTATION_PROVIDER_ADDED   =  1204;
+    public static final int NOTATION_PROVIDER_REMOVED =  1205;
+		  		 
+    public static final int ARGO_EVENT_END            = 99999;
 }

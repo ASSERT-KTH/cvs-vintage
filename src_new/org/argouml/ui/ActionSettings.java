@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.11 2003/06/29 23:47:01 linus Exp $
+// $Id: ActionSettings.java,v 1.12 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,8 @@ public class ActionSettings extends UMLAction
 				if (event.getSource() == getOkButton()) {
 				    handleSave();
 				}
-				else if (event.getSource() == getCancelButton()) {
+				else if (event.getSource() == getCancelButton())
+				{
 				    handleCancel();
 				}
 			    }
@@ -136,9 +137,11 @@ public class ActionSettings extends UMLAction
                     // Increase width to accommodate all tabs on one row.
                     // (temporary solution until tabs are replaced with tree)
                     final int minimumWidth = 465;
-                    tabs.setPreferredSize(new Dimension(
-							Math.max(tabs.getPreferredSize().width, minimumWidth),
-							tabs.getPreferredSize().height));
+                    tabs.setPreferredSize(
+                            new Dimension(Math.max(tabs
+						   .getPreferredSize().width,
+						   minimumWidth),
+					  tabs.getPreferredSize().height));
 
                     dlg.setContent(tabs);                    
                 }

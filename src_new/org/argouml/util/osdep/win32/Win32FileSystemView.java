@@ -1,4 +1,4 @@
-// $Id: Win32FileSystemView.java,v 1.4 2003/06/29 23:48:17 linus Exp $
+// $Id: Win32FileSystemView.java,v 1.5 2003/06/30 18:00:39 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ package org.argouml.util.osdep.win32;
 import javax.swing.filechooser.*; 
 import java.io.*; 
 import java.util.*; 
-import java.lang.reflect.Method; 
 
 /** This class is necessary due to an annoying bug on Windows NT where 
  *  instantiating a JFileChooser with the default FileSystemView will 

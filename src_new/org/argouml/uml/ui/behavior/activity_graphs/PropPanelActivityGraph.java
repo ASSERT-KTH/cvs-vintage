@@ -1,4 +1,4 @@
-// $Id: PropPanelActivityGraph.java,v 1.2 2003/06/29 23:50:10 linus Exp $
+// $Id: PropPanelActivityGraph.java,v 1.3 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,18 +22,8 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelActivityGraph.java,v 1.2 2003/06/29 23:50:10 linus Exp $
 package org.argouml.uml.ui.behavior.activity_graphs;
 
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-
-import org.argouml.application.api.Argo;
-
-import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
-import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 import org.argouml.uml.ui.behavior.state_machines.*;
 

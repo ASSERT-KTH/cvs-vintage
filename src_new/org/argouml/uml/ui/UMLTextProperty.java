@@ -1,4 +1,4 @@
-// $Id: UMLTextProperty.java,v 1.11 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextProperty.java,v 1.12 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,7 @@ import org.argouml.kernel.*;
 
 import org.argouml.ui.*;
 
-import java.awt.event.InvocationEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
 import java.lang.reflect.*;
-
-import javax.swing.JOptionPane;
 
 import ru.novosoft.uml.*;
 

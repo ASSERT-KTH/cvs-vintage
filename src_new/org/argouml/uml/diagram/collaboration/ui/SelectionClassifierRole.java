@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.2 2003/06/29 23:52:15 linus Exp $
+// $Id: SelectionClassifierRole.java,v 1.3 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,11 +57,12 @@ public class SelectionClassifierRole extends SelectionWButtons {
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon assocrole =
-	ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource(
-									    "AssociationRole");
+	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	.lookupIconResource("AssociationRole");
 
     public static Icon selfassoc =
-        ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("SelfAssociation");
+        ResourceLoaderWrapper.getResourceLoaderWrapper()
+	.lookupIconResource("SelfAssociation");
 
     ////////////////////////////////////////////////////////////////
     // instance varables
@@ -196,10 +197,13 @@ public class SelectionClassifierRole extends SelectionWButtons {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeAbove(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeAbove(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeAbove(MutableGraphModel mgm, Object newNode) {
-	return mgm.connect(newNode, _content.getOwner(), MAssociationRole.class);
+	return mgm.connect(newNode, _content.getOwner(),
+			   MAssociationRole.class);
     }
 
     /**
@@ -210,7 +214,9 @@ public class SelectionClassifierRole extends SelectionWButtons {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeRight(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeRight(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
 	return gm.connect(_content.getOwner(), newNode, MAssociationRole.class);
@@ -218,7 +224,8 @@ public class SelectionClassifierRole extends SelectionWButtons {
 
     /**
      * To enable this we need to add an icon.
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeToSelf(org.tigris.gef.graph.MutableGraphModel)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeToSelf(org.tigris.gef.graph.MutableGraphModel)
      */
     protected Object createEdgeToSelf(MutableGraphModel gm) {
 	return gm.connect(
@@ -228,7 +235,9 @@ public class SelectionClassifierRole extends SelectionWButtons {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
 	return gm.connect(_content.getOwner(), newNode, MAssociationRole.class);

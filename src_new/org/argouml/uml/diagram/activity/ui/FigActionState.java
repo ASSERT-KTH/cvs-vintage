@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.5 2003/06/29 23:52:15 linus Exp $
+// $Id: FigActionState.java,v 1.6 2003/06/30 18:00:29 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class FigActionState extends FigStateVertex {
     // constructors
 
     public FigActionState() {
-	_bigPort = new FigRRect(10 + 1, 10 + 1, 90 - 2, 25 - 2, Color.cyan, Color.cyan);
+	_bigPort = new FigRRect(10 + 1, 10 + 1, 90 - 2, 25 - 2,
+				Color.cyan, Color.cyan);
 	_cover = new FigRRect(10, 10, 90, 25, Color.black, Color.white);
 
 	_bigPort.setLineWidth(0);

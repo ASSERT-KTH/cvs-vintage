@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.2 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelSignalEvent.java,v 1.3 2003/06/30 18:00:37 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,22 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
 // File: PropPanelCallEvent.java
 // Classes: PropPanelCallEvent
 // Original Author: oliver.heyden@gentleware.de
-// $Id:
 
 package org.argouml.uml.ui.behavior.state_machines;
 
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-
-import org.argouml.application.api.Argo;
-
-import org.argouml.uml.ui.UMLComboBoxNavigator;
-import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
 
 public class PropPanelSignalEvent extends PropPanelEvent {

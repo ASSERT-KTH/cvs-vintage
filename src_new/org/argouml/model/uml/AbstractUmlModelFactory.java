@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.11 2003/06/29 23:46:41 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.12 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,17 +103,17 @@ public abstract class AbstractUmlModelFactory {
      * handle.
      * @param handle the modelelement the listeners are interested in
      */
+    // TODO: The model shall not reference the ProjectBrowser!
     public void addListenersToModelElement(Object handle) {
         if (handle instanceof MBase) {
             MBase base = (MBase) handle;
             UmlModelEventPump pump = UmlModelEventPump.getPump();
-            ((MBase) handle).addMElementListener(pump);
+            base.addMElementListener(pump);
             if (GuiEnabled) {
-                ((MBase) handle).addMElementListener(
-						     ProjectBrowser.getInstance().getNavigatorPane());
+                base.addMElementListener(ProjectBrowser.getInstance()
+					 .getNavigatorPane());
             }
-            ((MBase) handle).addMElementListener(
-						 UmlModelListener.getInstance());
+            base.addMElementListener(UmlModelListener.getInstance());
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: DockLayout.java,v 1.2 2003/06/29 23:47:53 linus Exp $
+// $Id: DockLayout.java,v 1.3 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,11 +86,14 @@ public class DockLayout extends BorderLayout {
             int southHeight = getPreferredDimension(south).height;
             int eastWidth = getPreferredDimension(east).width;
             int westWidth = getPreferredDimension(west).width;
-            placeComponents(north, left, top, right - left, northHeight, HORIZONTAL);
+            placeComponents(north, left, top, right - left,
+			    northHeight, HORIZONTAL);
             top += (northHeight + getVgap());
-            placeComponents(south, left, bottom - southHeight, right - left, southHeight, HORIZONTAL);
+            placeComponents(south, left, bottom - southHeight, right - left,
+			    southHeight, HORIZONTAL);
             bottom -= (southHeight + getVgap());
-            placeComponents(east, right - eastWidth, top, eastWidth, bottom - top, VERTICAL);
+            placeComponents(east, right - eastWidth, top, eastWidth,
+			    bottom - top, VERTICAL);
             right -= (eastWidth + getHgap());
             placeComponents(west, left, top, westWidth, bottom - top, VERTICAL);
             left += (westWidth + getHgap());
@@ -112,7 +115,9 @@ public class DockLayout extends BorderLayout {
         return new Dimension(w, h);   
     }   
 
-    private void placeComponents(ArrayList comps, int x, int y, int w, int h, int orientation) {
+    private void placeComponents(ArrayList comps,
+				 int x, int y, int w, int h, int orientation)
+    {
         int offset = 0;      
         Component c = null;      
         if (orientation == HORIZONTAL) {         

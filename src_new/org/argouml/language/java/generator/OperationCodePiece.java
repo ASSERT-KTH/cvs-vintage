@@ -1,4 +1,4 @@
-// $Id: OperationCodePiece.java,v 1.7 2003/06/29 23:47:19 linus Exp $
+// $Id: OperationCodePiece.java,v 1.8 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,8 @@ public class OperationCodePiece extends NamedCodePiece
                               String name)
     {
 	this.name = name;
-	fullyQualifiedTypeNames = (operationDef.getText().toString().indexOf('.') != -1);
+	fullyQualifiedTypeNames =
+	    (operationDef.getText().toString().indexOf('.') != -1);
 	if (javadocDef != null) {
 	    CompositeCodePiece cp = new CompositeCodePiece(javadocDef);
 	    cp.add(operationDef);
@@ -127,11 +128,14 @@ public class OperationCodePiece extends NamedCodePiece
 
         for (Iterator j = features.iterator(); j.hasNext() && !found; ) {
             MFeature feature = (MFeature) j.next();
-            if (feature.getName().equals(name) && feature instanceof MOperation) { // fixed issue 1527
+            if (feature.getName().equals(name)
+		&& feature instanceof MOperation) 
+	    {
                 found = true;
                 parseState.newFeature(feature);
                 MOperation mOperation = (MOperation) feature;
-                writer.write (GeneratorJava.getInstance().generateOperation(mOperation, true));
+                writer.write(GeneratorJava.getInstance()
+			     .generateOperation(mOperation, true));
             }
         }
         if (found) {

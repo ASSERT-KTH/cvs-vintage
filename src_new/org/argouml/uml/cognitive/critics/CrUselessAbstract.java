@@ -1,4 +1,4 @@
-// $Id: CrUselessAbstract.java,v 1.4 2003/06/29 23:52:59 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.4 2003/06/29 23:52:59 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -57,12 +57,15 @@ public class CrUselessAbstract extends CrUML {
 	MClass cls, c;
 	if (!(dm instanceof MClass)) return false;
 	cls = (MClass) dm;
-	if (!cls.isAbstract()) return false;  // original class was not abstract
-	VectorSet derived = (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
+	if (!cls.isAbstract())
+	    return false;  // original class was not abstract
+	VectorSet derived =
+	    (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
 	java.util.Enumeration enum = derived.elements();
 	while (enum.hasMoreElements()) {
 	    c = (MClass) enum.nextElement();
-	    if (!c.isAbstract()) return false;  // found a concrete subclass
+	    if (!c.isAbstract())
+		return false;  // found a concrete subclass
 	}
 	return true; // no concrete subclasses defined, this class is "useless"
     }

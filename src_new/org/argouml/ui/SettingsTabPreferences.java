@@ -1,4 +1,4 @@
-// $Id: SettingsTabPreferences.java,v 1.6 2003/06/29 23:47:02 linus Exp $
+// $Id: SettingsTabPreferences.java,v 1.7 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.*;
 import org.argouml.application.helpers.*;
 import org.argouml.kernel.*;
-import org.argouml.uml.ui.UMLAction;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -114,7 +113,9 @@ public class SettingsTabPreferences extends SettingsTabHelper
         _preload.setSelected(Configuration.getBoolean(Argo.KEY_PRELOAD, true));
         _edem.setSelected(Configuration.getBoolean(Argo.KEY_EDEM, true));
         _profile.setSelected(Configuration.getBoolean(Argo.KEY_PROFILE, false));
-        _reloadRecent.setSelected(Configuration.getBoolean(Argo.KEY_RELOAD_RECENT_PROJECT, false));
+        _reloadRecent.setSelected(
+		Configuration.getBoolean(Argo.KEY_RELOAD_RECENT_PROJECT,
+					 false));
     }
 
     public void handleSettingsTabSave() {
@@ -122,7 +123,8 @@ public class SettingsTabPreferences extends SettingsTabHelper
         Configuration.setBoolean(Argo.KEY_PRELOAD, _preload.isSelected());
         Configuration.setBoolean(Argo.KEY_EDEM, _edem.isSelected());
         Configuration.setBoolean(Argo.KEY_PROFILE, _profile.isSelected());
-        Configuration.setBoolean(Argo.KEY_RELOAD_RECENT_PROJECT, _reloadRecent.isSelected());
+        Configuration.setBoolean(Argo.KEY_RELOAD_RECENT_PROJECT,
+				 _reloadRecent.isSelected());
     }
 
     public void handleSettingsTabCancel() {
@@ -130,7 +132,9 @@ public class SettingsTabPreferences extends SettingsTabHelper
     }
 
     public String getModuleName() { return "SettingsTabPreferences"; }
-    public String getModuleDescription() { return "Settings Tab for Preferences"; }
+    public String getModuleDescription() {
+	return "Settings Tab for Preferences";
+    }
     public String getModuleAuthor() { return "ArgoUML Core"; }
     public String getModuleVersion() { return ArgoVersion.getVersion(); }
     public String getModuleKey() { return "module.settings.preferences"; }

@@ -1,4 +1,4 @@
-// $Id: ArrowIcon.java,v 1.3 2003/06/29 23:47:53 linus Exp $
+// $Id: ArrowIcon.java,v 1.4 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,8 @@ import java.awt.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 /**
- * A metal look and feel arrow icon that can be created to point to a compass point.
+ * A metal look and feel arrow icon that can be created to point to a
+ * compass point.
  *
  * @author  administrator
  */
@@ -68,18 +69,23 @@ public class ArrowIcon implements Icon, Serializable, SwingConstants {
     int direction;
     int width = SIZE;
     int height = SIZE;
+
     /** Construct an ArrowIcon pointing in the given direction
-     * @param direction the direction the arrow will point, this being one of the constants NORTH, SOUTH, EAST, WEST
+     *
+     * @param direction the direction the arrow will point, this being
+     * one of the constants NORTH, SOUTH, EAST, WEST
      */        
     public ArrowIcon(int direction) {
         this.direction = direction;
     }
 
-    /** Paints the icon. The top-left corner of the icon is drawn at the point
-     * (x, y) in the coordinate space of the graphics context g. If this icon has
-     * no image observer, this method uses the c component as the observer.
+    /** Paints the icon. The top-left corner of the icon is drawn at
+     * the point (x, y) in the coordinate space of the graphics
+     * context g. If this icon has no image observer, this method uses
+     * the c component as the observer.
      *
-     * @param c the component to be used as the observer if this icon has no image observer
+     * @param c the component to be used as the observer if this icon
+     * has no image observer
      * @param g the graphics context
      * @param x the X coordinate of the icon's top-left corner
      * @param y the Y coordinate of the icon's top-left corner

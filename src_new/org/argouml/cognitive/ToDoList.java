@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.14 2003/06/29 23:53:42 linus Exp $
+// $Id: ToDoList.java,v 1.15 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.14 2003/06/29 23:53:42 linus Exp $
+// $Id: ToDoList.java,v 1.15 2003/06/30 18:00:16 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -102,7 +102,9 @@ public class ToDoList
      */
     protected Vector _resolvedItems;
     
-    /** A Thread that keeps checking if the items on the list are still valid. */
+    /** A Thread that keeps checking if the items on the list are
+     * still valid. 
+     */
     protected Thread _validityChecker;
     
     /** The designer, used in determining if a ToDoItem is still valid.  */
@@ -384,7 +386,8 @@ public class ToDoList
         }
         
         if (!(item.getPoster() instanceof Critic))
-            throw new UnresolvableException("Unable to resolve with poster of type: "
+            throw new UnresolvableException("Unable to resolve with poster "
+					    + "of type: "
 					    + item.getPoster().getClass());
         
         ResolvedCritic rc = new ResolvedCritic((Critic) item.getPoster(),

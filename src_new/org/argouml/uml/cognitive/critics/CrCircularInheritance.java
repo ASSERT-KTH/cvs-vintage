@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.7 2003/06/29 23:52:58 linus Exp $
+// $Id: CrCircularInheritance.java,v 1.8 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.7 2003/06/29 23:52:58 linus Exp $
+// $Id: CrCircularInheritance.java,v 1.8 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,7 +46,8 @@ import ru.novosoft.uml.foundation.core.MGeneralizableElement;
  *  Semantics. OMG document ad/97-08-04. */
 
 public class CrCircularInheritance extends CrUML {
-    protected static Category cat = Category.getInstance(CrCircularInheritance.class);
+    protected static Category cat =
+	Category.getInstance(CrCircularInheritance.class);
 						      
     public CrCircularInheritance() {
 	setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
@@ -81,8 +82,10 @@ public class CrCircularInheritance extends CrUML {
 	VectorSet above = offs.reachable(new SuperclassGen());
 	java.util.Enumeration enum = above.elements();
 	while (enum.hasMoreElements()) {
-	    MGeneralizableElement ge2 = (MGeneralizableElement) enum.nextElement();
-	    VectorSet trans = (new VectorSet(ge2)).reachable(new SuperclassGen());
+	    MGeneralizableElement ge2 =
+		(MGeneralizableElement) enum.nextElement();
+	    VectorSet trans =
+		(new VectorSet(ge2)).reachable(new SuperclassGen());
 	    if (trans.contains(dm)) offs.addElement(ge2);
 	}
 	return offs;

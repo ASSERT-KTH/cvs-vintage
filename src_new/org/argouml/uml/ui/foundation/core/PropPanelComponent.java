@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.25 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelComponent.java,v 1.26 2003/06/30 18:00:38 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,6 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
-
 import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
@@ -41,7 +37,7 @@ import ru.novosoft.uml.foundation.core.MComponent;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.25 2003/06/29 23:50:17 linus Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.26 2003/06/30 18:00:38 linus Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.

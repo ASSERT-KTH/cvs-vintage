@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.3 2003/06/29 23:52:18 linus Exp $
+// $Id: FigSimpleState.java,v 1.4 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigSimpleState.java
 // Classes: FigSimpleState
 // Original Author: ics 125b silverbullet team
-// $Id: FigSimpleState.java,v 1.3 2003/06/29 23:52:18 linus Exp $
+// $Id: FigSimpleState.java,v 1.4 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -67,17 +67,27 @@ public class FigSimpleState extends FigState {
     // constructors
 
     public FigSimpleState() {
-	_bigPort = new FigRRect(getInitialX() + 1, getInitialY() + 1, getInitialWidth() - 2, getInitialHeight() - 2, Color.cyan, Color.cyan);
-	_cover = new FigRRect(getInitialX(), getInitialY(), getInitialWidth(), getInitialHeight(), Color.black, Color.white);
+	_bigPort =
+	    new FigRRect(getInitialX() + 1, getInitialY() + 1,
+			 getInitialWidth() - 2, getInitialHeight() - 2,
+			 Color.cyan, Color.cyan);
+	_cover =
+	    new FigRRect(getInitialX(), getInitialY(),
+			 getInitialWidth(), getInitialHeight(),
+			 Color.black, Color.white);
 
 	_bigPort.setLineWidth(0);
 	_name.setLineWidth(0);
-	_name.setBounds(getInitialX() + 2, getInitialY() + 2, getInitialWidth() - 4, _name.getBounds().height);
+	_name.setBounds(getInitialX() + 2, getInitialY() + 2,
+			getInitialWidth() - 4, _name.getBounds().height);
 	_name.setFilled(false);
 
-	_divider = new FigLine(getInitialX(),  getInitialY() + 2 + _name.getBounds().height + 1,
-			       getInitialWidth() - 1,  getInitialY() + 2 + _name.getBounds().height + 1,
-			       Color.black);   
+	_divider =
+	    new FigLine(getInitialX(),
+			getInitialY() + 2 + _name.getBounds().height + 1,
+			getInitialWidth() - 1,
+			getInitialY() + 2 + _name.getBounds().height + 1,
+			Color.black);   
 
 	// add Figs to the FigNode in back-to-front order
 	addFig(_bigPort);
@@ -138,7 +148,9 @@ public class FigSimpleState extends FigState {
 	Dimension nameDim = _name.getMinimumSize();
 
 	_name.setBounds(x + 2, y + 2, w - 4,  nameDim.height);
-	_divider.setShape(x, y + nameDim.height + 1, x + w - 1,  y + nameDim.height + 1);
+	_divider.setShape(x, y + nameDim.height + 1,
+			  x + w - 1,
+			  y + nameDim.height + 1);
 
 	_internal.setBounds(x + 2, y + nameDim.height + 4,
 			    w - 4, h - nameDim.height - 6);

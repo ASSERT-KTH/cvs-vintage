@@ -1,4 +1,4 @@
-// $Id: UMLOperationsListModel.java,v 1.10 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLOperationsListModel.java,v 1.11 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,6 @@ import java.awt.*;
 import java.lang.reflect.*;
 
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.MMUtil;
-import org.argouml.uml.diagram.ui.FigNodeModelElement;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),

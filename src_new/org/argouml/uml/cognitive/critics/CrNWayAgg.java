@@ -1,4 +1,4 @@
-// $Id: CrNWayAgg.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNWayAgg.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNWayAgg.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -52,11 +52,15 @@ import org.argouml.cognitive.critics.*;
  * <p>This is the third well-formedness rule for associations in the UML 1.3
  *   standard (see section 2.5.3 of the standard).</p>
  *
- * <p><em>Note</em>. This only applies to 3-way or more associations. There is
- * a separate critic (see {@link org.argouml.uml.cognitive.critics.CrMultipleAgg})
- * which deals with 2-way assocations.</p>
+ * <p><em>Note</em>. This only applies to 3-way or more
+ * associations. There is a separate critic (see {@link
+ * org.argouml.uml.cognitive.critics.CrMultipleAgg}) which deals with
+ * 2-way assocations.</p>
  *
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_multiple_agg">ArgoUML User Manual: Two Aggregate ends (roles) in binary Association</a> */
+ * @see <a
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_multiple_agg">ArgoUML
+ * User Manual: Two Aggregate ends (roles) in binary
+ * Association</a> */
 
 public class CrNWayAgg extends CrUML {
 

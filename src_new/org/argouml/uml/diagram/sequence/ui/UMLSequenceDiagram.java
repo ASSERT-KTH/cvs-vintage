@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.19 2003/06/29 23:52:16 linus Exp $
+// $Id: UMLSequenceDiagram.java,v 1.20 2003/06/30 18:00:31 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.19 2003/06/29 23:52:16 linus Exp $
+// $Id: UMLSequenceDiagram.java,v 1.20 2003/06/30 18:00:31 linus Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -35,7 +35,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.Action;
-import javax.swing.JToolBar;
 
 import org.apache.log4j.Category;
 import org.argouml.kernel.ProjectManager;
@@ -47,7 +46,6 @@ import org.argouml.uml.ui.ActionAddNote;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.gef.ui.ToolBar;
 import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.behavior.common_behavior.MCreateAction;
 import ru.novosoft.uml.behavior.common_behavior.MDestroyAction;

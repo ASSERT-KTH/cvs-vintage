@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.21 2003/06/29 23:53:43 linus Exp $
+// $Id: ToDoPane.java,v 1.22 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,6 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Category;
 
 import org.argouml.application.api.Argo;
-import org.argouml.application.api.Configuration;
 import org.argouml.application.api.QuadrantPanel;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Designer;
@@ -90,7 +89,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.21 2003/06/29 23:53:43 linus Exp $
+ * $Id: ToDoPane.java,v 1.22 2003/06/30 18:00:18 linus Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -176,14 +175,16 @@ public class ToDoPane extends JPanel
         _toolbar.add(_combo);
         // This is the only reason GEF toolbar is used here.
         // Must find a way to implement the same.
-        _flatButton = _toolbar.addToggle(_flatView, "Flat", "Hierarchical", "Flat");
+        _flatButton = _toolbar.addToggle(_flatView,
+					 "Flat", "Hierarchical", "Flat");
         _toolbar.add(_countLabel);
         
         JPanel toolbarPanel = new JPanel(new BorderLayout());
         toolbarPanel.add(_toolbar, BorderLayout.WEST);
         
-        ImageIcon hierarchicalIcon = ResourceLoaderWrapper.getResourceLoaderWrapper()
-	    .lookupIconResource("Hierarchical", "Hierarchical");
+        ImageIcon hierarchicalIcon =
+	    ResourceLoaderWrapper.getResourceLoaderWrapper()
+	        .lookupIconResource("Hierarchical", "Hierarchical");
         ImageIcon flatIcon = ResourceLoaderWrapper.getResourceLoaderWrapper()
 	    .lookupIconResource("Flat", "Flat");
         _flatButton.setIcon(hierarchicalIcon);
@@ -202,8 +203,10 @@ public class ToDoPane extends JPanel
         Designer.TheDesigner.getToDoList().addToDoListListener(this);
         
         if (doSplash) {
-            SplashScreen splash = ProjectBrowser.getInstance().getSplashScreen();
-            splash.getStatusBar().showStatus("Making TodoPane: Setting Perspectives");
+            SplashScreen splash =
+		ProjectBrowser.getInstance().getSplashScreen();
+            splash.getStatusBar().showStatus("Making TodoPane: "
+					     + "Setting Perspectives");
             splash.getStatusBar().showProgress(25);
         }
         

@@ -1,4 +1,4 @@
-// $Id: Toolbox.java,v 1.8 2003/06/29 23:47:54 linus Exp $
+// $Id: Toolbox.java,v 1.9 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,6 @@
 package org.argouml.swingext;
 
 import java.awt.GridLayout;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import javax.swing.Action;
-import javax.swing.JButton;
 
 /**
  * A toolbar where buttons are shown in a grid instead of a row.

@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: ItemUID.java,v 1.5 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class ItemUID
     protected static Category cat = Category.getInstance(ItemUID.class);
 
     /** Keeps a reference to the Class object of this class */
-    protected final static Class _myclass = (new ItemUID()).getClass();
+    protected static final Class _myclass = (new ItemUID()).getClass();
 
     /** This actual ID of this instance. */
     protected String _id;

@@ -1,4 +1,4 @@
-// $Id: SelectionRerouteEdge.java,v 1.3 2003/06/29 23:52:20 linus Exp $
+// $Id: SelectionRerouteEdge.java,v 1.4 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,11 @@ package org.argouml.uml.diagram.ui;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 
 import java.awt.Rectangle;
-import java.awt.Point;
-import java.awt.Color;
 
 import java.awt.event.MouseEvent;
 
 import java.util.Enumeration;
 
-import org.tigris.gef.base.SelectionReshape;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Layer;
@@ -45,8 +42,6 @@ import org.tigris.gef.base.FigModifyingMode;
 
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
-import org.tigris.gef.presentation.FigNode;
-import org.tigris.gef.presentation.FigPoly;
 
 /**
  * A general class for rerouting edges, achieved by delegating

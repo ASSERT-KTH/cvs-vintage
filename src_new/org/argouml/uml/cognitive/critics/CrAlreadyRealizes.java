@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.5 2003/06/29 23:52:58 linus Exp $
+// $Id: CrAlreadyRealizes.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.5 2003/06/29 23:52:58 linus Exp $
+// $Id: CrAlreadyRealizes.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -58,7 +58,8 @@ public class CrAlreadyRealizes extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
 	if (ModelFacade.isAClass(dm)) {
-	    Collection col = CoreHelper.getHelper().getAllRealizedInterfaces(dm);
+	    Collection col =
+		CoreHelper.getHelper().getAllRealizedInterfaces(dm);
 	    int size = col.size();
 	    Set set = new HashSet();
 	    set.addAll(col);

@@ -1,4 +1,4 @@
-// $Id: TableModelObjectByProps.java,v 1.4 2003/06/30 15:39:10 linus Exp $
+// $Id: TableModelObjectByProps.java,v 1.5 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: TableModelObjectByProps.java
 // Classes: TableModelObjectByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelObjectByProps.java,v 1.4 2003/06/30 15:39:10 linus Exp $
+// $Id: TableModelObjectByProps.java,v 1.5 2003/06/30 18:00:30 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -52,7 +52,10 @@ public class TableModelObjectByProps extends TableModelComposite {
     }
 
     public Vector rowObjectsFor(Object t) {
-	if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponentInstance || t instanceof MComponent)) return new Vector();
+	if (!(t instanceof UMLDeploymentDiagram
+	      || t instanceof MComponentInstance
+	      || t instanceof MComponent))
+	    return new Vector();
 	if (t instanceof UMLDeploymentDiagram) {
 	    UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
 	    Vector nodes = d.getNodes();

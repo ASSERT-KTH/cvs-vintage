@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.9 2003/06/29 23:53:41 linus Exp $
+// $Id: Configuration.java,v 1.10 2003/06/30 18:00:15 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class Configuration {
 
     /** Define a static log4j category variable for ArgoUML configuration.
      */
-    public final static Category cat = 
+    public static final Category cat = 
 	Category.getInstance("org.argouml.application.configuration");
     // TODO:  JDK 1.2 seems to not return the package name if
     // not running from a jar.
@@ -56,19 +56,19 @@ public class Configuration {
 
     /** Property to indicate configuration load from file
      */
-    public final static String FILE_LOADED = "configuration.load.file";
+    public static final String FILE_LOADED = "configuration.load.file";
 
     /** Property to indicate configuration load from url
      */
-    public final static String URL_LOADED = "configuration.load.url";
+    public static final String URL_LOADED = "configuration.load.url";
 
     /** Property to indicate configuration save to file
      */
-    public final static String FILE_SAVED = "configuration.save.file";
+    public static final String FILE_SAVED = "configuration.save.file";
 
     /** Property to indicate configuration save to url
      */
-    public final static String URL_SAVED = "configuration.save.url";
+    public static final String URL_SAVED = "configuration.save.url";
 
     /** The only occurance of the configuration handler.
      */

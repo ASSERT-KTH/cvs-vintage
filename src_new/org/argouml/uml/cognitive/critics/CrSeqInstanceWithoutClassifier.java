@@ -1,4 +1,4 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:12:42 linus Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,9 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
 // File: CrSeqInstanceWithoutClassifier.java
 // Classes: CrSeqInstanceWithoutClassifier
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:12:42 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 

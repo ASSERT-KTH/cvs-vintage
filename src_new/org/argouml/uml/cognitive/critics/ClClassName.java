@@ -1,4 +1,4 @@
-// $Id: ClClassName.java,v 1.3 2003/06/30 14:54:04 linus Exp $
+// $Id: ClClassName.java,v 1.4 2003/06/30 18:00:27 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,10 +68,12 @@ public class ClClassName implements Clarifier {
 		g.drawLine(i, height + WAVE_HEIGHT, i + WAVE_LENGTH, height);
 		i += WAVE_LENGTH;
 		if (i >= right) break;
-		g.drawLine(i, height, i + WAVE_LENGTH, height + WAVE_HEIGHT / 2);
+		g.drawLine(i, height, i + WAVE_LENGTH,
+			   height + WAVE_HEIGHT / 2);
 		i += WAVE_LENGTH;
 		if (i >= right) break;
-		g.drawLine(i, height + WAVE_HEIGHT / 2, i + WAVE_LENGTH, height);
+		g.drawLine(i, height + WAVE_HEIGHT / 2, i + WAVE_LENGTH,
+			   height);
 		i += WAVE_LENGTH;
 		if (i >= right) break;
 	    }

@@ -1,4 +1,4 @@
-// $Id: ChUseCase.java,v 1.7 2003/06/29 23:52:58 linus Exp $
+// $Id: ChUseCase.java,v 1.8 2003/06/30 18:00:26 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,9 @@ import ru.novosoft.uml.model_management.*;
  *  design. TODO: the checklist items are categorized, but
  *  those categories are not shown yet in the user interface. 
  *
- *  @deprecated As of ArgoUml version 0.9.1, Now created by loading strings from 
- *     UMLCognitiveResourceBundle into a generic UMLChecklist instance
+ *  @deprecated As of ArgoUml version 0.9.1, Now created by loading
+ *  strings from UMLCognitiveResourceBundle into a generic
+ *  UMLChecklist instance
  *           
  *  @see org.argouml.uml.cognitive.UMLCognitiveResourceBundle
  *  @see UMLChecklist

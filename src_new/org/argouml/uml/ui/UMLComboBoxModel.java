@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.19 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLComboBoxModel.java,v 1.20 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.19 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLComboBoxModel.java,v 1.20 2003/06/30 18:00:36 linus Exp $
 
 package org.argouml.uml.ui;
 
@@ -46,7 +46,6 @@ import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.use_cases.*;
 
 

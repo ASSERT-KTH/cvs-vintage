@@ -1,4 +1,4 @@
-// $Id: CrCircularComposition.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrCircularComposition.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrCircularComposition.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,7 +45,8 @@ import org.argouml.uml.*;
 /**  */
 
 public class CrCircularComposition extends CrUML {
-    protected static Category cat = Category.getInstance(CrCircularComposition.class);
+    protected static Category cat =
+	Category.getInstance(CrCircularComposition.class);
 						      
     public CrCircularComposition() {
 	setHeadline("Remove Circular Composition");
@@ -57,7 +58,8 @@ public class CrCircularComposition extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
-	VectorSet reach = (new VectorSet(cls)).reachable(GenCompositeClasses.SINGLETON);
+	VectorSet reach =
+	    (new VectorSet(cls)).reachable(GenCompositeClasses.SINGLETON);
 	if (reach.contains(cls)) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }
@@ -74,7 +76,8 @@ public class CrCircularComposition extends CrUML {
 	java.util.Enumeration enum = above.elements();
 	while (enum.hasMoreElements()) {
 	    MClassifier cls2 = (MClassifier) enum.nextElement();
-	    VectorSet trans = (new VectorSet(cls2)).reachable(GenCompositeClasses.SINGLETON);
+	    VectorSet trans =
+		(new VectorSet(cls2)).reachable(GenCompositeClasses.SINGLETON);
 	    if (trans.contains(dm)) offs.addElement(cls2);
 	}
 	return offs;

@@ -1,4 +1,4 @@
-// $Id: ActionSetExtendBase.java,v 1.6 2003/06/29 23:50:15 linus Exp $
+// $Id: ActionSetExtendBase.java,v 1.7 2003/06/30 18:00:37 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.use_cases;
 
 import java.awt.event.ActionEvent;
 
 import org.argouml.application.api.Argo;
-import org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
 

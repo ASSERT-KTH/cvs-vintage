@@ -1,4 +1,4 @@
-// $Id: PropPanelString.java,v 1.7 2003/06/29 23:52:20 linus Exp $
+// $Id: PropPanelString.java,v 1.8 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,6 @@ import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.*;
 import ru.novosoft.uml.model_management.*;
 
-import org.tigris.gef.base.Diagram;
-import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
 
 import org.argouml.ui.*;

@@ -1,4 +1,4 @@
-// $Id: SelectionState.java,v 1.13 2003/06/29 23:52:18 linus Exp $
+// $Id: SelectionState.java,v 1.14 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.13 2003/06/29 23:52:18 linus Exp $
+// $Id: SelectionState.java,v 1.14 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -59,8 +59,8 @@ public class SelectionState extends SelectionWButtons {
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon trans =
-	ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource(
-									    "Transition");
+	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	.lookupIconResource("Transition");
 
     ////////////////////////////////////////////////////////////////
     // instance varables
@@ -185,21 +185,27 @@ public class SelectionState extends SelectionWButtons {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeAbove(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeAbove(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeAbove(MutableGraphModel mgm, Object newNode) {
 	return mgm.connect(newNode, _content.getOwner(), MTransition.class);
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeLeft(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeLeft(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeLeft(MutableGraphModel gm, Object newNode) {
 	return gm.connect(newNode, _content.getOwner(), MTransition.class);
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeRight(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeRight(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
 	return gm.connect(_content.getOwner(), newNode, MTransition.class);
@@ -207,7 +213,8 @@ public class SelectionState extends SelectionWButtons {
 
     /**
      * To enable this we need to add an icon.
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeToSelf(org.tigris.gef.graph.MutableGraphModel)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeToSelf(org.tigris.gef.graph.MutableGraphModel)
      */
     protected Object createEdgeToSelf(MutableGraphModel gm) {
 	return gm.connect(
@@ -217,7 +224,9 @@ public class SelectionState extends SelectionWButtons {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
 	return gm.connect(_content.getOwner(), newNode, MTransition.class);

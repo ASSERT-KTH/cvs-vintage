@@ -1,4 +1,4 @@
-// $Id: GoListToDecisionsToItems.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: GoListToDecisionsToItems.java,v 1.7 2003/06/30 18:00:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class GoListToDecisionsToItems implements TreeModel {
     // TreeModel implementation
   
     public Object getRoot() {
-	throw new UnsupportedOperationException("getRoot should never be called");
+	throw new UnsupportedOperationException();
     } 
     public void setRoot(Object r) { }
 
@@ -48,7 +48,8 @@ public class GoListToDecisionsToItems implements TreeModel {
 	}
 	if (parent instanceof Decision) {
 	    Decision dec = (Decision) parent;
-	    java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+	    Enumeration itemEnum =
+		Designer.TheDesigner.getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.getPoster().supports(dec)) {
@@ -58,7 +59,8 @@ public class GoListToDecisionsToItems implements TreeModel {
 	    }
 	}
 
-	throw new IndexOutOfBoundsException("getChild shouldn't get here GoListToDecisionsToItems");
+	throw new IndexOutOfBoundsException("getChild shouldn't get here "
+					    + "GoListToDecisionsToItems");
     }
   
     private int getChildCountCond(Object parent, boolean stopafterone) {
@@ -67,7 +69,8 @@ public class GoListToDecisionsToItems implements TreeModel {
 	}
 	if (parent instanceof Decision) {
 	    Decision dec = (Decision) parent;
-	    java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+	    Enumeration itemEnum =
+		Designer.TheDesigner.getToDoList().elements();
 	    int count = 0;
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
@@ -96,7 +99,8 @@ public class GoListToDecisionsToItems implements TreeModel {
 	    // found and index == 0
 	    Vector candidates = new Vector();
 	    Decision dec = (Decision) parent;
-	    java.util.Enumeration itemEnum = Designer.TheDesigner.getToDoList().elements();
+	    Enumeration itemEnum =
+		Designer.TheDesigner.getToDoList().elements();
 	    while (itemEnum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) itemEnum.nextElement();
 		if (item.getPoster().supports(dec)) candidates.addElement(item);

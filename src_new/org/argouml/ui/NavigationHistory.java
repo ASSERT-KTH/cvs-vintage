@@ -1,4 +1,4 @@
-// $Id: NavigationHistory.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: NavigationHistory.java,v 1.4 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -185,7 +185,10 @@ public class NavigationHistory {
                 //      see if any of the references are still valid
                 //   
                 int index;
-                for (index = _position + 1; index < size && target == null; index++) {
+                for (index = _position + 1;
+		     index < size && target == null;
+		     index++)
+		{
                     ref = (WeakReference) _history.get(index);
                     if (ref != null) {
                         target = ref.get();
@@ -198,8 +201,9 @@ public class NavigationHistory {
                         }
                         else {
                             //
-                            //   these check for phantom model elements
-                            //       those still alive but not attached to anything
+                            //   these check for phantom model
+                            //   elements those still alive but not
+                            //   attached to anything
                             if (ModelFacade.isAFeature(target)) {
                                 if (ModelFacade.getOwner(target) == null) {
                                     target = null;

@@ -1,4 +1,4 @@
-// $Id: SettingsTabHelper.java,v 1.3 2003/06/29 23:53:42 linus Exp $
+// $Id: SettingsTabHelper.java,v 1.4 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.application.helpers;
 import org.argouml.application.api.*;
 import org.argouml.ui.*;
 import org.argouml.kernel.*;
-import org.argouml.uml.ui.UMLAction;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -46,7 +45,7 @@ public abstract class SettingsTabHelper extends JPanel
 
     /** Default localization key for Settings
      */
-    public final static String SETTINGS_BUNDLE = "CoreSettings";
+    public static final String SETTINGS_BUNDLE = "CoreSettings";
 
     /** String naming the resource bundle to use for localization.
      */

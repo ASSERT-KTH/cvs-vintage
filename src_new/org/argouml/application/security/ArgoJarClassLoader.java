@@ -1,4 +1,4 @@
-// $Id: ArgoJarClassLoader.java,v 1.2 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoJarClassLoader.java,v 1.3 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,9 @@ import java.io.IOException;
 /**
  * A class loader for loading jar files, both local and remote.
  *
- * This source was taken primarily from 
- *  <a href="http://java.sun.com/docs/books/tutorial/jar/api/jarclassloader.html">Sun's tutorial</a>
+ * This source was taken primarily from <a
+ * href="http://java.sun.com/docs/books/tutorial/jar/api/jarclassloader.html">
+ * Sun's tutorial</a>
  *
  *  @author Unascribed
  */

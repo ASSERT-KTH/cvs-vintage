@@ -1,4 +1,4 @@
-// $Id: ActionNotation.java,v 1.4 2003/06/29 23:47:19 linus Exp $
+// $Id: ActionNotation.java,v 1.5 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class ActionNotation extends UMLAction
 
     private JMenu _menu = null;
 
-    public final static ActionNotation getInstance() { return SINGLETON; }
+    public static final ActionNotation getInstance() { return SINGLETON; }
 
     public ActionNotation() {
 	super("Notation", NO_ICON);
@@ -87,7 +87,8 @@ public class ActionNotation extends UMLAction
             Object o = iterator.next();
 	    if (o instanceof NotationName) {
 		NotationName nn = (NotationName) o;
-	        JRadioButtonMenuItem mi = new JRadioButtonMenuItem(nn.getTitle());
+	        JRadioButtonMenuItem mi =
+		    new JRadioButtonMenuItem(nn.getTitle());
                 if (nn.getIcon() != null) {
                     mi.setIcon(nn.getIcon());
                 }

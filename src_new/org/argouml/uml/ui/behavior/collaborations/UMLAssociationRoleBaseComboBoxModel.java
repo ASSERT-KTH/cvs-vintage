@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.8 2003/06/29 23:50:10 linus Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.9 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.foundation.core.MNamespace;
 

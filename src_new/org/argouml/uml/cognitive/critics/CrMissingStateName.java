@@ -1,4 +1,4 @@
-// $Id: CrMissingStateName.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrMissingStateName.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMissingStateName.java
 // Classes: CrMissingStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingStateName.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrMissingStateName.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -52,7 +52,8 @@ public class CrMissingStateName extends CrUML {
     }
 						   
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!ModelFacade.isAStateVertex(dm) || ModelFacade.isTop(dm)) return NO_PROBLEM;   
+	if (!ModelFacade.isAStateVertex(dm) || ModelFacade.isTop(dm))
+	    return NO_PROBLEM;   
 	String myName = ModelFacade.getName(dm);
 	if (myName == null || myName.equals(""))
 	    return PROBLEM_FOUND;

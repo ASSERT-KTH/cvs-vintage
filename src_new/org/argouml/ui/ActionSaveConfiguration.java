@@ -1,4 +1,4 @@
-// $Id: ActionSaveConfiguration.java,v 1.8 2003/06/29 23:47:01 linus Exp $
+// $Id: ActionSaveConfiguration.java,v 1.9 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,13 +36,15 @@ public class ActionSaveConfiguration extends UMLAction {
  
     /** One and only instance.
      */
-    public static ActionSaveConfiguration SINGLETON = new ActionSaveConfiguration();
+    public static ActionSaveConfiguration SINGLETON =
+	new ActionSaveConfiguration();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
     protected ActionSaveConfiguration() {
-        super(Argo.localize(Argo.MENU_BUNDLE, "action.save-configuration"), false);
+        super(Argo.localize(Argo.MENU_BUNDLE, "action.save-configuration"),
+	      false);
     }
 
     ////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.12 2003/06/29 23:53:42 linus Exp $
+// $Id: ModuleLoader.java,v 1.13 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,13 +137,17 @@ public class ModuleLoader {
 
 	String[] path = {
 	    System.getProperty("user.dir") + fs + ArgoModule.MODULEFILENAME,
-	    System.getProperty("user.dir") + fs + ArgoModule.MODULEFILENAME_ALTERNATE,
+	    System.getProperty("user.dir") + fs
+	    + ArgoModule.MODULEFILENAME_ALTERNATE,
+
 	    System.getProperty("user.home") + fs + ArgoModule.MODULEFILENAME,
-	    System.getProperty("user.home") + fs + ArgoModule.MODULEFILENAME_ALTERNATE,
-	    System.getProperty("java.home") + fs + "lib" +
-	        fs + ArgoModule.MODULEFILENAME,
-	    System.getProperty("java.home") + fs + "lib" +
-	        fs + ArgoModule.MODULEFILENAME_ALTERNATE
+	    System.getProperty("user.home") + fs 
+	    + ArgoModule.MODULEFILENAME_ALTERNATE,
+
+	    System.getProperty("java.home") + fs + "lib" + fs
+	    + ArgoModule.MODULEFILENAME,
+	    System.getProperty("java.home") + fs + "lib" + fs
+	    + ArgoModule.MODULEFILENAME_ALTERNATE
 	};
 
 	// Get all of the file paths.  Check if the file exists,
@@ -216,10 +220,15 @@ public class ModuleLoader {
 		if (Pluggable.PLUGIN_TITLE.equals(s1) &&
 		    Pluggable.PLUGIN_VENDOR.equals(s2) &&
 		    key != null &&
-		    cname.endsWith(CLASS_SUFFIX)) {
+		    cname.endsWith(CLASS_SUFFIX))
+		{
+		    int cslen = CLASS_SUFFIX.length();
 		    // This load is not secure.
 		    loadClassFromLoader(classloader, key,
-					cname.substring(0, cname.length() - CLASS_SUFFIX.length()), false);
+					cname.substring(0, 
+							cname.length()
+							- cslen),
+					false);
 		}
 	    }
 	    // }
@@ -391,7 +400,8 @@ public class ModuleLoader {
 
     public boolean loadModules(InputStream is, String filename) {
         try {
-	    LineNumberReader lnr = new LineNumberReader(new InputStreamReader(is));
+	    LineNumberReader lnr =
+		new LineNumberReader(new InputStreamReader(is));
 	    while (true) {
 	        String realLine = lnr.readLine();
 		if (realLine == null) return true;
@@ -445,7 +455,9 @@ public class ModuleLoader {
                 }
             }
         } catch (Exception e) {
-            Argo.log.warn("ModuleLoader.shutdown Error processing Module shutdown:" + e);
+            Argo.log.warn("ModuleLoader.shutdown "
+			  + "Error processing Module shutdown:",
+			  e);
             e.printStackTrace();
         }
 
@@ -462,7 +474,9 @@ public class ModuleLoader {
                 }
             }
         } catch (Exception e) {
-            Argo.log.warn("ModuleLoader.addModuleAction Error processing Module popup actions:" + e);
+            Argo.log.warn("ModuleLoader.addModuleAction "
+			  + "Error processing Module popup actions:",
+			  e);
             e.printStackTrace();
         }
     }
@@ -511,12 +525,15 @@ public class ModuleLoader {
      *  current singleton.
      */
     public static boolean requestNewSingleton(Class modClass,
-					      ArgoSingletonModule moduleInstance) {
+					      ArgoSingletonModule
+					              moduleInstance)
+    {
 	boolean rc = moduleInstance.canActivateSingleton();
 	ArgoSingletonModule currentSingleton;
 	if (!moduleInstance.canActivateSingleton()) return false;
 	try {
-	    currentSingleton = (ArgoSingletonModule) getCurrentSingleton(modClass);
+	    currentSingleton =
+		(ArgoSingletonModule) getCurrentSingleton(modClass);
 	    if (currentSingleton.canDeactivateSingleton()) {
 		currentSingleton.deactivateSingleton();
 		_singletons.remove(modClass);

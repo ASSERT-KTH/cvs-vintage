@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.2 2003/06/29 23:52:20 linus Exp $
+// $Id: ActionAddAssociationRole.java,v 1.3 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@
  */
 package org.argouml.uml.diagram.ui;
 
-import java.awt.event.ActionEvent;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;

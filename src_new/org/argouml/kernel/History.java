@@ -1,4 +1,4 @@
-// $Id: History.java,v 1.3 2003/06/29 23:53:44 linus Exp $
+// $Id: History.java,v 1.4 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.kernel;
 
 import java.util.*;
-import java.util.Enumeration;
 import javax.swing.event.EventListenerList;
 
 import org.argouml.cognitive.*;
@@ -59,7 +58,8 @@ public class History {
 
     public void addItem(String head, String desc, Object target,
 			Object oldValue, Object newValue) {
-	HistoryItem hi = new HistoryItem(head, desc, target, oldValue, newValue);
+	HistoryItem hi =
+	    new HistoryItem(head, desc, target, oldValue, newValue);
 	addItem(hi);
     }
 
@@ -86,7 +86,8 @@ public class History {
     }
 
     public void addItemCritique(ToDoItem item) {
-	HistoryItem hi = new org.argouml.cognitive.critics.HistoryItemCritique(item);
+	HistoryItem hi =
+	    new org.argouml.cognitive.critics.HistoryItemCritique(item);
 	addItem(hi);
     }
 

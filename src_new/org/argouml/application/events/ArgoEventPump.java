@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.7 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoEventPump.java,v 1.8 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ public class ArgoEventPump {
 
     private ArrayList _listeners = null;
 
-    final static ArgoEventPump SINGLETON = new ArgoEventPump();
+    static final ArgoEventPump SINGLETON = new ArgoEventPump();
 
     public static ArgoEventPump getInstance() {
         return SINGLETON;

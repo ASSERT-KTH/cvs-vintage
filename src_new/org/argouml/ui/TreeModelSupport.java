@@ -1,4 +1,4 @@
-// $Id: TreeModelSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: TreeModelSupport.java,v 1.4 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.ui;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Category;
@@ -36,7 +34,7 @@ import org.apache.log4j.Category;
 /**
  * Helper class for tree models that provides tree event handling.
  *
- * <p>$Id: TreeModelSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+ * <p>$Id: TreeModelSupport.java,v 1.4 2003/06/30 18:00:24 linus Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003

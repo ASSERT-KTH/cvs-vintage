@@ -1,4 +1,4 @@
-// $Id: SettingsTabEnvironment.java,v 1.8 2003/06/29 23:47:02 linus Exp $
+// $Id: SettingsTabEnvironment.java,v 1.9 2003/06/30 18:00:24 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.*;
 import org.argouml.application.helpers.*;
 import org.argouml.kernel.*;
-import org.argouml.uml.ui.UMLAction;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -152,7 +151,9 @@ public class SettingsTabEnvironment extends SettingsTabHelper
 
     public String getModuleName() { return "SettingsTabEnvironment"; }
 
-    public String getModuleDescription() { return "Settings Tab for Environment"; }
+    public String getModuleDescription() {
+	return "Settings Tab for Environment";
+    }
 
     /** Use of Module is curious. Does this mean the
      * author of a particular zargo?

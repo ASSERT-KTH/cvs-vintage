@@ -1,4 +1,4 @@
-// $Id: CodePiece.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// $Id: CodePiece.java,v 1.4 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,30 +35,30 @@ package org.argouml.language.java.generator;
    code piece is going to be replaced by a string generated from the
    UML model.
 */
-abstract public class CodePiece
+public abstract class CodePiece
 {
     /**
        Return the string representation for this piece of code.
     */
-    abstract public StringBuffer getText();
+    public abstract StringBuffer getText();
 
     /**
        Return the start position.
     */
-    abstract public int getStartPosition();
+    public abstract int getStartPosition();
 
     /**
        Return the end position.
     */
-    abstract public int getEndPosition();
+    public abstract int getEndPosition();
 
     /**
 	Return the start line
     */
-    abstract public int getStartLine();
+    public abstract int getStartLine();
 
     /**
 	Return the end line
     */
-    abstract public int getEndLine();
+    public abstract int getEndLine();
 }

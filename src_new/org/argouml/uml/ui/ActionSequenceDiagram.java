@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.13 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionSequenceDiagram.java,v 1.14 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;

@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.9 2003/06/30 15:09:39 linus Exp $
+// $Id: CrOperNameConflict.java,v 1.10 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,9 @@ import org.argouml.model.ModelFacade;
  *   where classes have a lot of operations. See the {@link
  *   #predicate2} method for possible solutions.</p>
  *
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.oper_name_conflict">ArgoUML User Manual: Change Names or Signatures in &lt;artifact&gt;</a>
+ * @see <a
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.oper_name_conflict">ArgoUML
+ * User Manual: Change Names or Signatures in &lt;artifact&gt;</a>
  */
 
 public class CrOperNameConflict extends CrUML {

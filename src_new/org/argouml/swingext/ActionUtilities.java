@@ -1,4 +1,4 @@
-// $Id: ActionUtilities.java,v 1.4 2003/06/29 23:47:53 linus Exp $
+// $Id: ActionUtilities.java,v 1.5 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,12 +37,10 @@ import javax.swing.JPopupMenu;
  * A collection of utility methods for Swing Actions.
  *
  * @author Eugenio Alvarez
+ * @stereotype utility
  */
 public class ActionUtilities {
 
-    private ActionUtilities() {
-	throw new UnsupportedOperationException("ActionUtilities is just a container for static methods");
-    }
     /**
      * Intended for use inside an <code>actionPerformed</code> method eg:
      * <pre>
@@ -50,8 +48,10 @@ public class ActionUtilities {
      *         Container appRoot = ActionUtilities.getActionRoot(ae);
      *     }
      * </pre>
-     * Returns the root object, usually a <code>JFrame, JDialog or JApplet</code> that is the owner
-     * of the source event source object (JMenu, JMenuItem, JPopupMenu etc).
+     *
+     * Returns the root object, usually a <code>JFrame, JDialog or
+     * JApplet</code> that is the owner of the source event source
+     * object (JMenu, JMenuItem, JPopupMenu etc).
      */
     public static Container getActionRoot(ActionEvent ae) {
 	return ActionUtilities.getActionRoot(ae.getSource());
@@ -88,7 +88,8 @@ public class ActionUtilities {
     } // end getActionRoot()
 
     /**
-     * Helper method to find the <code>Container</code> of <code>Component</code>.
+     * Helper method to find the <code>Container</code> of
+     * <code>Component</code>.
      */
     private static Container getContainer(Component source) {
 	Container container = source.getParent();

@@ -1,4 +1,4 @@
-// $Id: GoModelToBaseElements.java,v 1.11 2003/06/29 23:52:20 linus Exp $
+// $Id: GoModelToBaseElements.java,v 1.12 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.model_management.MPackage;
 
 public class GoModelToBaseElements extends AbstractGoRule {
     protected static Category cat = Category.getInstance(GoModelToBaseElements.class);

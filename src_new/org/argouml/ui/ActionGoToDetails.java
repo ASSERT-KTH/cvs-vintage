@@ -1,4 +1,4 @@
-// $Id: ActionGoToDetails.java,v 1.10 2003/06/29 23:47:01 linus Exp $
+// $Id: ActionGoToDetails.java,v 1.11 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,10 +63,16 @@ public class ActionGoToDetails extends UMLAction {
         if (namedTab instanceof TabToDoTarget) {
             shouldBeEnabled = true;
         } else 
-	    if (namedTab instanceof TabModelTarget && TargetManager.getInstance().getTarget() != null) {
-		shouldBeEnabled = ((TabModelTarget) namedTab).shouldBeEnabled(TargetManager.getInstance().getTarget());
+	    if (namedTab instanceof TabModelTarget
+		&& TargetManager.getInstance().getTarget() != null)
+	    {
+		shouldBeEnabled =
+		    ((TabModelTarget) namedTab)
+		    .shouldBeEnabled(TargetManager.getInstance().getTarget());
 	    } else {
-		shouldBeEnabled = (namedTab != null && TargetManager.getInstance().getTarget() != null);
+		shouldBeEnabled =
+		    (namedTab != null
+		     && TargetManager.getInstance().getTarget() != null);
 	    } 
         
 	return shouldBeEnabled;

@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.5 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNavFromInterface.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,9 @@ import org.argouml.model.ModelFacade;
  * <p>The critic will trigger whenever an association between an interface and
  * a class is navigable <em>from</em> the interface.</p>
  *
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_nav_from_interface">ArgoUML User Manual: N</a>
+ * @see <a
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_nav_from_interface">ArgoUML
+ * User Manual: N</a>
  */
 
 public class CrNavFromInterface extends CrUML {

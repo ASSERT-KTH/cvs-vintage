@@ -1,4 +1,4 @@
-// $Id: GoClassToNavigableClass.java,v 1.9 2003/06/29 23:52:19 linus Exp $
+// $Id: GoClassToNavigableClass.java,v 1.10 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,10 @@
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.util.Collection;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
 
 import org.argouml.ui.AbstractGoRule;
 

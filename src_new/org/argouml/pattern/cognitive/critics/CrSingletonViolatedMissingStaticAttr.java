@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.3 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.4 2003/06/30 18:00:22 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,8 @@ import org.argouml.model.ModelFacade;
  * meet the requirements of a Singleton class. These are:
  *
  * <ol>
- *   <li>An static variable to hold the sole instance of the class; (This critic)
+ *   <li>An static variable to hold the sole instance of the class;
+ *       (This critic)
  *   <li>only private constructors to create the sole instance; and
  *   <li>At least one constructor to override the default constructor.
  * </ol>
@@ -55,7 +56,9 @@ import org.argouml.model.ModelFacade;
  * This version includes an implementation for the first test above!
  *
  * <p>
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">ArgoUML User Manual: Singleton Violated</a>
+ * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">
+ * ArgoUML User Manual: Singleton Violated
+ * </a>
  */
 public class CrSingletonViolatedMissingStaticAttr extends CrUML {
 

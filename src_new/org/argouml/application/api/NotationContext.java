@@ -1,4 +1,4 @@
-// $Id: NotationContext.java,v 1.3 2003/06/29 23:53:41 linus Exp $
+// $Id: NotationContext.java,v 1.4 2003/06/30 18:00:15 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,10 @@ package org.argouml.application.api;
  *  @since 0.9.4
  */
 public interface NotationContext {
- /** The context must return a NotationName indicating the notation
-  *  (and version if applicable) that it is using.
-  *
-  *  @return null if the context does not wish to name a specific notation
-  */
+    /** The context must return a NotationName indicating the notation
+     *  (and version if applicable) that it is using.
+     *
+     *  @return null if the context does not wish to name a specific notation
+     */
     public NotationName getContextNotation();
 }

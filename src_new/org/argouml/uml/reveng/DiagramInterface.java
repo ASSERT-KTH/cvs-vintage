@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.17 2003/06/29 23:53:00 linus Exp $
+// $Id: DiagramInterface.java,v 1.18 2003/06/30 18:00:35 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,12 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
 import org.argouml.uml.diagram.static_structure.ui.FigPackage;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
-import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.presentation.Fig;

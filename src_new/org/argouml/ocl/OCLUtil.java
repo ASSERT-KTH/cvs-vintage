@@ -1,4 +1,4 @@
-// $Id: OCLUtil.java,v 1.5 2003/06/29 23:47:34 linus Exp $
+// $Id: OCLUtil.java,v 1.6 2003/06/30 18:00:21 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,8 @@ public final class OCLUtil extends Object {
     public static String getContextString (final Object me) {
 	if (me == null || !(me instanceof MModelElement))
 	    return "";
-	MNamespace mnsContext = getInnerMostEnclosingNamespace ((MModelElement) me);
+	MNamespace mnsContext =
+	    getInnerMostEnclosingNamespace ((MModelElement) me);
 
 	if (me instanceof MBehavioralFeature) {
 	    StringBuffer sbContext =

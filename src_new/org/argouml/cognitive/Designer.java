@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.13 2003/06/29 23:53:42 linus Exp $
+// $Id: Designer.java,v 1.14 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.13 2003/06/29 23:53:42 linus Exp $
+// $Id: Designer.java,v 1.14 2003/06/30 18:00:16 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -40,6 +40,7 @@ import javax.swing.*;
 
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
 import org.apache.log4j.Category;
 
@@ -296,8 +297,10 @@ public class Designer
                 critiqueStartTime = System.currentTimeMillis();
             }
             _critiqueDuration = System.currentTimeMillis() - critiqueStartTime;
-            long cycleDuration = (_critiqueDuration * 100) / _critiqueCPUPercent;
-            long sleepDuration = Math.min(cycleDuration - _critiqueDuration, 3000);
+            long cycleDuration =
+		(_critiqueDuration * 100) / _critiqueCPUPercent;
+            long sleepDuration =
+		Math.min(cycleDuration - _critiqueDuration, 3000);
             sleepDuration = Math.max(sleepDuration, 1000);
             cat.debug("sleepDuration= " + sleepDuration);
             try { Thread.sleep(sleepDuration); }
@@ -344,7 +347,7 @@ public class Designer
     /** TODO: remove this */
     public void propertySet(MElementEvent mee) {
         critiqueASAP(mee.getSource(),
-		     ((ru.novosoft.uml.foundation.core.MModelElement) mee.getOldValue())
+		     ((MModelElement) mee.getOldValue())
 		     .getName());
     }
     

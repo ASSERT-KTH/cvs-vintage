@@ -1,4 +1,4 @@
-// $Id: ProportionalLayout.java,v 1.5 2003/06/29 23:47:54 linus Exp $
+// $Id: ProportionalLayout.java,v 1.6 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,9 @@ import java.awt.*;
 import java.util.*;
 
 /**
- * Allows components to be a set as a proportion to their container or left as fixed size.
- * Components are resized accordingly when the parent is resized.
+ * Allows components to be a set as a proportion to their container or
+ * left as fixed size.  Components are resized accordingly when the
+ * parent is resized.
  *
  * @author Bob Tarling
  */
@@ -98,7 +99,10 @@ public class ProportionalLayout extends LineLayout {
             if (comp.isVisible()) {
                 String proportionalLength = (String) (componentTable.get(comp));
                 if (proportionalLength.length() != 0) {
-                    length = (int) ((totalLength * Double.parseDouble(proportionalLength)) / totalProportionalLength);
+                    length =
+			(int)
+			((totalLength * Double.parseDouble(proportionalLength))
+			 / totalProportionalLength);
                     if (length < 0) length = 0;
                 }
                 else {

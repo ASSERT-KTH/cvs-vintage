@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.4 2003/06/29 23:52:19 linus Exp $
+// $Id: FigEdgeNote.java,v 1.5 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: FigEdgeNote.java
 // Classes: FigEdgeNote
 // Original Author: Andreas Rueckert <a_rueckert@gmx.net>
-// $Id: FigEdgeNote.java,v 1.4 2003/06/29 23:52:19 linus Exp $
+// $Id: FigEdgeNote.java,v 1.5 2003/06/30 18:00:34 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -49,7 +49,14 @@ import org.tigris.gef.presentation.FigPoly;
  * Class to display a UML note connection to a
  * annotated model element.
  */
-public class FigEdgeNote extends FigEdgeModelElement implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyListener, PropertyChangeListener  {
+public class FigEdgeNote
+    extends FigEdgeModelElement
+    implements VetoableChangeListener,
+	       DelayedVChangeListener,
+	       MouseListener,
+	       KeyListener,
+	       PropertyChangeListener
+{
 
     ////////////////////////////////////////////////////////////////     
     // constants
@@ -76,11 +83,15 @@ public class FigEdgeNote extends FigEdgeModelElement implements VetoableChangeLi
      */
     public FigEdgeNote(Object fromNode, Object toNode) {
         this();
-        Layer lay = ProjectManager.getManager().getCurrentProject().getActiveDiagram().getLayer();
+        Layer lay =
+	    ProjectManager.getManager().getCurrentProject()
+	    .getActiveDiagram().getLayer();
         setLayer(lay);
         Fig destFig = lay.presentationFor(toNode);
         Fig sourceFig = lay.presentationFor(fromNode);
-        if (destFig == null || sourceFig == null) throw new IllegalStateException("No destfig or sourcefig while creating FigEdgeNode");
+        if (destFig == null || sourceFig == null)
+	    throw new IllegalStateException("No destfig or sourcefig while "
+					    + "creating FigEdgeNode");
         setDestFigNode((FigNode) destFig);
         setDestPortFig(destFig);
         setSourceFigNode((FigNode) sourceFig);

@@ -1,4 +1,4 @@
-// $Id: ArgoModule.java,v 1.7 2003/06/29 23:53:41 linus Exp $
+// $Id: ArgoModule.java,v 1.8 2003/06/30 18:00:15 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public interface ArgoModule {
 
     /** Define a static log4j category variable for ArgoUML configuration.
      */
-    public final static Logger cat = 
+    public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.modules");
     // TODO:  JDK 1.2 seems to not return the package name if
     // not running from a jar.

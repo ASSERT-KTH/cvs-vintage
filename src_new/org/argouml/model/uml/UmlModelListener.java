@@ -1,4 +1,4 @@
-// $Id: UmlModelListener.java,v 1.15 2003/06/29 23:46:41 linus Exp $
+// $Id: UmlModelListener.java,v 1.16 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model.uml;
 
 import org.apache.log4j.Category;
+import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 
 import ru.novosoft.uml.MElementEvent;
@@ -119,9 +120,15 @@ public class UmlModelListener implements MElementListener {
 	// Should this be a property change event?
 	//
 
-	if (mee.getAddedValue() != null || mee.getRemovedValue() != null || (mee.getNewValue() != null && !mee.getNewValue().equals(mee.getOldValue()))) {
-	    if (ProjectManager.getManager().getCurrentProject() != null)
-		ProjectManager.getManager().getCurrentProject().setNeedsSave(true);
+	if (mee.getAddedValue() != null
+	    || mee.getRemovedValue() != null
+	    || (mee.getNewValue() != null
+		&& !mee.getNewValue().equals(mee.getOldValue())))
+	{
+	    Project cp = ProjectManager.getManager().getCurrentProject();
+
+	    if (cp != null)
+		cp.setNeedsSave(true);
 	}
 	
 	

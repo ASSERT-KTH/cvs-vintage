@@ -1,4 +1,4 @@
-// $Id: IllegalModelElementConnectionException.java,v 1.2 2003/06/29 23:46:41 linus Exp $
+// $Id: IllegalModelElementConnectionException.java,v 1.3 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,14 +37,18 @@ package org.argouml.model.uml;
 public class IllegalModelElementConnectionException extends UmlException {
     
     /**
-     * Creates a new instance of <code>IllegalModelElementConnection</code> without detail message.
+     * Creates a new instance of
+     * <code>IllegalModelElementConnection</code> without detail
+     * message.
      */
     public IllegalModelElementConnectionException() {
     }
     
     
     /**
-     * Constructs an instance of <code>IllegalModelElementConnection</code> with the specified detail message.
+     * Constructs an instance of
+     * <code>IllegalModelElementConnection</code> with the specified
+     * detail message.
      * @param msg the detail message.
      */
     public IllegalModelElementConnectionException(String msg) {
@@ -53,7 +57,9 @@ public class IllegalModelElementConnectionException extends UmlException {
     
     
     /**
-     * Constructs an instance of <code>IllegalModelElementConnection</code> with the specified detail message.
+     * Constructs an instance of
+     * <code>IllegalModelElementConnection</code> with the specified
+     * detail message.
      * @param msg the detail message.
      */
     public IllegalModelElementConnectionException(String msg, Throwable cause) {

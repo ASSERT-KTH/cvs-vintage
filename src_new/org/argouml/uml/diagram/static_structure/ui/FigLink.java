@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.5 2003/06/29 23:52:19 linus Exp $
+// $Id: FigLink.java,v 1.6 2003/06/30 18:00:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigLink
 // Original Author: your email address here
 
-// $Id: FigLink.java,v 1.5 2003/06/29 23:52:19 linus Exp $
+// $Id: FigLink.java,v 1.6 2003/06/30 18:00:34 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -61,7 +61,8 @@ public class FigLink extends FigEdgeModelElement {
      */
     protected Object getDestination() {
         if (getOwner() != null) {
-            return CommonBehaviorHelper.getHelper().getDestination((MLink) getOwner());
+            return CommonBehaviorHelper.getHelper()
+		.getDestination((MLink) getOwner());
         }
         return null;
     }
@@ -71,7 +72,8 @@ public class FigLink extends FigEdgeModelElement {
      */
     protected Object getSource() {
         if (getOwner() != null) {
-            return CommonBehaviorHelper.getHelper().getSource((MLink) getOwner());
+            return CommonBehaviorHelper.getHelper()
+		.getSource((MLink) getOwner());
         }
         return null;
     }

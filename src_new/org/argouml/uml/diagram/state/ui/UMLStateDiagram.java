@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.30 2003/06/29 23:52:18 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.31 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,13 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.30 2003/06/29 23:52:18 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.31 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
 import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
-import javax.swing.JToolBar;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
@@ -114,8 +113,8 @@ public class UMLStateDiagram extends UMLDiagram {
 
     protected static int _StateDiagramSerial = 1;
     /** 
-     *  this constructor is used to build a dummy state diagram so that a project
-     *  will load properly.
+     *  this constructor is used to build a dummy state diagram so
+     *  that a project will load properly.
      */
     public UMLStateDiagram() {
 
@@ -183,21 +182,27 @@ public class UMLStateDiagram extends UMLDiagram {
                 setup(contextNamespace, sm);
             }
         } else
-            throw new IllegalStateException("Cannot find context namespace while initializing statediagram");
+            throw new IllegalStateException("Cannot find context namespace "
+					    + "while initializing "
+					    + "statediagram");
     }
 
-    /** method to perform a number of important initializations of a StateDiagram. 
+    /** method to perform a number of important initializations of a
+     * StateDiagram.
      * 
      * each diagram type has a similar <I>UMLxxxDiagram</I> class.
      *
-     * @param m  MClass from the model in NSUML...connects the class to the State diagram.
+     * @param m MClass from the model in NSUML...connects the class to
+     * the State diagram.
      * @param sm MStateMachine from the model in NSUML...
-     * @modified changed <I>lay</I> from <I>LayerPerspective</I> to <I>LayerPerspectiveMutable</I>. 
-     *           This class is a child of <I>LayerPerspective</I> and was implemented 
-     *           to correct some difficulties in changing the model. <I>lay</I> is used 
-     *           mainly in <I>LayerManager</I>(GEF) to control the adding, changing and 
-     *           deleting layers on the diagram...
-     *           psager@tigris.org   Jan. 24, 2oo2
+     * @modified changed <I>lay</I> from <I>LayerPerspective</I> to
+     * <I>LayerPerspectiveMutable</I>.  This class is a child of
+     * <I>LayerPerspective</I> and was implemented to correct some
+     * difficulties in changing the model. <I>lay</I> is used mainly
+     * in <I>LayerManager</I>(GEF) to control the adding, changing and
+     * deleting layers on the diagram...
+     *
+     * @author psager@tigris.org Jan. 24, 2oo2
      */
     public void setup(MNamespace m, MStateMachine sm) {
         setNamespace(m);
@@ -232,7 +237,8 @@ public class UMLStateDiagram extends UMLDiagram {
     }
 
     /**
-     * Get the actions from which to create a toolbar or equivilent graphic triggers
+     * Get the actions from which to create a toolbar or equivilent
+     * graphic triggers
      */
     protected Object[] getUmlActions() {
         Object actions[] = {
@@ -266,7 +272,8 @@ public class UMLStateDiagram extends UMLDiagram {
 
     /**
      * This diagram listens to NSUML events from its Statemachine;
-     * When the Statemachine is removed, we also want to delete this diagram too.
+     * When the Statemachine is removed, we also want to delete this
+     * diagram too.
      */
     public void removed(MElementEvent e) {
 

@@ -1,4 +1,4 @@
-// $Id: InterfaceCodePiece.java,v 1.7 2003/06/29 23:47:19 linus Exp $
+// $Id: InterfaceCodePiece.java,v 1.8 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,6 @@
 
 
 package org.argouml.language.java.generator;
-
-import org.argouml.model.uml.UmlFactory;
 
 import java.io.*;
 import java.util.*;
@@ -116,7 +114,8 @@ public class InterfaceCodePiece extends NamedCodePiece
 
 	if (mInterface != null) {
 	    parseStateStack.push(new ParseState(mInterface));
-	    StringBuffer sbText = GeneratorJava.getInstance().generateClassifierStart(mInterface);
+	    StringBuffer sbText =
+		GeneratorJava.getInstance().generateClassifierStart(mInterface);
 	    if (sbText != null) {
 		writer.write (sbText.toString());
 	    }

@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityManager.java,v 1.12 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoSecurityManager.java,v 1.13 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,8 @@ package org.argouml.application.security;
 
 // Import the following classes fully qualified to ensure that
 // no one can short-circuit our intended inheritance.
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
 import java.util.PropertyPermission;
 import java.security.Permission;
-import java.io.FileDescriptor;
-import java.net.InetAddress;
 
 import org.apache.log4j.Category;
 
@@ -66,11 +61,11 @@ public final class ArgoSecurityManager extends SecurityManager
     private boolean _allowExit = false;
 
     /** The only allowed instance. */
-    private final static ArgoSecurityManager SINGLETON =
+    private static final ArgoSecurityManager SINGLETON =
 	new ArgoSecurityManager();
 
     /** Accessor for the instance. */
-    public final static ArgoSecurityManager getInstance() {
+    public static final ArgoSecurityManager getInstance() {
         return SINGLETON;
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.29 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelDataType.java,v 1.30 2003/06/30 18:00:38 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import org.argouml.ui.targetmanager.TargetManager;

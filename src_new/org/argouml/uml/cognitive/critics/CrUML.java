@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.18 2003/06/29 23:52:59 linus Exp $
+// $Id: CrUML.java,v 1.19 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.18 2003/06/29 23:52:59 linus Exp $
+// $Id: CrUML.java,v 1.19 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,7 +33,6 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
 import org.tigris.gef.util.*;
-import org.tigris.gef.base.Diagram;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.*;
@@ -189,7 +188,8 @@ public class CrUML extends Critic {
 	StringBuffer beginning = new StringBuffer("");
 	int matchPos = res.indexOf(OCL_START);
 
-	// replace all occurances of OFFENDER with the name of the first offender
+	// replace all occurances of OFFENDER with the name of the
+	// first offender
 	while (matchPos != -1) {
 	    int endExpr = res.indexOf(OCL_END, matchPos + 1);
 	    // check if there is no OCL_END; if so, the critic expression 

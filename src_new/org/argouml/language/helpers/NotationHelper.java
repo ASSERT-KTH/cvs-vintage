@@ -1,4 +1,4 @@
-// $Id: NotationHelper.java,v 1.5 2003/06/29 23:47:18 linus Exp $
+// $Id: NotationHelper.java,v 1.6 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,7 +153,9 @@ public abstract class NotationHelper
     }
 
     public String generateStereotype(MStereotype s) {
-	return getLeftGuillemot() + generateName(s.getName()) + getRightGuillemot();
+	return getLeftGuillemot()
+	    + generateName(s.getName())
+	    + getRightGuillemot();
     }
 
     public String generateExpression(MExpression expr) {

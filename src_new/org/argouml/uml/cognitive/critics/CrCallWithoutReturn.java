@@ -1,4 +1,4 @@
-// $Id: CrCallWithoutReturn.java,v 1.4 2003/06/30 14:57:02 linus Exp $
+// $Id: CrCallWithoutReturn.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCallWithoutReturn.java
 // Classes: CrCallWithoutReturn
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrCallWithoutReturn.java,v 1.4 2003/06/30 14:57:02 linus Exp $
+// $Id: CrCallWithoutReturn.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -98,20 +98,29 @@ public class CrCallWithoutReturn extends CrUML {
 		    Iterator it = col.iterator();
 		    while (it.hasNext()) {
 			MStimulus ms = (MStimulus) it.next();
-			if (ms.getDispatchAction() instanceof MCallAction || ms.getDispatchAction() instanceof MSendAction) {
+			if (ms.getDispatchAction() instanceof MCallAction
+			    || ms.getDispatchAction() instanceof MSendAction)
+			{
 			    found = true;
-			    Vector edges = ((FigSeqObject) fsl.getDestFigNode()).getFigEdges();
+			    Vector edges =
+				((FigSeqObject) fsl.getDestFigNode())
+				.getFigEdges();
 			    for (int j = 0; j < edges.size(); j++) {
-				FigSeqLink second = (FigSeqLink) edges.elementAt(j);
+				FigSeqLink second =
+				    (FigSeqLink) edges.elementAt(j);
 				MLink ml2 = (MLink) second.getOwner();
 				if (ml2.getStimuli() != null) {
 				    Collection col2 = ml2.getStimuli();
 				    Iterator it2 = col2.iterator();
 				    while (it2.hasNext()) {
 					MStimulus ms2 = (MStimulus) it2.next();
-					if (ms2.getDispatchAction() instanceof MReturnAction
-					    && second.getPortNumber(figs) > fsl.getPortNumber(figs)
-					    && ms.getSender() == ms2.getReceiver()) {
+					if ((ms2.getDispatchAction()
+					     instanceof MReturnAction)
+					    && (second.getPortNumber(figs)
+						> fsl.getPortNumber(figs))
+					    && (ms.getSender()
+						== ms2.getReceiver()))
+					{
 					    found = false;
 					}
 				    }

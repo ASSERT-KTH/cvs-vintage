@@ -1,4 +1,4 @@
-// $Id: ArgoClassLoader.java,v 1.3 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoClassLoader.java,v 1.4 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,19 +24,8 @@
 
 package org.argouml.application.security;
 
-// Import classes fully qualified to ensure that
-// no one can short-circuit our intended inheritance.
-import java.lang.System;
-import java.lang.Class;
-import java.lang.ClassLoader;
-import java.lang.String;
-import java.lang.Exception;
-import java.lang.ClassNotFoundException;
-import java.lang.SecurityManager;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
 import java.io.DataInputStream;
 
 

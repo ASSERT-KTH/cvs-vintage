@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.8 2003/06/29 23:53:43 linus Exp $
+// $Id: DismissToDoItemDialog.java,v 1.9 2003/06/30 18:00:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,8 @@ import org.argouml.cognitive.UnresolvableException;
 import org.argouml.ui.ProjectBrowser;
 
 public class DismissToDoItemDialog extends JDialog {
-    protected static Category cat = Category.getInstance(DismissToDoItemDialog.class);
+    protected static Category cat =
+	Category.getInstance(DismissToDoItemDialog.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -128,7 +129,8 @@ public class DismissToDoItemDialog extends JDialog {
 		    } else if (_explainButton.getModel().isSelected()) {
 			explain(e);
 		    } else {
-			cat.warn("DissmissToDoItemDialog: Unknown action: " + e);
+			cat.warn("DissmissToDoItemDialog: Unknown action: "
+				 + e);
 		    }
 		    setVisible(false);
 		    dispose();
@@ -172,7 +174,8 @@ public class DismissToDoItemDialog extends JDialog {
 
     private void badDec(ActionEvent e) {
 	//cat.debug("bad decision");
-	DesignIssuesDialog d = new DesignIssuesDialog(ProjectBrowser.getInstance());
+	DesignIssuesDialog d =
+	    new DesignIssuesDialog(ProjectBrowser.getInstance());
 	d.setVisible(true);
     }
 
@@ -185,7 +188,9 @@ public class DismissToDoItemDialog extends JDialog {
 	} catch (UnresolvableException ure) {
 	    cat.error("Resolve failed (ure): " + ure);
 	    // TODO: Should be internationalized
-	    JOptionPane.showMessageDialog(this, ure.getMessage(), "Dismiss failed", JOptionPane.ERROR_MESSAGE);
+	    JOptionPane.showMessageDialog(this, ure.getMessage(),
+					  "Dismiss failed",
+					  JOptionPane.ERROR_MESSAGE);
 	}
     }
 } /* end class DismissToDoItemDialog */

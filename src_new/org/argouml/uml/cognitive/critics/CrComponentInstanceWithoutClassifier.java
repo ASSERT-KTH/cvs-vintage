@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:00:05 linus Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.5 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 // File: CrCompInstanceWithoutNode.java
 // Classes: CrComponentInstanceWithoutClassifier
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:00:05 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -107,8 +106,11 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 		}
 		offs.addElement(fc);
 	    }
-	    else if (fc.getEnclosingFig() != null &&
-		     (((MComponentInstance) fc.getOwner()).getNodeInstance() == null)) {
+	    else if (fc.getEnclosingFig() != null 
+		     && ((((MComponentInstance)
+			   fc.getOwner()).getNodeInstance())
+			 == null))
+	    {
 		if (offs == null) {
 		    offs = new VectorSet();
 		    offs.addElement(dd);

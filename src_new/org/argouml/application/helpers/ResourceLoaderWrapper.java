@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.7 2003/06/29 23:53:42 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.8 2003/06/30 18:00:16 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,6 +101,20 @@ public final class ResourceLoaderWrapper {
     }
 
     /**
+     * Calculate the path to a look and feel object.
+     *
+     * @param classname The look and feel classname
+     * @param element The en part of the path.
+     * @returns the complete path.
+     */
+    private static String lookAndFeelPath(String classname, String element) {
+	return "/org/argouml/Images/plaf/"
+	    + classname.replace('.', '/')
+	    + "/toolbarButtonGraphics/"
+	    + element;
+    }
+
+    /**
      * Initializes the resourceloader.
      *
      * LookupIconResource checks if there are locations and extensions known. 
@@ -115,11 +129,16 @@ public final class ResourceLoaderWrapper {
         } else {
             lookAndFeelClassName = "javax.swing.plaf.metal.MetalLookAndFeel";
         }
-        String lookAndFeelGeneralImagePath = "/org/argouml/Images/plaf/" + lookAndFeelClassName.replace('.', '/') + "/toolbarButtonGraphics/general";
-        String lookAndFeelNavigationImagePath = "/org/argouml/Images/plaf/" + lookAndFeelClassName.replace('.', '/') + "/toolbarButtonGraphics/navigation";
-        String lookAndFeelDiagramImagePath = "/org/argouml/Images/plaf/" + lookAndFeelClassName.replace('.', '/') + "/toolbarButtonGraphics/argouml/diagrams";
-        String lookAndFeelElementImagePath = "/org/argouml/Images/plaf/" + lookAndFeelClassName.replace('.', '/') + "/toolbarButtonGraphics/argouml/elements";
-        String lookAndFeelArgoUmlImagePath = "/org/argouml/Images/plaf/" + lookAndFeelClassName.replace('.', '/') + "/toolbarButtonGraphics/argouml";
+        String lookAndFeelGeneralImagePath =
+	    lookAndFeelPath(lookAndFeelClassName, "general");
+        String lookAndFeelNavigationImagePath =
+	    lookAndFeelPath(lookAndFeelClassName, "navigation");
+        String lookAndFeelDiagramImagePath =
+	    lookAndFeelPath(lookAndFeelClassName, "argouml/diagrams");
+        String lookAndFeelElementImagePath =
+	    lookAndFeelPath(lookAndFeelClassName, "argouml/elements");
+        String lookAndFeelArgoUmlImagePath =
+	    lookAndFeelPath(lookAndFeelClassName, "argouml");
         ResourceLoader.addResourceExtension("gif");
         ResourceLoader.addResourceLocation(lookAndFeelGeneralImagePath);
         ResourceLoader.addResourceLocation(lookAndFeelNavigationImagePath);

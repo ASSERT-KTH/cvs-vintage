@@ -1,4 +1,4 @@
-// $Id: CrSubclassReference.java,v 1.5 2003/06/30 15:16:52 linus Exp $
+// $Id: CrSubclassReference.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.5 2003/06/30 15:16:52 linus Exp $
+// $Id: CrSubclassReference.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -81,7 +81,8 @@ public class CrSubclassReference extends CrUML {
 	Collection asc = cls.getAssociationEnds();
 	if (asc == null || asc.size() == 0) return null;
 
-	java.util.Enumeration descendEnum = GenDescendantClasses.SINGLETON.gen(cls);
+	java.util.Enumeration descendEnum =
+	    GenDescendantClasses.SINGLETON.gen(cls);
 	if (!descendEnum.hasMoreElements()) return null;
 	VectorSet descendants = new VectorSet();
 	while (descendEnum.hasMoreElements())

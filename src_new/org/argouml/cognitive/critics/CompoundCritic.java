@@ -1,4 +1,4 @@
-// $Id: CompoundCritic.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CompoundCritic.java,v 1.7 2003/06/30 18:00:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CompoundCritic.java,v 1.7 2003/06/30 18:00:17 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -116,13 +116,11 @@ public class CompoundCritic extends Critic {
     }
 
     public Vector getSupportedDecisions() {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic getSupportedDecisions");
+	throw new UnsupportedOperationException();
     }
 
     public void addSupportedDecision(Decision d) {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic addSupportedDecision");
+	throw new UnsupportedOperationException();
     }
 
     public boolean supports(Goal g) {
@@ -135,13 +133,11 @@ public class CompoundCritic extends Critic {
     }
 
     public Vector getSupportedGoals() {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic getSupportedGoals");
+	throw new UnsupportedOperationException();
     }
 
     public void addSupportedGoal(Goal g) {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic addSupportedGoal");
+	throw new UnsupportedOperationException();
     }
 
     public boolean containsKnowledgeType(String type) {
@@ -152,19 +148,17 @@ public class CompoundCritic extends Critic {
 	}
 	return false;
     }
+
     public void addKnowledgeType(String type) {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic addKnowledgeType");
+	throw new UnsupportedOperationException();
     }
   
     public String expand(String desc, VectorSet offs) {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic expand");
+	throw new UnsupportedOperationException();
     }
 
     public Icon getClarifier() {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic getClarifier");
+	throw new UnsupportedOperationException();
     }
   
 
@@ -188,8 +182,7 @@ public class CompoundCritic extends Critic {
     // design feedback
 
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
-	throw new UnsupportedOperationException("this method should never be called: " +
-						"CompoundCritic toDoItem()");
+	throw new UnsupportedOperationException();
     }
 
 } /* end class CompoundCritic */

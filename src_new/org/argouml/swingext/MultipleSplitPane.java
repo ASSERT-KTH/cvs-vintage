@@ -1,4 +1,4 @@
-// $Id: MultipleSplitPane.java,v 1.4 2003/06/29 23:47:54 linus Exp $
+// $Id: MultipleSplitPane.java,v 1.5 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Similar to the standard java class <code>JSplitPane</code> but allows the number of panes to 
- * be set in the constructor.
+ * Similar to the standard java class <code>JSplitPane</code> but
+ * allows the number of panes to be set in the constructor.
  *
  * @author Bob Tarling
  */
 public class MultipleSplitPane extends JComponent {
-    final static public Orientation HORIZONTAL_SPLIT = Horizontal.getInstance();
-    final static public Orientation VERTICAL_SPLIT = Vertical.getInstance();
+    public static final Orientation HORIZONTAL_SPLIT = Horizontal.getInstance();
+    public static final Orientation VERTICAL_SPLIT = Vertical.getInstance();
 
     private Splitter[] splitterArray;
 
@@ -46,7 +46,8 @@ public class MultipleSplitPane extends JComponent {
         this(componentArray.length);
     }
 
-    public MultipleSplitPane(Component componentArray[], Orientation orientation) {
+    public MultipleSplitPane(Component componentArray[],
+			     Orientation orientation) {
         this(componentArray.length, orientation);
     }
 
@@ -73,10 +74,14 @@ public class MultipleSplitPane extends JComponent {
         if (!(comp instanceof Splitter)) {
             SplitterLayout splitterLayout = (SplitterLayout) getLayout();
             if (index > 0) {
-                index = splitterLayout.getComponentPosition(splitterArray[index - 1]) + 1;
+                index =
+		    splitterLayout
+		    .getComponentPosition(splitterArray[index - 1]) + 1;
             }
         }
-        if (index < this.getComponentCount() && !(this.getComponent(index) instanceof Splitter)) {
+        if (index < this.getComponentCount()
+	    && !(this.getComponent(index) instanceof Splitter))
+	{
             super.remove(index);
         }
         return super.add(comp, index);
@@ -86,10 +91,14 @@ public class MultipleSplitPane extends JComponent {
         if (!(comp instanceof Splitter)) {
             SplitterLayout splitterLayout = (SplitterLayout) getLayout();
             if (index > 0) {
-                index = splitterLayout.getComponentPosition(splitterArray[index - 1]) + 1;
+                index =
+		    splitterLayout.
+		    getComponentPosition(splitterArray[index - 1]) + 1;
             }
         }
-        if (index < this.getComponentCount() && !(this.getComponent(index) instanceof Splitter)) {
+        if (index < this.getComponentCount()
+	    && !(this.getComponent(index) instanceof Splitter))
+	{
             super.remove(index);
         }
         super.add(comp, constraints, index);
@@ -98,11 +107,17 @@ public class MultipleSplitPane extends JComponent {
     public void remove(int index) {
         SplitterLayout splitterLayout = (SplitterLayout) getLayout();
         if (index >= splitterArray.length) {
-            index = splitterLayout.getComponentPosition(splitterArray[index - 1]) + 1;
+            index =
+		splitterLayout.getComponentPosition(splitterArray[index - 1])
+		+ 1;
         }
         else {
-            index = splitterLayout.getComponentPosition(splitterArray[index]) - 1;
+            index =
+		splitterLayout.getComponentPosition(splitterArray[index])
+		- 1;
         }
-        if (index >= 0 && !(this.getComponent(index) instanceof Splitter)) super.remove(index);
+        if (index >= 0
+	    && !(this.getComponent(index) instanceof Splitter))
+	    super.remove(index);
     }
 }

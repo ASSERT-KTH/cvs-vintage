@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.22 2003/06/29 23:50:11 linus Exp $
+// $Id: PropPanelLink.java,v 1.23 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,13 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.22 2003/06/29 23:50:11 linus Exp $
+// $Id: PropPanelLink.java,v 1.23 2003/06/30 18:00:36 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;

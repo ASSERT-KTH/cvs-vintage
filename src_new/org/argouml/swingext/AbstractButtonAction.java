@@ -1,4 +1,4 @@
-// $Id: AbstractButtonAction.java,v 1.2 2003/06/29 23:47:53 linus Exp $
+// $Id: AbstractButtonAction.java,v 1.3 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,10 @@ import javax.swing.Icon;
  *
  * @author Bob Tarling
  */
-abstract public class AbstractButtonAction extends AbstractAction implements ButtonAction {
+public abstract class AbstractButtonAction
+    extends AbstractAction
+    implements ButtonAction
+{
     
     private boolean modal;
     private int lockMethod = NONE;
@@ -64,7 +67,8 @@ abstract public class AbstractButtonAction extends AbstractAction implements But
     /**
      * Creates a new instance of AbstractButtonAction
      */
-    public AbstractButtonAction(String name, Icon icon, boolean modal, int lockMethod) {
+    public AbstractButtonAction(String name, Icon icon,
+				boolean modal, int lockMethod) {
         super(name, icon);
         this.modal = modal;
         this.lockMethod = lockMethod;

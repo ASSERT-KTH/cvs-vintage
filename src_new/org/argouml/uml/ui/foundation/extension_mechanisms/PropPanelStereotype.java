@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.23 2003/06/29 23:50:44 linus Exp $
+// $Id: PropPanelStereotype.java,v 1.24 2003/06/30 18:00:38 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 
 import org.argouml.ui.targetmanager.TargetManager;

@@ -1,4 +1,4 @@
-// $Id: PackageCodePiece.java,v 1.5 2003/06/29 23:47:19 linus Exp $
+// $Id: PackageCodePiece.java,v 1.6 2003/06/30 18:00:19 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,8 @@ public class PackageCodePiece extends NamedCodePiece
 
 	if (!(mNamespace instanceof MModel)) {
 	    writer.write("package ");
-	    writer.write(GeneratorJava.getInstance().getPackageName(mNamespace));
+	    writer.write(GeneratorJava.getInstance()
+			 .getPackageName(mNamespace));
 	    writer.write(";");
 	}
 	// fast forward original code (overwriting)

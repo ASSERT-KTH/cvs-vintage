@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.2 2003/06/29 23:47:01 linus Exp $
+// $Id: ActionExportXMI.java,v 1.3 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionExportXMI.java,v 1.2 2003/06/29 23:47:01 linus Exp $
+// $Id: ActionExportXMI.java,v 1.3 2003/06/30 18:00:23 linus Exp $
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
@@ -73,7 +73,8 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
     }
 
     /**
-     * @see org.argouml.application.api.PluggableMenu#getMenuItem(java.lang.Object[])
+     * @see
+     * org.argouml.application.api.PluggableMenu#getMenuItem(java.lang.Object[])
      */
     public JMenuItem getMenuItem(Object[] context) {
         if (!inContext(context)) {
@@ -84,7 +85,9 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
     }
 
     /**
-     * @see org.argouml.application.api.PluggableMenu#buildContext(javax.swing.JMenuItem, java.lang.String)
+     * @see
+     * org.argouml.application.api.PluggableMenu#buildContext(javax.swing.JMenuItem,
+     * java.lang.String)
      */
     public Object[] buildContext(JMenuItem parentMenuItem, String menuType) {
         return new Object[] {
@@ -166,7 +169,9 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
     }
 
     /**
-     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(java.util.Vector, java.lang.Object)
+     * @see
+     * org.argouml.application.api.ArgoModule#getModulePopUpActions(java.util.Vector,
+     * java.lang.Object)
      */
     public Vector getModulePopUpActions(Vector popUpActions, Object context) {
         return null;
@@ -180,17 +185,18 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
     }
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
         // show a chooser dialog for the file name, only xmi is allowed
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle(
-			       Translator.localize(
-						   "CoreMenu",
-						   "action.export-project-as-xmi"));
-        chooser.setApproveButtonText(
-				     Translator.localize("CoreMenu", "filechooser.export"));
+        chooser.setDialogTitle(Translator.localize(
+				       "CoreMenu",
+				       "action.export-project-as-xmi"));
+        chooser.setApproveButtonText(Translator.localize(
+				             "CoreMenu",
+					     "filechooser.export"));
         chooser.setFileFilter(new FileFilter() 
 	    {
 		public boolean accept(File file) {
@@ -215,22 +221,22 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
                         member.save(new FileWriter(selectedFile));
                     } catch (Exception ex) {
                         String sMessage =
-                            MessageFormat.format(
-						 Argo.localize(
-							       "Actions",
-							       "optionpane.save-project-general-exception"),
+                            MessageFormat.format(Argo.localize(
+				  "Actions",
+				  "optionpane.save-project-general-exception"),
 						 new Object[] {
 						     ex.getMessage()
 						 });
 
-                        JOptionPane.showMessageDialog(
-						      ProjectBrowser.getInstance(),
-						      sMessage,
-						      Argo.localize(
-								    "Actions",
-								    "optionpane.save-project-general-exception-title"),
-						      JOptionPane.ERROR_MESSAGE);
-
+                        JOptionPane
+			    .showMessageDialog(ProjectBrowser
+					       .getInstance(),
+					       sMessage,
+					       Argo.localize(
+						       "Actions",
+						       "optionpane.save-project-general-exception-title"),
+					       JOptionPane.ERROR_MESSAGE);
+			
                         log.error(sMessage, ex);
                     }
                 }

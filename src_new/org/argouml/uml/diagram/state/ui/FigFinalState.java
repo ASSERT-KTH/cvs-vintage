@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.10 2003/06/29 23:52:18 linus Exp $
+// $Id: FigFinalState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.10 2003/06/29 23:52:18 linus Exp $
+// $Id: FigFinalState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -228,7 +228,13 @@ public class FigFinalState extends FigStateVertex {
 	int MAXPOINTS = 20;
 	Point point = null;
 	for (int i = 0; i < MAXPOINTS; i++) {
-	    point = new Point((int) (cx + Math.cos(2 * Math.PI / MAXPOINTS * i) * radius), (int) (cy + Math.sin(2 * Math.PI / MAXPOINTS * i) * radius));
+	    point =
+		new Point((int)
+			  (cx
+			   + Math.cos(2 * Math.PI / MAXPOINTS * i) * radius),
+			  (int)
+			  (cy
+			   + Math.sin(2 * Math.PI / MAXPOINTS * i) * radius));
 	    ret.add(point);
 	}
 	return ret;

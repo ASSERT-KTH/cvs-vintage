@@ -1,4 +1,4 @@
-// $Id: ChildGenFind.java,v 1.6 2003/06/29 23:52:58 linus Exp $
+// $Id: ChildGenFind.java,v 1.7 2003/06/30 18:00:26 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.6 2003/06/29 23:52:58 linus Exp $
+// $Id: ChildGenFind.java,v 1.7 2003/06/30 18:00:26 linus Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -37,7 +37,6 @@ import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.model_management.*;
 
 import org.tigris.gef.base.Diagram;
-import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.util.*;
 
 import org.argouml.kernel.*;
@@ -127,8 +126,9 @@ public class ChildGenFind implements ChildGenerator {
 	    res.addAll(d.getGraphModel().getNodes());
 	    res.addAll(d.getGraphModel().getEdges());
 	    return res.elements();
-	    //return new EnumerationComposite(d.getGraphModel().getNodes().elements(),
-	    //			      d.getGraphModel().getEdges().elements());
+	    //return new
+	    //EnumerationComposite(d.getGraphModel().getNodes().elements(),
+	    //d.getGraphModel().getEdges().elements());
 	}
 
 	if (o instanceof MState) {

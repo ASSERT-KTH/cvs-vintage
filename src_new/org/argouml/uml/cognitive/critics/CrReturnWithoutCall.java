@@ -1,4 +1,4 @@
-// $Id: CrReturnWithoutCall.java,v 1.5 2003/06/30 15:10:29 linus Exp $
+// $Id: CrReturnWithoutCall.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrReturnWithoutCall.java
 // Classes: CrReturnWithoutCall
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrReturnWithoutCall.java,v 1.5 2003/06/30 15:10:29 linus Exp $
+// $Id: CrReturnWithoutCall.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -94,20 +94,34 @@ public class CrReturnWithoutCall extends CrUML {
 		    Iterator it = col.iterator();
 		    while (it.hasNext()) {
 			MStimulus ms = (MStimulus) it.next();
-			if (ms.getDispatchAction() != null && ms.getDispatchAction() instanceof MReturnAction) {
+			if (ms.getDispatchAction() != null
+			    && ms.getDispatchAction() instanceof MReturnAction)
+			{
 			    found = true;
-			    Vector edges = ((FigSeqObject) fsl.getDestFigNode()).getFigEdges();
+			    Vector edges =
+				((FigSeqObject) fsl.getDestFigNode())
+				.getFigEdges();
 			    for (int j = 0; j < edges.size(); j++) {
-				FigSeqLink second = (FigSeqLink) edges.elementAt(j);
+				FigSeqLink second =
+				    (FigSeqLink) edges.elementAt(j);
 				MLink ml2 = (MLink) second.getOwner();
 				if (ml2.getStimuli() != null) {
 				    Collection col2 = ml2.getStimuli();
 				    Iterator it2 = col2.iterator();
 				    while (it2.hasNext()) {
 					MStimulus ms2 = (MStimulus) it2.next();
-					if (ms2.getDispatchAction() != null && (ms2.getDispatchAction() instanceof MCallAction || ms2.getDispatchAction() instanceof MSendAction)
-					    && second.getPortNumber(figs) < fsl.getPortNumber(figs)
-					    && ms.getSender() == ms2.getReceiver()) {
+					if (ms2.getDispatchAction() != null
+					    && ((ms2.getDispatchAction()
+						 instanceof
+						 MCallAction)
+						|| (ms2.getDispatchAction()
+						    instanceof
+						    MSendAction))
+					    && (second.getPortNumber(figs)
+						< fsl.getPortNumber(figs))
+					    && (ms.getSender()
+						== ms2.getReceiver()))
+					{
 					    found = false;
 					}
 

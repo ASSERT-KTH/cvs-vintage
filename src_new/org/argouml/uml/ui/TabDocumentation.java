@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.19 2003/06/29 23:50:03 linus Exp $
+// $Id: TabDocumentation.java,v 1.20 2003/06/30 18:00:36 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.swingext.Horizontal;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.swingext.Vertical;
-import org.argouml.util.ConfigLoader;
 import org.tigris.gef.presentation.Fig;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.4 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.4 2003/06/30 18:00:18 linus Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -40,7 +40,6 @@ import org.argouml.kernel.*;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.cognitive.*;
 import org.argouml.uml.cognitive.critics.*;
-import org.argouml.uml.MMUtil;
 
 // related to issue 570
 
@@ -59,7 +58,8 @@ public class CrMultipleRealization extends CrUML {
 	if (!(dm instanceof MInterface)) return NO_PROBLEM;
 	MInterface inter = (MInterface) dm;
    
-	Collection realize = UmlHelper.getHelper().getCore().getSpecifications(inter);
+	Collection realize =
+	    UmlHelper.getHelper().getCore().getSpecifications(inter);
 
 	if (realize != null && realize.size() > 0) return PROBLEM_FOUND;
 	return NO_PROBLEM;

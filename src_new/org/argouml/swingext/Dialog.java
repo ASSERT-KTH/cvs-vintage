@@ -1,4 +1,4 @@
-// $Id: Dialog.java,v 1.5 2003/06/29 23:47:53 linus Exp $
+// $Id: Dialog.java,v 1.6 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,13 +111,17 @@ public abstract class Dialog extends JDialog implements ActionListener {
             
         _mainPanel = new JPanel();
         _mainPanel.setLayout(new BorderLayout(0, bottomBorder));
-        _mainPanel.setBorder(BorderFactory.createEmptyBorder(
-							     topBorder, leftBorder, bottomBorder, rightBorder));
+        _mainPanel.setBorder(BorderFactory.createEmptyBorder(topBorder,
+							     leftBorder,
+							     bottomBorder,
+							     rightBorder));
         getContentPane().add(_mainPanel);
 
-        _buttonPanel = new JPanel(new SerialLayout(
-						   Horizontal.getInstance(), SerialLayout.EAST, 
-						   SerialLayout.LEFTTORIGHT, SerialLayout.TOP, buttonGap));
+        _buttonPanel = new JPanel(new SerialLayout(Horizontal.getInstance(),
+						   SerialLayout.EAST, 
+						   SerialLayout.LEFTTORIGHT,
+						   SerialLayout.TOP,
+						   buttonGap));
         _mainPanel.add(_buttonPanel, BorderLayout.SOUTH);
 
         for (int i = 0; i < buttons.length; ++i) {
@@ -281,8 +285,10 @@ public abstract class Dialog extends JDialog implements ActionListener {
     private void centerOnParent() {
         Dimension size = getSize();
         Dimension p = getParent().getSize();
-        int x = (getParent().getX() - size.width) + (int) ((size.width + p.width) / 2d);
-        int y = (getParent().getY() - size.height) + (int) ((size.height + p.height) / 2d);
+        int x = (getParent().getX() - size.width)
+	    + (int) ((size.width + p.width) / 2d);
+        int y = (getParent().getY() - size.height)
+	    + (int) ((size.height + p.height) / 2d);
         setLocation(x, y);
     }
         

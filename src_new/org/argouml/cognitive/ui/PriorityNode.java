@@ -1,4 +1,4 @@
-// $Id: PriorityNode.java,v 1.4 2003/06/29 23:53:43 linus Exp $
+// $Id: PriorityNode.java,v 1.5 2003/06/30 18:00:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,12 @@ public class PriorityNode {
     public static Vector getPriorities() {
 	if (_PRIORITIES == null) {
 	    _PRIORITIES = new Vector();
-	    _PRIORITIES.addElement(new PriorityNode(high, ToDoItem.HIGH_PRIORITY));
-	    _PRIORITIES.addElement(new PriorityNode(medium, ToDoItem.MED_PRIORITY));
-	    _PRIORITIES.addElement(new PriorityNode(low, ToDoItem.LOW_PRIORITY));
+	    _PRIORITIES.addElement(new PriorityNode(high,
+						    ToDoItem.HIGH_PRIORITY));
+	    _PRIORITIES.addElement(new PriorityNode(medium,
+						    ToDoItem.MED_PRIORITY));
+	    _PRIORITIES.addElement(new PriorityNode(low,
+						    ToDoItem.LOW_PRIORITY));
 	}
 	return _PRIORITIES;
     }

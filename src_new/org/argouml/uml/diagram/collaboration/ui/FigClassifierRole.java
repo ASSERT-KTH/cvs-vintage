@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.17 2003/06/29 23:52:15 linus Exp $
+// $Id: FigClassifierRole.java,v 1.18 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.17 2003/06/29 23:52:15 linus Exp $
+// $Id: FigClassifierRole.java,v 1.18 2003/06/30 18:00:30 linus Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -447,7 +447,8 @@ public class FigClassifierRole extends FigNodeModelElement {
 		ParserDisplay.SINGLETON.parseClassifierRole(cls, s);
 		ProjectBrowser.getInstance().getStatusBar().showStatus("");
 	    } catch (ParseException pe) {
-		ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+		ProjectBrowser.getInstance().getStatusBar()
+		    .showStatus("Error: " + pe + " at " + pe.getErrorOffset());
 	    }
         }
     }
@@ -495,12 +496,16 @@ public class FigClassifierRole extends FigNodeModelElement {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see
+     * org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
      */
     protected void modelChanged(MElementEvent mee) {
         // base should get it's own figtext and it's own update method
         // TODO: remove the mee == null as soon as everything is migrated
-        if (mee == null || mee.getName().equals("base") && mee.getSource() == getOwner()) { 
+        if (mee == null
+	    || mee.getName().equals("base")
+	    && mee.getSource() == getOwner())
+	{
             updateNameText();
         } else
             super.modelChanged(mee);

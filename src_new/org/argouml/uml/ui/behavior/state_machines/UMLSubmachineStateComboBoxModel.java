@@ -1,4 +1,4 @@
-// $Id: UMLSubmachineStateComboBoxModel.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLSubmachineStateComboBoxModel.java,v 1.4 2003/06/30 18:00:37 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MSubmachineState;
 

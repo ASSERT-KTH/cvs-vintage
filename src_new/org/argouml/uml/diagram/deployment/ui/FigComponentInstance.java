@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.13 2003/06/29 23:52:15 linus Exp $
+// $Id: FigComponentInstance.java,v 1.14 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponentInstance.java
 // Classes: FigComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponentInstance.java,v 1.13 2003/06/29 23:52:15 linus Exp $
+// $Id: FigComponentInstance.java,v 1.14 2003/06/30 18:00:30 linus Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -50,7 +50,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -250,10 +249,12 @@ public class FigComponentInstance extends FigNodeModelElement {
           MComponentInstance me = (MComponentInstance) getOwner();
           MNodeInstance mnode = null;
         
-          if (encloser != null && (encloser.getOwner() instanceof MNodeInstance)) {
+          if (encloser != null
+	  && (encloser.getOwner() instanceof MNodeInstance)) {
 	  mnode = (MNodeInstance) encloser.getOwner();
           }
-          if (encloser != null && (encloser.getOwner() instanceof MComponentInstance)) {
+          if (encloser != null
+	  && (encloser.getOwner() instanceof MComponentInstance)) {
 	  MComponentInstance comp = (MComponentInstance) encloser.getOwner();
 	  mnode = (MNodeInstance) comp.getNodeInstance();
           }

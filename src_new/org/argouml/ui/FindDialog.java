@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.14 2003/06/29 23:47:02 linus Exp $
+// $Id: FindDialog.java,v 1.15 2003/06/30 18:00:23 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -125,7 +124,8 @@ public class FindDialog extends ArgoDialog
         _tabs.setEnabledAt(2, false);
 
         initConstraintsTab();
-        _tabs.addTab(Argo.localize("UMLMenu", "tab.constraints"), _constraintsTab);
+        _tabs.addTab(Argo.localize("UMLMenu", "tab.constraints"),
+		     _constraintsTab);
         _tabs.setEnabledAt(3, false);
 
         //_tabs.addTab("Tagged Values", _tagValsTab);
@@ -166,9 +166,11 @@ public class FindDialog extends ArgoDialog
 
     public void initNameLocTab() {
         _elementName.setEditable(true);
-        _elementName.getEditor().getEditorComponent().setBackground(Color.white);
+        _elementName.getEditor()
+	    .getEditorComponent().setBackground(Color.white);
         _diagramName.setEditable(true);
-        _diagramName.getEditor().getEditorComponent().setBackground(Color.white);
+        _diagramName.getEditor()
+	    .getEditorComponent().setBackground(Color.white);
 
         _elementName.addItem("*");
         _diagramName.addItem("*");

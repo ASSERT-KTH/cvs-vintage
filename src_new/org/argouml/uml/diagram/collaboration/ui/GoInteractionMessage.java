@@ -1,4 +1,4 @@
-// $Id: GoInteractionMessage.java,v 1.5 2003/06/29 23:52:15 linus Exp $
+// $Id: GoInteractionMessage.java,v 1.6 2003/06/30 18:00:30 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,8 @@ public class GoInteractionMessage extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
      */
     public Collection getChildren(Object parent) {
-	if (parent instanceof MInteraction) return ((MInteraction) parent).getMessages();
+	if (parent instanceof MInteraction)
+	    return ((MInteraction) parent).getMessages();
 	return null;
     }
 

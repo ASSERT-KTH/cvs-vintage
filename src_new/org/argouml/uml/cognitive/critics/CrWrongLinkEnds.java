@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.5 2003/06/30 15:20:14 linus Exp $
+// $Id: CrWrongLinkEnds.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.5 2003/06/30 15:20:14 linus Exp $
+// $Id: CrWrongLinkEnds.java,v 1.6 2003/06/30 18:00:28 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -78,10 +78,11 @@ public class CrWrongLinkEnds extends CrUML {
     }
 
     /**
-     * If there are links that are going from inside a FigComponent 
-     * to inside a FigComponentInstance the returned vector-set is not null. 
-     * Then in the vector-set are the UMLDeploymentDiagram and all FigLinks 
-     * with this characteristic and their FigObjects described over the links MLinkEnds 
+     * If there are links that are going from inside a FigComponent to
+     * inside a FigComponentInstance the returned vector-set is not
+     * null.  Then in the vector-set are the UMLDeploymentDiagram and
+     * all FigLinks with this characteristic and their FigObjects
+     * described over the links MLinkEnds
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 	Vector figs = dd.getLayer().getContents();
@@ -99,8 +100,11 @@ public class CrWrongLinkEnds extends CrUML {
 		Iterator it = ends.iterator();
 		while (it.hasNext()) {
 		    MLinkEnd le = (MLinkEnd) it.next();
-		    if (le.getInstance().getElementResidences() != null && (le.getInstance().getElementResidences().size() > 0)) count = count + 2;
-		    if (le.getInstance().getComponentInstance() != null) count = count + 1;
+		    if (le.getInstance().getElementResidences() != null
+			&& (le.getInstance().getElementResidences().size() > 0))
+			count = count + 2;
+		    if (le.getInstance().getComponentInstance() != null)
+			count = count + 1;
 		}
 		if (count == 3) {
 		    if (offs == null) {

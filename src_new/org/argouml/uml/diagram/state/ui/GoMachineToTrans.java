@@ -1,4 +1,4 @@
-// $Id: GoMachineToTrans.java,v 1.8 2003/06/29 23:52:18 linus Exp $
+// $Id: GoMachineToTrans.java,v 1.9 2003/06/30 18:00:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,6 @@ import java.util.Collection;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 
 public class GoMachineToTrans extends AbstractGoRule {
 
