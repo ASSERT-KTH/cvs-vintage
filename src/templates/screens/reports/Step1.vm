@@ -75,13 +75,9 @@ later).</p>
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep1" />
-</td>
- </tr>
-</table>
+  <input type="submit" value="Continue" name="eventSubmit_doStep1" />
 </div>
+
 $intake.declareGroups()
 </form>
 </div>

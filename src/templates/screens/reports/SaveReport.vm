@@ -61,14 +61,8 @@ Go to your $link.setPage("ReportList.vm").setLabel("Stored Reports List").
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   <input type="submit" value="Save" name="eventSubmit_doSavereport" />&#160;
   <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-  </td>
- </tr>
-</table>
 </div>
 
 <input type="hidden" name="overwrite" value="true" />
