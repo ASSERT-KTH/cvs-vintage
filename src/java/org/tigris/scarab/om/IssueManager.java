@@ -84,8 +84,16 @@ public class IssueManager
         setRegion(getClassName().replace('.', '_'));
     }
 
+    /**
+     * If the id is not specified, return null otherwise return the 
+     * issue object.
+     */
     public static Issue getIssueById(String id)
     {
+        if (id == null || id.length() == 0)
+        {
+            return null;
+        }
         Issue.FederatedId fid = new Issue.FederatedId(id);
         return getIssueById(fid);
     }
