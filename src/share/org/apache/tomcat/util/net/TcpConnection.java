@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnection.java,v 1.2 2000/09/24 17:33:44 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/24 17:33:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnection.java,v 1.3 2002/02/02 03:24:32 billbarker Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/02/02 03:24:32 $
  *
  * ====================================================================
  *
@@ -134,8 +134,9 @@ public class TcpConnection  { // implements Endpoint {
 	    // was added just to deal with such issues.
 	    
 	    // skip any unread (bogus) bytes
-	    if (available > 1) {
+	    while (available > 0) {
 		is.skip (available);
+		available = is.available();
 	    }
 	}catch(NullPointerException npe) {
 	    // do nothing - we are just cleaning up, this is
