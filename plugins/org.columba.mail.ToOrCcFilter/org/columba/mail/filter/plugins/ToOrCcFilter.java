@@ -42,8 +42,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		// get the header of the message
