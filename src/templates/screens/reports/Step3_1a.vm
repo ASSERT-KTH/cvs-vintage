@@ -14,7 +14,7 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-  <th width="120">report date</th>
+  <th width="120">Report date</th>
   <td>
     #fieldErrorMsg($intakeReport.NewDate "")
     <input type="text" size="20" name="$intakeReport.NewDate.Key"
@@ -22,10 +22,10 @@
   </td>
 </tr>
 <tr>
-  <th>rows: content types</th>
+  <th>Rows: content types</th>
   <td>
     <select name="$intakeReport.Axis1Category.Key">
-      <option value="">select...</option>
+      <option value="">Select...</option>
       #set ($options = $scarabR.Report.Axis1Categories)
       #foreach ( $option in $options )
         #option($option)
@@ -38,7 +38,7 @@
   <th>Columns: content types</th>
   <td>
     <select name="$intakeReport.Axis2Category.Key">
-      <option value="">select...</option>
+      <option value="">Select...</option>
       #set ($options = $scarabR.Report.Axis2Categories)
       #foreach ( $option in $options )
         #option($option)
