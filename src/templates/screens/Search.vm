@@ -19,7 +19,7 @@
 <input type="hidden" name="searchType" value="custom" />
 
 <p class="functnbar">
-<input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
+<input type="submit" value="$l10n.Search" name="eventSubmit_doSearch" />
 </p>
 
 #if (!$searchTextAttributes.isEmpty())
@@ -28,7 +28,7 @@
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Select text attributes</th>
+   <th width="120">$l10n.SelectTextAttributes</th>
    <td>
     ## default to first attribute if none was selected previously
     #if ($searchGroup.TextScope.isSet())
@@ -95,7 +95,7 @@
 <div class="axial">
 <table  cellpadding="3" cellspacing="2" border="1">
   <tr>
-    <th width="120">Sort by</th>
+    <th width="120">$l10n.SortBy</th>
     <td>
       <select name="sortColumn">
         #foreach ($attKey in $attrValues.sequence())
@@ -124,7 +124,7 @@
 </div>
 
 <p class="functnbar2">
-<input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
+<input type="submit" value="$l10n.Search" name="eventSubmit_doSearch" />
 </p>
 
 $intake.declareGroups()
