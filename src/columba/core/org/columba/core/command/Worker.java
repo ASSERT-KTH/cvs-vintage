@@ -24,7 +24,6 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
 
 public class Worker extends SwingWorker implements WorkerStatusController {

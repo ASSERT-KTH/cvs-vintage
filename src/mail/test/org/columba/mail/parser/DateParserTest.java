@@ -12,8 +12,6 @@ import java.util.GregorianCalendar;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * @author frd
  *

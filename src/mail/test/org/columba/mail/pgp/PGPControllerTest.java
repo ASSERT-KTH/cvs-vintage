@@ -6,10 +6,10 @@
  */
 package org.columba.mail.pgp;
 
+import junit.framework.TestCase;
+
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PGPItem;
-
-import junit.framework.TestCase;
 
 /**
  * @author waffel

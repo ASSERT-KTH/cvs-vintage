@@ -27,7 +27,6 @@ import java.security.NoSuchAlgorithmException;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 public class POP3Protocol {
 	private Socket socket;

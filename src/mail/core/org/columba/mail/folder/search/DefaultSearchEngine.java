@@ -16,7 +16,6 @@
 
 package org.columba.mail.folder.search;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;

@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.util.Hashtable;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 

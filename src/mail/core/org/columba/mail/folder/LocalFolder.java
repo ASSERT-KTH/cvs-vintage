@@ -167,6 +167,7 @@ public abstract class LocalFolder extends Folder {
 		String source = message.getSource();
 		if( source == null) {
 			System.out.println( "source is null " + newUid );
+			return null;
 		}
 
 		// save message to disk

@@ -21,7 +21,6 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;

@@ -24,7 +24,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.OSInfo;
 import org.columba.mail.message.MimeHeader;
 

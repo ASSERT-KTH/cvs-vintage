@@ -28,7 +28,6 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;

@@ -16,8 +16,8 @@
 
 package org.columba.mail.pop3.command;
 
-import java.net.URL;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -27,7 +27,6 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;

@@ -92,9 +92,8 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		// update table viewer
 		TableChangedEvent ev =
 			new TableChangedEvent(
-				TableChangedEvent.ADD,
-				inboxFolder,
-				headerList);
+				TableChangedEvent.UPDATE,
+				inboxFolder);
 
 		TableUpdater.tableChanged(ev);
 

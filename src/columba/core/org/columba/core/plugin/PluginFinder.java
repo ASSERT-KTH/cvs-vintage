@@ -21,7 +21,6 @@ import java.util.Vector;
 
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

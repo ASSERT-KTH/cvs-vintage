@@ -31,12 +31,12 @@ import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;

@@ -25,7 +25,6 @@ import java.util.Date;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;

@@ -42,7 +42,6 @@ import java.util.StringTokenizer;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 /*

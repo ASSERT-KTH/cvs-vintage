@@ -19,7 +19,6 @@ package org.columba.mail.composer;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.StringTokenizer;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;

@@ -17,9 +17,7 @@ package org.columba.mail.pgp;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
 
 import org.columba.core.io.DiskIO;

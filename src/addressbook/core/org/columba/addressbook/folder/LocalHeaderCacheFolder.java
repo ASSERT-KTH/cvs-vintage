@@ -31,7 +31,6 @@ import org.columba.addressbook.parser.DefaultCardLoader;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * 

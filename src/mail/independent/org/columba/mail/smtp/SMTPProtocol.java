@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.util.MailResourceLoader;

@@ -28,7 +28,6 @@ import java.net.URL;
 
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * The startup default for installation directory is the system propertry "user.dir".

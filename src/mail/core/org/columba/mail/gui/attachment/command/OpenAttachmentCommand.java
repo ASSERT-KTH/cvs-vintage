@@ -33,7 +33,6 @@ import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 

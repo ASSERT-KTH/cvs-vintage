@@ -69,7 +69,8 @@ public abstract class CachedFolder extends LocalFolder {
 		// call addMessage of superclass LocalFolder
 		// to do the dirty work
 		Object newUid = super.addMessage(message, worker);
-
+		if ( newUid == null ) return null;
+		
 		// this message was already parsed and so we
 		// re-use the header to save us some cpu time
 		ColumbaHeader h =

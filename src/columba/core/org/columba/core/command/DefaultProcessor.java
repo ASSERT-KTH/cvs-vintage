@@ -18,7 +18,6 @@ package org.columba.core.command;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
 
 public class DefaultProcessor extends Thread {

@@ -22,7 +22,6 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;

@@ -79,6 +79,8 @@ public abstract class AbstractPluginHandler {
 	 * @throws Exception
 	 */
 	public Object getPlugin(String name, Object[] args) throws Exception {
+		ColumbaLogger.log.debug("name="+name);
+		
 		String className = getPluginClassName(name, "class");
 		return getPlugin(name, className, args);
 	}

@@ -17,11 +17,10 @@ package org.columba.mail.folder;
 
 import java.util.EventObject;
 
-import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.Message;
 
-public class FolderEvent extends EventObject
-{
+public class FolderEvent extends EventObject {
 	public final static int UPDATE = 0;
 	public final static int ADD = 1;
 	public final static int REMOVE = 2;
@@ -34,87 +33,72 @@ public class FolderEvent extends EventObject
 	private Message message;
 	private MessageNode node;
 
-	public FolderEvent(Object source, int mode)
-	{
+	public FolderEvent(Object source, int mode) {
 		super(source);
 		this.mode = mode;
 	}
 
-	public FolderEvent(Object source, Object uid, int mode)
-	{
+	public FolderEvent(Object source, Object uid, int mode) {
 		super(source);
 		this.mode = mode;
 		this.uid = uid;
 	}
 
-	public FolderEvent(Object source, Object[] uids, int mode, int sub)
-	{
+	public FolderEvent(Object source, Object[] uids, int mode, int sub) {
 		super(source);
 		this.mode = mode;
 		this.subMode = sub;
 		this.uids = uids;
 	}
 
-	public FolderEvent(Object source, Message message, int mode)
-	{
+	public FolderEvent(Object source, Message message, int mode) {
 		super(source);
 		this.mode = mode;
 		this.message = message;
 	}
 
-	public FolderEvent(Object source, Object[] uids, int mode)
-	{
+	public FolderEvent(Object source, Object[] uids, int mode) {
 		super(source);
 		this.mode = mode;
 		this.uids = uids;
 	}
 
-	public MessageNode getMessageNode()
-	{
+	public MessageNode getMessageNode() {
 		return node;
 	}
 
-	public int getMode()
-	{
+	public int getMode() {
 		return mode;
 	}
 
-	public Object getUid()
-	{
+	public Object getUid() {
 		return uid;
 	}
 
-	public Object[] getUids()
-	{
+	public Object[] getUids() {
 		return uids;
 	}
 
-	public Message getMessage()
-	{
+	public Message getMessage() {
 		return message;
 	}
 
-	public int getSubMode()
-	{
+	public int getSubMode() {
 		return subMode;
 	}
 
-	public void setSource(Folder f)
-	{
+	public void setSource(Folder f) {
 		this.source = f;
 	}
 
-	public Object clone()
-	{
+	public Object clone() {
 		FolderEvent event = new FolderEvent(source, mode);
 		event.mode = mode;
 		event.subMode = subMode;
 		event.uid = uid;
-		if (uids != null)
-		{
+		if (uids != null) {
 			event.uids = new Object[uids.length];
-			for (int i = 0; i < uids.length; i++)
-			{
+			for (int i = 0; i < uids.length; i++) {
 				event.uids[i] = uids[i];
 			}
 		}

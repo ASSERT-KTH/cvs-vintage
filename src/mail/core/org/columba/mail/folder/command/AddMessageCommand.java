@@ -52,7 +52,7 @@ public class AddMessageCommand extends Command {
 		//MailFrameController frame = (MailFrameController) frameController;
 
 		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
+			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
 
 		//frame.tableController.tableChanged(ev);
 		
