@@ -15,22 +15,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import java.io.IOException;
-import java.net.BindException;
-import java.net.ConnectException;
-import java.net.NoRouteToHostException;
-import java.net.PortUnreachableException;
-import java.net.ProtocolException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.net.UnknownServiceException;
+import java.net.*;
 import java.text.MessageFormat;
 
 import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
@@ -56,42 +48,41 @@ public class ExceptionHandler {
         } else if (e instanceof IOException) {
             processIOException((IOException) e);
         } else if ( e instanceof IMAPException ) {
-        	processIMAPExcpetion((IMAPException) e);
-        }
-        else {
+            processIMAPExcpetion((IMAPException) e);
+        } else {
             // unknown exception - this is most likely a Columba-specific bug
             e.printStackTrace();
 
             // show error dialog, with exception message and stack-trace
             // -> dialog also provides a button for the user to easily
             // -> report a bug
-            new ExceptionDialog(e);
+            new ErrorDialog(e.getMessage(), e);
         }
     }
 
     /**
-	 * @param exception
-	 */
-	private void processIMAPExcpetion(IMAPException exception) {
-		String errorMessage = "";
-		String serverResponse = "";
-		
-		if( exception.getResponse() != null ) {
-			serverResponse = ": " + exception.getResponse().getResponseMessage();
-		}
-		
-		if( exception instanceof IMAPDisconnectedException ) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
-					"imap_disconnected_error") + serverResponse;
-		} else {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
-			"imap_error") + serverResponse;
-		}
-        
-		showErrorDialog(errorMessage, exception);
-	}
+     * @param exception
+     */
+    private void processIMAPExcpetion(IMAPException exception) {
+        String errorMessage = "";
+        String serverResponse = "";
 
-	/**
+        if (exception.getResponse() != null) {
+            serverResponse = ": " + exception.getResponse().getResponseMessage();
+        }
+
+        if (exception instanceof IMAPDisconnectedException) {
+            errorMessage = MailResourceLoader.getString("dialog", "error",
+                    "imap_disconnected_error") + serverResponse;
+        } else {
+            errorMessage = MailResourceLoader.getString("dialog", "error",
+            "imap_error") + serverResponse;
+        }
+
+        showErrorDialog(errorMessage, exception);
+    }
+
+    /**
      * Handle all java.net.SocketException
      * 
      * @param e
