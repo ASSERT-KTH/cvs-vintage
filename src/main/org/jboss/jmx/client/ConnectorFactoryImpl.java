@@ -11,11 +11,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
+
+import javax.naming.InitialContext;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
 
 import org.jboss.jmx.interfaces.JMXConnector;
 
@@ -56,11 +61,36 @@ public class ConnectorFactoryImpl {
 	public Collection getServers(
 //AS		ServerQuery pServerQuery
 	) {
+		Vector lServers = new Vector();
+		try {
+			InitialContext lNamingServer = new InitialContext();
+			// Lookup the JNDI server
+			NamingEnumeration enum = lNamingServer.list( "" );
+			while( enum.hasMore() ) {
+				NameClassPair lItem = (NameClassPair) enum.next();
+				System.out.println( "Naming Server item: " + lItem );
+				String lName = lItem.getName();
+				if( lName.indexOf( "jmx:" ) == 0 ) {
+					lServers.add(
+						lName.substring(
+							4,
+							lName.indexOf( ":", 5 )
+						)
+					);
+				}
+			}
+		}
+		catch( Exception e ) {
+			e.printStackTrace();
+		}
+		return lServers;
+/*
 		return Arrays.asList(
 			new String[] {
-				"localhost"
+				System.getProperty( "java.naming.provider.url" )
 			}
 		);
+*/
 	}
 	
 	/**
@@ -95,7 +125,7 @@ public class ConnectorFactoryImpl {
 		String pProtocol
 	) {
 		JMXConnector lConnector = null;
-		if( pServer.equals( "localhost" ) ) {
+//AS		if( pServer.equals( "localhost" ) ) {
 			if( pProtocol.equals( "rmi" ) ) {
 				try {
 					lConnector = new RMIClientConnectorImpl(
@@ -110,7 +140,7 @@ public class ConnectorFactoryImpl {
 					e.printStackTrace();
 				}
 			}
-		}
+//AS		}
 		System.out.println( "ConnectorFactoryImpl.createConnection(), got connector: " + lConnector );
 		return lConnector;
 	}
