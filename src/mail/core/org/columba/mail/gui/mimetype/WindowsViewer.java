@@ -50,7 +50,7 @@ public class WindowsViewer extends AbstractViewer {
             try {
                 String[] cmd = new String[] {
                         "rundll32", "url.dll,FileProtocolHandler",
-                        url.toString()
+                        '"' + url.toString() + '"'
                     };
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
