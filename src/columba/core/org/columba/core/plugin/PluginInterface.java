@@ -16,12 +16,14 @@
 package org.columba.core.plugin;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Every abstract plugin class should implement this interface.
+ * 
+ * This is needed by the plugin loader classes which handle all 
+ * plugins equally, using this interface as the common determinator.
+ * 
+ * 
  */
 public interface PluginInterface {
 
