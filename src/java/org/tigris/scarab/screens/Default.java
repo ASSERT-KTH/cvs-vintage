@@ -59,6 +59,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.IssueType;
 
 /**
  * This class is responsible for building the Context up
@@ -68,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.23 2001/10/16 08:37:56 jon Exp $
+ * @version $Id: Default.java,v 1.24 2001/10/18 23:17:40 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -113,6 +114,7 @@ public class Default extends TemplateSecureScreen
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
             ModuleEntity currentModule = scarabR.getCurrentModule();
+            IssueType currentIssueType = scarabR.getCurrentIssueType();
             
             if (perm != null)
             {
@@ -122,6 +124,14 @@ public class Default extends TemplateSecureScreen
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectModule(data);
+                    return false;
+                }
+                if (currentIssueType == null)
+                {
+                    data.setMessage("Please select the Issue Type " +
+                                    "that you would like to work " +
+                                    "in.");
+                    setTargetSelectIssueType(data);
                     return false;
                 }
                 else if (! data.getUser().hasLoggedIn() &&
@@ -165,6 +175,19 @@ public class Default extends TemplateSecureScreen
 
         setTarget(data, Turbine.getConfiguration()
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
+    }
+
+    private static void setTargetSelectIssueType(RunData data)
+    {
+        // Note: we need to replace '/' with ',' so that 
+        //       the hidden input field will have the right
+        //       value for ParameterParser to parse.
+        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE,
+                                      ScarabPage.getScreenTemplate(data)
+                                          .replace('/',',') );
+
+        setTarget(data, Turbine.getConfiguration()
+                .getString("scarab.CurrentArtifactTypeTemplate", "SelectModule.vm"));        
     }
 
     private static void setTargetLogin(RunData data)
