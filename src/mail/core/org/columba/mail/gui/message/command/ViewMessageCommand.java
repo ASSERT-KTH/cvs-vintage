@@ -107,10 +107,13 @@ public class ViewMessageCommand extends FolderCommand {
 			.setHeader(
 			header);
 
+		if ( header.getFlags().getSeen() == false )
+		{
 		((MailFrameController) frameController)
 			.tableController
 			.getMarkAsReadTimer()
 			.restart( folder, uid);
+		}
 
 	}
 
