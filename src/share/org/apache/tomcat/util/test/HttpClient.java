@@ -131,14 +131,12 @@ public class HttpClient {
     /** The port used to send the request
      */
     public void setPort(String portS) {
-	System.out.println("HttpClient.setPort " + portS + " " + port);
 	this.port=Integer.valueOf( portS).intValue();
     }
 
     /** Set the port as int - different name to avoid confusing introspection
      */
     public void setPortInt(int i) {
-	System.out.println("HttpClient.setPort " + i + " " + port );
 	this.port=i;
     }
 
