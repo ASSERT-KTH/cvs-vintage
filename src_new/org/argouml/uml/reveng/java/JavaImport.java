@@ -36,8 +36,8 @@ import org.tigris.gef.base.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.1 $
- * $Date: 2001/03/07 14:42:46 $
+ * $Revision: 1.2 $
+ * $Date: 2001/03/10 10:49:51 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -71,7 +71,7 @@ public class JavaImport {
 	    System.out.println("Starting java parser for file: " + f.getAbsolutePath());
 
 	    // start parsing at the compilationUnit rule
-	    parser.compilationUnit(modeller);
+	    parser.compilationUnit(modeller, lexer);
 	} catch ( Exception e) {
 	    System.err.println("parser exception: "+e);
 	    e.printStackTrace();   // so we can get stack trace		
