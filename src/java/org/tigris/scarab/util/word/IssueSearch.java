@@ -116,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.102 2003/06/24 23:52:12 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.103 2003/06/25 18:05:34 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1962,16 +1962,16 @@ public class IssueSearch
             }
             String countSql = sql.toString();
             
-            Connection con = conn;
+            Connection localCon = conn;
             Statement stmt = null;
             try
             {
-                if (con == null) 
+                if (localCon == null) 
                 {
-                    con = Torque.getConnection();
+                    localCon = Torque.getConnection();
                 }
                 long startTime = System.currentTimeMillis();
-                stmt = conn.createStatement();
+                stmt = localCon.createStatement();
                 ResultSet resultSet = stmt.executeQuery(countSql);
                 if (resultSet.next()) 
                 {
@@ -1986,9 +1986,9 @@ public class IssueSearch
                 {
                     stmt.close();
                 }                
-                if (conn == null && con != null) 
+                if (conn == null && localCon != null) 
                 {
-                    con.close();
+                    localCon.close();
                 }
             }
         }
