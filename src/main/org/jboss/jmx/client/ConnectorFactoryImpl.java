@@ -71,7 +71,6 @@ public class ConnectorFactoryImpl {
          NamingEnumeration enum = lNamingServer.list( "" );
          while( enum.hasMore() ) {
             NameClassPair lItem = ( NameClassPair ) enum.next();
-            System.out.println( "Naming Server item: " + lItem );
             ConnectorName lName = pTester.check( lItem.getName(), lItem.getClass() );
             if( lName != null ) {
                lConnectors.add( lName );
@@ -111,7 +110,6 @@ public class ConnectorFactoryImpl {
             e.printStackTrace();
          }
       }
-      System.out.println( "ConnectorFactoryImpl.createConnection(), got connector: " + lConnector );
       return lConnector;
    }
 
@@ -129,7 +127,6 @@ public class ConnectorFactoryImpl {
                new ObjectName( "DefaultDomain:name=RMIConnectorTo" + pConnector.getServer() ),
                null
             );
-            System.out.println( "ConnectorFactoryImpl.removeConnection(), got connectors: " + lConnectors );
             if( !lConnectors.isEmpty() ) {
                Iterator i = lConnectors.iterator();
                while( i.hasNext() ) {
@@ -142,9 +139,6 @@ public class ConnectorFactoryImpl {
                   );
                   mServer.unregisterMBean(
                      lConnector.getObjectName()
-                  );
-                  System.out.println( "ConnectorFactoryImpl.removeConnection(), " +
-                     "unregister MBean: " + lConnector.getObjectName()
                   );
                }
             }

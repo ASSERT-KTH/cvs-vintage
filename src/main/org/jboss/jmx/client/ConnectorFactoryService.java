@@ -52,7 +52,6 @@ public class ConnectorFactoryService
 	}
 	
    public Iterator getConnectors( Hashtable pProperties, ConnectorFactoryImpl.IConnectorTester pTester ) {
-		System.out.println( "ConnectorFactoryService.getConnectors(), properties: " + pProperties );
 		return mFactory.getConnectors( pProperties, pTester );
    }
 
@@ -86,10 +85,7 @@ public class ConnectorFactoryService
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
 		try {
-		System.out.println( "ConnectorFactoryService.initService(), server: " + mServer );
-		mFactory = new ConnectorFactoryImpl( mServer );
-		System.out.println( "ConnectorFactoryService.initService(), server: " + mServer +
-			", factory: " + mFactory );
+         mFactory = new ConnectorFactoryImpl( mServer );
 		}
 		catch( Exception e ) {
 			e.printStackTrace();
