@@ -34,11 +34,11 @@ import org.jboss.tm.JBossTransactionRolledbackLocalException;
  * An interceptor used to log all invocations. It also handles any
  * unexpected exceptions.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -302,12 +302,12 @@ public class LogInterceptor extends AbstractInterceptor
                (NoSuchEntityException) e;
          if (noSuchEntityException.getCausedByException() != null)
          {
-            log.error("NoSuchEntityException, causedBy:",
+            log.error("NoSuchEntityException in method: " + invocation.getMethod() + ", causedBy:",
                   noSuchEntityException.getCausedByException());
          }
          else
          {
-            log.error("NoSuchEntityException:", noSuchEntityException);
+            log.error("NoSuchEntityException in method: " + invocation.getMethod() + ":", noSuchEntityException);
          }
 
          if (isLocal)
@@ -329,12 +329,12 @@ public class LogInterceptor extends AbstractInterceptor
          EJBException ejbException = (EJBException) e;
          if (ejbException.getCausedByException() != null)
          {
-            log.error("EJBException, causedBy:",
+            log.error("EJBException in method: " + invocation.getMethod() + ", causedBy:",
                   ejbException.getCausedByException());
          }
          else
          {
-            log.error("EJBException:", ejbException);
+            log.error("EJBException in method: " + invocation.getMethod() + ":", ejbException);
          }
 
          if (isLocal)
@@ -350,7 +350,7 @@ public class LogInterceptor extends AbstractInterceptor
       if (e instanceof RuntimeException)
       {
          RuntimeException runtimeException = (RuntimeException)e;
-         log.error("RuntimeException:", runtimeException);
+         log.error("RuntimeException in method: " + invocation.getMethod() + ":", runtimeException);
 
          if (isLocal)
          {
@@ -363,7 +363,7 @@ public class LogInterceptor extends AbstractInterceptor
       }
       if (e instanceof Error)
       {
-         log.error("Unexpected Error:", e);
+         log.error("Unexpected Error in method: " + invocation.getMethod() + ":", e);
          if (isLocal)
          {
             String msg = formatException("Unexpected Error", e);
@@ -381,7 +381,7 @@ public class LogInterceptor extends AbstractInterceptor
       {
          if (callLogging)
          {
-            log.info("Remote Exception", e);
+            log.info("Remote Exception in method: " + invocation.getMethod(), e);
          }
          return new EJBException((RemoteException)e);
       }
@@ -390,7 +390,7 @@ public class LogInterceptor extends AbstractInterceptor
       {
          if (callLogging)
          {
-            log.info("Application Exception", e);
+            log.info("Application Exception in method: " + invocation.getMethod(), e);
          }
          return (Exception)e;
       }
@@ -398,7 +398,7 @@ public class LogInterceptor extends AbstractInterceptor
       {
          // The should not happen
          String msg = formatException("Unexpected Throwable", e);
-         log.warn("Unexpected Throwable", e);
+         log.warn("Unexpected Throwable in method: " + invocation.getMethod(), e);
          if (isLocal)
          {
             return new EJBException(msg);
