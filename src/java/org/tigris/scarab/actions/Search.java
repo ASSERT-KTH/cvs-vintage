@@ -89,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.56 2002/01/28 02:50:32 elicia Exp $
+    @version $Id: Search.java,v 1.57 2002/02/13 22:25:17 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -112,7 +112,7 @@ public class Search extends RequireLoginFirstAction
         data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List searchResults = scarabR.getCurrentSearchResults();
-        context.put("queryString", queryString);
+        data.getParameters().add("queryString", queryString);
 
         if (searchResults.size() > 0)
         {
@@ -135,7 +135,7 @@ public class Search extends RequireLoginFirstAction
     public void doRedirecttosavequery(RunData data, TemplateContext context)
          throws Exception
     {        
-        context.put("queryString", getQueryString(data));
+        data.getParameters().add("queryString", getQueryString(data));
         setTarget(data, "SaveQuery.vm");            
     }
 
@@ -155,7 +155,7 @@ public class Search extends RequireLoginFirstAction
         Field name = queryGroup.get("Name");
         name.setRequired(true);
         Field value = queryGroup.get("Value");
-        context.put("queryString", value);
+        data.getParameters().add("queryString", getQueryString(data));
 
         if (intake.isAllValid()) 
         {
