@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.22 2002/03/12 04:14:49 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.23 2002/03/19 11:48:05 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -1097,6 +1097,22 @@ unsafe escape sequences.</p>
       %2F ('/'), and %5C ('\').  If any are found in the URI, the request is
       considered &quot;unsafe&quot; and a 403 Forbidden error is returned.</td>
     <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>saveOriginal</td>
+    <td>If <code>true</code>, a copy of the original request URI is saved
+      before it is decoded. This saved copy is later used as the return value
+      HttpServletRequest.getRequestURI(). If <code>false</code>, then
+      HttpServletRequest.getRequestURI() returns a re-encoded version of the
+      decoded request URI.  Setting this attribute to <code>true</code> most
+      closely follows the Servlet 2.2 spec.  However, <code>false</code> is
+      the default because <code>true</code> can't be implemented when
+      Tomcat is connected to Netscape Web Server 4.1 or earlier.  The original
+      un-escaped request URI isn't made available to the connector.  Also,
+      the IIS connector that shipped with Tomcat 3.3(a) did not support
+      passing the original request URI, though the current one does, using
+      the <code>uri_select</code> setting.</td>
+    <td>false</td>
   </tr>
 </table>
 
