@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.72 2004/10/30 09:25:25 mvw Exp $
+// $Id: NavigatorPane.java,v 1.73 2004/11/20 20:45:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,7 +159,7 @@ public class NavigatorPane
         
         combo.addItemListener((ExplorerTreeModel) tree.getModel());
         orderByCombo.addItemListener((ExplorerTreeModel) tree.getModel());
-        PerspectiveManager.getInstance().loadDefaultPerspectives();
+        PerspectiveManager.getInstance().loadUserPerspectives();
     }
 
     ////////////////////////////////////////////////////////////////
