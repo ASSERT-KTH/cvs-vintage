@@ -49,13 +49,8 @@ package org.tigris.scarab.util.xmlissues;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ActivitySet implements java.io.Serializable
 {
-    private final static Log log = LogFactory.getLog(ActivitySet.class);
-
     private String id = null;
     private String type = null;
     private String createdBy = null;
@@ -65,7 +60,6 @@ public class ActivitySet implements java.io.Serializable
 
     public ActivitySet()
     {
-        this.activities = new ArrayList();
     }
 
     public String getId()
@@ -110,11 +104,19 @@ public class ActivitySet implements java.io.Serializable
 
     public List getActivities()
     {
+        if (activities == null)
+        {
+            activities = new ArrayList();
+        }
         return this.activities;
     }
 
     public void addActivity(Activity activity)
     {
+        if (activities == null)
+        {
+            activities = new ArrayList();
+        }
         activities.add(activity);
     }
 

@@ -46,13 +46,11 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Activity implements java.io.Serializable
 {
-    private final static Log log = LogFactory.getLog(Activity.class);
-
     private String id = null;
     private String attribute = null;
     private String oldNumericValue = null;
@@ -63,7 +61,9 @@ public class Activity implements java.io.Serializable
     private String newOption = null;
     private String oldValue = null;
     private String newValue = null;
+    private Dependency dependency = null;
     private String description = null;
+    private EndDate endDate = null;
     private Attachment attachment = null;
 
     private boolean isNewActivity = true;
@@ -181,6 +181,17 @@ public class Activity implements java.io.Serializable
         return this.newValue;
     }
 
+    public Dependency getDependency()
+    {
+        return dependency;
+    }
+    
+    public void setDependency(Dependency name)
+    {
+        this.dependency = name;
+        isNewActivity = true;
+    }
+
     public void setDescription(String description)
     {
         this.description = description;
@@ -189,6 +200,16 @@ public class Activity implements java.io.Serializable
     public String getDescription()
     {
         return this.description;
+    }
+
+    public EndDate getEndDate()
+    {
+        return endDate;
+    }
+    
+    public void setEndDate(EndDate endDate)
+    {
+        this.endDate = endDate;
     }
 
     public void setAttachment(Attachment attachment)

@@ -46,13 +46,8 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class Dependency implements java.io.Serializable
 {
-    private final static Log log = LogFactory.getLog(Dependency.class);
-
     private String id = null;
     private String type = null;
     private String child = null;

@@ -56,49 +56,19 @@ package org.tigris.scarab.util.xmlissues;
  * <http://www.apache.org/>.
  */
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * <p><code>BaseDate</code> is a base class for Modified and Created dates.</p>
+ * <p><code>EndDate</code> bean for use in Activity elements.</p>
  *
  * @author <a href="mailto:jon@latchkey.com">Jon Scott Stevens</a>
- * @version $Id: BaseDate.java,v 1.3 2002/12/17 16:25:29 jon Exp $
+ * @version $Id: EndDate.java,v 1.1 2002/12/17 16:25:29 jon Exp $
  */
-public class BaseDate implements java.io.Serializable
+public class EndDate extends BaseDate
 {
-    private String format = null;
-    private String timestamp = null;
-
-    public void setFormat(String format)
-    {
-        this.format = format;
-    }
-
-    public String getFormat()
-    {
-        return this.format;
-    }
-
-    public void setTimestamp(String timestamp)
-    {
-        this.timestamp = timestamp;
-    }
-
-    public String getTimestamp()
-    {
-        return this.timestamp;
-    }
-
-    public Date getDate()
-        throws java.text.ParseException
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat(getFormat());
-        return sdf.parse(getTimestamp());
-    }
-
-    public String toString()
-    {
-        return "format=" + format + ";timestamp=" + timestamp;
-    }
+    /**
+     * Logger
+     */
+    private final static Log log = LogFactory.getLog(EndDate.class);
 }
