@@ -1010,7 +1010,8 @@ public class IssueSearch
             crit.add(TransactionPeer.TYPE_ID, 
                      TransactionTypePeer.CREATE_ISSUE__PK);
             // convert usernames to ids
-            List users = UserManager.getUsers(createdBy);
+            List users = UserManager.getUsers(createdBy, 
+                                              getModule().getDomain());
             NumberKey[] ids = new NumberKey[users.size()];
             for ( int i=0; i<users.size(); i++ ) 
             {

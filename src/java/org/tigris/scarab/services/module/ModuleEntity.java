@@ -65,7 +65,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.35 2001/10/26 23:09:24 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.36 2001/11/01 00:31:23 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -112,6 +112,9 @@ public interface ModuleEntity
     public String getCode();
     public void setCode(String code);
 
+    public String getDomain();
+    public void setDomain(String domain);
+
     public String getDescription();
     public void setDescription(String description);
 
@@ -120,6 +123,7 @@ public interface ModuleEntity
 
     public void setPrimaryKey(ObjectKey key) throws Exception;
     public NumberKey getModuleId();
+    public void setModuleId(NumberKey v) throws Exception;
     
 /** @deprecated THESE WILL BE DEPRECATED */
     public NumberKey getQaContactId();

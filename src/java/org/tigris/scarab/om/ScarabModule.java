@@ -96,7 +96,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.60 2001/10/27 00:41:25 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.61 2001/11/01 00:31:23 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -117,6 +117,26 @@ public class ScarabModule
     private Map allRModuleOptionsMap = new HashMap();
     private Map activeRModuleOptionsMap = new HashMap();
 
+    private String domain;
+    
+    /**
+     * Get the value of domain.
+     * @return value of domain.
+     */
+    public String getDomain() 
+    {
+        return domain;
+    }
+    
+    /**
+     * Set the value of domain.
+     * @param v  Value to assign to domain.
+     */
+    public void setDomain(String  v) 
+    {
+        this.domain = v;
+    }
+    
     /**
      * The 'long' name of the module, includes the parents.
      */
