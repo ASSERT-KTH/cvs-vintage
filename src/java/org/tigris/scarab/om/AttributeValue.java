@@ -724,9 +724,6 @@ public abstract class AttributeValue
         StringBuffer sb = new StringBuffer(length)
         */
         StringBuffer sb = new StringBuffer()
-            .append("Issue ")
-            .append(id)
-            .append(" had attribute ")
             .append(name);
         if ( oldValue == null ) 
         {
