@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.30 $" />  
+     <property name="revision" value="$Revision: 1.31 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1194,10 +1194,9 @@ mod_webapp into mod_jk )
            goldenFile="${gdir}/HelloWorld.txt"
       />
 
-      <gtest description="This URL should return HTML, not JSP source"
+      <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.js%2570 HTTP/1.0"
-           returnCode="${http.protocol} 200" 
-           goldenFile="${gdir}/HelloWorld.txt"
+           returnCode="${http.protocol} 404" 
       />
       <gtest description="This URL should return HTML, not JSP source"
            request="GET /test/jsp/HelloWorld%2Ejsp HTTP/1.0"
@@ -1205,10 +1204,9 @@ mod_webapp into mod_jk )
            goldenFile="${gdir}/HelloWorld.txt"
       />
 
-      <gtest description="This URL should return HTML, not JSP source"
+      <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld%252Ejsp HTTP/1.0"
-           returnCode="${http.protocol} 200" 
-           goldenFile="${gdir}/HelloWorld.txt"
+           returnCode="${http.protocol} 404" 
       />
    </target>
 
