@@ -64,7 +64,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.15 2001/10/18 21:33:21 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.16 2001/10/18 23:19:10 elicia Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -109,6 +109,11 @@ public class ScarabLink extends TemplateLink
         if (moduleid != null && moduleid.length() > 0)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
+        }
+        String issuetypeid = data.getParameters().getString(ScarabConstants.CURRENT_ISSUE_TYPE);
+        if (issuetypeid != null && issuetypeid.length() > 0)
+        {
+            addPathInfo(ScarabConstants.CURRENT_ISSUE_TYPE, issuetypeid);
         }
         String issueKey = data.getParameters()
             .getString(ScarabConstants.REPORTING_ISSUE);
