@@ -493,9 +493,11 @@ final class DirHandler extends Handler  {
 	    
 	    toPath = toPath.substring(0, toPath.lastIndexOf("/"));
 	    
-	    if (toPath.length() == 0) {
-		toPath = "/";
-	    }
+	    //if (toPath.length() == 0) {
+	    //toPath = "/";
+	    //}
+	    // Add trailing "/"
+	    toPath += "/";
 	    
 	    buf.write("<a href=\"");
 	    utfEncoder.urlEncode( buf, toPath);
@@ -552,7 +554,7 @@ final class DirHandler extends Handler  {
                 buf.write("<tt><a href=\"");
 		utfEncoder.urlEncode( buf, slashedRequestURI);
 		utfEncoder.urlEncode( buf, fileN);
-		buf.write("\">");
+		buf.write("/\">");
 		buf.write(fileN);
 		buf.write("/</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		buf.write("</tt>\r\n");
