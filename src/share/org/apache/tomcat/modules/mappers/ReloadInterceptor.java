@@ -153,8 +153,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 	// ReloadInterceptor must be configured _after_ LoaderInterceptor
 	ClassLoader cl=context.getClassLoader();
 	
-	ClassLoader loader=
-	    new DependClassLoader12( dm, cl,
+	ClassLoader loader=DependClassLoader.getDependClassLoader( dm, cl,
 		     context.getAttribute( Context.ATTRIB_PROTECTION_DOMAIN));
 
 	context.setClassLoader(loader);
