@@ -193,7 +193,7 @@ source. -->
 <!-- The res-auth element indicates whether the application component
 code performs resource signon programmatically or whether the
 container signs onto the resource based on the principle mapping
-information supplied by the deployer. Must be CONTAINER or SERVLET>
+information supplied by the deployer. Must be CONTAINER or SERVLET -->
 
 <!ELEMENT res-auth (#PCDATA)>
 
@@ -311,7 +311,7 @@ to a defined security role. The role-link element must contain the
 name of one of the security roles defined in the security-role
 elements. -->
 
-<!ELEMENT role-link (#PC-DATA)>
+<!ELEMENT role-link (#PCDATA)>
 
 <!-- The env-entry element contains the declaration of an
 application's environment entry. This element is required to be
