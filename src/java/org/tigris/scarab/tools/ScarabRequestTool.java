@@ -54,6 +54,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.velocity.TurbineVelocity;
+import org.apache.turbine.services.template.TurbineTemplate;
 import org.apache.turbine.util.pool.Recyclable;
 
 
@@ -160,7 +161,7 @@ public class ScarabRequestTool implements ScarabRequestScope,
 
     private IntakeTool getIntakeTool()
     {
-        return (IntakeTool)TurbineVelocity.getContext(data)
+        return (IntakeTool)TurbineTemplate.getTemplateContext(data)
             .get(ScarabConstants.INTAKE_TOOL);
     }
 

@@ -48,7 +48,7 @@ This page is for editing the Attributes which are defined globally.
 <tr class="b">
 #end
 <td><input type="checkbox"/></td>
-<td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
+<td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
 <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
