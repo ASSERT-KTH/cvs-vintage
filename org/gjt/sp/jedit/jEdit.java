@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.56 2002/03/21 07:54:36 spestov Exp $
+ * @version $Id: jEdit.java,v 1.57 2002/03/22 04:31:38 spestov Exp $
  */
 public class jEdit
 {
@@ -2995,7 +2995,7 @@ public class jEdit
 			{
 				Log.log(Log.DEBUG, jEdit.class, "HTTP proxy user: " + username);
 				PasswordAuthentication pw = new PasswordAuthentication(
-					username,password
+					username,password.toCharArray()
 				);
 				Authenticator.setDefault(new FirewallAuthenticator(pw));
 			}

@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.10 2002/03/15 04:11:37 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.11 2002/03/22 04:31:38 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -147,7 +147,7 @@ public class RESearchMatcher implements SearchMatcher
 		if(beanshell)
 		{
 			int count = re.getNumSubs();
-			for(int i = 0; i < count; i++)
+			for(int i = 0; i <= count; i++)
 				replaceNS.setVariable("_" + i,match.toString(i));
 
 			Object obj = BeanShell.runCachedBlock(replaceMethod,
