@@ -77,7 +77,7 @@ public class Menu extends JMenuBar {
 
 			(
 				(MenuPluginHandler) MainInterface.pluginManager.getHandler(
-					"menu")).insertPlugins(
+					"org.columba.core.menu")).insertPlugins(
 				this);
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();

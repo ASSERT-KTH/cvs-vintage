@@ -232,7 +232,7 @@ public class Main {
 							ActionPluginHandler) MainInterface
 								.pluginManager
 								.getHandler(
-							"action")).addActionList(
+							"org.columba.core.action")).addActionList(
 						"org/columba/mail/action/action.xml");
 				} catch (PluginHandlerNotFoundException ex) {
 

@@ -86,7 +86,7 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 	}
 
 	public ActionPluginHandler() {
-		super("action", "org/columba/core/action/action.xml");
+		super("org.columba.core.action", "org/columba/core/action/action.xml");
 
 		parentNode = getConfig().getRoot().getElement("actionlist");
 	}

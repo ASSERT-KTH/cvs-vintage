@@ -77,7 +77,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 									ActionPluginHandler) MainInterface
 										.pluginManager
 										.getHandler(
-									"action")).getAction(
+									"org.columba.core.action")).getAction(
 								next.getAttribute("action"),
 								frameController);
 
@@ -95,7 +95,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 										ActionPluginHandler) MainInterface
 											.pluginManager
 											.getHandler(
-										"action")).getAction(
+										"org.columba.core.action")).getAction(
 								next.getAttribute("checkboxaction"),
 								frameController);
 						JCheckBoxMenuItem menuitem =
@@ -113,7 +113,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 									ActionPluginHandler) MainInterface
 										.pluginManager
 										.getHandler(
-									"action")).getIMenu(
+									"org.columba.core.action")).getIMenu(
 								next.getAttribute("imenu"),
 								frameController));
 					} catch (Exception e) {

@@ -60,7 +60,7 @@ public class ToolBar extends JToolBar {
 			try {
 				buttonElement = (XmlElement) iterator.next();
 				if( buttonElement.getName().equals("button"))
-					addButton( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("action")).getAction(buttonElement.getAttribute("action"),frameController));
+					addButton( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("org.columba.core.action")).getAction(buttonElement.getAttribute("action"),frameController));
 				else if( buttonElement.getName().equals("separator"))
 					addSeparator();
 			} catch (Exception e) {
