@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.23 2003/07/23 06:08:54 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.24 2004/04/30 19:55:28 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -373,6 +373,12 @@ public class UndoManager
 			if(mgr.redoClearDirty == this)
 				mgr.buffer.setDirty(false);
 			return offset;
+		} //}}}
+
+		//{{{ toString() method
+		public String toString()
+		{
+			return str;
 		} //}}}
 
 		UndoManager mgr;
