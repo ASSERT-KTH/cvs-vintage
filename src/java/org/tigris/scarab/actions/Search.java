@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabUtil;
-import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.export.ExportFormat;
 
 /**
  *  This class is responsible for searching.
@@ -89,7 +89,7 @@ import org.tigris.scarab.util.Log;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.126 2003/04/17 22:35:32 elicia Exp $
+ * @version $Id: Search.java,v 1.127 2003/04/18 02:42:31 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -113,7 +113,7 @@ public class Search extends RequireLoginFirstAction
         if (queryResults != null && queryResults.size() > 0)
         {
             context.put("queryResults", queryResults);
-            String format = data.getParameters().getString("format");
+            String format = ExportFormat.determine(data);
             String next = data.getParameters().getString("next");
             if (StringUtils.isNotEmpty(format))
             {
@@ -482,6 +482,11 @@ public class Search extends RequireLoginFirstAction
         }
     }
 
+    /**
+     * @return The search string used to perform the query.  (Does
+     * <i>not</i> refer to the CGI context of the term "query
+     * string".)
+     */
     public static String getQueryString(RunData data) throws Exception
     {
         String queryString = data.getParameters().getString("queryString");

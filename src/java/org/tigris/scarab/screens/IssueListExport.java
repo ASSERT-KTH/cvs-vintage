@@ -64,6 +64,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.util.export.ExportFormat;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -110,8 +111,8 @@ public class IssueListExport extends Default
         ScarabUser user = (ScarabUser)data.getUser();
         MITList mitlist = user.getCurrentMITList();
 
-        String format = data.getParameters().getString("format");
-        if ("tsv".equalsIgnoreCase(format))
+        String format = ExportFormat.determine(data);
+        if (ExportFormat.TSV_FORMAT.equalsIgnoreCase(format))
         {
             data.getResponse().setContentType("text/plain");
         }
