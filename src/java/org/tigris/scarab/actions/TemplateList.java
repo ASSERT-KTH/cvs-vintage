@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -63,7 +63,6 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
-import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
@@ -89,7 +88,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.48 2003/05/17 01:41:20 elicia Exp $
+ * @version $Id: TemplateList.java,v 1.49 2003/06/25 17:46:01 mpoeschl Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {

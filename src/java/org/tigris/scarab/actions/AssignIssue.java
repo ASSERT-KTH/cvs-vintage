@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -65,12 +65,10 @@ import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -80,7 +78,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.97 2003/05/14 21:43:54 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.98 2003/06/25 17:46:01 mpoeschl Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -236,7 +234,6 @@ public class AssignIssue extends BaseModifyIssue
             issues = scarabR.getAssignIssuesList();
         }
         Map userMap = user.getAssociatedUsersMap();
-        String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
         Attachment attachment = null;
@@ -245,8 +242,6 @@ public class AssignIssue extends BaseModifyIssue
         for (int i=0; i < issues.size(); i++)
         {
             Issue issue = (Issue)issues.get(i);
-            IssueType issueType = issue.getIssueType();
-            Module module = issue.getModule();
             Set userList = (Set) userMap.get(issue.getIssueId());
             List oldAssignees = issue.getUserAttributeValues();
            
@@ -303,7 +298,6 @@ public class AssignIssue extends BaseModifyIssue
             {
                 boolean userStillAssigned = false;
                 AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(m);
-                Attribute oldAttr = oldAttVal.getAttribute();
                 for (Iterator iter = userList.iterator(); iter.hasNext();)
                 {
                     List item = (List)iter.next();

@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -61,8 +61,6 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.om.MITListItem;
-import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.reports.ReportBridge;
@@ -76,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.21 2003/06/16 23:44:52 elicia Exp $
+ * @version $Id: DefineXModuleList.java,v 1.22 2003/06/25 17:46:01 mpoeschl Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {

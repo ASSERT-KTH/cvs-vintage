@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -59,8 +59,6 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.om.MITListItem;
-import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -72,7 +70,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.14 2003/06/16 23:44:52 elicia Exp $
+ * @version $Id: ModuleQuery.java,v 1.15 2003/06/25 17:46:01 mpoeschl Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {

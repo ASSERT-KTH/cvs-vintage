@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -55,7 +55,6 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey; 
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
@@ -93,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.169 2003/06/19 19:19:03 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.170 2003/06/25 17:46:01 mpoeschl Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -338,7 +337,6 @@ public class ModifyIssue extends BaseModifyIssue
         {
             Field nameField = newGroup.get("Name"); 
             Field dataField = newGroup.get("Data");
-            String nameFieldString = nameField.toString();
             String dataFieldString = dataField.toString();
             if (dataFieldString != null && dataFieldString.trim().length() > 0)
             {
@@ -479,7 +477,6 @@ public class ModifyIssue extends BaseModifyIssue
     {
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
             getTemplateContext(data).get(ScarabConstants.LOCALIZATION_TOOL);
-        ActivitySet activitySet = null;
         if (group != null)
         {
             Field nameField = group.get("Name");
