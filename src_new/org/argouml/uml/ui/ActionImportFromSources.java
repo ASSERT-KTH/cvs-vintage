@@ -1,4 +1,4 @@
-// $Id: ActionImportFromSources.java,v 1.19 2004/09/16 17:51:08 mvw Exp $
+// $Id: ActionImportFromSources.java,v 1.20 2004/09/18 15:56:49 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: ActionImportFromSources.java,v 1.19 2004/09/16 17:51:08 mvw Exp $
+//$Id: ActionImportFromSources.java,v 1.20 2004/09/18 15:56:49 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -75,7 +75,7 @@ public class ActionImportFromSources extends UMLAction {
     /**
      * @return Returns the SINGLETON.
      */
-    public static ActionImportFromSources getSingleton() {
+    public static ActionImportFromSources getInstance() {
         return SINGLETON;
     }
 }
