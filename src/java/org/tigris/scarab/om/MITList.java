@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.28 2003/06/13 16:22:42 dlr Exp $
+ * @version $Id: MITList.java,v 1.29 2003/06/17 20:59:18 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -82,6 +82,11 @@ public  class MITList
     private ScarabUser aScarabUser;
 
     private List itemsScheduledForDeletion;
+    // cache the expanded list because it is used by many methods
+    // and is not likely to change after list is first initialized.
+    private List expandedList = null;
+    // keep track if this list represents everything the user can query
+    private boolean isAllMITs = false;
 
     public int size()
     {
@@ -167,6 +172,7 @@ public  class MITList
             {
                 rawList.remove(currentObject);
                 i.remove();
+                expandedList = null;
             }
             else 
             {
@@ -248,6 +254,7 @@ public  class MITList
             sublist.setScarabUser(userB);
         }
         List items = getExpandedMITListItems();
+        sublist.isAllMITs = this.isAllMITs;
         Module[] validModules = user.getModules(permissions);
 
         Set moduleIds = new HashSet();
@@ -369,6 +376,7 @@ public  class MITList
         
         super.setScarabUser(v);
         aScarabUser = v;
+        expandedList = null;
     }
 
                  
@@ -414,7 +422,6 @@ public  class MITList
         return getCommonAttributes(true);
     }
 
-
     /**
      * Checks all items to see if they contain the attribute.
      *
@@ -424,17 +431,37 @@ public  class MITList
     public boolean isCommon(Attribute attribute, boolean activeOnly)
         throws Exception
     {
+        Criteria crit = new Criteria();
+        addToCriteria(crit, RModuleAttributePeer.MODULE_ID, 
+                      RModuleAttributePeer.ISSUE_TYPE_ID);
+        crit.add(RModuleAttributePeer.ATTRIBUTE_ID, 
+                 attribute.getAttributeId());            
+        if (activeOnly)
+        {
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+        }
+
+        return size() == RModuleAttributePeer.count(crit);
+
+        /*
+        List rmas = RModuleAttributePeer.doSelect(crit); 
         boolean common = true;
-        Iterator items = iterator();
-        while (items.hasNext() && common) 
+        for (Iterator items = iterator(); items.hasNext() && common;) 
         {
             MITListItem compareItem = (MITListItem)items.next();
-            RModuleAttribute modAttr = getModule(compareItem)
-                        .getRModuleAttribute(attribute, 
-                                             getIssueType(compareItem));
-            common = modAttr != null && (!activeOnly || modAttr.getActive());
+            boolean foundRma = false;
+            for (Iterator rmaIter = rmas.iterator(); 
+                 rmaIter.hasNext() && !foundRma;) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)rmaIter.next();
+                foundRma = (!activeOnly || rma.getActive()) &&
+                    rma.getModuleId().equals(compareItem.getModuleId()) &&
+                    rma.getIssueTypeId().equals(compareItem.getIssueTypeId());
+            }
+            common = foundRma;
         }
         return common;
+        */
     }
 
     public boolean isCommon(Attribute attribute)
@@ -825,6 +852,12 @@ public  class MITList
         return matchingRMOs;
     }
 
+    public boolean isCommon(AttributeOption option)
+        throws Exception
+    {
+        return isCommon(option, true);
+    }
+
     /**
      * Checks all items after the first to see if they contain the attribute.
      * It is assumed the attribute is included in the first item.
@@ -832,19 +865,20 @@ public  class MITList
      * @param option an <code>Attribute</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean isCommon(AttributeOption option)
+    public boolean isCommon(AttributeOption option, boolean activeOnly)
         throws Exception
     {
-        boolean common = true;
-        Iterator items = iterator();
-        while (items.hasNext() && common) 
+        Criteria crit = new Criteria();
+        addToCriteria(crit, RModuleOptionPeer.MODULE_ID, 
+                      RModuleOptionPeer.ISSUE_TYPE_ID);
+        crit.add(RModuleOptionPeer.OPTION_ID, 
+                 option.getOptionId());            
+        if (activeOnly)
         {
-            MITListItem compareItem = (MITListItem)items.next();
-            RModuleOption modOpt = getModule(compareItem)
-                .getRModuleOption(option, getIssueType(compareItem));
-            common = modOpt != null && modOpt.getActive();
-        }
-        return common;
+            crit.add(RModuleOptionPeer.ACTIVE, true);
+        }            
+
+        return size() == RModuleOptionPeer.count(crit);
     }
 
     public List getModuleIds()
@@ -917,8 +951,30 @@ public  class MITList
     }
 
     public void addToCriteria(Criteria crit)
+        throws Exception
     {
-        if (size() > 0) 
+        addToCriteria(crit, IssuePeer.MODULE_ID, IssuePeer.TYPE_ID);
+    }
+
+    private void addToCriteria(Criteria crit, 
+                               String moduleField, String issueTypeField)
+        throws Exception
+    {
+        if (!isSingleModule() && isSingleIssueType()) 
+        {
+            crit.addIn(moduleField, getModuleIds());
+            crit.add(issueTypeField, getIssueType().getIssueTypeId());
+        }
+        else if (isSingleModule() && !isSingleIssueType()) 
+        {
+            crit.add(moduleField, getModule().getModuleId());
+            crit.addIn(issueTypeField, getIssueTypeIds());
+        }
+        else if (isAllMITs) 
+        {
+            crit.addIn(moduleField, getModuleIds());
+        }
+        else if (size() > 0) 
         {
             List items = getExpandedMITListItems();
             Iterator i = items.iterator();
@@ -927,10 +983,10 @@ public  class MITList
             {
                 MITListItem item = (MITListItem)i.next();
                 Criteria.Criterion c1 = 
-                    crit.getNewCriterion(IssuePeer.MODULE_ID, 
+                    crit.getNewCriterion(moduleField, 
                         item.getModuleId(), Criteria.EQUAL);
                 Criteria.Criterion c2 = 
-                    crit.getNewCriterion(IssuePeer.TYPE_ID, 
+                    crit.getNewCriterion(issueTypeField, 
                         item.getIssueTypeId(), Criteria.EQUAL);
                 c1.and(c2);
                 if (c == null) 
@@ -950,10 +1006,20 @@ public  class MITList
         throws TorqueException
     {
         super.addMITListItem(item);
+        expandedList = null;
+        calculateIsAllMITs(item);
+    }
+
+    private void calculateIsAllMITs(MITListItem item)
+    {
+        isAllMITs |= (MITListItem.MULTIPLE_KEY.equals(item.getModuleId())
+                && MITListItem.MULTIPLE_KEY.equals(item.getIssueTypeId()));
     }
 
     public List getExpandedMITListItems()
     {
+        if (expandedList == null) 
+        {
         List items = new ArrayList();
         try
         {
@@ -961,6 +1027,7 @@ public  class MITList
                  rawItems.hasNext();) 
             {
                 MITListItem item = (MITListItem)rawItems.next();
+                calculateIsAllMITs(item);
                 if (!item.isSingleModule()) 
                 {
                     Module[] modules = getScarabUser()
@@ -970,12 +1037,16 @@ public  class MITList
                         Module module = modules[i];
                         if (item.isSingleIssueType()) 
                         {
-                            MITListItem newItem = 
-                                MITListItemManager.getInstance();
-                            newItem.setModule(module);
-                            newItem.setIssueType(getIssueType(item));
-                            newItem.setListId(getListId());
-                            items.add(newItem);
+                            IssueType type = getIssueType(item);
+                            if (module.getRModuleIssueType(type) != null) 
+                            {
+                                MITListItem newItem = 
+                                    MITListItemManager.getInstance();
+                                newItem.setModule(module);
+                                newItem.setIssueType(type);
+                                newItem.setListId(getListId());
+                                items.add(newItem);
+                            }
                         }
                         else 
                         {
@@ -997,7 +1068,10 @@ public  class MITList
         {
             throw new TorqueRuntimeException(e);
         }
-        return items;
+            expandedList = items;
+        }
+        
+        return expandedList;
     }
 
     /**

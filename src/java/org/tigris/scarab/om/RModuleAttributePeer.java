@@ -49,6 +49,9 @@ package org.tigris.scarab.om;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.util.Criteria;
+import com.workingdogs.village.Record;
+import com.workingdogs.village.DataSetException;
 
 // Scarab classes
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -69,6 +72,27 @@ public class RModuleAttributePeer
         "RModuleAttributePeer";
     private static final String RETRIEVE_BY_PK = 
         "retrieveByPK";
+
+    private static final String COUNT = 
+        "count(*)";
+
+    /**
+     * Adds count(*) to the select clause and returns the 
+     * number of rows resulting from the given Criteria.  If the criteria will
+     * lead to duplicate rows they will be counted.  
+     *
+     * @param crit a <code>Criteria</code> value
+     * @return an <code>int</code> value
+     * @exception TorqueException if an error occurs
+     * @exception DataSetException if an error occurs
+     */
+    public static int count(Criteria crit)
+        throws TorqueException, DataSetException
+    {
+        crit.addSelectColumn(COUNT);
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt();
+    }
 
     /** 
      * Retrieve a single object by pk
