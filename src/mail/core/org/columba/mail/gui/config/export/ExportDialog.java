@@ -83,16 +83,16 @@ public class ExportDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    private void initTree(CheckableTreeNode root, FolderTreeNode parent) {
+    private void createChildNodes(CheckableTreeNode root, FolderTreeNode parent) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
 
             CheckableTreeNode c = new CheckableTreeNode(child.getName());
             c.setIcon(child.getCollapsedIcon());
             c.setNode(child);
-            root.addChild(c);
+            root.add(c);
 
-            initTree(c, child);
+            createChildNodes(c, child);
         }
     }
 
@@ -120,7 +120,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             (FolderTreeNode) MailInterface.treeModel.getRoot();
         CheckableTreeNode root = new CheckableTreeNode(parent.getName());
         root.setNode(parent);
-        initTree(root, parent);
+        createChildNodes(root, parent);
 
         tree = new CheckableTree(root);
         tree.setRootVisible(false);

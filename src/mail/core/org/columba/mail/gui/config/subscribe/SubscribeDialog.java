@@ -15,34 +15,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.subscribe;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.event.TreeExpansionEvent;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 
@@ -60,14 +43,13 @@ import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * 
  * Subscribe dialog used by IMAP accounts.
  * 
  * @author fdietz
  */
-public class SubscribeDialog
-    extends JDialog
-    implements ActionListener, TreeSelectionListener, TreeWillExpandListener {
+public class SubscribeDialog extends JDialog
+    implements ActionListener, TreeSelectionListener {
+    
     private JButton subscribeButton;
     private JButton syncButton;
     private JButton unsubscribeButton;
@@ -114,7 +96,7 @@ public class SubscribeDialog
         MainInterface.processor.addOp(c);
     }
 
-       private void unsubscribe() {
+    private void unsubscribe() {
         setEnabled(false);
 
         Command c =
@@ -125,9 +107,10 @@ public class SubscribeDialog
                     selection.getMailbox()));
         MainInterface.processor.addOp(c);
     }
-/**
-	 * Inits the GUI components.
-	 */
+       
+    /**
+     * Inits the GUI components.
+     */
     private void initComponents() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -216,7 +199,6 @@ public class SubscribeDialog
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
         tree = new CheckableTree();
         tree.addTreeSelectionListener(this);
-        tree.addTreeWillExpandListener(this);
         tree.setRootVisible(false);
 
         JScrollPane scrollPane = new JScrollPane(tree);
@@ -305,8 +287,8 @@ public class SubscribeDialog
 	 */
     private void updateButtons() {
         if (selection != null) {
-            subscribeButton.setEnabled(!selection.isSubscribed());
-            unsubscribeButton.setEnabled(selection.isSubscribed());
+            subscribeButton.setEnabled(!selection.isSelected());
+            unsubscribeButton.setEnabled(selection.isSelected());
         } else {
             subscribeButton.setEnabled(false);
             unsubscribeButton.setEnabled(false);
@@ -314,21 +296,6 @@ public class SubscribeDialog
         
         syncButton.setEnabled(true);
         tree.setEnabled(true);
-    }
-
-    /** ************************ TreeWillExpandListener ******************* */
-    /**
-	 * @see javax.swing.event.TreeWillExpandListener#treeWillCollapse(javax.swing.event.TreeExpansionEvent)
-	 */
-    public void treeWillCollapse(TreeExpansionEvent arg0)
-        throws ExpandVetoException {
-    }
-
-    /**
-	 * @see javax.swing.event.TreeWillExpandListener#treeWillExpand(javax.swing.event.TreeExpansionEvent)
-	 */
-    public void treeWillExpand(TreeExpansionEvent arg0)
-        throws ExpandVetoException {
     }
 
     /**
@@ -356,7 +323,7 @@ public class SubscribeDialog
 	 *  
 	 */
     public void subscribeDone() {
-        selection.setSubscribed(true);
+        selection.setSelected(true);
         treeModel.nodeChanged(selection);
                
         updateButtons();
@@ -366,10 +333,9 @@ public class SubscribeDialog
      *  
      */
     public void unsubscribeDone() {
-        selection.setSubscribed(false);
+        selection.setSelected(false);
         treeModel.nodeChanged(selection);
         
         updateButtons();
     }
-    
 }

@@ -24,37 +24,19 @@ import org.columba.core.gui.util.ImageLoader;
 
 public class ListInfoTreeNode extends CheckableItemImpl {
     protected final static ImageIcon collapsedIcon =
-    ImageLoader.getSmallImageIcon("folder-closed.png");
+            ImageLoader.getSmallImageIcon("folder-closed.png");
     protected final static ImageIcon expandedIcon =
-    ImageLoader.getSmallImageIcon("folder-open.png");
+            ImageLoader.getSmallImageIcon("folder-open.png");
     
-    private String name;
-    private boolean subscribed;
     private String mailbox;
     
     /**
      * 
      */
     public ListInfoTreeNode(String name ,String mailbox) {
-        super();
-        this.setName(name);
-        this.mailbox= mailbox;
+        super(name);
+        this.mailbox = mailbox;
      }
-
-
-    /**
-     * @return Returns the subscribed.
-     */
-    public boolean isSubscribed() {
-        return this.isSelected();
-    }
-
-    /**
-     * @param subscribed The subscribed to set.
-     */
-    public void setSubscribed(boolean subscribed) {
-        this.setSelected(subscribed);
-    }
 
     /**
      * @return Returns the mailbox.
@@ -70,12 +52,10 @@ public class ListInfoTreeNode extends CheckableItemImpl {
         this.mailbox = mailbox;
     }
 
-
     /**
      * @see org.columba.core.gui.checkabletree.CheckableItem#getIcon()
      */
     public Icon getIcon() {
         return collapsedIcon;
     }
-
 }

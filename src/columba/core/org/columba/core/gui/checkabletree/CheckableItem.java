@@ -13,25 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.checkabletree;
 
 import javax.swing.Icon;
 import javax.swing.tree.TreeNode;
 
-
 /**
  * @author fdietz
  */
 public interface CheckableItem extends TreeNode {
-    boolean isSelected();
+    public boolean isSelected();
 
-    void setSelected(boolean b);
+    public void setSelected(boolean b);
     
-    Icon getIcon();
+    public Icon getIcon();
     
-    void setIcon( Icon icon);
-    
-    void setName(String s);
-    
-    String getName();
+    public void setIcon( Icon icon);
 }

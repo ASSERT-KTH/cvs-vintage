@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.checkabletree;
 
 import javax.swing.Icon;
@@ -21,9 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @author fdietz
  */
-public class CheckableItemImpl
-    extends DefaultMutableTreeNode
-    implements CheckableItem {
+public class CheckableItemImpl extends DefaultMutableTreeNode implements CheckableItem {
     private boolean selected;
     private Icon icon;
 
@@ -37,9 +36,8 @@ public class CheckableItemImpl
     /**
      *
      */
-    public CheckableItemImpl(String name) {
-        super();
-        setName(name);
+    public CheckableItemImpl(Object userObject) {
+        super(userObject);
     }
 
     /**
@@ -63,20 +61,4 @@ public class CheckableItemImpl
     public void setIcon( Icon icon) {
         this.icon = icon;
     }
-    
-    /**
-     * @see org.columba.core.gui.checkabletree.CheckableItem#getName()
-     */
-    public String getName() {
-        return (String) getUserObject();
-    }
-
-    /**
-     * @see org.columba.core.gui.checkabletree.CheckableItem#setName(java.lang.String)
-     */
-    public void setName(String s) {
-       setUserObject(s);
-
-    }
-
 }

@@ -62,7 +62,7 @@ public class CheckRenderer extends JPanel implements TreeCellRenderer {
         
         label.setFont(tree.getFont());
         
-        label.setText(item.getName());
+        label.setText(item.toString());
 
         label.setSelected(isSelected);
         label.setFocus(hasFocus);

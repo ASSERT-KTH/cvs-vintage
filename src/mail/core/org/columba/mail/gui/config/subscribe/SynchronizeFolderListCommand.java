@@ -84,15 +84,15 @@ public class SynchronizeFolderListCommand extends Command {
         delimiter = list[0].getDelimiter();
         
         Iterator it = subscribedFolders.iterator();
-        while( it.hasNext() ) {
+        while (it.hasNext()) {
             ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
-            node.setSubscribed(true);
+            node.setSelected(true);
         }
         
         it = unsubscribedFolders.iterator();
-        while( it.hasNext() ) {
+        while (it.hasNext()) {
             ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
-            node.setSubscribed(false);
+            node.setSelected(false);
         }
         
         return root;
@@ -107,7 +107,7 @@ public class SynchronizeFolderListCommand extends Command {
         mailboxName.append(matcher.group(1));
         actParent = ensureChild(matcher.group(1),mailboxName.toString(), actParent);
         
-        while( matcher.find() ) {
+        while (matcher.find()) {
             mailboxName.append(delimiter);
             mailboxName.append(matcher.group(1));
             actParent = ensureChild(matcher.group(1),mailboxName.toString(), actParent);            
@@ -120,9 +120,9 @@ public class SynchronizeFolderListCommand extends Command {
         Enumeration children = parent.children();
         ListInfoTreeNode node;
         
-        while( children.hasMoreElements() ) {
+        while (children.hasMoreElements()) {
             node = (ListInfoTreeNode) children.nextElement();
-            if( node.getName().equals(name) ) {
+            if (node.toString().equals(name)) {
                 return node;
             }
         }
@@ -133,7 +133,6 @@ public class SynchronizeFolderListCommand extends Command {
         return node;
     }
     
-
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#updateGUI()
      */
@@ -142,5 +141,4 @@ public class SynchronizeFolderListCommand extends Command {
         
         dialog.syncFolderListDone( new DefaultTreeModel(node));       
     }
-
 }
