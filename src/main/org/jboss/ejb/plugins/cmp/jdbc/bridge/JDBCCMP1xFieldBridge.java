@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    private Field field;
@@ -108,7 +108,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
     */
    public void setClean(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
-      fieldState.originalValue = getInstanceValue(ctx);
+      fieldState.originalValue = getManager().copy(getInstanceValue(ctx));
 
       // update last read time
       if(isReadOnly()) {
