@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.5 2001/08/28 00:55:54 user57 Exp $
+# $Id: build.sh,v 1.6 2001/08/28 04:53:11 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -28,12 +28,11 @@ ANT_BUILD_FILE="build.xml"
 # the default arguments
 ANT_OPTIONS="-find $ANT_BUILD_FILE"
 
-# don't check versions (too slow)
-ANT_VERSION=""
-
-# specify the jaxp parsers to use
-JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
-JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
+# the jaxp parser to use
+if [ "x$JAXP" = "x" ]; then
+    # Default to crimson
+    JAXP="crimson"
+fi
 
 #
 # Helper to complain.
@@ -61,7 +60,7 @@ search() {
 	ANT="$ANT_HOME/bin/ant"
 	if [ -x "$ANT" ]; then
 	    # found one
-	    echo $ANT
+	    echo $ANT_HOME
 	    break
 	fi
     done
@@ -75,52 +74,63 @@ main() {
     maybe_source "$DIRNAME/build.conf" "$HOME/.build.conf"
 
     # try the search path
-    ANT=`search $ANT_SEARCH_PATH`
-    target="build"
-    _cwd=`pwd`
+    ANT_HOME=`search $ANT_SEARCH_PATH`
 
-    while [ "x$ANT" = "x" ] && [ "$cwd" != "$ROOT" ]; do
-	cd ..
-	cwd=`pwd`
-	ANT=`search $ANT_SEARCH_PATH`
-    done
+    # try looking up to root
+    if [ "x$ANT_HOME" = "x" ]; then
+	target="build"
+	_cwd=`pwd`
 
-    # make sure we get back
-    cd $_cwd
+	while [ "x$ANT_HOME" = "x" ] && [ "$cwd" != "$ROOT" ]; do
+	    cd ..
+	    cwd=`pwd`
+	    ANT_HOME=`search $ANT_SEARCH_PATH`
+	done
 
-    if [ "$cwd" != "$ROOT" ]; then
-	found="true"
-    fi
+	# make sure we get back
+	cd $_cwd
 
-    # complain if we did not find anything
-    if [ "$found" != "true" ]; then
-	die "Could not locate Ant; check \$ANT or \$ANT_HOME."
+	if [ "$cwd" != "$ROOT" ]; then
+	    found="true"
+	fi
+
+	# complain if we did not find anything
+	if [ "$found" != "true" ]; then
+	    die "Could not locate Ant; check \$ANT or \$ANT_HOME."
+	fi
     fi
 
     # make sure we have one
+    ANT=$ANT_HOME/bin/ant
     if [ ! -x "$ANT" ]; then
 	die "Ant file is not executable: $ANT"
     fi
 
-    # perhaps check the version
-    if [ "x$ANT_VERSION" != "x" ] && [ "x$ANT_VERSION_CHECK" != "x" ]; then
-	result="`$ANT -version 2>&1 | $GREP $ANT_VERSION`x"
-	if [ "$result" = "x" ]; then
-	    die "Ant version $ANT_VERSION is required to build."
-	fi
+    # specify the jaxp parser impls to use
+    case "$JAXP" in
+	crimson)
+	    JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
+	    JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
+	    ;;
+	   
+	xerces)
+	    JAXP_DOM_FACTORY="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"
+	    JAXP_SAX_FACTORY="org.apache.xerces.jaxp.SAXParserFactoryImpl"
+	    ;;
+    esac
+
+    if [ "x$JAXP_DOM_FACTORY" != "x" ]; then
+	ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
+    fi
+    if [ "x$JAXP_SAX_FACTORY" != "x" ]; then
+	ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
     fi
 
-    # Specify the JAXP parser impls to use
-    ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
-    ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
-    export ANT_OPTS
-
-    # change to the directory where the script lives so folks do not have
-    # to be in the same dir to run the build without specifying the build
-    # file. 
+    # change to the directory where the script lives so users are not forced
+    # to be in the same directory as build.xml
     cd $DIRNAME
 
-    export ANT ANT_HOME
+    export ANT ANT_HOME ANT_OPTS
     exec $ANT $ANT_OPTIONS "$@"
 }
 
