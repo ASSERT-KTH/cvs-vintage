@@ -26,7 +26,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.6 2001/01/10 06:24:00 carnold Exp $
+// $Id: PropPanelInstance.java,v 1.7 2001/01/14 22:52:52 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 import java.awt.*;
@@ -53,12 +53,12 @@ public class PropPanelInstance extends PropPanel {
 
     addCaption("Stereotype:",1,0,0);
     JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
-    addField(stereotypeBox,1,0,0);
+    addField(new UMLComboBoxNavigator(this,"NavStereo",stereotypeBox),1,0,0);
 
     addCaption("Classifier:",2,0,0);
     UMLComboBoxModel classifierModel = new UMLComboBoxModel(this,"isAcceptibleClassifier",
             "classifier","getClassifier","setClassifier",false,MClassifier.class,true);
-    addField(new UMLComboBox(classifierModel),2,0,0);
+    addField(new UMLComboBoxNavigator(this,"NavClass",new UMLComboBox(classifierModel)),2,0,0);
 
     addCaption("Namespace:",3,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);

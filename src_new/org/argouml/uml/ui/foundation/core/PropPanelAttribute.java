@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.8 2001/01/14 06:29:45 carnold Exp $
+// $Id: PropPanelAttribute.java,v 1.9 2001/01/14 22:52:52 carnold Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -167,5 +167,22 @@ public class PropPanelAttribute extends PropPanel {
         return baseClass.equals("Attribute") ||
             baseClass.equals("StructuralFeature") ||
             baseClass.equals("Feature");
+    }
+
+    /**
+     *   Appropriate namespace is the namespace of our class,
+     *      not the class itself
+     */
+    protected MNamespace getDisplayNamespace() {
+      MNamespace ns = null;
+      Object target = getTarget();
+      if(target instanceof MAttribute) {
+        MAttribute attr = ((MAttribute) target);
+        MClassifier owner = attr.getOwner();
+        if(owner != null) {
+          ns = owner.getNamespace();
+        }
+      }
+      return ns;
     }
 } /* end class PropPanelAttribute */
