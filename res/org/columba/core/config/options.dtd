@@ -1,32 +1,43 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- DTD for configuration file". -->
+<?xml version="1.0" encoding="UTF-8"?>
 
+<!ELEMENT options (gui)>
 
-<!ELEMENT options ( gui )>
+<!ELEMENT gui (mainfont,textfont,theme,toolbar)>
 
-<!ELEMENT gui (mainfont, textfont, theme, toolbar)>
+<!ELEMENT mainfont EMPTY>
+<!ATTLIST mainfont
+ name CDATA #REQUIRED
+ size CDATA "10"
+>
 
-<!ELEMENT theme ( foreground, background )  >
- <!ATTLIST theme id CDATA "2">
+<!ELEMENT textfont EMPTY>
+<!ATTLIST textfont
+ name CDATA #REQUIRED
+ size CDATA "10"
+>
+
+<!ELEMENT theme (foreground,background)>
+<!ATTLIST theme
+ id CDATA "2"
+>
  
-<!ELEMENT foreground > 
- <!ATTLIST foreground red CDATA "255">
- <!ATTLIST foreground green CDATA "255">
- <!ATTLIST foreground blue CDATA "255">
+<!ELEMENT foreground EMPTY> 
+<!ATTLIST foreground
+ red CDATA "255"
+ green CDATA "255"
+ blue CDATA "255"
+>
  
-<!ELEMENT background > 
- <!ATTLIST foreground red CDATA "131">
- <!ATTLIST foreground green CDATA "74">
- <!ATTLIST foreground blue CDATA "105">
+<!ELEMENT background EMPTY> 
+<!ATTLIST background
+ red CDATA "131"
+ green CDATA "74"
+ blue CDATA "105"
+>
 
-<!ELEMENT toolbar >
- <!ATTLIST toolbar enable_icon (true|false) "true">
- <!ATTLIST toolbar enable_text (true|false) "true">
- <!ATTLIST toolbar text_position (true|false) "false">
-
-<!ELEMENT mimetypes  >
-
-
-
-
-
+<!ELEMENT toolbar EMPTY>
+<!ATTLIST toolbar
+ enable_icon (true|false) "true"
+ enable_text (true|false) "true"
+ text_position (true|false) "false"
+>
