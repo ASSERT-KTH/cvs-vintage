@@ -59,7 +59,7 @@ import org.tigris.scarab.util.IssueIdParser;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.1 2003/01/31 19:33:38 jon Exp $
+ * @version $Id: ScarabUtil.java,v 1.2 2003/02/07 03:35:48 jon Exp $
  */
 public class ScarabUtil
 {
@@ -106,4 +106,95 @@ public class ScarabUtil
         }
         return sb.toString();
     }
+
+    /**
+     * URL encodes <code>in</code> and writes it to <code>out</code>. If the
+     * string is null, 'null' will be written. Code 'borrowed' from DynamicURI.java
+     * in the Jakarta Turbine 3 package. We use this code instead of java.net.Encoder
+     * because Encoder.encode is deprecated and we don't feel like putting a dependency
+     * on JDK 1.4.1. This should work fine for our purposes.
+     *
+     * @param in String to write.
+     * @param out Buffer to write to. Null if nothing in in.
+     */
+    public static final String urlEncode(String in)
+    {
+        if (in == null || in.length() == 0)
+        {
+            return null;
+        }
+
+        StringBuffer out = new StringBuffer(in.length()+128);
+        // This is the most expensive operation:
+        byte[] bytes = in.getBytes();
+
+        for (int i = 0; i < bytes.length; i++)
+        {
+            char c = (char) bytes[i];
+
+            if ( c < 128 && safe[ c ] )
+            {
+                out.append(c);
+            }
+            else if (c == ' ')
+            {
+                out.append('+');
+            }
+            else
+            {
+                byte toEscape = bytes[i];
+                out.append('%');
+                int low = (int) (toEscape & 0x0f);
+                int high = (int) ((toEscape & 0xf0) >> 4);
+                out.append(hexadecimal[high]);
+                out.append(hexadecimal[low]);
+            }
+        }
+        return out.toString();
+    }
+
+    // ------------------------------------- private constants for url encoding
+
+    /**
+     * Array mapping hexadecimal values to the corresponding ASCII characters.
+     */
+    private static final char[] hexadecimal =
+        {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'A', 'B', 'C', 'D', 'E', 'F'
+        };
+
+    /**
+     * Characters that need not be encoded. This is much faster than using a
+     * BitSet, and for such a small array the space cost seems justified.
+     */
+    private static boolean[] safe = new boolean[ 128 ];
+
+    /** Static initializer for {@link #safe} */
+    static
+    {
+        for (int i = 'a'; i <= 'z'; i++)
+        {
+            safe[ i ] = true;
+        }
+        for (int i = 'A'; i <= 'Z'; i++)
+        {
+            safe[ i ] = true;
+        }
+        for (int i = '0'; i <= '9'; i++)
+        {
+            safe[ i ] = true;
+        }
+
+        safe['-'] = true;
+        safe['_'] = true;
+        safe['.'] = true;
+        safe['!'] = true;
+        safe['~'] = true;
+        safe['*'] = true;
+        safe['\''] = true;
+        safe['('] = true;
+        safe[')'] = true;
+    }
+
 }

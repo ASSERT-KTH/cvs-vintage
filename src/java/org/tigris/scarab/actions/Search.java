@@ -73,7 +73,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabUtil;
 
 /**
  *  This class is responsible for searching.
@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.105 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: Search.java,v 1.106 2003/02/07 03:35:48 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -478,7 +478,7 @@ public class Search extends RequireLoginFirstAction
                     for (int j=0; j<values.length; j++)
                     {
                         buf.append('&').append(key);
-                        buf.append('=').append(values[j]);
+                        buf.append('=').append(ScarabUtil.urlEncode(values[j]));
                     }
                 }
             }
