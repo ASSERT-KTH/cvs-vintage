@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.8 2001/10/05 21:41:20 nacho Exp $
- * $Revision: 1.8 $
- * $Date: 2001/10/05 21:41:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.9 2001/10/08 04:58:19 larryi Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/10/08 04:58:19 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -152,11 +152,25 @@ public class JDBCRealm extends RealmBase {
     }
 
     /**
+     * Return status of connectionName
+     */
+    public boolean isConnectionNameSet() {
+        return (connectionName != null);
+    }
+
+    /**
      * Set the password to use to connect to the database.
      * @param connectionPassword User password
      */
     public void setConnectionPassword(String connectionPassword) {
         this.connectionPassword = connectionPassword;
+    }
+
+    /**
+     * Return status of connectionPassword
+     */
+    public boolean isConnectionPasswordSet() {
+        return (connectionPassword != null);
     }
 
     /**
