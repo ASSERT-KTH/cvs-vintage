@@ -213,6 +213,16 @@ public class Tomcat {
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
 	apacheConfig.execute( cm );     
 
+	// Generate IIS configs
+	//
+	org.apache.tomcat.task.IISConfig iisConfig=new  org.apache.tomcat.task.IISConfig();
+	iisConfig.execute( cm );     
+
+	// Generate Netscape configs
+	//
+	org.apache.tomcat.task.NSConfig nsConfig=new  org.apache.tomcat.task.NSConfig();
+	nsConfig.execute( cm );     
+
 	System.out.println(sm.getString("tomcat.start"));
 	cm.init(); // set up contexts
 	cm.start(); // start serving

@@ -76,8 +76,7 @@ public class ApacheConfig  { // implements XXX
     public static final String APACHE_CONFIG  = "/conf/tomcat-apache.conf";
     public static final String MOD_JK_CONFIG  = "/conf/mod_jk.conf";
     public static final String WORKERS_CONFIG = "/conf/workers.properties";
-    public static final String URL_WORKERS_MAP_CONFIG = "/conf/uriworkermap.properties";
-    public static final String JK_LOG_LOCATION = "/log/mod_jk.log";
+    public static final String JK_LOG_LOCATION = "/logs/mod_jk.log";
 
     public ApacheConfig() {
     }
@@ -95,13 +94,7 @@ public class ApacheConfig  { // implements XXX
 
 	    FileWriter configW=new FileWriter(tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter(configW);
-        PrintWriter mod_jk = new PrintWriter(new FileWriter(tomcatHome + MOD_JK_CONFIG));
-        PrintWriter uri_worker = new PrintWriter(new FileWriter(tomcatHome + URL_WORKERS_MAP_CONFIG));        
-
-        uri_worker.println("###################################################################");		    
-        uri_worker.println("# Auto generated configuration. Dated: " +  new Date());
-        uri_worker.println("###################################################################");		    
-        uri_worker.println();
+        PrintWriter mod_jk = new PrintWriter(new FileWriter(tomcatHome + MOD_JK_CONFIG + "-auto"));
 
         mod_jk.println("###################################################################");
         mod_jk.println("# Auto generated configuration. Dated: " +  new Date());
@@ -116,7 +109,7 @@ public class ApacheConfig  { // implements XXX
                 mod_jk.println("LoadModule jk_module modules/mod_jk.dll");
                 mod_jk.println();                
                 mod_jk.println("JkWorkersFile \"" + new File(tomcatHome, WORKERS_CONFIG).toString().replace('\\', '/') + "\"");
-                mod_jk.println("JkWorkersFile \"" + new File(tomcatHome, JK_LOG_LOCATION).toString().replace('\\', '/') + "\"");
+                mod_jk.println("JkLogFile \"" + new File(tomcatHome, JK_LOG_LOCATION).toString().replace('\\', '/') + "\"");
 	    } else {
 		// XXX XXX change it to mod_jserv_${os.name}.so, put all so in tomcat
 		// home
@@ -124,7 +117,7 @@ public class ApacheConfig  { // implements XXX
                 mod_jk.println("LoadModule jk_module libexec/mod_jk.so");
                 mod_jk.println();                                
                 mod_jk.println("JkWorkersFile " + new File(tomcatHome, WORKERS_CONFIG));
-                mod_jk.println("JkWorkersFile " + new File(tomcatHome, JK_LOG_LOCATION));
+                mod_jk.println("JkLogFile " + new File(tomcatHome, JK_LOG_LOCATION));
 	    }
 
 
@@ -156,14 +149,6 @@ public class ApacheConfig  { // implements XXX
         mod_jk.println("JkMount /*.jsp ajp12");
         mod_jk.println("JkMount /servlet/* ajp12");
         mod_jk.println();
-
-        uri_worker.println("#");        
-        uri_worker.println("# Root context mounts for Tomcat");
-        uri_worker.println("#");        
-		uri_worker.println("/servlet/*=ajp12");
-		uri_worker.println("/*.jsp=ajp12"); 
-        uri_worker.println();            
-
 
 	    // Set up contexts
 	    // XXX deal with Virtual host configuration !!!!
@@ -226,7 +211,7 @@ public class ApacheConfig  { // implements XXX
             mod_jk.println("#");		    
             mod_jk.println("# The following line mounts all JSP files and the /servlet/ uri to tomcat");
             mod_jk.println("#");                        
-		    mod_jk.println("JkMount " + path +"/servlet ajp12");
+		    mod_jk.println("JkMount " + path +"/servlet/* ajp12");
 		    mod_jk.println("JkMount " + path +"/*.jsp ajp12");
 
 
@@ -246,32 +231,6 @@ public class ApacheConfig  { // implements XXX
             mod_jk.println("#######################################################");		    
             mod_jk.println();
 
-            // Static files will be served by Apache
-            uri_worker.println("#########################################################");		    
-            uri_worker.println("# Auto configuration for the " + path + " context starts.");
-            uri_worker.println("#########################################################");		    
-            uri_worker.println();
-            
-
-            uri_worker.println("#");		    
-            uri_worker.println("# The following line mounts all JSP file and the /servlet/ uri to tomcat");
-            uri_worker.println("#");                        
-		    uri_worker.println(path +"/servlet/*=ajp12");
-		    uri_worker.println(path +"/*.jsp=ajp12"); 
-            uri_worker.println();            
-
-            uri_worker.println("#######################################################");		    
-            uri_worker.println("# Auto configuration for the " + path + " context ends.");
-            uri_worker.println("#######################################################");		    
-            uri_worker.println();
-
-		    // SetHandler broken in jserv ( no zone is sent )
-		    // 		    pw.println("<Location " + path + "/servlet/ >");
-		    // 		    pw.println("    AllowOverride None");
-		    // 		    pw.println("    SetHandler jserv-servlet");
-		    // 		    pw.println("</Location>");
-		    // 		    pw.println();
-
 		    // XXX check security
 		    if( false ) {
 			pw.println("<Location " + path + "/servlet/ >");
@@ -283,18 +242,9 @@ public class ApacheConfig  { // implements XXX
 			pw.println("</Location>");
 		    }
 
-		    // SetHandler broken in jserv ( no zone is sent )
-		    // 		    pw.println("<Location " + path + " >");
-		    // 		    pw.println("    AllowOverride None");
-		    // 		    pw.println("    AddHandler jserv-servlet .jsp");
-		    // 		    pw.println("    Options Indexes");
-		    // 		    pw.println("</Location>");
-
-		    // XXX ErrorDocument
+	        // XXX ErrorDocument
 
 		    // XXX mime types - AddEncoding, AddLanguage, TypesConfig
-
-
 		} else {
 		    // the root context
 		    // XXX use a non-conflicting name
@@ -304,16 +254,12 @@ public class ApacheConfig  { // implements XXX
 	    }
 
 	    pw.close();
-	    mod_jk.close();
-	    uri_worker.close();
-	        
+	    mod_jk.close();        
 	} catch( Exception ex ) {
 	    //	    ex.printStackTrace();
 	    //throw new TomcatException( "Error generating Apache config", ex );
 	    System.out.println("Error generating automatic apache configuration " + ex);
 	    ex.printStackTrace(System.out);
 	}
-
     }
-
 }
