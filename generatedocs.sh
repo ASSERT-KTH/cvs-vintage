@@ -1,6 +1,6 @@
-#!/bin/ksh
+#!/bin/sh
 #
-# $Id: generatedocs.sh,v 1.1 1999/10/09 00:19:57 duncan Exp $
+# $Id: generatedocs.sh,v 1.2 2000/01/14 01:42:51 rubys Exp $
 
 # Ksh wrapper to build the documentation
 # Currently this only works on my personal setups as it uses Java2
