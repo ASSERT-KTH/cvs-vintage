@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.267 2003/02/04 18:20:42 jon Exp $
+ * @version $Id: Issue.java,v 1.268 2003/02/07 00:38:33 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2031,8 +2031,7 @@ public class Issue
         Depend prevDepend = this.getDependency(childIssue, true);
         if (prevDepend != null)
         {
-            throw new Exception("This issue already has a dependency" 
-                                  + " on the issue id you entered.");
+            throw new ScarabException("DependencyExists");
         }
 
         // we definitely want to do an insert here so force it.
@@ -3196,8 +3195,7 @@ public class Issue
                         .getInstance(oldDepend.getObserverId(), false);
         if (otherIssue.equals(this))
         {
-            throw new ScarabException(
-                "Cannot delete a parent issue dependency from a child issue.");
+            throw new ScarabException("CannotDeleteDependency");
         }
         Issue thisIssue = IssueManager
                         .getInstance(oldDepend.getObservedId(), false);
