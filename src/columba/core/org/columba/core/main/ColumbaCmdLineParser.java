@@ -2,6 +2,20 @@
  * Created on Apr 25, 2003
  * File ColumbaCmdLineParser.java
  * 
+ * The contents of this file are subject to the Mozilla Public License Version 1.1
+ * (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and
+ * limitations under the License.
+ *
+ * The Original Code is "The Columba Project"
+ * 
+ * The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+ * Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+ *
+ * All Rights Reserved.
  */
 package org.columba.core.main;
 
@@ -33,7 +47,7 @@ public class ColumbaCmdLineParser {
   private String bodyOption = null;
   private boolean composerOption = false;
   private String mailurlOption = null;
-  private String subjectOption = null;;
+  private String subjectOption = null;
   private String ccOption = null;
   private String bccOption = null;
 
@@ -173,7 +187,7 @@ public class ColumbaCmdLineParser {
       setComposerOption(composerValue.booleanValue());
     }
   }
-  
+
   /**
    * Checks the option --subject, if this is true the intern subjectValue is set 
    * @see ColumbaCmdLineParser#setSubjectOption(String), else the option is set to null.
@@ -191,20 +205,26 @@ public class ColumbaCmdLineParser {
    * TODO: all option should be printed
    */
   public static void printUsage() {
-    System.err.println(
-      "usage: java -jar columba.jar [{-d,--debug}] [{-c,--composer}]"
-        + "[{-r,--rcpt} recipient] [{-b,--body} message body] [{-p,--path} config path]");
+    System.out.println("usage: java -jar columba.jar [OPTION]");
+    System.out.println();
+    System.out.println("Mandatory arguments to long options are mandatory for short options too.");
+    System.out.println("  -d, --debug\t\tprints debug informations to standard out");
+    System.out.println("  -c, --composer\tdisplays the composer window on startup");
+    System.out.println("  -p, --path\t\tsets the path to the config directory");
+    System.out.println("  -r, --rcpt\t\tsets the recipient for the composer");
+    System.out.println("  -b, --body\t\tsets the message body for the composer");
+    System.out.println("\t--help\t\tdisplay this help and exit");
+    System.out.println("\t--version\toutput version information and exit");
+    System.out.println();
   }
 
   /**
    * Prints the current version of columba
-   * TODO: the version String should be set global and this can be done by generating a java-file
-   * per build.xml with the actual version info and compile this to columba
    */
   public static void printVersionInfo() {
-    System.out.println("columba 0.9.11");
+    System.out.println("columba " + MainInterface.version);
   }
-  
+
   /**
    * Gives the value of the Body Option.
    * @return the value of the Body Option.
