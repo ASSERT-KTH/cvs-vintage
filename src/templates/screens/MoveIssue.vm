@@ -1,19 +1,17 @@
 <div class="app" id="moveissue">
 
 #set ($user = $data.User)
-#set ($issueId = $data.Parameters.getString("id"))
-#set ($issue = $scarabR.getIssue($issueId))
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($selectAction = $moveIssueGroup.Action.Value)
 #set ($issueModule= $scarabR.CurrentModule)
-#set ($moduleList = $user.getCopyToModules($issueModule))
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
+#set ($moduleList = $user.getCopyToModules($issueModule, $selectAction))
 
-#if (!$issueList || $issueId.length() == 0)
+#if (!$issueList)
 
   <p class="infomark"><em>$l10n.CouldNotFindIssue</em></p>
 
-#elseif ($copyToModules.isEmpty())
+elseif ($copyToModules.isEmpty())
   <p class="infomark"><em>$l10n.NoDestinationModuleAvailable</em></p>
 
 #else
@@ -30,31 +28,65 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 
-<input type="hidden" name="$moveIssueGroup.Action.Key" 
- value="$selectAction" />
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.FilterThisList</th>
+   <td><input type="text" name="searchString" value="$!searchString" />&nbsp;
+       <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
+  </tr>
+</table>
+
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($sortPolarity = $data.Parameters.getInt("sortPolarity", 1))
+#set ($searchString = $data.Parameters.getString("searchString", ""))
+#set ($paginated = ($resultsPerPage > 0 && $moduleList.size() > $resultsPerPage))
+#if ($searchString && $searchString.length() > 0)
+    #set ($moduleList = $user.getCopyToModules($issueModule, "$selectAction", "$searchString"))
+    #if ( $moduleList.isEmpty())
+        <p class="infomark"><em>$l10n.NoModulesMatch</em></p>
+        #set ($moduleList = $user.getCopyToModules($issueModule, $selectAction))
+    #end
+#else
+    #set ($moduleList = $user.getCopyToModules($issueModule, $selectAction))
+#end 
+
+#set ($paginated = ($resultsPerPage > 0 && $moduleList.size() > $resultsPerPage))
+#if ($paginated)
+    #set ($moduleList = $scarabR.getPaginatedList($moduleList,$pageNum, $resultsPerPage))
+ <p class="paginate">
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortPolarity", "$sortPolarity").setPage("MoveIssue.vm").setPathInfo("selectAction", "$selectAction").setPathInfo("$moveIssueGroup.Action.Key", "$selectAction"))
+
+ #foreach ($id in $issueList)
+    #set ($dummy = $prevLink.addPathInfo("issue_ids", $id))
+ #end
+  <a href="$prevLink">&laquo; previous</a> |
+ #end
+ $pageNum of $scarabR.NbrPages
+ #if ($scarabR.NextPage != 0)
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortPolarity", "$sortPolarity").setPage("MoveIssue.vm").setPathInfo("searchString", $searchString).setPathInfo("selectAction", "$selectAction").setPathInfo("$moveIssueGroup.Action.Key", "$selectAction"))
+ #foreach ($id in $issueList)
+    #set ($dummy = $nextLink.addPathInfo("issue_ids", $id))
+ #end
+  | <a href="$nextLink">&raquo; next</a>
+ #end
+ </p>
+#end
+        
+<input type="hidden" name="$moveIssueGroup.Action.Key" value="$selectAction" />
 <h3>$l10n.ChooseCopyMoveDestination</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-<tr>
- <th>$l10n.CapModule</th><th>$l10n.IssueType</th>
-</tr>
-<tr class="b">
-  <td>$l10n.format("SameModule", $issueModule.Name)</td>
-  <td>
-  <select name="mod_issuetype">
-   <option value="">$l10n.Choose</option>
-    #foreach ($issueType in $issueModule.IssueTypes)
-       <option value="${issueModule.ModuleId}_${issueType.IssueTypeId}">$issueType.Name</option>
-    #end
- </select>
- </td>
-</tr>
 
 #set ($index = 0)
 #foreach ($module in $moduleList)
-#if ($module.ModuleId != $issueModule.ModuleId)
  #set ($index = $index + 1)
  #indexedRows($index)
- <td>$module.Name</td>
+ #if ($module.ModuleId == $issueModule.ModuleId)
+   <td>$l10n.format("SameModule", $issueModule.Name)</td>
+ #else
+   <td>$module.Name</td>
+ #end
  <td>
  <select name="mod_issuetype">
   <option value="">$l10n.Choose</option>
@@ -65,9 +97,7 @@
  </td>
  </tr>
 #end
-#end
 </table>
-
 
 <div class="functnbar2">
   <input type="submit" value="$l10n.MapIssueAttributes" name="eventSubmit_doValidate" />

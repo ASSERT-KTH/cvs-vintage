@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.102 2003/04/10 23:01:30 dlr Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.103 2003/05/09 21:27:38 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -418,15 +418,17 @@ public class ScarabUserImpl
     {        
          return internalUser.getCopyToModules(currentModule);
     }
-
-    /**
-     * Get modules that user can move an issue to.
-     */
-    public List getMoveToModules(Module currentModule) throws Exception
+    public List getCopyToModules(Module currentModule, String action) throws Exception
     {        
-         return internalUser.getMoveToModules(currentModule);
+         return internalUser.getCopyToModules(currentModule, action, null);
     }
-   
+    public List getCopyToModules(Module currentModule, String action, 
+                                 String searchString)
+        throws Exception
+    {        
+         return internalUser.getCopyToModules(currentModule, action, searchString);
+    }
+
    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[], boolean)

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.80 2003/05/02 22:36:14 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.81 2003/05/09 21:27:37 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -312,43 +312,57 @@ public abstract class AbstractScarabUser
         return getEditableModules(null);
     }
 
+
     /**
-     * Get modules user can copy to.
+     * Get modules user can copy or move to.
+     * If copying, requires ISSUE_ENTER permission
+     * If moving, requires ISSUE_MOVE permission to move 
+     * To another module, or ISSUE_EDIT to move to another issue type.
      */
-    public List getCopyToModules(Module currentModule)
+    public List getCopyToModules(Module currentModule, String action, 
+                                 String searchString)
         throws Exception
     {
         List copyToModules = new ArrayList();
-        Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
-        for (int i=0; i<userModules.length; i++)
+        if (hasPermission(ScarabSecurity.ISSUE__MOVE, currentModule) 
+            || action.equals("copy"))
         {
-            Module module = userModules[i];
-             if (!module.isGlobalModule())
-             {
-                 copyToModules.add(module);
-             }
+            Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
+            for (int i=0; i<userModules.length; i++)
+            {
+                Module module = userModules[i];
+                if (!module.isGlobalModule() && 
+                    (searchString == null || searchString.equals("") || 
+                     module.getName().indexOf(searchString) != -1))
+                {
+                    copyToModules.add(module);
+                }
+            }
+        }
+        else if (hasPermission(ScarabSecurity.ISSUE__EDIT, currentModule)
+                 && currentModule.getIssueTypes().size() > 1)
+        {
+            copyToModules.add(currentModule);
         }
         return copyToModules;
     }
 
     /**
-     * Get modules user can move to.
-     * If user has Move permission, can move to any module
-     * If they have Edit permission, can move to another issue type.
+     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules()
      */
-    public List getMoveToModules(Module currentModule)
+    public List getCopyToModules(Module currentModule)
         throws Exception
     {
-        List moveToModules = new ArrayList();
-        if (hasPermission(ScarabSecurity.ISSUE__MOVE, currentModule))
-        {
-            moveToModules = getCopyToModules(currentModule);
-        }
-        else if (hasPermission(ScarabSecurity.ISSUE__EDIT, currentModule))
-        {
-            moveToModules.add(currentModule);
-        }
-        return moveToModules;
+        return getCopyToModules(currentModule, "copy", null);
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules()
+     */
+    public List getCopyToModules(Module currentModule, String action)
+        throws Exception
+    {
+        return getCopyToModules(currentModule, action, null);
     }
 
     /**

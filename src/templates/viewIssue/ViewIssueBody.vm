@@ -6,7 +6,10 @@
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module) && $rmit.Active)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
-#set ($moveToModules = $data.User.getMoveToModules($module))
+#set ($copyToModules = $data.User.getCopyToModules($module, "copy"))
+#set ($moveToModules = $data.User.getCopyToModules($module, "move"))
+#set ($showCopyButton = $copyToModules && !$copyToModules.isEmpty())
+#set ($showMoveButton = $moveToModules && !$moveToModules.isEmpty())
 
 <input type="hidden" name="action" value="ModifyIssue" />
 <input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
@@ -14,14 +17,16 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="tab" value="$tab" />
 
+#if ($showCopyButton || $showMoveButton)
 <div class="functnbar">
-#if (!$moveToModules.isEmpty() && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
+#if ($showMoveButton)
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
-#if (!$copyToModules.isEmpty())
+#if ($showCopyButton)
     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
+#end
 
 #asterisk()
 #if ($rmit.Active.toString().equals("false"))
@@ -55,11 +60,13 @@
   $renderer.render("viewIssue", "ViewIssueTab5.vm")
 #end
 
+#if ($showCopyButton || $showMoveButton)
 <div class="functnbar2">
-#if (!$moveToModules.isEmpty() && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
+#if ($showMoveButton)
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
-#if (!$copyToModules.isEmpty())
+#if ($showCopyButton)
     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
+#end
