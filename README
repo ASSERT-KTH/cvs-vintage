@@ -1,167 +1,175 @@
-			Jakarta Tomcat Servlet Container
-			================================
+			Tomcat Servlet Container
+			========================
 
 
-INSTALLING AND BUILDING TOMCAT
-------------------------------
+This subproject contains the source code for the Tomcat servlet container (and
+JSP engine) that conforms to the Java Servlet API Specification (version 2.2)
+and the JavaServer Pages Specificaton (version 1.1).
 
-This subproject contains the source code for the Tomcat servlet container and
-JSP engine that conforms to the latest public versions of the Servlet and JSP
-APIs.  In order to build these sources successfully, you must do the following:
+
+Installing and Building Tomcat
+==============================
+
+In order to successfully build Tomcat, you will need to do the following.  In
+the instructions below, $JAKARTA_HOME is assumed to be the directory into which
+you are installing all of the required distributions.
+
+* Download and install a version 1.1 or later Java Development Kit
+  implementation for your operating system platform.  Set a "JAVA_HOME"
+  environment variable to point at the directory where your JDK is installed,
+  and add "$JAVA_HOME/bin" to your PATH.  Configure the CLASSPATH environment
+  variable as well, if required.
 
 * Download and install the Java API for XML Parsing implementation (current
   version number is 1.0) from <http://java.sun.com/xml>.  Make sure that the
-  "jaxp.jar" and "parser.jar" files are on your class path.
+  "jaxp.jar" and "parser.jar" files are on your class path.  (NOTE:  In the
+  future it will be possible to use any JAXP-compliant parser).
 
-* Download and install the JAKARTA-ANT distribution.  If you have downloaded
-  the source distribution, you must create the executable version by
+* Download and install the Ant distribution (subproject "jakarta-ant") into
+  a directory named "$JAKARTA_HOME/jakarta-ant".  If you have downloaded the
+  source distribution, you will need to build the executable version by
   executing the following commands:
 
-	cd jakarta-ant
+	cd $JAKARTA_HOME/jakarta-ant
 	./bootstrap.sh		<-- Unix
 	bootstrap		<-- Windows
 
   This should result in the creation of a file "ant.jar" in the "lib"
-  subdirectory, which will be used when building the Servlet API distribution.
+  subdirectory, which will be used when building Watchdog.
 
-* Download and install the JAKARTA-SERVLETAPI distribution into the same
-  directory where you installed Ant.  If you have downloaded the source
-  distribution, you must create the executable version by executing the
-  following commands:
+* Download and install the Servletapi distribution (subproject
+  "jakarta-servletapi") into a subdirectory named
+  "$JAKARTA_HOME/jakarta-servletapi".  If you have downloaded the source
+  distribution, you will need to build the executable version by
+  executing the following commands:
 
-	cd jakarta-servletapi
+	cd $JAKARTA_HOME/jakarta-servletapi
 	./build.sh dist		<-- Unix
 	build dist		<-- Windows
 
-* Download and install the JAKARTA-TOMCAT source code distribution (or check
-  them out via anonymous CVS) into the same directory where you installed
-  Ant and the Servlet API downloads.  To build an "unpacked" version of Tomcat
-  into directory "../build/tomcat", execute the following commands:
+  This should result in the creation of a file "servlet.jar" in the "lib"
+  subdirectory, which will be used when building Watchdog.
 
-	cd jakarta-tomcat
+* Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
+  or check it out via anonymous CVS, into a subdirectory named
+  "$JAKARTA_HOME/jakarta-tomcat".  You can now build an "unpacked" version
+  of Tomcat (quicker builds because no time is spent JARing up results)
+  by executing the following commands:
+
+	cd $JAKARTA_HOME/jakarta-tomcat
 	./build.sh		<-- Unix
 	build			<-- Windows
 
-  To run the unpacked version of Tomcat, execute the following:
+  This version can be executed as follows:
 
-	cd ../build/tomcat	<-- Unix
+	cd $JAKARTA_HOME/build/tomcat
 	./bin/startup.sh	<-- Unix
+	bin\startup		<-- Indows
 
-	cd ..\build\tomcat	<-- Windows
-	.\bin\startup		<-- Windows
+  and it can be shut down as follows:
 
-  To shut down the unpacked version of Tomcat (from the same directory):
-
+	cd $JAKARTA_HOME/build/tomcat
 	./bin/shutdown.sh	<-- Unix
-	.\bin\shutdown		<-- Windows
+	bin\shutdown		<-- Indows
 
-* You can also build a distribution version of Tomcat as follows:
+* You can also build a binary distribution version of Tomcat as follows:
 
-	cd jakarta-tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat
 	./build.sh dist		<-- Unix
 	build dist		<-- Windows
 
-  which will create the distribution in directory "../dist/tomcat".
+  This will create a distribution in "$JAKARTA_HOME/dist/tomcat" that is
+  equivalent (in file arrangement) to the binary distribution releases
+  of Tomcat that can be downloaded from the Jakarta web site at
+  <http://jakarta.apache.org>.
 
+* You can delete the generated files in the "build/tomcat" and "dist/tomcat"
+  directories by executing the following:
 
- source code, or check it out
-  from the CVS repository, into a directory parallel to the jakarta-ant
-  directory created above.  That is, if you downloaded both subprojects into
-  a directory named $JAKARTA_HOME, you would see the following two entries:
-
-	jakarta-ant/
-	jakarta-servletapi/
-
-  underneath it.
-
-
-
-How to Build
-------------
-
-First, you must have the jakarta-ant workspace checked out parallel
-to this workspace (jakarta-tomcat). Without jakarta-ant, you won't
-be able to build.  When you have completed your downloads and checkouts,
-you should have the following directory structure:
-
-	$JAKARTA_HOME/
-		jakarta-ant/    <-- Contains jakarta-ant files
-		jakarta-tomcat/	<-- Contains jakarta-tomcat files
-
-There are  2 compilation scripts provided, a sh based script for
-Unix and a .bat based DOS build script. Essentially these scripts are
-wrappers that put the ant.jar file on the classpath and calls:
-
-        java org.apache.tools.ant.Main
-
-To build, execute the following command in the jakarta-tomcat directory:
-
-	build.sh		<-- Unix
-	build			<-- Windows
-
-This will build Tomcat into ../build/tomcat.
-
-Windows Note: If you get an "Out of Environment Space" message, you
-need to up the initial environment of your command prompt window.
-
-To build a 'distribution' build (with all the classes jarred up nice) execute:
-
-	build.sh dist		<-- Unix
-	build dist		<-- Windows
-
-This will build a distribution build of Tomcat into ../dist/tomcat
-
-To clean out the build (removes the build dir):
-
-	build.sh clean		<-- Unix
+	cd $JAKARTA_HOME/jakarta-tomcat
+	./build.sh clean	<-- Unix
 	build clean		<-- Windows
 
 
 Running the Build
------------------
+=================
 
-If you are running under JDK 1.2, you will need to ensure that the
-"tools.jar" file from your JDK distribution is present on your classpath.
-The Java compiler is required by the JSP engine, which uses it when
-converting JSP source files into Java class files.
+You can run the "unpacked" version of Tomcat as follows:
 
-Two scripts are provided for starting and stopping the server. To
-start the server:
+* To start Tomcat, execute the following commands:
 
-	cd ../build/tomcat	<-- Unix
-	bin/startup.sh
+	cd $JAKARTA_HOME/build/tomcat
+	./bin/startup.sh	<-- Unix
+	bin\startup		<-- Indows
 
-	cd ..\build\tomcat	<-- Windows
-	bin\startup
+* You can now access the default web pages from a web browser at URL:
 
-To stop the server:
+	http://localhost:8080
 
-	bin/shutdown.sh		<-- Unix
+* To stop Tomcat, execute the following commands:
+
+	cd $JAKARTA_HOME/build/tomcat
+	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
+You can run the "distribution" version of Tomcat as follows:
 
-TESTING THE BUILD
------------------
+* To start Tomcat, execute the following commands:
 
-We have packaged a set of 'quick tests' that test out various parts of
-Tomcat as a web application.  It is build automatically by the procedures
-described above.  To execute it, do the following:
+	cd $JAKARTA_HOME/dist/tomcat
+	./bin/startup.sh	<-- Unix
+	bin\startup		<-- Indows
 
-	cd ../build/tomcat	<-- Unix
-	bin/tomcat.sh ant -buildfile conf/test-tomcat.xml
+* You can now access the default web pages from a web browser at URL:
 
-	cd ..\build\tomcat	<-- Windows
-	bin\tomcat ant -buildfile conf/test-tomcat.xml
+	http://localhost:8080
+
+* To stop Tomcat, execute the following commands:
+
+	cd $JAKARTA_HOME/dist/tomcat
+	./bin/shutdown.sh	<-- Unix
+	bin\shutdown		<-- Windows
+
+Alternatively, you can run Tomcat without changing your current working
+directory, by setting the TOMCAT_HOME environment variable to point at the
+Tomcat files you have built (for example, at directory
+"$JAKARTA_HOME/build/tomcat" or "$JAKARTA_HOME/dist/tomcat").  Now, you
+can start Tomcat as follows:
+
+	$TOMCAT_HOME/bin/startup.sh	<-- Unix
+	%TOMCAT_HOME%\bin\startup	<-- Windows
+
+and shut it down likewise:
+
+	$TOMCAT_HOME/bin/shutdown.sh	<-- Unix
+	%TOMCAT_HOME%\bin\shutdown	<-- Windows
 
 
-BEFORE COMMITTING CHANGES
--------------------------
+Testing the Build
+=================
 
-You must, MUST do a `build clean;build` to make sure a clean
-workspace builds. Also, you must, MUST run the tests. All tests must
-pass before checking in code. Yes, we just started adding tests, but
-as time goes on, this will be our sanity check.
+Tomcat includes a small web application with some quick tests to exercize
+the various parts of the server.  It is built automatically, along with the
+rest of Tomcat, by the steps described above.  To run the tests against the
+"unpacked" build, for example, you would do the following:
 
-This is not a MUST for changes to Java code but if you modify .bat or
-sh scripts you MUST make sure that it atleast builds on Solaris, and
-Windows NT.
+	cd $JAKARTA_HOME/build/tomcat	<-- Unix
+	./bin/tomcat.sh ant -buildfile conf/test-tomcat.xml
+
+	cd %JAKARTA_HOME%\build\tomcat	<-- Windows
+	bin\tomcat ant -buildfile conf\test-tomcat.xml
+
+You can also use the Watchdog compatibility test suite, also available at
+<http://jakarta.apache.org>, to test Tomcat's compliance to the servlet and
+JSP specifications.
+
+
+
+Before Committing Changes
+=========================
+
+Before committing any changes to the Tomcat CVS repository, you MUST do a
+"build clean" followed by a "build dist" to ensure that the build process runs
+cleanly, and you must ensure that the tests run correctly.
+
+
