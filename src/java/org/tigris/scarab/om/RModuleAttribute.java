@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -59,6 +60,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -177,6 +179,23 @@ public class RModuleAttribute
             attributeType = (attr.isUserAttribute() ? Module.USER : Module.NON_USER);
             module.getRModuleAttributes(getIssueType(), false, attributeType)
                                         .remove(this);
+            // delete module-option mappings
+            if (attr.isOptionAttribute())
+            {
+                List optionList = module.getRModuleOptions(attr, 
+                                  IssueTypePeer.retrieveByPK(getIssueTypeId()), 
+                                  false);
+                ArrayList optionIdList = new ArrayList(optionList.size());
+                for (int i =0; i<optionList.size(); i++)
+                { 
+                    optionIdList.add(((RModuleOption)optionList.get(i)).getOptionId());
+                }
+                Criteria c2 = new Criteria()
+                    .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                    .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                    .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
+                RModuleOptionPeer.doDelete(c2);
+            }
         } 
         else
         {
