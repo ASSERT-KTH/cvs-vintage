@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -349,7 +349,7 @@ public final class JDBCRelationshipRoleMetaData {
          return Collections.EMPTY_MAP;
       } else if(relationMetaData.isForeignKeyMappingStyle() 
             && isMultiplicityMany()) {
-         throw new DeploymentException("A role with multiplicity many using " +
+         throw new DeploymentException("Role: "+relationshipRoleName+" with multiplicity many using " +
                "foreign-key mapping is not allowed to have key-fields");
       }
 
