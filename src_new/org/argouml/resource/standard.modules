@@ -1,11 +1,11 @@
 #
-# $Id: standard.modules,v 1.9 2002/03/20 07:10:44 linus Exp $
+# $Id: standard.modules,v 1.10 2002/04/15 11:36:14 linus Exp $
 #
 # The sequence of modules within this file may be significant.
 #
 # Take care when editing
 #
-module.resources.notation=org.argouml.language.NotationResourceBundle
+module.resources.notation=org.argouml.i18n.NotationResourceBundle
 module.settings.preferences=org.argouml.ui.SettingsTabPreferences
 module.settings.environment=org.argouml.ui.SettingsTabEnvironment
 module.settings.user=org.argouml.ui.SettingsTabUser
