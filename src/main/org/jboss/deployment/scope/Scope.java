@@ -104,7 +104,7 @@ public class Scope {
      */
     protected boolean addDependency(ScopedURLClassLoader source, ScopedURLClassLoader target) {
         // no rescursions necessary (but not volatile for the code)
-        if(!source.equals(target)) {
+        if(source !=null && target!=null && !source.equals(target)) {
             
             Set deps=(Set) dependencies.get(target);
             
@@ -166,7 +166,8 @@ public class Scope {
         } // sync
     }
     
-    /** gets a URL on behalf of a given classloader */
+    /** gets a URL on behalf of a given classloader which may be null
+     *  in case that we do not check dependencies */
     public URL getResource(String name, ScopedURLClassLoader source) {
         
         // short look into the resource location cache, is synchronized in
