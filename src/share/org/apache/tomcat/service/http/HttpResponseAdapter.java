@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponse.java,v 1.3 1999/10/28 05:15:33 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 05:15:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.1 1999/11/01 22:24:23 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 1999/11/01 22:24:23 $
  *
  * ====================================================================
  *
@@ -64,89 +64,85 @@
 
 package org.apache.tomcat.service.http;
 
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+// no "buffering" - we send the status and headers as soon as
+// the method is called.
 
-public class HttpResponse extends Response {
-    OutputStream os;
+// this method is _not_ thread-safe. ( if 2 threads call ServletOutputStream.out
 
-    public HttpResponse() {
-	super();
-	out=new HttpServletOS();
-	((HttpServletOS)out).setResponse( this );
-    }
+/**
+ */
+public class HttpResponseAdapter implements  ResponseAdapter {
+    protected OutputStream sout;
 
-    public HttpResponse(OutputStream os ) {
-	out=new HttpServletOS(this, os );
-    }
-    
-    public void setOutputStream( OutputStream os) {
-	this.os=os;
-	((HttpServletOS)out).setOutputStream( os );
+    // no need to create new objects/request,
+    // avoid extra String creation
+    protected StringBuffer statusSB;
+    protected StringBuffer headersSB;
+
+    public HttpResponseAdapter() {
+        super();
+	statusSB=new StringBuffer();
+	headersSB=new StringBuffer();
     }
 
     public void recycle() {
-	super.recycle();
-	//	rout.recycle();
-	//	out=rout;
-	os=null;
+	sout=null;
+	statusSB.setLength(0);
+	headersSB.setLength(0);
     }
 
-    // XXX if more headers that MAX_SIZE, send 2 packets!   
-    public void writeHeaders() throws IOException {
-	//	System.out.println("Writing headers");
-        if (omitHeaders) {
-            return;
-        }
-	fixHeaders();
-
-	StringBuffer buf = new StringBuffer();
-
-
-        appendStatus( buf );
-	HttpDate date = new HttpDate(System.currentTimeMillis());
-	buf.append("Date: " + date + "\r\n");
-	buf.append("Server: " + getServerHeader() + "\r\n");
-
-	// context is null if we are in a error handler before the context is
-	// set ( i.e. 414, wrong request )
-	if( request.getContext() != null) 
-	    buf.append("Servlet-Engine: " + 
-		       request.getContext().getEngineHeader() + "\r\n");
-	
-        if (contentLanguage != null) {
-            buf.append("Content-Language: " + contentLanguage + "\r\n");
-        }
-
-        int size = headers.size();
-        for (int i = 0; i < size; i++) {
-            MimeHeaderField h = headers.getField(i);
-            buf.append(h).append("\r\n");
-        }
-        buf.append("\r\n");
-        
-        os.write(buf.toString().getBytes());        
-     }
-
-
-    public void endResponse() throws IOException {
-    }
-
-
-    protected void appendStatus( StringBuffer buf ) {
-	String statusPhrase = null; // XXX sm.getString("sc." + status);	
-	buf.append("HTTP/1.0 " + status);
-	if (statusPhrase != null) {
-	    buf.append(" " + statusPhrase);
-	}
-	buf.append("\r\n");
+    public void setStatus( int status, String message ) throws IOException {
+	// statusSB.reset();
+	statusSB.append("HTTP/1.0 ").append(status);
+	if(message!=null) statusSB.append(" ").append(message);
+	statusSB.append("\r\n");
+	sout.write(statusSB.toString().getBytes());
+	statusSB.setLength(0);
     }
     
+    public void setOutputStream(OutputStream os) {
+	sout = os;
+    }
+
+    public void addHeader(String name, String value) throws IOException{
+	headersSB.setLength(0);
+	headersSB.append(name).append(": ").append(value).append("\r\n");
+	sout.write( headersSB.toString().getBytes() );
+    }
+    
+    public void addMimeHeaders(MimeHeaders headers) throws IOException {
+	headersSB.setLength(0);
+	int size = headers.size();
+        for (int i = 0; i < size; i++) {
+            MimeHeaderField h = headers.getField(i);
+            headersSB.append(h).append("\r\n");
+        }
+	sout.write( headersSB.toString().getBytes() );
+    }
+
+    static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
+    
+    public void endHeaders()  throws IOException {
+	sout.write( CRLF, 0, 2 );
+    }
+
+    public void endResponse() throws IOException {
+	sout.flush();
+    }
+
+    public ServletOutputStream getServletOutputStream() throws IOException {
+	return null; // use default
+    }
+
+    public void doWrite( byte buffer[], int pos, int count) throws IOException {
+	sout.write( buffer, pos, count);
+    }
 }

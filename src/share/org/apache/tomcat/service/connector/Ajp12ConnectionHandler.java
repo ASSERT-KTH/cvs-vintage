@@ -72,6 +72,8 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.server.*;
 import org.apache.tomcat.service.http.*;
+import org.apache.tomcat.service.http.HttpResponseAdapter;
+import org.apache.tomcat.service.http.HttpRequestAdapter;
 import org.apache.tomcat.service.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -108,9 +110,15 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
 	    Request request = new Request();
 	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(socket);
-	    Response response = new AJP12Response();
+	    Response response=new Response();
+	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
+
+	    InputStream in=socket.getInputStream();
+	    OutputStream out=socket.getOutputStream();
+	    
 	    request.setRequestAdapter(reqA);
-	    ((HttpResponse) response).setOutputStream(socket.getOutputStream());
+	    response.setResponseAdapter( resA );
+	    resA.setOutputStream(socket.getOutputStream());
 
 	    request.setResponse(response);
 	    response.setRequest(request);
@@ -289,10 +297,13 @@ class AJP12RequestAdapter extends RequestAdapterImpl {
 
 
 // Ajp use Status: instead of Status 
-class AJP12Response extends HttpResponse {
-
-    public void appendStatus( StringBuffer buf ) {
-	buf.append("Status: " ).append( status ).append("\r\n");
+class AJP12ResponseAdapter extends HttpResponseAdapter {
+    /** Override setStatus
+     */
+    public void setStatus( int status, String message) throws IOException {
+	statusSB.setLength(0);
+	statusSB.append("Status: " ).append( status ).append("\r\n");
+	sout.write(statusSB.toString().getBytes());
     }
 }
 

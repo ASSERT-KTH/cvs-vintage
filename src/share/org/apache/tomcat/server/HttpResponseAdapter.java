@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpResponseAdapter.java,v 1.1 1999/11/01 03:44:17 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/01 03:44:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpResponseAdapter.java,v 1.2 1999/11/01 22:24:12 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/01 22:24:12 $
  *
  * ====================================================================
  *
@@ -111,7 +111,7 @@ public class HttpResponseAdapter implements  ResponseAdapter {
 	statusSB.setLength(0);
     }
     
-    void setOutputStream(OutputStream os) {
+    public void setOutputStream(OutputStream os) {
 	sout = os;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.8 1999/10/30 00:29:28 costin Exp $
- * $Revision: 1.8 $
- * $Date: 1999/10/30 00:29:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.9 1999/11/01 22:24:14 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 1999/11/01 22:24:14 $
  *
  * ====================================================================
  *
@@ -48,8 +48,7 @@
  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF * SUCH DAMAGE.
  * ====================================================================
  *
  * This software consists of voluntary contributions made by many
@@ -75,6 +74,8 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.server.*;
 import org.apache.tomcat.service.http.*;
+import org.apache.tomcat.service.http.HttpResponseAdapter;
+import org.apache.tomcat.service.http.HttpRequestAdapter;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -113,8 +114,10 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	    AJPRequestAdapter reqA = new AJPRequestAdapter(socket); // todo: clean ConnectionHandler, make it abstract
 	    request.setRequestAdapter( reqA );
 	    
-	    AJPResponse response = new AJPResponse();
-            response.setOutputStream(socket.getOutputStream());
+	    Ajp11ResponseAdapter resA=new Ajp11ResponseAdapter();
+	    Response response = new Response();
+            resA.setOutputStream(socket.getOutputStream());
+	    response.setResponseAdapter(resA );
 	    int count = 1;
 
 	    request.setResponse(response);
@@ -302,8 +305,13 @@ class Ajp11 {
 }
 
 // Ajp use Status: instead of Status 
-class AJPResponse extends HttpResponse {
-    public void appendStatus( StringBuffer buf ) {
-	buf.append("Status: " ).append( status ).append("\r\n");
+class Ajp11ResponseAdapter extends HttpResponseAdapter {
+    /** Override setStatus
+     */
+    public void setStatus( int status, String message) throws IOException {
+	statusSB.setLength(0);
+	statusSB.append("Status: " ).append( status ).append("\r\n");
+	sout.write(statusSB.toString().getBytes());
     }
 }
+
