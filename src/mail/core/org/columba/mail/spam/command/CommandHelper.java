@@ -16,6 +16,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam.command;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.columba.core.xml.XmlElement;
@@ -24,9 +25,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
@@ -70,19 +69,12 @@ public final class CommandHelper {
             bodyPart = (StreamableMimePart) mimePartTree
                     .getFirstTextPart("plain");
         }
-
-        if (bodyPart == null) {
-            bodyPart = new LocalMimePart(new MimeHeader());
-            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
-                    "<No Message-Text>"));
-        } else {
-            //@TODO dont use deprecated method
-            bodyPart = (StreamableMimePart) folder.getMimePart(uid, bodyPart
-                    .getAddress());
+        
+        if ( bodyPart == null) {
+        	return new ByteArrayInputStream(new byte[0]);
         }
 
-        InputStream bodyStream = ((StreamableMimePart) bodyPart)
-                .getInputStream();
+        InputStream bodyStream = folder.getMimePartBodyStream(uid, bodyPart.getAddress());
 
         int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
