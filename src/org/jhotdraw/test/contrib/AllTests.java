@@ -18,14 +18,14 @@
  * License:		Lesser GNU Public License (LGPL)
  *				http://www.opensource.org/licenses/lgpl-license.html
  */
-package CH.ifa.draw.test.contrib;
+package org.jhotdraw.test.contrib;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
  * @author <a href="mailto:mtnygard@charter.net">Michael T. Nygard</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AllTests {
 
@@ -34,7 +34,7 @@ public class AllTests {
 	}
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for CH.ifa.draw.test.contrib");
+		TestSuite suite = new TestSuite("Test for org.jhotdraw.test.contrib");
 		//$JUnit-BEGIN$
 		suite.addTest(new TestSuite(CTXCommandMenuTest.class));
 		suite.addTest(new TestSuite(CTXWindowMenuTest.class));

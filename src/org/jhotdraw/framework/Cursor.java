@@ -9,20 +9,20 @@
  *				http://www.opensource.org/licenses/lgpl-license.html
  */
 
-package CH.ifa.draw.framework;
+package org.jhotdraw.framework;
 
 /**
  * This interface has the purpose to reduce the dependency of JHotDraw on AWT
  * classes and interfaces.
- * See {@link CH.ifa.draw.standard.AWTCursor} for an example of implementation
+ * See {@link org.jhotdraw.standard.AWTCursor} for an example of implementation
  * for this interface.
  * 
  * <p>Created on: 08/05/2003.</p>
  * 
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author <a href="mailto:ricardo_padilha@users.sourceforge.net">Ricardo 
  * Sangoi Padilha</a>
- * @see CH.ifa.draw.standard.AWTCursor
+ * @see org.jhotdraw.standard.AWTCursor
  */
 public interface Cursor {
 

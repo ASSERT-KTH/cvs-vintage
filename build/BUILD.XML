@@ -29,7 +29,7 @@
 
   <property name="javadoc.dir" value="${dest.dir}/javadoc"/>
   <property name="mk.dir" value="${dest.dir}/build"/>
-  <property name="testsuite.package.name" value="CH.ifa.draw.test"/>
+  <property name="testsuite.package.name" value="org.jhotdraw.test"/>
   <property name="testsuite" value="${testsuite.package.name}.AllTests"/>
   
   <property name="javac.deprecation" value="off"/>
@@ -45,11 +45,11 @@
   <property name="needs.jdo.src" value="**/JDOStorageFormat.java"/>
   <property name="needs.junit.src" value="CH/ifa/draw/test/**"/>
 
-  <property name="needs.batik.class" value="CH.ifa.draw.contrib.SVG*"/>
-  <property name="needs.jdo.class" value="CH.ifa.draw.util.JDOStorageFormat"/>
-  <property name="needs.junit.class" value="CH.ifa.draw.test.*"/>
+  <property name="needs.batik.class" value="org.jhotdraw.contrib.SVG*"/>
+  <property name="needs.jdo.class" value="org.jhotdraw.util.JDOStorageFormat"/>
+  <property name="needs.junit.class" value="org.jhotdraw.test.*"/>
   
-  <property name="test.packages" value="CH.ifa.draw.test.*"/>
+  <property name="test.packages" value="org.jhotdraw.test.*"/>
 
   <property environment="env"/>
 
@@ -187,7 +187,7 @@
       classpath           = "${dest.dir}"
       sourcepath          = "${src.dir}"
       defaultexcludes     = "yes">
-      <package name="CH.ifa.draw.util.*"/>
+      <package name="org.jhotdraw.util.*"/>
       <excludepackage name="${needs.batik.class}"/>
       <excludepackage name="${needs.jdo.class}"/>
       <excludepackage name="${test.packages}"/>
@@ -299,7 +299,7 @@
   </path>
   
   <target name="javadraw" depends="main">
-     <java classname="CH.ifa.draw.samples.javadraw.JavaDrawApp" fork="yes">
+     <java classname="org.jhotdraw.samples.javadraw.JavaDrawApp" fork="yes">
        <classpath>
          <path refid="example_path"/>
        </classpath>
@@ -307,7 +307,7 @@
   </target>
 
   <target name="pert" depends="main">
-     <java classname="CH.ifa.draw.samples.pert.PertApplication" fork="yes">
+     <java classname="org.jhotdraw.samples.pert.PertApplication" fork="yes">
        <classpath>
          <path refid="example_path"/>
        </classpath>
@@ -315,7 +315,7 @@
   </target>
 
   <target name="net" depends="main">
-     <java classname="CH.ifa.draw.samples.net.NetApp" fork="yes">
+     <java classname="org.jhotdraw.samples.net.NetApp" fork="yes">
        <classpath>
          <path refid="example_path"/>
        </classpath>
@@ -323,7 +323,7 @@
   </target>
 
   <target name="nothing" depends="main">
-     <java classname="CH.ifa.draw.samples.nothing.NothingApp" fork="yes">
+     <java classname="org.jhotdraw.samples.nothing.NothingApp" fork="yes">
        <classpath>
          <path refid="example_path"/>
        </classpath>
@@ -331,7 +331,7 @@
   </target>
 
   <target name="svgdraw" depends="main" if="batik.available">
-     <java classname="CH.ifa.draw.contrib.SVGDrawApp" fork="yes">
+     <java classname="org.jhotdraw.contrib.SVGDrawApp" fork="yes">
        <classpath>
          <path refid="example_path"/>
          <pathelement path="${env.CLASSPATH}"/>
