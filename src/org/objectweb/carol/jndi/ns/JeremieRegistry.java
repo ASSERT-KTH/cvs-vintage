@@ -30,8 +30,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
-import org.objectweb.jeremie.libs.binding.moa.UnicastRemoteObject;
-import org.objectweb.jeremie.libs.services.registry.LocateRegistry;
+import org.objectweb.jeremie.binding.moa.UnicastRemoteObject;
+import org.objectweb.jeremie.services.registry.LocateRegistry;
 
 /*
  * Class <code>JeremieRegistry</code>

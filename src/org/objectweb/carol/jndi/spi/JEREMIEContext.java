@@ -76,7 +76,7 @@ public class JEREMIEContext implements Context {
         if (ctx == null) {
 			env.put(
 				"java.naming.factory.initial",
-                "org.objectweb.jeremie.libs.services.registry.jndi.JRMIInitialContextFactory");
+                "org.objectweb.jeremie.services.registry.jndi.JRMIInitialContextFactory");
 			ctx = new JEREMIEContext(new InitialContext(env));
             hashMap.put(key, ctx);
 		}

@@ -54,7 +54,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     /**
      * UnicastRemoteObjectClass
      */
-    private static String className = "org.objectweb.jeremie.libs.binding.moa.UnicastRemoteObject";
+    private static String className = "org.objectweb.jeremie.binding.moa.UnicastRemoteObject";
 
     /**
      * Instance object for this UnicastRemoteObject
