@@ -17,7 +17,6 @@
 package org.columba.mail.folder.temp;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.io.StreamUtils;
 
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.MessageFolder;
@@ -41,10 +40,6 @@ import java.util.logging.Logger;
 
 /**
  * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class TempFolder extends MessageFolder {
 
@@ -209,7 +204,10 @@ public class TempFolder extends MessageFolder {
     public void innerCopy(MailboxInterface destFolder, Object[] uids)
         throws Exception {
         for (int i = 0; i < uids.length; i++) {
-            destFolder.addMessage(getMessageSourceStream(uids[i]));
+
+            InputStream messageSourceStream = getMessageSourceStream(uids[i]);
+            destFolder.addMessage(messageSourceStream);
+            messageSourceStream.close();
         }
     }
 

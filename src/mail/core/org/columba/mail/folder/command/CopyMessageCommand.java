@@ -30,6 +30,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.text.MessageFormat;
 import java.util.logging.Logger;
@@ -79,8 +80,7 @@ public class CopyMessageCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get references
         FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
 
@@ -130,16 +130,17 @@ public class CopyMessageCommand extends FolderCommand {
                 // -> destination-folder as inputstream
                 // -----> moving of raw message source
                 // (works also for copying from local to IMAP folders, etc.
-                for (int j = 0; (j < uids.length) && !worker.cancelled();
-                        j++) {
+                for (int j = 0; (j < uids.length) && !worker.cancelled(); j++) {
                     if (!srcFolder.exists(uids[j])) {
                         continue;
                     }
 
                     try {
                         // add source to destination folder
-                        destFolder.addMessage(srcFolder.getMessageSourceStream(
-                                uids[j]));
+
+                        InputStream messageSourceStream = srcFolder.getMessageSourceStream(uids[j]);
+                        destFolder.addMessage(messageSourceStream);
+                        messageSourceStream.close();
                     } catch (IOException ioe) {
                         String[] options = new String[] {
                                 MailResourceLoader.getString("statusbar",

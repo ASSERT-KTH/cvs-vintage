@@ -124,8 +124,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 
                 try {
                     // save message source under selected filename
-                    in = new BufferedInputStream(srcFolder.getMessageSourceStream(
-                                uid));
+                    in = new BufferedInputStream(srcFolder.getMessageSourceStream(uid));
                     out = new BufferedOutputStream(new FileOutputStream(f));
 
                     byte[] buffer = new byte[1024];

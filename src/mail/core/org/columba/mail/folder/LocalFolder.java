@@ -250,14 +250,15 @@ public abstract class LocalFolder extends MessageFolder {
                 continue;
             }
 
-            Object destuid = destFolder.addMessage(
-                    getMessageSourceStream(uids[i]), getAttributes(uids[i]));
-            
+            InputStream messageSourceStream = getMessageSourceStream(uids[i]);
+            Object destuid = destFolder.addMessage(messageSourceStream, getAttributes(uids[i]));
+            messageSourceStream.close();
+
             ((LocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
                     uids[i]).clone());
-            
+
             //destFolder.fireMessageAdded(uids[i]);
-            
+
             if (getObservable() != null) {
                 getObservable().setCurrent(i);
             }
@@ -273,12 +274,11 @@ public abstract class LocalFolder extends MessageFolder {
         return addMessage(in, null);
     }
 
-    public Object addMessage(InputStream in, Attributes attributes)
-            throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes) throws Exception {
 
         // before adding message, load header list
         getHeaderListStorage().getHeaderList();
-        
+
         // generate UID for new message
         Object newUid = generateNextMessageUid();
 
@@ -287,11 +287,13 @@ public abstract class LocalFolder extends MessageFolder {
 
         // close stream
         in.close();
-        
+
         Source source = getDataStorageInstance().getMessageSource(newUid);
 
         // parse header
         Header header = HeaderParser.parse(source);
+
+        source.close();
 
         if (attributes != null) {
             // save header and attributes
@@ -301,22 +303,19 @@ public abstract class LocalFolder extends MessageFolder {
             getHeaderListStorage().addMessage(newUid, header, h.getAttributes());
         }
         /*else {
-            
-            
-            
             ColumbaHeader header = new ColumbaHeader();
             header.set("columba.uid", newUid);
-            
-            
+
+
             // we have to assign the initial default flags
             Flags flags = header.getFlags();
             flags.setSeen(false);
             flags.setRecent(true);
             flags.setExpunged(false);
             flags.setFlagged(false);
-            
+
             getHeaderListStorage().addMessage(newUid, header.getHeader(), header.getAttributes());
-            
+
         }
         */
 
@@ -357,8 +356,9 @@ public abstract class LocalFolder extends MessageFolder {
         //Check if the message is already cached
         if (aktMessage != null) {
             if (aktMessage.getUID().equals(uid)) {
-            // this message is already cached
-            return aktMessage; }
+                // this message is already cached
+                return aktMessage;
+            }
         }
 
         ColumbaMessage message;
@@ -376,10 +376,12 @@ public abstract class LocalFolder extends MessageFolder {
                 LOG.fine(e1.getSource().toString());
                 throw e1;
             }
+            source.close();
 
             message.setUID(uid);
 
             aktMessage = message;
+
 
             // TODO: fix parser exception
         } catch (FolderInconsistentException e) {
@@ -476,7 +478,7 @@ public abstract class LocalFolder extends MessageFolder {
      * accordingly.
      * <p>
      * This method is only used for innerCopy().
-     * 
+     *
      * @param uid				selected message UID
      * @param flags				new flags
      * @throws Exception
@@ -488,7 +490,7 @@ public abstract class LocalFolder extends MessageFolder {
         Flags oldFlags = h.getFlags();
         h.setFlags(flags);
 
-        
+
         // update MessageFolderInfo
         if (oldFlags.get(Flags.RECENT) && !flags.get(Flags.RECENT)) {
             getMessageFolderInfo().decRecent();
@@ -505,7 +507,6 @@ public abstract class LocalFolder extends MessageFolder {
         if (!oldFlags.get(Flags.SEEN) && flags.get(Flags.SEEN)) {
             getMessageFolderInfo().decUnseen();
         }
-        
     }
 
     /**

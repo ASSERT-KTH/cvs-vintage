@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -33,9 +31,8 @@ public class GetMessageSourceStreamTest extends AbstractFolderTest {
      */
     public GetMessageSourceStreamTest(MailboxTestFactory factory, String test) {
         super(factory, test);
-        
     }
-    
+
     /**
      * Test if MailboxInterface.getMessageSourceStream() returns the
      * correct data.
@@ -61,6 +58,8 @@ public class GetMessageSourceStreamTest extends AbstractFolderTest {
 
         // compare both messages
         assertEquals("message source should be equal", input, output);
+
+        outputStream.close();
     }
 
 }

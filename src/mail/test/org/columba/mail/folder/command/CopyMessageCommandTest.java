@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -41,14 +39,14 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
     public CopyMessageCommandTest(MailboxTestFactory factory, String arg0) {
         super(factory, arg0);
     }
-    
+
     /**
      * Copy message using a {@link CopyMessageCommand}.
-     * 
+     *
      * @throws Exception
      */
     public void testCopyMessage() throws Exception {
-        //		 add message "0.eml" as inputstream to folder
+        // add message "0.eml" as inputstream to folder
         String input = FolderTestHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
@@ -60,7 +58,7 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
         // create Command reference
         FolderCommandReference[] ref = new FolderCommandReference[2];
         ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
+                new Object[] {uid});
         ref[1] = new FolderCommandReference(getDestFolder());
 
         // create copy command
@@ -89,11 +87,11 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
     /**
      * Copy message using a {@link CopyMessageCommand}and check if attributes
      * are copied correctly.
-     * 
+     *
      * @throws Exception
      */
     public void testCopyMessageAttribute() throws Exception {
-        //		 add message "0.eml" as inputstream to folder
+        //  add message "0.eml" as inputstream to folder
         String input = FolderTestHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
@@ -112,7 +110,7 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
         // create Command reference
         FolderCommandReference[] ref = new FolderCommandReference[2];
         ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
+                new Object[] {uid});
         ref[1] = new FolderCommandReference(getDestFolder());
 
         // create copy command
@@ -136,5 +134,5 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
         inputStream.close();
 
     }
-    
+
 }

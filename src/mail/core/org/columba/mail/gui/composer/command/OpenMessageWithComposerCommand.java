@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -43,6 +41,7 @@ import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.TempSourceFactory;
 import org.columba.ristretto.parser.MessageParser;
 
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,8 +87,10 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
         //TODO keep track of progress here
-        Source tempSource = TempSourceFactory.createTempSource(folder.getMessageSourceStream(
-                    uids[0]), -1, null);
+
+        InputStream messageSourceStream = folder.getMessageSourceStream(uids[0]);
+        Source tempSource = TempSourceFactory.createTempSource(messageSourceStream, -1, null);
+        messageSourceStream.close();
 
         Message message = MessageParser.parse(tempSource);
 

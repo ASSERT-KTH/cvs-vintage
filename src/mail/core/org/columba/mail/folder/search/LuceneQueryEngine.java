@@ -20,7 +20,6 @@ import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -47,12 +46,9 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.MessageParser;
-import org.columba.ristretto.parser.ParserException;
 
 import java.io.File;
 import java.io.IOException;
@@ -539,6 +535,8 @@ public class LuceneQueryEngine implements QueryEngine {
                 ColumbaMessage message = new ColumbaMessage((ColumbaHeader) hl.get(
                             uid),
                         MessageParser.parse(new CharSequenceSource(source)));
+
+                source.close();
 
                 Document doc = getDocument(message);
 

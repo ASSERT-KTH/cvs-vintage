@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,12 +9,13 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
+
+import java.io.InputStream;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
@@ -32,13 +32,13 @@ import org.columba.ristretto.message.MimeType;
 /**
  * Reply to message, while keeping the original message as attachment. In
  * comparison to quoting the bodytext inline.
- * 
+ *
  * @author fdietz
  */
 public class ReplyAsAttachmentCommand extends ReplyCommand {
     /**
      * Constructor for ReplyCommand.
-     * 
+     *
      * @param frameMediator
      * @param references
      */
@@ -46,8 +46,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
         super(references);
     }
 
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // create composer model
         model = new ComposerModel();
 
@@ -65,7 +64,9 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
         mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
         // add mimepart to model
-        model.addMimePart(new InputStreamMimePart(mimeHeader,
-                folder.getMessageSourceStream(uids[0])));
+
+        InputStream messageSourceStream = folder.getMessageSourceStream(uids[0]);
+        model.addMimePart(new InputStreamMimePart(mimeHeader, messageSourceStream));
+        messageSourceStream.close();
     }
 }
