@@ -66,15 +66,9 @@ public class ExternalToolsDialog
 
 	ExternalToolsPluginHandler handler;
 
-	JButton helpButton;
-	JButton closeButton;
-
-	JButton configButton;
-	JButton infoButton;
-
-	JList list;
-
-	String selection;
+	protected JButton helpButton, closeButton, configButton, infoButton;
+	protected JList list;
+	protected String selection;
 
 	/**
 	 * @throws java.awt.HeadlessException
@@ -98,29 +92,26 @@ public class ExternalToolsDialog
 		initComponents();
 
 		pack();
-
 		setLocationRelativeTo(null);
-
 		setVisible(true);
 	}
 
 	protected void initComponents() {
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
+		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-		getContentPane().add(mainPanel);
+		setContentPane(mainPanel);
 
 		// TODO: i18n
-		configButton = new JButton("Configure...");
-
+		configButton = new ButtonWithMnemonic("Con&figure...");
 		configButton.setActionCommand("CONFIG");
 		configButton.addActionListener(this);
+                configButton.setEnabled(false);
 
 		// TODO: i18n
-		infoButton = new JButton("Details...");
-
+		infoButton = new ButtonWithMnemonic("&Details...");
 		infoButton.setActionCommand("INFO");
 		infoButton.addActionListener(this);
+                infoButton.setEnabled(false);
 
 		String[] ids = handler.getPluginIdList();
 		list = new JList(ids);
@@ -144,7 +135,7 @@ public class ExternalToolsDialog
 		nameLabel.setEnabled(false);
 		topPanel.add(nameLabel);
 
-		topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
+		topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		topPanel.add(Box.createHorizontalGlue());
 
 		Component glue = Box.createVerticalGlue();
@@ -183,16 +174,15 @@ public class ExternalToolsDialog
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setPreferredSize(new Dimension(200, 200));
+		scrollPane.setPreferredSize(new Dimension(150, 150));
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JButton closeButton =
 			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
@@ -216,19 +206,15 @@ public class ExternalToolsDialog
 			"HELP",
 			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("CLOSE")) {
-
 			setVisible(false);
 		} else if (action.equals("CONFIG")) {
-
 			new ExternalToolsWizardLauncher().launchWizard(selection);
-
 		} else if (action.equals("INFO")) {
 			AbstractExternalToolsPlugin plugin = null;
 			try {
@@ -237,7 +223,6 @@ public class ExternalToolsDialog
 						selection,
 						null);
 			} catch (Exception e1) {
-
 				e1.printStackTrace();
 			}
 
@@ -249,10 +234,10 @@ public class ExternalToolsDialog
 	/* (non-Javadoc)
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
-	public void valueChanged(ListSelectionEvent arg0) {
-
+	public void valueChanged(ListSelectionEvent e) {
+                boolean enabled = !list.isSelectionEmpty();
+                configButton.setEnabled(enabled);
+                infoButton.setEnabled(enabled);
 		selection = (String) list.getSelectedValue();
-
 	}
-
 }
