@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeTest.java,v 1.3 2002/03/14 01:13:14 jmcnally Exp $
+ * @version $Id: AttributeTest.java,v 1.4 2002/05/14 21:32:04 jon Exp $
  */
 public class AttributeTest extends BaseTestCase
 {
@@ -82,6 +82,7 @@ public class AttributeTest extends BaseTestCase
     protected void runTest()
         throws Throwable
     {
+        testGetAllAttributeOptions();
 //        createROptionOptionMapping();
 //        testSortAttributeOptions();
     }
@@ -92,6 +93,22 @@ public class AttributeTest extends BaseTestCase
         Attribute.createROptionOptionMapping();
     }
 */    
+
+    public void testGetAllAttributeOptions()
+        throws Exception
+    {
+        // operating system
+        Attribute attribute = 
+            AttributeManager.getInstance(new NumberKey(6));
+            
+        List result = attribute.getAttributeOptions(true);
+        System.out.println ("All Attribute Options Size (include deleted): " + result.size());
+        assertEquals (result.size(), 44);
+        result = attribute.getAttributeOptions(false);
+        System.out.println ("All Attribute Options Size (exclude deleted): " + result.size());
+        assertEquals (result.size(), 44);        
+    }
+
     private void testSortAttributeOptions()
         throws Exception
     {
