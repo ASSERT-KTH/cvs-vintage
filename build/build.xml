@@ -94,9 +94,64 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Prepares the Tomcat directory                                      -->
+    <!-- Prepares the Tomcat 4.1 directory                                  -->
     <!-- ================================================================== -->
     <target name="prepare-tomcat" depends="prepare-build-dir"
+            if="do-tomcat-build">
+
+        <!-- copy over tomcat -->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/temp"/>
+        <copy todir="${build.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/bin"/>
+        </copy>
+        <copy todir="${build.dir}/common" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/common"/>
+        </copy>
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
+        <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
+        <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
+        <filter token="TOMCAT_PROXY_PORT" value="${scarab.tomcat.proxy.port}"/>
+        <copy todir="${build.dir}/conf" filtering="yes">
+            <fileset dir="${tomcat.dist.dir}/conf"/>
+        </copy>
+        <!--
+        <copy todir="${build.dir}/lib" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/lib"/>
+        </copy> -->
+        <copy todir="${build.dir}/server" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/server"/>
+        </copy>
+        <copy todir="${build.dir}" filtering="no">
+            <fileset dir="${tomcat.dist.dir}">
+                <include name="scarab.sh"/>
+            </fileset>
+        </copy>
+        <!-- no need to have two copies of this checked into CVS -->
+        <copy todir="${build.dir}/server/lib" filtering="no">
+             <fileset dir="${lib.dir}">
+                <include name="**/jakarta-regexp*.jar"/>
+            </fileset>
+        </copy>
+        <!-- no need to have two copies of this checked into CVS -->
+        <copy todir="${build.dir}/server/lib" filtering="no">
+             <fileset dir="${lib.dir}">
+                <include name="**/commons-logging*.jar"/>
+            </fileset>
+        </copy>
+
+        <chmod dir="${build.dir}" perm="ug+rx" includes="**/*.sh" />
+
+        <mkdir dir="${build.dir}/logs"/>
+        <mkdir dir="${build.dir}/work"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Tomcat 4.0 directory                                  -->
+    <!-- Kept around for old time purposes. Will be removed.                -->
+    <!-- ================================================================== -->
+    <target name="prepare-tomcat-4-0" depends="prepare-build-dir"
             if="do-tomcat-build">
 
         <!-- copy over tomcat -->
@@ -850,7 +905,49 @@
         </copy>
     </target>
 
-    <target name="upgrade-tomcat-bin">
+    <target name="upgrade-tomcat-4-1-bin">
+        <echo>
+        Upgrading Tomcat 4.1 from: ${tomcat.binary.dir}
+        </echo>
+    
+        <copy todir="${tomcat.dist.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/bin"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/common/endorsed" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/common/endorsed">
+                <include name="**/xmlParserAPIs.jar"/>
+            </fileset>
+       </copy>
+        <copy todir="${tomcat.dist.dir}/server/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/common/endorsed">
+                <include name="**/xercesImpl.jar"/>
+            </fileset>
+       </copy>
+        <copy todir="${tomcat.dist.dir}/common/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/common/lib">
+                <include name="**/commons-collections.jar"/>
+                <include name="**/naming-common.jar"/>
+                <include name="**/naming-resources.jar"/>
+                <include name="**/servlet.jar"/>
+            </fileset>
+       </copy>
+        <copy todir="${tomcat.dist.dir}/server/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/server/lib">
+                <include name="**/catalina.jar"/>
+                <include name="**/commons-beanutils.jar"/>
+                <include name="**/commons-digester.jar"/>
+                <include name="**/commons-digester.jar"/>
+                <include name="**/servlets-common.jar"/>
+                <include name="**/servlets-default.jar"/>
+                <include name="**/servlets-invoker.jar"/>
+                <include name="**/tomcat-coyote.jar"/>
+                <include name="**/tomcat-http11.jar"/>
+                <include name="**/tomcat-util.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="upgrade-tomcat-4-0-bin">
         <echo>
         Upgrading Tomcat from: ${tomcat.binary.dir}
         </echo>
