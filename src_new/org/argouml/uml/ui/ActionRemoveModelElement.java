@@ -1,4 +1,4 @@
-// $Id: ActionRemoveModelElement.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionRemoveModelElement.java,v 1.11 2004/11/04 12:56:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.kernel.ProjectManager;
  * Action to delete modelelements from the model without navigating
  * to/from them.  Used in UMLMutableList for deletion of modelelements
  * from the list.
+ * @see org.argouml.uml.ui.ActionRemoveFromModel
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
