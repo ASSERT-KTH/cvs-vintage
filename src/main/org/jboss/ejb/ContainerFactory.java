@@ -58,6 +58,7 @@ import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
@@ -70,13 +71,15 @@ import org.jboss.logging.Logger;
 *  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
 *  them available for invocation.
 *
+*   Now also works with message driven beans
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+*   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.57 $
+*   @version $Revision: 1.58 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -87,7 +90,7 @@ public class ContainerFactory
    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
    public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
    public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
-
+   public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
    // Attributes ----------------------------------------------------
    // Temp directory where deployed jars are stored
    File tmpDir;
@@ -394,8 +397,113 @@ public class ContainerFactory
             BeanMetaData bean = (BeanMetaData)beans.next();
 
             log.log("Deploying "+bean.getEjbName());
+	    // Added message driven deployment
+	    if (bean.isMessageDriven()) {
+		// Stolen from Stateless deploy
+		// Create container
+                  MessageDrivenContainer container = new MessageDrivenContainer();
 
-            if (bean.isSession()) // Is session?
+                  // Create classloader for this container
+                  // Only used to identify bean. Not really used for class loading!
+                  container.setClassLoader(new URLClassLoader(new URL[0], cl));
+
+                  // Set metadata
+                  container.setBeanMetaData(bean);
+
+                  // get the container configuration for this bean
+                  // a default configuration is now always provided
+                  ConfigurationMetaData conf = bean.getContainerConfiguration();
+
+                  // Set transaction manager
+                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
+
+                  // Set security manager & role mapping manager
+                  String securityManagerJNDIName = conf.getAuthenticationModule();
+                  String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+
+                  if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+                  {
+                     try
+                     {
+                        EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                        container.setSecurityManager( ejbS );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                     }
+
+                     try
+                     {
+                        RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                        container.setRealmMapping( rM );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                     }
+                  }
+
+                  // Set container invoker
+                  ContainerInvoker ci = null;
+                 try {
+
+                    ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                     } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + conf.getContainerInvoker() +" - " + e);
+                     }
+                 if (ci instanceof XmlLoadable) {
+                   // the container invoker can load its configuration from the jboss.xml element
+                   ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+                     }
+                 container.setContainerInvoker(ci);
+
+                  // Set instance pool
+                  InstancePool ip = null;
+                 try {
+                    ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+                     } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
+                     }
+                  if (ip instanceof XmlLoadable) {
+                   ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+                     }
+                 container.setInstancePool(ip);
+
+                  // Create interceptors
+
+                  container.addInterceptor(new LogInterceptor());
+                  container.addInterceptor(new SecurityInterceptor());
+
+                  if (((MessageDrivenMetaData)bean).isContainerManagedTx())
+                  {
+                     // CMT
+                     container.addInterceptor(new TxInterceptorCMT());
+                     
+                     if (metricsEnabled)
+                         container.addInterceptor(new MetricsInterceptor());
+                     
+                     container.addInterceptor(new MessageDrivenInstanceInterceptor());
+                  }
+                  else
+                  {
+                     // BMT
+                     container.addInterceptor(new MessageDrivenInstanceInterceptor());
+		     // FIXME. should we have a special BMT tx interceptor
+		     // to place ACK there???
+                     container.addInterceptor(new MessageDrivenTxInterceptorBMT());
+                     
+                     if (metricsEnabled)
+                         container.addInterceptor(new MetricsInterceptor());
+                  }
+
+                  // Finally we add the last interceptor from the container
+                  container.addInterceptor(container.createContainerInterceptor());
+
+                  // Add container to application
+                  app.addContainer(container);
+	    }
+            else if (bean.isSession()) // Is session?
             {
                if (((SessionMetaData)bean).isStateless()) // Is stateless?
                {
