@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.24 2002/07/12 21:38:22 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.25 2002/08/28 21:59:49 csjank Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -29,9 +29,9 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 
 <div id="ManageUserSearch" class="app">
 
-<h3>Search</h3>
+<h3>$l10n.Search</h3>
 
-<p>Enter search criteria:</p>
+<p>$l10n.EnterSearchCriteria</p>
 
 <form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
@@ -42,30 +42,30 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 <tr>
 <td>
 <select name="searchField">
- <option value="FIRST_NAME" #if ($searchField.equals("FIRST_NAME")) selected="selected" #end>First name</option>
- <option value="LAST_NAME" #if ($searchField.equals("LAST_NAME")) selected="selected" #end>Last name</option>
- <option value="EMAIL" #if ($searchField.equals("EMAIL")) selected="selected" #end>E-mail address</option>
- <option value="LOGIN_NAME" #if ($searchField.equals("LOGIN_NAME")) selected="selected" #end>Login name</option>
+ <option value="FIRST_NAME" #if ($searchField.equals("FIRST_NAME")) selected="selected" #end>$l10n.FirstName</option>
+ <option value="LAST_NAME" #if ($searchField.equals("LAST_NAME")) selected="selected" #end>$l10n.LastName</option>
+ <option value="EMAIL" #if ($searchField.equals("EMAIL")) selected="selected" #end>$l10n.Email</option>
+ <option value="LOGIN_NAME" #if ($searchField.equals("LOGIN_NAME")) selected="selected" #end>$l10n.LoginName</option>
 </select>
 <input type="text" name="searchCriteria" value="$searchCriteria" />
 </td>
 <td>
 Order by: <select name="orderByField">
- <option value="FIRST_NAME" #if ($orderByField.equals("FIRST_NAME")) selected="selected" #end>First name</option>
- <option value="LAST_NAME" #if ($orderByField.equals("LAST_NAME")) selected="selected" #end>Last name</option>
- <option value="EMAIL" #if ($orderByField.equals("EMAIL")) selected="selected" #end>E-mail address</option>
- <option value="LOGIN_NAME" #if ($orderByField.equals("LOGIN_NAME")) selected="selected" #end>Login name</option>
+ <option value="FIRST_NAME" #if ($orderByField.equals("FIRST_NAME")) selected="selected" #end>$l10n.FirstName</option>
+ <option value="LAST_NAME" #if ($orderByField.equals("LAST_NAME")) selected="selected" #end>$l10n.LastName</option>
+ <option value="EMAIL" #if ($orderByField.equals("EMAIL")) selected="selected" #end>$l10n.Email</option>
+ <option value="LOGIN_NAME" #if ($orderByField.equals("LOGIN_NAME")) selected="selected" #end>$l10n.LoginName</option>
 </select>
 <select name="ascOrDesc">
-  <option value="ASC" #if ($ascOrDesc.equals("ASC")) selected="selected" #end>Ascending</option>
-  <option value="DESC" #if ($ascOrDesc.equals("DESC")) selected="selected" #end>Descending</option>
+  <option value="ASC" #if ($ascOrDesc.equals("ASC")) selected="selected" #end>$l10n.Ascending</option>
+  <option value="DESC" #if ($ascOrDesc.equals("DESC")) selected="selected" #end>$l10n.Descending</option>
 </select>  
 </td>
 </tr>
 </table>
 
 <p>
-Results per page: 
+$l10n.ResultsPerPage 
 <input type="radio" name="resultsPerPage" value="5" #if ($resultsPerPage.equals("5")) checked="checked" #end /> 5 &#160;
 <input type="radio" name="resultsPerPage" value="10" #if ($resultsPerPage.equals("10")) checked="checked" #end /> 10 &#160;
 <input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25 &#160;
@@ -75,18 +75,18 @@ Results per page:
 </p>
 
 <div class="functnbar2">
-   <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-   <input type="submit" name="eventSubmit_doGotoadduser" value="Add user" />
+   <input type="submit" name="eventSubmit_doSearch" value="$l10n.Search" />&#160;
+   <input type="submit" name="eventSubmit_doGotoadduser" value="$l10n.AddUser" />
 </div>
 
 </form>
 
 #if (!$newSearch.equals("true"))
 
-<h3>Search results - $userList.size()</h3>
+<h3>$l10n.format("UserSearchResults", $userList.size())</h3>
 
  #if ($userList.size() == 0)
-   <p class="warn">There are no users matching the specified criteria.</p>
+   <p class="warn">$l10n.NoUsersFound</p>
  #else
 
 <form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
@@ -117,9 +117,9 @@ Results per page:
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-   <th width="10">Select</th>
-   <th>Login name</th>
-   <th>Name</th>
+   <th width="10">$l10n.Select</th>
+   <th>$l10n.LoginName</th>
+   <th>$l10n.Name</th>
  </tr>
 
 #foreach ($user in $userList)
@@ -153,9 +153,9 @@ Results per page:
 #end
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doGotoedituser" value="Edit user" />&#160;
- <input type="submit" name="eventSubmit_doGotoeditroles" value="Edit roles" />&#160;
- <input type="submit" name="eventSubmit_doGotodeleteuser" value="Delete user" />
+ <input type="submit" name="eventSubmit_doGotoedituser" value="$l10n.EditUser" />&#160;
+ <input type="submit" name="eventSubmit_doGotoeditroles" value="$l10n.EditRoles" />&#160;
+ <input type="submit" name="eventSubmit_doGotodeleteuser" value="$l10n.DeleteUser" />
 </div>
 </form>
 #end

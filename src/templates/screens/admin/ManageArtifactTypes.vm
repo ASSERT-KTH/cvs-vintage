@@ -53,21 +53,21 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Issue types</h3>
+<h3>$l10n.IssueTypes</h3>
 
 #if (!$rmits || $rmits.isEmpty())
-   <p class="alert">There are no issue types in this module.</p>
+   <p class="alert">$l10n.NoIssueTypesInModule</p>
 <div class="functnbar3">
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate"/>
 </div>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Select</th>
-<th>#sort ("name" "Name")</th>
-<th>Active</th>
-<th>Show in top nav (if more than one is chosen)</th>
-<th>#sort ("sequence" "Sequence #")</th>
+<th>$l10n.Select</th>
+<th>#sort ("name" "$l10n.Name")</th>
+<th>$l10n.Active</th>
+<th>$l10n.ShowInTopNav</th>
+<th>#sort ("sequence" "$l10n.Sequence")</th>
 </tr>
 
 #foreach ($rmit in $rmits)
@@ -92,12 +92,12 @@
 
 <div class="functnbar3">
 #if (!$rmits || !$rmits.isEmpty())
-<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 #end
-<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #if (!$rmits || !$rmits.isEmpty())
-<input type="submit" value="Delete selected from project" name="eventSubmit_doDeletemoduleissuetype" />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.RemoveSelectedFromProject" name="eventSubmit_doDeletemoduleissuetype" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 #end
 </div>
 
