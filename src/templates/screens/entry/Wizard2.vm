@@ -331,23 +331,23 @@ Comments<br>
           <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
         </TR>
         <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+          <TD HEIGHT="4" COLSPAN="5"></TD>
         </TR>
         <TR>
           <TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
         </TR>
         <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+          <TD HEIGHT="4" COLSPAN="5"></TD>
         </TR>
         <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
           <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:matt@collab.net">matt@collab.net</A></SPAN></TD>
           <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
         </TR>
         <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+          <TD HEIGHT="4" COLSPAN="5"></TD>
         </TR>
         <TR>
           <TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>

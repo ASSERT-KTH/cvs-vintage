@@ -30,10 +30,10 @@
       </TD>
     </TR>
     <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
+      <TD HEIGHT="1" BGCOLOR="#000000"></TD>
     </TR>
     <TR>
-      <TD HEIGHT="2" CLASS="SectionHeader" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="2"></TD>
+      <TD HEIGHT="2" CLASS="SectionHeader" BGCOLOR="#cccccc"></TD>
     </TR>
 </TABLE>
 
@@ -115,7 +115,7 @@
     <TR>
       <TD COLSPAN="8">
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-            <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD></TR>
+            <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"></TD></TR>
         </TABLE>
       </TD>
     </TR>
@@ -133,7 +133,7 @@
       <TD COLSPAN="8">
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
           <TR>
-           <TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
+           <TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"></TD>
           </TR>
         </TABLE>
       </TD>
@@ -169,7 +169,7 @@
     <TR>
       <TD COLSPAN="8">
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-      <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD></TR>
+      <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"></TD></TR>
     </TABLE>
       </TD>
     </TR>
@@ -313,7 +313,7 @@
     <TR>
       <TD COLSPAN="2">
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-      <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD></TR>
+      <TR><TD CLASS="SectionHeader" BGCOLOR="#cccccc" HEIGHT="1"></TD></TR>
     </TABLE>
       </TD>
     </TR>

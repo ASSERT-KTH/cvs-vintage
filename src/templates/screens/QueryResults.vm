@@ -31,14 +31,14 @@
       </td>
     </tr>
     <tr>
-      <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
+      <td height="1" bgcolor="#000000"></td>
     </tr>
 </table>
 <p>
 <!-- current project and login -->
   <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-      <td bgcolor="#FFFFFF" height="1"><spacer height="1" type="block"></td>
+      <td bgcolor="#FFFFFF" height="1"></td>
       <td align="right" nowrap class="PlainText">Logged in: <a href="/">jon 123</a></td>
     </tr>
   </table>
@@ -52,7 +52,7 @@
     <tr>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
-   <tr><td bgcolor="#FFFFFF" height="2"><spacer height="2" type="block"></td></tr>
+   <tr><td bgcolor="#FFFFFF" height="2"></td></tr>
  </table>
       </td>
     </tr>
@@ -86,7 +86,7 @@
     <tr>
       <td colspan="9">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
-   <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr>
+   <tr><td bgcolor="#CCCCCC" height="1"></td></tr>
  </table>
       </td>
     </tr>
@@ -103,7 +103,7 @@
     <tr>
       <td colspan="9">
  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-   <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr>
+   <tr><td bgcolor="#CCCCCC" height="1"></td></tr>
  </table>
       </td>
     </tr>
@@ -120,7 +120,7 @@
     <tr>
       <td colspan="9">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
-   <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr>
+   <tr><td bgcolor="#CCCCCC" height="1"></td></tr>
  </table>
       </td>
     </tr>

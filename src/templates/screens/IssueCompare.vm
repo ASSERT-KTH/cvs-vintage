@@ -32,7 +32,7 @@
       </TD>
     </TR>
     <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
+      <TD HEIGHT="1" BGCOLOR="#000000"></TD>
     </TR>
 </TABLE>
 <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
@@ -52,7 +52,7 @@
 <!-- current project and login -->
   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
     <TR>
-      <TD BGCOLOR="#FFFFFF" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
+      <TD BGCOLOR="#FFFFFF" HEIGHT="1"></TD>
       <TD ALIGN="right" NOWRAP CLASS="PlainText">Logged in: <A HREF="/">jon 123</A></TD>
     </TR>
   </TABLE>
@@ -67,7 +67,7 @@
 </TABLE>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Issue ID#:</TD>
@@ -77,14 +77,14 @@
 		<TD VALIGN="top" CLASS="TableData">Closed</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Component:</TD>
@@ -94,28 +94,28 @@
 		<TD VALIGN="top" CLASS="TableData">$resolution</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Summary:</TD>
 		<TD VALIGN="top" COLSPAN="4" CLASS="TableData">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Description:</TD>
@@ -125,14 +125,14 @@
 		<TD VALIGN="top" CLASS="TableData">$type</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Reported by:</TD>
@@ -142,14 +142,14 @@
 		<TD VALIGN="top" CLASS="TableData">2000-06-13</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Assigned to:</TD>
@@ -159,14 +159,14 @@
 		<TD VALIGN="top" CLASS="TableData">2000-08-21</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Severity</TD>
@@ -176,14 +176,14 @@
 		<TD VALIGN="top" CLASS="TableData">P4</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Keywords</TD>
@@ -193,14 +193,14 @@
 		<TD VALIGN="top" CLASS="TableData">12</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 		
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Depends On:</TD>
@@ -210,10 +210,10 @@
 		<TD VALIGN="top" CLASS="TableData">??</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 </TABLE>
 <P>
@@ -224,23 +224,23 @@
 </TABLE>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
 		<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue #12856, #30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
@@ -248,16 +248,16 @@
 		<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 </TABLE>
 		</TD>
@@ -270,7 +270,7 @@
 </TABLE>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Issue ID#:</TD>
@@ -280,14 +280,14 @@
 		<TD VALIGN="top" CLASS="TableData">Closed</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Component:</TD>
@@ -297,28 +297,28 @@
 		<TD VALIGN="top" CLASS="TableData">$resolution</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Summary:</TD>
 		<TD VALIGN="top" COLSPAN="4" CLASS="TableData">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Description:</TD>
@@ -328,14 +328,14 @@
 		<TD VALIGN="top" CLASS="TableData">$type</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Reported by:</TD>
@@ -345,14 +345,14 @@
 		<TD VALIGN="top" CLASS="TableData">2000-06-13</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Assigned to:</TD>
@@ -362,14 +362,14 @@
 		<TD VALIGN="top" CLASS="TableData">2000-08-21</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Severity</TD>
@@ -379,14 +379,14 @@
 		<TD VALIGN="top" CLASS="TableData">P4</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Keywords</TD>
@@ -396,14 +396,14 @@
 		<TD VALIGN="top" CLASS="TableData">12</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 		
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="top" CLASS="TableDataHeader">Depends On:</TD>
@@ -413,10 +413,10 @@
 		<TD VALIGN="top" CLASS="TableData">??</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 </TABLE>
 <P>
@@ -427,23 +427,23 @@
 </TABLE>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
-		<TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+		<TD HEIGHT="2" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
 		<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue #12856, #30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 	
 	<TR>
@@ -451,16 +451,16 @@
 		<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
 		<TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="5"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
 	</TR>
 </TABLE>
 		</TD>	</TR>

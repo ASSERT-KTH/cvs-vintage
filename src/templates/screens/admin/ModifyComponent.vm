@@ -9,7 +9,7 @@
             </TD>
         </TR>
         <tr>
-            <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
+            <td height="1" bgcolor="#000000"></td>
         </tr>
         <tr>
             <td nowrap CLASS="NavHeader" bgcolor="#C0C0C0">
@@ -19,7 +19,7 @@
             <a href="/"">Role</a> | <a href="/">Permission</a></td>
         </tr>
         <tr>
-            <td height="0" bgcolor="#000000"><spacer type="block" height="0"></td>
+            <td height="0" bgcolor="#000000"></td>
         </tr>
           <TR>
             <TD CLASS="NavHeader" BGCOLOR="#C0C0C0" NOWRAP>

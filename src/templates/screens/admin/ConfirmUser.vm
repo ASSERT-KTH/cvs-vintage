@@ -40,7 +40,7 @@
 </td>
 </tr>
 <tr>
-<td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
+<td height="1" bgcolor="#000000"></td>
 </tr>
 </table>
 <p>
@@ -64,7 +64,7 @@
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Email Address:</td>
@@ -72,13 +72,13 @@
 <td class="PlainText">To be verified via email</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Full Name:</td>
@@ -86,13 +86,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Company Name:</td>
@@ -100,13 +100,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Address:</td>
@@ -114,13 +114,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;City:</td>
@@ -128,13 +128,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;State:</td>
@@ -142,13 +142,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Country:</td>
@@ -156,13 +156,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Phone:</td>
@@ -170,13 +170,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Alt Phone:</td>
@@ -184,13 +184,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Fax:</td>
@@ -198,13 +198,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Cell:</td>
@@ -212,13 +212,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Pager:</td>
@@ -226,13 +226,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Username:</td>
@@ -240,13 +240,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Password:</td>
@@ -254,13 +254,13 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td class="PlainTextHeader">&nbsp;Roles:</td>
@@ -268,23 +268,23 @@
 <td class="PlainText">OK</td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
 <td><input type="button" name="Confirm" value="Confirm"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 </table>
 </form>

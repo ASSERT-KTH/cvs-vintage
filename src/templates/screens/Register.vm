@@ -1,132 +1,49 @@
-<table border="0" cellpadding="3" cellspacing="0" width="100%">
-	<tr>
-		<td>Scarab: Registration</td>
-	</tr>
-	<tr>
-		<td>Please enter the required contact information below. Fields marked with a <font color="#FF0000">*</font> are required.</td>
-	</tr>
-</table>
-#if ($data.getMessage())
-    <table border="0" cellpadding="3" cellspacing="0" width="100%">
-            <tr>
-                <td class="MessageText">$data.getMessage()</td>
-            </tr>
-    </table>
-#end
-<p>
+  <div id="register" class="app">
+   $page.setTitle("Scarab Registration") 
 
-<form name="RegisterForm" action="$link.setPage("register.vm")" method="POST">
-<input type="hidden" name="action" value="Register">
-<input type="hidden" name="nextTemplate" value="RegisterConfirm.vm">
-<input type="hidden" name="cancelTemplate" value="Login.vm">
+   <h2>$page.getTitle()</h2>
 
-## Attempt to populate the Scarab API User object on re-display
-$data.Parameters.setProperties($scarabR.getUser())
+   <p>Please enter the contact information below. Fields marked with a * are required.</p>
+   #if ($data.getMessage()) 
+   <p>$data.getMessage()</p>
+   #end 
 
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td><font color="#FF0000">*</font></td>
-		<td>&nbsp;First Name:</td>
-		<td><input name="FirstName" value="$!scarabR.User.FirstName" type="text" size="25"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td><font color="#FF0000">*</font></td>
-		<td>&nbsp;Last Name:</td>
-		<td><input name="LastName" value="$!scarabR.User.LastName" type="text" size="25"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
+   <form name="RegisterForm" action="$link.setPage("register.vm")" method="post">
+    <input type="hidden" name="action" value="Register" /> <input type="hidden" name="nextTemplate" value="RegisterConfirm.vm" /> <input type="hidden" name="cancelTemplate" value="Login.vm" /> 
+## Attempt to populate the Scarab API User object on re-display $data.Parameters.setProperties($scarabR.getUser()) 
 
-	<tr>
-		<td><font color="#FF0000">*</font></td>
-		<td>&nbsp;Email Address:</td>
-		<td><input name="Email" value="$!scarabR.User.Email" type="text" size="25">
-		</td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>
-		Note: Enter your valid email address - including your
-		"@serviceprovider" domain.<br/>For example if your AOL screen name
-		is joe cool, your email address is joecool@aol.com.
-		</td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td><font color="#FF0000">*</font></td>
-		<td>&nbsp;Password:</td>
-		<td><input name="password" type="password" size="25"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td><font color="#FF0000">*</font></td>
-		<td>&nbsp;Password Confirm:</td>
-		<td><input name="password_confirm" type="password" size="25"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3"><spacer type="block" height="1"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td><input type="submit" name="eventSubmit_doCancel" value="Cancel"> <input type="submit" name="eventSubmit_doRegister" value="Register"></td>
-	</tr>
-	<tr>
-		<td height="4" colspan="3"><spacer type="block" height="4"></td>
-	</tr>
-</table>
-</form>
+    <div class="axial">
+     <table cellpadding="3" cellspacing="2" border="1">
+      <tr>
+       <th>* First Name:</th>
+       <td><input name="FirstName" value="$!scarabR.User.FirstName" type="text" size="25" /></td>
+      </tr>
+      <tr>
+       <th> *Last Name:</th>
+       <td><input name="LastName" value="$!scarabR.User.LastName" type="text" size="25" /></td>
+      </tr>
+      <tr>
+       <th> *Email Address:</th>
+       <td><input name="Email" value="$!scarabR.User.Email" type="text" size="25" /> 
+      <p>
+ Note: Enter your valid email address - including your "@serviceprovider" domain.
+       For example, if your AOL screen name is joe cool, your email address is joecool@aol.com.
+</p>
+       </td>
+      </tr>
+      <tr>
+       <th> *Password:</th>
+       <td><input name="password" type="password" size="25" /></td>
+      </tr>
+      <tr>
+       <th> *Password Confirm:</th>
+       <td><input name="password_confirm" type="password" size="25" /></td>
+      </tr>
+      <tr>
+       <td> </td>
+       <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /> <input type="submit" name="eventSubmit_doRegister" value="Register" /></td>
+      </tr>
+     </table>
+    </div>
+   </form>
+  </div>

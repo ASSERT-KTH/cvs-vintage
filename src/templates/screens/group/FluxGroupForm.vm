@@ -59,7 +59,7 @@ $page.setBgColor($ui.bgcolor)
             shouldn't appear when inserting a new user.
           *#
 
-          <font face="$ui.sansSerifFonts">
+          
 
           <input type="submit" name="eventSubmit_doCancel" value="Cancel">
           #if ($flux.Mode && $flux.Mode == "modify")
@@ -70,7 +70,7 @@ $page.setBgColor($ui.bgcolor)
             <input type="submit" name="eventSubmit_doInsert" value="Add Group"/>
           #end
           
-          </font>
+          
        <td>
      </tr>
   </table>

@@ -13,7 +13,7 @@ $page.setTitle("Registration Confirmation")
       </TD>
     </TR>
     <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
+      <TD HEIGHT="1" BGCOLOR="#000000"></TD>
     </TR>
 </TABLE>
 <!-- end top nav bar -->
@@ -54,7 +54,7 @@ $page.setTitle("Registration Confirmation")
 
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
 		<TD class="PlainTextHeader">&nbsp;Email Address:</TD>
@@ -62,13 +62,13 @@ $page.setTitle("Registration Confirmation")
 		<TD class="PlainText">To be verified via email</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
 		<TD class="PlainTextHeader">&nbsp;Full Name:</TD>
@@ -76,13 +76,13 @@ $page.setTitle("Registration Confirmation")
 		<TD class="PlainText">OK</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
 		<TD>&nbsp;</TD>
@@ -92,10 +92,10 @@ $page.setTitle("Registration Confirmation")
 		</TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+		<TD HEIGHT="4" COLSPAN="3"></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
 	</TR>
 </TABLE>
 </FORM>

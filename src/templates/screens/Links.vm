@@ -1,4 +1,7 @@
+<div id="links" class="app">
 $page.setTitle("Scarab Links")
+
+<h2>Scarab Links</h2>
 
 <h3>Site Pages</h3>
 <ul>
@@ -49,3 +52,4 @@ Not working:
 <li><a href="$link.setPage("admin,ModifyUser.vm")">admin,ModifyUser.vm</a>
 </ul>
 -->
+</div>

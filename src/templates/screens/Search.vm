@@ -73,9 +73,9 @@
 
     $attVal.Attribute.Name:
 
-    <font color="red">
+    
         #attrValueErrorMsg ( $attVal $field )
-    </font>
+    
     <br>
     #attrValueHierarchySelect ($attVal $field "")
 

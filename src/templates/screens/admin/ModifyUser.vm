@@ -37,8 +37,7 @@
         </TR>
 
         <TR>
-                <TD HEIGHT="1" BGCOLOR="#000000"><SPACER
-TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" BGCOLOR="#000000"></TD>
         </TR>
 </TABLE>
 <P>
@@ -52,7 +51,7 @@ Users</TD>
                 <TD class="Header" BGCOLOR="#999999">&nbsp;UPDATE USER INFORMATION</TD>
         </TR>
         <TR>
-                <TD class="PlainText">Please enter the required contact information below. Fields marked with a <SPAN class="StressedText"><font color="#ff0000">*</font></SPAN> are required.</TD>
+                <TD class="PlainText">Please enter the required contact information below. Fields marked with a <SPAN class="StressedText">*</SPAN> are required.</TD>
         </TR>
 </TABLE>
 
@@ -60,21 +59,21 @@ Users</TD>
 <FORM>
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD><SPAN class="StressedText"><FONT COLOR="#FF0000">*</FONT></span></TD>
+                <TD><SPAN class="StressedText">*</span></TD>
                 <TD class="InputHeader">&nbsp;Email Address:</TD>
                 <TD><INPUT TYPE="text" SIZE="25" name="email" value="$email"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -82,41 +81,41 @@ Users</TD>
                 <TD class="PlainText">Note: Enter user's valid email address - including user's "@serviceprovider" domain. For example if user's AOL screen name is joe cool, user's email address is joecool@aol.com.</TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD><SPAN class="StressedText"><FONT COLOR="#FF0000">*</FONT></span></TD>
+                <TD><SPAN class="StressedText">*</span></TD>
                 <TD class="InputHeader">&nbsp;First Name:</TD>
                 <TD><INPUT TYPE="text" SIZE="25" name="firstname" value="$firstname"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD><SPAN class="StressedText"><FONT COLOR="#FF0000">*</FONT></span></TD>
+                <TD><SPAN class="StressedText">*</span></TD>
                 <TD CLASS="InputHeader">&nbsp;Last Name:</TD>
                 <TD><INPUT TYPE="text" SIZE="25" name="lastname" value="$lastname"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -124,13 +123,13 @@ Users</TD>
                 <TD><INPUT TYPE="text" SIZE="35" name="companyname" value="$companyname"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -138,13 +137,13 @@ Users</TD>
                 <TD><INPUT TYPE="text" SIZE="35" name="address1" value="$address1"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -152,13 +151,13 @@ Users</TD>
                 <TD><INPUT TYPE="text" SIZE="35" name="address2" value="$address2"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -167,13 +166,13 @@ Users</TD>
         
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -260,13 +259,13 @@ Users</TD>
                 </TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -428,13 +427,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 </TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -442,13 +441,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="postalcode" value="$postalcode"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -456,13 +455,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="phone" value="$phone"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -470,13 +469,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="altphone" value="$altphone"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -484,13 +483,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="fax" value="$fax"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -498,13 +497,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="cell" value="$cell"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -512,13 +511,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="pager" value="$pager"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -526,13 +525,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="text" SIZE="25" name="username" value="$username"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -545,16 +544,16 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD valign="top"><INPUT TYPE="password" SIZE="25" name="passwordconfirm" value=""></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -578,13 +577,13 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
         </TR>
 
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
                 <TD>&nbsp;</TD>
@@ -592,10 +591,10 @@ VALUE="224">Zimbabwe</OPTION></SELECT>
                 <TD><INPUT TYPE="submit" NAME="eventSubmit_doModify" VALUE="Modify"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+                <TD HEIGHT="4" COLSPAN="3"></TD>
         </TR>
         <TR>
-                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+                <TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
         </TR>
 </TABLE>
 </FORM>

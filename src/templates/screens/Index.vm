@@ -1,8 +1,7 @@
+<div id="welcome" class="app">
 $page.setTitle("Welcome to Scarab!")
 
-<font face="verdana,geneva,helvetica">
-<h2>Welcome to Scarab!</h2>
-</font>
+<h2>$page.getTitle()!</h2>
 
 <p>
 This is going to be the homepage that you first get to when you bring up
@@ -17,3 +16,4 @@ have questions or comments, please read
 <p>
 <a href="$link.setPage("Links.vm")">Links Page</a>
 </p>
+</div>

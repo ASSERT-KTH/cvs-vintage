@@ -13,7 +13,7 @@ $page.setTitle("Confirm Your Email Address")
       </td>
     </tr>
     <tr>
-      <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
+      <td height="1" bgcolor="#000000"></td>
     </tr>
 </table>
 <!-- end top nav bar -->
@@ -60,33 +60,33 @@ $page.setTitle("Confirm Your Email Address")
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  <tr>
   <td nowrap class="InputHeader">Email Address:</td>
   <td width="80%"><input type="text" size="25" name="Email" value="$!user.Email"></td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="2" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  <tr>
   <td nowrap class="InputHeader">Confirmation Code:</td>
   <td><input type="text" size="25" name="Confirm" value="$!data.Parameters.Confirm"></td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="2" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  </tr>
   <td>&nbsp;</td>
@@ -96,13 +96,13 @@ $page.setTitle("Confirm Your Email Address")
   </td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
  <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="2" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="2"><spacer type="block" height="4"></td>
+  <td height="4" colspan="2"></td>
  </tr>
 </table>
 </form>

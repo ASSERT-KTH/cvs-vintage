@@ -41,7 +41,7 @@
   </td>
  </tr>
  <tr>
-  <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
+  <td height="1" bgcolor="#000000"></td>
  </tr>
 </table>
 <p>
@@ -53,28 +53,28 @@
   <td class="Header" bgcolor="#999999">&nbsp;ADD USER</td>
  </tr>
  <tr>
-  <td class="PlainText">Please enter the required contact information below. Fields marked with a <span class="StressedText"><font color="#FF0000">*</font></span> are required.</td>
+  <td class="PlainText">Please enter the required contact information below. Fields marked with a <span class="StressedText">*</span> are required.</td>
  </tr>
 </table>
 <p>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td class="StressedText"><font color="#FF0000">*</font></td>
+  <td class="StressedText">*</td>
   <td nowrap class="InputHeader">&nbsp;Email Address:</td>
   <td><input name="email" value="$email" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -82,41 +82,41 @@
   <td class="PlainText">Note: Enter user's valid email address - including user's "@serviceprovider" domain. For example if user's AOL screen name is joe cool, user's email address is joecool@aol.com.</td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td class="StressedText"><font color="#FF0000">*</font></td>
+  <td class="StressedText">*</td>
   <td class="InputHeader">&nbsp;First Name:</td>
   <td><input name="firstname" value="$firstname" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td class="StressedText"><font color="#FF0000">*</font></td>
+  <td class="StressedText">*</td>
   <td class="InputHeader">&nbsp;Last Name:</td>
   <td><input NAME="lastname" value="$lastname" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
- <td height="4" colspan="3"><spacer type="block" height="4"></td>
+ <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -124,13 +124,13 @@
   <td><input NAME="companyname" value="$companyname" type="text" size="35"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -138,13 +138,13 @@
   <td><input NAME="address1" value="$address1" type="text" size="35"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -152,13 +152,13 @@
   <td><input NAME="address2" value="$address2"  type="text" size="35"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -166,13 +166,13 @@
   <td><input NAME="city" value="$city" type="text" size="25"></td>   
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -259,13 +259,13 @@
   </td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -500,13 +500,13 @@
   </td>
  </tr>
  <tr>
- <td height="4" colspan="3"><spacer type="block" height="4"></td>
+ <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -514,13 +514,13 @@
   <td><input NAME="postalcode" value="$postalcode" type="text" size="25"></td>
  </tr>
  <tr>
- <td height="4" colspan="3"><spacer type="block" height="4"></td>
+ <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -528,13 +528,13 @@
   <td><input NAME="phone" value="$phone" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -542,13 +542,13 @@
  <td><input NAME="altphone" value="$altphone" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -556,13 +556,13 @@
   <td><input NAME="fax" value="$fax" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -570,13 +570,13 @@
   <td><input NAME="cell" value="$cell" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -584,13 +584,13 @@
   <td><input NAME="pager" value="$pager" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
   <td>&nbsp;</td>
@@ -598,13 +598,13 @@
  <td><input name="username" value="$username" type="text" size="25"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
-  <td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+  <td height="1" colspan="3" bgcolor="#cccccc"></td>
  </tr>
  <tr>
-  <td height="4" colspan="3"><spacer type="block" height="4"></td>
+  <td height="4" colspan="3"></td>
  </tr>
  <tr>
 <td>&nbsp;</td>
@@ -617,16 +617,16 @@
 <td valign="top"><input name="password_confirm" type="password" size="25"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
@@ -649,13 +649,13 @@
 </td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
@@ -663,10 +663,10 @@
 <td><input type="submit" name="eventSubmit_doAddUser" value="Add User"></td>
 </tr>
 <tr>
-<td height="4" colspan="3"><spacer type="block" height="4"></td>
+<td height="4" colspan="3"></td>
 </tr>
 <tr>
-<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+<td height="1" colspan="3" bgcolor="#cccccc"></td>
 </tr>
 </table>
 </form>

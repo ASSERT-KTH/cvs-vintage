@@ -32,14 +32,14 @@
       </TD>
     </TR>
     <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
+      <TD HEIGHT="1" BGCOLOR="#000000"></TD>
     </TR>
 </TABLE>
 <P>
 <!-- current project and login -->
   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
     <TR>
-      <TD BGCOLOR="#FFFFFF" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
+      <TD BGCOLOR="#FFFFFF" HEIGHT="1"></TD>
       <TD ALIGN="right" NOWRAP CLASS="PlainText">Logged in: <A HREF="/">jon 123</A></TD>
     </TR>
   </TABLE>
@@ -71,8 +71,7 @@ success of open source projects depends on contributions like this.</TD>
     <TR>
       <TD>
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-          <TR><TD BGCOLOR="#CCCCCC" HEIGHT="1"><SPACER
-HEIGHT="1" TYPE="block"></TD></TR>
+          <TR><TD BGCOLOR="#CCCCCC" HEIGHT="1"></TD></TR>
         </TABLE>
       </TD>
     </TR>

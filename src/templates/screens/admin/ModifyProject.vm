@@ -68,7 +68,7 @@ $page.setBgColor($ui.bgcolor)
             shouldn't appear when inserting a new user.
           *#
 
-          <font face="$ui.sansSerifFonts">
+          
 
           #if ($flux.Mode && $flux.Mode == "modify")
             <input type="submit" name="eventSubmit_doUpdate" value="Update Group"/>
@@ -78,7 +78,7 @@ $page.setBgColor($ui.bgcolor)
             <input type="submit" name="eventSubmit_doInsert" value="Add Group"/>
           #end
           
-          </font>
+          
        <td>
      </tr>
   </table>
