@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.16 2005/03/10 10:09:18 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.17 2005/03/11 14:02:11 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -36,6 +36,8 @@ import java.util.Properties;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
+import org.objectweb.carol.rmi.exception.NoSuchObjectExceptionHelper;
+import org.objectweb.carol.rmi.exception.RemoteExceptionHelper;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
@@ -47,8 +49,8 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * class <code>JeremiePRODelegate</code> for the mapping between Jeremie
  * UnicastRemoteObject and PortableRemoteObject
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
+ * @author Guillaume Riviere
+ * @author Florent Benoit (exception rethrow)
  */
 public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 
@@ -65,7 +67,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     /**
      * UnicastRemoteObjectClass
      */
-    private static String className = "org.objectweb.jeremie.binding.moa.UnicastRemoteObject";
+    private static final String JEREMIE_UNICAST_CLASS = "org.objectweb.jeremie.binding.moa.UnicastRemoteObject";
 
     /**
      * Instance object for this UnicastRemoteObject
@@ -79,10 +81,11 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Empty constructor for instanciate this class
+     * @throws ClassNotFoundException if the class  JEREMIE_UNICAST_CLASS cannot be loaded
      */
-    public JeremiePRODelegate() throws Exception {
+    public JeremiePRODelegate() throws ClassNotFoundException {
         // class for name
-        unicastClass = Thread.currentThread().getContextClassLoader().loadClass(className);
+        unicastClass = Thread.currentThread().getContextClassLoader().loadClass(JEREMIE_UNICAST_CLASS);
         try {
             RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jeremie");
             String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
@@ -97,9 +100,11 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     }
 
     /**
-     * Export a Remote Object
-     * @param Remote object to export
-     * @exception RemoteException exporting remote object problem
+     * Makes a server object ready to receive remote calls. Note
+     * that subclasses of PortableRemoteObject do not need to call this
+     * method, as it is called by the constructor.
+     * @param obj the server object to export.
+     * @exception RemoteException if export fails.
      */
     public void exportObject(Remote obj) throws RemoteException {
         if (!containsJeremieStub(obj)) {
@@ -108,15 +113,19 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         try {
             Method exportO = unicastClass.getMethod("exportObject", new Class[] {Remote.class, Integer.TYPE});
             exportO.invoke(unicastClass, (new Object[] {obj, new Integer(port)}));
+        } catch (InvocationTargetException e) {
+            throw RemoteExceptionHelper.create(e.getTargetException());
         } catch (Exception e) {
-            throw new RemoteException(e.toString(), e);
+            throw new RemoteException("exportObject() method fails on object '" + obj + "'", e);
         }
     }
 
     /**
-     * Method for unexport object
-     * @param Remote obj object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * Deregisters a server object from the runtime, allowing the object to become
+     * available for garbage collection.
+     * @param obj the object to unexport.
+     * @exception NoSuchObjectException if the remote object is not
+     * currently exported.
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
         if (!containsJeremieStub(obj)) {
@@ -125,56 +134,61 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         try {
             Method unexportO = unicastClass.getMethod("unexportObject", new Class[] {Remote.class, Boolean.TYPE});
             unexportO.invoke(unicastClass, (new Object[] {obj, Boolean.TRUE}));
+        } catch (InvocationTargetException e) {
+            throw NoSuchObjectExceptionHelper.create(e.getTargetException());
         } catch (Exception e) {
-            throw new NoSuchObjectException(e.toString());
+            throw NoSuchObjectExceptionHelper.create("unexportObject() method fails on object '" + obj + "'", e);
         }
     }
 
     /**
-     * Connection method
-     * @param target a remote object;
-     * @param source another remote object;
-     * @exception RemoteException if the connection fail
+     * Makes a Remote object ready for remote communication. This normally
+     * happens implicitly when the object is sent or received as an argument
+     * on a remote method call, but in some circumstances it is useful to
+     * perform this action by making an explicit call.  See the
+     * {@link Stub#connect} method for more information.
+     * @param target the object to connect.
+     * @param source a previously connected object.
+     * @throws RemoteException if <code>source</code> is not connected
+     * or if <code>target</code> is already connected to a different ORB than
+     * <code>source</code>.
      */
     public void connect(Remote target, Remote source) throws RemoteException {
         // do nothing
     }
 
     /**
-     * Narrow method
-     * @param Remote obj the object to narrow
-     * @param Class newClass the expected type of the result
-     * @return an object of type newClass
-     * @exception ClassCastException if the obj class is not compatible with a
-     *            newClass cast
+     * Checks to ensure that an object of a remote or abstract interface type
+     * can be cast to a desired type.
+     * @param narrowFrom the object to check.
+     * @param narrowTo the desired type.
+     * @return an object which can be cast to the desired type.
+     * @throws ClassCastException if narrowFrom cannot be cast to narrowTo.
      */
-    public Object narrow(Object obj, Class newClass) throws ClassCastException {
-        if (newClass.isAssignableFrom(obj.getClass())) {
-            return obj;
+    public Object narrow(Object narrowFrom, Class narrowTo) throws ClassCastException {
+        if (narrowTo.isAssignableFrom(narrowFrom.getClass())) {
+            return narrowFrom;
         } else {
-            throw new ClassCastException("Can't cast " + obj.getClass().getName() + " in " + newClass.getName());
+            throw new ClassCastException("Cannot cast '" + narrowFrom.getClass().getName() + "' in '" + narrowTo.getName() + "'.");
         }
     }
 
     /**
-     * To stub method
-     * @return the stub object
-     * @param Remote object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * Returns a stub for the given server object.
+     * @param obj the server object for which a stub is required. Must either be a subclass
+     * of PortableRemoteObject or have been previously the target of a call to
+     * {@link #exportObject}.
+     * @return the most derived stub for the object.
+     * @exception NoSuchObjectException if a stub cannot be located for the given server object.
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
         try {
             Method exportO = unicastClass.getMethod("toStub", new Class[] {Remote.class});
             return (Remote) exportO.invoke(unicastClass, (new Object[] {obj}));
         } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof NoSuchObjectException) {
-                throw (NoSuchObjectException) t;
-            } else {
-                throw new NoSuchObjectException(t.toString());
-            }
+            throw NoSuchObjectExceptionHelper.create(e.getTargetException());
         } catch (Exception e) {
-            throw new NoSuchObjectException(e.toString());
+            throw NoSuchObjectExceptionHelper.create("toStub() method fails on object '" + obj + "'", e);
         }
     }
 
