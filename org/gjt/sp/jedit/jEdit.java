@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.68 2002/05/17 07:23:28 spestov Exp $
+ * @version $Id: jEdit.java,v 1.69 2002/05/26 05:43:53 spestov Exp $
  */
 public class jEdit
 {
@@ -2114,6 +2114,16 @@ public class jEdit
 		return viewsLast;
 	} //}}}
 
+	//{{{ getActiveView() method
+	/**
+	 * Returns the currently focused view.
+	 * @since jEdit 4.1pre1
+	 */
+	public static View getActiveView()
+	{
+		return activeView;
+	} //}}}
+
 	//}}}
 
 	//{{{ Miscellaneous methods
@@ -2520,6 +2530,12 @@ public class jEdit
 			path,messageProp,args));
 	} //}}}
 
+	//{{{ setActiveView() method
+	static void setActiveView(View view)
+	{
+		jEdit.activeView = view;
+	} //}}}
+
 	//}}}
 
 	//{{{ Private members
@@ -2556,6 +2572,7 @@ public class jEdit
 	private static int viewCount;
 	private static View viewsFirst;
 	private static View viewsLast;
+	private static View activeView;
 	//}}}
 
 	private jEdit() {}

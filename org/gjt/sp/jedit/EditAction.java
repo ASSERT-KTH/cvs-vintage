@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.8 2002/02/08 02:37:17 spestov Exp $
+ * @version $Id: EditAction.java,v 1.9 2002/05/26 05:43:53 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -185,8 +185,7 @@ public abstract class EditAction
 		public void actionPerformed(ActionEvent evt)
 		{
 			// Let input handler do recording, repeating, etc
-			GUIUtilities.getView((Component)evt.getSource())
-				.getInputHandler().invokeAction(action);
+			jEdit.getActiveView().getInputHandler().invokeAction(action);
 		}
 
 		private EditAction action;

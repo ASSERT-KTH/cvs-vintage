@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.23 2002/05/19 07:00:26 spestov Exp $
+ * @version $Id: View.java,v 1.24 2002/05/26 05:43:53 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1281,6 +1281,8 @@ public class View extends JFrame implements EBComponent
 	{
 		public void windowActivated(WindowEvent evt)
 		{
+			jEdit.setActiveView(View.this);
+
 			final Vector buffers = new Vector();
 			EditPane[] editPanes = getEditPanes();
 			for(int i = 0; i < editPanes.length; i++)
