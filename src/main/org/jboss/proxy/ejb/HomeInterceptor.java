@@ -26,7 +26,7 @@ import org.jboss.invocation.InvocationType;
  * The client-side proxy for an EJB Home object.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class HomeInterceptor
    extends GenericEJBInterceptor
@@ -117,7 +117,7 @@ public class HomeInterceptor
          // equality of the proxy home is based on names...
          Object[] args = invocation.getArguments();
          String argsString = args[0] != null ? args[0].toString() : "";
-         String thisString = ctx.getValue(JNDI_NAME).toString() + "Home";
+         String thisString = ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home";
          return new Boolean(thisString.equals(argsString));
       }
       else if (m.equals(HASH_CODE))
