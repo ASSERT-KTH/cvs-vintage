@@ -50,7 +50,6 @@ import java.util.List;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
@@ -68,7 +67,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.36 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.37 2003/03/28 01:20:40 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -139,7 +138,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             if (key.startsWith("action_"))
             {
                 id = key.substring(7);
-                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                issueType = IssueTypeManager.getInstance(new Integer(id));
                 if (issueType != null)
                 {
                     issueType.copyIssueType();
@@ -177,7 +176,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
              if (key.startsWith("action_"))
              {
                 id = key.substring(7);
-                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                issueType = IssueTypeManager.getInstance(new Integer(id));
                 if (issueType != null)
                 {
                     if (issueType.hasIssues())
@@ -225,7 +224,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             if (key.startsWith("action_"))
             {
                 id = key.substring(7);
-                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                issueType = IssueTypeManager.getInstance(new Integer(id));
                 if (issueType != null)
                 {
                     issueType.setDeleted(false);
