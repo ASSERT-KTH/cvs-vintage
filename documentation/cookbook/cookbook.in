@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.3 2003/07/25 14:30:26 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.4 2003/08/03 18:40:54 linus Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -1983,6 +1983,16 @@ it doesn't have anything to do with ocl constraints in your uml model.
 Currently this component is more or less only 
 Dresden OCL Toolkit
 and adaptation.
+</para>
+      <para>
+Because of a problem with the interpretation of the UML specification and
+the OCL specification, 
+the implementation of constraints in ArgoUML is only possible for
+Classes, Interfaces and Features (Attributes and Operations).
+See 
+<ulink url="http://argouml.tigris.org/issues/show_bug.cgi?id=1805">
+Issue 1805
+</ulink>.
 </para>
     </sect1>
 
