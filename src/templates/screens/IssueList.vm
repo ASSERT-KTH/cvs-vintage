@@ -130,7 +130,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   #if (!$value.equals(""))
    $value
   #else
-    Not set
+    -------
   #end
   </td>
 #end
