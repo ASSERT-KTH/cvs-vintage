@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -115,12 +115,16 @@ extends AbstractInterceptor
          // OSH: An extra check to avoid warning.
          // Can go when we are sure that we no longer get
          // the JTA violation warning.
-         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+         
+		 // SA FIXME. this is a bad check. when minerva marks rollback, we still should 
+		 // be notified of the tx demarcation.
+		 
+		 //if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
           
-          ctx.setValid(false);
+         // ctx.setValid(false);
           
-          return;
-         }
+         // return;
+         //}
          
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
@@ -196,7 +200,7 @@ extends AbstractInterceptor
        
        // Invocation with a running Transaction
        
-       if (tx != null && tx.getStatus() == Status.STATUS_ACTIVE) {
+       if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION) {
          
          try {
           
