@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.43 2001/09/13 23:59:18 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.44 2001/09/17 22:22:32 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -1051,6 +1051,10 @@
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1"></column>
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
+    <!--
+        Default subscription frequency.
+    -->
+    <column name="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" javaName="subscriptionFrequency" required="false" type="INTEGER"></column>
 
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
@@ -1060,6 +1064,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_FREQUENCY">
+        <reference local="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
     </foreign-key>
 
 </table>
@@ -1079,6 +1086,54 @@
     -->
     <column name="QUERY_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
+
+<!--
+    Users subscribed to a query.
+-->
+<table name="SCARAB_R_QUERY_USER" idMethod="none" 
+        javaName="RQueryUser">
+    <!--
+
+        Query.
+    -->
+    <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        User's subscription frequency.
+    -->
+    <column name="SUBSCRIPTION_FREQUENCY_ID" javaName="subscriptionFrequency" required="true" type="INTEGER"></column>
+
+    <foreign-key foreignTable="SCARAB_QUERY">
+        <reference local="QUERY_ID" foreign="QUERY_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_FREQUENCY">
+        <reference local="SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
+    </foreign-key>
+
+</table>
+
+
+<!--
+    Frequencies of an event.
+    Examples: every half hour, weekly
+-->
+<table name="SCARAB_FREQUENCY" idMethod="none" javaName="Frequency">
+    <!--
+        Unique identifier.
+    -->
+    <column name="FREQUENCY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="FREQUENCY_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+</table>
+
 
 <!--
     A saved user template for entering issues.
