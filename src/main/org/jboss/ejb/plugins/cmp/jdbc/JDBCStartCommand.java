@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class JDBCStartCommand {
 
@@ -227,42 +227,33 @@ public class JDBCStartCommand {
       sql.append(" (");
          // add fields
          // sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
+         for(Iterator iter = 
+            SQLUtil.getJDBCTypes(entity.getFields()).iterator();
+            iter.hasNext();) {
 
-         // THE FOLLOWING SHOULD BE IMPROVED
-         boolean isFirstColumn = true;
-         for(Iterator iter = entity.getFields().iterator(); iter.hasNext();) {
-            JDBCFieldBridge fieldBridge = (JDBCFieldBridge)iter.next();
-
-            // if a field is a CMR field and isn't a column in
-            // the entity's table, its jdbcType is null
-            JDBCType type = fieldBridge.getJDBCType();
-            if(type == null || type.getColumnNames().length < 1) {
-               continue;
-            }
-
-            if(isFirstColumn) {
-               isFirstColumn = false;
-            } else {
-               sql.append(", ");
-            }
+            JDBCType type = (JDBCType) iter.next();
 
             // apply auto-increment template
-            if( fieldBridge.isKeyDbGenerated() ) {
+            if( type.getAutoIncrement()[0] ) {
                String columnClause = 
-                  SQLUtil.getCreateTableColumnsClause(fieldBridge);
+                  SQLUtil.getCreateTableColumnsClause( type );
 
                JDBCFunctionMappingMetaData autoIncrement = 
                   manager.getMetaData().getTypeMapping().
                   getAutoIncrementTemplate();
                if(autoIncrement == null) {
                   throw new IllegalStateException(
-                     "The field must be auto-increment");
+                     "auto-increment template not found");
                }
 
                String[] args = new String[] { columnClause };
                sql.append(autoIncrement.getFunctionSql(args));
             } else {
                sql.append(SQLUtil.getCreateTableColumnsClause(type));
+            }
+
+            if( iter.hasNext() ) {
+               sql.append( ", " );
             }
          }
 
