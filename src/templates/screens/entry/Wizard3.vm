@@ -158,7 +158,7 @@ $page.setTitle("Enter issue")
     <tr>
       <th>Attachment description</th>
       <td>
-       #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
+       #textAreaMedium("$intakeAttachment.Name.Key" "")
       </td>
     </tr>    
   </table>
