@@ -45,6 +45,22 @@ public class Module
     }
 
 
+    public Attribute[] getAttributes(Criteria criteria)
+        throws Exception
+    {
+        List moduleAttributes = 
+            getRModuleAttributesJoinAttribute(criteria);
+
+        Attribute[] attributes = new Attribute[moduleAttributes.size()];
+        for ( int i=0; i<moduleAttributes.size(); i++ ) 
+        {
+            attributes[i] = 
+               ((RModuleAttribute) moduleAttributes.get(i)).getAttribute();
+        }
+
+        return attributes;
+    }
+
     public void save() throws Exception
     {
         // if new, relate the Module to the user who created it.
