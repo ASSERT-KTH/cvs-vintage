@@ -445,20 +445,19 @@ public abstract class AttributeValue
 
     public void save(DBConnection dbcon)
         throws Exception
-    {
-        checkTransaction("Cannot save a value outside a Transaction");
-        
+    {        
         if ( isModified() ) 
         {
+            checkTransaction("Cannot save a value outside a Transaction");
             // Save activity record
             Activity activity = new Activity();
             String desc = getActivityDescription();
             activity.create(getIssue(), getAttribute(), desc, this.transaction,
                             this.attachment, oldOptionId, getOptionId(),
                             oldValue , getValue());
+            endTransaction();
         }
         super.save(dbcon);
-        endTransaction();
     }
 
     // Not sure it is a good idea to save description in activity record
