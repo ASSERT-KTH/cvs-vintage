@@ -14,13 +14,14 @@ $page.setTitle("Attribute Editor")
     <td class="firstchild">
       <div>Screen options:</div>
       <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
+      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
       <input type="submit" value="Cancel" />
     </td>
     <td nowrap="nowrap">
-      <div>Artifact type management options:</div>
-      <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
+      <div>Artifact type management:</div>
+      <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
     </tr>
@@ -59,13 +60,14 @@ $page.setTitle("Attribute Editor")
     <td class="firstchild">
       <div>Screen options:</div>
       <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
+      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
       <input type="submit" value="Cancel" />
     </td>
     <td nowrap="nowrap">
-      <div>Artifact type management options:</div>
-      <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
+      <div>Artifact type management:</div>
+      <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
     </tr>

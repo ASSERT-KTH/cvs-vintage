@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.21 2001/10/16 06:35:51 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.22 2001/10/16 08:36:53 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -172,16 +172,31 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                              TemplateContext context )
         throws Exception
     {
-        AttributeGroup ag = new AttributeGroup();
-
+        AttributeGroup ag = null;
+    
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         String issueTypeId = data.getParameters().getString("issueTypeId");
-        IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
-      
+        if (issueTypeId == null || issueTypeId.length() == 0)
+        {
+            data.setMessage("The artifact type id was not set");
+            return ag;
+        }
+        IssueType issueType = null;
+        try
+        {
+            issueType = (IssueType) IssueTypePeer
+                        .retrieveByPK(new NumberKey(issueTypeId));
+        }
+        catch (Exception e)
+        {
+            data.setMessage("The artifact type id was invalid.");
+            return ag;            
+        }
+
         List groups = issueType.getAttributeGroups(module);
 
+        ag = new AttributeGroup();
         // Make default group name 'attribute group x' where x is size + 1
         ag.setName("attribute group " + Integer.toString(groups.size()+1));
         ag.setOrder(groups.size() +2);
@@ -201,9 +216,20 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String issueTypeId = data.getParameters().getString("issueTypeId");
         if (issueTypeId == null || issueTypeId.length() == 0)
         {
-            data.setMessage("Please select an Issue type.");
+            data.setMessage("Please select an Artifact type.");
             return;
         }
+        try
+        {
+            IssueType issueType = (IssueType) IssueTypePeer
+                                .retrieveByPK(new NumberKey(issueTypeId));
+        }
+        catch (Exception e)
+        {
+            data.setMessage("The artifact type id was invalid.");
+            return;            
+        }
+
         RModuleIssueType rmit = new RModuleIssueType();
         rmit.setModuleId(scarabR.getCurrentModule().getModuleId());
         rmit.setIssueTypeId(issueTypeId);
@@ -211,7 +237,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rmit.setDisplay(false);
         rmit.save();
 
-        data.setMessage("The Issue type has been added to the module.");
+        data.setMessage("The Artifact type has been added to the module.");
         setTarget(data, "admin,ManageArtifactTypes.vm");            
     }
 
@@ -439,12 +465,12 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         if (!foundOne)
         {
-            data.setMessage("Please select an Issue Type " + 
+            data.setMessage("Please select an Artifact Type " + 
                 "to delete from the module.");
         }
         else
         {
-            data.setMessage("The selected Issue Types have " + 
+            data.setMessage("The selected Artifact Types have " + 
                 "been removed from the module.");
         }
         String nextTemplate = data.getParameters()
