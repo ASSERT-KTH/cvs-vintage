@@ -106,6 +106,7 @@ import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributeManager;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
@@ -986,6 +987,38 @@ try{
         {
             user.setCurrentIssueType(type);
         }        
+    }
+
+    /**
+     * Looks at the current RModuleIssueType and if it is null,
+     * returns the users homepage. If it is not null, and is 
+     * dedupe, returns Wizard1...else Wizard3.
+     */
+    public String getNextEntryTemplate()
+    {
+        RModuleIssueType rmit = null;
+        String nextTemplate = null;
+        try
+        {
+            rmit = ((ScarabUser)data.getUser()).getCurrentRModuleIssueType();
+            if (rmit == null)
+            {
+                nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
+            }
+        }
+        catch (Exception e)
+        {
+            // ignore
+        }
+        if (nextTemplate == null && rmit.getDedupe())
+        {
+            nextTemplate = "entry,Wizard1.vm";
+        }
+        else
+        {
+            nextTemplate = "entry,Wizard3.vm";
+        }
+        return nextTemplate;
     }
 
     /**
