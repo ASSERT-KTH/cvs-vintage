@@ -12,11 +12,11 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
-import org.jboss.ejb.plugins.jrmp.interfaces.ReadAheadResult;
+import org.jboss.proxy.ejb.ReadAheadResult;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.FinderResults;
 
@@ -26,7 +26,7 @@ import org.jboss.util.FinderResults;
  * then invokes the given method on the container for all of them, gathers results and returns them.
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCReadAheadInterceptor extends AbstractInterceptor {
    // Constants -----------------------------------------------------
@@ -53,7 +53,7 @@ public class JDBCReadAheadInterceptor extends AbstractInterceptor {
 
    // Interceptor implementation --------------------------------------
 
-   public Object invoke(MethodInvocation mi) throws Exception {
+   public Object invoke(Invocation mi) throws Exception {
       Object result = null;
 
       if ((mi.getId() instanceof ListCacheKey) && (container instanceof EntityContainer) &&
@@ -80,7 +80,7 @@ public class JDBCReadAheadInterceptor extends AbstractInterceptor {
                //storeManager.loadEntities(results, from, to);
                rar.setMainResult(getNext().invoke(mi));
                for (int i = from; i < to; i++) {
-                  rar.addAheadResult(container.invoke(new MethodInvocation(
+                  rar.addAheadResult(container.invoke(new Invocation(
                         new CacheKey(ids.get(i)), mi.getMethod(), mi.getArguments(),
                         mi.getTransaction(), mi.getPrincipal(), mi.getCredential())));
                }

@@ -17,7 +17,7 @@ import javax.transaction.Transaction;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -97,7 +97,7 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
    
    // Interceptor implementation --------------------------------------
    
-   public Object invoke(MethodInvocation mi) throws Exception
+   public Object invoke(Invocation mi) throws Exception
    {
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx =

@@ -23,7 +23,7 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalContainerInvoker;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
@@ -47,7 +47,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -595,7 +595,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         return manager.getContainer().invoke(new MethodInvocation(
+         return manager.getContainer().invoke(new Invocation(
                instanceCache.createCacheKey(myId),
                GET_RELATED_ID,
                new Object[] { this },
@@ -622,7 +622,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         manager.getContainer().invoke(new MethodInvocation(
+         manager.getContainer().invoke(new Invocation(
                instanceCache.createCacheKey(myId),
                ADD_RELATION,
                new Object[] { this, relatedId },
@@ -649,7 +649,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         manager.getContainer().invoke(new MethodInvocation(
+         manager.getContainer().invoke(new Invocation(
                instanceCache.createCacheKey(myId),
                REMOVE_RELATION,
                new Object[] { this, relatedId },

@@ -57,7 +57,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -163,7 +163,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    //
    // Store Manager Life Cycle Commands
    //
-   public void init() throws Exception {
+   public void create() throws Exception {
       log.debug("Initializing CMP plugin for " +
                 container.getBeanMetaData().getEjbName());
 
@@ -216,7 +216,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          readAheadLimit = metaData.getReadAhead().getLimit();
          readAheadCache = 
                new LRUCachePolicy(2, metaData.getReadAhead().getCacheSize());
-         readAheadCache.init();
+         readAheadCache.create();
       }
       tm = (TransactionManager) container.getTransactionManager();
 
