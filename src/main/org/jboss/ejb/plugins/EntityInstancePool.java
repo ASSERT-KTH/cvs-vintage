@@ -17,7 +17,8 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.5 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -43,6 +44,9 @@ public class EntityInstancePool
     */
    public synchronized void free(EnterpriseContext ctx)
    {
+       // If transaction still present don't do anything (let the instance be GC)
+       if (ctx.getTransaction() != null) return ;
+           
       // Reset instance
       ((EntityEnterpriseContext)ctx).setValid(false);
       ((EntityEnterpriseContext)ctx).setInvoked(false);
@@ -62,7 +66,7 @@ public class EntityInstancePool
    protected EnterpriseContext create(Object instance, Container con)
       throws RemoteException
    {
-	   // MF FIXME why pass con and then use getContainer()
+       // MF FIXME why pass con and then use getContainer()
       return new EntityEnterpriseContext(instance, getContainer());
    }
     
