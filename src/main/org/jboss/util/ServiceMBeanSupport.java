@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -29,11 +29,11 @@ public abstract class ServiceMBeanSupport
    // Attributes ----------------------------------------------------
    private int state;
    
-   private static String[] states = {"Stopped","Stopping","Starting","Started"};
-   private static int STOPPED  = 0;
-   private static int STOPPING = 1;
-   private static int STARTING = 2;
-   private static int STARTED  = 3;
+   public static String[] states = {"Stopped","Stopping","Starting","Started"};
+   public static int STOPPED  = 0;
+   public static int STOPPING = 1;
+   public static int STARTING = 2;
+   public static int STARTED  = 3;
    
    private int id = 0;
    
