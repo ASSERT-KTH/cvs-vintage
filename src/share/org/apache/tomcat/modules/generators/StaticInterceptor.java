@@ -85,6 +85,10 @@ public class StaticInterceptor extends BaseInterceptor {
      */
     private boolean listings = true;
 
+    public boolean getListings() {
+	return listings;
+    }
+
     public void setListings(boolean listings) {
 	this.listings = listings;
     }
@@ -260,7 +264,11 @@ final class FileHandler extends Handler  {
 	    subReq=req.getChild();
 
 	Context ctx=subReq.getContext();
-	String pathInfo=subReq.servletPath().toString();
+	// Use "javax.servlet.include.servlet_path" for path if defined.
+	// ErrorHandler places the path here when invoking an error page.
+	String pathInfo = (String)subReq.getAttribute("javax.servlet.include.servlet_path");
+	if(pathInfo == null)
+	    pathInfo=subReq.servletPath().toString();
 	String absPath = (String)subReq.getNote( realFileNote );
 	if( absPath==null )
 	    absPath=FileUtil.safePath( context.getAbsolutePath(),
@@ -332,7 +340,9 @@ final class FileHandler extends Handler  {
 
 		String relPathU=relPath.toUpperCase();
 		if ( relPathU.startsWith("WEB-INF") ||
-		     relPathU.startsWith("META-INF")) {
+		     relPathU.startsWith("META-INF") ||
+                    (relPathU.indexOf("/WEB-INF/") >= 0) ||
+                    (relPathU.indexOf("/META-INF/") >= 0) ) {
 			return null;
 		}
 	}
