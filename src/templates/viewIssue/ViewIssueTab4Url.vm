@@ -23,7 +23,11 @@
        <input type="checkbox" name="url_delete_$url.AttachmentId" />
      </td>
      #end
+     #if ($url.Name && !$url.Name.toString().equals(""))
      <td><a href="$url.Data">$url.Name</a></td>
+     #else
+     <td><a href="$url.Data">$url.Data</a></td>
+     #end
      #if ($canEdit)
       #set ($urlGroup = $intake.Attachment.mapTo($url))
          <td><input type="text" size="25" name="$urlGroup.Data.Key" 
