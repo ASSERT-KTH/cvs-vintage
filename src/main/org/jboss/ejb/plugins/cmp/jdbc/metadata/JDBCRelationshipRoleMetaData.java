@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  * ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -69,36 +69,67 @@ public final class JDBCRelationshipRoleMetaData {
          RelationshipRoleMetaData relationshipRole)  throws DeploymentException {
       
       this.relationMetaData = relationMetaData;
+      RelationshipRoleMetaData relatedRole =
+               relationshipRole.getRelatedRoleMetaData();
       
       relationshipRoleName = relationshipRole.getRelationshipRoleName();
       multiplicityOne = relationshipRole.isMultiplicityOne();
       cascadeDelete = relationshipRole.isCascadeDelete();
       
-      cmrFieldName = relationshipRole.getCMRFieldName();
+      String tempCmrFieldName = relationshipRole.getCMRFieldName();
+      if(tempCmrFieldName == null) {
+         // no cmr field on this side use relatedEntityName_relatedCMRFieldName
+         tempCmrFieldName = relatedRole.getEntityName() + "_" +
+               relatedRole.getCMRFieldName();
+      }
+      cmrFieldName = tempCmrFieldName;
+
       cmrFieldType = relationshipRole.getCMRFieldType();
 
+      // get the entity for this role
       entity = application.getBeanByEjbName(relationshipRole.getEntityName());
-
-	  if (entity == null)
-		  throw new DeploymentException("Related entity: "+relationshipRole.getEntityName()+" not found for: "+relationshipRoleName);
+      if(entity == null) {
+         throw new DeploymentException("Entity: " + 
+              relationshipRole.getEntityName() + 
+              " not found for: " + relationshipRoleName);
+      }
       
       if(relationMetaData.isTableMappingStyle()) {
          // load all pks of entity into tableKeys map
          for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
             JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
             if(cmpField.isPrimaryKeyMember()) {
-               cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
+               cmpField = new JDBCCMPFieldMetaData(
+                     entity, 
+                     cmpField, 
+                     getCMRFieldName() + "_" + cmpField.getFieldName(), 
+                     false);
                tableKeyFields.put(cmpField.getFieldName(), cmpField);
             }
          }
-      } else if(relationshipRole.getRelatedRoleMetaData().isMultiplicityOne()){   
+      } else if(relatedRole.isMultiplicityOne()){   
+         // get the related entity
+         String relatedEntityName = 
+               relatedRole.getEntityName();
+         JDBCEntityMetaData relatedEntity = 
+               application.getBeanByEjbName(relatedEntityName);
+         if(relatedEntity == null) {
+            throw new DeploymentException("Entity: " + relatedEntityName +
+                  " not found for: " + relationshipRoleName);
+         }
+      
          // load all pks of related entity into foreignKeys map
-         String relatedEntityName = relationshipRole.getRelatedRoleMetaData().getEntityName();
-         JDBCEntityMetaData relatedEntity = application.getBeanByEjbName(relatedEntityName);
-         for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext(); ) {
+         for(Iterator i = relatedEntity.getCMPFields().iterator();
+               i.hasNext();
+               ) {
+
             JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
             if(cmpField.isPrimaryKeyMember()) {
-               cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
+               cmpField = new JDBCCMPFieldMetaData(
+                     entity,
+                     cmpField, 
+                     getCMRFieldName() + "_" + cmpField.getFieldName(), 
+                     false);
                foreignKeyFields.put(cmpField.getFieldName(), cmpField);
             }
          }
