@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.3 2001/05/09 01:51:35 jmcnally Exp $
+    @version $Id: ScarabPage.java,v 1.4 2001/05/11 00:45:43 jmcnally Exp $
 */
 public class ScarabPage extends VelocityPage
 {
@@ -78,5 +78,3 @@ public class ScarabPage extends VelocityPage
         org.tigris.scarab.om.BaseScarabObject.tempWorkAround(data,context);
     }
 }
-
-

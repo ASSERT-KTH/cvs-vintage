@@ -60,6 +60,11 @@ public class RModuleOption
         return comparator;
     }
 
+    public AttributeOption getAttributeOption()
+    {
+        return Attribute.getAttributeForOption(
+            getOptionId()).getAttributeOption(getOptionId());
+    }
 
     /**
      * A convenience method for getting the option name.  It is 

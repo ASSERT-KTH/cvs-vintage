@@ -14,6 +14,7 @@ import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.turbine.util.Log;
+import org.apache.turbine.util.SequencedHashtable;
 import org.apache.turbine.services.db.TurbineDB;
 import org.apache.turbine.util.db.pool.DBConnection;
 import org.apache.turbine.util.db.map.DatabaseMap;
@@ -133,15 +134,17 @@ public class IssueSearch
     public List getQuickSearchTextAttributes()
         throws Exception
     {
-        AttributeValue[] searchValues = getOrderedModuleAttributeValues();
-        List searchAttributes = new ArrayList(searchValues.length);
+        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        List searchAttributes = new ArrayList(searchValues.size());
 
-        for ( int i=0; i<searchValues.length; i++ ) 
+        for ( int i=0; i<searchValues.size(); i++ ) 
         {
-            if ( searchValues[i].isQuickSearchAttribute() &&                  
-                 searchValues[i] instanceof StringAttribute ) 
+            AttributeValue searchValue = 
+                (AttributeValue)searchValues.getValue(i);
+            if ( searchValue.isQuickSearchAttribute() &&                  
+                 searchValue instanceof StringAttribute ) 
             {
-                searchAttributes.add(searchValues[i].getAttribute());
+                searchAttributes.add(searchValue.getAttribute());
             }
         }
 
@@ -158,15 +161,17 @@ public class IssueSearch
     public List getQuickSearchOptionAttributeValues()
         throws Exception
     {
-        AttributeValue[] searchValues = getOrderedModuleAttributeValues();
-        List searchAttributeValues = new ArrayList(searchValues.length);
+        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        List searchAttributeValues = new ArrayList(searchValues.size());
 
-        for ( int i=0; i<searchValues.length; i++ ) 
+        for ( int i=0; i<searchValues.size(); i++ ) 
         {
-            if ( searchValues[i].isQuickSearchAttribute() && 
-                 searchValues[i] instanceof OptionAttribute ) 
+            AttributeValue searchValue = 
+                (AttributeValue)searchValues.getValue(i);
+            if ( searchValue.isQuickSearchAttribute() && 
+                 searchValue instanceof OptionAttribute ) 
             {
-                searchAttributeValues.add(searchValues[i]);
+                searchAttributeValues.add(searchValue);
             }
         }
 

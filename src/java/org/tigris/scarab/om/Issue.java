@@ -14,6 +14,7 @@ import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.ParameterParser;
 import org.apache.turbine.util.Log;
+import org.apache.turbine.util.SequencedHashtable;
 import org.apache.turbine.services.db.TurbineDB;
 import org.apache.turbine.util.db.pool.DBConnection;
 import org.apache.turbine.util.db.map.DatabaseMap;
@@ -157,23 +158,25 @@ public class Issue
     /**
      * AttributeValues that are relevant to the issue's current module.
      * Empty AttributeValues that are relevant for the module, but have 
-     * not been set for the issue are included.
+     * not been set for the issue are included.  The values are ordered
+     * according to the module's preference
      */
-    public HashMap getModuleAttributeValuesMap() throws Exception
+    public SequencedHashtable getModuleAttributeValuesMap() throws Exception
     {
-        Criteria crit = new Criteria(2)
-            .add(RModuleAttributePeer.ACTIVE, true);
-        
+        SequencedHashtable map = null; 
+
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.ACTIVE, true)
+            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+
+        try{
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
         // this exception is getting lost 
-        try{
         attributes = getModule().getAttributes(crit);
         siaValuesMap = getAttributeValuesMap();
-        }catch (Exception e){e.printStackTrace();}
 
-        HashMap map = new HashMap( (int)(1.25*attributes.length + 1) );
-
+        map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
         for ( int i=0; i<attributes.length; i++ ) 
         {
             String key = attributes[i].getName().toUpperCase();
@@ -190,6 +193,7 @@ public class Issue
                 map.put( key, aval );
             }
         }
+        }catch (Exception e){e.printStackTrace();}
 
         return map;
     }
@@ -212,9 +216,9 @@ public class Issue
     }
 
 
-    /**
+    /* * the map is ordered this should not be needed
      * AttributeValues in the order that is preferred for this module
-     */
+     * /
     public AttributeValue[] getOrderedModuleAttributeValues() throws Exception
     {
         
@@ -227,6 +231,7 @@ public class Issue
 
         return orderAttributeValues(values, attributes);
     }
+    */
 
     /**
      * AttributeValues that are set for this Issue in the order
@@ -281,38 +286,6 @@ public class Issue
         return orderedValues;
     }
 
-    /*
-    public static getMatchingIssues(AttributeValue[] avals, 
-                                    boolean combineText)
-    {
-
-        Iterator iter = issue.getModuleAttributeValuesMap()
-            .values().iterator();
-
-        for ( int j=dedupeAttributes.length-1; j>=0; j-- ) 
-        {
-            while ( iter.hasNext() ) 
-            {
-                aval = (AttributeValue)iter.next();
-                if ( aval.getAttribute().equals(dedupeAttributes[j])) 
-                {
-                    group = intake.get("AttributeValue", aval.getQueryKey());
-                    group.setProperties(aval);
-                        
-                    for ( int k=matchingIssues.size()-1; k>=0; k--) 
-                    {
-                        Issue possibleMatch = (Issue)matchingIssues.get(k);
-                        possibleMatch.getAttributeValue(dedupeAttributes[j]);
-                    }
-                        
-                        
-                        field.setRequired(true);
-                        break;
-                    }                    
-                }
-            }
-        }
-    */
 
     /**
      * AttributeValues that are set for this Issue
@@ -362,11 +335,11 @@ public class Issue
         //    getModule().getRModuleAttributes(crit);
         
         boolean result = true;
-        Iterator i = getModuleAttributeValuesMap()
-            .values().iterator();
+        SequencedHashtable avMap = getModuleAttributeValuesMap(); 
+        Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {
-            AttributeValue aval = (AttributeValue)i.next();
+            AttributeValue aval = (AttributeValue)avMap.get(i.next());
             
             if ( aval.getOptionId() == null && aval.getValue() == null ) 
             {

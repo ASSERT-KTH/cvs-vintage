@@ -53,31 +53,30 @@ public abstract class AttributeValue
     public void setOptionId(NumberKey optionId)
         throws Exception
     {
-        List options = getIssue().getModule()
-            .getRModuleOptions(getAttribute());
-        for ( int i=options.size()-1; i>=0; i-- ) 
+        if ( optionId != null && optionId.getValue() != null ) 
         {
-            RModuleOption option = (RModuleOption)options.get(i);
-            if ( option.getOptionId().equals(optionId) ) 
+            List options = getIssue().getModule()
+                .getRModuleOptions(getAttribute());
+            for ( int i=options.size()-1; i>=0; i-- ) 
             {
-                setValue(option.getDisplayValue());
-                break;
+                RModuleOption option = (RModuleOption)options.get(i);
+                if ( option.getOptionId().equals(optionId) ) 
+                {
+                    setValue(option.getDisplayValue());
+                    break;
+                }
             }
         }
+
         super.setOptionId(optionId);
     }
 
     public boolean isRequired()
        throws Exception
     {
-        boolean b = false;
-        try {
-        RModuleAttribute rma = RModuleAttributePeer
-            .retrieveByPK(getIssue().getModule().getModuleId(), 
-                          getAttribute().getAttributeId() );
-        b = rma.getRequired();
-        }catch (Exception e){e.printStackTrace();}
-        return b;
+        RModuleAttribute rma = getIssue().getModule()
+            .getRModuleAttribute(getAttribute());
+        return rma.getRequired();
     }
 
     // need a local reference
@@ -100,6 +99,12 @@ public abstract class AttributeValue
         super.setAttribute(v);
     }
 
+
+    public AttributeOption getAttributeOption()
+        throws Exception
+    {
+        return getAttribute().getAttributeOption(getOptionId());
+    }
     //public abstract boolean isEquivalent(AttributeValue aval);
 
 

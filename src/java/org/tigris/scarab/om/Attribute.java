@@ -38,6 +38,7 @@ public class Attribute
     private static Criteria moduleOptionsCriteria;
 
     private HashMap optionsMap;
+    private static HashMap optionAttributeMap = new HashMap();
 
     static
     {
@@ -52,18 +53,8 @@ public class Attribute
             .addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
     }
 
-    public Attribute()
+    protected Attribute()
     {
-        /*
-        try
-        {            
-            buildOptionsMap();
-        }
-        catch (Exception e)
-        {
-            Log.error("Unable to setup attribute "+getName()+"'s options", e);
-        }
-        */
     }
 
     static String getCacheKey(ObjectKey key)
@@ -71,6 +62,15 @@ public class Attribute
          String keyString = key.getValue().toString();
          return new StringBuffer(className.length() + keyString.length())
              .append(className).append(keyString).toString();
+    }
+
+
+    /**
+     * A new Attribute
+     */
+    public static Attribute getNewInstance() 
+    {
+        return new Attribute();
     }
 
     /**
@@ -97,11 +97,21 @@ public class Attribute
                 throw new ScarabException("Attribute with ID " + attId + 
                                           " can not be found");
             }
-            attribute.buildOptionsMap();
+            if ( attribute.getAttributeType().getAttributeClass().getName()
+                 .equals("select-one") ) 
+            {
+                attribute.buildOptionsMap();                
+            }
+
             tgcs.addObject(key, new CachedObject(attribute));
         }
         
         return attribute;
+    }
+
+    public static Attribute getAttributeForOption(NumberKey optionId)
+    {
+        return (Attribute)optionAttributeMap.get(optionId);
     }
 
     /**
@@ -156,6 +166,7 @@ public class Attribute
         {
             AttributeOption option = (AttributeOption)options.get(i);
             optionsMap.put(option.getOptionId(), option);
+            optionAttributeMap.put(option.getOptionId(), this);
         }
         
         this.optionsMap = optionsMap;
@@ -174,18 +185,18 @@ public class Attribute
         return (AttributeOption)optionsMap.get(pk);
     }
 
-    /**
-     * Get options associated with this attribute base on 
-     * specified criteria.
-     *
-     * @param c a <code>Criteria</code> value
-     * @return a <code>Vector</code> value
-     * @exception Exception if an error occurs
-     */
-    public Vector getAttributeOptions(Criteria c)
+
+    public List getAttributeOptions(boolean includeDeleted)
         throws Exception
     {
-        return super.getAttributeOptions(c);
+        Criteria crit = new Criteria(2);
+        if ( !includeDeleted ) 
+        {
+            crit.add(AttributeOptionPeer.DELETED, false);
+        }
+        crit.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
+        crit.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
+        return getAttributeOptions(crit);
     }
 
     /**

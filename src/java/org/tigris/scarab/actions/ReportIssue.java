@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.13 2001/05/05 03:57:27 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.14 2001/05/11 00:45:42 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -108,11 +108,11 @@ public class ReportIssue extends VelocityAction
             .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
         Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
-        Iterator iter = issue.getModuleAttributeValuesMap()
-            .values().iterator();
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        Iterator iter = avMap.iterator();
         while ( iter.hasNext() ) 
         {
-            aval = (AttributeValue)iter.next();
+            aval = (AttributeValue)avMap.get(iter.next());
             
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
@@ -145,11 +145,11 @@ public class ReportIssue extends VelocityAction
             search.setSearchWords(summary.toString());
 
             search.setModule(user.getCurrentModule());
-            Iterator i = search.getModuleAttributeValuesMap()
-                .values().iterator();
+            avMap = search.getModuleAttributeValuesMap(); 
+            Iterator i = avMap.iterator();
             while (i.hasNext()) 
             {
-                aval = (AttributeValue)i.next();
+                aval = (AttributeValue)avMap.get(i.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null ) 
                 {
@@ -193,11 +193,11 @@ public class ReportIssue extends VelocityAction
 
         if ( intake.isAllValid() ) 
         {
-            Iterator i = issue.getModuleAttributeValuesMap()
-                .values().iterator();
+            SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+            Iterator i = avMap.iterator();
             while (i.hasNext()) 
             {
-                aval = (AttributeValue)i.next();
+                aval = (AttributeValue)avMap.get(i.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null ) 
                 {

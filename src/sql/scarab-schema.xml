@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.15 2001/05/10 23:05:35 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.16 2001/05/11 00:45:43 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -595,6 +595,19 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
+
+    <index name="IX_ACTIVE">
+        <index-column name="ACTIVE"/>
+    </index>
+    <index name="IX_REQUIRED">
+        <index-column name="REQUIRED"/>
+    </index>
+    <index name="IX_DEDUPE">
+        <index-column name="DEDUPE"/>
+    </index>
+    <index name="IX_QUICKSEARCH">
+        <index-column name="QUICK_SEARCH"/>
+    </index>
 </table>
 
 
@@ -633,6 +646,10 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
+
+    <index name="IX_ACTIVE">
+        <index-column name="ACTIVE"/>
+    </index>
 </table>
 
 

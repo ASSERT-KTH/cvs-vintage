@@ -38,6 +38,20 @@ public class Module
 
     private static final NumberKey ROOT_ID = new NumberKey("0");
 
+    private static final Criteria dedupeCriteria;
+    private static final Criteria quicksearchCriteria;
+
+    static
+    {
+        dedupeCriteria = new Criteria(3)
+            .add(RModuleAttributePeer.DEDUPE, true)        
+            .add(RModuleAttributePeer.ACTIVE, true);        
+
+        quicksearchCriteria = new Criteria(3)
+            .add(RModuleAttributePeer.QUICK_SEARCH, true)        
+            .add(RModuleAttributePeer.ACTIVE, true);        
+    }
+
     static String getCacheKey(ObjectKey key)
     {
          String keyString = key.getValue().toString();
@@ -119,10 +133,7 @@ public class Module
     public Attribute[] getDedupeAttributes()
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.DEDUPE, true)        
-            .add(RModuleAttributePeer.ACTIVE, true);        
-        return getAttributes(crit);
+        return getAttributes(dedupeCriteria);
     }
 
     /**
@@ -133,10 +144,15 @@ public class Module
     public Attribute[] getQuickSearchAttributes()
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.QUICK_SEARCH, true)        
-            .add(RModuleAttributePeer.ACTIVE, true);        
-        return getAttributes(crit);
+        return getAttributes(quicksearchCriteria);
+    }
+
+    public RModuleAttribute getRModuleAttribute(Attribute attribute)
+        throws Exception
+    {
+        // !FIXME! better implementation
+        return RModuleAttributePeer
+            .retrieveByPK( getModuleId(), attribute.getAttributeId() );
     }
 
     public List getRModuleAttributes(boolean activeOnly)
@@ -182,16 +198,22 @@ public class Module
     public List getRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception
     {
+        List options = attribute.getAttributeOptions(false) ;
+        NumberKey[] optIds = new NumberKey[options.size()];
+        for ( int i=optIds.length-1; i>=0; i-- ) 
+        {
+            optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
+        }
+        
+
         Criteria crit = new Criteria(2);
         if ( activeOnly ) 
         {
             crit.add(RModuleOptionPeer.ACTIVE, true);
         }
-        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
+        crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
         crit.addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-        crit.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
         crit.addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
-        crit.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
 
         List rModOpts = null;
         Module module = this;
@@ -210,7 +232,15 @@ public class Module
     public List getLeafRModuleOptions(Attribute attribute)
         throws Exception
     {
+        try
+        {
         return getLeafRModuleOptions(attribute, true);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
@@ -222,16 +252,16 @@ public class Module
         Map optionsMap = new HashMap((int)(rModOpts.size()*1.5));
         for ( int i=rModOpts.size()-1; i>=0; i-- ) 
         {
-            AttributeOption option = ((RModuleOption)rModOpts.get(i))
-                .getAttributeOption();
-            optionsMap.put(option.getOptionId(), null);
+            RModuleOption rmo = (RModuleOption)rModOpts.get(i);
+            optionsMap.put(rmo.getOptionId(), null);
         }
 
         // remove options with descendants in the list
         for ( int i=rModOpts.size()-1; i>=0; i-- ) 
         {
-            RModuleOption modOpt = (RModuleOption)rModOpts.get(i);
-            List descendants = modOpt.getAttributeOption().getDescendants();
+            AttributeOption option = 
+                ((RModuleOption)rModOpts.get(i)).getAttributeOption();
+            List descendants = option.getDescendants();
             if ( descendants != null ) 
             {
                 for ( int j=descendants.size()-1; j>=0; j-- ) 
@@ -286,8 +316,8 @@ try{
         Map optionsMap = new HashMap((int)(size*1.5));
         for ( int i=size-1; i>=0; i-- ) 
         {
-            AttributeOption option = ((RModuleOption)moduleOptions.get(i))
-                .getAttributeOption();
+            AttributeOption option =
+                ((RModuleOption)moduleOptions.get(i)).getAttributeOption();
             optionsMap.put(option.getOptionId(), null);
 
             List moduleOptionAncestors = option.getAncestors();
