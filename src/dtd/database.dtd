@@ -1,6 +1,6 @@
 <!-- 
     Torque XML database schema DTD 
-    $Id: database.dtd,v 1.6 2001/06/14 18:43:44 jon Exp $
+    $Id: database.dtd,v 1.7 2001/07/05 00:04:37 jon Exp $
 -->
 
 <!ELEMENT app-data (database+)>
@@ -75,6 +75,8 @@ agnostic way.
 <!ELEMENT foreign-key (reference+)>
 <!ATTLIST foreign-key 
   foreignTable CDATA #REQUIRED
+  onUpdate (cascade|setnull|restrict|none) "none" 
+  onDelete (cascade|setnull|restrict|none) "none" 
 >
   
 <!ELEMENT reference EMPTY>

@@ -45,19 +45,20 @@ package org.tigris.scarab.attribute;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
+import java.util.*;
 
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.om.security.Role;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserPeer;
-import org.tigris.scarab.om.*;
-import java.util.*;
 import org.apache.turbine.services.db.util.Criteria;
+
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.*;
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.4 $ $Date: 2001/06/29 00:49:06 $
+ * @version $Revision: 1.5 $ $Date: 2001/07/05 00:04:37 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -88,7 +89,7 @@ public class UserAttribute extends AttributeValue
      * Looks for users using prefix and suffix wildcards on the
      * username.
      */
-    public List getMatchingUsers(Module module, String partialUserName)
+    public List getMatchingUsers(ModuleEntity module, String partialUserName)
         throws Exception
     {
         // exclude users with Roles Guest or Observer 

@@ -63,7 +63,7 @@ import org.apache.turbine.om.security.*;
  * so there isn't much here.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabModule.java,v 1.5 2001/06/29 00:49:07 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.6 2001/07/05 00:04:37 jon Exp $
  */
 public class ScarabModule extends Module
     implements Group, Comparable
@@ -110,14 +110,14 @@ public class ScarabModule extends Module
                      (Object)("%" + partialUserName + "%"), Criteria.LIKE);
         }
         */
-        List moduleRoles = getRModuleUserRolesJoinScarabUser(crit);
+        List moduleRoles = getRModuleUserRolesJoinScarabUserImpl(crit);
 
         // rearrange so list contains Users
         List users = new ArrayList(moduleRoles.size());
         Iterator i = moduleRoles.iterator();
         while (i.hasNext()) 
         {
-            ScarabUser user = ((RModuleUserRole)i.next()).getScarabUser();
+            ScarabUser user = ((RModuleUserRole)i.next()).getScarabUserImpl();
             users.add(user);
         }
         

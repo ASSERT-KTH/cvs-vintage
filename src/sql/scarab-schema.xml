@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.23 2001/06/29 02:56:29 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.24 2001/07/05 00:04:38 jon Exp $ -->
 
 <app-data>
 <database>
@@ -861,7 +861,7 @@
     name. Then, all you need to do is regenerate the OR code to use the new 
     table name.
 -->
-<table name="SCARAB_USER" javaName="ScarabUser" alias="TurbineUser" 
+<table name="SCARAB_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
       baseClass="TurbineTorqueUser"
       basePeer="org.apache.turbine.om.security.TurbineUserPeer">
     <!--

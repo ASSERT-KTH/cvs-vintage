@@ -67,7 +67,6 @@ import org.apache.turbine.om.*;
 // Scarab Stuff
 import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
@@ -83,7 +82,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.4 2001/05/11 00:45:42 jmcnally Exp $
+    @version $Id: Search.java,v 1.5 2001/07/05 00:04:37 jon Exp $
 */
 public class Search extends VelocityAction
 {
@@ -156,7 +155,7 @@ public class Search extends VelocityAction
                                      scarab.getSearch().getQueryKey() );
             group.setProperties(search);
 
-            search.setModule(user.getCurrentModule());
+            search.setModuleCast(user.getCurrentModule());
             SequencedHashtable avMap = search.getModuleAttributeValuesMap();
             Iterator i = avMap.iterator();
             while (i.hasNext()) 

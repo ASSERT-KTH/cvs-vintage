@@ -50,6 +50,7 @@ import java.util.List;
 
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.ScarabUser;
 
 import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.services.db.om.NumberKey;
@@ -58,13 +59,11 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.services.db.util.Criteria;
 
-import org.tigris.scarab.om.Module;
-
 /**
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.5 2001/06/29 01:57:26 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.6 2001/07/05 00:04:38 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -79,7 +78,8 @@ public interface ModuleEntity
 
     public void setPrimaryKey(String key) throws Exception;
     public void setPrimaryKey(ObjectKey key) throws Exception;
-
+    public NumberKey getModuleId();
+    
 /** THESE WILL BE DEPRECATED */
     public NumberKey getQaContactId();
 /** THESE WILL BE DEPRECATED */
@@ -96,7 +96,15 @@ public interface ModuleEntity
 
     public void save() throws Exception;
 
-    public void setModuleRelatedByParentId(Module module) throws Exception;
+    public void setModuleRelatedByParentId(ModuleEntity module) 
+        throws Exception;
+
+    public List getRModuleAttributes(boolean activeOnly)
+        throws Exception;
+
+    public List 
+        getRModuleOptions(Attribute attribute, boolean activeOnly)
+        throws Exception;
 
     public String getQueryKey();
 
@@ -106,6 +114,12 @@ public interface ModuleEntity
     public NumberKey getParentId();
     public void setParentId(String v ) throws Exception;
     public void setParentId(NumberKey v ) throws Exception;
+    
+    public Issue getNewIssue(ScarabUser user)
+        throws Exception;
+
+    public List getUsers(String partialUserName, String permission)
+        throws Exception;
 
 /*    
     

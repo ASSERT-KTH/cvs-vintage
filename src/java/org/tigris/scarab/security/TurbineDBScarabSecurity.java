@@ -61,13 +61,13 @@ import org.apache.turbine.om.security.*;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserPeer;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 
 /**
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.6 2001/06/29 01:57:26 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.7 2001/07/05 00:04:38 jon Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -178,7 +178,7 @@ public class TurbineDBScarabSecurity
                      TurbineUserGroupRolePeer.ROLE_ID);
         crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
                  ((Persistent)module).getPrimaryKey());
-        crit.addJoin(ScarabUserPeer.USER_ID, TurbineUserGroupRolePeer.USER_ID);
+        crit.addJoin(ScarabUserImplPeer.USER_ID, TurbineUserGroupRolePeer.USER_ID);
         ScarabUser[] scarabUsers = null;
         try
         {

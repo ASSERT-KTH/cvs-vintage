@@ -51,17 +51,22 @@ import java.util.Date;
 
 // Turbine
 import org.apache.turbine.services.db.om.*;
+import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.util.RunData;
+
+import org.apache.velocity.context.Context;
 
 import org.tigris.scarab.tools.*;
 import org.tigris.scarab.util.*;
-import org.tigris.scarab.services.module.*;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 
 /**
     This BaseScarabObject contains methods and variables that are common
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.6 2001/06/29 01:57:26 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.7 2001/07/05 00:04:37 jon Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {
@@ -136,8 +141,8 @@ public class BaseScarabObject extends BaseObject
      * It should be removed as soon as we have some way to set 
      * this within the application
      */
-    public static void tempWorkAround( org.apache.turbine.util.RunData data, 
-                                org.apache.velocity.context.Context context ) 
+    public static void tempWorkAround( RunData data, 
+                                Context context ) 
         throws Exception
     {
 
@@ -146,20 +151,20 @@ public class BaseScarabObject extends BaseObject
           
         if ( data.getUser() == null ) 
         {
-              org.tigris.scarab.om.ScarabUser user = 
-                  new org.tigris.scarab.om.ScarabUser();
-              user.setPrimaryKey(new NumberKey("2"));
-              user.setUserName("workarounduser");
-              scarab.setUser(user);
-              data.setUser(user);
+            ScarabUser user = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            // bad bad bad...
+            ((ScarabUserImpl)user).setPrimaryKey(new NumberKey("2"));
+            user.setUserName("workarounduser");
+            scarab.setUser(user);
+            data.setUser(user);
         }
           
         if ( scarab.getUser().getCurrentModule() == null ) 
-        {               
-              org.tigris.scarab.services.module.ModuleEntity module = 
-              ModuleManager.getInstance(
-                  new org.apache.turbine.services.db.om.NumberKey("5"));
-              scarab.getUser().setCurrentModule(module);
+        {
+            ModuleEntity module = 
+                ModuleManager.getInstance(
+                    new NumberKey("5"));
+            scarab.getUser().setCurrentModule(module);
         }
     }
 }

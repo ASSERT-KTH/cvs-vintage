@@ -64,6 +64,16 @@ public abstract class Module
                 .getInstance().getService(ModuleService.SERVICE_NAME))
                 .getInstance(modId);
     }
+    */
+    
+    /**
+     * Wrapper method to perform the proper cast to the BaseModule method
+     * of the same name.
+     */
+    public void setModuleRelatedByParentId(ModuleEntity v) throws Exception
+    {
+        super.setModuleRelatedByParentId((Module)v);
+    }
 
     /**
      * Creates a new Issue.
@@ -73,9 +83,9 @@ public abstract class Module
         throws Exception
     {
         Issue issue = new Issue();
-        issue.setModule( this );
-        issue.setModifiedBy((NumberKey)user.getPrimaryKey());
-        issue.setCreatedBy((NumberKey)user.getPrimaryKey());
+        issue.setModuleCast( (ModuleEntity) this );
+//        issue.setModifiedBy((NumberKey)user.getUserId());
+//        issue.setCreatedBy((NumberKey)user.getUserId());
         java.util.Date now = new java.util.Date();
         issue.setModifiedDate(now);
         issue.setCreatedDate(now);

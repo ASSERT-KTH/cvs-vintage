@@ -19,6 +19,7 @@ import org.apache.turbine.services.db.TurbineDB;
 import org.apache.turbine.services.db.pool.DBConnection;
 import org.apache.turbine.services.db.map.DatabaseMap;
 
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -58,7 +59,7 @@ public class Issue
         setIdPrefix(fid.getPrefix());
         setIdCount(fid.getCount());
     }
-     
+
     public static class FederatedId
     {
         String domainId;
@@ -125,6 +126,12 @@ public class Issue
         {
             return domainId;
         }
+    }
+
+    public void setModuleCast(ModuleEntity me)
+        throws Exception
+    {
+        super.setModule((Module)me);
     }
 
     public static Issue getIssueById(String id)

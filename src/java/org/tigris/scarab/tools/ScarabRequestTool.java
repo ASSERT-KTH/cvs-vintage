@@ -390,7 +390,7 @@ throw e;
         throws Exception
     {
         IssueSearch search = new IssueSearch();
-        search.setModule(((ScarabUser)getUser()).getCurrentModule());
+        search.setModuleCast(((ScarabUser)getUser()).getCurrentModule());
         return search;
     }
 
