@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.129 2004/12/09 19:09:13 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.130 2004/12/10 13:46:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ import org.tigris.gef.presentation.FigText;
 
 /**
  * Abstract class to display diagram icons for UML ModelElements that
- * look like nodes and that have editiable names and can be
+ * look like nodes and that have editable names and can be
  * resized.
  *
  * @author abonner
