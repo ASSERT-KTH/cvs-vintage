@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.87 2004/11/05 16:03:06 schrouf Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.88 2004/11/20 04:07:12 starksm Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1401,6 +1401,133 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.sql.Timestamp</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
             <sql-type>TIMESTAMP with time zone</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.math.BigDecimal</java-type>
+            <jdbc-type>NUMERIC</jdbc-type>
+            <sql-type>NUMERIC</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Object</java-type>
+            <jdbc-type>VARBINARY</jdbc-type>
+            <sql-type>BYTEA</sql-type>
+         </mapping>
+      </type-mapping>
+
+      <type-mapping>
+         <name>PostgreSQL 8.0</name>
+         <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 ORDER BY ?4 FOR UPDATE</row-locking-template>
+         <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+         <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         <auto-increment-template>?1</auto-increment-template>
+         <alias-header-prefix>t</alias-header-prefix>
+         <alias-header-suffix>_</alias-header-suffix>
+         <alias-max-length>32</alias-max-length>
+         <subquery-supported>true</subquery-supported>
+         <true-mapping>TRUE</true-mapping>
+         <false-mapping>FALSE</false-mapping>
+
+         <function-mapping>
+            <function-name>concat</function-name>
+            <function-sql>(?1 || ?2)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>substring</function-name>
+            <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>length</function-name>
+            <function-sql>length(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>locate</function-name>
+            <function-sql>(CASE position(?1 in substring(?2 from ?3)) WHEN 0 THEN 0 ELSE position(?1 in substring(?2 from ?3)) + ?3 - 1 END)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>abs</function-name>
+            <function-sql>abs(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>sqrt</function-name>
+            <function-sql>sqrt(CAST(?1 AS double precision))</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
+         </function-mapping>
+         <function-mapping>
+            <function-name>count</function-name>
+            <function-sql>count(?1)</function-sql>
+         </function-mapping>
+
+         <mapping>
+            <java-type>java.lang.Boolean</java-type>
+            <jdbc-type>BOOLEAN</jdbc-type>
+            <sql-type>BOOLEAN</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Byte</java-type>
+            <jdbc-type>TINYINT</jdbc-type>
+            <sql-type>INT2</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Short</java-type>
+            <jdbc-type>SMALLINT</jdbc-type>
+            <sql-type>INT2</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Integer</java-type>
+            <jdbc-type>INTEGER</jdbc-type>
+            <sql-type>INT4</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Long</java-type>
+            <jdbc-type>BIGINT</jdbc-type>
+            <sql-type>INT8</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Float</java-type>
+            <jdbc-type>FLOAT</jdbc-type>
+            <sql-type>FLOAT(7)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Double</java-type>
+            <jdbc-type>DOUBLE</jdbc-type>
+            <sql-type>FLOAT8</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Character</java-type>
+            <jdbc-type>CHAR</jdbc-type>
+            <sql-type>CHAR(1)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.String</java-type>
+            <jdbc-type>VARCHAR</jdbc-type>
+            <sql-type>TEXT</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.util.Date</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Date</java-type>
+            <jdbc-type>DATE</jdbc-type>
+            <sql-type>DATE</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Time</java-type>
+            <jdbc-type>TIME</jdbc-type>
+            <sql-type>TIME</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Timestamp</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP</sql-type>
          </mapping>
          <mapping>
             <java-type>java.math.BigDecimal</java-type>
