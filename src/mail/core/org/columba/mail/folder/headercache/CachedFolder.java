@@ -20,10 +20,12 @@ package org.columba.mail.folder.headercache;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.LocalFolder;
@@ -572,38 +574,33 @@ public abstract class CachedFolder extends LocalFolder {
      *
      */
     public Header getHeaderFields(Object uid, String[] keys)
-        throws Exception {
-        // get header with UID
-        ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
-
-        Header result = new Header();
-
-        // if only one headerfield wasn't found in cache
-        // -> call LocalFolder.getHeaderFields() to parse the
-        // -> complete message source
-        boolean parsingNeeded = false;
-
-        // cached headerfield list
-        List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
-             
-        for (int i = 0; i < keys.length; i++) {
-            if (header.get(keys[i]) != null) {
-                // headerfield found
-                result.set(keys[i], header.get(keys[i]));
-            } else {
-                // check if this headerfield is in the cache
-                // -> if its not a cached headerfield, we need to fetch it
-                
-                if ( !list.contains(keys[i]) )
-                    parsingNeeded = true;
-            }
-        }
-
-        if (parsingNeeded) {
-            return super.getHeaderFields(uid, keys);
-        } else {
-            return result;
-        }
+        throws Exception {        	
+		// cached headerfield list
+		List cachedList = Arrays.asList(CachedHeaderfields.getCachedHeaderfieldArray());
+		
+		LinkedList keyList = new LinkedList( Arrays.asList(keys));
+		
+		ListTools.substract( keyList, cachedList);
+		
+		if( keyList.size() == 0 ) {
+			// all wanted headers are cached
+			// get header with UID
+			ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+			
+			// copy fields
+			Header result = new Header();
+			for (int i = 0; i < keys.length; i++) {
+				if (header.get(keys[i]) != null) {
+					// headerfield found
+					result.set(keys[i], header.get(keys[i]));
+				}
+			}
+			
+			return result;
+		} else {
+			// We need to parse
+			return super.getHeaderFields(uid, keys);
+		}
     }
 
     public Flags getFlags(Object uid) throws Exception {

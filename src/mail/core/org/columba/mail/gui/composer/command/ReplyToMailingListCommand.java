@@ -86,7 +86,7 @@ public class ReplyToMailingListCommand extends FolderCommand {
         Header header = folder.getHeaderFields(uids[0],
                 new String[] {
                     "Subject", "From", "To", "Reply-To", "Message-ID",
-                    "In-Reply-To", "References", "X-BeenThere"
+                    "In-Reply-To", "References", "X-Beenthere", "X-BeenThere"
                 });
         message.setHeader(header);
 

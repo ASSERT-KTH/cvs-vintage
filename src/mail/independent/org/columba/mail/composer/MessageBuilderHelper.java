@@ -219,9 +219,9 @@ public class MessageBuilderHelper {
         // example: X-BeenThere: columba-devel@lists.sourceforge.net
         String sender = (String) header.get("X-BeenThere");
 
-        if (sender == null) {
-            sender = (String) header.get("X-Beenthere");
-        }
+		if (sender == null) {
+			sender = (String) header.get("X-Beenthere");
+		}
 
         if (sender == null) {
             sender = (String) header.get("Reply-To");
