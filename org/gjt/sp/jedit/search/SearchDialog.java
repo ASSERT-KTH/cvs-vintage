@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.19 2002/03/14 09:22:41 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.20 2002/03/28 04:08:42 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -737,9 +737,15 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		{
 			// Windows bug workaround in case a YES/NO confirm
 			// was shown
-			toFront();
-			requestFocus();
-			find.requestFocus();
+
+			// ... but if HyperSearch results window is floating,
+			// the workaround causes problems!
+			if(!hyperSearch.isSelected())
+			{
+				toFront();
+				requestFocus();
+				find.requestFocus();
+			}
 			return;
 		}
 		else

@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * hopelessly broken in this regard.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.12 2002/03/19 09:40:56 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.13 2002/03/28 04:08:42 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -52,9 +52,26 @@ public class KeyEventWorkaround
 			switch(keyCode)
 			{
 			case KeyEvent.VK_ALT:
+			case KeyEvent.VK_ALT_GRAPH:
 			case KeyEvent.VK_CONTROL:
 			case KeyEvent.VK_SHIFT:
 			case KeyEvent.VK_META:
+			case KeyEvent.VK_DEAD_GRAVE:
+			case KeyEvent.VK_DEAD_ACUTE:
+			case KeyEvent.VK_DEAD_CIRCUMFLEX:
+			case KeyEvent.VK_DEAD_TILDE:
+			case KeyEvent.VK_DEAD_MACRON:
+			case KeyEvent.VK_DEAD_BREVE:
+			case KeyEvent.VK_DEAD_ABOVEDOT:
+			case KeyEvent.VK_DEAD_DIAERESIS:
+			case KeyEvent.VK_DEAD_ABOVERING:
+			case KeyEvent.VK_DEAD_DOUBLEACUTE:
+			case KeyEvent.VK_DEAD_CARON:
+			case KeyEvent.VK_DEAD_CEDILLA:
+			case KeyEvent.VK_DEAD_OGONEK:
+			case KeyEvent.VK_DEAD_IOTA:
+			case KeyEvent.VK_DEAD_VOICED_SOUND:
+			case KeyEvent.VK_DEAD_SEMIVOICED_SOUND:
 			case '\0':
 				return null;
 			default:
@@ -164,6 +181,7 @@ public class KeyEventWorkaround
 					last = LAST_MOD;
 			}
 			return evt;
+		//}}}
 		default:
 			return evt;
 		}
