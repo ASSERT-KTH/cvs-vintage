@@ -41,7 +41,7 @@ import org.jboss.util.SerializableEnumeration;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  *
  * <p><b>Revisions:</b>
  *
@@ -108,11 +108,6 @@ public class EntityContainer
    // These members contains statistics variable
    protected long createCount = 0;
    protected long removeCount = 0;
-
-   /**
-    *  Optional isModified method used by storeEntity
-    */
-   protected Method isModified;
 
    /**
     * This provides a way to find the entities that are part of a given
@@ -315,15 +310,6 @@ public class EntityContainer
          in.init();
          in = in.getNext();
       }
-
-      try
-      {
-         isModified = getBeanClass().getMethod("isModified", new Class[0]);
-         if (!isModified.getReturnType().equals(Boolean.TYPE))
-            isModified = null; // Has to have "boolean" as return type!
-      }
-      catch (NoSuchMethodException ignored) {}
-
 
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
@@ -640,18 +626,7 @@ public class EntityContainer
    {
       if (ctx.getId() != null)
       {
-         boolean dirty = true;
-         // Check isModified bean method flag
-         if (isModified != null)
-         {
-            Object[] args = {};
-            Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
-            dirty = modified.booleanValue();
-         }
-
-         // Store entity
-         if (dirty)
-         {
+         if(getPersistenceManager().isModified(ctx)) {
             getPersistenceManager().storeEntity(ctx);
          }
       }

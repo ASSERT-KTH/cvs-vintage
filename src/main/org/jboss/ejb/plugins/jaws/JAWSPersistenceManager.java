@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -80,6 +80,11 @@ public class JAWSPersistenceManager
 
    Category log = Category.getInstance(this.getClass().getName());
 
+   /**
+    *  Optional isModified method used by storeEntity
+    */
+   Method isModified;
+    
    // EntityPersistenceStore implementation -------------------------
 
    public void setContainer(Container c)
@@ -111,8 +116,16 @@ public class JAWSPersistenceManager
       activateEntityCommand = commandFactory.createActivateEntityCommand();
       passivateEntityCommand = commandFactory.createPassivateEntityCommand();
 
-      // Execute the init Command
+      try
+      {
+         isModified = container.getBeanClass().getMethod(
+               "isModified", new Class[0]);
+         if (!isModified.getReturnType().equals(Boolean.TYPE))
+            isModified = null; // Has to have "boolean" as return type!
+      }
+      catch (NoSuchMethodException ignored) {}
 
+      // Execute the init Command
       initCommand.execute();
    }
 
@@ -261,6 +274,18 @@ public class JAWSPersistenceManager
       loadEntitiesCommand.execute(keys);
    }
 
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception 
+   {
+      if(isModified == null) 
+      {
+         return true;
+      }
+
+      Object[] args = {};
+      Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
+      return modified.booleanValue();
+   }
+  
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {

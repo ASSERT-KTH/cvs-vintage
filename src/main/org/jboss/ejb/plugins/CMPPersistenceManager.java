@@ -44,7 +44,7 @@ import org.jboss.management.j2ee.TimeStatistic;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  * Revisions:
  * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -382,6 +382,11 @@ public class CMPPersistenceManager
       invokeLoad(ctx);
    }
    
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   {
+      return store.isModified(ctx);
+   }
+
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {

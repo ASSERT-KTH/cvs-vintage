@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCCommandFactory {
    private JDBCStoreManager manager;
@@ -116,6 +116,10 @@ public class JDBCCommandFactory {
    
    public JDBCLoadEntityCommand createLoadEntityCommand() {
       return new JDBCLoadEntityCommand(manager);
+   }
+   
+   public JDBCIsModifiedCommand createIsModifiedCommand() {
+      return new JDBCIsModifiedCommand(manager);
    }
    
    public JDBCStoreEntityCommand createStoreEntityCommand() {

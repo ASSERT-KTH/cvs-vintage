@@ -27,7 +27,7 @@ import org.jboss.monitor.StatisticsProvider;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin, StatisticsProvider
@@ -115,6 +115,15 @@ public interface EntityPersistenceManager
    void loadEntity(EntityEnterpriseContext instance)
       throws RemoteException;
       
+   /**
+    * This method is used to determine if an entity should be stored.
+    *
+    * @param instance    the instance to check
+    * @return true, if the entity has been modified
+    * @throws Exception    thrown if some system exception occurs
+    */
+   boolean isModified(EntityEnterpriseContext instance) throws Exception;
+
    /**
     * This method is called whenever an entity shall be stored to the
     * underlying storage. The persistence manager must call ejbStore on the

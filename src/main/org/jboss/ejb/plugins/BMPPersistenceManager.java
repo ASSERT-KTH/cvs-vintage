@@ -39,7 +39,7 @@ import org.apache.log4j.Category;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.32 $
+*  @version $Revision: 1.33 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -66,6 +66,11 @@ implements EntityPersistenceManager
    Method ejbActivate;
    Method ejbPassivate;
    Method ejbRemove;
+
+   /**
+    *  Optional isModified method used by storeEntity
+    */
+   Method isModified;
 
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
@@ -110,6 +115,13 @@ implements EntityPersistenceManager
          createMethodCache( methods );
       }
 
+      try
+      {
+         isModified = con.getBeanClass().getMethod("isModified", new Class[0]);
+         if (!isModified.getReturnType().equals(Boolean.TYPE))
+            isModified = null; // Has to have "boolean" as return type!
+      }
+      catch (NoSuchMethodException ignored) {}
    }
 
     /**
@@ -415,6 +427,18 @@ implements EntityPersistenceManager
       }
    }
 
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception 
+   {
+      if(isModified == null)
+      {
+         return true;
+      }
+            
+      Object[] args = {};
+      Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
+      return modified.booleanValue();
+   }
+  
    public void storeEntity(EntityEnterpriseContext ctx)
    throws RemoteException
    {

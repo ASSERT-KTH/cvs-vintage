@@ -38,7 +38,7 @@ import org.jboss.util.FinderResults;
 /**
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * <p><b>20010801 marc fleury:</b>
  * <ul>
  * <li>- insertion in cache upon create in now done in the instance interceptor
@@ -57,6 +57,11 @@ public class CMPFilePersistenceManager
    EntityContainer con;
    File dir;
    Field idField;
+
+   /**
+    *  Optional isModified method used by storeEntity
+    */
+   Method isModified;
     
    // Static --------------------------------------------------------
    
@@ -74,6 +79,14 @@ public class CMPFilePersistenceManager
       String ejbName = con.getBeanMetaData().getEjbName();
       dir = new File(getClass().getResource("/db/"+ejbName+"/db.properties").getFile()).getParentFile();
       idField = con.getBeanClass().getField("id");
+
+      try
+      {
+         isModified = con.getBeanClass().getMethod("isModified", new Class[0]);
+         if (!isModified.getReturnType().equals(Boolean.TYPE))
+            isModified = null; // Has to have "boolean" as return type!
+      }
+      catch (NoSuchMethodException ignored) {}
    }
    
    public void start()
@@ -285,7 +298,19 @@ public class CMPFilePersistenceManager
          throw new EJBException("Store failed", e);
       }
    }
-   
+
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception 
+   {
+      if(isModified == null)
+      {
+         return true;
+      }
+
+      Object[] args = {};
+      Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
+      return modified.booleanValue();
+   }
+  
    public void storeEntity(EntityEnterpriseContext ctx)
    {
 	   storeEntity(ctx.getId(), ctx.getInstance());

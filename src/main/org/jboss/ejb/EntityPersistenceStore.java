@@ -26,7 +26,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -140,6 +140,15 @@ public interface EntityPersistenceStore
    void loadEntity(EntityEnterpriseContext instance)
       throws RemoteException;
       
+   /**
+    * This method is used to determine if an entity should be stored.
+    *
+    * @param instance    the instance to check
+    * @return true, if the entity has been modified
+    * @throws Exception    thrown if some system exception occurs
+    */
+   boolean isModified(EntityEnterpriseContext instance) throws Exception;
+
    /**
     * This method is called whenever an entity shall be stored to the
     * underlying storage. The persistence manager must call ejbStore on the

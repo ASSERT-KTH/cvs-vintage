@@ -61,7 +61,7 @@ import org.jboss.proxy.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -97,6 +97,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private JDBCCreateEntityCommand createEntityCommand;
    private JDBCRemoveEntityCommand removeEntityCommand;
    private JDBCLoadEntityCommand loadEntityCommand;
+   private JDBCIsModifiedCommand isModifiedCommand;
    private JDBCStoreEntityCommand storeEntityCommand;
    private JDBCActivateEntityCommand activateEntityCommand;
    private JDBCPassivateEntityCommand passivateEntityCommand;
@@ -367,6 +368,10 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          }
       }
       loadFieldCommand.execute(fieldsToLoad, ctx);
+   }
+
+   public boolean isModified(EntityEnterpriseContext ctx) {
+      return isModifiedCommand.execute(ctx);
    }
 
    public void storeEntity(EntityEnterpriseContext ctx) {
