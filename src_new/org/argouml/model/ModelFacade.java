@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.33 2003/02/21 16:17:02 alexb Exp $
+// $Id: ModelFacade.java,v 1.34 2003/03/21 08:54:38 lepekhine Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1578,9 +1578,10 @@ public class ModelFacade {
      * @param flag
      */
     public static void setAbstract(Object o, boolean flag) {
-        if (o != null && o instanceof MClassifier) {
-            ((MClassifier)o).setAbstract(flag);
-        }
+        if (o != null ) {
+        	if ( o instanceof MClassifier)  ((MClassifier)o).setAbstract(flag);
+        	else if ( o instanceof MOperation)  ((MOperation)o).setAbstract(flag);
+        } 
     }
 
     /**
