@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.36 2003/03/23 18:02:20 spestov Exp $
+ * @version $Id: Gutter.java,v 1.37 2003/03/23 19:17:09 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -546,6 +546,8 @@ public class Gutter extends JComponent implements SwingConstants
 	private void paintLine(Graphics2D gfx, int line, int y)
 	{
 		Buffer buffer = textArea.getBuffer();
+		if(!buffer.isLoaded())
+			return;
 
 		int lineHeight = textArea.getPainter().getFontMetrics()
 			.getHeight();

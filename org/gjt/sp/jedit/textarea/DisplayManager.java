@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.4 2003/03/23 17:56:07 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.5 2003/03/23 19:17:09 spestov Exp $
  */
 public class DisplayManager
 {
@@ -284,6 +284,9 @@ public class DisplayManager
 		{
 			buffer.writeUnlock();
 		}
+
+		offsetMgr.notifyScreenLineChanges();
+		textArea.foldStructureChanged();
 	} //}}}
 
 	//{{{ expandFold() method
@@ -401,6 +404,9 @@ public class DisplayManager
 			buffer.writeUnlock();
 		}
 
+		offsetMgr.notifyScreenLineChanges();
+		textArea.foldStructureChanged();
+
 		return returnValue;
 	} //}}}
 
@@ -424,6 +430,9 @@ public class DisplayManager
 		{
 			buffer.writeUnlock();
 		}
+
+		offsetMgr.notifyScreenLineChanges();
+		textArea.foldStructureChanged();
 	} //}}}
 
 	//{{{ expandFolds() method
@@ -477,6 +486,9 @@ public class DisplayManager
 		{
 			buffer.writeUnlock();
 		}
+
+		offsetMgr.notifyScreenLineChanges();
+		textArea.foldStructureChanged();
 	} //}}}
 
 	//{{{ narrow() method
@@ -515,6 +527,9 @@ public class DisplayManager
 		// JEditTextArea.getView() method?
 		GUIUtilities.getView(textArea).getStatus().setMessageAndClear(
 			jEdit.getProperty("view.status.narrow"));
+
+		offsetMgr.notifyScreenLineChanges();
+		textArea.foldStructureChanged();
 	} //}}}
 
 	//{{{ Package-private members
@@ -607,12 +622,15 @@ public class DisplayManager
 			super(index);
 		} //}}}
 
+		//{{{ changed() method
+		public void changed()
+		{
+			textArea.updateScrollBars();
+		} //}}}
+
 		//{{{ reset() method
 		public void reset()
 		{
-			System.err.println(this);
-			System.err.println(DisplayManager.this);
-			System.err.println(offsetMgr);
 			physicalLine = offsetMgr.getLineCount();
 			scrollLine = 0;
 			for(int i = 0; i < physicalLine; i++)
@@ -620,12 +638,6 @@ public class DisplayManager
 				if(isLineVisible(i))
 					scrollLine += getScreenLineCount(i);
 			}
-		} //}}}
-
-		//{{{ changed() method
-		public void changed()
-		{
-			textArea.updateScrollBars();
 		} //}}}
 	} //}}}
 
