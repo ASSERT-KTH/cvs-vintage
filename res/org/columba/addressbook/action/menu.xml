@@ -12,7 +12,7 @@
 		<separator/>
 	</menu>
 	
-	<menu name="menu_utilities">
+	<menu name="menu_utilities" extensionpoint="bottom">
         <menuitem action="AddVCard"/>
 	 	<menuitem action="AddressbookImport"/>
 	</menu>

@@ -95,9 +95,14 @@ public abstract class AbstractMenuGenerator {
 		String extensionName = menuExtension.getAttribute("extensionpoint");
 		if (extensionName == null) {
 			// new menu
+			//
+			// !!! Note that we don't append the new menu
+			// we insert it before the second last menu in the menubar of core
+			// as defined in "core.actions.menu.xml"
+			// -> meaning before "Utilities" and "Help" and after "View"
 			getMenuRoot().insertElement(
 				(XmlElement) menuExtension.clone(),
-				getMenuRoot().count() - 1);
+				getMenuRoot().count() - 2);
 			return;
 		}
 
