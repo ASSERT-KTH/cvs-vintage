@@ -83,6 +83,9 @@ public class AttributeOption
     private static HashMap parentChildMap;
     private static HashMap childParentMap;
 
+    // need a local reference
+    private Attribute aAttribute;                 
+
     static
     {
         try
@@ -124,8 +127,6 @@ public class AttributeOption
         return comparator;
     }
     
-    // need a local reference
-    private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception
     {
         if ( aAttribute==null && (getAttributeId() != null) )
