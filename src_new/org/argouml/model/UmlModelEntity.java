@@ -1,4 +1,4 @@
-// $Id: UmlModelEntity.java,v 1.3 2004/01/28 07:17:46 linus Exp $
+// $Id: UmlModelEntity.java,v 1.4 2004/06/02 20:40:26 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,13 +47,23 @@ public class UmlModelEntity extends AbstractModelEntity {
      * @param isCreatable true if UmlFactory can create it using create()
      * @param isFacade if the entity can be identified using ModelFacade
      * @deprecated as of 0.15.3. facade is to be removed.
-     * TODO: Why? What is it replaced by?
+     * Replaced by public UmlModelEntity(String string, boolean isCreatable)
      */
     public UmlModelEntity(String string,
                           boolean isCreatable,
                           boolean isFacade) {
         super(string);
         _availableInFacade = isFacade;
+        _creatable = isCreatable;
+    }
+
+    /**
+     * @param string the entity name
+     * @param isCreatable true if UmlFactory can create it using create()
+     */
+    public UmlModelEntity(String string,
+                          boolean isCreatable) {
+        super(string);
         _creatable = isCreatable;
     }
 
