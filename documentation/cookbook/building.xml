@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.21 2004/04/12 07:37:09 linus Exp $ -->
+<!-- $Id: building.xml,v 1.22 2004/05/20 19:06:12 linus Exp $ -->
 
   <chapter id="buildingandtools">
     <title>Building from source</title>
@@ -1764,8 +1764,19 @@ for this release to ---.
 </para>
 	      </listitem>
 	      <listitem>
+		<para>
+Change the target milestones of any fixed issue with target milestone
+--- to that of the current release.
+</para>
+                <para>
+This is probably some developer that has fixed an issue by forgot to
+set the target milestone correctly.
+</para>
+	      </listitem>
+	      <listitem>
 	        <para>
-Move all issues reported on 'current' to this release.
+Move all issues reported on 'current' to this release
+(for components argouml and modules).
 </para>
                 <para>
 These items were reported between the previous version and this version.
