@@ -16,12 +16,11 @@
 
 package org.columba.core.gui.menu;
 
-import java.awt.event.KeyEvent;
-
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
 import org.columba.core.action.BasicAction;
+import org.columba.core.gui.util.ImageUtil;
 import org.columba.core.gui.util.MnemonicSetter;
 import org.columba.core.help.HelpManager;
 
@@ -61,6 +60,9 @@ public class CMenuItem extends JMenuItem {
 		// Set text, possibly with a mnemonic if defined using &
 		MnemonicSetter.setTextWithMnemonic(this, basicAction.getName());
 
+		// apply transparent icon
+		if ( basicAction.getSmallIcon() != null )
+			setDisabledIcon(ImageUtil.createTransparentIcon(basicAction.getSmallIcon()));
 	}
 	
 	/**

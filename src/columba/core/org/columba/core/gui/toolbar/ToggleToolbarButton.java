@@ -17,6 +17,7 @@ import javax.swing.JToggleButton;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.SelectionStateObservable;
+import org.columba.core.gui.util.ImageUtil;
 
 /**
  * Customized JToogleButton for a Toolbar.
@@ -60,7 +61,11 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 		setText("");
 
 		setIcon(((BasicAction) action).getSmallIcon());
-
+		
+		// apply transparent icon
+		if ( ((BasicAction) action).getSmallIcon() != null )
+		setDisabledIcon(ImageUtil.createTransparentIcon(((BasicAction) action).getSmallIcon()));
+			 
 		//setToolTipText(((BasicAction) action).getTooltipText());
 		((CheckBoxAction) getAction()).getObservable().addObserver(this);
 		
