@@ -189,7 +189,10 @@ public final class IntrospectionUtils {
                         home=new File("./").getCanonicalPath();
                     }
                     File f=new File( home );
-		    File f1=new File ( f, "..");
+		    String parentDir = f.getParent();
+		    if(parentDir == null)
+			parentDir = home;  // unix style
+		    File f1=new File ( parentDir );
 		    install = f1.getCanonicalPath();
 		    if( installSysProp != null )
 			System.getProperties().put( installSysProp, install );
@@ -204,7 +207,10 @@ public final class IntrospectionUtils {
 		if( new File( fname ).exists()) {
 		    try {
 			File f=new File( path );
-			File f1=new File ( f, "..");
+			String parentDir = f.getParent();
+			if( parentDir == null )
+			    parentDir = path; // unix style
+			File f1=new File ( parentDir );
 			install = f1.getCanonicalPath();
 			if( installSysProp != null )
 			    System.getProperties().put( installSysProp,
