@@ -10,7 +10,7 @@
 #   This script is assumed to run from the bin directory or have the
 #   CATALINA_HOME env variable set.
 #
-# $Id: digest.sh,v 1.2 2001/08/13 05:01:49 jon Exp $
+# $Id: digest.sh,v 1.3 2001/08/21 18:42:34 jon Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -45,6 +45,19 @@ if [ -z "$JAVA_HOME" ] ; then
 fi
 
 # ----- Set Up The System Classpath -------------------------------------------
+# Cygwin support.  $cygwin _must_ be set to either true or false.
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  *) cygwin=false ;;
+esac
+ 
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$CATALINA_HOME" ] &&
+    CATALINA_HOME=`cygpath --unix "$CATALINA_HOME"`
+    [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+fi
 
 CP="$CATALINA_HOME/server/lib/catalina.jar"
 
