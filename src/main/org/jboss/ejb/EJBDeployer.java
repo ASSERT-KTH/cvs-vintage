@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.20 $</tt>
+ * @version <tt>$Revision: 1.21 $</tt>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -281,6 +281,8 @@ public class EJBDeployer
          }
       }
       catch (Exception e) {
+         if (e instanceof DeploymentException)
+            throw (DeploymentException)e;
          throw new DeploymentException("failed to initialize", e);
       }
       
@@ -304,7 +306,9 @@ public class EJBDeployer
          di.metaData = efm.load();
       }
       catch (Exception e) {
-         log.error("Problem loading metaData ", e);
+         if (e instanceof DeploymentException)
+            throw (DeploymentException)e;
+         throw new DeploymentException("Failed to load metadata", e);
       }
       
       // wrapping this into a try - catch block to prevent errors in
