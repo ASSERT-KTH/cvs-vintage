@@ -55,7 +55,9 @@ public class MetricsInterceptor extends AbstractInterceptor
     private String applicationName        = "<undefined>";
     /** Bean name in the container.                     */ 
     private String beanName               = "<undefined>";
-
+    /** Publisher thread.                               */
+    private Thread publisher              = null;
+    
     /**
      * Message queue for the outgoing JMS messages. This list is accessed
      * by the interceptor when adding new messages, and by the publisher
@@ -124,12 +126,18 @@ public class MetricsInterceptor extends AbstractInterceptor
          * wonder if container method callback order is documented somewhere, it should be.. 
          */
          
-        Thread thread = new Thread(new Publisher());
-        thread.setName("Metrics Publisher Thread for " + beanName + ".");
-        thread.setDaemon(true);
-        thread.start();
+        publisher = new Thread(new Publisher());
+        publisher.setName("Metrics Publisher Thread for " + beanName + ".");
+        publisher.setDaemon(true);
+        publisher.start();
    }
 
+   /**
+    * Kills the publisher thread.
+    */
+   public void destroy() {
+        publisher.interrupt();    
+   }
    
     // Private --------------------------------------------------------
     
@@ -140,7 +148,7 @@ public class MetricsInterceptor extends AbstractInterceptor
      * @param   begin   invocation begin time in ms
      * @param   end     invocation end time in ms
      */
-    private void addEntry(MethodInvocation mi, long begin, long end) {
+    private final void addEntry(MethodInvocation mi, long begin, long end) {
         
         /* this gets called by the interceptor */
         
@@ -172,7 +180,7 @@ public class MetricsInterceptor extends AbstractInterceptor
             msg.setStringProperty(BEAN, beanName);
             msg.setObjectProperty(METHOD, method);    
             msg.setLongProperty(TIME, time);
-            
+
             if (txID != -1) 
                 msg.setStringProperty("ID",  String.valueOf(txID));
                         
@@ -219,7 +227,7 @@ public class MetricsInterceptor extends AbstractInterceptor
         public void run() {
     
             try {
-                final boolean IS_TRANSACTED    = false;
+                final boolean IS_TRANSACTED    = true;
                 final int     ACKNOWLEDGE_MODE = Session.DUPS_OK_ACKNOWLEDGE;
                
                 // lookup the connection factory and topic and create a JMS session
@@ -243,9 +251,14 @@ public class MetricsInterceptor extends AbstractInterceptor
                 while (running) {
 
                     Object[] array;
-
+                    long sleepTime = delay;
+                    
                     try {
-                        Thread.sleep(delay);
+                        Thread.sleep(sleepTime);
+                        
+                        // measure message processing cost and try to deal
+                        // with congestion
+                        long begin = System.currentTimeMillis();
                         
                         // synchronized during the copy... the interceptor will
                         // have to wait til done
@@ -265,7 +278,18 @@ public class MetricsInterceptor extends AbstractInterceptor
                                           );
                                           
                             pub.publish(msg);
-                        }                                          
+                        }
+                        
+                        // try to deal with congestion a little better, alot of
+                        // small messages fast will kill JBossMQ performance, this is
+                        // a temp fix to group many messages into one operation
+                        try {session.commit();} catch (Exception e) {}
+
+                        // stop the clock and reduce the work time from our
+                        // resting time
+                        long end = System.currentTimeMillis();
+                  
+                        sleepTime = delay - (end - begin);
                     }
                     catch (InterruptedException e) {
                         // kill this thread
@@ -291,7 +315,7 @@ public class MetricsInterceptor extends AbstractInterceptor
      *
      * @see #msgQueue
      */
-    private class Entry {
+    private final class Entry {
      
        int  id = -1;
        long time;
