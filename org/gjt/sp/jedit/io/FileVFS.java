@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.28 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.29 2003/02/19 01:36:50 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -303,7 +303,14 @@ public class FileVFS extends VFS
 	//{{{ _mkdir() method
 	public boolean _mkdir(Object session, String directory, Component comp)
 	{
-		boolean retVal = new File(directory).mkdirs();
+		String parent = getParentOfPath(directory);
+		if(!new File(parent).exists())
+		{
+			if(!_mkdir(session,parent,comp))
+				return false;
+		}
+
+		boolean retVal = new File(directory).mkdir();
 		VFSManager.sendVFSUpdate(this,directory,true);
 		return retVal;
 	} //}}}
