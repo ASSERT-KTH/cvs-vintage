@@ -146,250 +146,249 @@
 	
 		<p id="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" /></p>
 
-	<h3>Issue ID #123</h3>
+		<h3>Issue ID #123</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">issue id #:</th>
+			<td>123</td>
+			</tr>
+			
+			<tr>
+			<th width="120">version:</th>
+			<td>345</td>
+			</tr>
+			
+			<tr>
+			<th width="120">platform:</th>
+			<td>commodore 64</td>
+			</tr>
+			
+			<tr>
+			<th width="120">os:</th>
+			<td>plan9</td>
+			</tr>
+			
+			<tr>
+			<th width="120">found during:</th>
+			<td>normal use, QA, Beta, etc</td>
+			</tr>
+			
+			<tr>
+			<th width="120">issue type:</th>
+			<td>e.g. change requirements / bug / enhancement</td>
+			</tr>
+			
+			<tr>
+			<th width="120">functional area:</th>
+			<td>eg. UI / setup / help</td>
+			</tr>
+			
+			<tr>
+			<th width="120">severity:</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select> </td>
+			</tr>
+			
+			<tr>
+			<th width="120">priority:</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
 	
-	<div class="axial">
+		<h3>personnel</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">committed by:</th>
+			<td><a href="#">x (x@xxx.com)</a></td>
+			</tr>
+			
+			<tr>
+			<th width="120">assignee(s):</th>
+			<td>
+			<a href="#">x (x@xxx.com)</a>,&#160;<a href="#">y (y@xxx.com)</a> 
+			<p><input type="submit" value="edit assignees" /></p>
+			</td>
+			</tr>
+			</table>
+		</div>
+		
+		<h3>Related Links</h3>
+	
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>
-		<th width="120">issue id #:</th>
-		<td>123</td>
+		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+		<th>URL:</th>
+		<th>description:</th>
 		</tr>
 		
-		<tr>
-		<th width="120">version:</th>
-		<td>345</td>
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><input type="text" size="25" value="http://" /></td>
+		<td><input type="text" size="25" value="url description x" /></td>
 		</tr>
 		
-		<tr>
-		<th width="120">platform:</th>
-		<td>commodore 64</td>
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><input type="text" size="25" value="http://" /></td>
+		<td><input type="text" size="25" value="url description y" /></td>
 		</tr>
 		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><input type="text" size="25" value="http://" /></td>
+		<td><input type="text" size="25" value="url description z" /></td>
+		</tr>
+		</table>
+		
+		<p><input type="submit" value="add url" />&#160;<input type="submit" value="delete url" /></p>
+		
+		<h3>Parent Issue</h3>
+	
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">parent issue</th>
+			<td><a href="#">parent issue x: non-blocking</a></td>
+			</tr>
+			</table>
+		</div>
+		
+		<h3>Child Issues</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th width="120">os:</th>
-		<td>plan9</td>
+		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+		<th>issue id#:</th>
+		<th>issue summary:</th>
+		<th>dependency type:</th>
 		</tr>
 		
-		<tr>
-		<th width="120">found during:</th>
-		<td>normal use, QA, Beta, etc</td>
-		</tr>
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">xxx</a></td>
+		<td><a href="#">child issue x</a></td>
 		
-		<tr>
-		<th width="120">issue type:</th>
-		<td>e.g. change requirements / bug / enhancement</td>
-		</tr>
-		
-		<tr>
-		<th width="120">functional area:</th>
-		<td>eg. UI / setup / help</td>
-		</tr>
-		
-		<tr>
-		<th width="120">severity:</th>
 		<td><select>
 		<option>
-		choice 1
+		blocking
 		</option>
 		<option>
-		choice 2
+		non-blocking
 		</option>
-		<option>
-		choice 3
-		</option>
-		</select> </td>
+		</select></td>
 		</tr>
 		
-		<tr>
-		<th width="120">priority:</th>
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">xxx</a></td>
+		<td><a href="#">child issue x</a></td>
 		<td><select>
 		<option>
-		choice 1
+		blocking
 		</option>
 		<option>
-		choice 2
-		</option>
-		<option>
-		choice 3
+		non-blocking
 		</option>
 		</select></td>
 		</tr>
 		</table>
-	</div>
-
-	<h3>personnel</h3>
+		
+		<p><input type="submit" value="add child issue" /></p>
+		
+		<h3>Comments</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
+			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
+			</tr>
+			
+			<tr>
+			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
+			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
+			</tr>
+			
+			<tr>
+			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
+			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
+			</tr>
+			
+			<tr>
+			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
+			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
+			</td>
+			</tr>
+			
+			<tr>
+			<th width="120">add comment:</th>
+			<td><textarea rows="4" cols="40"></textarea>
+				<p><input type="submit" value="submit comment" /></p>
+			</td>
+			</tr>
+			</table>
+		</div>
 	
-	<div class="axial">
+		<p><a href="#">view all comments (long form)</a></p>
+		
+		<h3>Issue History (up to first ten)</h3>
+		
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>
-		<th width="120">committed by:</th>
-		<td><a href="#">x (x@xxx.com)</a></td>
+		<th width="120">date stamp:</th>
+		<th>action:</th>
 		</tr>
 		
-		<tr>
-		<th width="120">assignee(s):</th>
-		<td>
-		<a href="#">x (x@xxx.com)</a>,&#160;<a href="#">y (y@xxx.com)</a> 
-		<p><input type="submit" value="edit assignees" /></p>
-		</td>
+		<tr class="a">
+		<td width="120">xx/xx/2001</td>
+		<td width="120">action descr. X</td>
+		</tr>
+		
+		<tr class="b">
+		<td width="120">xx/xx/2001</td>
+		<td>action descr. X</td>
+		</tr>
+		
+		<tr class="a">
+		<td width="120">xx/xx/2001</td>
+		<td>action descr. X</td>
+		</tr>
+		
+		<tr class="b">
+		<td width="120">xx/xx/2001</td>
+		<td>action descr. X</td>
 		</tr>
 		</table>
-	</div>
 	
-	<h3>Related Links</h3>
-
-	<table width="100%" cellpadding="3" cellspacing="2" border="1">
-	<tr>
-	<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
-	<th>URL:</th>
-	<th>description:</th>
-	</tr>
+		<p><a href="#">view complete history</a></p>
 	
-	<tr class="a">
-	<td><input type="checkbox" /></td>
-	<td><input type="text" size="25" value="http://" /></td>
-	<td><input type="text" size="25" value="url description x" /></td>
-	</tr>
+		<p id="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" /></p>
 	
-	<tr class="b">
-	<td><input type="checkbox" /></td>
-	<td><input type="text" size="25" value="http://" /></td>
-	<td><input type="text" size="25" value="url description y" /></td>
-	</tr>
-	
-	<tr class="a">
-	<td><input type="checkbox" /></td>
-	<td><input type="text" size="25" value="http://" /></td>
-	<td><input type="text" size="25" value="url description z" /></td>
-	</tr>
-	</table>
-	
-	<p><input type="submit" value="add url" />&#160;<input type="submit" value="delete url" /></p>
-	
-	<h3>Parent Issue</h3>
-
-	<div class="axial">
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<th width="120">parent issue</th>
-		<td><a href="#">parent issue x: non-blocking</a></td>
-		</tr>
-		</table>
-	</div>
-	
-	<h3>Child Issues</h3>
-	
-	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-	<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
-	<th>issue id#:</th>
-	<th>issue summary:</th>
-	<th>dependency type:</th>
-	</tr>
-	
-	<tr class="a">
-	<td><input type="checkbox" /></td>
-	<td><a href="#">xxx</a></td>
-	<td><a href="#">child issue x</a></td>
-	
-	<td><select>
-	<option>
-	blocking
-	</option>
-	<option>
-	non-blocking
-	</option>
-	</select></td>
-	</tr>
-	
-	<tr class="b">
-	<td><input type="checkbox" /></td>
-	<td><a href="#">xxx</a></td>
-	<td><a href="#">child issue x</a></td>
-	<td><select>
-	<option>
-	blocking
-	</option>
-	<option>
-	non-blocking
-	</option>
-	</select></td>
-	</tr>
-	</table>
-	
-	<p><input type="submit" value="add child issue" /></p>
-	
-	<h3>Comments</h3>
-	
-	<div class="axial">
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
-		<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-		</tr>
-		
-		<tr>
-		<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
-		<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-		</tr>
-		
-		<tr>
-		<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
-		<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-		</tr>
-		
-		<tr>
-		<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>
-		<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
-		</td>
-		</tr>
-		
-		<tr>
-		<th width="120">add comment:</th>
-		<td><textarea rows="4" cols="40"></textarea>
-			<p><input type="submit" value="submit comment" /></p>
-		</td>
-		</tr>
-		</table>
-	</div>
-
-	<p><a href="#">view all comments (long form)</a></p>
-	
-	<h3>Issue History (up to first ten)</h3>
-	
-	<table width="100%" cellpadding="3" cellspacing="2" border="1">
-	<tr>
-	<th width="120">date stamp:</th>
-	<th>action:</th>
-	</tr>
-	
-	<tr class="a">
-	<td width="120">xx/xx/2001</td>
-	<td width="120">action descr. X</td>
-	</tr>
-	
-	<tr class="b">
-	<td width="120">xx/xx/2001</td>
-	<td>action descr. X</td>
-	</tr>
-	
-	<tr class="a">
-	<td width="120">xx/xx/2001</td>
-	<td>action descr. X</td>
-	</tr>
-	
-	<tr class="b">
-	<td width="120">xx/xx/2001</td>
-	<td>action descr. X</td>
-	</tr>
-	</table>
-
-	<p><a href="#">view complete history</a></p>
-
-	<p id="functnbar"><input type="submit" value="save" />&#160;<input type="submit" value="cancel" /></p>
-
-	<p>&#171; previous | 1 of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
-
+		<p>&#171; previous | 1 of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
 	</div>
 	<!-- Scarab - App -->
 
