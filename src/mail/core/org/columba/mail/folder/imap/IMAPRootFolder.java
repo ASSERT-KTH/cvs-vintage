@@ -40,7 +40,6 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
-import org.columba.mail.imap.parser.Imap4Parser;
 import org.columba.mail.imap.parser.ListInfo;
 import org.columba.mail.imap.protocol.IMAPProtocol;
 import org.columba.mail.message.AbstractMessage;
@@ -56,7 +55,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	private IMAPProtocol imap;
 	//private boolean select=false;
 	private boolean fetch = false;
-	private Imap4Parser parser;
+
 	private StringBuffer cache;
 	private int state;
 	private List lsubList;

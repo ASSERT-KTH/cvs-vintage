@@ -205,23 +205,17 @@ public class IMAPResponse {
 		}
 	}
 
-	/**
-	 * Method parses a single line server response string
-	 * @param str server response
-	 * @throws Exception
-	 */
 	public void parse(String str) throws Exception {
 		String nextAtom = null;
-
-		//System.out.println("parsing:" + str);
+		int index = 0;
 
 		source = str;
 
 		// start with beginning of string
-		atomIndex = source.indexOf(" ");
-		nextAtom = source.substring(0, atomIndex);
-		//System.out.println("nextAtom="+nextAtom+">");
-		
+		int endOfAtom = skipSpaces(source, 0);
+		nextAtom = source.substring(0, endOfAtom);
+		index = endOfAtom + 1;
+
 		if (nextAtom.equals("*") == true)
 			tagged = UNTAGGED;
 		else if (nextAtom.equals("+") == true)
@@ -229,17 +223,12 @@ public class IMAPResponse {
 		else {
 			tagged = TAGGED;
 			tag = source.substring(0, source.indexOf(" "));
-			//System.out.println("tag-string=" + tag);
+
 		}
 
-		//System.out.println("tag-id=" + tagged);
-
-		int oldIndex = atomIndex;
-		oldIndex++;
-		atomIndex = source.indexOf(" ", oldIndex);
-		nextAtom = source.substring(oldIndex, atomIndex);
-
-		//System.out.println("status-string=" + nextAtom);
+		endOfAtom = skipSpaces(source, index);
+		nextAtom = source.substring(index, endOfAtom);
+		index = endOfAtom;
 
 		for (int i = 0; i < statusCodeString.length; i++) {
 			if (nextAtom.equalsIgnoreCase(statusCodeString[i])) {
@@ -251,39 +240,82 @@ public class IMAPResponse {
 		if (status == -1)
 			status = STATUS_UNKNOWN;
 
-		//System.out.println("status-id=" + status);
-
 		// the next atom is optional
-		if (source.charAt(atomIndex + 1) == '[') {
-			oldIndex = atomIndex + 1;
-			atomIndex = source.indexOf("]", oldIndex);
-			nextAtom = source.substring(oldIndex, atomIndex + 1);
 
-			// we found a response code
-			//System.out.println("responsecode=" + nextAtom);
-			/*
+		// parse for status code:
+		/*
+		 * 
+		 * [<STATUS-CODE>]
+		 * 
+		 * examples: [ALERT]
+		 * 
+		 * possible codes:
+		 * 
+			* ALERT  the text following the code is a message that the user must see
+			* NEWNAME mailbox name has changed
+			* PARSE  some headers are not parseable
+			* PERMANENTFLAGS  the list of flags that can be stored
+			* READ-ONLY  mailbox is read only
+			* READ-WRITE  mailbox is not read only
+			* TRYCREATE  an operation is failing because the target doesn't exist
+			* UIDVALIDITY  the uid validity number has changed
+			* UNSEEN  the sequence number of the first unread message
+			* 
+			 */
+		if (source.charAt(index + 1) == '[') {
+			int oldIndex = index + 1;
+			index = source.indexOf("]", oldIndex);
+			System.out.println("charAt(index)=" + source.charAt(index));
+			nextAtom = source.substring(oldIndex + 1, index);
+
 			for (int i = 0; i < responseCodeString.length; i++) {
 				if (nextAtom
 					.equalsIgnoreCase("[" + responseCodeString[i] + "]")) {
 					responseCode = i;
-			
+
 					break;
 				}
 			}
-			
-			if (responseCode == -1)
-				responseCode = RESPONSE_CODE_UNKNOWN;
-			*/
+
+			index++;
+
+			System.out.println("nextAtom=\"" + nextAtom + "\"");
 
 		}
 
-		if (source.charAt(atomIndex + 1) == ' ') {
+		System.out.println("charAt(index)=" + source.charAt(index));
+		if (source.charAt(index) == ' ') {
 			// we found human readable optional message
 
-			nextAtom = source.substring(atomIndex + 2, source.length() - 1);
+			nextAtom = source.substring(index + 1, source.length());
 
-			//System.out.println("hrm=" + nextAtom);
+			System.out.println("hrm=" + nextAtom);
 		}
+
+	}
+
+	protected String getNextWhiteSpaceAtom(String source) throws Exception {
+		int oldIndex = atomIndex;
+
+		if (oldIndex == -1) {
+
+			oldIndex = 0;
+
+			//atomIndex = source.indexOf(" ");
+		} else
+			oldIndex++;
+
+		int whitespaceIndex = source.indexOf(" ");
+
+		atomIndex = source.indexOf(" ", oldIndex);
+
+		if (atomIndex != -1) {
+			String substring = source.substring(oldIndex, atomIndex);
+			//System.out.println("substring=" + substring);
+			return substring;
+		}
+
+		throw new IMAPResponseException("next atom not found");
 	}
 
 	protected String getNextAtom() throws Exception {
@@ -292,9 +324,40 @@ public class IMAPResponse {
 		if (oldIndex == -1) {
 
 			oldIndex = 0;
-			atomIndex = source.indexOf(" ");
+
+			//atomIndex = source.indexOf(" ");
 		} else
-			atomIndex = source.indexOf(" ", oldIndex + 1);
+			oldIndex++;
+
+		//atomIndex = source.indexOf(" ", oldIndex + 1);
+
+		int bracketIndex = source.indexOf("[");
+		int parenthesisIndex = source.indexOf("(");
+
+		int whitespaceIndex = source.indexOf(" ");
+
+		atomIndex = source.indexOf(" ", oldIndex);
+
+		if (bracketIndex != -1) {
+			int endBracketIndex = source.indexOf("]", bracketIndex);
+
+			String substring = source.substring(bracketIndex, endBracketIndex);
+
+			atomIndex = endBracketIndex;
+
+			return substring;
+		}
+
+		if (parenthesisIndex != -1) {
+			int endParenthesisIndex = source.indexOf(")", parenthesisIndex);
+
+			String substring =
+				source.substring(parenthesisIndex, endParenthesisIndex);
+
+			atomIndex = endParenthesisIndex;
+
+			return substring;
+		}
 
 		if (atomIndex != -1) {
 			String substring = source.substring(oldIndex, atomIndex);
@@ -310,18 +373,16 @@ public class IMAPResponse {
 		List v = new Vector();
 
 		String str = source;
-		for ( int i=0; i<str.length(); i++ )
-		{
+		for (int i = 0; i < str.length(); i++) {
 			int lsubindex = skipSpaces(str, 0);
 		}
-		
-		
+
 		int size = v.size();
 		if (size > 0) {
 			String[] s = new String[size];
-			((Vector)v).copyInto(s);
+			((Vector) v).copyInto(s);
 			return s;
-		} else 
+		} else
 			return null;
 	}
 
@@ -348,9 +409,9 @@ public class IMAPResponse {
 	}
 
 	public String getSource() {
-		if ( source.length() > 1 ) return source.substring(0,source.length()-1);
-		
-		
+		if (source.length() > 1)
+			return source.substring(0, source.length() - 1);
+
 		return source;
 	}
 
@@ -388,12 +449,33 @@ public class IMAPResponse {
 
 		return false;
 	}
-	
-	public boolean isCONTINUATION()
-	{
-		if ( getTaggedCode()==CONTINUATION ) return true;
-		
+
+	public boolean isCONTINUATION() {
+		if (getTaggedCode() == CONTINUATION)
+			return true;
+
 		return false;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setResponseCode(int i) {
+		responseCode = i;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setStatus(int i) {
+		status = i;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setTag(String string) {
+		tag = string;
 	}
 
 }

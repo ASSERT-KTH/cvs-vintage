@@ -31,29 +31,7 @@ import org.columba.mail.imap.IMAPResponse;
  */
 public class FlagsParser {
 
-	public static Object[] parseUids(IMAPResponse[] responses) {
-		List v = new Vector();
-
-		for (int i = 0; i < responses.length - 1; i++) {
-			if (responses[i] == null)
-				continue;
-
-			String data = responses[i].getSource();
-			//ColumbaLogger.log.debug("answer=" + data);
-
-			String uid = parseUidsLine(data);
-			//String source = responses[i].getSource();
-			//ColumbaLogger.log.debug("index=" + uid);
-
-			v.add(uid);
-			//System.out.println("line["+i+"]="+source);
-		}
-
-		Object[] uids = new Object[v.size()];
-		((Vector)v).copyInto(uids);
-
-		return uids;
-	}
+	
 
 	public static IMAPFlags[] parseFlags(IMAPResponse[] responses) {
 		List v = new Vector();

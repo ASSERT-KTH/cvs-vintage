@@ -37,8 +37,8 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
 import org.columba.mail.imap.parser.IMAPFlags;
-import org.columba.mail.imap.parser.Imap4Parser;
 import org.columba.mail.imap.parser.ListInfo;
+import org.columba.mail.imap.parser.MessageFolderInfoParser;
 import org.columba.mail.imap.parser.MessageSet;
 import org.columba.mail.imap.parser.MessageSourceParser;
 import org.columba.mail.imap.parser.MimePartParser;
@@ -55,6 +55,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.DateParser;
+import org.columba.mail.parser.Rfc822Parser;
 
 /**
  * @author freddy
@@ -77,7 +78,7 @@ public class IMAPStore {
 	private String delimiter = new String();
 
 	private IMAPProtocol imap;
-	private Imap4Parser parser;
+	
 	private ImapItem item;
 
 	private IMAPRootFolder parent;
@@ -288,7 +289,7 @@ public class IMAPStore {
 			}
 
 			messageFolderInfo =
-				Imap4Parser.parseMessageFolderInfo(buf.toString());
+				MessageFolderInfoParser.parseMessageFolderInfo(buf.toString());
 
 			ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
 
@@ -711,7 +712,8 @@ public class IMAPStore {
 	}
 
 	private ColumbaHeader parseMessage(String headerString) {
-		parser = new Imap4Parser();
+
+		Rfc822Parser parser = new Rfc822Parser();
 
 		ColumbaHeader h = parser.parseHeader(headerString.toString());
 
@@ -892,7 +894,8 @@ public class IMAPStore {
 		MessageSet set = new MessageSet(list.toArray());
 
 		//	get list of used-defined headerfields
-		String[] headercacheList = CachedHeaderfieldOwner.getCachedHeaderfieldArray();
+		String[] headercacheList =
+			CachedHeaderfieldOwner.getCachedHeaderfieldArray();
 		StringBuffer headerFields = new StringBuffer();
 		String name;
 		for (int j = 0; j < headercacheList.length; j++) {

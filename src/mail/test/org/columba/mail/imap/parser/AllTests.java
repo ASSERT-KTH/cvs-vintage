@@ -33,7 +33,7 @@ public class AllTests {
 		TestSuite suite =
 			new TestSuite("Test for org.columba.modules.mail.parser");
 		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(Imap4ParserTest.class));
+		suite.addTest(new TestSuite(UIDParserTest.class));
 		//$JUnit-END$
 		return suite;
 	}
