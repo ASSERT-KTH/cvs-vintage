@@ -111,7 +111,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
      * Save window properties and close the window.
      */
     public void close() {
-        tableController.saveColumnConfig();
+        //tableController.saveColumnConfig();
         super.close(); // this saves view settings and closes the view
     }
 

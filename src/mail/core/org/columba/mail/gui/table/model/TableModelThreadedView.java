@@ -53,14 +53,6 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         collator = Collator.getInstance();
     }
 
-    public void toggleView(boolean b) {
-        setEnabled(b);
-
-        /*
-        getHeaderTableModel().update();
-        */
-    }
-
     public boolean isEnabled() {
         return enabled;
     }

@@ -3,17 +3,7 @@
 
 <options version="1.0">
  <gui>
-  <table selected="Date" ascending="true">  
-    <column name="Status" position="0" size="23" enabled="true" />
-    <column name="Attachment" position="1" size="23" enabled="true" />
-   	<column name="Flagged" position="2" size="23" enabled="true" />
-   	<column name="Priority" position="3" size="23" enabled="true" />
-   	<column name="Subject" position="4" size="196" enabled="true" />
-   	<column name="From" position="5" size="146" enabled="true" />
-   	<column name="Date" position="6" size="146" enabled="true" />
-  	<column name="Size" position="7" size="97" enabled="true" />
-   	<column name="Spam" position="8" size="100" enabled="true" /> 
-  </table>
+  <table />
   <messageframe>
    <view id="MessageFrame" >
     <window x="0" y="0" width="900" height="700" maximized="true"/> 

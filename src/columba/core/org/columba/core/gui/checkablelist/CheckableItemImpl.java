@@ -13,53 +13,44 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table;
+package org.columba.core.gui.checkablelist;
 
-import java.util.Observable;
-
+import javax.swing.Icon;
 
 /**
+ * Item used by the renderer.
+ * <p>
+ * Encapsulates the label's string, icon and the selected state.
  * 
- *
- * This is the model which handles the selected sorting column
- * and the sorting order (ascending/descending) of the table
- *
  * @author fdietz
  */
-public class SortingStateObservable extends Observable {
-    private String column;
-    private boolean order;
+public class CheckableItemImpl implements CheckableItem{
+    private String str;
+    private boolean isSelected;
+    private Icon icon;
 
-    /**
-     *
-     */
-    public SortingStateObservable() {
-        super();
+    public CheckableItemImpl(String str) {
+        this.str = str;
+        isSelected = false;
     }
 
-    /**
-     * @return
-     */
-    public String getColumn() {
-        return column;
+    public void setSelected(boolean b) {
+        isSelected = b;
     }
 
-    /**
-     * @return
-     */
-    public boolean isOrder() {
-        return order;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    /**
-     * @param string
-     */
-    public void setSortingState(String string, boolean order) {
-        column = string;
-        this.order = order;
+    public String toString() {
+        return str;
+    }
 
-        setChanged();
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
 
-        notifyObservers();
+    public Icon getIcon() {
+        return icon;
     }
 }

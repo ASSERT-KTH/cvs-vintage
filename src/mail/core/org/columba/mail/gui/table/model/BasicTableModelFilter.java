@@ -54,7 +54,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
     }
 
     /************** filter view *********************/
-    public void setDataFiltering(boolean b) throws Exception {
+    public void setDataFiltering(boolean b){
         dataFiltering = b;
     }
 
@@ -62,7 +62,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return dataFiltering;
     }
 
-    public void setNewFlag(boolean b) throws Exception {
+    public void setNewFlag(boolean b) {
         newFlag = b;
     }
 
@@ -70,7 +70,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return newFlag;
     }
 
-    public void setAnsweredFlag(boolean b) throws Exception {
+    public void setAnsweredFlag(boolean b) {
         answeredFlag = b;
     }
 
@@ -78,7 +78,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return answeredFlag;
     }
 
-    public void setFlaggedFlag(boolean b) throws Exception {
+    public void setFlaggedFlag(boolean b){
         flaggedFlag = b;
     }
 
@@ -86,7 +86,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return flaggedFlag;
     }
 
-    public void setExpungedFlag(boolean b) throws Exception {
+    public void setExpungedFlag(boolean b) {
         expungedFlag = b;
     }
 
@@ -94,7 +94,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return expungedFlag;
     }
 
-    public void setAttachmentFlag(boolean b) throws Exception {
+    public void setAttachmentFlag(boolean b)  {
         attachmentFlag = b;
     }
 
@@ -102,7 +102,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return attachmentFlag;
     }
 
-    public void setPatternString(String s) throws Exception {
+    public void setPatternString(String s) {
         patternString = s;
     }
 

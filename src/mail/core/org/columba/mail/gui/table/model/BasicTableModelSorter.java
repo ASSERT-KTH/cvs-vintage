@@ -28,25 +28,25 @@ import java.util.List;
 
 
 /**
- * @author fdietz
+ * 
  *
  * Adds sorting capability to the TableModel.
- *
+ * <p>
  * We support the following sorting orders:
  *  - In Order Received (no sorting applied)
  *  - Ascending
  *  - Descending
- *
+ * <p>
  * Sorting is applied on the selected column.
- *
+ * <p>
  * When inserting new headers we use insertion sort
  * to insert them in the already sorted list of headers
  *
- *
+ * @author fdietz
  */
 public class BasicTableModelSorter extends TreeTableModelDecorator {
     protected boolean ascending = true;
-    protected String sort = new String("In Order Received");
+    protected String sort = new String("Date");
     protected Collator collator;
 
     public BasicTableModelSorter(TreeTableModelInterface tableModel) {
@@ -81,10 +81,12 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
     public void sort() {
         String str = getSortingColumn();
 
+        /*
         if (str.equals("In Order Received")) {
             // do not sort the table, just use
             MessageNode rootNode = getRootNode();
         } else {
+        */
             MessageNode rootNode = getRootNode();
 
             // get a list of MessageNode objects of the first
@@ -95,7 +97,7 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
             Collections.sort(v,
                 new MessageHeaderComparator(getRealModel().getColumnNumber(getSortingColumn()),
                     getSortingOrder()));
-        }
+        //}
     }
 
     /**

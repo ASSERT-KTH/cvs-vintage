@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.treetable.CustomTreeTableCellRenderer;
 import org.columba.core.gui.util.treetable.Tree;
 
@@ -24,7 +22,9 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultTreeModel;
@@ -32,23 +32,28 @@ import javax.swing.tree.TreePath;
 
 
 /**
- * @author fdietz
+ *
  *
  * <class>BasicHeaderTableModel</class> extends AbstractTableModel
  * and adds a <class>DefaultTreeModel</class>.
- *
+ * <p>
  * The TableModel uses the TreeModel data. You can say, that it just
  * wraps the TreeModel in the TableModel.
- *
+ * <p>
  * This is necessary to support a threaded view of messages, useful
  * when following discussions of mailing-lists or newsgroups.
- *
+ * <p>
  * Another possible scenario would be adding a grouping support
  * which also needs a tree-like structure.
  *
+ * @author fdietz
+ *
  */
 public class BasicHeaderTableModel extends AbstractTableModel {
-    protected TableItem item;
+    /**
+     * list of column IDs
+     */
+    private List columns;
     protected HeaderList headerList;
     protected Tree tree;
 
@@ -64,8 +69,19 @@ public class BasicHeaderTableModel extends AbstractTableModel {
     protected MessageNode root;
     private boolean enableThreadedView;
 
-    public BasicHeaderTableModel(TableItem item) {
-        this.item = item;
+    public BasicHeaderTableModel() {
+        map = new HashMap();
+
+        columns = new Vector();
+    }
+
+    public BasicHeaderTableModel(String[] c) {
+        columns = new Vector();
+
+        // add array to vector
+        for (int i = 0; i < c.length; i++) {
+            columns.add(c[i]);
+        }
 
         map = new HashMap();
     }
@@ -116,17 +132,7 @@ public class BasicHeaderTableModel extends AbstractTableModel {
 
     /********************* AbstractTableModel implementation ********************/
     public int getColumnCount() {
-        int count = 0;
-
-        for (int i = 0; i < item.count(); i++) {
-            HeaderItem headerItem = item.getHeaderItem(i);
-
-            if (headerItem.getBoolean("enabled")) {
-                count++;
-            }
-        }
-
-        return count;
+        return columns.size();
     }
 
     public int getRowCount() {
@@ -146,13 +152,13 @@ public class BasicHeaderTableModel extends AbstractTableModel {
     }
 
     public String getColumnName(int column) {
-        return item.getHeaderItem(column).get("name");
+        return (String) columns.get(column);
     }
 
     public int getColumnNumber(String name) {
+
         for (int i = 0; i < getColumnCount(); i++) {
-            //System.out.println("column name: "+ getColumnName(i) );
-            if (name.indexOf(getColumnName(i)) != -1) {
+            if (name.equals(getColumnName(i))) {
                 return i;
             }
         }
@@ -160,20 +166,21 @@ public class BasicHeaderTableModel extends AbstractTableModel {
         return -1;
     }
 
+    /**
+     * Get the class which is responsible for renderering
+     * this column.
+     * <p>
+     * If the threaded-view is enabled, return a custom
+     * tree cell renderer.
+     * <p>
+     * @see org.columba.mail.gui.table.TableView#enableThreadedView
+     */
     public Class getColumnClass(int column) {
         if (enableThreadedView) {
-            String name = getColumnName(column);
-
-            if (name.equalsIgnoreCase("Subject")) {
-                return CustomTreeTableCellRenderer.class;
-            } else {
-                return getValueAt(0, column).getClass();
-            }
+            return CustomTreeTableCellRenderer.class;
         } else {
             return getValueAt(0, column).getClass();
         }
-
-        //return null;
     }
 
     public boolean isCellEditable(int row, int col) {
@@ -184,5 +191,36 @@ public class BasicHeaderTableModel extends AbstractTableModel {
         }
 
         return false;
+    }
+
+    /**
+     * Set column IDs
+     *
+     * @param c   array of column IDs
+     */
+    public void setColumns(String[] c) {
+        columns = new Vector();
+
+        // add array to vector
+        for (int i = 0; i < c.length; i++) {
+            columns.add(c[i]);
+        }
+    }
+
+    /**
+     * Add column to table model.
+     *
+     * @param c     new column ID
+     */
+    public void addColumn(String c) {
+        columns.add(c);
+    }
+
+    /**
+     * Clear column list.
+     *
+     */
+    public void clearColumns() {
+        columns.clear();
     }
 }

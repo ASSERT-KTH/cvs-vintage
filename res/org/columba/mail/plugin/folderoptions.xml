@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- !Attention!
+The order of the following plugins is itentional. Do not change the order of appeareance. -->
+
+<folderoptions>
+ <folderoption name="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" />
+ <folderoption name="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" />
+ <folderoption name="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />
+ <folderoption name="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" />
+</folderoptions>

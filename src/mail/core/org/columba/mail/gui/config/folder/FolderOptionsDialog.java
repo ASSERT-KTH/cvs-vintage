@@ -21,13 +21,18 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.checkablelist.CheckableItemImpl;
+import org.columba.core.gui.checkablelist.CheckableList;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
@@ -48,6 +53,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -55,11 +61,11 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-
 
 /**
  * Folder Options Dialog.
@@ -67,26 +73,30 @@ import javax.swing.UIManager;
  * @author fdietz
  */
 public class FolderOptionsDialog extends JDialog implements ActionListener {
-    JPanel generalPanel;
-    JPanel advPanel;
-    Folder folder;
-    JLabel nameLabel;
-    JTextField nameTextField;
-    JLabel totalLabel;
-    JLabel totalLabel2;
-    JLabel unreadLabel;
-    JLabel unreadLabel2;
-    JLabel recentLabel;
-    JLabel recentLabel2;
-    JLabel locationLabel;
-    JLabel locationLabel2;
-    JLabel sizeLabel;
-    JLabel sizeLabel2;
-    JButton exportButton;
-    MultiLineLabel enableLabel;
-    JCheckBox enableTextIndexingCheckBox;
-    boolean renameFolder;
-    String oldFolderName = null;
+    private JPanel generalPanel;
+    private JPanel advPanel;
+    private Folder folder;
+    private JLabel nameLabel;
+    private JTextField nameTextField;
+    private JLabel totalLabel;
+    private JLabel totalLabel2;
+    private JLabel unreadLabel;
+    private JLabel unreadLabel2;
+    private JLabel recentLabel;
+    private JLabel recentLabel2;
+    private JLabel locationLabel;
+    private JLabel locationLabel2;
+    private JLabel sizeLabel;
+    private JLabel sizeLabel2;
+    private JButton exportButton;
+    private MultiLineLabel enableLabel;
+    private JCheckBox enableTextIndexingCheckBox;
+    private boolean renameFolder;
+    private String oldFolderName = null;
+    private MultiLineLabel overwriteLabel;
+    private JButton resetButton;
+    //JCheckBox overwriteOptionsCheckBox;
+    private CheckableList checkableList;
 
     /**
      * Constructor
@@ -133,10 +143,12 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
     protected JPanel createGeneralPanel() {
         // Create a FormLayout instance. 
-        FormLayout layout = new FormLayout("6dlu, right:max(25dlu;default), 3dlu, fill:default:grow, fill:0dlu:grow",
-                
+        FormLayout layout =
+            new FormLayout(
+                "6dlu, right:max(25dlu;default), 3dlu, fill:default:grow, fill:0dlu:grow",
+
             // 3 columns
-            "pref, 3dlu, pref, 6dlu, pref, 3dlu, pref, 3dlu, pref, 6dlu, pref, 24dlu, pref, 3dlu, pref, 6dlu, default, 0dlu");
+    "pref, 3dlu, pref, 6dlu, pref, 3dlu, pref, 3dlu, pref, 6dlu, pref, 24dlu, pref, 3dlu, pref, 6dlu, default, 0dlu");
 
         // create a form builder
         PanelBuilder builder = new PanelBuilder(layout);
@@ -181,10 +193,12 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
     protected JPanel createAdvancedPanel() {
         // Create a FormLayout instance. 
-        FormLayout layout = new FormLayout("6dlu, right:max(25dlu;default), 3dlu, default, fill:0dlu:grow",
-                
+        FormLayout layout =
+            new FormLayout(
+                "6dlu, right:max(25dlu;default), 3dlu, default, fill:0dlu:grow",
+
             // 3 columns
-            "pref, 3dlu, pref, 6dlu, pref, 3dlu, 0dlu");
+    "pref, 3dlu, pref, 3dlu, pref, 0dlu");
 
         // create a form builder
         PanelBuilder builder = new PanelBuilder(layout);
@@ -193,11 +207,24 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
         // create EmptyBorder between components and dialog-frame 
         builder.setDefaultDialogBorder();
 
+        //builder.addSeparator("Folder-based options");
+
+        builder.add(overwriteLabel, cc.xywh(1, 1, 5, 1));
+
+        JScrollPane sp = new JScrollPane(checkableList);
+        builder.add(sp, cc.xywh(1, 3, 5, 1));
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(resetButton, BorderLayout.EAST);
+        builder.add(panel, cc.xywh(5, 5, 1, 1));
+
+        /*
         builder.addSeparator("Full-text indexing");
-
-        builder.add(enableLabel, cc.xywh(1, 3, 5, 1));
-        builder.add(enableTextIndexingCheckBox, cc.xywh(2, 5, 4, 1));
-
+        
+        builder.add(enableLabel, cc.xywh(1, 7, 5, 1));
+        builder.add(enableTextIndexingCheckBox, cc.xywh(2, 9, 4, 1));
+        */
         return builder.getPanel();
     }
 
@@ -235,24 +262,41 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
         enableTextIndexingCheckBox = new JCheckBox("Enable full-text indexing");
 
-        enableLabel = new MultiLineLabel(
-                "This is an experimental feature. Enable this only if you know what your are doing!");
+        enableLabel =
+            new MultiLineLabel("This is an experimental feature. Enable this only if you know what your are doing!");
         enableLabel.setFont(boldFont);
 
+        overwriteLabel =
+            new MultiLineLabel("Select individual options you would like to change for this folder only. Note, that you can always restore the default values with the \"Reset Defaults\" button.");
+
+        resetButton = new JButton("Reset Defaults");
+        resetButton.setActionCommand("RESET");
+        resetButton.addActionListener(this);
+
         /*
+        overwriteOptionsCheckBox = new JCheckBox("Overwrite global settings");
+        overwriteOptionsCheckBox.addActionListener(this);
+        overwriteOptionsCheckBox.setActionCommand("OVERWRITE");
+        */
+        checkableList = new CheckableList();
+
         CTabbedPane tp = new CTabbedPane();
         tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         tp.add("General Options", createGeneralPanel());
         tp.add("Advanced", createAdvancedPanel());
-        */
-        getContentPane().add(createGeneralPanel(), BorderLayout.CENTER);
+
+        getContentPane().add(tp, BorderLayout.CENTER);
 
         getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
-        getRootPane().registerKeyboardAction(this, "CANCEL",
+        getRootPane().registerKeyboardAction(
+            this,
+            "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
+        getRootPane().registerKeyboardAction(
+            this,
+            "HELP",
             KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
@@ -264,15 +308,17 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
         //bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
         //bottom.add( Box.createHorizontalStrut());
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "cancel"));
+        ButtonWithMnemonic cancelButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "cancel"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         cancelButton.addActionListener(this);
         cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "ok"));
+        ButtonWithMnemonic okButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "ok"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         okButton.addActionListener(this);
@@ -280,8 +326,9 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
         okButton.setDefaultCapable(true);
         getRootPane().setDefaultButton(okButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "help"));
 
         // associate with JavaHelp
         HelpManager.enableHelpOnButton(helpButton, "folder_options");
@@ -311,9 +358,34 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
             locationLabel2.setText(folder.getDirectoryFile().getPath());
 
+            FolderItem item = folder.getFolderItem();
+            XmlElement property = item.getElement("property");
+
+            DefaultListModel model = new DefaultListModel();
+
+            for (int i = 0; i < property.count(); i++) {
+                OptionsItem optionsItem =
+                    new OptionsItem(
+                        (XmlElement) property.getElement(i).clone());
+
+                model.addElement(optionsItem);
+            }
+
+            checkableList.setModel(model);
+
+            /*
+            if (property.getAttribute("overwrite_default_settings", "false")
+                            .equals("true")) {
+                overwriteOptionsCheckBox.setSelected(true);
+            } else {
+                overwriteOptionsCheckBox.setSelected(false);
+            }
+            */
+
             // only local folders have an full-text indexing capability
             if (folder instanceof LocalFolder) {
-                FolderItem item = folder.getFolderItem();
+                item = folder.getFolderItem();
+
                 boolean bool = item.getBoolean("property", "enable_lucene");
 
                 enableTextIndexingCheckBox.setSelected(bool);
@@ -331,9 +403,43 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
                 }
             }
 
+            FolderItem item = folder.getFolderItem();
+            XmlElement property = item.getElement("property");
+
+            // remove all old elements
+            property.removeAllElements();
+
+            DefaultListModel model =
+                (DefaultListModel) checkableList.getModel();
+
+            for (int i = 0; i < model.getSize(); i++) {
+                OptionsItem optionsItem = (OptionsItem) model.get(i);
+
+                // add new element
+                property.addElement(optionsItem.getElement());
+            }
+
+            /*
+            item.set("property", "overwrite_default_settings",
+                overwriteOptionsCheckBox.isSelected());
+            
+            
+            XmlElement table = property.getElement("table");
+            
+            if (table == null) {
+                // create default table
+                // use copy of global options as default
+                table = (XmlElement) MailConfig.get("options")
+                                               .getElement("/options/gui/table")
+                                               .clone();
+                property.addElement(table);
+            }
+            */
+
             //	only local folders have an full-text indexing capability
             if (folder instanceof LocalFolder) {
-                FolderItem item = folder.getFolderItem();
+                item = folder.getFolderItem();
+
                 boolean bool = enableTextIndexingCheckBox.isSelected();
                 item.set("property", "enable_lucene", bool);
 
@@ -349,7 +455,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
                     // execute resyncing command
                     FolderCommandReference[] r = new FolderCommandReference[1];
                     r[0] = new FolderCommandReference(folder);
-                    MainInterface.processor.addOp(new SyncSearchEngineCommand(r));
+                    MainInterface.processor.addOp(
+                        new SyncSearchEngineCommand(r));
                 } else {
                     //engine = new LocalSearchEngine(localFolder);
                     localFolder.setSearchEngine(null);
@@ -390,6 +497,27 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
             r[0] = new FolderCommandReference(folder);
             r[0].setDestFile(destFile);
             MainInterface.processor.addOp(new ExportFolderCommand(r));
+        } else if (action.equals("RESET")) {
+            FolderItem item = folder.getFolderItem();
+            XmlElement property = item.getElement("property");
+
+            // reset all options 
+            for (int i = 0; i < property.count(); i++) {
+                XmlElement child = property.getElement(i);
+                child.addAttribute("overwrite", "false");
+            }
+
+            // update list view
+            DefaultListModel model = new DefaultListModel();
+            for (int i = 0; i < property.count(); i++) {
+                OptionsItem optionsItem =
+                    new OptionsItem(
+                        (XmlElement) property.getElement(i).clone());
+
+                model.addElement(optionsItem);
+            }
+
+            checkableList.setModel(model);
         }
     }
 }

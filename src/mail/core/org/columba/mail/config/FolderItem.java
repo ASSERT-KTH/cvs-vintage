@@ -23,4 +23,30 @@ public class FolderItem extends DefaultItem {
     public FolderItem(XmlElement root) {
         super(root);
     }
+
+    /**
+    * Get folder-based configuration.
+    *
+    * @return      parent xml-node storing the configuration
+    */
+    public XmlElement getFolderOptions() {
+        XmlElement property = getElement("property");
+
+        return property;
+    }
+
+    
+    /**
+     * Get global folder options.
+     * 
+     * @return      xml parent node
+     */
+    public static XmlElement getGlobalOptions() {
+        //      use global table options
+        XmlElement tableElement = MailConfig.get("options").getElement("/options/gui/table");
+
+        
+        
+        return tableElement;
+    }
 }

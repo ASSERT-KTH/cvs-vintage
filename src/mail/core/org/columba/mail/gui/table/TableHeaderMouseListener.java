@@ -64,8 +64,11 @@ public class TableHeaderMouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent e) {
         TableColumnModel columnModel = view.getColumnModel();
         int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-        int column = view.convertColumnIndexToModel(viewColumn);
-
+        int column = viewColumn;
+        
+        //int column = view.convertColumnIndexToModel(viewColumn);
+        //int column2 = view.convertColumnIndexToView(viewColumn);
+        
         if (column != -1) {
             ImageIcon icon = null;
 

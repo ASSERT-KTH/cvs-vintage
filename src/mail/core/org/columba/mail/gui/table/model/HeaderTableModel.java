@@ -27,8 +27,13 @@ import java.util.Enumeration;
 
 public class HeaderTableModel extends BasicHeaderTableModel
     implements TreeTableModelInterface {
-    public HeaderTableModel(TableItem item) {
-        super(item);
+        
+    public HeaderTableModel() {
+        super();    
+    }
+    
+    public HeaderTableModel(String[] columns) {
+        super(columns);
     }
 
     /**

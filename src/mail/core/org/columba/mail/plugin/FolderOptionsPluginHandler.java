@@ -13,53 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table;
+package org.columba.mail.plugin;
 
-import java.util.Observable;
-
+import org.columba.core.plugin.AbstractPluginHandler;
 
 /**
+ * Folder specific options.
  * 
- *
- * This is the model which handles the selected sorting column
- * and the sorting order (ascending/descending) of the table
- *
  * @author fdietz
  */
-public class SortingStateObservable extends Observable {
-    private String column;
-    private boolean order;
+public class FolderOptionsPluginHandler extends AbstractPluginHandler {
 
     /**
-     *
+     * @param id
+     * @param config
      */
-    public SortingStateObservable() {
-        super();
+    public FolderOptionsPluginHandler() {
+       super("org.columba.mail.folderoptions", "org/columba/mail/plugin/folderoptions.xml");
+
+       parentNode = getConfig().getRoot().getElement("folderoptions");
+  
     }
 
-    /**
-     * @return
-     */
-    public String getColumn() {
-        return column;
-    }
-
-    /**
-     * @return
-     */
-    public boolean isOrder() {
-        return order;
-    }
-
-    /**
-     * @param string
-     */
-    public void setSortingState(String string, boolean order) {
-        column = string;
-        this.order = order;
-
-        setChanged();
-
-        notifyObservers();
-    }
 }

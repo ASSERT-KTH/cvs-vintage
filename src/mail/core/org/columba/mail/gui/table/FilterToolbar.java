@@ -30,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.core.config.OptionsSerializer;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTextField;
@@ -47,7 +48,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 
-public class FilterToolbar extends JPanel implements ActionListener, OptionsSerializer {
+public class FilterToolbar extends JPanel implements ActionListener {
     public JToggleButton newButton;
     public JToggleButton oldButton;
     private JToggleButton answeredButton;
@@ -260,34 +261,36 @@ public class FilterToolbar extends JPanel implements ActionListener, OptionsSeri
     }
     
     
+ 
     
-    /*************************** OptionsSerializer ****************************/
-    
-    
-    
-    /* (non-Javadoc)
-     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
-     */
-    public void loadOptionsFromXml(XmlElement element) {
-       // not yet implemented
-
+    public void enableNew(boolean b )
+    {
+        newButton.setSelected(b);
     }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
-     */
-    public XmlElement saveOptionsToXml() {
-        XmlElement parent = new XmlElement("filtertoolbar");
-        
-        // save all possible states
-        parent.addAttribute("new_state",Boolean.toString(newButton.isSelected()));
-        parent.addAttribute("answered_state", Boolean.toString(answeredButton.isSelected()));
-        parent.addAttribute("flagged_state", Boolean.toString(flaggedButton.isSelected()));
-        parent.addAttribute("expunged_state", Boolean.toString(expungedButton.isSelected()));
-        parent.addAttribute("attachment_state", Boolean.toString(attachmentButton.isSelected()));
-        parent.addAttribute("pattern", textField.getText());
-        
-        return parent;
+    
+    public void enableAnswered(boolean b)
+    {
+        answeredButton.setSelected(b);
+    }
+    
+    public void enableFlagged(boolean b)
+    {
+        flaggedButton.setSelected(b);
+    }
+    
+    public void enableAttachment(boolean b)
+    {
+        attachmentButton.setSelected(b);
+    }
+    
+    public void enableExpunged(boolean b)
+    {
+        expungedButton.setSelected(b);
+    }
+    
+    public void setPattern(String pattern)
+    {
+        textField.setText(pattern);
     }
 
 }

@@ -31,11 +31,14 @@
 		<menuitem checkboxaction="ViewFolderInfoPanel" />
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="top">	    
+	<menu name="menu_view" extensionpoint="top">
+	    <menuitem action="ColumnDialog"/>
+		<separator/>	    
 		<menuitem imenu="SortMessagesMenu"/>		
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>
+		
 		<!--
 		<menu name="menu_view_next">
 			<menuitem action="NextMessage" />

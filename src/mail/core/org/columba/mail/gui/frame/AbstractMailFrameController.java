@@ -25,6 +25,7 @@ import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
 
@@ -60,8 +61,12 @@ public abstract class AbstractMailFrameController
     public AttachmentController attachmentController;
     protected CharsetManager charsetManager;
 
+    private FolderOptionsController folderOptionsController;
+    
     public AbstractMailFrameController(String id, ViewItem viewItem) {
         super(id, viewItem);
+        
+        
     }
 
     public FolderCommandReference[] getTableSelection() {
@@ -137,6 +142,8 @@ public abstract class AbstractMailFrameController
         attachmentController = new AttachmentController(this);
 
         messageController = new MessageController(this, attachmentController);
+        
+        folderOptionsController = new FolderOptionsController(this);
     }
 
     public CharsetManager getCharsetManager() {
@@ -154,4 +161,12 @@ public abstract class AbstractMailFrameController
     public AttachmentController getAttachmentController() {
         return attachmentController;
     }
+    
+    /**
+     * @see org.columba.mail.gui.frame.MailFrameMediator#getFolderOptionsController()
+     */
+    public FolderOptionsController getFolderOptionsController() {
+       return folderOptionsController;
+    }
+
 }

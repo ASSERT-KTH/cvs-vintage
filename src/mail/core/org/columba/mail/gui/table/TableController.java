@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.OptionsSerializer;
 import org.columba.core.config.TableItem;
@@ -31,10 +32,12 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.CopyAction;
@@ -61,7 +64,7 @@ import org.columba.mail.message.HeaderList;
  * @version 0.9.1
  * @author Frederik
  */
-public class TableController implements FocusOwner, ListSelectionListener, OptionsSerializer {
+public class TableController implements FocusOwner, ListSelectionListener {
     private HeaderTableModel headerTableModel;
     private FilterToolbar filterToolbar;
     private HeaderTableMouseListener headerTableMouseListener;
@@ -77,6 +80,7 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
     protected TableModelThreadedView tableModelThreadedView;
     protected TableModelUpdateManager updateManager;
     protected int[] previouslySelectedRows;
+    private Folder previouslySelectedFolder;
 
     public TableController(AbstractMailFrameController mailFrameController) {
         this.mailFrameController = mailFrameController;
@@ -84,7 +88,7 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
         headerTableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
                                                 .getTableItem();
 
-        headerTableModel = new HeaderTableModel(headerTableItem);
+        headerTableModel = new HeaderTableModel();
 
         tableModelFilteredView = new TableModelFilter(headerTableModel);
 
@@ -95,6 +99,15 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
         updateManager = new TableModelUpdateManager(tableModelSorter);
 
         view = new TableView(headerTableModel);
+
+        
+        /*
+        XmlElement tableElement = MailConfig.get("options").getElement("/options/gui/table");
+        getMailFrameController().getFolderOptionsController().load();
+        */
+        
+        
+        
         headerTableModel.setTree((Tree) view.getTree());
 
         headerTableMouseListener = new HeaderTableMouseListener(this);
@@ -109,8 +122,11 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
 
         getView().setDragEnabled(false);
 
+        // FIXME
+        /*
         getTableModelSorter().loadConfig(getView());
-
+        */
+        
         // MouseListener sorts table when clicking on a column header
         new TableHeaderMouseListener(getView(), getTableModelSorter());
 
@@ -146,6 +162,7 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
      *  - appearance
      * of every column
      */
+    /*
     public void saveColumnConfig() {
         TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
                                                     .getTableItem();
@@ -185,7 +202,8 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
             }
         }
     }
-
+    */
+    
     /**
      * return the Model which contains a HeaderList
      */
@@ -328,23 +346,32 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
         return markAsReadTimer;
     }
 
+   
+
     /* (non-Javadoc)
              * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
              */
     public void showHeaderList(Folder folder, HeaderList headerList)
         throws Exception {
-        boolean enableThreadedView = folder.getFolderItem().getBoolean("property",
-                "enable_threaded_view", false);
+        // save previously selected folder options
+        if (previouslySelectedFolder != null) {
+            //saveCurrentState(previouslySelectedFolder);
+            getMailFrameController().getFolderOptionsController().save(previouslySelectedFolder);
+            
+        }
 
-        getView().enableThreadedView(enableThreadedView);
-
-        getTableModelThreadedView().toggleView(enableThreadedView);
-
+        getMailFrameController().getFolderOptionsController().load(folder);
+                
+        // send an update notification to the table model
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.SET,
                 folder, headerList);
-
         tableChanged(ev);
 
+
+        previouslySelectedFolder = folder;
+
+        // TODO: make selection available as plugin, too
+         
         boolean ascending = getTableModelSorter().getSortingOrder();
         int row = getView().getTree().getRowCount();
 
@@ -600,54 +627,6 @@ public class TableController implements FocusOwner, ListSelectionListener, Optio
     public void valueChanged(ListSelectionEvent arg0) {
         MainInterface.focusManager.updateActions();
     }
-    
-    /*************************** OptionsSerializer ****************************/
-    
-    
-    /* (non-Javadoc)
-     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
-     */
-    public void loadOptionsFromXml(XmlElement element) {
-        // not implemented yet
 
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
-     */
-    public XmlElement saveOptionsToXml() {
-        XmlElement parent = new XmlElement("table");
-        
-        // threaded view
-        parent.addAttribute("enable_threaded_view", Boolean.toString(getTableModelThreadedView().isEnabled()));
-        
-        // sorting order
-        parent.addAttribute("sorting_order", Boolean.toString(getTableModelSorter().getSortingOrder()));
-        
-        // selected column
-        parent.addAttribute("sorting_column", getTableModelSorter().getSortingColumn());
-        
-        XmlElement columns = new XmlElement("columns");
-        
-        // TODO: save list of columns
-        // for each column
-        int c = -1;
-        for ( int i=0; i<c; i++)
-        {
-            XmlElement column = new XmlElement("column");
-            
-            column.addAttribute("name", "name");
-            column.addAttribute("size", "0");
-            column.addAttribute("position", "0");
-            
-            // add to columns list
-            columns.addElement(column);
-        }
-        
-        // filter toolbar configuration
-        parent.addElement(getFilterToolbar().saveOptionsToXml());
-        
-        return parent;
-    }
-
+   
 }

@@ -15,25 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.core.command.StatusObservable;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.config.ConfigPath;
-import org.columba.core.io.DiskIO;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
-import org.columba.mail.gui.config.filter.ConfigFrame;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-
-import org.columba.ristretto.message.MessageFolderInfo;
-
 import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.tree.TreeNode;
 
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.config.ConfigPath;
+import org.columba.core.io.DiskIO;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
+import org.columba.mail.gui.config.filter.ConfigFrame;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
  *
@@ -64,7 +62,9 @@ import javax.swing.tree.TreeNode;
  * @author       freddy
  * @created      19. Juni 2001
  */
-public abstract class Folder extends FolderTreeNode implements MailboxInterface {
+public abstract class Folder
+    extends FolderTreeNode
+    implements MailboxInterface {
     /**
      * total/unread/recent count of messages in this folder
      */
@@ -336,8 +336,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * @return Object[]                array of matched messages as UIDs
      * @throws Exception
      */
-    public abstract Object[] searchMessages(Filter filter)
-        throws Exception;
+    public abstract Object[] searchMessages(Filter filter) throws Exception;
 
     /**
      * save messagefolderinfo to xml-configuration
@@ -350,9 +349,15 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
         XmlElement property = item.getElement("property");
 
-        property.addAttribute("exists", new Integer(info.getExists()).toString());
-        property.addAttribute("unseen", new Integer(info.getUnseen()).toString());
-        property.addAttribute("recent", new Integer(info.getRecent()).toString());
+        property.addAttribute(
+            "exists",
+            new Integer(info.getExists()).toString());
+        property.addAttribute(
+            "unseen",
+            new Integer(info.getUnseen()).toString());
+        property.addAttribute(
+            "recent",
+            new Integer(info.getRecent()).toString());
     }
 
     /**
@@ -435,4 +440,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     public boolean isTrashFolder() {
         return false;
     }
+
+   
 }

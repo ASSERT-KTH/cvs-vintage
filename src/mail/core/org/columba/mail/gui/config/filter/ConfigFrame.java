@@ -253,42 +253,42 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         gridBagLayout.setConstraints(addButton, c);
         eastPanel.add(addButton);
 
-        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+        Component strut1 = Box.createRigidArea(new Dimension(30, 6));
         gridBagLayout.setConstraints(strut1, c);
         eastPanel.add(strut1);
 
         gridBagLayout.setConstraints(editButton, c);
         eastPanel.add(editButton);
 
-        Component strut = Box.createRigidArea(new Dimension(30, 5));
+        Component strut = Box.createRigidArea(new Dimension(30, 6));
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
         gridBagLayout.setConstraints(removeButton, c);
         eastPanel.add(removeButton);
 
-        strut = Box.createRigidArea(new Dimension(30, 20));
+        strut = Box.createRigidArea(new Dimension(30, 12));
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
         gridBagLayout.setConstraints(moveupButton, c);
         eastPanel.add(moveupButton);
 
-        strut = Box.createRigidArea(new Dimension(30, 5));
+        strut = Box.createRigidArea(new Dimension(30, 6));
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
         gridBagLayout.setConstraints(movedownButton, c);
         eastPanel.add(movedownButton);
 
-        strut = Box.createRigidArea(new Dimension(30, 20));
+        strut = Box.createRigidArea(new Dimension(30, 12));
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
         gridBagLayout.setConstraints(importButton, c);
         eastPanel.add(importButton);
 
-        strut = Box.createRigidArea(new Dimension(30, 5));
+        strut = Box.createRigidArea(new Dimension(30, 6));
         gridBagLayout.setConstraints(strut, c);
         eastPanel.add(strut);
 
@@ -303,7 +303,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
         // centerpanel
         JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
         listView = new FilterListTable(filterList, this);
         listView.getSelectionModel().addListSelectionListener(this);
         listView.addMouseListener(new MouseTableListener());

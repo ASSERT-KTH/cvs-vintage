@@ -21,7 +21,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.tree.TreeModel;
@@ -29,6 +28,7 @@ import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.FilterPluginHandler;
+import org.columba.mail.plugin.FolderOptionsPluginHandler;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
@@ -37,7 +37,6 @@ import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.composer.MimeTreeRenderer;
 
 
@@ -96,6 +95,7 @@ public class MailMain extends DefaultMain {
         MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
         MainInterface.pluginManager.registerHandler(new POP3PreProcessingFilterPluginHandler());
         MainInterface.pluginManager.registerHandler(new TableRendererPluginHandler());
+        MainInterface.pluginManager.registerHandler(new FolderOptionsPluginHandler());
         MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
                 "org.columba.mail.menu"));
 

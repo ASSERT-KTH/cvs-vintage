@@ -55,7 +55,10 @@ public interface OptionsSerializer {
     
     /**
      * Load options of this component from xml element.
-     * 
+     * <p>
+     * Following the example used above, this element should
+     * have the name <b>toolbar</b>.
+     * <p>
      * @param element       configuration options node
      */
     void loadOptionsFromXml(XmlElement element);

@@ -61,6 +61,7 @@ public class ViewHeaderListCommand extends Command {
         ((TableViewOwner) frameMediator).getTableController().showHeaderList(folder,
             headerList);
 
+        // update tree model
         MailInterface.treeModel.nodeChanged(folder);
     }
 
