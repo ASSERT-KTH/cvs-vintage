@@ -161,7 +161,12 @@ public class ScarabRequestTool
      * A ParentChildAttributeOption
      */
     private ParentChildAttributeOption pcao = null;
-
+    
+    /**
+     * A list of Issues
+     */
+    private List issueList;
+    
     /**
      * A ReportGenerator
      */
@@ -847,11 +852,25 @@ try{
      * Get the cached list of issue id's resulting from a search
      * And return the list of issues.
      */
-    public List getIssueList() throws Exception
+    public List getIssueList() 
+        throws Exception
     {
-        return getCurrentSearchResults();
+        if ( issueList == null ) 
+        {
+            issueList = getCurrentSearchResults();
+        }
+        return issueList;
     }
 
+    /**
+     * Set the value of issueList.
+     * @param v  Value to assign to issueList.
+     */
+    public void setIssueList(List  v) 
+    {
+        this.issueList = v;
+    }
+    
     /**
      * Return the number of paginated pages.
      *
