@@ -28,7 +28,11 @@
 <p>
 Name: 
 <input type=text" name="$intakeList.Name.Key" value="$!intakeList.Name" />
+#fieldErrorMsg($intakeList.Name "")
 </p>
+<p><small>
+Entering a previously saved list's name will overwrite the old list.
+</small></p>
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doSavelist" value="$l10n.Save" />
