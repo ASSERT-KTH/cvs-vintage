@@ -458,7 +458,9 @@ public final class IntrospectionUtils {
             if (cpComp != null){
                 int jarCount=cpComp.length;
                 for( int i=0; i< jarCount ; i++ ) {
-                    cpV.addElement( getURL(  dir , cpComp[i] ));
+		    URL url=getURL(  dir , cpComp[i] );
+                    if( url!=null )
+			cpV.addElement( url );
                 }
             }
         }catch(Exception ex){
@@ -509,6 +511,7 @@ public final class IntrospectionUtils {
             if( f.isDirectory() ){
                     path +="/";
             }
+	    if( ! f.exists() ) return null;
             return new URL( "file", "", path );
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -564,8 +567,13 @@ public final class IntrospectionUtils {
 	throws IOException, MalformedURLException
     {
 	Vector jarsV = new Vector();
-	if( dir!=null )
+	if( dir!=null ) {
 	    addToClassPath( jarsV, dir );
+	    // Add dir/classes, if it exists
+	    URL url=getURL( dir, "classes");
+	    if( url!=null )
+		jarsV.addElement(url);
+	}
 	
 	if( cpath != null )
 	    addJarsFromClassPath(jarsV,cpath);
