@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class EntityContainer
    extends Container
@@ -365,20 +365,54 @@ public class EntityContainer
 		 return (EJBObject)containerInvoker.getEntityEJBObject(id);
       }
    }
-
-   public EJBObject createHome(MethodInvocation mi)
-      throws java.rmi.RemoteException, CreateException
-   {
-      getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
-   }
-
+	
+	public EJBObject createHome(MethodInvocation mi)
+		throws java.rmi.RemoteException, CreateException
+	{
+		
+		EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
+		
+		try {
+			
+			// Call ejbCreate
+			getBeanClass().getMethod("ejbCreate", mi.getMethod().getParameterTypes())
+			.invoke(ctx.getInstance(),mi.getArguments());
+			
+			
+			// Lock instance in cache
+			getInstanceCache().insert(ctx);
+			
+			
+			// Deal with the persistence in the persistence manager
+			getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), ctx);
+			
+			// Create EJBObject
+			ctx.setEJBObject(getContainerInvoker().getEntityEJBObject(mi.getId()));
+			
+			// Invoke postCreate
+			getBeanClass().getMethod("ejbPostCreate", mi.getMethod().getParameterTypes())
+			.invoke(ctx.getInstance(),mi.getArguments());
+			
+			return ctx.getEJBObject();
+		
+		}  catch (InvocationTargetException e) {    
+			
+			throw new CreateException("Create failed:"+e);
+		} catch (NoSuchMethodException e) {
+			
+			throw new CreateException("Create methods not found:"+e);
+		} catch (IllegalAccessException e) {
+			
+			throw new CreateException("Could not create entity:"+e);
+		} 
+	}
+		
    // EJBHome implementation ----------------------------------------
    public void removeHome(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
       throw new Error("Not yet implemented");
-   }
+   }      
    
    public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
       throws java.rmi.RemoteException
