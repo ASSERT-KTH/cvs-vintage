@@ -17,7 +17,9 @@ $page.setTitle("Identified as duplicate")
     </table>
 </div>
 	
+#set ($templateId = $data.Parameters.getString("templateId"))
 <form method="get" name="Report2Form" action="$action">
+<input type="hidden" name="templateId" value="$templateId" />
 
 <h3>New issue</h3>
 
