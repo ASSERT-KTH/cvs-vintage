@@ -53,7 +53,7 @@ import org.jboss.management.JBossTimeStatistic;
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*   @version $Revision: 1.29 $
+*   @version $Revision: 1.30 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -435,7 +435,12 @@ public class CMPPersistenceManager
       } catch (InvocationTargetException ite)
       {
          Throwable e = ite.getTargetException();
-         if (e instanceof RemoteException)
+         if (e instanceof RemoveException)
+         {
+            // Rethrow exception
+            throw (RemoveException)e;
+         }
+         else if (e instanceof RemoteException)
          {
             // Rethrow exception
             throw (RemoteException)e;
