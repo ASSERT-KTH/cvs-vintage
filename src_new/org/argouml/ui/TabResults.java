@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.20 2004/09/21 19:03:28 mvw Exp $
+// $Id: TabResults.java,v 1.21 2004/10/18 17:23:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.PredicateFind;
 import org.argouml.uml.TMResults;
@@ -81,11 +82,11 @@ public class TabResults
     private Vector diagrams = new Vector();
     private boolean relatedShown = false;
 
-    private JLabel resultsLabel = new JLabel("Results:");
+    private JLabel resultsLabel = new JLabel(/*"Results:"*/);
     private JTable resultsTable = new JTable(10, 4);
     private TMResults resultsModel = new TMResults();
 
-    private JLabel relatedLabel = new JLabel("Related Elements:");
+    private JLabel relatedLabel = new JLabel(/*"Related Elements:"*/);
     private JTable relatedTable = new JTable(4, 4);
     private TMResults relatedModel = new TMResults();
 
@@ -183,10 +184,13 @@ public class TabResults
     {
 	results = res;
 	diagrams = dia;
-	resultsLabel.setText("Results: " + results.size() + " items");
+	Object[] msgArgs = {new Integer(results.size()) };
+	resultsLabel.setText(Translator.messageFormat(
+            "dialog.tabresults.results-items", msgArgs));
 	resultsModel.setTarget(results, diagrams);
 	relatedModel.setTarget(null, null);
-	relatedLabel.setText("Related Elements: ");
+	relatedLabel.setText(
+            Translator.localize("dialog.tabresults.related-items"));
     }
 
     /**
@@ -367,8 +371,8 @@ public class TabResults
 	results.removeAllElements();
 	depthFirst(root, null);
 	setResults(results, diagrams);
-	resultsLabel.setText("Results: " + results.size() + " items");
-	resultsModel.setTarget(results, diagrams);
+	//resultsLabel.setText("Results: " + results.size() + " items");
+	//resultsModel.setTarget(results, diagrams);
     }
 
     private void depthFirst(Object node, Diagram lastDiagram)
