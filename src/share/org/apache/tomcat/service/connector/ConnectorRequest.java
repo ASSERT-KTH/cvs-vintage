@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.6 2000/04/14 22:48:05 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/04/14 22:48:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.7 2000/04/17 21:02:29 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/04/17 21:02:29 $
  *
  * ====================================================================
  *
@@ -82,8 +82,11 @@ public class ConnectorRequest extends RequestImpl {
     int blen;
     int pos;
 
-    public ConnectorRequest( MsgConnector con ) {
+    public ConnectorRequest() {
 	super();
+    }
+
+    public void setConnector( MsgConnector con ) {
 	this.con=con;
 	pos=0;
 	this.in = new BufferedServletInputStream( this ); 

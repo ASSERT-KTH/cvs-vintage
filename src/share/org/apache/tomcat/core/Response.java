@@ -102,6 +102,19 @@ public interface Response {
      *  Used to avoid the ugly try getWriter() catch getOutputStream.
      */
     public boolean isUsingStream();
+
+    /** The output stream is used.
+     */
+    public void setUsingStream( boolean stream );
+
+    /** Stream/Writer control
+     */
+    public boolean isUsingWriter();
+
+    /** Stream/Writer control
+     */
+    public void setUsingWriter( boolean writer );
+
     
     /** Signal that we're done with a particular request, the
      *	server can go on and read more requests or close the socket

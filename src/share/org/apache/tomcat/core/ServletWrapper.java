@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.38 2000/04/05 02:52:14 costin Exp $
- * $Revision: 1.38 $
- * $Date: 2000/04/05 02:52:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.39 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.39 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -592,7 +592,6 @@ public class ServletWrapper {
     {
 	Request rrequest=request.getRealRequest();
 	Response rresponse=rrequest.getResponse();
-
 	handleRequest( rrequest, rresponse );
     }
 

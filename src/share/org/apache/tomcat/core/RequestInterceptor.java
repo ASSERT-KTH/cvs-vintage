@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.8 2000/02/16 05:53:33 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/02/16 05:53:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.9 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -92,7 +92,7 @@ public interface RequestInterceptor {
     /** Will extract the user ID from the request, and check the password.
      *  It will set the user only if the user/password are correct, or user
      *  will be null.
-     *  XXX what should we do if the password is wrong ? 
+     *  XXX what should we do if the password is wrong ?
      */
     public int authenticate(Request request, Response response);
 
@@ -117,36 +117,67 @@ public interface RequestInterceptor {
     
     /** Called before the first body write, and before sending
      *  the headers. The interceptor have a chance to change the
-     *  output headers.
+     *  output headers. 
      */
     public int beforeBody( Request request, Response response);
 
     
-    /** Called before the output buffer is commited
+    /** Called before the output buffer is commited.
      */
     public int beforeCommit( Request request, Response response);
 
     
     /** Called after the output stream is closed ( either by servlet
-     *  or automatically at end of service )
+     *  or automatically at end of service ).
      */
     public int afterBody( Request request, Response response);
 
     
-    /** Called after service method ends. Log is a particular use
+    /** Called after service method ends. Log is a particular use.
      */
     public int postService(Request request, Response response);
-
 
     /** Will return the methods fow which this interceptor is interested
      *  in notification.
      *  This will be used by ContextManager to call only the interceptors
      *  that are interested, avoiding empty calls.
-     *  ( not implemented yet )
+     *  ( not implemented yet ). 
      */
     public String[] getMethods();
-
-    
-
 }
 
+/*
+      IIS equiv:
+      
+      Authenticate=  SF_NOTIFY_AUTHETNICATION
+      beforeBody =   SF_NOTIFY_SEND_RESPONSE.
+      beforeCommit = SF_NOTIFY_SEND_RAW_DATA
+      afterBody =    SF_NOTIFY_END_OF_REQUEST
+      postService =  SF_NOTIFY_LOG
+      getMethods  =  FILTER_VERSION.dwFlags
+
+      Missing:
+      pre/postConnection == SF_NOTIFY_END_OF_NET_SESSION
+
+      afterReceive() == SF_NOTIFY_READ_RAW_DATA
+
+      accessDenied() == SF_NOTIFY_ACCESS_DENIED
+
+      afterHeaders() == SF_NOTIFY_PREPROC_HEADERS
+
+      Return codes in IIS :
+      FINISHED disconect the session, we're don
+      FINISHED_KEEP_CON - keep the connection open if possible
+      NEXT_NOTIFICATION - go to next in chain
+      HANDLED_NOTIFICATION - stop the chain
+      ERROR - send an error
+      READ_NEXT - do another read ( for stream filter )
+*/ 
+
+/* 
+   NES equiv:
+
+*/
+
+/* Apaceh equiv:
+ */

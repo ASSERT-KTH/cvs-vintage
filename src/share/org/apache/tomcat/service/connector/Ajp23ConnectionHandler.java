@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.7 2000/02/17 07:52:22 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/17 07:52:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.8 2000/04/17 21:02:29 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/04/17 21:02:29 $
  *
  * ====================================================================
  *
@@ -92,7 +92,15 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
     }
     
     public Object[] init( ) {
-	return null;
+	Object thData[]=new Object[3];
+	ConnectorRequest reqA=new ConnectorRequest();
+	ConnectorResponse resA=new ConnectorResponse();
+	contextM.initRequest( reqA, resA );
+	thData[0]=reqA;
+	thData[1]=resA;
+	thData[2]=new TcpConnector();
+
+	return  thData;
     }
 
     // XXX
@@ -104,12 +112,29 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 
 	try {
 	    socket=connection.getSocket();
-	    TcpConnector con=new TcpConnector( socket );
-	    ConnectorResponse rresponse=new ConnectorResponse(con);
-	    //	    RequestImpl  rrequest=new RequestImpl();
-	    ConnectorRequest  reqA=new ConnectorRequest(con);
-	    reqA.setContextManager( contextM );
-	    //rrequest.setRequestAdapter( reqA ); 
+	    TcpConnector con=null; 
+	    ConnectorRequest reqA=null;
+	    ConnectorResponse rresponse=null;
+	    
+	    if( thData != null ) {
+		reqA=(ConnectorRequest)thData[0];
+		rresponse=(ConnectorResponse)thData[1];
+		con=(TcpConnector)thData[2];
+		if( reqA!=null ) reqA.recycle();
+		if( rresponse!=null ) rresponse.recycle();
+		if( con!=null ) con.recycle();
+	    }
+
+	    if( reqA==null || rresponse==null || con==null ) {
+		reqA = new ConnectorRequest();
+		rresponse=new ConnectorResponse();
+		con=new TcpConnector();
+		contextM.initRequest( reqA, rresponse );
+	    }
+
+	    con.setSocket( socket );
+	    rresponse.setConnector( con );
+	    reqA.setConnector( con );
 
 	    boolean moreRequests=true;
             while( moreRequests ) { // XXX how to exit ? // request.hasMoreRequests()) {
@@ -131,9 +156,6 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 
 		reqA.recycle();
 		rresponse.recycle();
-
-		// XXX
-		//		rresponse=new ConnectorResponse(con);
             }
 
 	    //System.out.println("Closing connection");
@@ -154,14 +176,21 @@ class TcpConnector implements MsgConnector {
     
     MsgBuffer msg;
     
-    public TcpConnector( Socket socket ) throws IOException {
+    public TcpConnector() {
+	msg= new MsgBuffer( MAX_PACKET_SIZE );
+    }
+
+    public void setSocket( Socket socket ) throws IOException {
 	socket.setSoLinger( true, 100);
 	
 	out = socket.getOutputStream();
 	in = socket.getInputStream();
-	msg= new MsgBuffer( MAX_PACKET_SIZE );
     }
 
+    public void recycle() {
+
+    }
+    
     public MsgBuffer getMsgBuffer() {
 	msg.reset();
 	return msg;

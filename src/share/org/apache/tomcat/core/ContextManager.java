@@ -125,7 +125,7 @@ public class ContextManager {
     // Instalation directory  
     String home;
     String tomcatHome;
-    
+
     Vector connectors=new Vector();
 
     
@@ -531,19 +531,17 @@ public class ContextManager {
 	    workDir=DEFAULT_WORK_DIR;
 	return workDir;
     }
-    
+
     // -------------------- Request processing / subRequest --------------------
     
     /** Common for all connectors, needs to be shared in order to avoid
 	code duplication
     */
     public void service( Request rrequest, Response rresponse ) {
-	//	log( "New  request " + rrequest );
 	try {
-	    //	    System.out.print("A");
-	    rrequest.setContextManager( this );
-	    rrequest.setResponse(rresponse);
-	    rresponse.setRequest(rrequest);
+	    /* assert rrequest/rresponse are set up
+	       corectly - have cm, and one-one relation
+	    */
 
 	    // wront request - parsing error
 	    int status=rresponse.getStatus();
@@ -556,8 +554,7 @@ public class ContextManager {
 	    if(status == 0)
 		status=authorize( rrequest, rresponse );
 	    if( status == 0 ) {
-		rrequest.getWrapper().handleRequest(rrequest,
-						    rresponse);
+		rrequest.getWrapper().handleRequest(rrequest, rresponse);
 	    } else {
 		// something went wrong
 		handleError( rrequest, rresponse, null, status );
@@ -565,7 +562,6 @@ public class ContextManager {
 	} catch (Throwable t) {
 	    handleError( rrequest, rresponse, t, 0 );
 	}
-	//	System.out.print("B");
 	try {
 	    rresponse.finish();
 	    rrequest.recycle();
@@ -583,7 +579,6 @@ public class ContextManager {
      *  is already known.
      */
     int processRequest( Request req ) {
-	req.setContextManager( this );
 	if(debug>9) log("ProcessRequest: "+req.toString());
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
@@ -799,6 +794,19 @@ public class ContextManager {
 	return lr;
     }
 
+    /** Prepare the req/resp pair for use in tomcat.
+	Call it after you create the request/response objects
+     */
+    public void initRequest( Request req, Response resp ) {
+	// used to be done in service(), but there is no need to do it
+	// every time. 
+	// We may add other special calls here.
+	// XXX Maybe make it a callback? 
+	resp.setRequest( req );
+	req.setResponse( resp );
+	req.setContextManager( this );
+    }
+    
     public void setDebug( int level ) {
 	if( level != 0 ) System.out.println( "Setting level to " + level);
 	debug=level;
@@ -841,5 +849,4 @@ public class ContextManager {
 		t.printStackTrace( System.out );
 	}
     }
-    
 }

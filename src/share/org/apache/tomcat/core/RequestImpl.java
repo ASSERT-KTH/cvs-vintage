@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.26 2000/04/06 06:00:44 craigmcc Exp $
- * $Revision: 1.26 $
- * $Date: 2000/04/06 06:00:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.27 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -582,7 +582,6 @@ public class RequestImpl  implements Request {
 
     // -------------------- End utils
     public void recycle() {
-	response = null;
 	context = null;
         attributes.clear();
         parameters.clear();
@@ -613,7 +612,8 @@ public class RequestImpl  implements Request {
 	pathTranslated=null;
 	pathInfo=null;
 	pathTranslatedIsSet=false;
-	    
+
+	if( requestFacade != null ) requestFacade.recycle();
 	// XXX a request need to override those if it cares
 	// about security
 	remoteAddr="127.0.0.1";
@@ -737,5 +737,25 @@ public class RequestImpl  implements Request {
 	sb.append( ",MP:" + getMappedPath() );
 	sb.append( "," + getWrapper() +") ");
 	return sb.toString();
+    }
+
+    // -------------------- Accounting --------------------
+    public static final int ACC_PRE_CMAP=0;
+    public static final int ACC_PRE_RMAP=1;
+    public static final int ACC_POST_MAP=2;
+    public static final int ACC_PRE_SERVICE=3;
+    public static final int ACC_POST_SERVICE=4;
+    public static final int ACC_IN_OUT=5;
+    public static final int ACC_OUT_COUNT=6;
+    
+    public static final int ACCOUNTS=7;
+    long accTable[]=new long[ACCOUNTS];
+
+    public void setAccount( int pos, long value ) {
+	accTable[pos]=value;
+    }
+
+    public long getAccount( int pos ) {
+	return accTable[pos];
     }
 }

@@ -1,10 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorResponse.java,v 1.5 2000/04/17 21:02:29 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/04/17 21:02:29 $
- *
  * ====================================================================
- *
+ * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -62,78 +58,82 @@
  */ 
 
 
-package org.apache.tomcat.service.connector;
+package org.apache.tomcat.core;
 
+import org.apache.tomcat.util.StringManager;
 import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletOutputStream;
 
-
-public class ConnectorResponse extends ResponseImpl {
-    public static final int SEND_HEADERS=2;
-    public static final int END_RESPONSE=5;
-
-    MsgConnector con;
-    ConnectorServletOS rout;
-
-    public ConnectorResponse() {
+/**
+ *  Facade to the PrintWriter returned by Response.
+ *  This will grow to include more support for JSPs ( and other templating
+ *  systems ) buffering requirements, provide support for accounting
+ *  and will allow more control over char-to-byte conversion ( if it proves
+ *  that we spend too much time in that area ).
+ *
+ *  This will also help us control the multi-buffering ( since all writers have
+ *  8k or more of un-recyclable buffers). Recycling is good !
+ *
+ * @author Costin Manolache [costin@eng.sun.com]
+ */
+public class ServletWriterFacade extends PrintWriter {
+    Response resA;
+    RequestImpl req;
+    
+    protected ServletWriterFacade( Writer w, Response resp ) {
+	super( w );
+	this.resA=resp;
+	req=(RequestImpl)resA.getRequest();
     }
 
-    public void setConnector( MsgConnector con ) {
-	this.con=con;
-	rout=new ConnectorServletOS(con);
-	rout.setResponse( this );
-	this.out=rout;
+    // -------------------- Write methods --------------------
+
+    public void flush() {
+	in();
+	super.flush();
+	out();
     }
 
-    public void recycle() {
-	super.recycle();
-	if( rout!=null ) rout.recycle();
+    public void print( String str ) {
+	in();
+	super.print( str );
+	out(); 
+   }
 
-	out=rout;
+    public void println( String str ) {
+	in();
+	super.print( str );
+	out(); 
+   }
+
+    public void write( char buf[], int offset, int count ) {
+	in();
+	super.write( buf, offset, count );
+	out();
     }
 
-    // XXX if more headers that MAX_SIZE, send 2 packets!   
-    public void endHeaders() throws IOException {
-	super.endHeaders();
-	
-        if (request.getProtocol() == null) {
-            return;
-        }
-	
-	MsgBuffer msg=con.getMsgBuffer();
-	msg.reset();
-	msg.appendInt( SEND_HEADERS );
-	msg.appendInt( headers.size() +1 );
-
-	msg.appendString("Status");
-	msg.appendString( Integer.toString(getStatus()) );
-	Enumeration e = headers.names();
-	while (e.hasMoreElements()) {
-	    String headerName = (String)e.nextElement();
-	    String headerValue = headers.getHeader(headerName);
-	    msg.appendString( headerName);
-	    msg.appendString( headerValue);
-	}
-
-	msg.end();
-	con.send( msg );
-     }
-
-
-    public void finish() throws IOException {
-	super.finish();
-	MsgBuffer msg=con.getMsgBuffer();
-	msg.reset();
-	msg.appendInt( END_RESPONSE );
-	msg.end();
-	con.send( msg );
+    public void write( String str ) {
+	in();
+	super.write( str );
+	out();
     }
 
+    private void in() {
+	req.setAccount( RequestImpl.ACC_IN_OUT, System.currentTimeMillis() );
+    }
+
+    private void out() {
+	long l=System.currentTimeMillis();
+	long l1=req.getAccount( RequestImpl.ACC_IN_OUT);
+	long l3=req.getAccount( RequestImpl.ACC_OUT_COUNT);
+	req.setAccount( RequestImpl.ACC_OUT_COUNT, l - l1 + l3 );
+    }
+
+    /** Reuse the object instance, avoid GC
+     *  Called from BSOS
+     */
+    void recycle() {
+    }
 
 }
+

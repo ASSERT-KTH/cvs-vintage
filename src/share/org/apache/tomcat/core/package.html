@@ -1,10 +1,45 @@
 <html>
 <head>
-<title>Untitled Document</title>
+<title>The servlet engine implementation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body bgcolor="#FFFFFF">
-The inner guts of the servlet engine. 
+<h2>Components</h2>
+
+<dl>
+
+<dt>Facades
+<dd>For every object exposed in the servlet specification tomcat use a 
+Facade. It have few important advantages:
+<ul>
+<li>Security - the user should have no way to access the real implementation
+objects, except one controled way ( HttpRequestFacade.getRealRequest() ).
+When policy-based security will be added that will allow the user to declare a 
+"trusted" servlet, and no other servlet will be able to access internal objects.
+<li>Future evolution of Servlet API - the API changed and will probably change, 
+by adding new methods and new semantics. Facades makes very simple to make sure
+we respect the spec, without having to change the core too much.
+That may allow supporting multiple servlet API versions ( but it's not a goal -
+each context has it's own classloader and it may be possible to load a different
+JDK and set of facades ).
+<li>Decouple the API and the web server. Tomcat.core allows integration with
+web servers, and it's  modeled after APIs like Apache's, ISAPI and NSAPI.
+</ul>
+
+</dd>
+
+<dt>Request,Response
+<dd>
+
+<dt>Context, Container, ServletWrapper
+<dd>
+
+<dt>ContextManager
+<dd>
+
+</dl>
+
+
 </body>
 </html>

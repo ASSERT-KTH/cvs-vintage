@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.10 2000/04/13 01:45:54 craigmcc Exp $
- * $Revision: 1.10 $
- * $Date: 2000/04/13 01:45:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.11 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -141,10 +141,21 @@ implements HttpServletResponse {
     }
     
     public ServletOutputStream getOutputStream() {
+	if (response.isUsingWriter() ) {
+	    String msg = sm.getString("serverResponse.outputStream.ise");
+	    throw new IllegalStateException(msg);
+	}
+	response.setUsingStream( true );
 	return response.getOutputStream();
+	// response.getBufferedOutputStream().getServletOutputStreamFacade();
     }
 
     public PrintWriter getWriter() throws IOException {
+	if (response.isUsingStream() ) {
+	    String msg = sm.getString("serverResponse.writer.ise");
+	    throw new IllegalStateException(msg);
+	}
+	response.setUsingWriter( true );
 	return response.getWriter();
     }
 

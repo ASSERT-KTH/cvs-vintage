@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.7 2000/02/18 18:14:50 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/18 18:14:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.8 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -93,13 +93,22 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 	// the right permission !!!
 	return request;
     }
-    
-    public HttpServletRequestFacade(Request request) {
+
+    /** Not public - called only from RequestImpl
+     */
+    HttpServletRequestFacade(Request request) {
 	// XXX In JDK1.2, call a security class to see if the code has
 	// the right permission !!!
         this.request = request;
     }
 
+    /** Not public - is called only from RequestImpl
+     */
+    void recycle() {
+	usingReader=false;
+	usingStream=false;
+    }
+    
     public Object getAttribute(String name) {
 	return request.getAttribute(name);
     }

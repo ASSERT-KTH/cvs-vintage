@@ -88,7 +88,14 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
     }
 
     public Object[] init() {
-	return null;
+	Object thData[]=new Object[2];
+	AJP12RequestAdapter reqA=new AJP12RequestAdapter();
+	AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
+	contextM.initRequest( reqA, resA );
+	thData[0]=reqA;
+	thData[1]=resA;
+
+	return  thData;
     }
 
     public void setAttribute(String name, Object value ) {
@@ -101,8 +108,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	this.contextM=contextM;
     }
 
-    public void processConnection(TcpConnection connection, Object[] theData) {
-
+    public void processConnection(TcpConnection connection, Object[] thData) {
         try {
 	    // XXX - Add workarounds for the fact that the underlying
 	    // serverSocket.accept() call can now time out.  This whole
@@ -112,24 +118,31 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    Socket socket=connection.getSocket();
 	    if (socket == null)
 		return;
+
 	    socket.setSoLinger( true, 100);
 	    //	    socket.setSoTimeout( 1000); // or what ?
 
-	    //	    RequestImpl request = new RequestImpl();
-	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(contextM, socket);
-	    reqA.setContextManager( contextM );
-	    //	    ResponseImpl response=new ResponseImpl();
-	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
+	    AJP12RequestAdapter reqA=null;
+	    AJP12ResponseAdapter resA=null;
+	    
+	    if( thData != null ) {
+		reqA=(AJP12RequestAdapter)thData[0];
+		resA=(AJP12ResponseAdapter)thData[1];
+		if( reqA!=null ) reqA.recycle();
+		if( resA!=null ) resA.recycle();
+	    }
+
+	    if( reqA==null || resA==null ) {
+		reqA = new AJP12RequestAdapter();
+		resA=new AJP12ResponseAdapter();
+		contextM.initRequest( reqA, resA );
+	    }
 
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
 
-	    //	    request.setRequestAdapter(reqA);
-	    //	    response.setResponseAdapter( resA );
-	    resA.setOutputStream(socket.getOutputStream());
-
-	    reqA.setResponse(resA);
-	    resA.setRequest(reqA);
+	    reqA.setSocket( socket);
+	    resA.setOutputStream(out);
 
 	    reqA.readNextRequest();
 	    if( reqA.isPing )
@@ -138,14 +151,11 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 		return;
 	    if (resA.getStatus() >= 400) {
 		resA.finish();
-
 		socket.close();
 		return;
 	    }
 
 	    // resolve the server that we are for
-
-	    // XXX is this needed ??
 	    int contentLength = reqA.getFacade().getIntHeader("content-length");
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
@@ -154,7 +164,6 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    }
 
 	    contextM.service( reqA, resA );
-
 	    resA.finish();
 	    socket.close();
 	} catch (Exception e) {
@@ -171,7 +180,6 @@ class AJP12RequestAdapter extends RequestImpl {
     Socket socket;
     InputStream sin;
     Ajpv12InputStream ajpin;
-    ContextManager contextM;
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;
@@ -188,6 +196,21 @@ class AJP12RequestAdapter extends RequestImpl {
 	contextM.log( s );
     }
     
+    public AJP12RequestAdapter() {
+    }
+
+    public void setContextManager(ContextManager cm ) {
+	contextM=cm;
+	doLog=contextM.getDebug() > 10;
+    }
+
+    public void setSocket( Socket s ) throws IOException {
+	this.socket = s;
+	sin = s.getInputStream();
+	in = new BufferedServletInputStream( this );
+	ajpin = new Ajpv12InputStream(sin);
+    }
+    
     public AJP12RequestAdapter(ContextManager cm, Socket s) throws IOException {
 	this.socket = s;
 	this.contextM=cm;
@@ -202,7 +225,6 @@ class AJP12RequestAdapter extends RequestImpl {
 	int marker;
 	int signal;
 //      Hashtable env_vars=new Hashtable();
-
 
 	try {
 	    boolean more=true;

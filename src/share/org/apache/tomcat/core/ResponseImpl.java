@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.20 2000/04/03 22:39:52 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2000/04/03 22:39:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.21 2000/04/17 21:02:27 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/04/17 21:02:27 $
  *
  * ====================================================================
  *
@@ -160,13 +160,12 @@ public class ResponseImpl implements Response {
 	usingStream = false;
 	sessionId=null;
 	writer=null;
-	out.recycle();
 	started = false;
 	committed = false;
 	notIncluded=true;
 	// adapter
-	status=-1;
 	body.setLength(0);
+	if( out != null ) out.recycle();
     }
 
     public void finish() throws IOException {
@@ -200,44 +199,67 @@ public class ResponseImpl implements Response {
     public boolean isUsingStream() {
 	return usingStream;
     }
+
+    public void setUsingStream( boolean stream ) {
+	usingStream=stream;
+    }
+    
+    public boolean isUsingWriter() {
+	return usingWriter;
+    }
+
+    public void setUsingWriter( boolean writer ) {
+	usingWriter=writer;
+	out.setUsingWriter (true);
+    }
     
     public PrintWriter getWriter() throws IOException {
 	if(writer!=null) return writer;
 	// it already did all the checkings
 	
-	if (usingStream) {
-	    String msg = sm.getString("serverResponse.writer.ise");
-	    throw new IllegalStateException(msg);
-	}
-
 	started = true;
-	usingWriter = true;
 
-	String encoding = getCharacterEncoding();
-
+	
 	// XXX - EBCDIC issue here?
-
-	if ((encoding == null) || "Default".equals(encoding) )
-	    writer = new PrintWriter(new OutputStreamWriter(out));
+	String encoding = getCharacterEncoding();
+	if ((encoding == null) || Constants.DEFAULT_CHAR_ENCODING.equals(encoding) )
+	    writer = new ServletWriterFacade( new OutputStreamWriter(out), this);
 	else
 	    try {
-		writer = new PrintWriter(new OutputStreamWriter(out, encoding));
+		writer = new ServletWriterFacade( new OutputStreamWriter(out, encoding), this);
 	    } catch (java.io.UnsupportedEncodingException ex) {
 		// if we don't do that, the runtime exception will propagate
 		// and we'll try to send an error page - but surprise, we
 		// still can't get the Writer to send the error page...
-		writer = new PrintWriter( new OutputStreamWriter(out));
+		writer = new ServletWriterFacade( new OutputStreamWriter(out), this);
 		
 		// Deal with strange encodings - webmaster should see a message
 		// and install encoding classes - n new, unknown language was discovered,
 		// and they read our site!
 		System.out.println("Unsuported encoding: " + encoding );
 	    }
-	out.setUsingWriter (true);
-
 	return writer;
     }
 
+    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
+	@deprecated 
+     */
+    public ServletOutputStream getOutputStream() {
+	started = true;
+	return out; // out.getServletOutputStreamFacade();
+    }
+
+    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
+     */
+    public BufferedServletOutputStream getBufferedOutputStream() {
+	return out;
+    }
+    
+
+    // -------------------- Headers --------------------
+    
     public void setHeader(String name, String value) {
 	if( ! notIncluded ) return; // we are in included sub-request
 	if( ! checkSpecialHeader(name, value) ) 
@@ -447,22 +469,6 @@ public class ResponseImpl implements Response {
 	this.status=status;
     }
 
-    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
-	and implement doWrite();
-     */
-    public ServletOutputStream getOutputStream() {
-	started = true;
-
-	if (usingWriter) {
-	    String msg = sm.getString("serverResponse.outputStream.ise");
-	    throw new IllegalStateException(msg);
-	}
-
-	usingStream = true;
-
-	return out;
-    }
-    
     /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
      *	No need to implement it if your adapter implements ServletOutputStream.
      *  Headers and status will be written before this method is exceuted.
