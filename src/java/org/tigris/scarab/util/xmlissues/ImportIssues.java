@@ -49,8 +49,10 @@ package org.tigris.scarab.util.xmlissues;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -58,6 +60,7 @@ import java.io.BufferedInputStream;
 
 import org.apache.commons.fileupload.FileItem;
 
+import org.apache.fulcrum.localization.Localization;
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
@@ -69,40 +72,42 @@ import org.apache.commons.logging.LogFactory;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.TurbineInitialization;
 import org.tigris.scarab.util.xmlissues.ScarabIssues;
+import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.om.Module;
 
 
 /**
- * <p>This is a bean'ish object which allows one to set values for importing 
- * issues, and then run the actual import.</p>
+ * This is a bean'ish object which allows one to set values for importing 
+ * issues, and then run the actual import. 
  *
- * <p>Amenable to the ant task wrapper or
+ * Amenable to the ant task wrapper {@link AntTaskWrapper AntTaskWrapper} or
  * you can pass an explicit file for explicit import if turbine is already 
- * up and running.</p>
+ * up and running.
  * 
  * <p>The way the ant task wrapper works is simple: call all the appropriate
  * set methods to define the properties. Then you will need to call the init()
  * and execute methods to start running things. Note: If Turbine is already
- * initialized, there is no need to call the init() method.</p>
+ * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.11 2003/04/01 02:50:44 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.12 2003/04/02 04:59:15 elicia Exp $
  */
 public class ImportIssues
 {
-    private static final Log LOG = LogFactory.getLog(ImportIssues.class);
+    private final static Log log = LogFactory.getLog(ImportIssues.class);
+
 
     /** 
      * Name of the TR.props file.
      */
-    private String trProps = 
+    private String TR_PROPS = 
         "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     /** 
      * Name of the xmlimport.properties file used for configuration of log4j.
      */
-    private String configProps = 
+    private String CONFIG_PROPS = 
             "/WEB-INF/conf/xmlimport.properties";
 
     private File configDir = null;
@@ -150,22 +155,22 @@ public class ImportIssues
 
     public String getConfigFile()
     {
-        return this.configProps;
+        return this.CONFIG_PROPS;
     }
 
-    public void setConfigFile(String configProps)
+    public void setConfigFile(String CONFIG_PROPS)
     {
-        this.configProps = configProps;
+        this.CONFIG_PROPS = CONFIG_PROPS;
     }
 
     public String getTurbineResources()
     {
-        return this.trProps;
+        return this.TR_PROPS;
     }
 
-    public void setTurbineResources(String trProps)
+    public void setTurbineResources(String TR_PROPS)
     {
-        this.trProps = trProps;
+        this.TR_PROPS = TR_PROPS;
     }
 
     public void init()
@@ -185,8 +190,9 @@ public class ImportIssues
     /**
      * Run an import.
      *
-     * Assumes you've already set the xml file we're to run the import with
-     * by calling  {@link #setXmlFile}.
+     * Assumes we're up and running inside of turbine.
+     *
+     * @param importFile File to import.
      *
      * @return List of errors if any.
      *
@@ -215,7 +221,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        LOG.debug("Importing: " + importFile.getAbsolutePath());
+        log.debug("Importing: " + importFile.getAbsolutePath());
 
         try
         {
@@ -233,13 +239,15 @@ public class ImportIssues
                     reader);
             }
         }
+
         catch(Exception e)
         {
-            LOG.debug("\nThe following error(s) were found: " 
+            log.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
         }
+
         finally
         {
             // Renable workflow
@@ -253,7 +261,7 @@ public class ImportIssues
      * Run an import.
      *
      * Assumes we're up and running inside of turbine.  Awkwardly duplicates 
-     * {@link #runImport(File)} but duplication is so we can do the reget of
+     * {@link import(File) import} but duplication is so we can do the reget of
      * the input stream; FileInput "manages" backing up the Upload for us on the
      * second get of the input stream (It creates new ByteArrayInputStream 
      * w/ the src being a byte array of the file its kept in memory or in 
@@ -293,7 +301,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        LOG.debug("Importing: " + importFile.getName());
+        log.debug("Importing: " + importFile.getName());
 
         try
         {
@@ -312,7 +320,7 @@ public class ImportIssues
 
         catch(Exception e)
         {
-            LOG.debug("\nThe following error(s) were found: " 
+            log.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
@@ -363,9 +371,12 @@ public class ImportIssues
                     importErrors = new ArrayList();
                 }
 
-                importErrors.add("XML module is " + si.getModule().getName()
-                    + " but current module is " + currentModule.getName()
-                    + "."); 
+                Object[] args = {si.getModule().getName(), currentModule.getName()};
+                String error = Localization.format(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    getLocale(),
+                    "XMLModuleNotCurrent", args);
+                importErrors.add(error);
             }
         }
 
@@ -377,12 +388,12 @@ public class ImportIssues
             }
             else
             {
-                LOG.error("Found " + importErrors.size() + " errors importing "
+                log.error("Found " + importErrors.size() + " errors importing "
                     + ((name != null)? name: "null") + ":");
                 for (Iterator itr = importErrors.iterator(); itr.hasNext();)
                 {
                     String message = (String)itr.next();
-                    LOG.error(message);
+                    log.error(message);
                 }
             }
         }
@@ -410,7 +421,7 @@ public class ImportIssues
         ScarabIssues.setInValidationMode(false);
         ScarabIssues si = (ScarabIssues)reader.parse(is);
         si.doHandleDependencies();
-        LOG.debug("Successfully imported " + name + "!");
+        log.debug("Successfully imported " + name + "!");
         return si;
     }
 
@@ -472,5 +483,12 @@ public class ImportIssues
         writer.enablePrettyPrint();
         writer.setWriteIDs(false);
         writer.write(bean);
+    }
+
+    private Locale getLocale()
+    {
+        return new Locale(
+            Localization.getDefaultLanguage(), 
+            Localization.getDefaultCountry());
     }
 }
