@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  */
 public class SessionMetaData extends BeanMetaData 
 {
@@ -63,9 +63,7 @@ public class SessionMetaData extends BeanMetaData
       } else {
          if (this.isClustered())
             return ConfigurationMetaData.CLUSTERED_STATELESS_13;
-         else if(this.isWebservice()) 
-            return ConfigurationMetaData.STATELESS_14;
-         else
+         else 
             return ConfigurationMetaData.STATELESS_13;
       }
    }

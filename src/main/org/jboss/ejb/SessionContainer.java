@@ -31,7 +31,7 @@ import org.jboss.metadata.SessionMetaData;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 30.10.2003
  */
 
@@ -98,21 +98,24 @@ public abstract class SessionContainer extends Container {
       return interceptor;
    }
 
-   /** return home class */
-   public Class getHomeClass() {
-      return homeInterface;
-   }
-
-   /** return remote class */
-   public Class getRemoteClass() {
-      return remoteInterface;
-   }
-
    /** return service endpoint */
    public Class getServiceEndpoint() {
       return serviceEndpoint;
    }
 
+   /** 
+    * explicitely sets the service endpoint interface
+    * this is for the lazy guys that do not want to 
+    * extend their ejb-jar.xml and nevertheless expose
+    * ejb-based webservices
+    */
+   public void setServiceEndpoint(Class sei) throws NoSuchMethodException {
+      if(serviceEndpoint!=sei) {
+         serviceEndpoint=sei;
+         setupServiceEndpointBeanMapping();
+      }
+   }
+   
    // Container stuff
 
    protected void createService() throws Exception {
@@ -231,13 +234,28 @@ public abstract class SessionContainer extends Container {
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl(map, m, "javax.ejb.EJBLocalObject");
       }
-      if (serviceEndpoint != null) {
-         Method[] m = serviceEndpoint.getMethods();
-         setUpBeanMappingImpl(map, m, "java.rmi.Remote");
-      }
       beanMapping = map;
+      // the sei->bean mapping is factored out, because the sei could be set
+      // individually (such that ejb-jar.xml must not know about webservices)
+      setupServiceEndpointBeanMapping();
    }
 
+   /** 
+    * sets the service endpoint mappings either at container creation time or
+    * later, when the webservice module shows up
+    */
+   protected void setupServiceEndpointBeanMapping() throws NoSuchMethodException {
+      if (serviceEndpoint != null) {
+         Method[] m = serviceEndpoint.getMethods();
+         setUpBeanMappingImpl(beanMapping, m, "java.rmi.Remote");
+      }
+   }
+   
+   /**
+    * sets up marshalled invocation mappings
+    * @throws Exception
+    */
+   
    protected void setupMarshalledInvocationMapping() throws Exception {
       // Create method mappings for container invoker
       if (homeInterface != null) {

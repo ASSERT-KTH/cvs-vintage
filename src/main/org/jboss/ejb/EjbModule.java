@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -863,6 +863,7 @@ public class EjbModule
       throws Exception
    {
       Iterator it = conf.getInvokerBindings();
+      boolean foundOne=false;
       while (it.hasNext())
       {
          String invoker = (String) it.next();
@@ -884,12 +885,17 @@ public class EjbModule
                ((XmlLoadable) ci).importXml(imd.getProxyFactoryConfig());
             }
             container.addProxyFactory(invoker, ci);
+            foundOne=true;
          }
          catch (Exception e)
          {
-            throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker, e);
+            log.warn("The Container Invoker "+invoker+" (in jboss.xml or standardjboss.xml) could not be created because of "+e+
+               " We will ignore this error, but you may miss a transport for this bean.");
          }
       }
+      if(!foundOne) {
+         throw new DeploymentException("Missing or invalid Container Invokers (in jboss.xml or standardjboss.xml).");
+      } 
    }
 
 

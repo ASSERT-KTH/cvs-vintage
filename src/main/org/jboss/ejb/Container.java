@@ -67,7 +67,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.128 $
+ * @version $Revision: 1.129 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -197,7 +197,11 @@ public abstract class Container
       return remoteInterface;
    }
 
-   public Class getRemoteHomeClass()
+   /** 
+    * this actually should be called remotehome, but for interface compliance purposes
+    * we keep it like that
+    */
+   public Class getHomeClass()
    {
       return homeInterface;
    }
