@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE jbosscmp-jdbc PUBLIC
-   "-//JBoss//DTD JBOSSCMP-JDBC 3.2//EN"
-   "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_3_2.dtd">
+   "-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN"
+   "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_4_0.dtd">
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -9,13 +9,13 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.83 2004/09/02 08:26:57 schrouf Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.84 2004/09/15 15:48:58 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
    <defaults>
       <datasource>java:/DefaultDS</datasource>
-      <datasource-mapping>@default.type.mapping@</datasource-mapping>
+      <!-- optional since 4.0 <datasource-mapping>@default.type.mapping@</datasource-mapping> -->
 
       <create-table>true</create-table>
       <remove-table>false</remove-table>
