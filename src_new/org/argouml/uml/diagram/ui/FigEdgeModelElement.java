@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.86 2005/02/13 16:12:51 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.87 2005/02/13 16:18:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -769,8 +769,8 @@ public abstract class FigEdgeModelElement
         super.removeFromDiagram();
         
         //This partly solves issue 3042.
-        Layer l = this.getLayer();
-        if (l != null) l.remove(this);
+//        Layer l = this.getLayer();
+//        if (l != null) l.remove(this);
     }
 
     /**
