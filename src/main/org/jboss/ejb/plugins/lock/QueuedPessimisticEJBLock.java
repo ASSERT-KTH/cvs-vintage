@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -407,11 +407,18 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     */
    public void endInvocation(Invocation mi)
    { 
-      if (isReadOnlyTxLock && mi.getTransaction() != null)
+      Transaction tx = mi.getTransaction();
+
+      if (isReadOnlyTxLock && tx != null)
       {
+         // If we are not the owner, won't synchronize was
+         // done first to pass to the lock
+         if (tx.equals(getTransaction()) == false)
+            return;
+
          if (isReadOnlyTxLock)
          {
-            endTransaction(mi.getTransaction());
+            endTransaction(tx);
          }
       }
    }
