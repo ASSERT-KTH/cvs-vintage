@@ -13,23 +13,23 @@
   <postGoal name="war:webapp"> 
     <j:set var="warWebappBuildDir"
         value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
-  	<ant:echo message="Copying files to webapp ${warWebappBuildDir}"/>
+    <ant:echo message="Copying files to webapp ${warWebappBuildDir}"/>
     <ant:copy todir="${warWebappBuildDir}/WEB-INF/conf">
-    	<ant:fileset dir="${maven.src.dir}/conf/conf"
+      <ant:fileset dir="${maven.src.dir}/conf/conf"
           includes="**/*.*"/>
     </ant:copy>
     <ant:copy todir="${warWebappBuildDir}/WEB-INF/sql">
-    	<ant:fileset dir="${maven.src.dir}/sql"
+      <ant:fileset dir="${maven.src.dir}/sql"
           includes="**/*.*"/>
     </ant:copy>    
     <!--ant:copy todir="${warWebappBuildDir}/WEB-INF/classes">
-    	<ant:fileset dir="${maven.src.dir}/conf/classes"
+      <ant:fileset dir="${maven.src.dir}/conf/classes"
           includes="**/*.*"/>
     </ant:copy-->    
   </postGoal>
   
   <postGoal name="clean"> 
-	 <ant:delete>
+   <ant:delete>
         <ant:fileset dir="${basedir}"
              includes="junit*.properties">
         </ant:fileset>
@@ -47,18 +47,18 @@
         <ant:fileset dir="src/test/logs">
             <ant:include name="*.log"/>
         </ant:fileset>    
-		<ant:delete dir="src/test/WEB-INF"/>   
+    <ant:delete dir="src/test/WEB-INF"/>   
      </ant:delete>  
   </postGoal>
   
 
   <goal name="scarab:sample" prereqs="scarab:clean, war:webapp" description="Create an out of the box ready distribution">    
-  	<ant:mkdir dir="target/dist"/>
-  	<ant:copy todir="target/dist/scarab">
+    <ant:mkdir dir="target/dist"/>
+    <ant:copy todir="target/dist/scarab">
       <ant:fileset dir="target/scarab"
           includes="**/*.*"/>
     </ant:copy>
-  	<ant:copy todir="target/dist/tomcat">
+    <ant:copy todir="target/dist/tomcat">
       <ant:fileset dir="tomcat"
           includes="**/*.*"/>
     </ant:copy>
@@ -69,7 +69,7 @@
     <attainGoal name="nsis"/>
   </goal>
   
-  <goal name="scarab:deploy_docs_head" description="Copy documentation to scarab-gen head">
+  <goal name="scarab:deploy_docs_head" prereqs="site" description="Copy documentation to scarab-gen head">
     <ant:echo message="Copying Site Documentation to ${scarab.docs.head}"/>
         
     <!--    
@@ -118,19 +118,19 @@
      
    </goal>
 
-	<!-- 
-  	Delegate a call to the scarab:inplace-clean goal without
-  	starting to loop! 
-  	-->
-	<goal name="scarab:clean">
-		<j:if test="${firstclean == null}">
-			<ant:echo message="About to clean inplace war files"/>
-			<ant:property name="firstclean" value="false"/>
-			<attainGoal name="scarab:inplace-clean"/>
-		</j:if>
+  <!-- 
+    Delegate a call to the scarab:inplace-clean goal without
+    starting to loop! 
+    -->
+  <goal name="scarab:clean" description="Cleans an inplace exploded WAR webapp">
+    <j:if test="${firstclean == null}">
+      <ant:echo message="About to clean inplace war files"/>
+      <ant:property name="firstclean" value="false"/>
+      <attainGoal name="scarab:inplace-clean"/>
+    </j:if>
     </goal>
-	   
-   <goal name="scarab:inplace-clean" description="Cleans an inplace exploded WAR webapp">
+     
+   <goal name="scarab:inplace-clean">
 
      <j:set var="warWebappBuildDir"
         value="${maven.src.dir}/webapp"/>    
