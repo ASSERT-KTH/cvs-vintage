@@ -90,7 +90,8 @@ class XmlHelperHandler implements DocumentHandler {
     String tagStack[];
     int sp;
     Properties props;
-
+    int debug=0;
+    
     Hashtable tagMapper;
     
     public XmlHelperHandler(Hashtable mapper, Properties props) {
@@ -133,57 +134,76 @@ class XmlHelperHandler implements DocumentHandler {
 	throws SAXException
     {
 	try {
+	    if( debug>0) log("Start " + tag + " " + attributes + " " + sp);
+
+	    // Special case: <foo><property name="a" value="b" /></foo>
+	    // Will call foo.setA( "b" ) ( or foo.setProperty("a", "b") if setA not found )
+	    if( "property".equals( tag ) ) {
+		String n=attributes.getValue("name");
+		String v=attributes.getValue("value");
+		if(n==null || v==null)
+		    System.out.println("Error: property with null name/value");
+		Object elem=elemStack[sp-1];
+		if(debug>1) log("Setting " + elem.getClass()+ " "  + n + "=" + v );
+		
+		InvocationHelper.setProperty( elem, n, processValue(v) );
+		return;
+	    }
+
+	    // Normal tag <foo> - mapped to org.bar.Foo, will construct a new Foo.
+	    Object elem=tagMapper.get( tag );
+
+	    // For the root element, add the properties passed to XmlHelper
+	    // ( from the command line )
+	    if(sp==0) {
+		// set all "default" properties
+		Enumeration e = props.keys();
+		while (e.hasMoreElements()) {
+		    String arg = (String)e.nextElement();
+		    String value = (String)props.get(arg);
+		    InvocationHelper.setProperty(elem, arg, value);
+		}
+	    }
+
+	    /* Set parent in child:
+	       For <foo><bar/></foo>,
+	       will try: bar.setFoo( Foo )
+	       then: foo.setAttribute( "foo", Foo);
+	    */
+	    if( sp > 0 ) {
+		// we're not the root
+		// tell our parent about us
+		InvocationHelper.setAttribute( elem, tagStack[sp-1], elemStack[sp-1] );
+	    }
+
+	    /* <foo a="b" />
+	       Normal attribute setting, with setA( "b" ), or setProperty("a", "b") if not
+	       setA found
+	     */
+	    if(attributes!=null) {
+		for (int i = 0; i < attributes.getLength (); i++) {
+		    String type = attributes.getType (i);
+		    String name=attributes.getName(i);
+		    String value=attributes.getValue(i);
+		    //System.out.println("Attribute " + i + " type= " + type + " name=" + name + " value=" + value);
+		    InvocationHelper.setProperty( elem, name, processValue(value) );
+		}
+	    }
+
+	    /*
+	      Set parent in sun, will try:
+	      foo.setBar( Bar )
+	      foo.addBar( Bar )
+	      foo.setAttribute( "bar", Bar)
+	    */
+	    if( sp > 0 ) {
+		InvocationHelper.addAttribute( elemStack[sp-1], tag, elem );
+	    }
+	
+	    elemStack[sp]=elem;
+	    tagStack[sp]=tag;
+	    sp++;
 	    //	System.out.println("Start " + tag + " " + attributes + " " + sp);
-
-	// Special case: property
-	if( "property".equals( tag ) ) {
-	    String n=attributes.getValue("name");
-	    String v=attributes.getValue("value");
-	    if(n==null || v==null)
-		System.out.println("Error: property with null name/value");
-	    Object elem=elemStack[sp-1];
-	    //  System.out.println("Setting " + elem.getClass()+ " "  + n + "=" + v );
-	    InvocationHelper.setProperty( elem, n, processValue(v) );
-	    return;
-	}
-	
-	Object elem=tagMapper.get( tag );
-
-	if(sp==0) {
-	    // set all "default" properties
-	    Enumeration e = props.keys();
-	    while (e.hasMoreElements()) {
-		String arg = (String)e.nextElement();
-		String value = (String)props.get(arg);
-		InvocationHelper.setProperty(elem, arg, value);
-	    }
-	    
-	}
-	
-	if( sp > 0 ) {
-	    // we're not the root
-	    InvocationHelper.setAttribute( elem, tagStack[sp-1], elemStack[sp-1] );
-	}
-	
-	if(attributes!=null) {
-	    for (int i = 0; i < attributes.getLength (); i++) {
-		String type = attributes.getType (i);
-		String name=attributes.getName(i);
-		String value=attributes.getValue(i);
-		//System.out.println("Attribute " + i + " type= " + type + " name=" + name + " value=" + value);
-
-		InvocationHelper.setProperty( elem, name, processValue(value) );
-	    }
-	}
-
-	if( sp > 0 ) {
-	    InvocationHelper.addAttribute( elemStack[sp-1], tag, elem );
-	}
-	
-	elemStack[sp]=elem;
-	tagStack[sp]=tag;
-	sp++;
-	//	System.out.println("Start " + tag + " " + attributes + " " + sp);
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
@@ -224,6 +244,15 @@ class XmlHelperHandler implements DocumentHandler {
     public Object getRootElement() {
 	return elemStack[0];
     }
-	
+
+    // Debug ( to be replaced with the real thing )
+    public void setDebug( int level ) {
+	debug=level;
+    }
+
+    void log( String msg ) {
+	System.out.println("XMLH: " + msg );
+    }
+
 }
 

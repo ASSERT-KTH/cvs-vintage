@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.13 2000/01/14 04:08:11 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/01/14 04:08:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.14 2000/01/14 19:48:22 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/01/14 19:48:22 $
  *
  * ====================================================================
  *
@@ -429,6 +429,11 @@ public class ServletWrapper {
 	    } catch (InterruptedException e) { }
 	}
     }
-    
+
+    public String toString() {
+	String toS="Wrapper( " + servletClassName + ",";
+	if( servlet!=null ) toS=toS+ servlet.getClass().getName();
+	return toS + ")";
+    }
 
 }

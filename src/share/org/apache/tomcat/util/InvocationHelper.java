@@ -133,6 +133,7 @@ public class InvocationHelper {
      */
     public static void addAttribute( Object o, String name, Object v ) {
 	try {
+	    // Find addXXX method
 	    Method setMethod = getMethod(o, "add" + capitalize( name ));
 	    //	    System.out.println("ADD: " + name + " " + o.getClass() + " " + v.getClass());
 	    if( setMethod!= null ) {
@@ -144,6 +145,25 @@ public class InvocationHelper {
 		    return;
 		}
 	    }
+
+	    // Try to find addYYY - where YYY is an interface supported by v
+	    Class interF[]=v.getClass().getInterfaces();
+	    for( int i=0; i<interF.length; i++ ) {
+		String iName=interF[i].getName();
+		// XXX deal with default package
+		String lastComp = iName.substring( iName.lastIndexOf(".") );
+		setMethod = getMethod( o, "add" + lastComp );
+		if( setMethod != null ) {
+		    System.out.println("Found add" + lastComp + " for " +
+				       o.getClass().getName() + " " + v.getClass().getName());
+		    Class[] ma =setMethod.getParameterTypes();
+		    if ( (ma.length == 1) && (! ma[0].getName().equals("java.lang.String"))) {
+			setMethod.invoke(o, new Object[] {v});
+			return;
+		    }
+		}
+	    }
+	    
 	    
 	    // fallback to setAttribute
 	    setAttribute( o, name, v);

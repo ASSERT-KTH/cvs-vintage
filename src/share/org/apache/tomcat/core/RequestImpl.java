@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.5 2000/01/13 18:20:32 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/13 18:20:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.6 2000/01/14 19:48:22 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/14 19:48:22 $
  *
  * ====================================================================
  *
@@ -716,5 +716,16 @@ public class RequestImpl  implements Request {
 	didCookies = false;
 	if( reqA!=null) reqA.recycle();// XXX avoid double recycle
 	//	moreRequests = false;
+    }
+
+    public String toString() {
+	StringBuffer sb=new StringBuffer();
+	sb.append( "Request( " + context );
+	sb.append( ",URI:" + getRequestURI()  ).append("\n");
+	sb.append( "    SP:" + getServletPath() );
+	sb.append( ",PI:" + getPathInfo() );
+	sb.append( ",LP:" + getLookupPath() );
+	sb.append( "," + getWrapper() +") ");
+	return sb.toString();
     }
 }

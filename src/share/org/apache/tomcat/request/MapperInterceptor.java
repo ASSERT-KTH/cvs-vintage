@@ -77,11 +77,18 @@ import java.util.Hashtable;
  *
  */
 public class MapperInterceptor  implements  RequestInterceptor {
-
+    int debug=0;
+    
     public MapperInterceptor() {
     }
 
-    // no configuration 
+    public void setDebug( int level ) {
+	debug=level;
+    }
+
+    void log( String msg ) {
+	System.out.println("Mapper: " + msg );
+    }
     
     public int handleRequest(Request req) {
 	Context context=req.getContext();
@@ -92,30 +99,31 @@ public class MapperInterceptor  implements  RequestInterceptor {
 
 	if (wrapper == null) {
 	    wrapper = context.getDefaultServlet();
-	    if (wrapper == null) {
-	        wrapper = context.getServletByName(Constants.DEFAULT_SERVLET_NAME );
-	    }
 
 	    req.setWrapper( wrapper );
 	    req.setServletPath( "" );
 	    req.setPathInfo( path);
+	    if(debug>0) log("Found wrapper using getMatch " + req);
 	} else {
 	    getMapPath(wrapper, req);
 	    String resolvedServlet = getResolvedServlet(context, req.getMappedPath());
 	    
 	    req.setWrapper( wrapper );
 	    req.setResolvedServlet( resolvedServlet );
+	    if(debug>0) log("Found wrapper using getMapPath " + req);
 	}
-	
-	if (req.getResolvedServlet() != null) {
-	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-				 req.getResolvedServlet());
-	} else if (req.getMappedPath() != null) {
-	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-				 req.getMappedPath());
-	} else {
-	    req.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
-	}
+
+	// XXX Nobody seems to use it, remove if nothing comes out,
+	// Document why it's here if we find a user 
+	// 	if (req.getResolvedServlet() != null) {
+	// 	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+	// 				 req.getResolvedServlet());
+	// 	} else if (req.getMappedPath() != null) {
+	// 	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+	// 				 req.getMappedPath());
+	// 	} else {
+	// 	    req.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
+	// 	}
 
 	return OK;
     }
@@ -276,6 +284,15 @@ public class MapperInterceptor  implements  RequestInterceptor {
         return wrapper;
     }
 
+    /** Called when a wrapper is found.
+	It will change "mappedPath" ( ?? ):
+
+	- if servletPath==/servlet -> mapPath=everything after first /
+	   component of pathInfo ( if pathInfo!=null) 
+	- else mapPath = resourceName (??) ( if !=null)
+	- else unchanged
+	
+     */
     private void getMapPath(ServletWrapper wrapper, Request req) {
         String mapPath = req.getMappedPath();
 

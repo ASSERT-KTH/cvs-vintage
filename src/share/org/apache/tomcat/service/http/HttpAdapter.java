@@ -1,9 +1,9 @@
 
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpAdapter.java,v 1.2 1999/11/12 23:24:24 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/12 23:24:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpAdapter.java,v 1.3 2000/01/14 19:48:23 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/14 19:48:23 $
  *
  * ====================================================================
  *
@@ -118,7 +118,11 @@ public class HttpAdapter  implements ServerConnector {
 	this.cm=ctx;
 	con.setContextManager( ctx );
     }
-    
+
+    public void setPort( String s ) {
+	vport=string2Int( s );
+    }
+
     public void setProperty( String prop, String value) {
 	if(HttpServer.VHOST_PORT.equals(prop) ) {
 	    //	    System.out.println("XXX");

@@ -113,6 +113,7 @@ public class DefaultServlet extends HttpServlet {
 	// It should use getMappedPath instead !!!
         URL url = getServletContext().getResource(pathInfo);
 
+	// 	System.out.println("Resource: " + url + " PI: " + pathInfo);
 	if (url != null) {
 	    if (url.getProtocol().equals("war") &&
 	        context.isWARExpanded()) {

@@ -86,12 +86,10 @@ public class ContextManager {
      */
     private StringManager sm =StringManager.getManager("org.apache.tomcat.core");
 
+    int debug=0;
+    
     private Vector requestInterceptors = new Vector();
     private Vector contextLifecycleInterceptors = new Vector();
-    
-    ContextMapperInterceptor contextInterceptor=new ContextMapperInterceptor( this );
-    SessionInterceptor sessionInterceptor=new SessionInterceptor();
-    MapperInterceptor mapperInterceptor=new MapperInterceptor();
     
     /**
      * The set of Contexts associated with this ContextManager,
@@ -116,7 +114,10 @@ public class ContextManager {
     int port;
 
     String workDir;
+    
+    Vector connectors=new Vector();
 
+    
     /**
      * Construct a new ContextManager instance with default values.
      */
@@ -131,6 +132,58 @@ public class ContextManager {
         return contexts.keys();
     }
 
+    public void start() throws Exception {
+
+	// set a default connector ( http ) if none defined yet
+	if(connectors.size()==0) {
+	    // Make the default customizable!
+	    addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
+	}
+	
+	for( int i=0; i<connectors.size(); i++ ) {
+	    ((ServerConnector)connectors.elementAt(i)).setContextManager( this );
+	    ((ServerConnector)connectors.elementAt(i)).start();
+	}
+	
+	// check for default context 
+	Context defaultContext=getContext("/");
+	if (defaultContext == null ||
+	    defaultContext.getDocumentBase() == null) {
+	    // XXX find a better exception 
+	    throw new IllegalArgumentException("No default context " + defaultContext);
+	}
+
+	if( requestInterceptors.size() == 0 ) {
+	    // nothing set up by starter, add default ones
+	    addRequestInterceptor(new ContextMapperInterceptor( this ));
+	    addRequestInterceptor(new SessionInterceptor());
+	    addRequestInterceptor(new MapperInterceptor());
+	}
+	
+	// init contexts
+	Enumeration enum = getContextNames();
+	while (enum.hasMoreElements()) {
+            Context context = getContext((String)enum.nextElement());
+            context.init();
+	}
+    }
+
+    public void stop() throws Exception {
+	for (int i=0; i<connectors.size(); i++) {
+	    ((ServerConnector)connectors.elementAt(i)).stop();
+	}
+
+	Enumeration enum = getContextNames();
+	while (enum.hasMoreElements()) {
+	    Context context =
+	        getContext((String)enum.nextElement());
+	    
+	    System.out.println("Taking down context: " +
+			       context.getPath());
+	    
+	    context.shutdown();
+	}
+    }
 
     /**
      * Gets a context by it's name, or <code>null</code> if there is
@@ -154,7 +207,9 @@ public class ContextManager {
 
 	// it will replace existing context - it's better than 
 	// IllegalStateException.
-	contexts.put( ctx.getPath(), ctx );
+	String path=ctx.getPath();
+	// Log	System.out.println(this + " adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
+	contexts.put( path, ctx );
     }
     
     /**
@@ -175,6 +230,22 @@ public class ContextManager {
 	}
     }
 
+
+    // -------------------- Connectors and Interceptors --------------------
+
+    /**
+     * Add the specified server connector to the those attached to this server.
+     *
+     * @param con The new server connector
+     */
+    public synchronized void addServerConnector( ServerConnector con ) {
+	connectors.addElement( con );
+    }
+
+    public void addRequestInterceptor( RequestInterceptor ri ) {
+	requestInterceptors.addElement( ri );
+    }
+    
     // -------------------- Defaults for all contexts --------------------
     
     /**
@@ -254,9 +325,15 @@ public class ContextManager {
 
 	    processRequest( rrequest );
 
-	    // do it
-	    rrequest.getWrapper().handleRequest(rrequest.getFacade(),
-					       rresponse.getFacade());
+	    if( rrequest.getWrapper() == null ) {
+		System.out.println("ERROR: mapper returned no wrapper ");
+		System.out.println(rrequest );
+		// XXX send an error - it shouldn't happen, mapper is broken
+	    } else {
+		// do it
+		rrequest.getWrapper().handleRequest(rrequest.getFacade(),
+						    rresponse.getFacade());
+	    }
 	    
 	    // finish and clean up
 	    rresponse.finish();
@@ -279,16 +356,26 @@ public class ContextManager {
      *  is already known.
      */
     int processRequest( Request req ) {
-	// will set the Context
-	contextInterceptor.handleRequest( req );
-	// will set Session 
-	sessionInterceptor.handleRequest( req );
-	return mapperInterceptor.handleRequest( req );
+
+	if(debug>0) log( "ProcessRequest: ");
+	if(debug>0) log( req.toString() );
+	if(debug>0) log("");
+
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequest( req );
+	}
+
+	if(debug>0) log("After processing: ");
+	if(debug>0) log( req.toString() );
+	if(debug>0) log("");
+	return 0;
     }
 
+    // XXX XXX hack - we need to create a new request !
+    ContextMapperInterceptor contextInterceptor=new ContextMapperInterceptor( this );
     public Context getContextByPath(String path ) {
 	// XXX XXX XXX need to create a sub-request !!!!
-	// 
+	//
 	return contextInterceptor.getContextByPath( path );      
     }
 
@@ -366,6 +453,14 @@ public class ContextManager {
 	
     }
 
-    
+    // Debug ( to be replaced with the real thing )
+    public void setDebug( int level ) {
+	debug=level;
+    }
+
+    void log( String msg ) {
+	System.out.println("CM: " + msg );
+    }
+
     
 }

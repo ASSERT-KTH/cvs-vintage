@@ -293,22 +293,28 @@ public class Context {
 
     /** Implements getResource() - use a sub-request to let interceptors do the job.
      */
-    public URL getResource(String path)	throws MalformedURLException {
+    public URL getResource(String rpath)	throws MalformedURLException {
         URL url = null;
 
-	if ("".equals(path)) 
+	if ("".equals(rpath)) 
 	    return getDocumentBase();
 	
 	// deal with exceptional cases
-        if (path == null) 
+        if (rpath == null) 
             throw new MalformedURLException(sm.getString("scfacade.getresource.npe"));
-        else if ( ! path.startsWith("/")) {
-	    throw new MalformedURLException(sm.getString("scfacade.getresource.iae", path));
+        else if ( ! rpath.startsWith("/")) {
+	    // XXX fix - it shouldn't be a special case, MapperInterceptor
+	    // should deal with this ( workaround for bug in MapperInterceptor)
+	    //	    System.out.println("rpath=" + rpath + " " + path);
+	    if( "/".equals(path) ) // default context
+		rpath="/" + rpath;
+	    else
+		throw new MalformedURLException(sm.getString("scfacade.getresource.iae", rpath));
 	}
 
 	// Create a Sub-Request, do the request processing stage
 	// that will take care of aliasing and set the paths
-	Request lr=contextM.createRequest( this, path );
+	Request lr=contextM.createRequest( this, rpath );
 	getContextManager().processRequest(lr);
 
 	return getResourceURL( lr );
@@ -525,7 +531,7 @@ public class Context {
 	new WorkDirInterceptor().handleContextInit( this );
 
 	// XXX who uses servletBase ???
-	URL servletBase = this.documentBase;
+	URL servletBase = getDocumentBase();
         this.setServletBase(servletBase);
 
 	// expand WAR
@@ -621,10 +627,19 @@ public class Context {
     }
     
     public URL getDocumentBase() {
+	if( documentBase == null ) {
+	    if( docBase != null)
+		try {
+		    documentBase=URLUtil.resolve( docBase );
+		} catch( MalformedURLException ex ) {
+		    ex.printStackTrace();
+		}
+	}
         return documentBase;
     }
 
     public void setDocumentBase(URL s) {
+	// Used only by startup, will be removed
         this.documentBase=s;
     }
 
@@ -851,6 +866,11 @@ public class Context {
     }
 
     public ServletWrapper getDefaultServlet() {
+	if( defaultServlet==null)
+	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
+	// XXX works only if we do load default web.xml first - we should
+	// be able to work without that trick ( i.e. define a "default" )
+	
 	return defaultServlet;
     }
     
@@ -1069,5 +1089,9 @@ public class Context {
         }
 
         return cp;
+    }
+
+    public String toString() {
+	return "Context( " + path + " , " + getDocumentBase() + " ) ";
     }
 }
