@@ -19,6 +19,7 @@ import javax.management.j2ee.EventProvider;
 import javax.management.j2ee.StateManageable;
 import javax.management.j2ee.StatisticsProvider;
 
+import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -26,7 +27,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -47,6 +48,10 @@ public abstract class J2EEManagedObject
    public static final String NAME = "name";
    
    // Attributes ----------------------------------------------------
+
+   /** Class logger. */
+   private static final Logger log =
+      Logger.getLogger(J2EEManagedObject.class);
    
    private ObjectName mParent = null;
    private ObjectName mName = null;
@@ -100,7 +105,8 @@ public abstract class J2EEManagedObject
       lProperties.put( TYPE, pType );
       lProperties.put( NAME, pName );
       mName = new ObjectName( getDomainName(), lProperties );
-      System.out.println( "J2EEManagedObject(), create root with name: " + mName );
+
+      log.debug("create root with name: " + mName );
    }
    
    /**
@@ -131,7 +137,7 @@ public abstract class J2EEManagedObject
    // J2EEManagedObjectMBean implementation ----------------------------------------------
    
    public ObjectName getObjectName() {
-      System.out.println( "J2EEManagedObject.getObjectName(), name: " + mName );
+      log.debug("getObjectName(), name: " + mName );
       return mName;
    }
 
@@ -181,7 +187,7 @@ public abstract class J2EEManagedObject
    }
    
    public void postRegister( java.lang.Boolean pRegistrationDone ) {
-      System.out.println( "J2EEManagedObject.postRegister(), parent: " + mParent );
+      log.debug("postRegister(), parent: " + mParent );
       if( pRegistrationDone.booleanValue() && mParent != null ) {
          try {
             // Notify the parent about its new child
@@ -204,7 +210,7 @@ public abstract class J2EEManagedObject
    public void preDeregister()
       throws Exception
    {
-      System.out.println( "J2EEManagedObject.preDeregister(), parent: " + mParent );
+      log.debug("preDeregister(), parent: " + mParent );
       try {
          // Only remove child if it is a child (root has not parent)
          if( mParent != null ) {
