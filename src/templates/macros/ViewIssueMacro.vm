@@ -314,7 +314,7 @@ $l10n.NoComments
    <tr class="b">
      #if (!$currentIssue.Urls.isEmpty())
      <td>&#160;</td>
-     <td>&#160;</td>
+     <td>New</td>
      #end
      #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
      <td>
@@ -335,7 +335,7 @@ $l10n.NoComments
   #if (!$currentIssue.Urls.isEmpty())
   <input type="submit" value="Save" name="eventSubmit_doSaveurl" />&#160;
   #end
-  <input type="submit" value="Add link" name="eventSubmit_doSubmiturl" />&#160;
+  <input type="submit" value="Add new link" name="eventSubmit_doSubmiturl" />&#160;
   #if (!$currentIssue.Urls.isEmpty())
   <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
   #end
