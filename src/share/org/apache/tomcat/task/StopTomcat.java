@@ -112,7 +112,7 @@ public class StopTomcat {
 	    os.write( stopMessage );
 	    socket.close();
 	} catch(Exception ex ) {
-	    loghelper.log("Error stopping Tomcat with Ajp12", ex);
+	    throw new TomcatException("Error stopping Tomcat with Ajp12", ex);
 	}
     }
     

@@ -177,7 +177,15 @@ public class Tomcat extends Logger.Helper {
 
 	if( doStop ) {
 	    System.out.println(sm.getString("tomcat.stop"));
-	    stopTomcat(); // stop serving
+	    try {
+		stopTomcat(); // stop serving
+	    }
+	    catch (TomcatException te) {
+		if (te.getRootCause() instanceof java.net.ConnectException)
+		    System.out.println(sm.getString("tomcat.connectexception"));
+		else
+		    throw te;
+	    }
 	    return;
 	}
 
@@ -202,6 +210,8 @@ public class Tomcat extends Logger.Helper {
 	String path = cm.getLogger().getPath();
 	if (path == null)
 	    path = "console";
+	else
+	    path = new File(path).getAbsolutePath();
 	System.out.println(sm.getString("tomcat.start", new Object[] { path }));
 	
 	cm.init(); // set up contexts
@@ -216,7 +226,7 @@ public class Tomcat extends Logger.Helper {
 	}
 	catch (java.net.BindException be) {
 	    log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
-	    System.out.println(sm.getString("tomcat.start.bindexception"));
+	    System.out.println(sm.getString("tomcat.bindexception"));
 	}
     }
 
