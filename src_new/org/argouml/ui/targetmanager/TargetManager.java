@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.10 2003/05/04 07:34:44 kataka Exp $
+// $Id: TargetManager.java,v 1.11 2003/05/04 08:23:07 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,6 +63,9 @@ public final class TargetManager {
      * @author jaap.branderhorst@xs4all.nl
      */
     private class HistoryManager implements TargetListener {
+        
+        private final static int MAX_SIZE = 100;
+        
         /**
          * The history with targets
          */
@@ -104,6 +107,7 @@ public final class TargetManager {
                 if (_currentTarget+1 == _history.size()) {                
                     _history.add(new WeakReference(target));
                     _currentTarget++;
+                    resize();
                 }
                 else {                
                     WeakReference ref =
@@ -120,6 +124,24 @@ public final class TargetManager {
                     }                 
                 }
                 
+            }
+        }
+        
+        /**
+         * Resizes the history if it's grown too big.
+         *
+         */
+        private void resize() {
+            int size = _history.size();
+            if (size > MAX_SIZE) {
+                int oversize = size - MAX_SIZE;
+                int halfsize = size/2;
+                if (_currentTarget > halfsize && oversize < halfsize) {
+                    for (int i = 0; i < oversize; i++) {
+                        _history.remove(0);                        
+                    }
+                    _currentTarget -= oversize;
+                }
             }
         }
         
