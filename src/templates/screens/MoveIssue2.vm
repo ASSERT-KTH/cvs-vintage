@@ -14,14 +14,15 @@
 #set ($newIssueTypeId = $moveIssueGroup.IssueTypeId.Value)
 #set ($newModule = $scarabR.getModule("$newModuleId"))
 #set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
+## $issue is really only valid if its a single issue move, but we only
+## handle the case where multiple issues come from the same module and type
+## so $module and $issueType are valid
+#set ($issue = $scarabR.getIssue($data.Parameters.getString("issue_ids")))
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
 #set ($isMultiple =$scarabG.sizeOfArray($issueList) > 1)
 
 #if (!$isMultiple)
-  #foreach ($issueId in $issueList)
-    #set ($issue = $scarabR.getIssue($issueId))
-  #end
   ## For single issue move, display attribute values for this issue
   #set ($matchingAttributes = $issue.getMatchingAttributeValuesList($newModule, $newIssueType))
   #set ($orphanAttributes = $issue.getOrphanAttributeValuesList($newModule, $newIssueType))
@@ -59,9 +60,6 @@
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />
 </div>
 
-#set ($attrValues = $issue.AllAttributeValuesMap)
-#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-
 <h3>$l10n.Destination</h3>
 <div class="axial">
 <table border="1" cellspacing="2" cellpadding="3">
@@ -88,17 +86,13 @@
      #set ($attr = $attVal.Attribute)
   #end
   #indexedRows($velocityCount)
-  #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
   <td>
-    #if ($displayValue)
      $attr.Name
-     #if (!$attr.Attribute.Name.equals($displayValue))
+     #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
+    #if (!$attr.Name.equals($displayValue))
       ($displayValue)
      #end
-    #else
-     $l10n.format("IssueAttributeValueActive", $attr.Name)
-    #end
-    </td>
+  </td>
 <td>$attr.AttributeType.Name</td>
 #if (!$isMultiple)
 <td>$attVal.Value</td>
