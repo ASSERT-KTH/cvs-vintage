@@ -18,7 +18,7 @@
 
 <!ELEMENT activity (activity-attribute, description)>
 
-<!ELEMENT activity-attribute (name, value, old-value)>
+<!ELEMENT activity-attribute (name, value, old-value, type)>
 
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
