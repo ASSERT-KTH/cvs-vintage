@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.16 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionInterface.java,v 1.17 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.16 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionInterface.java,v 1.17 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -35,7 +35,7 @@ import java.awt.Rectangle;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -56,8 +56,8 @@ import ru.novosoft.uml.foundation.core.MClassImpl;
 import ru.novosoft.uml.foundation.core.MInterface;
 
 public class SelectionInterface extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionInterface.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionInterface.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon realiz =

@@ -1,6 +1,6 @@
 
 
-// $Id: UMLSequenceDiagram.java,v 1.22 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLSequenceDiagram.java,v 1.23 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.22 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLSequenceDiagram.java,v 1.23 2003/09/04 20:18:13 thierrylach Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -38,7 +38,7 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -60,8 +60,8 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
 public class UMLSequenceDiagram extends UMLDiagram {
-    protected static Category cat =
-        Category.getInstance(UMLSequenceDiagram.class);
+    protected static Logger cat =
+        Logger.getLogger(UMLSequenceDiagram.class);
 
     ////////////////
     // actions for toolbar

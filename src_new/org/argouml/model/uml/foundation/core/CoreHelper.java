@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.64 2003/09/01 23:13:20 alexb Exp $
+// $Id: CoreHelper.java,v 1.65 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -87,7 +87,7 @@ import ru.novosoft.uml.model_management.MModel;
  */
 public class CoreHelper {
 
-    protected static Category cat = Category.getInstance(CoreHelper.class);
+    protected static Logger cat = Logger.getLogger(CoreHelper.class);
     /** Don't allow instantiation.
      */
 

@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.5 2003/08/30 20:43:35 alexb Exp $
+// $Id: TodoParser.java,v 1.6 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Vector;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 
 import org.argouml.cognitive.ResolvedCritic;
@@ -49,7 +49,7 @@ import org.tigris.gef.util.VectorSet;
  * @author	Michael Stockman
  */
 public class TodoParser extends SAXParserBase {
-    protected static Category cat = Category.getInstance(TodoParser.class);
+    protected static Logger cat = Logger.getLogger(TodoParser.class);
 
     /** The SINGLETON object of this class. */
     public static TodoParser SINGLETON = new TodoParser();

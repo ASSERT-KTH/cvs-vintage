@@ -1,4 +1,4 @@
-// $Id: SelectionClass.java,v 1.14 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionClass.java,v 1.15 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.14 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionClass.java,v 1.15 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -36,7 +36,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.deployment.DeploymentDiagramGraphModel;
@@ -56,8 +56,8 @@ import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 
 public class SelectionClass extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionClass.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionClass.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon inherit = 

@@ -1,4 +1,4 @@
-// $Id: XMIReader.java,v 1.4 2003/06/29 23:53:45 linus Exp $
+// $Id: XMIReader.java,v 1.5 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -50,7 +50,7 @@ import ru.novosoft.uml.model_management.MModel;
  * @see ru.novosoft.uml.xmi.XMIReader
  */
 public class XMIReader extends ru.novosoft.uml.xmi.XMIReader {
-    private Category cat = Category.getInstance(this.getClass());
+    private Logger cat = Logger.getLogger(this.getClass());
     
     private boolean errors = false;
     private org.xml.sax.Parser parser = null;

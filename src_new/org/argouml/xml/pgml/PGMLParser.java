@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.22 2003/06/29 23:53:45 linus Exp $
+// $Id: PGMLParser.java,v 1.23 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,12 +36,12 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.FigNode;
 // the following three ugly package dependency are for restoring compartment visibility
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
 
 public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
-    protected static Category cat = Category.getInstance(PGMLParser.class);
+    protected static Logger cat = Logger.getLogger(PGMLParser.class);
 
     protected int _privateTextDepth = 0;
     protected StringBuffer _privateText = new StringBuffer();

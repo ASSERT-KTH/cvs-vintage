@@ -1,7 +1,7 @@
 
 
 
-// $Id: FigClass.java,v 1.70 2003/09/03 14:31:05 thierrylach Exp $
+// $Id: FigClass.java,v 1.71 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.70 2003/09/03 14:31:05 thierrylach Exp $
+// $Id: FigClass.java,v 1.71 2003/09/04 20:18:11 thierrylach Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -52,7 +52,7 @@ import java.util.Vector;
 
 import javax.swing.JMenu;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -98,7 +98,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
  */
 
 public class FigClass extends FigNodeModelElement {
-    private Category cat = Category.getInstance(this.getClass());
+    private Logger cat = Logger.getLogger(this.getClass());
 
     ////////////////////////////////////////////////////////////////
     // constants

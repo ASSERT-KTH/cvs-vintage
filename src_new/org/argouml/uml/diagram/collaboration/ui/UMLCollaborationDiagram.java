@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.31 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.32 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.31 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.32 2003/09/04 20:18:12 thierrylach Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -36,7 +36,7 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -65,8 +65,8 @@ import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 public class UMLCollaborationDiagram extends UMLDiagram {
 
     /** for logging */
-    private static final Category cat =
-        Category.getInstance("org.argouml.uml.diagram.collaboration.ui."
+    private static final Logger cat =
+        Logger.getLogger("org.argouml.uml.diagram.collaboration.ui."
 			     + "UMLCollaborationDiagram");
 
     ////////////////

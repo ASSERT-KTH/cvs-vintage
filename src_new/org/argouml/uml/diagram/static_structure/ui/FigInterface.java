@@ -2,7 +2,7 @@
 
 
 
-// $Id: FigInterface.java,v 1.45 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigInterface.java,v 1.46 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import java.util.Vector;
 
 import javax.swing.JMenu;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.ModelFacade;
@@ -86,7 +86,7 @@ import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 /** Class to display graphics for a UML Interface in a diagram. */
 
 public class FigInterface extends FigNodeModelElement {
-    protected static Category cat = Category.getInstance(FigInterface.class);
+    protected static Logger cat = Logger.getLogger(FigInterface.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

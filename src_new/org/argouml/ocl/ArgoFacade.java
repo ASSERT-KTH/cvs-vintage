@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.20 2003/08/30 18:16:29 alexb Exp $
+// $Id: ArgoFacade.java,v 1.21 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import tudresden.ocl.check.types.Type;
 import tudresden.ocl.check.types.Type2;
 import tudresden.ocl.check.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.*;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
@@ -94,7 +94,7 @@ public class ArgoFacade implements tudresden.ocl.check.types.ModelFacade {
 }
 
 class ArgoAny implements Any, Type2 {
-    protected static Category cat = Category.getInstance(ArgoAny.class);
+    protected static Logger cat = Logger.getLogger(ArgoAny.class);
 
     Object classifier;
 

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.75 2003/08/26 17:42:22 linus Exp $
+// $Id: Modeller.java,v 1.76 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -52,7 +52,7 @@ import org.tigris.gef.base.Globals;
  */
 public class Modeller
 {
-    protected static Category cat = Category.getInstance(Modeller.class);
+    protected static Logger cat = Logger.getLogger(Modeller.class);
     /** Current working model. */
     private Object model;
 

@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.8 2003/06/30 18:00:16 linus Exp $
+// $Id: ArgoEventPump.java,v 1.9 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.apache.log4j.*;
  */
 public class ArgoEventPump {
 
-    Category cat = Category.getInstance(ArgoEventPump.class.getName());
+    Logger cat = Logger.getLogger(ArgoEventPump.class.getName());
 
     private ArrayList _listeners = null;
 

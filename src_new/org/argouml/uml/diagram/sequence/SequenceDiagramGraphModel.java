@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.20 2003/09/04 19:11:17 thierrylach Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.21 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,11 +26,11 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.20 2003/09/04 19:11:17 thierrylach Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.21 2003/09/04 20:18:13 thierrylach Exp $
 
 package org.argouml.uml.diagram.sequence;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
@@ -62,8 +62,8 @@ import org.argouml.uml.diagram.UMLMutableGraphSupport;
 public class SequenceDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
-    protected static Category cat = 
-        Category.getInstance(SequenceDiagramGraphModel.class);
+    protected static Logger cat = 
+        Logger.getLogger(SequenceDiagramGraphModel.class);
     ////////////////////////////////////////////////////////////////
     // instance variables
   

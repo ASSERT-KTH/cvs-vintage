@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.35 2003/08/17 22:17:00 linus Exp $
+// $Id: Import.java,v 1.36 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableImport;
 import org.argouml.cognitive.Designer;
@@ -70,7 +70,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.35 2003/08/17 22:17:00 linus Exp $
+ * <p>$Id: Import.java,v 1.36 2003/09/04 20:18:13 thierrylach Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -110,8 +110,8 @@ public class Import {
     private ImportStatusScreen iss;
     
     // log4j logging
-    private static Category cat =
-	Category.getInstance(org.argouml.uml.reveng.Import.class);
+    private static Logger cat =
+	Logger.getLogger(org.argouml.uml.reveng.Import.class);
     
     /**
      * Unnecessary attribute

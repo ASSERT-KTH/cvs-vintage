@@ -1,4 +1,4 @@
-// $Id: SerialLayout.java,v 1.10 2003/06/30 18:00:23 linus Exp $
+// $Id: SerialLayout.java,v 1.11 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ package org.argouml.swingext;
 import java.awt.*;
 import java.util.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * Lays out components in a single row or column starting from any
@@ -49,8 +49,8 @@ import org.apache.log4j.Category;
  */
 public class SerialLayout extends LineLayout {
     
-    protected static Category cat = 
-        Category.getInstance(SerialLayout.class);
+    protected static Logger cat = 
+        Logger.getLogger(SerialLayout.class);
         
     public static final int LEFTTORIGHT = 10;
     public static final int TOPTOBOTTOM = 10;

@@ -1,4 +1,4 @@
-// $Id: FigSubsystem.java,v 1.7 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.8 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: FigSubsystem.java,v 1.7 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: FigSubsystem.java,v 1.8 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -31,14 +31,14 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Polygon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 
 /** Class to display graphics for a UML subsystem in a class diagram. */
 
 public class FigSubsystem extends FigPackage {
-    protected static Category cat = Category.getInstance(FigSubsystem.class);
+    protected static Logger cat = Logger.getLogger(FigSubsystem.class);
 
     protected FigPoly _figPoly;
 

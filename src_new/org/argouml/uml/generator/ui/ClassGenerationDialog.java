@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.21 2003/06/30 21:59:34 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.22 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationName;
 import org.argouml.application.notation.NotationProviderFactory;
@@ -63,8 +63,8 @@ import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.util.Converter;
 
 public class ClassGenerationDialog extends JDialog implements ActionListener {
-    protected static Category cat =
-	Category.getInstance(ClassGenerationDialog.class);
+    protected static Logger cat =
+	Logger.getLogger(ClassGenerationDialog.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -348,8 +348,8 @@ public class ClassGenerationDialog extends JDialog implements ActionListener {
 
 
 class TableModelClassChecks extends AbstractTableModel {
-    protected static Category cat =
-	Category.getInstance(TableModelClassChecks.class);
+    protected static Logger cat =
+	Logger.getLogger(TableModelClassChecks.class);
     ////////////////
     // instance varables
     Vector _classes;

@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.11 2003/06/29 23:53:43 linus Exp $
+// $Id: Agency.java,v 1.12 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.11 2003/06/29 23:53:43 linus Exp $
+// $Id: Agency.java,v 1.12 2003/09/04 20:18:14 thierrylach Exp $
 package org.argouml.cognitive.critics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 /** Agency manages Critics.  Since classes are not really first class
  *  objects in java, a singleton instance of Agency is made and passed
@@ -56,7 +56,7 @@ import org.argouml.cognitive.Designer;
  *  still half done.  Trigger's are the critiquing requests.  The code
  *  for triggers is currently dormant (latent?). */
 public class Agency extends Observable { //implements java.io.Serialization
-    protected static Category cat = Category.getInstance(Agency.class);
+    protected static Logger cat = Logger.getLogger(Agency.class);
     ////////////////////////////////////////////////////////////////
     // instance variables
     

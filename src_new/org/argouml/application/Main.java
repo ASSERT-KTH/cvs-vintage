@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.82 2003/09/01 21:25:53 linus Exp $
+// $Id: Main.java,v 1.83 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.CommandLineInterface;
@@ -66,7 +66,7 @@ import org.tigris.gef.util.Util;
 public class Main {
 
     // instantiation is done in main
-    private static Category cat = null;
+    private static Logger cat = null;
 
     ////////////////////////////////////////////////////////////////
     // constants

@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.31 2003/09/01 17:56:36 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.32 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,12 +26,12 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.31 2003/09/01 17:56:36 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.32 2003/09/04 20:18:13 thierrylach Exp $
 
 
 package org.argouml.uml.diagram.collaboration;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -55,8 +55,8 @@ import ru.novosoft.uml.model_management.*;
 public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
-    protected static Category cat =
-	Category.getInstance(CollabDiagramGraphModel.class);
+    protected static Logger cat =
+	Logger.getLogger(CollabDiagramGraphModel.class);
 
     /** The "home" UML model of this diagram, not all ModelElements in this
      *  graph are in the home model, but if they are added and don't

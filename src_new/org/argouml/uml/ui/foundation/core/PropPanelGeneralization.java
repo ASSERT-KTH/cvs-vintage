@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.31 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.32 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.JScrollPane;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 
@@ -59,8 +59,8 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
  *       old gui components.
  */
 public class PropPanelGeneralization extends PropPanelModelElement {
-    protected static Category cat =
-        Category.getInstance(PropPanelGeneralization.class);
+    protected static Logger cat =
+        Logger.getLogger(PropPanelGeneralization.class);
 
     private PropPanelButton _newButton;
 

@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.15 2003/08/30 20:09:52 alexb Exp $
+// $Id: CriticBrowserDialog.java,v 1.16 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.Document;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 
 import org.argouml.application.api.Argo;
@@ -80,8 +80,8 @@ public class CriticBrowserDialog extends ArgoDialog
 	       DocumentListener 
 {
     
-    protected static Category cat =
-	Category.getInstance(CriticBrowserDialog.class);
+    protected static Logger cat =
+	Logger.getLogger(CriticBrowserDialog.class);
     
     public static int _numCriticBrowser = 0;
 
@@ -425,8 +425,8 @@ public class CriticBrowserDialog extends ArgoDialog
 class TableModelCritics extends AbstractTableModel
     implements VetoableChangeListener, DelayedVChangeListener 
 {
-    protected static Category cat =
-	Category.getInstance(TableModelCritics.class);
+    protected static Logger cat =
+	Logger.getLogger(TableModelCritics.class);
     ////////////////
     // instance varables
     List _target;

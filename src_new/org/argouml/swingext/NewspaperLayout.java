@@ -1,4 +1,4 @@
-// $Id: NewspaperLayout.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: NewspaperLayout.java,v 1.7 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ package org.argouml.swingext;
 import java.awt.*;
 import javax.swing.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * Similar to <code>GridLayout2</code> but once the components fill
@@ -43,7 +43,7 @@ import org.apache.log4j.Category;
  * @author Bob Tarling
  */
 public class NewspaperLayout extends GridLayout2 {
-    protected static Category cat = Category.getInstance(NewspaperLayout.class);
+    protected static Logger cat = Logger.getLogger(NewspaperLayout.class);
 
     private int gridGap = 0;
     private int preferredX;

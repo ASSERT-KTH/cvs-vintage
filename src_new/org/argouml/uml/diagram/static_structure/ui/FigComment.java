@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.17 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: FigComment.java,v 1.18 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.17 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: FigComment.java,v 1.18 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -48,7 +48,7 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.ModelFacade;
@@ -80,7 +80,7 @@ public class FigComment
 	       KeyListener,
 	       PropertyChangeListener
 {
-    protected static Category cat = Category.getInstance(FigComment.class);
+    protected static Logger cat = Logger.getLogger(FigComment.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

@@ -1,6 +1,6 @@
 
 
-// $Id: FigPackage.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
+// $Id: FigPackage.java,v 1.32 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
+// $Id: FigPackage.java,v 1.32 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -42,7 +42,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -66,7 +66,7 @@ import ru.novosoft.uml.model_management.MPackage;
 /** Class to display graphics for a UML package in a class diagram. */
 
 public class FigPackage extends FigNodeModelElement {
-    protected static Category cat = Category.getInstance(FigPackage.class);
+    protected static Logger cat = Logger.getLogger(FigPackage.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.4 2003/06/30 21:59:32 linus Exp $
+// $Id: SelectionClassifierRole.java,v 1.5 2003/09/04 20:18:12 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.awt.Rectangle;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
@@ -52,8 +52,8 @@ import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 
 
 public class SelectionClassifierRole extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionClassifierRole.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionClassifierRole.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon assocrole =

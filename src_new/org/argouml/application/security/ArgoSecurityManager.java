@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityManager.java,v 1.13 2003/06/30 18:00:16 linus Exp $
+// $Id: ArgoSecurityManager.java,v 1.14 2003/09/04 20:18:15 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ package org.argouml.application.security;
 import java.util.PropertyPermission;
 import java.security.Permission;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /** The Argo custom security manager.
  *
@@ -56,8 +56,8 @@ import org.apache.log4j.Category;
  */
 public final class ArgoSecurityManager extends SecurityManager
 {
-    protected static Category cat =
-	Category.getInstance(ArgoSecurityManager.class);
+    protected static Logger cat =
+	Logger.getLogger(ArgoSecurityManager.class);
     private boolean _allowExit = false;
 
     /** The only allowed instance. */

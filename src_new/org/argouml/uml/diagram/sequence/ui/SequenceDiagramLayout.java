@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.6 2003/08/17 22:09:14 bobtarling Exp $
+// $Id: SequenceDiagramLayout.java,v 1.7 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import java.util.Enumeration;
 import java.awt.Rectangle;
 import java.awt.Color;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.presentation.FigDynPort;
 import org.tigris.gef.presentation.Fig;
@@ -52,8 +52,8 @@ import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 
 public class SequenceDiagramLayout extends LayerPerspective {
-    protected static Category cat = 
-        Category.getInstance(SequenceDiagramLayout.class);
+    protected static Logger cat = 
+        Logger.getLogger(SequenceDiagramLayout.class);
 
     static final int MIN_GAP = 80;
     static final int OBJ_WIDTH = 0;

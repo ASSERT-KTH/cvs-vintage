@@ -1,5 +1,5 @@
 
-// $Id: ClassDiagramRenderer.java,v 1.14 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.15 2003/09/04 20:18:11 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.14 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.15 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -41,7 +41,7 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
 import org.argouml.uml.diagram.ui.*;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 // could be singleton
 
@@ -64,8 +64,8 @@ import org.apache.log4j.Category;
 public class ClassDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer {
 
-    protected static Category cat = 
-        Category.getInstance(ClassDiagramRenderer.class);
+    protected static Logger cat = 
+        Logger.getLogger(ClassDiagramRenderer.class);
 
     /** Return a Fig that can be used to represent the given node */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {

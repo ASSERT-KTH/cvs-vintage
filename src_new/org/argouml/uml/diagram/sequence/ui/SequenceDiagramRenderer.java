@@ -1,6 +1,6 @@
 
 
-// $Id: SequenceDiagramRenderer.java,v 1.5 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.6 2003/09/04 20:18:13 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@
 // File: SequenceDiagramRenderer.java
 // Classes: SequenceDiagramRenderer
 // Original Author: 5eichler@inormatik.uni-hamburg.de
-// $Id: SequenceDiagramRenderer.java,v 1.5 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.6 2003/09/04 20:18:13 thierrylach Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -43,14 +43,14 @@ import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.ui.*;
 
 
 public class SequenceDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer {
-    protected static Category cat = 
-        Category.getInstance(SequenceDiagramRenderer.class);
+    protected static Logger cat = 
+        Logger.getLogger(SequenceDiagramRenderer.class);
 						     
     /** Return a Fig that can be used to represent the given node */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {

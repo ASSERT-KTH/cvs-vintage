@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.9 2003/08/30 21:28:52 alexb Exp $
+// $Id: UMLCheckItem.java,v 1.10 2003/09/04 20:18:14 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.cognitive.checklist;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 
 
@@ -41,8 +41,8 @@ import org.tigris.gef.util.Predicate;
  * @see org.argouml.ocl.OCLEvaluator */
 
 public class UMLCheckItem extends CheckItem {
-    protected static Category cat = 
-        Category.getInstance(UMLCheckItem.class);
+    protected static Logger cat = 
+        Logger.getLogger(UMLCheckItem.class);
 
     public UMLCheckItem(String c, String d) { super(c, d); }
 
