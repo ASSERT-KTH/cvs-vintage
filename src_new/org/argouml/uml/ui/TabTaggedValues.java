@@ -1,5 +1,5 @@
 
-// $Id: TabTaggedValues.java,v 1.27 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabTaggedValues.java,v 1.28 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.uml.UmlFactory;
@@ -225,8 +225,8 @@ class TableModelTaggedValues extends AbstractTableModel
     public int getColumnCount() { return 2; }
 
     public String  getColumnName(int c) {
-	if (c == 0) return Argo.localize(BUNDLE, "taggedvaluespane.label.tag");
-	if (c == 1) return Argo.localize(BUNDLE, "taggedvaluespane.label.value");
+	if (c == 0) return Translator.localize(BUNDLE, "taggedvaluespane.label.tag");
+	if (c == 1) return Translator.localize(BUNDLE, "taggedvaluespane.label.value");
 	return "XXX";
     }
 

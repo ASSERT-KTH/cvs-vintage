@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizManyNames.java,v 1.9 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizManyNames.java
 // Classes: WizManyNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizManyNames.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizManyNames.java,v 1.9 2003/11/25 10:58:16 jhraigniac Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,8 +35,8 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.WizStepManyTextFields;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
@@ -48,7 +48,7 @@ public class WizManyNames extends Wizard {
 					      
     protected String _instructions =
 	"Please change the name of the offending model element.";
-    protected String _label = Argo.localize("UMLMenu", "label.name");
+    protected String _label = Translator.localize("UMLMenu", "label.name");
     public Vector _mes = null;
 							  
     protected WizStepManyTextFields _step1 = null;

@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.11 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: CmdSetPreferredSize.java,v 1.12 2003/11/25 10:58:17 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.ui.cmd;
 
 import java.util.Vector;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.state.ui.FigCompositeState;
 import org.argouml.uml.diagram.static_structure.ui.FigPackage;
 
@@ -56,7 +56,7 @@ public class CmdSetPreferredSize extends Cmd {
      * @param mode one of the defined constants
      */
     public CmdSetPreferredSize(int mode) {
-	super(Argo.localize("action", 
+	super(Translator.localize("action", 
 			    "action.set-" + wordFor(mode) + "-size"));
         _mode = mode;
     }

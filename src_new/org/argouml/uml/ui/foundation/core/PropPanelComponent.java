@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.27 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: PropPanelComponent.java,v 1.28 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
@@ -36,7 +36,7 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.27 2003/09/21 14:11:12 bobtarling Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.28 2003/11/25 10:58:16 jhraigniac Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -49,24 +49,24 @@ public class PropPanelComponent extends PropPanelClassifier {
 	super("Component", ConfigLoader.getTabPropsOrientation());
 	Class mclass = (Class)ModelFacade.COMPONENT;
 
-	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-	addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-	_modifiersPanel.add(new UMLCheckBox(Argo.localize("UMLMenu", "checkbox.active-uc"), this, new UMLReflectionBooleanProperty("isActive", mclass, "isActive", "setActive")));
-	addField(Argo.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
+	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+	_modifiersPanel.add(new UMLCheckBox(Translator.localize("UMLMenu", "checkbox.active-uc"), this, new UMLReflectionBooleanProperty("isActive", mclass, "isActive", "setActive")));
+	addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
-	addField(Argo.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
+	addField(Translator.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
+	addField(Translator.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.client-dependencies"), getClientDependencyScroll());
-	addField(Argo.localize("UMLMenu", "label.supplier-dependencies"), getSupplierDependencyScroll());
+	addField(Translator.localize("UMLMenu", "label.client-dependencies"), getClientDependencyScroll());
+	addField(Translator.localize("UMLMenu", "label.supplier-dependencies"), getSupplierDependencyScroll());
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-	new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-class"), "removeElement", null);
+	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-class"), "removeElement", null);
 
 
 	//    addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);

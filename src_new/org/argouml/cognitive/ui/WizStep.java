@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.20 2003/10/14 06:27:01 linus Exp $
+// $Id: WizStep.java,v 1.21 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Wizard;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SpacerPanel;
@@ -73,10 +73,10 @@ public class WizStep extends JPanel
     // instance variables
 
     JPanel  _mainPanel = new JPanel();
-    JButton _backButton = new JButton(Argo.localize(BUNDLE, "button.back"));
-    JButton _nextButton = new JButton(Argo.localize(BUNDLE, "button.next"));
-    JButton _finishButton = new JButton(Argo.localize(BUNDLE, "button.finish"));
-    JButton _helpButton = new JButton(Argo.localize(BUNDLE, "button.help"));
+    JButton _backButton = new JButton(Translator.localize(BUNDLE, "button.back"));
+    JButton _nextButton = new JButton(Translator.localize(BUNDLE, "button.next"));
+    JButton _finishButton = new JButton(Translator.localize(BUNDLE, "button.finish"));
+    JButton _helpButton = new JButton(Translator.localize(BUNDLE, "button.help"));
     JPanel  _buttonPanel = new JPanel();
   
     /**
@@ -85,7 +85,7 @@ public class WizStep extends JPanel
     private Object _target;
 
     protected static final void setMnemonic(JButton b, String key) {
-	String m = Argo.localize(BUNDLE, key);
+	String m = Translator.localize(BUNDLE, key);
 	if (m == null)
 	    return;
 	if (m.length() == 1) {

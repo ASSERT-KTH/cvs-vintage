@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.16 2003/09/04 20:18:14 thierrylach Exp $
+// $Id: CriticBrowserDialog.java,v 1.17 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,10 @@ import javax.swing.text.Document;
 import org.apache.log4j.Logger;
 
 
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.ui.ArgoDialog;
@@ -94,9 +94,9 @@ public class CriticBrowserDialog extends ArgoDialog
   
     private static final int NUM_COLUMNS = 25;
 
-    static final String high = Argo.localize(BUNDLE, "level.high");
-    static final String medium = Argo.localize(BUNDLE, "level.medium");
-    static final String low = Argo.localize(BUNDLE, "level.low");
+    static final String high = Translator.localize(BUNDLE, "level.high");
+    static final String medium = Translator.localize(BUNDLE, "level.medium");
+    static final String low = Translator.localize(BUNDLE, "level.low");
 
     public static final String PRIORITIES[] = {
 	high, medium, low 

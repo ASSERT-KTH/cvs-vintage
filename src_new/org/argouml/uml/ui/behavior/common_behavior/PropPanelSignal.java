@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.34 2003/10/26 16:40:02 alexb Exp $
+// $Id: PropPanelSignal.java,v 1.35 2003/11/25 10:58:14 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
@@ -62,9 +62,9 @@ public class PropPanelSignal extends PropPanelModelElement {
 
         Class mclass = (Class)ModelFacade.SIGNAL;
 
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
         addSeperator();
 
@@ -72,18 +72,18 @@ public class PropPanelSignal extends PropPanelModelElement {
 	contextList.setBackground(getBackground());
         contextList.setForeground(Color.blue);
         JScrollPane contextScroll = new JScrollPane(contextList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        addField(Argo.localize("UMLMenu", "label.contexts"), contextScroll);
+        addField(Translator.localize("UMLMenu", "label.contexts"), contextScroll);
 
         JList receiverList = new UMLList(new UMLReflectionListModel(this, "receivers", false, "getReceptions", null, "addReception", "deleteReception"), true);
 	receiverList.setBackground(getBackground());
         receiverList.setForeground(Color.blue);
         JScrollPane receiverScroll = new JScrollPane(receiverList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        addField(Argo.localize("UMLMenu", "label.receptions"), receiverScroll);
+        addField(Translator.localize("UMLMenu", "label.receptions"), receiverScroll);
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _signalIcon, Argo.localize("UMLMenu", "button.add-signal"), "newSignal", null);
-        new PropPanelButton(this, buttonPanel, _receptionIcon, Argo.localize("UMLMenu", "button.add-reception"), "newReception", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-signal"), "removeElement", null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
+        new PropPanelButton(this, buttonPanel, _signalIcon, Translator.localize("UMLMenu", "button.add-signal"), "newSignal", null);
+        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.add-reception"), "newReception", null);
+        new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-signal"), "removeElement", null);
     }
 
     public void newSignal() {
@@ -134,7 +134,7 @@ public class PropPanelSignal extends PropPanelModelElement {
 	    Vector selected = new Vector();
 	    choices.addAll(CoreHelper.getHelper().getAllBehavioralFeatures());
 	    selected.addAll(ModelFacade.getContexts(signal));
-	    UMLAddDialog dialog = new UMLAddDialog(choices, selected, Argo.localize("UMLMenu", "dialog.title.add-contexts"), true, true);
+	    UMLAddDialog dialog = new UMLAddDialog(choices, selected, Translator.localize("UMLMenu", "dialog.title.add-contexts"), true, true);
 	    int returnValue = dialog.showDialog(ProjectBrowser.getInstance());
 	    if (returnValue == JOptionPane.OK_OPTION) {
 		ModelFacade.setContexts(signal, dialog.getSelected());

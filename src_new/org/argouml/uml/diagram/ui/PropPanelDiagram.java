@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.17 2003/10/28 19:16:05 jjones Exp $
+// $Id: PropPanelDiagram.java,v 1.18 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 import javax.swing.JTextField;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
@@ -51,7 +51,7 @@ public class PropPanelDiagram extends PropPanel {
 						       "getName",
 						       "setName"));
         
-        addField(Argo.localize("UMLMenu", "label.name"), field);
+        addField(Translator.localize("UMLMenu", "label.name"), field);
     }
     
     /**

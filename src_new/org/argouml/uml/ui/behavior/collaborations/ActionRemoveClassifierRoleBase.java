@@ -1,4 +1,4 @@
-// $Id: ActionRemoveClassifierRoleBase.java,v 1.4 2003/09/06 14:27:36 bobtarling Exp $
+// $Id: ActionRemoveClassifierRoleBase.java,v 1.5 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,10 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import java.awt.event.ActionEvent;
 
-import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.AbstractActionRemoveElement;
 
 /**
@@ -45,7 +45,7 @@ public class ActionRemoveClassifierRoleBase
      * Constructor for ActionRemoveClassifierRoleBase.
      */
     protected ActionRemoveClassifierRoleBase() {
-        super(Argo.localize("UMLMenu", "menu.popup.remove"));
+        super(Translator.localize("UMLMenu", "menu.popup.remove"));
     }
 
     

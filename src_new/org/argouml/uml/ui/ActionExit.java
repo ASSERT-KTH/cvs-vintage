@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.13 2003/08/24 15:13:47 linus Exp $
+// $Id: ActionExit.java,v 1.14 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui;
 
 import org.argouml.application.api.*;
 import org.argouml.application.security.*;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.*;
 import org.argouml.ui.*;
 
@@ -68,7 +69,7 @@ public class ActionExit extends UMLAction
 	if (p != null && p.needsSave() && !active) {
 	    active = true;
 	    String t = 
-		MessageFormat.format(Argo.localize("Actions",
+		MessageFormat.format(Translator.localize("Actions",
 						   "optionpane.exit-save-changes-to"),
 				     new Object[] {p.getName()} );
 	    int response = 

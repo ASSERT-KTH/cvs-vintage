@@ -1,4 +1,4 @@
-// $Id: SettingsTabHelper.java,v 1.6 2003/09/16 20:11:33 thierrylach Exp $
+// $Id: SettingsTabHelper.java,v 1.7 2003/11/25 10:58:17 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.application.helpers;
 import org.argouml.application.api.*;
+import org.argouml.i18n.Translator;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -56,7 +58,7 @@ public abstract class SettingsTabHelper extends JPanel
      *  the constructor.
      */
     public String localize(String key) {
-        return Argo.localize(_bundle, key);
+        return Translator.localize(_bundle, key);
     }
 
     /** Create a localized JLabel.

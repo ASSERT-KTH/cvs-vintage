@@ -1,6 +1,6 @@
 
 
-// $Id: WizDescription.java,v 1.13 2003/11/10 12:13:37 jhraigniac Exp $
+// $Id: WizDescription.java,v 1.14 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,11 +33,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Goal;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.i18n.Translator;
 
 
 
@@ -148,7 +148,7 @@ public class WizDescription extends WizStep {
 
 
     private static String localize(String label) {
-	return Argo.localize("Cognitive", label);
+	return Translator.localize("Cognitive", label);
     }
 
 } /* end class WizDescription */

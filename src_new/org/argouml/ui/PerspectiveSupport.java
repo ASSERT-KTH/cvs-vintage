@@ -1,4 +1,4 @@
-// $Id: PerspectiveSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: PerspectiveSupport.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,14 @@ package org.argouml.ui;
 import javax.swing.tree.TreeModel;
 import java.util.Vector;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 
 /**
  * Helper class for tree models that provides help building perspectives
  * out of gorules.
  *
- * <p>$Id: PerspectiveSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+ * <p>$Id: PerspectiveSupport.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003
@@ -57,7 +57,7 @@ public class PerspectiveSupport {
     /** Creates a new instance of PerspectiveSupport */
     public PerspectiveSupport(String name) {
         
-        setName(Argo.localize("Tree", name));
+        setName(Translator.localize("Tree", name));
         _goRules = new Vector();
     }
     

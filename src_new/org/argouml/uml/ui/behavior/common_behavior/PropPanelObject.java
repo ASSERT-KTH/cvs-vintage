@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.28 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.29 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.28 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.29 2003/11/25 10:58:13 jhraigniac Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -37,7 +37,7 @@ import java.util.Vector;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
@@ -62,15 +62,15 @@ public class PropPanelObject extends PropPanelModelElement {
 
 	Class mclass = (Class) ModelFacade.OBJECT;
 
-	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
 
 	UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this, "isAcceptibleClassifier", "classifier", "getClassifier", "setClassifier", true, (Class)ModelFacade.CLASSIFIER, true);
 	UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
-	addField("Classifier:", new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"), clsComboBox));
+	addField("Classifier:", new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-class"), clsComboBox));
 
-	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 
-	addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+	addLinkField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
         addSeperator();
 
@@ -84,7 +84,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	JScrollPane receivedScroll = new JScrollPane(receivedList);
 	addField("Stimuli received:", receivedScroll);
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
+	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
 	new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete object"), "removeElement", null);
     }
 

@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.17 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: TabSpawnable.java,v 1.18 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.TabToDoTarget;
+import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientable;
 import org.argouml.swingext.Orientation;
 import org.argouml.uml.diagram.ui.TabDiagram;
@@ -127,7 +127,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
 
 	JDialog  f = new JDialog(ProjectBrowser.getInstance());    
 	f.getContentPane().setLayout(new BorderLayout());
-	f.setTitle(Argo.localize(BUNDLE, _title));
+	f.setTitle(Translator.localize(BUNDLE, _title));
 	TabSpawnable newPanel = (TabSpawnable) clone();
 	if (newPanel == null)
 	    return null; //failed to clone
@@ -148,7 +148,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
 	    it.setTarget(me.getTarget());
 	}
     
-	newPanel.setTitle(Argo.localize(BUNDLE, _title));
+	newPanel.setTitle(Translator.localize(BUNDLE, _title));
     
 	f.getContentPane().add(newPanel, BorderLayout.CENTER);
 	Rectangle bounds = getBounds();

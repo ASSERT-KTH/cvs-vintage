@@ -1,4 +1,4 @@
-// $Id: Decision.java,v 1.5 2003/06/29 23:53:42 linus Exp $
+// $Id: Decision.java,v 1.6 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.cognitive;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /** This is where the class makes the decision
  * to to fire critic.
@@ -45,7 +45,7 @@ public class Decision {
     ////////////////////////////////////////////////////////////////
     // constructor
     public Decision(String n, int p) {
-	setName(Argo.localize("Cognitive", n));
+	setName(Translator.localize("Cognitive", n));
 	setPriority(p);
     }
 

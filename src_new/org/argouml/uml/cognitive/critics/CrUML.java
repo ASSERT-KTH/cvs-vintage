@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.22 2003/10/27 21:10:49 alexb Exp $
+// $Id: CrUML.java,v 1.23 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,15 +25,15 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.22 2003/10/27 21:10:49 alexb Exp $
+// $Id: CrUML.java,v 1.23 2003/11/25 10:58:16 jhraigniac Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ocl.OCLEvaluator;
@@ -129,9 +129,9 @@ public class CrUML extends Critic {
     }
 
     public void setResource(String key) {
-        String head = Argo.localize("Cognitive", key + "_head");
+        String head = Translator.localize("Cognitive", key + "_head");
         super.setHeadline(head);
-        String desc = Argo.localize("Cognitive", key + "_desc");
+        String desc = Translator.localize("Cognitive", key + "_desc");
         super.setDescription(desc);
     }
 

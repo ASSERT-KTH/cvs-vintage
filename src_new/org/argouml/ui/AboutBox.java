@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.28 2003/11/24 18:02:30 mvw Exp $
+// $Id: AboutBox.java,v 1.29 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.AboutTabPanel;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableAboutTab;
+import org.argouml.i18n.Translator;
 import org.argouml.util.Tools;
 
 /** This is what you see after you click the About
@@ -211,7 +212,7 @@ public class AboutBox extends JDialog {
 	    Object o = iterator.next();
 	    AboutTabPanel atp = ((PluggableAboutTab) o).getAboutTabPanel();
 	
-	    _tabs.addTab(Argo.localize(atp.getTabResourceBundleKey(),
+	    _tabs.addTab(Translator.localize(atp.getTabResourceBundleKey(),
 				       atp.getTabKey()),
 			 atp.getTabPanel());
 	}

@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLCollaborationDiagram.java,v 1.3 2003/06/30 21:59:33 linus Exp $
+// $Id: PropPanelUMLCollaborationDiagram.java,v 1.4 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class PropPanelUMLCollaborationDiagram extends PropPanelDiagram {
      * Constructor for PropPanelUMLCollaborationDiagram.
      */
     public PropPanelUMLCollaborationDiagram() {
-        super(Argo.localize("UMLMenu", "label.collaboration-diagram"));
+        super(Translator.localize("UMLMenu", "label.collaboration-diagram"));
     }
 
 }

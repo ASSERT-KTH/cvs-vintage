@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.19 2003/08/28 20:03:36 jjones Exp $
+// $Id: ActionSaveProjectAs.java,v 1.20 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.net.URL;
 
 import javax.swing.JFileChooser;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
@@ -95,7 +95,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         }
 
         String sChooserTitle =
-            Argo.localize("Actions", "filechooser.save-as-project");
+        Translator.localize("Actions", "filechooser.save-as-project");
         chooser.setDialogTitle(sChooserTitle + p.getName());
         chooser.setFileFilter(FileFilters.CompressedFileFilter);
 

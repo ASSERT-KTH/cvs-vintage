@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.34 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelClassifierRole.java,v 1.35 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,14 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.34 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelClassifierRole.java,v 1.35 2003/11/25 10:58:13 jhraigniac Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
@@ -58,16 +58,16 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	Class mclass = (Class)ModelFacade.CLASSIFIER_ROLE;
 
-	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Argo.localize("UMLMenu", "label.stereotype"),
+	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.stereotype"),
 		 new UMLComboBoxNavigator(this,
-					  Argo.localize("UMLMenu",
+					  Translator.localize("UMLMenu",
 							"tooltip.nav-stereo"),
 					  getStereotypeBox()));
-	addField(Argo.localize("UMLMenu", "label.namespace"),
+	addField(Translator.localize("UMLMenu", "label.namespace"),
 		 getNamespaceScroll());
 
-	addField(Argo.localize("UMLMenu", "label.multiplicity"),
+	addField(Translator.localize("UMLMenu", "label.multiplicity"),
 		 new UMLMultiplicityComboBox(this,
 					     mclass));
 
@@ -77,15 +77,15 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 				     null,
 				     ActionRemoveClassifierRoleBase.SINGLETON,
 				     false);
-	addField(Argo.localize("UMLMenu", "label.base"),
+	addField(Translator.localize("UMLMenu", "label.base"),
 		 new JScrollPane(baseList));
 
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.generalizations"),
+	addField(Translator.localize("UMLMenu", "label.generalizations"),
 		 getGeneralizationScroll());
-	addField(Argo.localize("UMLMenu", "label.specializations"),
+	addField(Translator.localize("UMLMenu", "label.specializations"),
 		 getSpecializationScroll());
 
 	JList connectList =
@@ -93,23 +93,23 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 								      null,
 								      true),
 			true);
-	addField(Argo.localize("UMLMenu", "label.associationrole-ends"),
+	addField(Translator.localize("UMLMenu", "label.associationrole-ends"),
 		 getAssociationEndScroll());
 
 	addSeperator();
 
 	JList availableContentsList =
 	    new UMLLinkedList(new UMLClassifierRoleAvailableContentsListModel());
-	addField(Argo.localize("UMLMenu", "label.available-contents"),
+	addField(Translator.localize("UMLMenu", "label.available-contents"),
 		 new JScrollPane(availableContentsList));
 
 	JList availableFeaturesList =
 	    new UMLLinkedList(new UMLClassifierRoleAvailableFeaturesListModel());
-	addField(Argo.localize("UMLMenu", "label.available-features"),
+	addField(Translator.localize("UMLMenu", "label.available-features"),
 		 new JScrollPane(availableFeaturesList));
 
 	new PropPanelButton(this, buttonPanel, _navUpIcon,
-			    Argo.localize("UMLMenu",
+			    Translator.localize("UMLMenu",
 					  "button.go-up"),
 			    "navigateUp",
 			    null);

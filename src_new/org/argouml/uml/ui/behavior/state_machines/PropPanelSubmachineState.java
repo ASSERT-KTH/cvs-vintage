@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.7 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelSubmachineState.java,v 1.8 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ package org.argouml.uml.ui.behavior.state_machines;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -47,20 +47,20 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
     public PropPanelSubmachineState() {
         // TODO: get the submachine state it's own icon
         super("Submachine State", _compositeStateIcon, ConfigLoader.getTabPropsOrientation());
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Argo.localize("UMLMenu", "label.container"), containerScroll);
+        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.container"), containerScroll);
         JComboBox submachineBox = new UMLComboBox2(new UMLSubmachineStateComboBoxModel(), ActionSetSubmachineStateSubmachine.SINGLETON);
-        addField(Argo.localize("UMLMenu", "label.submachine"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-submachine"), submachineBox));
+        addField(Translator.localize("UMLMenu", "label.submachine"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-submachine"), submachineBox));
 
         addSeperator();
 
-        addField(Argo.localize("UMLMenu", "label.incoming"), incomingScroll);
-        addField(Argo.localize("UMLMenu", "label.outgoing"), outgoingScroll);
+        addField(Translator.localize("UMLMenu", "label.incoming"), incomingScroll);
+        addField(Translator.localize("UMLMenu", "label.outgoing"), outgoingScroll);
 
         addSeperator();
 
-        addField(Argo.localize("UMLMenu", "label.subvertex"), new JScrollPane(new UMLMutableLinkedList(new UMLCompositeStateSubvertexListModel(), null, ActionNewStubState.SINGLETON)));
+        addField(Translator.localize("UMLMenu", "label.subvertex"), new JScrollPane(new UMLMutableLinkedList(new UMLCompositeStateSubvertexListModel(), null, ActionNewStubState.SINGLETON)));
     }
 
 }

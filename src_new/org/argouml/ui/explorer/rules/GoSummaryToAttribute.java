@@ -1,4 +1,4 @@
-// $Id: GoSummaryToAttribute.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: GoSummaryToAttribute.java,v 1.3 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,13 @@ package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  *
  * @author  alexb, $Author: jhraigniac $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
@@ -40,7 +40,7 @@ import org.argouml.model.ModelFacade;
 public class GoSummaryToAttribute implements PerspectiveRule {
 
     public String getRuleName() {
-	return Argo.localize ("Tree", "misc.class.attribute");
+	return Translator.localize ("Tree", "misc.class.attribute");
     }
 
 

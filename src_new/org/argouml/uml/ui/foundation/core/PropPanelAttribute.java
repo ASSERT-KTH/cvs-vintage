@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.36 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelAttribute.java,v 1.37 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,13 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.36 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelAttribute.java,v 1.37 2003/11/25 10:58:15 jhraigniac Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
@@ -47,29 +47,29 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
     public PropPanelAttribute() {
 	super("Attribute", ConfigLoader.getTabPropsOrientation());
 
-	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
 	addField(
-		 Argo.localize("UMLMenu", "label.stereotype"),
+	        Translator.localize("UMLMenu", "label.stereotype"),
 		 new UMLComboBoxNavigator(
 					  this,
-					  Argo.localize("UMLMenu", "tooltip.nav-stereo"),
+		         Translator.localize("UMLMenu", "tooltip.nav-stereo"),
 					  getStereotypeBox()));
-	addField(Argo.localize("UMLMenu", "label.owner"), getOwnerScroll());
+	addField(Translator.localize("UMLMenu", "label.owner"), getOwnerScroll());
 	addField(
-		 Argo.localize("UMLMenu", "label.multiplicity"),
+	        Translator.localize("UMLMenu", "label.multiplicity"),
 		 getMultiplicityComboBox());
 
 	addSeperator();
 
 	addField(
-		 Argo.localize("UMLMenu", "label.type"),
+	        Translator.localize("UMLMenu", "label.type"),
 		 new UMLComboBoxNavigator(
 					  this,
-					  Argo.localize("UMLMenu", "tooltip.nav-class"),
+		         Translator.localize("UMLMenu", "tooltip.nav-class"),
 					  getTypeComboBox()));
 
-	addField(Argo.localize("UMLMenu", "label.initial-value"), new JScrollPane(new UMLLinkedList(new UMLAttributeInitialValueListModel())));
-        add(new UMLModelElementVisibilityRadioButtonPanel(Argo.localize("UMLMenu", "label.visibility"), true));
+	addField(Translator.localize("UMLMenu", "label.initial-value"), new JScrollPane(new UMLLinkedList(new UMLAttributeInitialValueListModel())));
+        add(new UMLModelElementVisibilityRadioButtonPanel(Translator.localize("UMLMenu", "label.visibility"), true));
         add(getChangeabilityRadioButtonPanel());
         add(getOwnerScopeCheckbox());
 
@@ -77,21 +77,21 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 			    this,
 			    buttonPanel,
 			    _navUpIcon,
-			    Argo.localize("UMLMenu", "button.go-up"),
+				Translator.localize("UMLMenu", "button.go-up"),
 			    "navigateUp",
 			    null);
 	new PropPanelButton(
 			    this,
 			    buttonPanel,
 			    _addAttrIcon,
-			    Argo.localize("UMLMenu", "button.add-attribute"),
+				Translator.localize("UMLMenu", "button.add-attribute"),
 			    "newAttribute",
 			    null);
 	new PropPanelButton(
 			    this,
 			    buttonPanel,
 			    _deleteIcon,
-			    Argo.localize("UMLMenu", "button.delete-attribute"),
+				Translator.localize("UMLMenu", "button.delete-attribute"),
 			    "removeElement",
 			    null);
     }

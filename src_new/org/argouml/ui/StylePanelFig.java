@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.17 2003/09/15 20:22:45 jjones Exp $
+// $Id: StylePanelFig.java,v 1.18 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -61,22 +61,22 @@ public class StylePanelFig extends StylePanel
     // constants
     private static final String BUNDLE = "Cognitive";
     
-    private static final String CUSTOM_ITEM = Argo.localize(
+    private static final String CUSTOM_ITEM = Translator.localize(
         BUNDLE, "stylepane.label.custom") + "...";
 
     ////////////////////////////////////////////////////////////////
     // instance vars
     protected JLabel _bboxLabel =
-	new JLabel(Argo.localize(BUNDLE, "stylepane.label.bounds") + ": ");
+	new JLabel(Translator.localize(BUNDLE, "stylepane.label.bounds") + ": ");
     protected JTextField _bboxField = new JTextField();
     protected JLabel _fillLabel =
-	new JLabel(Argo.localize(BUNDLE, "stylepane.label.fill") + ": ");
+	new JLabel(Translator.localize(BUNDLE, "stylepane.label.fill") + ": ");
     protected JComboBox _fillField = new JComboBox();
     protected JLabel _lineLabel =
-	new JLabel(Argo.localize(BUNDLE, "stylepane.label.line") + ": ");
+	new JLabel(Translator.localize(BUNDLE, "stylepane.label.line") + ": ");
     protected JComboBox _lineField = new JComboBox();
     protected JLabel _shadowLabel =
-	new JLabel(Argo.localize(BUNDLE, "stylepane.label.shadow") + ": ");
+	new JLabel(Translator.localize(BUNDLE, "stylepane.label.shadow") + ": ");
     protected JComboBox _shadowField = new ShadowComboBox();
     //protected JLabel _dashedLabel = new JLabel("Dashed: ");
     //protected JComboBox _dashedField = new JComboBox(Fig.DASHED_CHOICES);
@@ -164,7 +164,7 @@ public class StylePanelFig extends StylePanel
     }
 
     protected void initChoices() {
-	_fillField.addItem(Argo.localize(BUNDLE, "stylepane.label.no-fill"));
+	_fillField.addItem(Translator.localize(BUNDLE, "stylepane.label.no-fill"));
 	_fillField.addItem(Color.black);
 	_fillField.addItem(Color.white);
 	_fillField.addItem(Color.gray);
@@ -187,7 +187,7 @@ public class StylePanelFig extends StylePanel
 	_fillField.addItem(Color.pink);
 	_fillField.addItem(CUSTOM_ITEM);
 
-	_lineField.addItem(Argo.localize(BUNDLE, "stylepane.label.no-line"));
+	_lineField.addItem(Translator.localize(BUNDLE, "stylepane.label.no-line"));
 	_lineField.addItem(Color.black);
 	_lineField.addItem(Color.white);
 	_lineField.addItem(Color.gray);

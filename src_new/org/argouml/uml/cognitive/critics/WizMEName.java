@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizMEName.java,v 1.9 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,15 +27,15 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizMEName.java,v 1.9 2003/11/25 10:58:16 jhraigniac Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.WizStepTextField;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
@@ -48,7 +48,7 @@ public class WizMEName extends Wizard {
 					   
     protected String _instructions =
 	"Please change the name of the offending model element.";
-    protected String _label = Argo.localize("UMLMenu", "label.name");
+    protected String _label = Translator.localize("UMLMenu", "label.name");
     protected String _suggestion = "suggestion";
     protected String _origSuggest = "suggestion";
     protected boolean _mustEdit = false;

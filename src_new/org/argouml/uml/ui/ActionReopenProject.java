@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.1 2003/11/11 23:55:00 linus Exp $
+// $Id: ActionReopenProject.java,v 1.2 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.ui;
 
 import org.argouml.ui.*;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.*;
-import org.argouml.application.api.Argo;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.JMenuItem;
@@ -76,7 +76,7 @@ public class ActionReopenProject extends UMLAction {
         if (p != null && p.needsSave()) {
             String t =
                 MessageFormat.format(
-				     Argo.localize(
+                        Translator.localize(
 						   "Actions",
 						   "optionpane.open-project-save-changes-to"),
 				     new Object[] {

@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.5 2003/06/30 18:00:23 linus Exp $
+// $Id: ArgoDialog.java,v 1.6 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import java.awt.Frame;
 
 import javax.swing.JButton;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * A dialog with localized buttons.
@@ -73,8 +73,8 @@ public class ArgoDialog extends org.argouml.swingext.Dialog {
     
     protected void nameButton(JButton button, String key) {
         if (button != null) {
-            button.setText(Argo.localize(BUNDLE, key));
-            String mnemonic = Argo.localize(BUNDLE, key + MNEMONIC_KEY_SUFFIX);
+            button.setText(Translator.localize(BUNDLE, key));
+            String mnemonic = Translator.localize(BUNDLE, key + MNEMONIC_KEY_SUFFIX);
             if (mnemonic != null && mnemonic.length() > 0) {
                 button.setMnemonic(mnemonic.charAt(0));
             }

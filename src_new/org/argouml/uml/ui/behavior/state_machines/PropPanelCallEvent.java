@@ -1,5 +1,5 @@
 
-// $Id: PropPanelCallEvent.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: PropPanelCallEvent.java,v 1.16 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ package org.argouml.uml.ui.behavior.state_machines;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 
 import org.argouml.uml.ui.UMLLinkedList;
@@ -55,7 +55,7 @@ public class PropPanelCallEvent extends PropPanelEvent {
        
         // TODO: make the next list into a scrollbox
         JList operationList = new UMLLinkedList(new UMLCallEventOperationListModel());
-        addField(Argo.localize("UMLMenu", "label.operations"), new JScrollPane(operationList));
+        addField(Translator.localize("UMLMenu", "label.operations"), new JScrollPane(operationList));
     }
 
 } /* end class PropPanelCallEvent */

@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLClassDiagram.java,v 1.2 2003/06/29 23:52:20 linus Exp $
+// $Id: PropPanelUMLClassDiagram.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelUMLClassDiagram.java,v 1.2 2003/06/29 23:52:20 linus Exp $
+// $Id: PropPanelUMLClassDiagram.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class PropPanelUMLClassDiagram extends PropPanelDiagram {
      * @param diagramName
      */
     public PropPanelUMLClassDiagram() {
-        super(Argo.localize("UMLMenu", "label.class-diagram"));
+        super(Translator.localize("UMLMenu", "label.class-diagram"));
     }
 
 }

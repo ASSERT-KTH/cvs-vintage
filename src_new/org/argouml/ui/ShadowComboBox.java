@@ -1,4 +1,4 @@
-// $Id: ShadowComboBox.java,v 1.3 2003/11/04 16:15:22 jjones Exp $
+// $Id: ShadowComboBox.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 
 /**
@@ -50,7 +50,7 @@ public class ShadowComboBox extends JComboBox {
     public ShadowComboBox() {
         super();
         
-        addItem(Argo.localize(BUNDLE, "stylepane.label.no-shadow"));
+        addItem(Translator.localize(BUNDLE, "stylepane.label.no-shadow"));
         addItem("1");
         addItem("2");
         addItem("3");

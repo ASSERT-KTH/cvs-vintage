@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.4 2003/11/05 07:04:26 linus Exp $
+// $Id: ExplorerPopup.java,v 1.5 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
@@ -172,7 +172,7 @@ public class ExplorerPopup extends JPopupMenu{
      * @return The localized string.
      */
     private final String menuLocalize(String key) {
-        return Argo.localize("Tree", key);
+        return Translator.localize("Tree", key);
     }
     
 }

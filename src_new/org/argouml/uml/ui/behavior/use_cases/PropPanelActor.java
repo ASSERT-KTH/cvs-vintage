@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.32 2003/06/29 23:50:15 linus Exp $
+// $Id: PropPanelActor.java,v 1.33 2003/11/25 10:58:17 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.32 2003/06/29 23:50:15 linus Exp $
+// $Id: PropPanelActor.java,v 1.33 2003/11/25 10:58:17 jhraigniac Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -38,7 +38,7 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 
 import org.argouml.ui.targetmanager.TargetManager;
@@ -73,30 +73,30 @@ public class PropPanelActor extends PropPanelClassifier {
     	super("Actor", ConfigLoader.getTabPropsOrientation());
 
 
-    	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-    	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+    	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+    	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 
-        addField(Argo.localize("UMLMenu", "label.modifiers"),
+        addField(Translator.localize("UMLMenu", "label.modifiers"),
                  _modifiersPanel);
 
-    	addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+    	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
     	addSeperator();
 
-    	addField(Argo.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
-    	addField(Argo.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
+    	addField(Translator.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
+    	addField(Translator.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
 
     	addSeperator();
 
-    	addField(Argo.localize("UMLMenu", "label.association-ends"),
+    	addField(Translator.localize("UMLMenu", "label.association-ends"),
             getAssociationEndScroll());
         // The toolbar buttons that go at the top.
 
         new PropPanelButton(this, buttonPanel, _navUpIcon,
-                            Argo.localize("UMLMenu", "button.go-up"), "navigateUp",
+                Translator.localize("UMLMenu", "button.go-up"), "navigateUp",
                             null);
         new PropPanelButton(this, buttonPanel, _actorIcon,
-                            Argo.localize("UMLMenu", "button.add-actor"), "newActor",
+                Translator.localize("UMLMenu", "button.add-actor"), "newActor",
                             null);
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement",

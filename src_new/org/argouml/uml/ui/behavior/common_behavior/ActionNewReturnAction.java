@@ -1,4 +1,4 @@
-// $Id: ActionNewReturnAction.java,v 1.2 2003/06/29 23:50:11 linus Exp $
+// $Id: ActionNewReturnAction.java,v 1.3 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 import javax.swing.Action;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
 
 /**
@@ -43,7 +43,7 @@ public class ActionNewReturnAction extends ActionNewAction {
      */
     protected ActionNewReturnAction() {
         super();
-        putValue(Action.NAME, Argo.localize("UMLMenu", "button.new-returnaction"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-returnaction"));
     }
     
     

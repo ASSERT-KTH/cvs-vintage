@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.19 2003/11/10 20:36:25 alexb Exp $
+// $Id: ActionNew.java,v 1.20 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,8 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Designer;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.FindDialog;
@@ -62,7 +62,7 @@ public class ActionNew extends UMLAction {
 
 	if (p != null && p.needsSave()) {
 	    String t =
-		MessageFormat.format(Argo.localize("Actions",
+		MessageFormat.format(Translator.localize("Actions",
 						   "optionpane.new-project-save-changes-to"),
 				     new Object[] {p.getName()} );
 	    int response =

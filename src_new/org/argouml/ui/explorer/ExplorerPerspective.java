@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.3 2003/10/04 07:32:05 alexb Exp $
+// $Id: ExplorerPerspective.java,v 1.4 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.argouml.ui.explorer.rules.PerspectiveRule;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 /**
  * Represents a perspective (or view) of the uml model for display in the
  * explorer.
@@ -50,7 +50,7 @@ public class ExplorerPerspective {
     /** Creates a new instance of ExplorerPerspective */
     public ExplorerPerspective(String newName) {
         
-        name = Argo.localize("Tree", newName);
+        name = Translator.localize("Tree", newName);
         rules = new ArrayList();
     }
     

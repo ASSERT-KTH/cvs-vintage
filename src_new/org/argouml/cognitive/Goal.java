@@ -1,4 +1,4 @@
-// $Id: Goal.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
+// $Id: Goal.java,v 1.7 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.cognitive;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 public class Goal {
     
@@ -42,7 +42,7 @@ public class Goal {
     ////////////////////////////////////////////////////////////////
     // constructor
     public Goal(String n, int p) {
-	setName(Argo.localize("Cognitive", n));
+	setName(Translator.localize("Cognitive", n));
 	setPriority(p);
     }
 				   

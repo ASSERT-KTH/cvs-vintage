@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociation.java,v 1.30 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelAssociation.java,v 1.31 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.PropPanelButton;
@@ -58,22 +58,22 @@ public class PropPanelAssociation extends PropPanelRelationship {
 	this("Association", ConfigLoader.getTabPropsOrientation());
 
 
-	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-	addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.association-ends"), _assocEndScroll);
+	addField(Translator.localize("UMLMenu", "label.association-ends"), _assocEndScroll);
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.association-roles"), _associationRoleScroll);
-	addField(Argo.localize("UMLMenu", "label.association-links"), _linksScroll);
+	addField(Translator.localize("UMLMenu", "label.association-roles"), _associationRoleScroll);
+	addField(Translator.localize("UMLMenu", "label.association-links"), _linksScroll);
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
 	// new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.add-association-end"),"addAssociationEnd",null);
-	new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-association"), "removeElement", null);
+	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-association"), "removeElement", null);
 
 
     }

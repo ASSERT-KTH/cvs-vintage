@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.17 2003/10/14 19:49:15 jjones Exp $
+// $Id: AddToDoItemDialog.java,v 1.18 2003/11/25 10:58:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ArgoDialog;
@@ -140,7 +140,7 @@ public class AddToDoItemDialog extends ArgoDialog {
      * @return the localized value.
      */
     private static String localize(String label) {
-	return Argo.localize(BUNDLE, label);
+	return Translator.localize(BUNDLE, label);
     }
 
 } /* end class AddToDoItemDialog */

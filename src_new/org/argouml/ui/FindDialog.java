@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.17 2003/08/20 18:37:29 jjones Exp $
+// $Id: FindDialog.java,v 1.18 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.PredicateFind;
@@ -124,7 +124,7 @@ public class FindDialog extends ArgoDialog
         _tabs.setEnabledAt(2, false);
 
         initConstraintsTab();
-        _tabs.addTab(Argo.localize("UMLMenu", "tab.constraints"),
+        _tabs.addTab(Translator.localize("UMLMenu", "tab.constraints"),
 		     _constraintsTab);
         _tabs.setEnabledAt(3, false);
 

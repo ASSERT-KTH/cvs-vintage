@@ -1,4 +1,4 @@
-// $Id: AbstractWellformednessRule.java,v 1.5 2003/11/10 12:35:46 jhraigniac Exp $
+// $Id: AbstractWellformednessRule.java,v 1.6 2003/11/25 10:58:17 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.model.uml;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 
 /**
  * Rule definition for wellformedness of some modelelement. In the UML
@@ -55,7 +55,7 @@ public abstract class AbstractWellformednessRule {
      * Returns the localized user message
      */
     public String getUserMessage() {
-	return Argo.localize("UMLMenu", "wellformednessrule." + _key);
+	return Translator.localize("UMLMenu", "wellformednessrule." + _key);
     }
 	
     /**

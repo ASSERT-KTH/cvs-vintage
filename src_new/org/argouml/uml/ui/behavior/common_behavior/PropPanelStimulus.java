@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.37 2003/10/26 16:40:02 alexb Exp $
+// $Id: PropPanelStimulus.java,v 1.38 2003/11/25 10:58:14 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.37 2003/10/26 16:40:02 alexb Exp $
+// $Id: PropPanelStimulus.java,v 1.38 2003/11/25 10:58:14 jhraigniac Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -34,8 +34,8 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
-import org.argouml.application.api.Argo;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -67,9 +67,9 @@ public class PropPanelStimulus extends PropPanelModelElement {
 
         Class mclass = (Class)ModelFacade.STIMULUS;
 
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
+        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
         addField("Action:", new UMLStimulusActionTextField(this, new UMLStimulusActionTextProperty("name")));
-        addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 
         UMLList senderList = new UMLList(new UMLReflectionListModel(this, "sender", true, "getSender", null, null, null), true);
         senderList.setForeground(Color.blue);
@@ -83,11 +83,11 @@ public class PropPanelStimulus extends PropPanelModelElement {
         receiverList.setVisibleRowCount(1);
         receiverList.setFont(smallFont);
         JScrollPane receiverScroll = new JScrollPane(receiverList);
-        addField(Argo.localize("UMLMenu", "label.receiver"), receiverScroll);
+        addField(Translator.localize("UMLMenu", "label.receiver"), receiverScroll);
 
-        addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addLinkField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete object"), "removeElement", null);
     }
 

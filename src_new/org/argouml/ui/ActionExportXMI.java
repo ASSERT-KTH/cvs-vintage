@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.5 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: ActionExportXMI.java,v 1.6 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionExportXMI.java,v 1.5 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: ActionExportXMI.java,v 1.6 2003/11/25 10:58:12 jhraigniac Exp $
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
@@ -38,7 +38,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableMenu;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
@@ -220,7 +219,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
                         member.save(new FileWriter(selectedFile));
                     } catch (Exception ex) {
                         String sMessage =
-                            MessageFormat.format(Argo.localize(
+                            MessageFormat.format(Translator.localize(
 				  "Actions",
 				  "optionpane.save-project-general-exception"),
 						 new Object[] {
@@ -231,7 +230,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 			    .showMessageDialog(ProjectBrowser
 					       .getInstance(),
 					       sMessage,
-					       Argo.localize(
+						   Translator.localize(
 						       "Actions",
 						       "optionpane.save-project-general-exception-title"),
 					       JOptionPane.ERROR_MESSAGE);

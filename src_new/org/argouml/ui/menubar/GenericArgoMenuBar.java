@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.43 2003/11/18 14:45:08 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.44 2003/11/25 10:58:17 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.application.events.ArgoModuleEventListener;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.ActionSaveConfiguration;
 import org.argouml.ui.ActionSettings;
@@ -112,11 +113,9 @@ public class GenericArgoMenuBar extends JMenuBar
 
     /** Name and prepareKey-Strings of/for the PropertyResourceBundle 
      * menu.properties.
-     * BUNDLE   = Name of the PropertyResourceBundle
      * MENU     = Prefix for menu-keys
      * MENUITEM = Prefix for menuitem-keys
      */
-    private static final String BUNDLE = "menu";
     private static final String MENU = "menu.";
     private static final String MENUITEM = "menu.item.";
 
@@ -198,7 +197,7 @@ public class GenericArgoMenuBar extends JMenuBar
 	    propertykey = MENUITEM + prepareKey(key) + ".mnemonic";
 	}
 		
-	String localMnemonic = Argo.localize(BUNDLE, propertykey);
+	String localMnemonic = Translator.localize(propertykey);
         char mnemonic = defMnemonic;
         if (localMnemonic != null && localMnemonic.length() == 1) {
             mnemonic = localMnemonic.charAt(0);
@@ -225,7 +224,7 @@ public class GenericArgoMenuBar extends JMenuBar
 	    propertykey = MENUITEM + prepareKey(key) + ".mnemonic";
 	}
 		
-	String localMnemonic = Argo.localize(BUNDLE, propertykey);
+	String localMnemonic = Translator.localize(propertykey);
 	char mnemonic = ' ';
 	if (localMnemonic != null && localMnemonic.length() == 1) {
 	    mnemonic = localMnemonic.charAt(0);
@@ -234,7 +233,7 @@ public class GenericArgoMenuBar extends JMenuBar
     }
 
     protected static final String menuLocalize(String key) {
-	return Argo.localize(BUNDLE, MENU + prepareKey(key));
+	return Translator.localize(MENU + prepareKey(key));
     }
 
     static final void setAccelerator(JMenuItem item, KeyStroke keystroke) {

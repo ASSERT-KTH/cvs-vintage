@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.9 2003/11/25 10:58:13 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.9 2003/11/25 10:58:13 jhraigniac Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
@@ -70,7 +70,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#getDialogTitle()
      */
     protected String getDialogTitle() {
-        return Argo.localize("UMLMenu", "dialog.title.add-bases");
+        return Translator.localize("UMLMenu", "dialog.title.add-bases");
     }
 
     /**

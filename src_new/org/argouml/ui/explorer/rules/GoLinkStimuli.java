@@ -1,4 +1,4 @@
-// $Id: GoLinkStimuli.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
+// $Id: GoLinkStimuli.java,v 1.3 2003/11/25 10:58:12 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,12 +21,12 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkStimuli.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
+// $Id: GoLinkStimuli.java,v 1.3 2003/11/25 10:58:12 jhraigniac Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 public class GoLinkStimuli implements PerspectiveRule {
@@ -40,7 +40,7 @@ public class GoLinkStimuli implements PerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Argo.localize ("Tree", "misc.link.stimuli");
+        return Translator.localize ("Tree", "misc.link.stimuli");
     }
 
 }
