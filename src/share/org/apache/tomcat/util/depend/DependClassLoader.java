@@ -239,8 +239,8 @@ public class DependClassLoader extends ClassLoader {
 	    if( idx>=0 )
 		fileN=fileN.substring( 0, idx) ;
 	    // Bojan Smojver <bojan@binarix.com>: remove jar:
-	    if( fileN.startsWith( "jar:" ))
-		fileN=fileN.substring( 4 );
+	    if( fileN.startsWith( "file:" ))
+		fileN=fileN.substring( 5 );
 	    f=new File(fileN);
 	    if( debug > 0 ) log( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;

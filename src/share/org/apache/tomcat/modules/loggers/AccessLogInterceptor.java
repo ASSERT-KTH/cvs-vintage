@@ -196,7 +196,7 @@ public class AccessLogInterceptor extends BaseInterceptor {
 			    c = logformat.charAt(i);
 			    switch (c) {
 			    case 'h':
-				if( reqest.remoteHost().toString() != null )
+				if( request.remoteHost().toString() != null )
 				    fw.write(request.remoteHost().toString());
 				else
 				    fw.write( "DEFAULT" );
