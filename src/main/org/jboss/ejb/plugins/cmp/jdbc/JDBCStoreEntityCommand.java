@@ -20,6 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
 import org.jboss.logging.Logger;
 
 /**
@@ -33,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -62,15 +63,18 @@ public class JDBCStoreEntityCommand {
          return;
       }
 
-      List setFields = new ArrayList(dirtyFields);
+      List setFields = new ArrayList(
+         dirtyFields.size() + (entity.getVersionField() == null ? 0 : 1));
+      setFields.addAll(dirtyFields);
       if(entity.getVersionField() != null)
          setFields.add(entity.getVersionField());
 
-      // get the list of where clause field list
+      // the fields used in the WHERE clause
       List whereFields = new ArrayList(entity.getPrimaryKeyFields());
       Collection lockedFields = Collections.EMPTY_LIST;
-      if(manager.getOptimisticLock(ctx) != null) {
-         lockedFields = manager.getOptimisticLock(ctx).getLockedFields();
+      JDBCOptimisticLock lock = manager.getOptimisticLock(ctx);
+      if(lock != null) {
+         lockedFields = lock.getLockedFields();
          whereFields.addAll(lockedFields);
       }
 
@@ -115,8 +119,7 @@ public class JDBCStoreEntityCommand {
          // WHERE: set optimistically locked field values
          for(Iterator iter = lockedFields.iterator(); iter.hasNext();) {
             JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
-            Object lockedValue =
-               manager.getOptimisticLock(ctx).getLockedFieldValue(field);
+            Object lockedValue = lock.getLockedFieldValue(field);
             index = field.setArgumentParameters(ps, index, lockedValue);
          }
 

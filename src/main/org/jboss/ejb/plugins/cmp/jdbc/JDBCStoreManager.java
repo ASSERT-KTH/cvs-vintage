@@ -33,6 +33,7 @@ import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -65,7 +66,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -180,7 +181,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
    }
 
    /**
-    * This method is called whenever field's state is changed
+    * This method is called whenever field's state is changed.
+    * It delegates the event to the optimistic lock associated with
+    * this container.
     * see get/setInstanceValue
     */
    public void fieldStateEventCallback(EntityEnterpriseContext ctx,
@@ -190,26 +193,23 @@ public class JDBCStoreManager implements EntityPersistenceStore
    {
       if(ctx.getId() == null)
          return;
-      Object lock = container.getLockManager().getLock(ctx.getId());
+      BeanLock lock = container.getLockManager().getLock(ctx.getId());
       if(lock instanceof JDBCOptimisticLock)
-      {
          ((JDBCOptimisticLock)lock).fieldStateEventCallback(msg, field, value);
-      }
    }
 
    /**
     * Returns optimistic lock associated with the context or null
-    * if context is not associated with id
+    * if the context is not associated with id
     */
    public JDBCOptimisticLock getOptimisticLock(EntityEnterpriseContext ctx)
    {
       if(ctx.getId() == null)
          return null;
+
       Object lock = container.getLockManager().getLock(ctx.getId());
       if(lock instanceof JDBCOptimisticLock)
-      {
          return (JDBCOptimisticLock)lock;
-      }
       return null;
    }
 
@@ -374,6 +374,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
          for(Iterator iter = managers.iterator(); iter.hasNext(); ) {
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.resolveRelationships();
+
+            // optimistic lock initialization
+            if(manager.getEntityBridge().getMetaData().getOptimisticLocking() != null) {
+               // register manager and locking metadata with optimictic lock
+               JDBCOptimisticLock.register(
+                  manager, manager.getEntityBridge().getMetaData().getOptimisticLocking()
+               );
+            }
          }
 
          //
@@ -382,30 +390,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
          for(Iterator iter = managers.iterator(); iter.hasNext(); ) {
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.startStoreManager();
-         }
-      }
-
-      // optimistic lock
-      if(entityBridge.getMetaData().getOptimisticLocking() != null) {
-         JDBCOptimisticLock.setJDBCStoreManager(this);
-         JDBCOptimisticLockingMetaData lockingMetaData =
-            entityBridge.getMetaData().getOptimisticLocking();
-         JDBCOptimisticLock.setLockMetaData(getContainer(), lockingMetaData);
-
-         // look up key generator factory
-         if(lockingMetaData.getKeyGeneratorFactory() != null) {
-            try {
-               InitialContext ic = new InitialContext();
-               KeyGeneratorFactory factory = (KeyGeneratorFactory)ic.lookup(
-                  lockingMetaData.getKeyGeneratorFactory()
-               );
-               JDBCOptimisticLock.setKeyGenerator(container, factory.getKeyGenerator());
-            } catch(NamingException ne) {
-               throw new DeploymentException(
-                  "Error: failed to look up key generator factory: "
-                     + lockingMetaData.getKeyGeneratorFactory()
-               );
-            }
          }
       }
    }
