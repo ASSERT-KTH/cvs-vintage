@@ -832,14 +832,8 @@ try{
         if (attachment != null)
         {
              String data = attachment.getData();
-             // If this is a comment entered, reason == comment
-             // If comment is long, it will be truncated
-             if (attachment.getTypeId().equals(AttachmentTypePeer.COMMENT_PK))
-             {
-                 reason = activity.getNewValue();
-             }
-             // Otherwise, reason is the attachment entered for this transaction
-             else if (data != null && data.length() > 0)
+             // Reason is the attachment entered for this transaction
+             if (data != null && data.length() > 0)
              {
                 reason = data;
              }
