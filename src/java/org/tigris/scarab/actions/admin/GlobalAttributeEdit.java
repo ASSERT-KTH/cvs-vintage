@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.54 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.55 2003/06/08 18:43:47 dlr Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -453,7 +453,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         }
     }
     
-    /*
+    /**
      * Manages clicking of the cancel button.
      * FIXME! document that the doCancel method alters the database
      * Why does it do this?!!
@@ -503,13 +503,15 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
             else if (lastTemplate.equals("admin,GlobalArtifactTypeEdit.vm"))
             {
+                IssueType issueType = scarabR.getIssueType();
                 if (log().isDebugEnabled()) 
                 {
-                    log().debug("Assuming user attribute and adding to issuetype id =" + 
-                                scarabR.getCurrentIssueType().getIssueTypeId());
+                    log().debug("Assuming user attribute and adding to "
+                                + "issuetype id "
+                                + issueType.getIssueTypeId());
                 }
                 // Add user attribute to issue type
-                scarabR.getIssueType().addRIssueTypeAttribute(attribute);
+                issueType.addRIssueTypeAttribute(attribute);
                 scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
             }
             ScarabCache.clear();
