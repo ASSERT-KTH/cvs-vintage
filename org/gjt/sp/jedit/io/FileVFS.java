@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.24 2002/08/13 18:59:48 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.25 2002/11/21 22:07:35 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -228,7 +228,7 @@ public class FileVFS extends VFS
 			return null;
 		}
 
-		Vector list2 = new Vector();
+		VFS.DirectoryEntry[] list2 = new VFS.DirectoryEntry[list.length];
 		for(int i = 0; i < list.length; i++)
 		{
 			File file = list[i];
@@ -239,14 +239,12 @@ public class FileVFS extends VFS
 			else
 				type = VFS.DirectoryEntry.FILE;
 
-			list2.add(new VFS.DirectoryEntry(file.getName(),
+			list2[i] = new VFS.DirectoryEntry(file.getName(),
 				file.getPath(),file.getPath(),type,
-				file.length(),file.isHidden()));
+				file.length(),file.isHidden());
 		}
 
-		VFS.DirectoryEntry[] retVal = new VFS.DirectoryEntry[list2.size()];
-		list2.copyInto(retVal);
-		return retVal;
+		return list2;
 	} //}}}
 
 	//{{{ _getDirectoryEntry() method
