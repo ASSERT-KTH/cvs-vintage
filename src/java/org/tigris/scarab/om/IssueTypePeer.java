@@ -22,11 +22,15 @@ public class IssueTypePeer
      *  Gets a List of all of the Issue types in the database,
      *  That are not template types.
      */
-    public static List getAllIssueTypes()
+    public static List getAllIssueTypes(boolean includeDeleted)
         throws Exception
     {
         Criteria c = new Criteria();
         c.add(IssueTypePeer.PARENT_ID, 0);
+        if (!includeDeleted)
+        {
+            c.add(IssueTypePeer.DELETED, 0);
+        }
         return doSelect(c);
     }
 }
