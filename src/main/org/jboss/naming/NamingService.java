@@ -19,7 +19,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -53,6 +53,11 @@ public class NamingService
    public void initService()
       throws Exception
    {
+      // Read jndi.properties into system properties
+      // RO: this is necessary because some components (=Tomcat servlets) use a 
+      // buggy classloader that disallows finding the resource properly
+      System.getProperties().load(Thread.currentThread().getContextClassLoader().getResourceAsStream("jndi.properties"));
+   
       naming.start();
       log.log("Naming started on port "+naming.getPort());
       
