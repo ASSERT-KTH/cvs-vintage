@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.7 2005/02/20 20:10:14 bobtarling Exp $
+// $Id: NSUMLModelImplementation.java,v 1.8 2005/02/24 23:08:28 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.model.uml;
 
+import java.beans.PropertyChangeSupport;
 import java.io.Writer;
 
 import org.argouml.model.ActivityGraphsFactory;
@@ -40,6 +41,7 @@ import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesFactory;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.DirectionKind;
+import org.argouml.model.EventAdapter;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.Facade;
@@ -62,7 +64,6 @@ import org.argouml.model.UseCasesHelper;
 import org.argouml.model.VisibilityKind;
 import org.argouml.model.XmiReader;
 import org.argouml.model.XmiWriter;
-import org.xml.sax.SAXException;
 
 /**
  * The handle to find all helper and factories.
@@ -106,6 +107,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
     private UseCasesHelper theUseCasesHelper = new UseCasesHelperImpl(this);
     private ModelEventPump theModelEventPump = new NSUMLModelEventPump(this);
     private MetaTypesImpl theMetaTypesObject = new MetaTypesImpl();
+    private EventAdapter theEventAdapter = new ExplorerNSUMLEventAdaptor();
 
     private KindsImpl theKindsObject = new KindsImpl();
 
@@ -213,7 +215,14 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public ExtensionMechanismsHelper getExtensionMechanismsHelper() {
         return theExtensionMechanismsHelper;
     }
-
+    
+    /**
+     * @see org.argouml.model.ModelImplementation#getExtensionMechanismsHelper()
+     */
+    public EventAdapter getEventAdapter() {
+        return theEventAdapter;
+    }
+    
     /**
      * @see org.argouml.model.ModelImplementation#getModelManagementFactory()
      */

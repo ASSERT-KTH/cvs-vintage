@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.9 2005/01/29 17:24:42 linus Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.10 2005/02/24 23:08:29 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.Configuration;
+import org.argouml.model.Model;
 import org.argouml.model.uml.ExplorerNSUMLEventAdaptor;
 
 /**
@@ -76,7 +77,7 @@ public final class ExplorerEventAdaptor
         Configuration.addListener(Notation.KEY_USE_GUILLEMOTS, this);
         Configuration.addListener(Notation.KEY_SHOW_STEREOTYPES, this);
         ProjectManager.getManager().addPropertyChangeListener(this);
-        ExplorerNSUMLEventAdaptor.getInstance().addPropertyChangeListener(this);
+        Model.getEventAdapter().addPropertyChangeListener(this);
     }
 
     /**

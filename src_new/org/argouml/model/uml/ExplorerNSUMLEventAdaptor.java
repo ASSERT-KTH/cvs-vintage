@@ -1,4 +1,4 @@
-// $Id: ExplorerNSUMLEventAdaptor.java,v 1.8 2005/01/26 22:11:50 linus Exp $
+// $Id: ExplorerNSUMLEventAdaptor.java,v 1.9 2005/02/24 23:08:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.model.uml;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 
+import org.argouml.model.EventAdapter;
+
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -38,24 +40,12 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
  */
 public final class ExplorerNSUMLEventAdaptor
     extends PropertyChangeSupport
-    implements MElementListener {
-
-    private static ExplorerNSUMLEventAdaptor instance;
-
-    /**
-     * @return the ExplorerNSUMLEventAdaptor
-     */
-    public static ExplorerNSUMLEventAdaptor getInstance() {
-        if (instance == null) {
-            instance = new ExplorerNSUMLEventAdaptor();
-	}
-	return instance;
-    }
+    implements MElementListener, EventAdapter {
 
     /**
      * Creates a new instance of ExplorerUMLEventAdaptor.
      */
-    private ExplorerNSUMLEventAdaptor() {
+    public ExplorerNSUMLEventAdaptor() {
         // PropertyChangeSupport needs a source object
         super(UmlModelEventPump.getPump());
     }
