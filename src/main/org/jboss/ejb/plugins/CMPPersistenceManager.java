@@ -10,7 +10,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.util.Collection;
+import java.util.Collection;                                
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
@@ -21,8 +23,8 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.EntityInstanceCache;
 import org.jboss.ejb.EntityPersistenceStore;
-import org.jboss.util.FastKey;
 
 /**
 *	The CMP Persistence Manager implements the semantics of the CMP
@@ -33,7 +35,7 @@ import org.jboss.util.FastKey;
 *      
 *	@see <related>
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.4 $
+*	@version $Revision: 1.5 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -114,17 +116,17 @@ implements EntityPersistenceManager {
             // Set the key on the target context
             ctx.setId(id);
             
-            // Create a new FastKey
-            FastKey fastKey =  new FastKey(id);
-            
-            // Pass it implicitely!
-            ctx.setFastKey(fastKey);
-            
-            // Lock instance in cache
-            con.getInstanceCache().insert(ctx);
-            
+            // Create a new CacheKey
+	   	    Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
+        
+			// Give it to the context
+			ctx.setCacheKey(cacheKey);
+			
+			// Lock instance in cache
+			((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+			
             // Create EJBObject
-            ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(fastKey));
+            ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
             
             postCreateMethod.invoke(ctx.getInstance(), args);
         
@@ -143,13 +145,29 @@ implements EntityPersistenceManager {
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, FinderException {
       
-        return store.findEntity(finderMethod, args, ctx);
+	  	// The store will find the entity and return the primaryKey
+		Object id = store.findEntity(finderMethod, args, ctx);
+		
+		// We return the cache key
+	    return ((EntityInstanceCache) con.getInstanceCache()).createCacheKey(id);
     }
     
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, FinderException {
-        
-        return store.findEntities(finderMethod, args, ctx);
+
+		// The store will find the id and return a collection of PrimaryKeys
+		Collection ids = store.findEntities(finderMethod, args, ctx);
+		
+		// Build a collection of cacheKeys
+		ArrayList list = new ArrayList(ids.size());
+      	Iterator idEnum = ids.iterator();
+     	while(idEnum.hasNext()) {
+			
+			// Get a cache key for it
+			list.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(idEnum.next()));
+         }
+      	
+		return list;		 
     }
     
     /*
