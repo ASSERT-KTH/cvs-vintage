@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -133,6 +133,7 @@ public abstract class EnterpriseInstanceCache
 		}
 		schedulePassivation(ctx);
 	}
+   
 	/* From InstanceCache interface */
 	public void remove(Object id)
 	{
@@ -147,6 +148,13 @@ public abstract class EnterpriseInstanceCache
 		}
 		removeLock(id);
 	}
+   
+   public boolean isActive(Object id)
+   {
+      // Check whether an object with the given id is available in the cache
+      return getCache().peek(id) != null;
+   }
+   
 	/**
 	 * Creates (if necessary) and returns an object used as mutex to sync passivation
 	 * activity with other activities. <br>

@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -430,6 +430,14 @@ implements EntityPersistenceManager
    private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx) 
    throws Exception
    {
+      // Check if findByPrimaryKey
+      // If so we check if the entity is in cache first
+      if (finderMethod.getName().equals("findByPrimaryKey"))
+      {
+         if (!con.getInstanceCache().isActive(args[0]))
+            return args[0]; // Object is active -> it exists -> no need to call finder
+      }
+   
       // get the finder method
       Method callMethod = (Method)finderMethods.get(finderMethod);
 
