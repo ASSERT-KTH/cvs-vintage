@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
+import org.columba.core.gui.config.themes.*;
 import org.columba.core.gui.config.themes.ThemePanel;
 
 import org.columba.mail.util.MailResourceLoader;

@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.mail.gui.config.general.GeneralOptionsDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -62,4 +62,5 @@ public class GlobalOptionsAction extends FrameAction {
 			ThemeSwitcher.updateFrame(frameController.getView());
 		}
 	}
+
 }

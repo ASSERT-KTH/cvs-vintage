@@ -37,12 +37,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
+import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
+import org.columba.core.xml.XmlElement;
 
-public class ThemePanel extends JPanel implements ActionListener
-{
+public class ThemePanel extends JPanel implements ActionListener {
 
 	private JButton themeButton;
 
@@ -65,20 +66,18 @@ public class ThemePanel extends JPanel implements ActionListener
 
 	//private ThemeItem item;
 
-	public ThemePanel()
-	{
+	public ThemePanel() {
 
 		init();
 	}
 
-	protected void init()
-	{
+	protected void init() {
 
 		//JPanel centerPanel = new JPanel();
 		setLayout(new BorderLayout());
-		setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
+		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		JPanel themePanel = new JPanel();
-		themePanel.setBorder( BorderFactory.createEmptyBorder(0,0,10,0) );
+		themePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		themePanel.setLayout(new BoxLayout(themePanel, BoxLayout.X_AXIS));
 		//LOCALIZE
 		JLabel themeLabel = new JLabel("Choose Theme:");
@@ -114,7 +113,7 @@ public class ThemePanel extends JPanel implements ActionListener
 		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.insets = new Insets(0,0,0,0);
+		c.insets = new Insets(0, 0, 0, 0);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
@@ -145,7 +144,7 @@ public class ThemePanel extends JPanel implements ActionListener
 		pulsatorLabel.setEnabled(false);
 		c.gridx = 0;
 		c.gridy = 1;
-		c.insets = new Insets(0,0,0,0);
+		c.insets = new Insets(0, 0, 0, 0);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
@@ -174,19 +173,32 @@ public class ThemePanel extends JPanel implements ActionListener
 		iconPanel.add(installpulsatorButton);
 		add(iconPanel, BorderLayout.CENTER);
 		//LOCALIZE
-		JLabel restartLabel = new JLabel("You have to restart for the changes to take effect.",SwingConstants.CENTER);
-		add( restartLabel, BorderLayout.SOUTH );
+		JLabel restartLabel =
+			new JLabel(
+				"You have to restart for the changes to take effect.",
+				SwingConstants.CENTER);
+		add(restartLabel, BorderLayout.SOUTH);
 
 	}
 
-	public void updateComponents(boolean b)
-	{
+	public void updateComponents(boolean b) {
+
+		XmlElement themeElement =
+			Config.get("options").getElement("options/gui/theme");
+		theme = Integer.parseInt(themeElement.getAttribute("id"));
+
+		if (b == true) {
+			selectorComboBox.setSelectedIndex(theme);
+		} else {
+			themeElement.addAttribute("id", new Integer(getTheme()).toString());
+		}
+		
 		// FIXME
 		/*
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
-
+		
 		theme = item.getTheme();
-
+		
 		if (b == true)
 		{
 			//java.util.Vector v = new java.util.Vector();
@@ -195,7 +207,7 @@ public class ThemePanel extends JPanel implements ActionListener
 			//v.add("Default");
 			File iconsetDirectory =
 				new File(ConfigPath.getConfigDirectory(), "iconsets");
-
+		
 			if (iconsetDirectory.exists())
 			{
 				File[] fileList = iconsetDirectory.listFiles();
@@ -211,14 +223,14 @@ public class ThemePanel extends JPanel implements ActionListener
 					}
 				}
 			}
-
+		
 			//v = new java.util.Vector();
 			//v.add("Default");
 			pulsatorComboBox.removeAllItems();
 			pulsatorComboBox.addItem("Default");
 			File pulsatorDirectory =
 				new File(ConfigPath.getConfigDirectory(), "pulsators");
-
+		
 			if (pulsatorDirectory.exists())
 			{
 				File[] pulsatorList = pulsatorDirectory.listFiles();
@@ -234,42 +246,38 @@ public class ThemePanel extends JPanel implements ActionListener
 					}
 				}
 			}
-
+		
 			iconsetComboBox.setSelectedItem(item.getIconset());
-
+		
 			pulsatorComboBox.setSelectedItem(item.getPulsator());
-
+		
 			selectorComboBox.setSelectedIndex(theme);
 		}
 		else
 		{
 			item.setPulsator((String) pulsatorComboBox.getSelectedItem());
 			item.setIconset((String) iconsetComboBox.getSelectedItem());
-
+		
 			item.setTheme(getTheme());
-
+		
 		}
 		*/
 	}
 
-	public int getStatus()
-	{
+	public int getStatus() {
 		return status;
 	}
 
-	public int getTheme()
-	{
+	public int getTheme() {
 		return selectorComboBox.getSelectedIndex();
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String command;
 
 		command = e.getActionCommand();
 
-		if (command.equals("THEME"))
-		{
+		if (command.equals("THEME")) {
 			int index = selectorComboBox.getSelectedIndex();
 			themeButton.setEnabled(false);
 			/*
@@ -280,28 +288,22 @@ public class ThemePanel extends JPanel implements ActionListener
 			else
 				themeButton.setEnabled(false);
 			*/
-		}
-		else if (command.equals("ICONSET"))
-		{
+		} else if (command.equals("ICONSET")) {
 			JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(this);
 
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-			{
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 
 				File iconsetDirectory =
 					new File(ConfigPath.getConfigDirectory(), "iconsets");
 
-                DiskIO.ensureDirectory( iconsetDirectory );
+				DiskIO.ensureDirectory(iconsetDirectory);
 				File destFile = new File(iconsetDirectory, file.getName());
 
-				try
-				{
-					DiskIO.copyFile( file, destFile );
-				}
-				catch (Exception ex)
-				{
+				try {
+					DiskIO.copyFile(file, destFile);
+				} catch (Exception ex) {
 					ex.printStackTrace();
 
 					NotifyDialog dialog = new NotifyDialog();
@@ -310,28 +312,22 @@ public class ThemePanel extends JPanel implements ActionListener
 
 				updateComponents(true);
 			}
-		}
-		else if (command.equals("PULSATOR"))
-		{
+		} else if (command.equals("PULSATOR")) {
 			JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(this);
 
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-			{
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 
 				File iconsetDirectory =
 					new File(ConfigPath.getConfigDirectory(), "pulsators");
 
-                DiskIO.ensureDirectory( iconsetDirectory );
+				DiskIO.ensureDirectory(iconsetDirectory);
 				File destFile = new File(iconsetDirectory, file.getName());
 
-				try
-				{
-					DiskIO.copyFile( file, destFile );
-				}
-				catch (Exception ex)
-				{
+				try {
+					DiskIO.copyFile(file, destFile);
+				} catch (Exception ex) {
 					ex.printStackTrace();
 
 					NotifyDialog dialog = new NotifyDialog();

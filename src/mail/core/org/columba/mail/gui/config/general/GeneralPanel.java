@@ -98,6 +98,7 @@ public class GeneralPanel extends JPanel implements ActionListener {
 				MailConfig.get("options").getElement("/options/markasread");
 
 			markasread.addAttribute("delay", markTextField.getText());
+			
 
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(

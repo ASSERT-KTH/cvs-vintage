@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package org.columba.core.gui.util;
+package org.columba.core.gui.themes;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
