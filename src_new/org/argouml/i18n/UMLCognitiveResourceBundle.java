@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.11 2003/02/01 09:46:25 mkl Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.12 2003/02/12 09:22:35 mkl Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -191,10 +191,11 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
         // Updated following bug fix
 
         { "CrCrossNamespaceAssoc_head" ,
-          "Classifier not in Namespace of its Association" },
+          "Classifier <ocl>self</ocl> not in Namespace of its Association" },
 
         { "CrCrossNamespaceAssoc_desc" ,
-          "Each Class, Interface or other Classifier involved in an " +
+          "Each Class, Interface or other Classifier (<ocl>self</ocl>) " + 
+          "involved in an " +
           "Association should be in the Namespace of the Association.\n" +
           "\n" +
           "If this is not the case, then there will be no way for the " +
