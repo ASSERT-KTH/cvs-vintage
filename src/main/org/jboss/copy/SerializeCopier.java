@@ -34,8 +34,12 @@ public final class SerializeCopier implements Copier
          return copy;
       }
       
+      ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
       try
       {
+         // set the class loader to the class loader of the source object
+         Thread.currentThread().setContextClassLoader(source.getClass().getClassLoader());
+
          // write the object out
          ByteArrayOutputStream bOut = new ByteArrayOutputStream();
          MarshalledValueOutputStream mvOut = 
@@ -60,6 +64,11 @@ public final class SerializeCopier implements Copier
                "Exception occured while serializing object: " + source, 
                e);
       }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(originalClassLoader);
+      }
+
    }
 }
 
