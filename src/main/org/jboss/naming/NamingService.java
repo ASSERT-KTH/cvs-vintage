@@ -19,7 +19,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -44,9 +44,29 @@ public class NamingService
       naming.setPort(port);
    }
    
-   public int  getPort()
+   public int getPort()
    {
       return naming.getPort();
+   }
+   
+   public void setRmiPort(int port)
+   {
+      naming.setRmiPort(port);
+   }
+   
+   public int getRmiPort()
+   {
+      return naming.getRmiPort();
+   }
+   
+   public void setLogging(boolean l)
+   {
+      naming.setLogging(l);
+   }
+   
+   public boolean getLogging()
+   {
+      return naming.getLogging();
    }
    
    public ObjectName getObjectName(MBeanServer server, ObjectName name)

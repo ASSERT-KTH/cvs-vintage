@@ -30,7 +30,9 @@
   <mbean code="org.jboss.security.EJBSecurityManagerService" name="DefaultDomain:service=EJBSecurityManager" />
 
   <!-- JDBC -->
-  <mbean code="org.jboss.jdbc.JdbcProvider" name="DefaultDomain:service=JdbcProvider" />
+  <mbean code="org.jboss.jdbc.JdbcProvider" name="DefaultDomain:service=JdbcProvider">
+     <attribute name="Drivers">org.hsql.jdbcDriver,org.enhydra.instantdb.jdbc.idbDriver</attribute>
+  </mbean>
 
   <mbean code="org.jboss.jdbc.HypersonicDatabase" name="DefaultDomain:service=Hypersonic">
     <attribute name="Port">1476</attribute>

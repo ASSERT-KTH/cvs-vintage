@@ -11,16 +11,14 @@ package org.jboss.naming;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public interface NamingServiceMBean
-   extends org.jboss.util.ServiceMBean
+   extends org.jboss.util.ServiceMBean, org.jnp.server.MainMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=Naming";
     
    // Public --------------------------------------------------------
-   public void setPort(int port);
-   public int  getPort();
 }
 

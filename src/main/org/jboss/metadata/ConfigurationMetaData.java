@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -138,7 +138,14 @@ public class ConfigurationMetaData extends MetaData {
 		
 		// configuration for instance cache
 		containerCacheConf = getOptionalChild(element, "container-cache-conf", containerCacheConf);
-		
+      
+      // DEPRECATED: Remove this in JBoss 4.0
+      if (containerInvoker.equals("org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker") ||
+          containerInvoker.equals("org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker"))
+      {
+         System.out.println("Deprecated container invoker. Change to org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker");
+         containerInvoker = "org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker";
+      }
 	}		
     
 	// Package protected ---------------------------------------------
