@@ -21,7 +21,7 @@
   </form>
   #end
 #else
-   <p><strong class="alert">You have not selected any issues to view.</strong></p>
+   <p class="alert">You have not selected any issues to view.</p>
 #end
 
 </div>

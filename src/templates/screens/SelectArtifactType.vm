@@ -43,8 +43,8 @@
       screens</a> to create new ones.<p>
     #end
   #else
-    <p><strong class="alert">There are no active issue types for this
-    module. Please contact an administrator to create some.</strong></p>
+    <p class="alert">There are no active issue types for this
+    module. Please contact an administrator to create some.</p>
   #end
 #end
 </div>

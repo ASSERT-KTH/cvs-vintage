@@ -4,7 +4,7 @@
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if (!$user.FirstName)
 
-<p><strong class="alert">
+<p class="alert">
 There has been an error locating the required information. Please go
 back to the $link.setPage("Register.vm").setLabel("Registration") page
 and try again.</strong>

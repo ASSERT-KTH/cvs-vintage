@@ -132,15 +132,13 @@
 #macro (attrValueErrorMsg $attrValue $fieldName)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #if (!$attrInput.get($fieldName).isValid())
-<p><strong class="alert">$attrInput.get($fieldName).Message</strong></p>
+<p class="alert">$attrInput.get($fieldName).Message</p>
 #end
 #end
 
 #macro (alert $text)
 	<p class="alert">
-	<strong>
 	<img src="$staticLink.setPath("/images/icon_alertsml.gif")" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
-	</strong>
 	<small>$text</small>
 	</p>
 #end
@@ -191,7 +189,7 @@
 
 #macro (stdIntakeMsg)
 #if (!$intake.isAllValid())
-<p><strong class="alert">Please check your form fields for errors and resubmit.</strong></p>
+<p class="alert">Please check your form fields for errors and resubmit.</p>
 #end
 #end
 

@@ -9,9 +9,9 @@
 
 #if ($currentIssueModuleId != $scarabR.CurrentModule.ModuleId)
 
-<p><strong class="alert">
+<p class="alert">
 You are viewing an issue in a different Module than is currently selected.
-</strong></p>
+</p>
 
 #end
 
@@ -88,13 +88,13 @@ You are viewing an issue in a different Module than is currently selected.
 <h3>Issue search results</h3>
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
-    <p><strong class="alert">
+    <p class="alert">
     The issue id, $currentIssueId, is not valid. Please enter a new issue id.
-    </strong></p>
+    </p>
   #else
-    <p><strong class="alert">
+    <p class="alert">
     You need to enter an issue id.
-    </strong></p>
+    </p>
   #end
 
 #end

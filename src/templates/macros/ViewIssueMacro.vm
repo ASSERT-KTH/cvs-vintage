@@ -510,14 +510,14 @@ $l10n.NoDependencies
 <td> 
  <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
  #if (!$newDependGroup.ObserverUniqueId.Message.equals(""))
-  <p><strong class="alert">$newDependGroup.ObserverUniqueId.Message</strong></p>
+  <p class="alert">$newDependGroup.ObserverUniqueId.Message</p>
  #end
     <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
 </td>
 <td>$l10n.Child</td>
 <td> 
  #if (!$newDependGroup.TypeId.Message.equals(""))
-  <p><strong class="alert">$newDependGroup.TypeId.Message</strong></p>
+  <p class="alert">$newDependGroup.TypeId.Message</p>
  #end
  <select name="$newDependGroup.TypeId.Key" class="select">
    <option value="">Choose dependency type</option>

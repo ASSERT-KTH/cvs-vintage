@@ -9,13 +9,9 @@
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
 #if ($userAttrs.isEmpty())
- <p><strong class="alert">
-  There are no active user attributes to which to assign users.
- </strong></p>
+ <p class="alert">There are no active user attributes to which to assign users.</p>
 #elseif ($issueListSize == 0)
- <p><strong class="alert">
- Please select an issue or issues with which to associate users.
- </strong></p>
+ <p class="alert">Please select an issue or issues with which to associate users.</p>
 #else
 
 #printCollisionInfo()
@@ -78,7 +74,7 @@
     #end
 
     #if ($noUsers.equals("true"))
-     <p><strong class="alert">None assigned.</strong></p>
+     <p class="alert">None assigned.</p>
      <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a> $l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
     #else
 		

@@ -46,10 +46,10 @@
 <h3>$l10n.Templates</h3>
 
 #if ($allTemplates.size() < 1)
-    <p><strong class="alert">
-    There are no stored templates, click the Create new button to create
-    a new template.
-    </strong></p>
+<p class="alert">
+There are no stored templates, click the Create new button to create
+a new template.
+</p>
 #else
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">

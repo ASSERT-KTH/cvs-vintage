@@ -47,9 +47,9 @@ $intake.declareGroups()
 </form>
 
 #else
-  <p><strong class="alert">No query to save. Please <a
+  <p class="alert">No query to save. Please <a
   href="$link.setPage("AdvancedQuery.vm")">enter a
-  query.</a></strong></p>
+  query.</a></p>
 #end
 
 </div>
