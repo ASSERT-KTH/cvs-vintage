@@ -420,14 +420,18 @@ public class HttpRequest {
     /** Return a URI (guessed) from the requestLine/fullRequest
      */
     public String getURI() {
-	String toExtract=fullRequest;
+	String toExtract=getRequestLine();
 	if( fullRequest==null ) toExtract=requestLine;
 	if( toExtract==null ) return null;
 
-	if( ! toExtract.startsWith("GET")) return null;
-	StringTokenizer st=new StringTokenizer( toExtract," " );
-	st.nextToken(); // GET
-	return st.nextToken();
+	//	if( ! toExtract.startsWith("GET")) return null;
+	try {
+	    StringTokenizer st=new StringTokenizer( toExtract," " );
+	    st.nextToken(); // GET
+	    return st.nextToken();
+	} catch( Exception ex ) {
+	    return "";
+	}
     }
 
     // -------------------- Repository for requet definitions ----------

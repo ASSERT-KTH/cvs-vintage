@@ -203,9 +203,10 @@ public class Main {
 	    Object proxy=cls.newInstance();
 
             IntrospectionUtils.setAttribute( proxy,"args", args );
+	    IntrospectionUtils.setAttribute( proxy,"home", homeDir );
             IntrospectionUtils.setAttribute( proxy,"parentClassLoader",
 					     sharedCl );
-            IntrospectionUtils.execute(  proxy, "executeWithAttributes" );
+            IntrospectionUtils.execute(  proxy, "execute" );
 	    return;
 	} catch( Exception ex ) {
 	    System.out.println("Guessed home=" + homeDir);

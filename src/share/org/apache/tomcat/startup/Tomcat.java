@@ -28,6 +28,10 @@ public class Tomcat extends Log {
 
     private String action="start";
 
+    String home=null;
+    String args[];
+    ClassLoader parentClassLoader;
+    
     // null means user didn't set one
     String configFile=null;
     // relative to TOMCAT_HOME
@@ -37,10 +41,47 @@ public class Tomcat extends Log {
     public Tomcat() {
 	super("tc_log");
     }
+    //-------------------- Properties --------------------
+    
+    public void setHome(String home) {
+	this.home=home;
+    }
+    
+    public void setArgs(String args[]) {
+	this.args=args;
+    }
+    
+
+    public void setAction(String s ) {
+	action=s;
+    }
+
+    public void setParentClassLoader( ClassLoader cl ) {
+	parentClassLoader=cl;
+    }
+    // -------------------- main/execute --------------------
+    
+    public static void main(String args[] ) {
+	try {
+	    Tomcat tomcat=new Tomcat();
+	    tomcat.setArgs( args );
+            tomcat.execute();
+	} catch(Exception ex ) {
+	    System.out.println(sm.getString("tomcat.fatal"));
+	    System.err.println(Logger.throwableToString(ex));
+	    System.exit(1);
+	}
+    }
 
     public void execute() throws Exception {
+	//	String[] args=(String[])attributes.get("args");
+        if ( args == null || ! processArgs( args )) {
+	    setAction("help");
+	}
 	if( "stop".equals( action )){
 	    stop();
+	} else if( "enableAdmin".equals( action )){
+	    enableAdmin();
 	} else if( "help".equals( action )) {
 	    printUsage();
 	} else if( "start".equals( action )) {
@@ -48,13 +89,32 @@ public class Tomcat extends Log {
 	}
     }
 
+    // -------------------- Actions --------------------
+
+    public void enableAdmin() throws IOException
+    {
+	System.out.println("Overriding apps-admin settings ");
+	FileWriter fw=new FileWriter( home + File.separator +
+				      "conf" + File.separator +
+				      "apps-admin.xml" );
+	PrintWriter pw=new PrintWriter( fw );
+	pw.println( "<webapps>" );
+	pw.println( "  <Context path=\"/admin\"");
+	pw.println( "           docBase=\"webapps/admin\"");
+	pw.println( "           trusted=\"true\">");
+	pw.println( "    <SimpleRealm");
+        pw.println( "      filename=\"conf/users/admin-users.xml\" />");
+	pw.println( "  </Context>");
+	pw.println( "</webapps>" );
+	pw.close();
+    }
+	
     public void stop() throws Exception {
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    StopTomcat task=
 		new  StopTomcat();
 
-//	    task.setConfig( configFile );
 	    task.execute();     
 	}
 	catch (TomcatException te) {
@@ -75,33 +135,14 @@ public class Tomcat extends Log {
 	ServerXmlReader sxmlConf=new ServerXmlReader();
 	sxmlConf.setConfig( configFile );
 	tcat.addInterceptor( sxmlConf );
-        ClassLoader cl=(ClassLoader)attributes.get("parentClassLoader");
-        //System.out.println("parentClassLoader:"+cl);
-        //System.out.println("thisClassLoader:"+this.getClass().getClassLoader());
+        ClassLoader cl=parentClassLoader;
+
         if (cl==null) cl=this.getClass().getClassLoader();
-        //System.out.println("parentClassLoader:"+cl);
+
         tcat.getContextManager().setParentLoader(cl);
 	tcat.initContextManager();
 
 	tcat.start();
-    }
-
-    public void setAction(String s ) {
-	action=s;
-    }
-
-    public static void main(String args[] ) {
-	try {
-	    Tomcat tomcat=new Tomcat();
-            if( ! tomcat.processArgs( args )) {
-                tomcat.setAction("help");
-            }
-            tomcat.execute();
-	} catch(Exception ex ) {
-	    System.out.println(sm.getString("tomcat.fatal"));
-	    System.err.println(Logger.throwableToString(ex));
-	    System.exit(1);
-	}
     }
 
     // -------------------- Command-line args processing --------------------
@@ -128,6 +169,8 @@ public class Tomcat extends Log {
 		return false;
 	    } else if (arg.equals("-stop")) {
 		action="stop";
+	    } else if (arg.equals("-enableAdmin")) {
+		action="enableAdmin";
 	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
 		// config generation is now a module. //doGenerate=true;
 	    } else if (arg.equals("-f") || arg.equals("-config")) {
@@ -147,16 +190,17 @@ public class Tomcat extends Log {
 	return true;
     }
 
+    // Hack for Main.java, will be replaced with calling the setters directly
     public void setAttribute(String s,Object o) {
-        attributes.put(s,o);
-    }
-    public void executeWithAttributes() throws Exception {
-       String[] args=(String[])attributes.get("args");
-        if ( args != null ){
-            if( ! processArgs( args )) {
-                setAction("help");
-            }
-        } else setAction("help");
-        execute();
+	if( "home".equals( s ) )
+	    setHome( (String)o);
+	else if("args".equals( s ) ) 
+	    setArgs((String[])o);
+	else if( "parentClassLoader".equals( s ) ) {
+	    setParentClassLoader((ClassLoader)o);
+	} else {
+	    System.out.println("Tomcat: setAttribute " + s + "=" + o);
+	    attributes.put(s,o);
+	}
     }
 }
