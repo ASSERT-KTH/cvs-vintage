@@ -1,5 +1,3 @@
-$page.setTitle("Create artifact type")
-
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($group = $intake.IssueType.mapTo($issueType))

@@ -1,11 +1,9 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddPermission.vm,v 1.1 2001/12/04 23:39:59 dr Exp $
+@version $Id: AddPermission.vm,v 1.2 2002/01/22 16:59:43 dlr Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
-
-$page.setTitle("Permission Administration")
 
 <div id="addpermission" class="app">
 

@@ -1,4 +1,3 @@
-$page.setTitle("Artifact Type Select")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 <div class="app" id="artifactTypeSelect">

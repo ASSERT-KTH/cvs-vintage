@@ -1,10 +1,8 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.13 2002/01/20 13:58:21 maartenc Exp $
+@version $Id: AdminIndex.vm,v 1.14 2002/01/22 16:59:43 dlr Exp $
 *#
-
-$page.setTitle("Scarab Administration")
 
 <div id="adminIndex" class="app">
 

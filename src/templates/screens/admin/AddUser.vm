@@ -2,8 +2,6 @@
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 *#
 
-$page.setTitle("User Administration")
-
 #set ($state = $data.Parameters.getString("state"))
 #if (!$state)
   #set ($state = "showadduser")
