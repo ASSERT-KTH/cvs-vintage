@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.12 2003/04/05 21:34:49 kataka Exp $
+// $Id: SAXParserBase.java,v 1.13 2003/04/05 22:58:02 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,17 +24,21 @@
 
 package org.argouml.xml;
 
-import org.apache.log4j.Category;
-import org.argouml.application.api.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import java.util.Stack;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.io.*;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.apache.log4j.Category;
+import org.argouml.application.api.Argo;
+import org.xml.sax.AttributeList;
+import org.xml.sax.HandlerBase;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * @author Jim Holt
