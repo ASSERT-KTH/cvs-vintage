@@ -842,7 +842,7 @@ public class Issue
      */
     public List getAssociatedUsers() throws Exception
     {
-        List result = null;
+        List result = new ArrayList();
         Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
         if ( obj == null ) 
         {        
