@@ -128,7 +128,6 @@
         <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
-        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
         <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
@@ -393,7 +392,6 @@
     <target name="create-db-schema" depends="db-type-check,sql,prepare" 
             if="auto.create.db">
 
-        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
               todir="${build.src.scarab}"
               filtering="true" overwrite="true"/>
