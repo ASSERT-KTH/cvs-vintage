@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.137 2003/04/30 00:03:04 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.138 2003/04/30 00:05:19 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -130,7 +130,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                log().debug("Error getting MODULE_DOMAIN:", e);
+                log().error("Error getting MODULE_DOMAIN:", e);
             }
         }
         return domain;
@@ -637,7 +637,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-            
+                log().error("Error setting MODULE_DOMAIN:", e);
             }
         }
         if (port != null)
@@ -649,7 +649,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                log().debug("Error setting MODULE_PORT:", e);
+                log().error("Error setting MODULE_PORT:", e);
             }
         }
         if (scheme != null)
@@ -661,7 +661,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                log().debug("Error setting MODULE_SCHEME:", e);
+                log().error("Error setting MODULE_SCHEME:", e);
             }
         }
         if (scriptName != null)
@@ -673,7 +673,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                log().debug("Error setting MODULE_SCRIPT_NAME:", e);
+                log().error("Error setting MODULE_SCRIPT_NAME:", e);
             }
         }
     }
