@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.119 2004/10/23 02:28:26 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.120 2004/10/26 15:21:18 loubyansky Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -347,6 +347,13 @@
    <mbean code="org.jboss.monitor.EntityLockMonitor"
           name="jboss.monitor:name=EntityLockMonitor"/>
    -->
+
+   <!-- ==================================================================== -->
+   <!-- An MBean that is a registry for JDBC type-mapping metadata           -->
+   <!-- ==================================================================== -->
+
+   <mbean code="org.jboss.ejb.plugins.cmp.jdbc.metadata.MetaDataLibrary"
+      name="jboss.jdbc:service=metadata"/>
 
    <!-- ==================================================================== -->
    <!-- Deployment Scanning                                                  -->
