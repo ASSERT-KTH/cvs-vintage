@@ -105,7 +105,7 @@ public class ConnectionManager
       ClassLoader cl = Thread.currentThread().getContextClassLoader(); 
       Class wmClass = cl.loadClass("org.jboss.resource.work.BaseWorkManager");
       workManager = (WorkManager)wmClass.newInstance();
-      Method m = wmClass.getMethod("setMaxSize", new Class[] {Integer.TYPE});
+      Method m = wmClass.getMethod("setMaxThreads", new Class[] {Integer.TYPE});
       m.invoke(workManager, new Object[] {new Integer(50)});
       }
       catch (Exception e)
