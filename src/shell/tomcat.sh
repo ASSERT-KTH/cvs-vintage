@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.31 2001/10/21 17:33:41 larryi Exp $
+# $Id: tomcat.sh,v 1.32 2002/01/31 03:58:13 larryi Exp $
 
 # Shell script to start and stop the server
 
@@ -142,10 +142,6 @@ elif [ "$1" = "stop_msg" ]; then
 
 elif [ "$1" = "start" ] ; then 
   shift 
-
-  if [ -f ${TOMCAT_HOME}/conf/ajp12.id ] ;  then  
-        rm -f  ${TOMCAT_HOME}/conf/ajp12.id
-  fi
 
   MAX_WAIT=360
   WAIT=0
