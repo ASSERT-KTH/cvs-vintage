@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: WebserviceClientDeployer.java,v 1.1 2003/11/23 18:11:47 tdiesler Exp $
+// $Id: WebserviceClientDeployer.java,v 1.2 2003/11/23 18:24:57 tdiesler Exp $
 
 package org.jboss.deployment;
 
@@ -26,7 +26,7 @@ import javax.management.ReflectionException;
  *
  * @since 10-Nov-2003
  * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class WebserviceClientDeployer
 {
@@ -41,17 +41,26 @@ public class WebserviceClientDeployer
    {
       log.debug("create: " + di.url);
 
+      Object webservicesClient = null;
       try
       {
          MBeanServer server = MBeanServerLocator.locateJBoss();
          ObjectName objectName = new ObjectName(JSR109_CLIENT_SERVICE_NAME);
-         Object webservicesClient = server.invoke(objectName, "create", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
-         return webservicesClient;
+         if (server.isRegistered(objectName))
+         {
+            webservicesClient = server.invoke(objectName, "create", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+         else
+         {
+            log.warn ("This is a webservice client deployment, but '" + JSR109_CLIENT_SERVICE_NAME + "' is not registered: " + di.url);
+         }
       }
       catch (Exception e)
       {
          throw new DeploymentException("Cannot create webservice client", e);
       }
+
+      return webservicesClient;
    }
 
    /**
