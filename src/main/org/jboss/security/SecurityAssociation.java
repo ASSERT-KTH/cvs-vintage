@@ -36,7 +36,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.19 $
+@version $Revision: 1.20 $
  */
 public final class SecurityAssociation
 {
@@ -151,7 +151,31 @@ public final class SecurityAssociation
       else
          return principal;
    }
-   
+
+   /** Get the caller's principal information.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.getPrincipalInfo")
+    </code>
+    permission to ensure it's ok to access principal information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @return Principal, the current principal identity.
+    */
+   public static Principal getCallerPrincipal()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(getPrincipalInfoPermission);
+
+      if (peekRunAsIdentity(1) != null)
+         return peekRunAsIdentity(1);
+      if (server)
+         return (Principal) threadPrincipal.get();
+      else
+         return principal;
+   }
+
    /** Get the current principal credential information. This can be of
     any type including: a String password, a char[] password, an X509 cert,
     etc.
