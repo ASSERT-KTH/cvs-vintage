@@ -125,6 +125,10 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 </div>
 
 <h3>User attributes</h3>
+#set ($userAttrs = $module.getUserAttributes($issueType, false))
+#if ($userAttrs.isEmpty())
+  <p class="strong">There are no user attributes for this issue type</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">select</th>
@@ -134,8 +138,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <th>sequence #</th>
 </tr>
 
-#set ($userAttrs = $module.getUserAttributes($issueType, false))
-#if (!$userAttrs.isEmpty())
 #foreach ($userAttr in $userAttrs)
    #set ($rma = $module.getRModuleAttribute($userAttr, $issueType))
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
@@ -158,7 +160,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <td>#numericSelect( "$rmaGroup.Order.Key" 1 $maxNum $rmaGroup.Order.Value 1 )</td>
 </tr>
 #end
-#end
 
 </table>
 
@@ -170,6 +171,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />&#160;
 <small>attribute group</small>
 </div>
+#end
 
 <div class="functnbar2">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
