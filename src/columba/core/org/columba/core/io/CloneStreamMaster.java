@@ -16,6 +16,8 @@
 
 package org.columba.core.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,17 +35,19 @@ import java.util.List;
 public class CloneStreamMaster {
 
 	private InputStream master;
-	private int[] streampos;
-	private int masterpos;
+
 	private int nextId;
 	private List streamList;
 	private File tempFile;
-	private FileOutputStream tempOut;
+	private byte[] buffer;
+	
 	private static int uid = 0;
 	private byte[] copyBuffer;
 	private int openClones;
+	private boolean usesFile;
 	
-	
+	private int size;
+
 	/**
 	 * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
 	 * the construction!
@@ -53,32 +57,42 @@ public class CloneStreamMaster {
 	public CloneStreamMaster(InputStream master) throws IOException {
 		super();
 		this.master = master;
-		streampos = new int[2];
-		
-		streamList = new ArrayList(2);
-		
-		tempFile = File.createTempFile("columba-stream-clone" + (uid++), ".tmp");
-		// make sure file is deleted automatically when closing VM
-		tempFile.deleteOnExit();
-		tempOut = new FileOutputStream( tempFile );
-		
 		copyBuffer = new byte[8000];
 
+		streamList = new ArrayList(2);
+
+		if (master.available() > 51200) {
+
+			tempFile =
+				File.createTempFile("columba-stream-clone" + (uid++), ".tmp");
+			// make sure file is deleted automatically when closing VM
+			tempFile.deleteOnExit();
+			FileOutputStream tempOut = new FileOutputStream(tempFile);
+			
+			size = (int) StreamUtils.streamCopy(master, tempOut);
+			
+			tempOut.close();
+
+			usesFile = true;
+		} else {
+			ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+
+			size = (int) StreamUtils.streamCopy(master, tempOut);			
+			tempOut.close();
+
+			buffer = tempOut.toByteArray();
+			usesFile = false;
+		}
 	}
-	
+
 	/**
 	 * Gets a new clone of the master.
 	 * 
 	 * @return Clone of the master
 	 */
 	public CloneInputStream getClone() {
-		// Ensure that there are enough pos counters 
-		if( streampos.length <= nextId ) {
-			int[] oldpos = streampos;
-			streampos = new int[oldpos.length + 2];
-			System.arraycopy(oldpos,0,streampos,0,oldpos.length);
-		}
 		
+		if( usesFile ) {
 		try {
 			// add a new inputstream to read from
 			streamList.add(new FileInputStream(tempFile));
@@ -86,56 +100,39 @@ public class CloneStreamMaster {
 			e.printStackTrace();
 			// only if tempfile was corrupted
 		}
+		} else {			
+			streamList.add(new ByteArrayInputStream(buffer));
+		}
 		
 		openClones++;
 		return new CloneInputStream(this, nextId++);
 	}
-	
+
 	public int read(int id) throws IOException {
-		if( streampos[id] >= masterpos ) {
-			// read next block in tempfile
-			masterpos += bufferNextBlock();			
-		}
-		
-		streampos[id]++;
-		return ((FileInputStream)streamList.get(id)).read();
+		return ((InputStream) streamList.get(id)).read();
 	}
-	
-	public int read(int id, byte[] out, int offset, int length ) throws IOException {
-		while( streampos[id] + length >= masterpos ) {
-			// read next block in tempfile
-			int read = bufferNextBlock();
-			if( read == 0) break;
-			masterpos += read;		
-		}
-		
-		streampos[id] += length;
-		return ((FileInputStream)streamList.get(id)).read(out,offset,length);
-	}
-	
-	private int bufferNextBlock() throws IOException {
-		int length = master.read(copyBuffer);
-		if (length == -1 ) {
-			tempOut.close();
-			return 0;
-		}
-		tempOut.write(copyBuffer,0,length);
-		return length;
+
+	public int read(int id, byte[] out, int offset, int length)
+		throws IOException {
+		return ((InputStream) streamList.get(id)).read(out, offset, length);
 	}
 
 	/**
 	 * @return
 	 */
 	public int available() throws IOException {
-		return master.available();
+		return size;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#finalize()
 	 */
 	protected void finalize() throws Throwable {
 		super.finalize();
-		// Delete the tempfile immedietly
-		tempFile.delete();
+
+		if (usesFile) {
+			// Delete the tempfile immedietly
+			tempFile.delete();
+		}
 	}
 
 }
