@@ -176,11 +176,11 @@
         <artifactId>jwizz</artifactId>
         <version>0.1.1</version>
       </dependency>
-      <dependency>
+      <!--dependency>
         <groupId>clover</groupId>
         <artifactId>clover</artifactId>
         <version>0.1</version>
-      </dependency>
+      </dependency-->
       <dependency>
         <groupId>jargs</groupId>
         <artifactId>jargs</artifactId>
@@ -234,7 +234,7 @@
     <unitTestSourceDirectory>maven/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
+        <include>**/*AllTests.java</include>
       </includes>
       <excludes/>
     </unitTest>
