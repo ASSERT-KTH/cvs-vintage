@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.18 2003/06/30 18:00:30 linus Exp $
+// $Id: FigClassifierRole.java,v 1.19 2003/08/18 19:14:41 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.18 2003/06/30 18:00:30 linus Exp $
+// $Id: FigClassifierRole.java,v 1.19 2003/08/18 19:14:41 jjones Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -125,7 +125,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         // The big port and cover. Color of the big port is irrelevant
 
         _bigPort = new FigRect(10, 10, 90, 50, Color.cyan, Color.cyan);
-        _cover   = new FigRect(10, 10, 90, 50, Color.black, Color.white);
+        _cover   = new ShadowRect(10, 10, 90, 50, Color.black, Color.white);
 
         // The stereotype. Width is the same as the cover, height is whatever
         // its minimum permitted is. The text should be centred.

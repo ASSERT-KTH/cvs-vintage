@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.18 2003/07/19 09:43:11 d00mst Exp $
+// $Id: FigUseCase.java,v 1.19 2003/08/18 19:17:48 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.18 2003/07/19 09:43:11 d00mst Exp $
+// $Id: FigUseCase.java,v 1.19 2003/08/18 19:17:48 jjones Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -34,6 +34,7 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
@@ -206,7 +207,7 @@ public class FigUseCase extends FigNodeModelElement {
         // will realize it. Use arbitrary dimensions for now.
 
         _bigPort = new FigMyCircle(0, 0, 100, 60, Color.black, Color.white);
-        _cover = new FigMyCircle(0, 0, 100, 60, Color.black, Color.white);
+        _cover = new ShadowCircle(0, 0, 100, 60, Color.black, Color.white);
 
         // Mark the text, but not the box as filled, mark that the name may
         // use multiline text (a bit odd - how do we enter a multi-line
@@ -929,6 +930,33 @@ public class FigUseCase extends FigNodeModelElement {
 			  (int) (mu * dy + _y + ry));
             cat.debug("    returns " + res.x + ',' + res.y + ')');
             return res;
+        }
+    }
+
+    /**
+     * A FigCircle that is drawn with a shadow using the current figure's
+     * shadow size.
+    **/
+    protected class ShadowCircle extends FigMyCircle {
+        public ShadowCircle(
+            int x,
+            int y,
+            int w,
+            int h,
+            Color lColor,
+            Color fColor) {
+            super(x, y, w, h, lColor, fColor);
+        }
+
+        public void paint(Graphics g) {
+            if (_shadowSize > 0) {
+                Color shadow = new Color(
+                    SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, 
+                    SHADOW_COLOR_ALPHA);
+                g.setColor(shadow);
+                g.fillOval(_x + _shadowSize - 1, _y + _shadowSize - 1, _w, _h);         
+            }
+            super.paint(g);                
         }
     }
 
