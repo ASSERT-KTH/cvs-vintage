@@ -1,5 +1,5 @@
 @echo off
-rem $Id: jspc.bat,v 1.1 2000/02/07 08:02:14 shemnon Exp $
+rem $Id: jspc.bat,v 1.2 2000/02/07 16:07:39 shemnon Exp $
 rem A batch file to run the JspC Compiler
 
 rem This batch file written and tested under Windows NT
@@ -24,7 +24,7 @@ set CLASSPATH=%CLASSPATH%;%cp%
 
 echo Using classpath: %CLASSPATH%
 rem start java org.apache.tomcat.shell.Startup %2 %3 %4 %5 %6 %7 %8 %9
-java org.apache.japser.JspC %1 %2 %3 %4 %5 %6 %7 %8 %9
+java org.apache.jasper.JspC %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set CLASSPATH=%cp%
 set port=
