@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.7 2003/06/29 23:16:07 linus Exp $
+// $Id: ClassfileImport.java,v 1.8 2003/07/24 19:40:47 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,8 @@ import org.argouml.util.SuffixFilter;
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.7 $
- * $Date: 2003/06/29 23:16:07 $
+ * $Revision: 1.8 $
+ * $Date: 2003/07/24 19:40:47 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -319,6 +319,11 @@ public class ClassfileImport extends FileImportSupport {
      */
     public void parseFile(InputStream is, String fileName) throws Exception {
 
+        int lastSlash = fileName.lastIndexOf('/');
+	if(lastSlash != -1) {
+	    fileName = fileName.substring(lastSlash + 1);
+	}
+        
         ClassfileParser parser = new ClassfileParser(new SimpleByteLexer(new BufferedInputStream(is)));
 
         // start parsing at the classfile rule
