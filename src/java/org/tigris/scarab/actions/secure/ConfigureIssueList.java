@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.3 2001/08/28 00:51:55 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.4 2001/08/28 18:16:38 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -98,7 +98,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             Group group = intake.get("RModuleUserAttribute", queryKey, false);
 
             // If the user selected the attribute, add or update the record.
-            if (group.get("Selected").toString().equals("true"))
+            if (group.get("Selected").toString().equals("on"))
             {
                 mua = user.getModuleUserAttribute
                          (new NumberKey(moduleId), attributeId);
