@@ -12,7 +12,9 @@
  *#
 
 #macro (xmlExport $fids)
-#xmlScarabHeader()
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE scarab SYSTEM "scarab.dtd">
+<scarab>
 #set ($currentModuleId = "false")
 #foreach ($fid in $fids)
   #set ($issue = $scarabR.getIssue("${fid.Prefix}${fid.Count}"))
@@ -23,7 +25,8 @@
       #set ($currentModuleId = "true")
     #else
       #if ($currentModuleId != "true")
-        #xmlModuleFooter()
+
+        </module>
         #xmlModuleHeader($module)
         #set ($currentModuleId = "false")
       #end
@@ -32,15 +35,11 @@
   #end
 #end
 #if ($currentModuleId != "false")
-  #xmlModuleFooter()
-#end
-#xmlScarabFooter()
+
+  </module>
 #end
 
-#macro (xmlScarabHeader)
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE scarab SYSTEM "scarab.dtd">
-<scarab>
+</scarab>
 #end
 
 #macro (xmlModuleHeader $module)
@@ -60,7 +59,8 @@
           #xmlTransactionHeader($activity.Transaction)
           #set ($currentTransaction = $activity.TransactionId)
         #elseif ($currentTransaction != $activity.TransactionId)
-            #xmlTransactionFooter()
+
+            </transaction>
             #xmlTransactionHeader($activity.Transaction)
             #set ($currentTransaction = $activity.TransactionId)
             #set ($transactionAttachment = $activity.Transaction.Attachment)
@@ -71,7 +71,8 @@
         #xmlTransactionActivity($activity)
       #end
       #if ($currentTransaction)
-        #xmlTransactionFooter()
+
+        </transaction>
       #end
 
       #foreach ($depend in $issue.DependsRelatedByObserverId)
@@ -143,19 +144,4 @@
           </attribute>
           <description>$activity.Description</description>
         </activity>
-#end
-
-#macro (xmlTransactionFooter)
-
-      </transaction>
-#end
-
-#macro (xmlModuleFooter)
-
-  </module>
-#end
-
-#macro (xmlScarabFooter)
-
-</scarab>
 #end
