@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.15 2003/06/30 18:00:18 linus Exp $
+// $Id: ProjectManager.java,v 1.16 2003/08/21 20:13:48 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ProjectManager.java,v 1.15 2003/06/30 18:00:18 linus Exp $
+// $Id: ProjectManager.java,v 1.16 2003/08/21 20:13:48 alexb Exp $
 
 package org.argouml.kernel;
 
@@ -48,8 +48,6 @@ import org.argouml.xml.xmi.XMIParser;
 import org.argouml.xml.xmi.XMIReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * This class manages the projects loaded in argouml. It is a
@@ -249,11 +247,13 @@ public final class ProjectManager {
      * @param url
      * @return Project
      * @throws IOException
+     *
+     * @deprecated since 0.15.1, remove in 0.16
      */
     private Project loadProjectFromXMI(URL url) throws IOException {
         Project p = new Project();
         XMIParser.SINGLETON.readModels(p, url);
-        MModel model = XMIParser.SINGLETON.getCurModel();
+        Object model = XMIParser.SINGLETON.getCurModel();
         UmlHelper.getHelper().addListenersToModel(model);
         p.setUUIDRefs(XMIParser.SINGLETON.getUUIDRefs());
         p.addMember(new ProjectMemberTodoList("", p));
@@ -325,7 +325,7 @@ public final class ProjectManager {
                 cat.error(pc);
                 throw pc;
             }
-            MModel mmodel = null;
+            Object mmodel = null;
 
             InputSource source = new InputSource(zis);
             source.setEncoding("UTF-8");
