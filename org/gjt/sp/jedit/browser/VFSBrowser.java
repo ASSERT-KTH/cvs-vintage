@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.40 2002/05/27 09:02:38 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.41 2002/05/28 02:53:27 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -672,11 +672,8 @@ public class VFSBrowser extends JPanel implements EBComponent
 			filter = getFilenameFilter();
 		}
 
-		if(!(VFSManager.getVFSForPath(path) instanceof FileVFS))
-		{
-			getToolkit().beep();
-			return;
-		}
+		if(path.endsWith("/") || path.endsWith(File.separator))
+			path = path.substring(0,path.length() - 1);
 
 		SearchAndReplace.setSearchFileSet(new DirectoryListSet(
 			path,filter,true));
