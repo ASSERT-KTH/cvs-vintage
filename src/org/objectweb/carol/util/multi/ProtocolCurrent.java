@@ -103,13 +103,9 @@ public class ProtocolCurrent {
 		    } else {
 			icHashtable.put(rmiName,  new InitialContext(currentConf.getJndiProperties()));
 		    }
-		    // set the default protocol 
-		    if (currentConf.isDefaultRMI()) {
-			defaultRMI=rmiName;
-		    }
 		}
 	    }
-	    
+	    defaultRMI = CommunicationConfiguration.getDefaultProtocol().getName();
 	    // set the default protocol
 	    threadCtx.set(defaultRMI) ;
 	} catch (Exception e) {

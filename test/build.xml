@@ -126,8 +126,7 @@
   </target>
 
   <!-- *************************************-->
-  <!-- *********    
-    <multipleAnt dir="${test.genstub}" />    JAR       **********-->
+  <!-- *************    JAR       **********-->
   <!-- *************************************-->
   <!-- This target call every default target of each xml file
        present in ${archive} directory. -->

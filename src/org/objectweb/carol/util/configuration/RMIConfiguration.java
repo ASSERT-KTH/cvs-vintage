@@ -73,7 +73,7 @@ public class RMIConfiguration {
     public static String DEFAULT_PREFIX="default";
 
     /**
-     * default Prefix
+     * portable remote object Prefix
      */
     public static String PRO_PREFIX="PortableRemoteObjectClass";
 
@@ -96,11 +96,6 @@ public class RMIConfiguration {
      * boolean for activation
      */
     private boolean activate;
-
-    /**
-     * boolean for activation
-     */
-    private boolean defaultRMI = false;
         
     /**
      * Portable Remote Delegate class for this protocol
@@ -134,20 +129,11 @@ public class RMIConfiguration {
 
 	// RMI Properties
 	rmiName=name;
-	
-
 	// activation flag
 	if (rmiProperties.getProperty( rmiPref + "." + ACTIVATION_PREFIX ) == null) {
 	    throw new RMIConfigurationException("The flag " + rmiPref + "." + ACTIVATION_PREFIX + " missing in the configuration file");
 	} else {
 	    activate = new Boolean(rmiProperties.getProperty( rmiPref + "." + ACTIVATION_PREFIX ).trim()).booleanValue();
-	}
-
-	// default flag 
-	if (rmiProperties.getProperty( rmiPref + "." + DEFAULT_PREFIX )== null) {
-	    throw new RMIConfigurationException("The flag " + rmiPref + "." + DEFAULT_PREFIX + " missing in the configuration file");
-	} else {
-	    defaultRMI = new Boolean(rmiProperties.getProperty( rmiPref + "." + DEFAULT_PREFIX ).trim()).booleanValue();
 	}
 
 	// PortableRemoteObjectClass flag	
@@ -206,13 +192,6 @@ public class RMIConfiguration {
     public boolean isActivate() {
 	return activate;
     }
-
-    /**
-     * @return true if default protocol
-     */
-    public boolean isDefaultRMI() {
-	return defaultRMI;
-    }
         
     /**
      * @return Portable Remote Delegate for this protocol
@@ -236,7 +215,6 @@ public class RMIConfiguration {
     public String toString() {
 	String result =                  "RMI " + rmiName + " Configuration: \n";
 	if (activate) result +=          "is activate\n";
-	if (defaultRMI) result +=   "is default protocol\n"; 
         result +="Portable Remote Object Delegate Class: "+pro+"\n";
 	result +="JNDI Properties =\n" +jndiProperties +"\n";
 	return result;
