@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.6 $                                               *
+ * Version:     $Revision: 1.7 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -99,6 +99,9 @@ typedef struct uri_worker_record uri_worker_record_t;
 struct jk_uri_worker_map {
     jk_pool_t p;
     jk_pool_atom_t buf[SMALL_POOL_SIZE];
+
+    jk_pool_t tp;    /* temp pool */
+    jk_pool_atom_t tbuf[SMALL_POOL_SIZE];
 
     uri_worker_record_t *maps;
     unsigned size;
@@ -203,9 +206,12 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
         jk_open_pool(&uw_map->p, 
                      uw_map->buf, 
                      sizeof(jk_pool_atom_t) * SMALL_POOL_SIZE);
+        jk_open_pool(&uw_map->tp, 
+                     uw_map->tbuf, 
+                     sizeof(jk_pool_atom_t) * SMALL_POOL_SIZE);
         uw_map->size = 0;
         uw_map->maps = NULL;
-        
+
         sz = map_size(init_data);
 
         jk_log(l, JK_LOG_DEBUG, 
@@ -327,6 +333,7 @@ int uri_worker_map_close(jk_uri_worker_map_t *uw_map,
 
     if(uw_map) {
         jk_close_pool(&uw_map->p);
+        jk_close_pool(&uw_map->tp);
 	return JK_TRUE;
     }
 
@@ -351,7 +358,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         char *url_rewrite = strstr(uri, JK_PATH_SESSION_IDENTIFIER);
         
         if(url_rewrite) {
-	    clean_uri = strdup(uri);
+            clean_uri = jk_pool_strdup(&uw_map->tp,uri);
             url_rewrite = strstr(clean_uri, JK_PATH_SESSION_IDENTIFIER);
             *url_rewrite = '\0';
             uri = clean_uri;
@@ -374,7 +381,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
 			       "jk_uri_worker_map_t::map_uri_to_worker, Found an exact match %s -> %s\n",
 			       uw_map->maps[i].worker_name,
 			       uw_map->maps[i].context );
-			free(clean_uri);
+			jk_reset_pool(&uw_map->tp);
                         return uw_map->maps[i].worker_name;
                     }
                 } else if(MATCH_TYPE_CONTEXT == uw_map->maps[i].match_type) {
@@ -419,7 +426,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         }
 
         if(-1 != best_match) {
-	    free(clean_uri);
+            jk_reset_pool(&uw_map->tp);
             return uw_map->maps[best_match].worker_name;
         } else {
             /*
@@ -436,9 +443,10 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
                 jk_log(l, JK_LOG_EMERG, 
                        "In jk_uri_worker_map_t::map_uri_to_worker, found a security fraud in '%s'\n",
                        uri);
-		free(clean_uri);
+                jk_reset_pool(&uw_map->tp);
                 return uw_map->maps[fraud].worker_name;
             }
+            jk_reset_pool(&uw_map->tp);
        }        
     } else {
         jk_log(l, JK_LOG_ERROR, 
