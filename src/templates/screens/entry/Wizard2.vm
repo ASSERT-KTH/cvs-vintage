@@ -127,14 +127,8 @@ Click Bypass Duplicates to continue entering your Issue.
 </p>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
 <input type="submit" name="eventSubmit_doGotowizard3" value="Bypass Duplicates" />&#160;
 <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-  </td>
- </tr>
-</table>
 </div>
 
 $intake.declareGroups()
