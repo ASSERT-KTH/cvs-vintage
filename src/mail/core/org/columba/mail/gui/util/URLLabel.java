@@ -13,30 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class URLLabel extends JLabel implements MouseListener
 {
     private JPopupMenu popup;
-    private JMenuItem menuItem;
 
     boolean entered = false;
     boolean mousehover;
-
-   
 
     public URLLabel( URL url )
     {
@@ -58,7 +54,6 @@ public class URLLabel extends JLabel implements MouseListener
 
     public void mouseClicked( MouseEvent e )
     {
-        Point point = e.getPoint();
         popup.show( e.getComponent(),
                     e.getX(), e.getY() );
     }
@@ -68,7 +63,7 @@ public class URLLabel extends JLabel implements MouseListener
         setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
         entered = true;
 
-        if ( mousehover == true )repaint();
+        if ( mousehover )repaint();
     }
 
     public void mouseExited( MouseEvent e )
@@ -76,7 +71,7 @@ public class URLLabel extends JLabel implements MouseListener
         setCursor( Cursor.getDefaultCursor() );
         entered = false;
 
-        if ( mousehover == true )repaint();
+        if ( mousehover )repaint();
     }
 
     public void mousePressed( MouseEvent e ){}
@@ -86,8 +81,7 @@ public class URLLabel extends JLabel implements MouseListener
     {
         super.paint( g );
 
-        if ( ( entered == true ) || ( mousehover == false ) )
-        {
+        if ( entered || !mousehover ) {
             Rectangle r = g.getClipBounds();
 
             g.drawLine(0,

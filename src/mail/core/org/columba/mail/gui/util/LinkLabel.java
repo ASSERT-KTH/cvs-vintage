@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
 import java.awt.Color;
@@ -63,7 +64,7 @@ public class LinkLabel extends JLabel implements MouseListener
         setCursor( new Cursor( Cursor.HAND_CURSOR ) );
         entered = true;
 
-        if ( mousehover == true )
+        if ( mousehover )
            repaint();
     }
 
@@ -72,23 +73,18 @@ public class LinkLabel extends JLabel implements MouseListener
         setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
         entered = false;
 
-        if ( mousehover == true )
+        if ( mousehover )
            repaint();
     }
 
-    public void mousePressed( MouseEvent e )
-    {
-    }
-
-    public void mouseReleased( MouseEvent e )
-    {}
-
+    public void mousePressed( MouseEvent e ) {}
+    public void mouseReleased( MouseEvent e ) {}
 
     public void paint( Graphics g )
     {
         super.paint( g );
 
-        if ( ( entered == true ) || ( mousehover == false ) )
+        if ( entered || !mousehover )
         {
             Rectangle r = g.getClipBounds();
 
@@ -99,8 +95,4 @@ public class LinkLabel extends JLabel implements MouseListener
         }
 
     }
-
-
-
-
 }
