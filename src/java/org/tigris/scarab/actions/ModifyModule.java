@@ -74,7 +74,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.14 2002/01/18 22:26:03 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.15 2002/02/05 02:01:37 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -141,7 +141,6 @@ public class ModifyModule extends RequireLoginFirstAction
             try
             {
                 moduleGroup.setProperties(me);
-                me.setOwnerId(((ScarabUser)data.getUser()).getUserId());
                 me.save();
                 
                 data.setACL(TurbineSecurity.getACL(data.getUser()));
