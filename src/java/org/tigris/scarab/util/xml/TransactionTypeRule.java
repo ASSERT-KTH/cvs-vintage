@@ -48,6 +48,7 @@ package org.tigris.scarab.util.xml;
 
 import org.tigris.scarab.om.TransactionType;
 import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.TransactionTypeManager;
 
 /**
  * Handler for the xpath "scarab/module/issue/transaction/type"
@@ -76,7 +77,7 @@ public class TransactionTypeRule extends BaseRule
         log().debug("(" + getImportBean().getState() + 
             ") transaction type body: " + transactionTypeName);
         TransactionType transactionType = 
-            TransactionType.getInstance(transactionTypeName);
+            TransactionTypeManager.getInstance(transactionTypeName);
         checkCreateTransaction(transactionType);
         getImportBean().setTransactionType(transactionType);
     }
