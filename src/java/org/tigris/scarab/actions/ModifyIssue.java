@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.100 2002/06/10 21:43:55 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.101 2002/06/11 02:15:00 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -626,7 +626,7 @@ public class ModifyIssue extends BaseModifyIssue
                String name = attachment.getFileName();
                String path = attachment.getRelativePath();
                String desc = new StringBuffer(path.length()+name.length()+38)
-                   .append("deleted attachment for File '").append(name)
+                   .append("deleted attachment for file '").append(name)
                    .append("'; path=").append(path).toString();
                registerActivity(desc, "Your file was deleted", issue, user, 
                                 attachment, context, data);
