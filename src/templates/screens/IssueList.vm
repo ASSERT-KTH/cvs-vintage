@@ -14,16 +14,6 @@ $page.setTitle("Query Results")
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($issueList = $scarabR.IssueList)
 
-
-<div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
-#if ($searchType.equals("advanced"))
-<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>
-		
 #if ($issueList.size() == 0)
   <p class="alert">There are no matching issues.</p>
 #else
@@ -49,6 +39,15 @@ $page.setTitle("Query Results")
 
 <P>
 
+<div class="functnbar">
+<input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
+#if ($searchType.equals("advanced"))
+<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+		
 ## PAGINATION
 #if( $paginated)
   #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
