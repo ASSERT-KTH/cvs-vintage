@@ -46,6 +46,8 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
@@ -57,6 +59,14 @@ import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -66,7 +76,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.1 2001/10/14 01:21:28 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.2 2001/10/22 18:55:35 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -141,7 +151,6 @@ public class ModifyModule extends RequireLoginFirstAction
                 data.setACL(TurbineSecurity.getACL(data.getUser()));
                 data.save();
 
-                intake.remove(moduleGroup);
                 data.setMessage("New Module Created!");
             }
             catch (Exception e)
@@ -149,6 +158,65 @@ public class ModifyModule extends RequireLoginFirstAction
                 setTarget(data, template);
                 data.setMessage(e.getMessage());
                 return;
+            }
+            // Add defaults for issue types and attributes from parent module
+            NumberKey newModuleId = me.getModuleId();
+            String parentId = moduleGroup.get("ParentId").toString();
+            intake.remove(moduleGroup);
+            ScarabModule parentModule = (ScarabModule)ScarabModulePeer
+                .retrieveByPK(new NumberKey(parentId));
+            AttributeGroup ag1;
+            AttributeGroup ag2;
+            // First set module-issue type mappings
+            List rmits = parentModule.getRModuleIssueTypes();
+            for (int i=0; i<rmits.size(); i++)
+            {
+                RModuleIssueType rmit1 = (RModuleIssueType)rmits.get(i);
+                RModuleIssueType rmit2 = rmit1.copy();
+                rmit2.setModuleId(newModuleId);
+                rmit2.setIssueTypeId(rmit1.getIssueTypeId());
+                rmit2.setActive(rmit1.getActive());
+                rmit2.setDisplay(rmit1.getDisplay());
+                rmit2.setOrder(rmit1.getOrder());
+                rmit2.setHistory(rmit1.getHistory());
+                rmit2.setComments(rmit1.getComments());
+                rmit2.save();
+                IssueType issueType = rmit1.getIssueType();
+                
+                // set attribute group defaults
+                List attributeGroups = issueType
+                    .getAttributeGroups(parentModule);
+                for (int j=0; j<attributeGroups.size(); j++)
+                {
+                    ag1 = (AttributeGroup)attributeGroups.get(j);
+                    ag2 = ag1.copy();
+                    ag2.setModuleId(newModuleId);
+                    ag2.save();
+
+                    List attributes = ag1.getAttributes();
+                    for (int k=0; k<attributes.size(); k++)
+                    {
+                        Attribute attribute = (Attribute)attributes.get(k);
+
+                        // set attribute-attribute group defaults
+                        RAttributeAttributeGroup raag1 = ag1
+                           .getRAttributeAttributeGroup(attribute);
+                        RAttributeAttributeGroup raag2 = raag1.copy();
+                        raag2.setGroupId(ag2.getAttributeGroupId());
+                        raag2.setAttributeId(raag1.getAttributeId());
+                        raag2.setOrder(raag1.getOrder());
+                        raag2.save();
+
+                        // set module-attribute defaults
+                        RModuleAttribute rma1 = parentModule
+                           .getRModuleAttribute(attribute, issueType);
+                        RModuleAttribute rma2 = rma1.copy();
+                        rma2.setModuleId(newModuleId);
+                        rma2.setAttributeId(rma1.getAttributeId());
+                        rma2.setIssueTypeId(issueType.getIssueTypeId());
+                        rma2.save();
+                    }
+                }
             }
             setTarget(data, nextTemplate);
         }
