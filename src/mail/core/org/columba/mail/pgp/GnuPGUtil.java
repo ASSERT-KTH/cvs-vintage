@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
  * The special class witch handles the commandline parameters to sign, verify,
  * encrypt and decrypt messages with the gnu pgp tool named gpg.
  * @author waffel
- *
+ * @deprecated Use JSCF
  */
 public class GnuPGUtil extends DefaultUtil {
     // For signing we use the SHA1 algo as digest
@@ -38,6 +38,7 @@ public class GnuPGUtil extends DefaultUtil {
 
     /* (non-Javadoc)
      * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
+     * @deprecated Use JSCF
      */
     protected String[] getRawCommandString(int type) {
         List ret = new ArrayList();
@@ -52,6 +53,7 @@ public class GnuPGUtil extends DefaultUtil {
 
     /**
      * every line of the error stream starts with "gpg"; remove these characters
+     * @deprecated Use JSCF
      */
     protected String parse(String s) {
         StringBuffer str = new StringBuffer(s);

@@ -31,8 +31,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderInconsistentException;
@@ -47,11 +45,7 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.pgp.CancelledException;
-import org.columba.mail.pgp.MissingPublicKeyException;
-import org.columba.mail.pgp.PGPController;
-import org.columba.mail.pgp.PGPException;
-import org.columba.mail.pgp.VerificationException;
+import org.columba.mail.pgp.PGPPassChecker;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -64,6 +58,12 @@ import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
 import org.columba.ristretto.parser.ParserException;
+import org.waffel.jscf.JSCFConnection;
+import org.waffel.jscf.JSCFDriverManager;
+import org.waffel.jscf.JSCFException;
+import org.waffel.jscf.JSCFResultSet;
+import org.waffel.jscf.JSCFStatement;
+import org.waffel.jscf.gpg.GPGDriver;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -114,37 +114,39 @@ public class ViewMessageCommand extends FolderCommand {
 				uid,
 				encryptedMultipart.getChild(1).getAddress());
 
-		// decrypt string
-		// getting controller Instance
-		PGPController controller = PGPController.getInstance();
-		// creating Stream for encrypted Body part and decrypt it
 		InputStream decryptedStream = null;
 
 		try {
-			decryptedStream = controller.decrypt(encryptedPart, pgpItem);
+            JSCFDriverManager.registerJSCFDriver(new GPGDriver());
+            JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
+            con.getProperties().put("USERID", pgpItem.get("id"));
+            JSCFStatement stmt = con.createStatement();
+            PGPPassChecker passCheck = PGPPassChecker.getInstance();
+            boolean check = passCheck.checkPassphrase(pgpItem, con);
+            if (!check) {
+                pgpMode =  SecurityIndicator.DECRYPTION_FAILURE;
+                // TODO make i18n!
+                pgpMessage = "wrong passphrase";
+                return;
+            }
+            JSCFResultSet res = stmt.executeDecrypt(encryptedPart, passCheck.getPasswordFromId(pgpItem));
+            if (res.isError()) {
+                pgpMode =  SecurityIndicator.DECRYPTION_FAILURE;
+                pgpMessage = StreamUtils.readInString(res.getErrorStream()).toString();
+                return;
+            } else {
+                decryptedStream = res.getResultStream();
+                pgpMode =  SecurityIndicator.DECRYPTION_SUCCESS;
+            }
+        } catch (JSCFException e) {
+            e.printStackTrace();
 
-			pgpMode = SecurityIndicator.DECRYPTION_SUCCESS;
+            pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+            pgpMessage = e.getMessage();
 
-			pgpMessage = controller.getPgpMessage();
-
-		} catch (CancelledException e) {
-
-			// just show the encrypted raw message
-			return;
-
-		} catch (PGPException e) {
-
-			// generic pgp error
-
-			e.printStackTrace();
-
-			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
-			pgpMessage = e.getMessage();
-
-			// just show the encrypted raw message
-			decryptedStream = encryptedPart;
-		}
-
+            // just show the encrypted raw message
+            decryptedStream = encryptedPart;
+        }
 		try {
 			// TODO should be removed if we only use Streams!
 			String decryptedBodyPart =
@@ -217,55 +219,27 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// Get the mailaddress and use it as the id
 		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
-
-		PGPItem pgpItem = new PGPItem(new XmlElement());
-		//MailInterface.config.getAccountList().getPGPItem(toAddress.getMailAddress());
-		pgpItem.set("id", fromAddress.getMailAddress());
-
-		// Set the digest-algorithm from content-paramater micalg, cut of "pgp-"
-		pgpItem.setDigestAlgorithm(
-			signedMultipart.getHeader().getContentParameter(
-				"micalg").substring(
-				4));
-
-		// getting controller Instance
-		PGPController controller = PGPController.getInstance();
+		
+        PGPItem pgpItem =null;
+        // we need the pgpItem, to extract the path to gpg
+        pgpItem = MailInterface.config.getAccountList().getDefaultAccount().getPGPItem();
 
 		try {
-
-			// we use the PGPItem to store this message hash-algorithm
-			// -> this additional value has to be passed to the gnupg
-			// -> commandline-tool for verification
-			MimePart firstPartMimeType = mimePartTree.getRootMimeNode();
-			MimeHeader h = firstPartMimeType.getHeader();
-
-			//pgpItem.set("hashalgorithm", hash);
-
-			// verify
-			controller.verifySignature(signedPart, signature, pgpItem);
-
-			// if everything is ok, verification is a success
-			pgpMode = SecurityIndicator.VERIFICATION_SUCCESS;
-			pgpMessage = controller.getPgpMessage();
-
-		} catch (MissingPublicKeyException e) {
-
-			// we don't have the senders public key in our keyring
-			// -> just attach a status message
-			// -> we don't complain to the user with a dialog box here
-			pgpMode = SecurityIndicator.NO_KEY;
-			pgpMessage = e.getMessage();
-
-			System.out.println("comand-message=" + pgpMessage);
-
-		} catch (VerificationException e) {
-
-			// this probably means that the signature could'nt
-			// be verified successfully
-			pgpMode = SecurityIndicator.VERIFICATION_FAILURE;
-			pgpMessage = e.getMessage();
-
-		} catch (PGPException e) {
+            // TODO this should be only once, after starting columba!
+            JSCFDriverManager.registerJSCFDriver(new GPGDriver());
+            JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
+            
+			JSCFStatement stmt = con.createStatement();
+            String micalg = signedMultipart.getHeader().getContentParameter( "micalg").substring(4);
+            JSCFResultSet res = stmt.executeVerify(signedPart, signature, micalg);
+            if (res.isError()) {
+                pgpMode = SecurityIndicator.VERIFICATION_FAILURE;
+                pgpMessage = StreamUtils.readInString(res.getErrorStream()).toString();
+            } else {
+                pgpMode = SecurityIndicator.VERIFICATION_SUCCESS;
+                pgpMessage = StreamUtils.readInString(res.getResultStream()).toString();
+            }
+		} catch (JSCFException e) {
 
 			e.printStackTrace();
 
@@ -351,6 +325,9 @@ public class ViewMessageCommand extends FolderCommand {
 		// interesting for the PGP stuff are:
 		// - multipart/encrypted
 		// - multipart/signed
+        
+        // TODO encrypt AND sign dosN#t work. The message is always only encrypted. We need a function that knows, here
+        // is an encrypted AND signed Message. Thus first encyrpt and then verifySign the message
 		MimeType firstPartMimeType =
 			mimePartTree.getRootMimeNode().getHeader().getMimeType();
 		String contentType = (String) header.get("Content-Type");
@@ -361,22 +338,12 @@ public class ViewMessageCommand extends FolderCommand {
 		}
 
 		if (firstPartMimeType.getSubtype().equals("encrypted")) {
-		    Integer accountuid = (Integer)header.getAttributes().get("columba.accountuid");
-		    AccountItem item = MailInterface.config.getAccountList().uidGet(accountuid.intValue());
-		    PGPItem pgpitem;
-		    if( item != null ) {
-		        pgpitem = item.getPGPItem();
-		        if( pgpitem.get("id").equals("")) {
-		            pgpitem.set("id", item.getIdentityItem().get("address"));
-		        }
-		    } else {
-		        pgpitem = new PGPItem(new XmlElement(""));
-		        // fall back to first to address
-		        pgpitem.set("id", new BasicHeader(header.getHeader()).getTo()[0].getMailAddress());
-		    }
-		    
-
-		    decryptEncryptedPart(pgpitem, mimePartTree.getRootMimeNode());
+            
+            PGPItem pgpItem =null;
+            // we need the pgpItem, to extract the path to gpg
+            pgpItem = MailInterface.config.getAccountList().getDefaultAccount().getPGPItem();
+            pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0].getMailAddress());
+		    decryptEncryptedPart(pgpItem, mimePartTree.getRootMimeNode());
 		} 
 		
 		

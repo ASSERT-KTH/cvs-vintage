@@ -37,6 +37,7 @@ import org.columba.mail.config.PGPItem;
  * <p>
  * This class is used by {@link org.columba.mail.pgp.PGPController PGPController}.
  * @author tstich, waffel
+ * @deprecated Use JSCF
  *
  */
 public abstract class DefaultUtil {
@@ -54,11 +55,13 @@ public abstract class DefaultUtil {
 
 	/**
 	 * The outputStream which holds the output from the whole PGP tool.
+     * @deprecated Use JSCF
 	 */
 	protected InputStream outputStream;
 
 	/**
 	 * The errorStream which holds the error output from the whole PGP tool.
+     * @deprecated Use JSCF
 	 */
 	protected InputStream errorStream;
 
@@ -66,6 +69,7 @@ public abstract class DefaultUtil {
 	 * @param cmd Command to be executed
 	 * @return Process which is connected with the executed command
 	 * @throws Exception if the command cannot be executed. @see Runtime.getRuntime().exec(String[])
+     * @deprecated Use JSCF
 	 */
 	protected Process executeCommand(String[] cmd) throws Exception {
 		Process p= Runtime.getRuntime().exec(cmd);
@@ -77,6 +81,7 @@ public abstract class DefaultUtil {
 	* This method should parse the given String and for example remove all "gpg:" strings from the given String.
 	 * @param str String which should be parsed
 	 * @return a parsed String, not null
+     * @deprecated Use JSCF
 	 */
 	protected abstract String parse(String str);
 
@@ -132,6 +137,7 @@ public abstract class DefaultUtil {
 	 * read.
 	* @return The Restult of a operation like sign, encryypt, verify and so on as an InputStream from which the result can be
 	 * read.
+     * @deprecated Use JSCF
 	*/
 	public InputStream getStreamResult() {
 		return this.outputStream;
@@ -140,6 +146,7 @@ public abstract class DefaultUtil {
 	/**
 	* Returns the result of a operation like sign, encrypt and so on as an InputStream from which the error result can be read.
 	 * @return The result of a operation like sign, encrypt and so on as an InputStream from which the error result can be read.
+     * @deprecated Use JSCF
 	 */
 	public InputStream getErrorStream() {
 		return this.errorStream;
@@ -150,6 +157,7 @@ public abstract class DefaultUtil {
 	* @param type for which type the commandline should be returned. The types are defined in {@link PGPController}.
 	* @return a String Array which holds all necessary command line argument for the instancieated tool, like gpg.
 	* @see PGPController
+    * @deprecated Use JSCF
 	*/
 	protected abstract String[] getRawCommandString(int type);
 
@@ -158,6 +166,7 @@ public abstract class DefaultUtil {
 	 * @see org.columba.core.plugin.ExternalToolsPluginHandler
 	 * @param type                id of commandline tool
 	 * @return                        absolut path of tool or null if the path cannot be obtained.
+     * @deprecated Use JSCF
 	 */
 	protected String getPath(String type)
 		throws ExternalToolsNotFoundException {
@@ -194,6 +203,7 @@ public abstract class DefaultUtil {
 	 * @param item Item which holds all necessary datas for the command - line. For example the entry path MUST be
 	 * given.
 	 * @return The command - line that should be executed by a Runtime - Process.
+     * @deprecated Use JSCF
 	 */
 	protected String[] getCommandString(int type, PGPItem item)
 		throws Exception {
@@ -246,6 +256,7 @@ public abstract class DefaultUtil {
 	 * @param name The name that should be replaced
 	 * @param item The item which should hold the entry for the given name
 	 * @return The entry for the given name or null, if no entry is found.
+     * @deprecated Use JSCF
 	 */
 	private String getValue(String name, PGPItem item) {
 		if (name.equals("user")) {
@@ -276,6 +287,7 @@ public abstract class DefaultUtil {
 	 * @param signature Signature wich should be verify for the given message
 	 * @return the exit status from the pgp-tool for the veify process.
 	 * @throws Exception If the temporary file cannot be created or the verify process cannot be run.
+     * @deprecated Use JSCF
 	 */
 	public int verify(PGPItem item, InputStream message, InputStream signature)
 		throws Exception {
@@ -316,6 +328,7 @@ public abstract class DefaultUtil {
 	 * @param pgpMessage The message to be signed
 	 * @return the exit value from the process that executes the whole singing command.
 	 * @throws Exception If the process cannot execute the command.
+     * @deprecated Use JSCF
 	 */
 	public int sign(PGPItem item, InputStream pgpMessage) throws Exception {
 		int exitVal= -1;
@@ -382,6 +395,7 @@ public abstract class DefaultUtil {
 	 * @param message The message to be encrypt
 	 * @return the exit value from the process that executes the whole singing command.
 	 * @throws Exception If the process cannot execute the command.
+     * @deprecated Use JSCF
 	 */
 	public int encrypt(PGPItem item, InputStream message) throws Exception {
 		int exitVal= -1;
@@ -411,6 +425,7 @@ public abstract class DefaultUtil {
 	* implementation of the PGP tool.
 	* @return The exit value from the whole PGP tool.
 	* @see PGPController#decrypt(InputStream, PGPItem)
+    * @deprecated Use JSCF
 	 */
 	public int decrypt(PGPItem item, InputStream cryptMessage)
 		throws Exception {

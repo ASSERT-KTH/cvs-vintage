@@ -1,24 +1,3 @@
-package org.columba.mail.pgp;
-
-import org.columba.core.io.CloneStreamMaster;
-
-import org.columba.mail.config.PGPItem;
-import org.columba.mail.message.PGPMimePart;
-
-import org.columba.ristretto.composer.MimePartRenderer;
-import org.columba.ristretto.composer.MimeTreeRenderer;
-import org.columba.ristretto.message.InputStreamMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.SequenceInputStream;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.util.Vector;
-
-
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -34,6 +13,28 @@ import java.util.Vector;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.mail.pgp;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Vector;
+
+import org.columba.core.io.CloneStreamMaster;
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.message.PGPMimePart;
+import org.columba.ristretto.composer.MimePartRenderer;
+import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.message.InputStreamMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.SequenceInputStream;
+import org.waffel.jscf.JSCFConnection;
+import org.waffel.jscf.JSCFDriverManager;
+import org.waffel.jscf.JSCFResultSet;
+import org.waffel.jscf.JSCFStatement;
+import org.waffel.jscf.gpg.GPGDriver;
+
 public class MultipartSignedRenderer extends MimePartRenderer {
     private MimeHeader signatureHeader;
 
@@ -88,12 +89,25 @@ public class MultipartSignedRenderer extends MimePartRenderer {
         StreamableMimePart signatureMimePart;
 
         signatureMimePart = null;
-
+/*
         PGPController controller = PGPController.getInstance();
 
         signatureMimePart = new InputStreamMimePart(signatureHeader,
                 controller.sign(signedPartCloneModel.getClone(), pgpItem));
-
+*/
+        JSCFDriverManager.registerJSCFDriver(new GPGDriver());
+        JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
+        con.getProperties().put("USERID", pgpItem.get("id"));
+        PGPPassChecker passCheck = PGPPassChecker.getInstance();
+        boolean check = passCheck.checkPassphrase(pgpItem, con);
+        if (!check) {
+            throw new WrongPassphraseException();
+        }
+        JSCFStatement stmt = con.createStatement();
+        JSCFResultSet res = stmt.executeSign(signedPartCloneModel.getClone(),pgpItem.get("id"), passCheck.getPasswordFromId(pgpItem));
+        
+        signatureMimePart = new InputStreamMimePart(signatureHeader, res.getResultStream());
+        
         streams.add(MimeTreeRenderer.getInstance().renderMimePart(signatureMimePart));
 
         // Create the closing boundary

@@ -19,11 +19,12 @@ package org.columba.mail.pgp;
  * Throw this exception if tool could not be found. 
  *
  * @author fdietz
+ * @deprecated Use JSCF
  */
 public class ProgramNotFoundException extends PGPException {
 
 	/**
-	 * 
+	 * @deprecated Use JSCF
 	 */
 	public ProgramNotFoundException() {
 		super();
@@ -32,6 +33,7 @@ public class ProgramNotFoundException extends PGPException {
 
 	/**
 	 * @param arg0
+     * @deprecated Use JSCF
 	 */
 	public ProgramNotFoundException(String arg0) {
 		super(arg0);

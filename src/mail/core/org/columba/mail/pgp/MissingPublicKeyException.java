@@ -9,13 +9,11 @@ package org.columba.mail.pgp;
 
 /**
  * @author frd
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @deprecated Use JSCF
  */
 public class MissingPublicKeyException extends VerificationException {
     /**
-     *
+     * @deprecated Use JSCF
      */
     public MissingPublicKeyException() {
         super("Missing Public Key");
@@ -23,6 +21,7 @@ public class MissingPublicKeyException extends VerificationException {
 
     /**
      * @param message
+     * @deprecated Use JSCF
      */
     public MissingPublicKeyException(String message) {
         super(message);

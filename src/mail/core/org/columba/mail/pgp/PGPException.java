@@ -10,12 +10,11 @@ package org.columba.mail.pgp;
 /**
  * @author frd
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ *@deprecated Use JSCF
  */
 public class PGPException extends Exception {
     /**
-     *
+     * @deprecated Use JSCF
      */
     public PGPException() {
         super("PGP failure");
@@ -23,6 +22,7 @@ public class PGPException extends Exception {
 
     /**
      * @param arg0
+     * @deprecated Use JSCF
      */
     public PGPException(String arg0) {
         super(arg0);

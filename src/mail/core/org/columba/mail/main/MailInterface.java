@@ -36,7 +36,7 @@ public class MailInterface {
     public static TreeModel treeModel;
 
     // PGP encryption package
-    public static PGPController pgpController;
+    //public static PGPController pgpController;
     
     // mailchecking manager
     public static MailCheckingManager mailCheckingManager;

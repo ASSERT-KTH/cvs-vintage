@@ -20,10 +20,11 @@ package org.columba.mail.pgp;
  * User cancelled PGP operation.
  *
  * @author fdietz
+ * @deprecated Use JSCF
  */
 public class CancelledException extends PGPException {
     /**
-     *
+     * @deprecated Use JSCF
      */
     public CancelledException() {
         super();
@@ -31,6 +32,7 @@ public class CancelledException extends PGPException {
 
     /**
      * @param arg0
+     * @deprecated Use JSCF
      */
     public CancelledException(String arg0) {
         super(arg0);

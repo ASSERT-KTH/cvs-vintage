@@ -20,7 +20,7 @@ import org.columba.core.xml.XmlElement;
 
 
 public class PGPItem extends DefaultItem {
-    private String passphrase;
+    private String passphrase = "";
     private String digestAlgorithm;
 
     public PGPItem(XmlElement e) {

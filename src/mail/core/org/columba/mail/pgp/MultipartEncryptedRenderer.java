@@ -1,28 +1,3 @@
-package org.columba.mail.pgp;
-
-import org.columba.mail.config.PGPItem;
-import org.columba.mail.message.PGPMimePart;
-
-import org.columba.ristretto.composer.MimePartRenderer;
-import org.columba.ristretto.composer.MimeTreeRenderer;
-import org.columba.ristretto.message.InputStreamMimePart;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.message.io.SequenceInputStream;
-import org.columba.ristretto.message.io.Source;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-
-
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -38,6 +13,34 @@ import javax.swing.JOptionPane;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.mail.pgp;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
+
+import org.columba.core.io.StreamUtils;
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.message.PGPMimePart;
+import org.columba.ristretto.composer.MimePartRenderer;
+import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.message.InputStreamMimePart;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.SequenceInputStream;
+import org.columba.ristretto.message.io.Source;
+import org.waffel.jscf.JSCFConnection;
+import org.waffel.jscf.JSCFDriverManager;
+import org.waffel.jscf.JSCFResultSet;
+import org.waffel.jscf.JSCFStatement;
+import org.waffel.jscf.gpg.GPGDriver;
+
+
 public class MultipartEncryptedRenderer extends MimePartRenderer {
     private StreamableMimePart controlPart;
     private MimeHeader encryptedHeader;
@@ -90,22 +93,16 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
         StreamableMimePart encryptedPart;
         encryptedPart = null;
 
-        try {
-            PGPController controller = PGPController.getInstance();
-
-            encryptedPart = new InputStreamMimePart(encryptedHeader,
-                    controller.encrypt(MimeTreeRenderer.getInstance()
-                                                       .renderMimePart(part.getChild(
-                                0)), pgpItem));
-        } catch (PGPException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-
-            e.printStackTrace();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            e.printStackTrace();
+        JSCFDriverManager.registerJSCFDriver(new GPGDriver());
+        JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
+        con.getProperties().put("USERID", pgpItem.get("id"));
+        JSCFStatement stmt = con.createStatement();
+        JSCFResultSet res = stmt.executeEncrypt(MimeTreeRenderer.getInstance() .renderMimePart(part.getChild(0)), 
+                pgpItem.get("recipients"));
+        if (res.isError()) {
+            JOptionPane.showMessageDialog(null, StreamUtils.readInString(res.getErrorStream()).toString());
         }
-
+        encryptedPart = new InputStreamMimePart(encryptedHeader,res.getResultStream());
         streams.add(MimeTreeRenderer.getInstance().renderMimePart(encryptedPart));
 
         // Create the closing boundary

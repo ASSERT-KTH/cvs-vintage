@@ -16,23 +16,21 @@
 
 package org.columba.mail.pgp;
 
-import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
-
-import org.columba.mail.config.PGPItem;
-import org.columba.mail.gui.util.PGPPassphraseDialog;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.gui.util.PGPPassphraseDialog;
 
 
 /**
@@ -117,6 +115,7 @@ public class PGPController {
 
     /**
      * The default constructor for this class. The exit value is default 0.
+     * @deprecated Use JSCF
      */
     protected PGPController() {
         exitVal = 0;
@@ -132,6 +131,7 @@ public class PGPController {
      * @return PGPController a new PGPController if there is no one created in one
      * columba session, or an alrady existing PGPConstroller, so only one Controller
      * is used in one columba session.
+     * @deprecated Use JSCF
      */
     public static PGPController getInstance() {
         if (myInstance == null) {
@@ -148,6 +148,7 @@ public class PGPController {
      * controlling errors when signing ... messages
      * @return int exitValue, 0 means all ok, all other exit vlaues identifying errors. Errors can be obtained by the
     * @see #getPGPErrorStream()
+    * @deprecated Use JSCF
      */
     public int getReturnValue() {
         return exitVal;
@@ -165,6 +166,7 @@ public class PGPController {
      * @param item The item which holds all necessary information like stored passphrase or the path to the pgp-tool.
      * @return a decrypted InputStream
      * @throws PGPException if the underlaying implementation throws an exception.
+     * @deprecated Use JSCF
      */
     public InputStream decrypt(InputStream cryptMessage, PGPItem item)
         throws PGPException {
@@ -202,6 +204,7 @@ public class PGPController {
      * @param signature Signature wich should be verify for the given message.
      * @return true if the signature can be verify for the given message, else false.
     * @see DefaultUtil#verify(PGPItem, InputStream, InputStream)
+    * @deprecated Use JSCF
      */
     public void verifySignature(InputStream message, InputStream signature,
         PGPItem item) throws PGPException {
@@ -240,6 +243,7 @@ public class PGPController {
     * @exception PGPException The exception is thrown, if the exit-value from the whole gpg-program is != 0.
     * @see DefaultUtil#encrypt(PGPItem, InputStream)
      * @return the encrypted message if all is ok, else an empty input-stream. {@link DefaultUtil#getStreamResult()}
+     * @deprecated Use JSCF
      */
     public InputStream encrypt(InputStream pgpStream, PGPItem item)
         throws PGPException {
@@ -283,6 +287,7 @@ public class PGPController {
      * stored passphrase is used.
      * @return The signed message as an InputStream. Null, when
      * an error occurse or the exit-value is not equal to 0 from the whole gpg-util is returned.
+     * @deprecated Use JSCF
      */
     public InputStream sign(InputStream pgpStream, PGPItem item)
         throws PGPException {
@@ -318,6 +323,7 @@ public class PGPController {
 	 * This method returned normal only if the user give the right passphrase-
 	 * @param item PGPItem used for signing the test string
 	 * @exception PGPException if the user cancels the passphrase dialog or the pgp tool has errors and returns with exit code != 0.
+     * @deprecated Use JSCF
 	 */
 	private void checkPassphrase(PGPItem item) throws PGPException {
 		String testStr= "test";
@@ -456,6 +462,7 @@ public class PGPController {
      * Returnes the Result from the GPG Util as an InputStream. On each operation with the GPG Util this Stream is
      *  overidden. The ResultStream can be empty if it has earliyer readed out.
      * @return The Result from the GPG Util as an InputStream.
+     * @deprecated Use JSCF
      */
     public InputStream getPGPResultStream() {
         return utils[GPG].getStreamResult();
@@ -474,6 +481,7 @@ public class PGPController {
      * Gets the pgp commandline output.
      *
      * @return        output of the commandline
+     * @deprecated Use JSCF
      */
     public String getPgpMessage() {
         return pgpMessage;
@@ -486,6 +494,7 @@ public class PGPController {
     * correct exit of the running VM {@link File#deleteOnExit()}.
      * @param in Stream wich should be written to the temporary file. The file self is created via  {@link File#createTempFile(java.lang.String, java.lang.String)}.
      * @throws IOException If the file cannot be created or written.
+     * @deprecated Use JSCF
      */
     protected void createTempFileFromStream(InputStream in)
         throws IOException {
@@ -505,6 +514,7 @@ public class PGPController {
     * {@link #createTempFileFromStream(InputStream)}.
      * @return The contents of the file as a InputStream.
      * @throws IOException if the file cannot be read.
+     * @deprecated Use JSCF
      */
     protected InputStream getTempInputStream() throws IOException {
         return new FileInputStream(tempFile);
@@ -513,11 +523,15 @@ public class PGPController {
     /**
      *  Removes all password saved in the current session. This is used if a recursive dialog asks often for a password in
     * one session, then the password is saved in a internal Map. To clear the Map use this function.
+    * @deprecated Use JSCF
      */
     public void clearAllPassphrases() {
         passwordMap.clear();
     }
 
+    /**
+     * @deprecated Use JSCF
+     */
     public void addPasswordToMap(String key, String item) {
         this.passwordMap.put(key, item);
     }
