@@ -1,4 +1,4 @@
-<!-- $Id: project_status.html,v 1.23 2001/08/16 19:16:44 jon Exp $ -->
+<!-- $Id: project_status.html,v 1.24 2001/09/05 08:23:22 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -20,28 +20,31 @@
 </p>
 
 <p align="center">
-Last Updated: $Date: 2001/08/16 19:16:44 $
+Last Updated: $Date: 2001/09/05 08:23:22 $
 </p>
 
 <h3><i>Tentative</i> Roadmap</h3>
 
 <p>
 Project Start Date: 8/2<br/>
-Project Finish Date: 10/11 
+Project Finish Date: 10/15
 </p>
 
 <p>
 <a href="project_schedule.html">Project Milestones</a>, who is assigned
 to what and their dates of completion are now tracked on another page.
+Note: the finish date says 12/3. Thanks to the magic of M$ Project, this
+isn't accurate. We are shooting for a decently usable system around the
+middle of October.
 </p>
 
 <p>
-There is a <a href="http://scarab.whichever.com">Runbox</a> where
-you can look at an actual instance of Scarab running on a machine. This
-is a nightly build and run of the latest version of Scarab from CVS. Any
-data in the database will get replaced the next rebuild. Note: If it is
-not responding the machine may have crashed, it has been a bit unstable
-as of late...not related to Scarab, try back again later.
+There is a <a href="http://scarab.whichever.com">Runbox</a> where you
+can look at an actual instance of Scarab running on a machine. This is a
+nightly build and run of the latest version of Scarab from CVS. Any data
+in the database will get replaced the next rebuild. Note: If it shows an
+error is not responding, it is probably due to a bad nightly build and
+will be corrected within the next 24 hours.
 </p>
 
 <h3>Recent Activities</h3>
@@ -54,93 +57,16 @@ up to date reflection of the current project status.
 
 <ul>
 <li>
-    6-22-01 - People are still coding, however the M1 milestone has been
-    pushed back another 5 days until 6-29 because Jon is out of town for
-    6-25-6-26 and I think that we won't make 6-25 for M1. Some of the
-    delay is a result of John being out sick for a week and Jon trying
-    to help figure out some show stopping bugs in Catalina's classloader
-    implementation that causes Scarab to not function when classes are
-    reloaded. These were both unanticpated delays.
-</li>
-<li>
-    7-02-01 - Elicia is almost finished with IssueView. John is mostly
-    done with IssueEntry. I (Jon) am still behind on AttributeEditor.
-    However, I have made progress on creating a <a
-    href="http://scarab.whichever.com/">Runbox</a> where people can see
-    Scarab running on a test server. Each night, Scarab and Turbine are
-    checked out from CVS, built clean and Catalina is restarted. We are
-    still waiting on M2 UI's from Briano.
-</li>
-<li>
-    7-10-01 - After some discussion, John is going back and making it so
-    that multiple Attribute values can be defined. This will require
-    creating another table and modifying a bunch of code. This is
-    necessary because it will provide us with a better schema design in
-    the long run. Previously, we were going to just store this
-    information in a text column, but that isn't a good long standing
-    design. Elicia is going to pick up the IssueQuery changes. Jon is
-    working on upgrading Scarab to work with Turbine 2.2 as well as
-    trying to resolve some classloader issues with Tomcat. The UI team
-    is working on updating the UI with a better stylesheet and finishing
-    up the rest of the milestone deliverables.
-</li>
-<li>
-    8-16-01 - It has been a while for an update...we have been busy.
-    John and Elicia are cranking on doing screens (see the new project
-    milestone schedule to see what people are working on). We now have a
-    project milestone schedule thanks to Neal. Jon is ever working on
-    the attribute editor but keeps getting side tracked with underlying
-    framework level and code cleanup issues. There are several 
-    <a href="http://scarab.tigris.org/servlets/SearchList?searchText=TODO&listName=dev&defaultField=subject">TODO</a>
-    items that have been posted to the mailing list that we are looking
-    for someone to own.
+    9-5-01 - Everyone is still coding like mad (see the 
+    <a href="project_schedule.html">Project Schedule</a> for
+    an idea of who is working on what). The latest UI changes
+    are up on the <a href="/nonav/ui/">static website</a>. Once they are
+    finalized, the CollabNet UI team will be updating the Velocity
+    templates to reflect the new UI. This is your chance to 
+    <a href="project_members.html">comment</a> on 
+    how Scarab will look and work.
 </li>
 </ul>
-
-<!--
-
-<h3>What People Are Currently Working On</h3>
-
-<p>
-Please see the <a href="project_members.html">participants page</a> for
-a list of what each persons roles and responsibilities are.
-</p>
-
-<ul>
-    <li><strong>UI/IA</strong>: Brian O'Kelley, Jon S. Stevens</li>
-    <li><strong>Code/Templates</strong>: John McNally, Jon S. Stevens, Elicia
-    David, Warner Onstine</li>
-    <li><strong>Docs</strong>: Jon S. Stevens</li>
-</ul>
-
-<h3>IA/UI Schedule</h3>
-
-<table border="1" cellspacing="1" cellpadding="3">
-<tr>
-<td><strong>Duration</strong></td>
-<td><strong>Tasks</strong></td>
-<td><strong>Status</strong></td>
-</tr>
-<tr>
-<td>May 7-11</td><td>1st draft (Work flows 2.0.0, 2.1.0, 2.2.0, 2.5.0, 2.6.0)</td><td>completed</td>
-</tr>    
-<tr>
-<td>May 14-24</td><td>1st draft (Work flows 2.3.0, 2.0.0.1, 3.0.0.a, 3.1.0.a, 3.2.0.a, 3.3.0.a, 3.4.0.a, 3.5.0.a, 3.6.0.a)</td><td>ongoing</td>
-</tr>    
-<tr>
-<td>May 16</td><td>Work flow review (Jon, Brian)</td><td>ongoing</td>
-</tr>    
-<tr>
-<td>May 18</td><td>Work flow review (Brian, James)</td><td>ongoing</td>
-</tr>    
-<tr>
-<td>May 21</td><td>Page requirements</td><td>&nbsp;</td>
-</tr>    
-<tr>
-<td>May 21-25</td><td>Work flow revisions</td><td>&nbsp;</td>
-</tr>    
-</table>
--->
 
 </body>
 </html>
