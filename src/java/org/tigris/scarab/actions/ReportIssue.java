@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.35 2001/08/15 04:42:40 jon Exp $
+    @version $Id: ReportIssue.java,v 1.36 2001/08/16 01:03:08 jon Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -291,7 +291,7 @@ public class ReportIssue extends TemplateAction
                     intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null ) 
                 {
-                    System.out.println("Parameters: "+data.getParameters());
+//                    System.out.println("Parameters: "+data.getParameters());
                     group.setProperties(aval);
                 }                
             }
