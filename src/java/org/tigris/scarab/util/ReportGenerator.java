@@ -80,6 +80,7 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.TransactionPeer;
+import org.tigris.scarab.om.TransactionTypePeer;
 
 /** 
  * generates reports
@@ -105,6 +106,8 @@ public class ReportGenerator
     private static final String ACT_END_DATE;
     private static final String TRAN_TRANSACTION_ID;
     private static final String TRAN_CREATED_DATE;
+    private static final String TRAN_CREATED_BY;
+    private static final String TRAN_TYPE_ID;
 
     private ModuleEntity module;
     private String name;    
@@ -154,6 +157,10 @@ public class ReportGenerator
             TransactionPeer.TRANSACTION_ID.indexOf('.')+1);
         TRAN_CREATED_DATE = TransactionPeer.CREATED_DATE.substring(
             TransactionPeer.CREATED_DATE.indexOf('.')+1);
+        TRAN_CREATED_BY = TransactionPeer.CREATED_BY.substring(
+            TransactionPeer.CREATED_BY.indexOf('.')+1);
+        TRAN_TYPE_ID = TransactionPeer.TYPE_ID.substring(
+            TransactionPeer.TYPE_ID.indexOf('.')+1);
     }
 
     public List getReportTypes()
@@ -260,22 +267,30 @@ public class ReportGenerator
     
     
     /**
-     * Get the value of generatedDate.
+     * This is the date that was used in the queries for reports on a 
+     * single date.  It is not necessarily the same as the date on which the
+     * queries were run.
      * @return value of generatedDate.
      */
     public Date getGeneratedDate() 
     {
+        if ( generatedDate == null ) 
+        {
+            // if we have multiple dates or if no date was set just set this 
+            // date to the current time
+            if ( getType() == 1 || getNewDate() == null ) 
+            {
+                generatedDate = new Date();
+            }
+            else 
+            {
+                generatedDate = getNewDate();
+            }
+        }
+        
         return generatedDate;
     }
     
-    /**
-     * Set the value of generatedDate.
-     * @param v  Value to assign to generatedDate.
-     */
-    public void setGeneratedDate(Date  v) 
-    {
-        this.generatedDate = v;
-    }
     
     /**
      */
@@ -929,25 +944,24 @@ public class ReportGenerator
         }
     }
 
-    public int getIssueCount(AttributeOption o1, AttributeOption o2,
-                             OptionGroup group, Date date)
-        throws Exception
-    {
-        return runQuery(o1, o2, group, date);
-    }
-
-    public int getIssueCount(AttributeOption o1, AttributeOption o2,
-                             RModuleOption rmo, Date date)
-        throws Exception
-    {
-        return runQuery(o1, o2, rmo, date);
-    }
-
-    public int getIssueCount(AttributeOption o1, Date date)
+    private int getIssueCount(Object o1, Object o2, Object ogOrRmo, Date date)
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.addSelectColumn("count(a1.ISSUE_ID)");
+        // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
+        crit.addSelectColumn("count(DISTINCT a1." + ACT_ISSUE_ID + ')');
+        addOptionOrGroup(1, o1, date, crit);
+        addOptionOrGroup(2, o2, date, crit);
+        addOptionOrGroup(3, ogOrRmo, date, crit);
+        // need to add in module criteria !FIXME!
+        return getCountAndCleanUp(crit);
+    }
+
+    public int getIssueCount(Object o1, Date date)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.addSelectColumn("count(DISTINCT a1." + ACT_ISSUE_ID + ')');
         addOptionOrGroup(1, o1, date, crit);
         // need to add in module criteria !FIXME!
         return getCountAndCleanUp(crit);
@@ -982,9 +996,17 @@ public class ReportGenerator
                                   Date date, Criteria crit)
     {
         String a = "a"+alias;
+        String t = "t"+alias;
         if ( optionOrGroup != null ) 
         {
-            addCommonCriteria(alias, date, crit);            
+            registerAlias(alias, crit);
+            crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
+            crit.add(t, TRAN_CREATED_DATE, date, Criteria.LESS_THAN);   
+            // end date criteria
+            Criteria.Criterion c1 = crit
+                .getNewCriterion(a, ACT_END_DATE, date, Criteria.GREATER_THAN);
+            c1.or(crit.getNewCriterion(a, ACT_END_DATE, null, Criteria.EQUAL));
+            crit.add(c1);
         }
 
         if ( optionOrGroup instanceof OptionGroup ) 
@@ -1005,7 +1027,6 @@ public class ReportGenerator
                 // group is empty make sure there are no results
                 crit.add(a+'.'+ACT_NEW_OPTION_ID, -1);
             }
-            
         }
         else if (optionOrGroup instanceof RModuleOption)
         {
@@ -1025,49 +1046,13 @@ public class ReportGenerator
             crit.add(a, ACT_ATTRIBUTE_ID, rma.getAttributeId());
             crit.add(a, ACT_NEW_USER_ID, user.getUserId());
         }
-    }
-
-    private void addCommonCriteria(int alias, Date date, Criteria crit)
-    {
-        String a = "a"+alias;
-        String t = "t"+alias;
-        registerAlias(alias, crit);
-        crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
-        crit.add(t, TRAN_CREATED_DATE, date, Criteria.LESS_THAN);            
-        // end date criteria
-        Criteria.Criterion c1 = crit
-            .getNewCriterion(a, ACT_END_DATE, date, Criteria.GREATER_THAN);
-        c1.or(crit.getNewCriterion(a, ACT_END_DATE, null, Criteria.EQUAL) );
-        crit.add(c1);
-    }
-
-    /*
-    private void addAttributeAndUser(int alias, AttributeAndUser au, 
-                                     Date date, Criteria crit)
-    {
-        Attribute attribute = au.getAttribute();
-        ScarabUser user = au.getUser();
-        if ( au != null && attribute != null && user != null ) 
+        else if (optionOrGroup instanceof ScarabUser)
         {
-            addCommonCriteria(alias, date, crit);            
-            String a = "a"+alias;
-            crit.add(a, ACT_ATTRIBUTE_ID, attribute.getAttributeId());
-            crit.add(a, ACT_NEW_USER_ID, user.getUserId());
+            crit.add(t, TRAN_TYPE_ID, 
+                     TransactionTypePeer.CREATE_ISSUE__PK);
+            crit.add(t, TRAN_CREATED_BY, 
+                     ((ScarabUser)optionOrGroup).getUserId());
         }
-    }
-    */
-
-    private int runQuery(Object o1, Object o2, Object ogOrRmo, Date date)
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
-        crit.addSelectColumn("count(a1.ISSUE_ID)");
-        addOptionOrGroup(1, o1, date, crit);
-        addOptionOrGroup(2, o2, date, crit);
-        addOptionOrGroup(3, ogOrRmo, date, crit);
-        // need to add in module criteria !FIXME!
-        return getCountAndCleanUp(crit);
     }
 
     private int getCountAndCleanUp(Criteria crit)
@@ -1099,14 +1084,21 @@ public class ReportGenerator
             public Report1TableModel()
                 throws Exception
             {
-                columnData = getSelectedAxis2();
                 rowData = getSelectedAxis1();
-                secondCriteria = getOptionGroups();
-                isGroups = true;
-                if ( secondCriteria == null ) 
+                if ( getType() == 0 ) 
                 {
-                    isGroups = false;
-                    secondCriteria = getSelectedOptionsForGrouping();
+                    columnData = getSelectedAxis2();                    
+                    secondCriteria = getOptionGroups();
+                    isGroups = true;
+                    if ( secondCriteria == null ) 
+                    {
+                        isGroups = false;
+                        secondCriteria = getSelectedOptionsForGrouping();
+                    }
+                }
+                else 
+                {
+                    columnData = Arrays.asList(getDates());
                 }
             }         
 
@@ -1148,15 +1140,30 @@ public class ReportGenerator
                 if ( r >= 0) 
                 {
                     Object rData = rowData.get(r);
-                    contents = new Integer( 
-                        runQuery(rData, cData, secCrit, getNewDate())); 
+                    if ( cData instanceof Date ) 
+                    {
+                        contents = new Integer( 
+                            getIssueCount(rData, (Date)cData) ); 
+                    }
+                    else 
+                    {
+                        contents = new Integer( getIssueCount(
+                            rData, cData, secCrit, getGeneratedDate())); 
+                    }
                 }
                 else   
                 {                      
                     ColumnHeading heading = new ColumnHeading();
-                    heading.setLabel(new Label(cData, secCrit));
+                    if ( cData instanceof Date ) 
+                    {
+                        heading.setLabel(cData);
+                    }
+                    else 
+                    {
+                        heading.setLabel(new Label(cData, secCrit));
+                    }
                     contents = heading;
-                }
+                }                    
             }
             else if ( r >= 0 && c == -1 )
             {                     
@@ -1198,31 +1205,21 @@ public class ReportGenerator
                 }
             }
 
-            public boolean isOption()
+            public boolean isOption(Object obj)
             {
-                return objs.size() == 1 && objs.get(0) instanceof RModuleOption;
+                return obj instanceof RModuleOption;
             }
-            public boolean isOptionGroup()
+            public boolean isOptionGroup(Object obj)
             {
-                return objs.size() == 1 && objs.get(0) instanceof OptionGroup;
+                return obj instanceof OptionGroup;
             }
-            public boolean isOptionAndGroup()
+            public boolean isAttributeAndUser(Object obj)
             {
-                return objs.size() == 2 && objs.get(1) instanceof OptionGroup;
+                return obj instanceof AttributeAndUser;
             }
-            public boolean isOptionAndOption()
+            public boolean isUser(Object obj)
             {
-                return objs.size() == 2 && objs.get(1) instanceof RModuleOption;
-            }
-            public boolean isAttributeAndUser()
-            {
-                return objs.size() == 1 && 
-                    objs.get(0) instanceof AttributeAndUser;
-            }
-            public boolean isUser()
-            {
-                return objs.size() == 1 && 
-                    objs.get(0) instanceof ScarabUser;
+                return obj instanceof ScarabUser;
             }
             public List getSubLabels()
             {

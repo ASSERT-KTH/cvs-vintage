@@ -100,7 +100,6 @@
     #set ($quote = '"')
     #set ($maxRow = $model.RowCount)
     #set ($maxColumn = $model.ColumnCount)
-$maxRow $maxColumn
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 
 #foreach ($rowIndex in [0..$maxRow])
@@ -114,19 +113,23 @@ $maxRow $maxColumn
                 #else
                     #set ($cellLabel = $cell.Label)
                     #if ($model.isDate($cellLabel))
-                        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $cellLabel"))
-                    #elseif ($cellLabel.isOption())
+                        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $cellLabel)")
+                    #elseif ($cellLabel.isOption($cellLabel.subLabel1))
                         #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue")
-                    #elseif ($cellLabel.isOptionGroup())
+                    #elseif ($cellLabel.isOptionGroup($cellLabel.subLabel1))
                         #set ($label = "$cellLabel.SubLabel1.DisplayValue")
-                    #elseif ($cellLabel.isOptionAndGroup())
-                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue $cellLabel.SubLabel2.DisplayValue")
-                    #elseif ($cellLabel.isOptionAndOption())
-                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue $cellLabel.SubLabel2.RModuleAttribute.DisplayValue:$cellLabel.SubLabel2.DisplayValue")
-                    #elseif ($cellLabel.isAttributeAndUser())
+                    #elseif ($cellLabel.isAttributeAndUser($cellLabel.subLabel1))
                         #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.User.UserName")
-                    #elseif ($cellLabel.isUser())
-                        #set ($label = "Author:$cellLabel.SubLabel1.User.UserName")
+                    #elseif ($cellLabel.isUser($cellLabel.subLabel1))
+                        #set ($label = "Author:$cellLabel.SubLabel1.UserName")
+                    #end
+    
+                    #if ($cellLabel.SubLabels.size() == 2)
+                        #if ($cellLabel.isOptionGroup($cellLabel.SubLabel2))
+                            #set ($label = "$label $cellLabel.SubLabel2.DisplayValue")
+                        #elseif ($cellLabel.isOption($cellLabel.SubLabel2))
+                            #set ($label = "$label $cellLabel.SubLabel2.RModuleAttribute.DisplayValue:$cellLabel.SubLabel2.DisplayValue")
+                        #end
                     #end
                 #end
                 #if ($model.isColumnHeading($cell))
@@ -135,7 +138,7 @@ $maxRow $maxColumn
                     #else
                         #set ($colspan = "")
                     #end
-		            <th$colspan>$columnIndex $label</th>
+		            <th$colspan>$label</th>
                 #else
                     #if ($cell.Rowspan > 1)
                         #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
@@ -149,7 +152,7 @@ $maxRow $maxColumn
                 #if ($model.isDate($cell))
                     $format.getDate('MM/dd/yyyy HH:mm', $cell)
                 #elseif (!$cell)
-                    &nbsp;
+                    &nbsp;foo1
                 #else
                     $cell
                 #end

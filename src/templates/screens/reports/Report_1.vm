@@ -2,7 +2,7 @@
 
 <div class="app" id="div2-4-1-a-output">
 
-<h2>$report.Name</h2>
+<h2>$!report.Name</h2>
 	
 <div>
 	<strong>Project:</strong> $report.Module.Name
@@ -17,8 +17,10 @@
 #if ($report.Description)
     <p>$report.Description</p>
 #end
-		
-<p>Report Date/Time: $report.NewDate</p>
+
+#if ($report.Type == 0)
+    <p>Report Date/Time: $report.GeneratedDate</p>
+#end
 		
 #reportTable( $report.Model )
 		
