@@ -127,6 +127,9 @@ public class DateTool {
 	asctimeFormat.setTimeZone(GMT_ZONE);
     }
  
+    private static String rfc1123DS;
+    private static long   rfc1123Sec;
+
     private static StringManager sm =
         StringManager.getManager("org.apache.tomcat.util.buf.res");
 
@@ -139,7 +142,12 @@ public class DateTool {
     /** 
      */
     public static String format1123( Date d ) {
-	return rfc1123Format.format( d );
+        long dt = d.getTime() % 1000;
+        if ((rfc1123DS != null) && (dt == rfc1123Sec))
+            return rfc1123DS;
+        rfc1123DS  = rfc1123Format.format( d );
+        rfc1123Sec = dt;
+        return rfc1123DS;
     } 
 
 

@@ -343,6 +343,14 @@ class HttpResponse extends  Response {
 	    return;
 
 	http.sendStatus( status, HttpMessages.getMessage( status ));
+
+    // Check if a Date is to be added
+    MessageBytes dateH=getMimeHeaders().getValue("Date");
+    if( dateH == null ) {
+    // no date header set by user
+        getMimeHeaders().setValue(  "Date" ).setTime( System.currentTimeMillis());
+    }
+
 	http.sendHeaders( getMimeHeaders() );
     }
 
