@@ -44,19 +44,32 @@ public class ShutdownManager {
 	}
 
 	public void shutdown() {
+		/*
 		JFrame dialog = new JFrame("Saving Folders...");
-
+		
 		dialog.getContentPane().add(new JButton("Saving Folders..."), BorderLayout.CENTER);
 		dialog.pack();
-
+		
 		java.awt.Dimension dim = new Dimension(300, 50);
 		dialog.setSize(dim);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		dialog.setLocation(
 			screenSize.width / 2 - dim.width / 2,
 			screenSize.height / 2 - dim.height / 2);
-
+		
 		dialog.setVisible(true);
+		
+		for (int i = 0; i < list.size(); i++) {
+			ShutdownPluginInterface plugin =
+				(ShutdownPluginInterface) list.get(i);
+		
+			plugin.shutdown();
+		}
+		
+		dialog.setVisible(false);
+		
+		System.exit(1);
+		*/
 
 		for (int i = 0; i < list.size(); i++) {
 			ShutdownPluginInterface plugin =
@@ -64,9 +77,6 @@ public class ShutdownManager {
 
 			plugin.shutdown();
 		}
-
-		dialog.setVisible(false);
-
 		System.exit(1);
 	}
 }
