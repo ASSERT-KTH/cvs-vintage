@@ -44,6 +44,7 @@
     <path id="classpath">
         <fileset dir="${lib.dir}">
             <include name="**/*.jar"/>
+            <exclude name="**/xalan*.jar"/>
         </fileset>
     </path>
 
@@ -175,7 +176,7 @@
         <copy todir="${build.project.webinf}/lib" filtering="no">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
-                <exclude name="**/stylebook*.jar"/>
+                <exclude name="**/xalan*.jar"/>
                 <exclude name="**/${torque.zip}"/>
                 <include name="**/*.jar"/>
             </fileset>
