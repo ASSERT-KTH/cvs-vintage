@@ -225,6 +225,13 @@
              <outputproperty name="method" value="text"/>
         </ant:style> 
 
+        <ant:style  
+             in="xdocs/howto/build-howto.xml"
+             out="NREADME.txt"
+             style="readme.xsl">
+             <outputproperty name="method" value="text"/>
+        </ant:style> 
+
     </goal>
 
     <!-- ===================================================== -->
@@ -400,6 +407,12 @@
     </preGoal>
     
     <preGoal name="java:compile">
+     <ant:echo>
+torque.java.dir=${root.dir}/src/java
+torque.schema.dir=${root.dir}/src/schema
+torque.javadoc.dir=${torque.output.dir}/javadoc
+torque.sql.dir=${torque.output.dir}/sql
+     </ant:echo>
         <attainGoal name="torque:om"/>
     </preGoal>
     
@@ -488,9 +501,15 @@
         </j:if>
         <ant:delete>
             <ant:fileset dir="${basedir}">
-            <ant:include name="**/report.${torque.project}.*.generation"/>
-            </ant:fileset>
+               <ant:include name="**/report.${torque.project}.*.generation"/>
+            </ant:fileset>            
             <ant:fileset dir="${basedir}" includes="junit*.properties">
+            </ant:fileset>
+            <ant:fileset dir="${src.dir}/java/org/tigris/scarab/om">
+                <ant:include name="Base*.java"/>
+            </ant:fileset>
+            <ant:fileset dir="${src.dir}/java">
+                <ant:include name="report.*.generation"/>
             </ant:fileset>
         </ant:delete>
         <ant:delete quiet="true">

@@ -30,7 +30,7 @@ If you are doing development work with Scarab, please make sure to read
 </source>
 
 <p>
-In tis document we use the following logical locations:
+In this document we use the following logical locations:
 <ul>
   <li>$SCARAB_ROOT<br/>
   This is the root of your Scarab source installation</li>
