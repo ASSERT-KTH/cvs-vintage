@@ -54,13 +54,16 @@ import org.apache.turbine.tool.TemplateLink;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.apache.torque.om.NumberKey;    
 
 /**
  * This class adds a special link tool that should only be used
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.1 2002/01/21 03:57:35 jmcnally Exp $
+ * @version $Id: SelectModule.java,v 1.2 2002/05/16 23:50:36 elicia Exp $
  */
 public class SelectModule extends Default
 {
@@ -85,9 +88,23 @@ public class SelectModule extends Default
         /**
          * override super method and make it public
          */
-        public TemplateLink setPage(String t, String moduleid)
+        public TemplateLink setPage(String moduleId)
         {
-            return super.setPage(t, moduleid);
+            String template = null;
+            Module module = null;
+            try
+            {
+                module = ModuleManager.getInstance(new NumberKey(moduleId));
+            if (module.getNavIssueTypes().size() == 0)
+            { 
+                template = "SelectArtifactType.vm";
+            }
+            else
+            {
+                template = "entry,Wizard1.vm";
+            }
+            }catch(Exception e){e.printStackTrace();}
+            return super.setPage(template, moduleId);
         }
     }
 }

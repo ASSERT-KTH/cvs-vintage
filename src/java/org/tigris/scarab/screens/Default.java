@@ -74,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.46 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: Default.java,v 1.47 2002/05/16 23:50:36 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -85,59 +85,7 @@ public class Default extends TemplateSecureScreen
     public void doBuildTemplate( RunData data, TemplateContext context )
         throws Exception 
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-        String lastTarget = null;
-        String currentTemplate = data.getTarget();
-        if ((cancelTargets == null) || (cancelTargets.empty()))
-        {
-            cancelTargets = new Stack();
-        }
-        else
-        {
-            lastTarget = (String)cancelTargets.peek();
-        }
-
-        // Don't save cancel target if it is an Error page,
-        // Or one of the entry wizard pages.
-        if (!currentTemplate.equals(lastTarget) && 
-            !currentTemplate.equals("Error.vm") &&
-            (!(currentTemplate.indexOf("entry") > -1)) )
-        {
-            cancelTargets.push(data.getTarget());
-            saveContext( data ); 
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-    }
-
-    /**
-     * Saves context so it will be there when user cancels back.
-     */
-    public void saveContext( RunData data)
-        throws Exception 
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        String currentTemplate = data.getTarget();
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-
-        if (contextMap == null) 
-        {
-            contextMap = new HashMap();
-        }
-
-        HashMap params = new HashMap();
-        // Save parameters that are id's.
-        Enumeration e = data.getParameters().keys();
-        while ( e.hasMoreElements() )
-        {
-            String key = (String)e.nextElement();
-            if (key.indexOf("id") > -1)
-            {
-               params.put(key, data.getParameters().getStrings(key));
-               contextMap.put(currentTemplate, params); 
-            }
-        }
-        user.setTemp("contextMap", contextMap);
+        // Nothing needed here
     }
 
     /**
