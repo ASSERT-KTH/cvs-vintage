@@ -43,9 +43,9 @@ public class Issue
 
     public String getFederatedId()
     {
-        if ( getIdInstance() != null ) 
+        if ( getIdDomain() != null ) 
         {
-            return getIdInstance() + getUniqueId();
+            return getIdDomain() + getUniqueId();
         }
         return getUniqueId();
     }
@@ -53,14 +53,14 @@ public class Issue
     public void setFederatedId(String id)
     {
         FederatedId fid = new FederatedId(id);
-        setIdInstance(fid.getInstance());
-        setIdPrefix(fid.getInstance());
+        setIdDomain(fid.getDomain());
+        setIdPrefix(fid.getPrefix());
         setIdCount(fid.getCount());
     }
      
     public static class FederatedId
     {
-        String instanceId;
+        String domainId;
         String prefix;
         int count;
 
@@ -69,7 +69,7 @@ public class Issue
             int dash = id.indexOf('-');
             if ( dash > 0 ) 
             {
-                instanceId = id.substring(0, dash);
+                domainId = id.substring(0, dash);
                 setUniqueId(id.substring(dash+1));
             }
             else 
@@ -120,9 +120,9 @@ public class Issue
          * Get the IdInstance
          * @return String
          */
-        public String getInstance()
+        public String getDomain()
         {
-            return instanceId;
+            return domainId;
         }
     }
 
@@ -138,9 +138,9 @@ public class Issue
             .add(IssuePeer.ID_PREFIX, fid.getPrefix())
             .add(IssuePeer.ID_COUNT, fid.getCount());
 
-        if (  fid.getInstance() != null ) 
+        if (  fid.getDomain() != null ) 
         {
-            crit.add(IssuePeer.ID_INSTANCE, fid.getInstance());    
+            crit.add(IssuePeer.ID_DOMAIN, fid.getDomain());    
         }
         
         Issue issue = null;

@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.9 2001/05/14 21:43:55 jon Exp $
+    @version $Id: ScarabConstants.java,v 1.10 2001/05/24 02:09:50 jmcnally Exp $
 */
 
 public interface ScarabConstants
@@ -104,7 +104,7 @@ public interface ScarabConstants
      * It is the prefix to all issue id's created in response to an issue
      * entered against a module in this instance's database.
      */
-    public static final String INSTANCE_NAME = "scarab.instance.name";
+    public static final String DOMAIN_NAME = "scarab.domain.name";
 
     /**
      *  This is maximum rating for a word.
