@@ -57,7 +57,7 @@ public class BodyFilter extends AbstractFilter {
 
 		String body = folder.getMessageSource(uid, worker);
 		int condition = FilterCriteria.getCriteria((String) args[0]);
-		String bodyText = (String) args[0];
+		String bodyText = (String) args[1];
 
 		boolean result = false;
 
