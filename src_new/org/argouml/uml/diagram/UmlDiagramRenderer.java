@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.5 2005/01/26 01:37:36 bobtarling Exp $
+// $Id: UmlDiagramRenderer.java,v 1.6 2005/01/27 00:58:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,13 +108,14 @@ public abstract class UmlDiagramRenderer
      */
     public FigNode getFigNodeFor(Object node, Map styleAttributes) {
         if (node == null) {
-            throw new IllegalArgumentException("A model element must be supplied");
+            throw new IllegalArgumentException(
+                    "A model element must be supplied");
         }
         FigNode figNode = null;
         if (ModelFacade.isAComment(node)) {
             figNode = new FigComment();
         } else if (ModelFacade.isAClass(node)) {
-             figNode = new FigClass();
+            figNode = new FigClass();
         } else if (ModelFacade.isAInterface(node)) {
             figNode = new FigInterface();
         } else if (ModelFacade.isAInstance(node)) {
@@ -176,16 +177,20 @@ public abstract class UmlDiagramRenderer
                 figNode = new FigForkState();
             } else if (ModelFacade.JOIN_PSEUDOSTATEKIND.equals(kind)) {
                 figNode = new FigJoinState();
-            } else if (ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND.equals(kind)) {
+            } else if (ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND
+                    .equals(kind)) {
                 figNode = new FigShallowHistoryState();
             } else if (ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND.equals(kind)) {
                 figNode = new FigDeepHistoryState();
             }
         }
         
-        if (figNode != null) {
-            setStyleAttributes(figNode, styleAttributes);
+        if (figNode == null) {
+            throw new IllegalArgumentException(
+                    "Failed to construct a FigNode for " + node);
         }
+            
+        setStyleAttributes(figNode, styleAttributes);
         
         return figNode;
     }
@@ -265,7 +270,8 @@ public abstract class UmlDiagramRenderer
         }
         
         if (newEdge == null) {
-            throw new IllegalArgumentException("Failed to construct a FigEdge for " + edge);
+            throw new IllegalArgumentException(
+                    "Failed to construct a FigEdge for " + edge);
         }
             
         return newEdge;
