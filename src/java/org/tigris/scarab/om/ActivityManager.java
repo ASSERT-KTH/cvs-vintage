@@ -59,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.11 2002/12/10 06:00:34 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.12 2002/12/24 22:03:02 elicia Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -117,10 +117,20 @@ public class ActivityManager
                                                  NumberKey newUserId)
         throws TorqueException
     {
+        String oldUsername = null;
+        String newUsername = null;
+        if (oldUserId != null)
+        {
+            oldUsername = ((ScarabUser)ScarabUserManager.getInstance(oldUserId)).getUserName();
+        }
+        if (newUserId != null)
+        {
+            newUsername = ((ScarabUser)ScarabUserManager.getInstance(newUserId)).getUserName();
+        }
         return create(issue,attribute,activitySet,description,attachment,
                       0, 0,
                       oldUserId, newUserId, 
-                      null, null, null, null);
+                      null, null, oldUsername, newUsername);
     }
     
     public static Activity createAddDependencyActivity(Issue issue,
