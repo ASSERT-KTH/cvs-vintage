@@ -253,7 +253,10 @@ public final class ContextManager implements LogAware{
     private ClassLoader parentLoader;
     // tomcat classes ( used to load tomcat)
     private URL serverClassPath[];
-    
+
+    // Store Loggers before initializing them
+    private Hashtable Loggers;
+
     private Counters cntr=new Counters(ACCOUNTS);
 
     /**
@@ -291,11 +294,10 @@ public final class ContextManager implements LogAware{
 	}
 
 	state=STATE_INIT;
-
 	Enumeration existingCtxE=contextsV.elements();
 	while( existingCtxE.hasMoreElements() ) {
 	    Context ctx=(Context)existingCtxE.nextElement();
-	    
+
 	    cI=getInterceptors(ctx.getContainer());
 	    for( int i=0; i< cI.length; i++ ) {
 		cI[i].addContext( this, ctx );
@@ -957,17 +959,12 @@ public final class ContextManager implements LogAware{
     public final void addLogger(Logger l) {
 	if (debug>20)
 	    log("addLogger: " + l, new Throwable("trace"), Logger.DEBUG);
+        if( Loggers==null ) Loggers=new Hashtable();
+        Loggers.put(l.toString(),l);
+    }
 
-	String path=l.getPath();
-	if( path!=null ) {
-	    File f=new File( path );
-	    if( ! f.isAbsolute() ) {
-		File wd= new File(getHome(), f.getPath());
-		l.setPath( wd.getAbsolutePath() );
-	    }
-	    // create the files, ready to log.
-	}
-	l.open();
+    public final Hashtable getLoggers(){
+        return Loggers;
     }
 
     public final void log(String msg) {
@@ -975,15 +972,15 @@ public final class ContextManager implements LogAware{
     }
 
     public final void log(String msg, Throwable t) {
-	loghelper.log(msg, t);
+        loghelper.log(msg, t);
     }
 
     public final void log(String msg, int level) {
-	loghelper.log(msg, level);
+        loghelper.log(msg, level);
     }
 
     public final void log(String msg, Throwable t, int level) {
-	loghelper.log(msg, t, level);
+        loghelper.log(msg, t, level);
     }
 
 }

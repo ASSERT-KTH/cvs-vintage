@@ -139,9 +139,28 @@ public final class DefaultCMSetter extends BaseInterceptor {
 				 workDir);
 	}
 	cm.setWorkDir( workDir );
-
+        initLoggers(cm.getLoggers());
     }
-    
+
+    private void initLoggers(Hashtable Loggers){
+        if( Loggers!=null ){
+            Enumeration el=Loggers.elements();
+            while( el.hasMoreElements()){
+                Logger l=(Logger)el.nextElement();
+                String path=l.getPath();
+                if( path!=null ) {
+                    File f=new File( path );
+                    if( ! f.isAbsolute() ) {
+                        File wd= new File(cm.getHome(), f.getPath());
+                        l.setPath( wd.getAbsolutePath() );
+                    }
+                    // create the files, ready to log.
+                }
+                l.open();
+            }
+        }
+    }
+
     /** Adjust paths
      */
     public void addContext( ContextManager cm, Context ctx)
