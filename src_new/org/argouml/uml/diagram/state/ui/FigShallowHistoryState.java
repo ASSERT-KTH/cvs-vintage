@@ -24,7 +24,7 @@
 // File: FigShallowHistoryState.java
 // Classes: FigShallowHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigShallowHistoryState.java,v 1.7 2003/02/15 12:42:50 kataka Exp $
+// $Id: FigShallowHistoryState.java,v 1.8 2003/06/21 08:58:34 mkl Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -73,7 +73,7 @@ public class FigShallowHistoryState extends FigStateVertex {
   public FigShallowHistoryState() {
     _bigPort = new FigCircle(x, y, width, height, Color.cyan, Color.cyan);
     _head = new FigCircle(x, y, width, height, Color.black, Color.white);
-    _name = new FigText(x+5, y+5, width-10, height-10);
+    _name = new FigText(x, y, width-10, height-10);
     _name.setText("H");
     _name.setTextColor(Color.black);
     _name.setFilled(false);

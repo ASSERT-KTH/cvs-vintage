@@ -24,7 +24,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigDeepHistoryState.java,v 1.5 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigDeepHistoryState.java,v 1.6 2003/06/21 08:58:34 mkl Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -73,7 +73,7 @@ public class FigDeepHistoryState extends FigStateVertex {
   public FigDeepHistoryState() {
     _bigPort = new FigCircle(x, y, width, height, Color.cyan, Color.cyan);
     _head = new FigCircle(x, y, width, height, Color.black, Color.white);
-    _name = new FigText(x+5, y+5, width-10, height-10);
+    _name = new FigText(x, y, width-10, height-10);
     _name.setText("H*");
     _name.setTextColor(Color.black);
     _name.setFilled(false);
