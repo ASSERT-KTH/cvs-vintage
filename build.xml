@@ -586,14 +586,17 @@
 
   <target name="sample.add-ons">
     <ant antfile="proposals/PasswordPrompter/build.xml"/>
+    <ant antfile="proposals/StreamHandler/build.xml" />
   </target>
 
   <target name="sample.add-ons.dist" depends="sample.add-ons">
     <ant antfile="proposals/PasswordPrompter/build.xml" target="password.prompter.war"/>
+    <ant antfile="proposals/StreamHandler/build.xml" target="stream.handler.war" />
   </target>
 
   <target name="sample.add-ons.clean">
     <ant antfile="proposals/PasswordPrompter/build.xml" target="clean"/>
+    <ant antfile="proposals/StreamHandler/build.xml" target="clean" />
   </target>
 
   <!-- ==================== Embeded tomcat ======== -->
