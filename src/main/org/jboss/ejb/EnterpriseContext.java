@@ -21,6 +21,7 @@ import javax.ejb.EJBException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.UserTransaction;
+import javax.transaction.TransactionManager;
 import javax.transaction.Synchronization;
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
@@ -42,7 +43,8 @@ import org.jboss.security.SimplePrincipal;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.33 $
+ *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ *  @version $Revision: 1.34 $
  */
 public abstract class EnterpriseContext
 {
@@ -177,9 +179,16 @@ public abstract class EnterpriseContext
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
+
    protected class EJBContextImpl
       implements EJBContext
    {
+      /**
+       *  A per-bean instance UserTransaction instance cached after the
+       *  first call to <code>getUserTransaction()</code>.
+       */
+      private UserTransactionImpl userTransaction = null;
+
       /**
        * @deprecated
        */
@@ -265,11 +274,13 @@ public abstract class EnterpriseContext
       
       public boolean getRollbackOnly() 
       { 
-         try
-         {
+         // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
+         if (con.getBeanMetaData().isBeanManagedTx())
+            throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
+
+         try {
             return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK; 
-         } catch (SystemException e)
-         {
+         } catch (SystemException e) {
 //DEBUG            Logger.debug(e);
             return true;
          }
@@ -277,6 +288,10 @@ public abstract class EnterpriseContext
        
       public void setRollbackOnly() 
       { 
+         // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
+         if (con.getBeanMetaData().isBeanManagedTx())
+            throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
+
          try {
             con.getTransactionManager().setRollbackOnly();
          } catch (IllegalStateException e) {
@@ -329,38 +344,41 @@ public abstract class EnterpriseContext
          return con.getRealmMapping().doesUserHaveRole( principal, set );
        }
    
-      // TODO - how to handle this best?
       public UserTransaction getUserTransaction() 
       { 
-         // If not BMT, throw exception.
-         // We default to the exception here, and override this method for
-         // contexts of bean types that may be able to handle their own
-         // transaction demarcation.
-         throw new IllegalStateException("Not a BMT bean.");
+         if (userTransaction == null) {
+            if (con.getBeanMetaData().isContainerManagedTx())
+               throw new IllegalStateException("CMT beans are not allowed to get a UserTransaction");
+            userTransaction = new UserTransactionImpl(); 
+         }
+         return userTransaction;
       }
    }
    
     // Inner classes -------------------------------------------------
-   
-   
-   // SA MF FIXME: the usertransaction is only used for session beans with BMT.
-   // This does not belong here (getUserTransaction is properly implemented in subclasses)
-   
-   class UserTransactionImpl
+ 
+   protected class UserTransactionImpl
       implements UserTransaction
    {
+      /**
+       *  Timeout value in seconds for new transactions started
+       *  by this bean instance.
+       */
+      private int timeout = 0;
+
       public void begin()
-         throws NotSupportedException,SystemException
+         throws NotSupportedException, SystemException
       {
-         con.getTransactionManager().begin();
-        
-        // keep track of the transaction in enterprise context for BMT
-        setTransaction(con.getTransactionManager().getTransaction());        
-        
-        
-        // DEBUG Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-//DEBUG        Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        
+         TransactionManager tm = con.getTransactionManager();
+
+         // Set the timeout value
+         tm.setTransactionTimeout(timeout);
+
+         // Start the transaction
+         tm.begin();
+
+         // keep track of the transaction in enterprise context for BMT
+         setTransaction(tm.getTransaction());        
       }
       
       public void commit()
@@ -371,9 +389,7 @@ public abstract class EnterpriseContext
                    java.lang.IllegalStateException,
                    SystemException
       {
-//DEBUG        Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        
-        con.getTransactionManager().commit();
+         con.getTransactionManager().commit();
       }
        
       public void rollback()
@@ -381,9 +397,7 @@ public abstract class EnterpriseContext
                      java.lang.SecurityException,
                      SystemException
       {
-//DEBUG        Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        
-        con.getTransactionManager().rollback();
+         con.getTransactionManager().rollback();
       }
       
       public void setRollbackOnly()
@@ -397,11 +411,15 @@ public abstract class EnterpriseContext
       {
          return con.getTransactionManager().getStatus();
       }
-      
+ 
+      /**
+       *  Set the transaction timeout value for new transactions
+       *  started by this instance.
+       */
       public void setTransactionTimeout(int seconds)
          throws SystemException
       {
-         con.getTransactionManager().setTransactionTimeout(seconds);
+         timeout = seconds;
       }
    }
 }

@@ -28,7 +28,7 @@ import org.jboss.metadata.SessionMetaData;
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- *	@version $Revision: 1.12 $
+ *	@version $Revision: 1.13 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -142,13 +142,6 @@ public class StatefulSessionEnterpriseContext
       public Object getPrimaryKey()
       {
          return id;
-      }
-
-      public UserTransaction getUserTransaction()
-      {
-         if (((SessionMetaData)con.getBeanMetaData()).isContainerManagedTx())
-            throw new IllegalStateException("Not a BMT bean.");
-         return new UserTransactionImpl();
       }
    }
 }

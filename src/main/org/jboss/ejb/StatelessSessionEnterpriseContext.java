@@ -30,7 +30,7 @@ import org.jboss.metadata.SessionMetaData;
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -127,13 +127,6 @@ public class StatelessSessionEnterpriseContext
             ejbLocalObject = ((StatelessSessionContainer)con).getLocalContainerInvoker().getStatelessSessionEJBLocalObject(); 
          }
          return ejbLocalObject;
-      }
-
-      public UserTransaction getUserTransaction()
-      {
-         if (((SessionMetaData)con.getBeanMetaData()).isContainerManagedTx())
-            throw new IllegalStateException("Not a BMT bean.");
-         return new UserTransactionImpl();
       }
    }
 }

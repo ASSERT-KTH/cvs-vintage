@@ -38,7 +38,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -165,16 +165,6 @@ public class MessageDrivenEnterpriseContext
 	      super.setRollbackOnly();
 	      
 	   }
-       }
-       
-       public UserTransaction getUserTransaction() 
-       { 
-	   if (((MessageDrivenMetaData)con.getBeanMetaData()).isContainerManagedTx() ) {
-	       // NO transaction
-	       Logger.log("MessageDriven bean is not allowed to get a UserTransactio: transaction is containeremanaged");
-	       throw new IllegalStateException("MessageDriven bean is not allowed to get a UserTransactio: transaction is containeremanaged");
-	   } else
-	       return new UserTransactionImpl();
        }
    }
 }
