@@ -294,9 +294,9 @@
 
 #macro (paginate $pageNum $resultsPerPage $searchType $page)
 #set ($searchType = $data.Parameters.getString("searchType"))
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
-#set ($pageNum = $data.Parameters.getInt("pageNum"))
-#if ($resultsPerPage == 0)
+#set ($resultsPerPage = $data.Parameters.getString("resultsPerPage",""))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage.equals("0"))
   #set ($resultsPerPage = "25")
 #end
 #if ($pageNum == 0)
