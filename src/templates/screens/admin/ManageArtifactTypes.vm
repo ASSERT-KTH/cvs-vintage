@@ -64,7 +64,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th></th>
-<th>#sort ("name" "Issue type name")</th>
+<th>#sort ("name" "Name")</th>
 <th>Active</th>
 <th>Show in left hand nav</th>
 <th>#sort ("sequence" "Sequence #")</th>
