@@ -69,6 +69,16 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+// XXX Do we need this ?
+// For the webapp -> core communication we use a Context attribute to
+// get the FacadeManager to get the Context. We could as well get
+// the Context directly - same security checks.
+
+// For core use ( creation of Facade objects ) we can call directly.
+// In fact, there is only one call ( in ServletWrapper ) and SW
+// belongs to Facade anyway - so it may not need this.
+// Removing it will also make things simpler.
+
 /**
  *   Control for facades - this is the only "gate" between servlets
  *   and tomcat.
