@@ -355,7 +355,7 @@ public class Context {
     }
 
     public void addErrorPage( String errorType, String value ) {
-	this.errorPages.put( errorPages, value );
+	this.errorPages.put( errorType, value );
     }
 
     public String getErrorPage(String errorCode) {
