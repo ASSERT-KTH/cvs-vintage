@@ -106,6 +106,9 @@ public class EmbededTomcat {
     boolean autoDeploy=true;
     
     boolean serverXml=true;
+
+    // prevent tomcat from starting.
+    boolean nostart=false;
     
     public EmbededTomcat() {
 	//	setDebug( 10 );
@@ -147,6 +150,11 @@ public class EmbededTomcat {
 	attributes.put("sandbox", "true");
     }
 
+    public void setJkconf(boolean b ) {
+	attributes.put("jkconf", "true");
+	nostart=true;
+    }
+    
     // First param
     public void setStart(boolean b) {
 	// nothing, default mode
@@ -422,6 +430,11 @@ public class EmbededTomcat {
     }
 
     public void start() throws TomcatException {
+	if( nostart ) {
+	    debug("Tomcat will not start  - configuration only mode ");
+	    contextM.shutdown();
+	    return;
+	}
 	long time3=System.currentTimeMillis();
 	contextM.start();
 	long time4=System.currentTimeMillis();
