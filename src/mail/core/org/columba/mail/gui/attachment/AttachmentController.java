@@ -179,7 +179,7 @@ public class AttachmentController {
 
 		private void maybeShowPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
-				if (getView().countSelected() == 0) {
+				if (getView().countSelected() <= 1) {
 					getView().select(e.getPoint(), 0);
 				}
 				getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
