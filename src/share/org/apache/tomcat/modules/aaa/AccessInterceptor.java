@@ -505,6 +505,23 @@ class FormAuthHandler extends Handler {
 	String username=(String)session.getAttribute( "j_username" );
 
 	if( debug>0) log( "Username = " + username);
+
+	String originalLocation = req.requestURI().toString();
+	if (req.queryString().toString() != null
+                && !req.queryString().toString().equals(""))
+	    originalLocation += "?" + req.queryString().toString();
+        //XXX is needed to put the JVM route too?
+        if (noSession
+	    || Request.SESSIONID_FROM_URL.equals(req.getSessionIdSource()))  {
+	    // If new session we have no way to know if cookies are supported
+	    String id=";jsessionid="+req.getSessionId() ;
+            originalLocation += id ;
+            page += id ;
+	}
+	session.setAttribute( "tomcat.auth.originalLocation",
+			      originalLocation);
+
+
 	if( username != null ) {
 	    // 401 with existing j_username - that means wrong credentials.
 	    // Next time we'll have a fresh start
@@ -517,20 +534,6 @@ class FormAuthHandler extends Handler {
 	    return;
 	}
 
-	String originalLocation = req.requestURI().toString();
-	if (req.queryString().toString() != null
-                && !req.queryString().toString().equals(""))
-	    originalLocation += "?" + req.queryString().toString();
-        //XXX is needed to put the JVM route too?
-        if (noSession 
-	    || Request.SESSIONID_FROM_URL.equals(req.getSessionIdSource()))  {
-	    // If new session we have no way to know if cookies are supported
-	    String id=";jsessionid="+req.getSessionId() ;
-            originalLocation += id ;
-            page += id ;
-	}
-	session.setAttribute( "tomcat.auth.originalLocation",
-			      originalLocation);
 	if( debug > 0 )
 	    log("Redirect1: " + page  + " originalUri=" +
 		originalLocation );
