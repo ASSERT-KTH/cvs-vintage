@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.1 2001/09/02 05:38:21 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DockableWindow
 {
@@ -129,11 +129,6 @@ public class VFSBrowser extends JPanel implements EBComponent, DockableWindow
 		filterCheckbox.setSelected(mode != BROWSER ||
 			jEdit.getBooleanProperty("vfs.browser.filter-enabled"));
 
-		// we ensure that the foreground color is not an UIResource
-		// so that updateUI() does not reset the color back to the
-		// default...
-		filterCheckbox.setForeground(new Color(
-			UIManager.getColor("Label.foreground").getRGB()));
 		filterCheckbox.addActionListener(actionHandler);
 		cons.gridx = 0;
 		cons.weightx = 0.0f;

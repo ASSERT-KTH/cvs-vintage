@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
 /**
  * A wrapper around JavaHelp.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.3 2001/09/09 03:17:10 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.4 2001/09/10 08:46:23 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -47,9 +47,8 @@ public class HelpViewer extends JFrame implements EBComponent
 
 		try
 		{
-			helpSet = new HelpSet();
-			helpSet.add(new HelpSet(HelpViewer.class.getClassLoader(),
-				new URL("jeditresource:/doc/jhelpset.hs")));
+			helpSet = new HelpSet(HelpViewer.class.getClassLoader(),
+				new URL("jeditresource:/doc/jhelpset.hs"));
 			helpSet.add(new HelpSet(HelpViewer.class.getClassLoader(),
 				new URL("jeditresource:/doc/users-guide/jhelpset.hs")));
 		}

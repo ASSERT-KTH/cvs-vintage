@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.jEdit;
 /**
  * A font chooser widget.
  * @author Slava Pestov
- * @version $Id: FontSelector.java,v 1.1 2001/09/02 05:37:41 spestov Exp $
+ * @version $Id: FontSelector.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class FontSelector extends JButton
 {
@@ -202,7 +202,7 @@ class FontSelectorDialog extends EnhancedDialog
 		}
 		catch(Exception e)
 		{
-			size = 14;
+			size = 12;
 		}
 
 		return new Font(familyField.getText(),styleList
@@ -313,7 +313,7 @@ class FontSelectorDialog extends EnhancedDialog
 		}
 		catch(Exception e)
 		{
-			size = 14;
+			size = 12;
 		}
 		int style = styleList.getSelectedIndex();
 

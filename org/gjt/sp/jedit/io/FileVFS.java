@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.3 2001/09/05 01:25:05 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.4 2001/09/10 08:46:23 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -282,17 +282,7 @@ public class FileVFS extends VFS
 		throws IOException
 	{
 		// Fetch properties
-		int backups;
-		try
-		{
-			backups = Integer.parseInt(jEdit.getProperty(
-				"backups"));
-		}
-		catch(NumberFormatException nf)
-		{
-			Log.log(Log.ERROR,this,nf);
-			backups = 1;
-		}
+		int backups = jEdit.getIntegerProperty("backups",1);
 
 		if(backups == 0)
 			return;

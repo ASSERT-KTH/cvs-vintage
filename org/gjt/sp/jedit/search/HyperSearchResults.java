@@ -28,6 +28,7 @@ import java.awt.event.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.msg.*;
+import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.EBComponent;
@@ -39,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.1 2001/09/02 05:38:00 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements DockableWindow,
 	EBComponent
@@ -223,7 +224,11 @@ public class HyperSearchResults extends JPanel implements DockableWindow,
 					{
 						int pos = result.linePos.getOffset();
 						view.setBuffer(buffer);
-						view.getTextArea().setCaretPosition(pos);
+						JEditTextArea textArea = view.getTextArea();
+						if(textArea.isMultipleSelectionEnabled())
+							textArea.moveCaretPosition(pos);
+						else
+							textArea.setCaretPosition(pos);
 						view.toFront();
 						view.requestFocus();
 					}

@@ -1,6 +1,6 @@
 /*
  * OptionsDialog.java - Global options dialog
- * Copyright (C) 1998, 1999, 2000 Slava Pestov
+ * Copyright (C) 1998, 1999, 2000, 2001 Slava Pestov
  * Portions copyright (C) 1999 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.1 2001/09/02 05:37:44 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -256,13 +256,14 @@ public class OptionsDialog extends EnhancedDialog
 		jEditGroup = new OptionGroup("jedit");
 
 		addOptionPane(new GeneralOptionPane(), jEditGroup);
-		addOptionPane(new LoadSaveOptionPane(), jEditGroup);
-		addOptionPane(new EditingOptionPane(), jEditGroup);
-		addOptionPane(new ModeOptionPane(), jEditGroup);
+		addOptionPane(new AppearanceOptionPane(), jEditGroup);
 		addOptionPane(new TextAreaOptionPane(), jEditGroup);
 		addOptionPane(new GutterOptionPane(), jEditGroup);
 		addOptionPane(new ColorOptionPane(), jEditGroup);
 		addOptionPane(new StyleOptionPane(), jEditGroup);
+		addOptionPane(new LoadSaveOptionPane(), jEditGroup);
+		addOptionPane(new EditingOptionPane(), jEditGroup);
+		addOptionPane(new ModeOptionPane(), jEditGroup);
 		addOptionPane(new ShortcutsOptionPane(), jEditGroup);
 		addOptionPane(new DockingOptionPane(), jEditGroup);
 		addOptionPane(new ContextOptionPane(), jEditGroup);

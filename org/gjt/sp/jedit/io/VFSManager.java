@@ -34,7 +34,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * stored elsewhere than the local filesystem, for example on an FTP
  * site.
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
  */
 public class VFSManager
 {
@@ -295,15 +295,7 @@ public class VFSManager
 
 	static
 	{
-		int count;
-		try
-		{
-			count = Integer.parseInt(jEdit.getProperty("ioThreadCount"));
-		}
-		catch(NumberFormatException nf)
-		{
-			count = 4;
-		}
+		int count = jEdit.getIntegerProperty("ioThreadCount",4);
 		ioThreadPool = new WorkThreadPool("jEdit I/O",count);
 		fileVFS = new FileVFS();
 		urlVFS = new UrlVFS();

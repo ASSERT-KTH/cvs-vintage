@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.1 2001/09/02 05:37:59 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog
 {
@@ -178,6 +178,7 @@ public class SearchDialog extends EnhancedDialog
 			if(!save())
 				return;
 
+			System.err.println("calling find()");
 			if(hyperSearch.isSelected())
 			{
 				if(SearchAndReplace.hyperSearch(view));

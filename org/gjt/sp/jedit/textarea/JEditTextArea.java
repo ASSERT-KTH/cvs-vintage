@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.2 2001/09/04 06:45:35 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4911,10 +4911,6 @@ forward_scan:		do
 
 			// repaint gutter and painter
 			gutter.repaint();
-
-			// this should really go elsewhere!!!
-			if(view.getTextArea() == JEditTextArea.this)
-				view.getStatus().updateFoldStatus();
 		}
 	}
 

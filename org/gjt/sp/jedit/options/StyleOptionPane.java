@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: StyleOptionPane.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: StyleOptionPane.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
  */
 public class StyleOptionPane extends AbstractOptionPane
 {
@@ -231,8 +231,8 @@ class StyleTableModel extends AbstractTableModel
 				else
 				{
 					// this part sucks
-					setBackground(GUIUtilities.parseColor(
-						jEdit.getProperty("view.bgColor")));
+					setBackground(jEdit.getColorProperty(
+						"view.bgColor"));
 				}
 				setFont(style.getFont());
 			}
@@ -280,7 +280,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		panel.add(Box.createHorizontalStrut(12));
 		panel.add(bgColor = new JButton("    "));
 		if(style.getBackgroundColor() == null)
-			bgColor.setBackground(GUIUtilities.parseColor(jEdit.getProperty("view.bgColor")));
+			bgColor.setBackground(jEdit.getColorProperty("view.bgColor"));
 		else
 			bgColor.setBackground(style.getBackgroundColor());
 		bgColor.setRequestFocusEnabled(false);
@@ -344,7 +344,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 
 		Color background = bgColor.getBackground();
 
-		if (background.equals(GUIUtilities.parseColor(jEdit.getProperty("view.bgColor"))))
+		if (background.equals(jEdit.getColorProperty("view.bgColor")))
 			background = null;
 
 		return new SyntaxStyle(fgColor.getBackground(),background,

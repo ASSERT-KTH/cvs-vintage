@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.1 2001/09/02 05:37:27 spestov Exp $
+ * @version $Id: View.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -968,7 +968,6 @@ public class View extends JFrame implements EBComponent
 			status.repaintCaretStatus();
 			status.updateBufferStatus();
 			status.updateMiscStatus();
-			status.updateFoldStatus();
 		}
 	}
 
