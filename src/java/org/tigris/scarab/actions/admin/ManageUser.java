@@ -70,13 +70,15 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabGlobalTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is responsible for dealing with the user management
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.19 2003/05/23 19:51:50 dlr Exp $
+ * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
+ * @version $Id: ManageUser.java,v 1.20 2003/06/23 11:45:59 mpoeschl Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -87,6 +89,7 @@ public class ManageUser extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         ScarabUser su = null;
@@ -109,8 +112,7 @@ public class ManageUser extends RequireLoginFirstAction
             }
             
             su  = (ScarabUser) TurbineSecurity.getAnonymousUser();
-            //su.setUserName(data.getParameters().getString("UserName"));
-            su.setUserName(register.get("Email").toString());
+            su.setUserName(register.get("UserName").toString());
             su.setFirstName(register.get("FirstName").toString());
             su.setLastName(register.get("LastName").toString());
             su.setEmail(register.get("Email").toString());
@@ -119,7 +121,7 @@ public class ManageUser extends RequireLoginFirstAction
             if (ScarabUserImplPeer.checkExists(su))
             {
                 setTarget(data, template);
-                scarabR.setAlertMessage("Sorry, a user with that email address already exists!");
+                scarabR.setAlertMessage(l10n.get("UsernameExistsAlready"));
                 data.getParameters().setString("errorLast","true");
                 data.getParameters().setString("state","showadduser");
                 return;
@@ -129,10 +131,11 @@ public class ManageUser extends RequireLoginFirstAction
             try
             {
                 su.createNewUser();
-                ScarabUserImpl.confirmUser(register.get("Email").toString());
+                ScarabUserImpl.confirmUser(register.get("UserName").toString());
                 // force the user to change their password the first time they login
                 su.setPasswordExpire(Calendar.getInstance());
-                scarabR.setConfirmMessage("SUCCESS: a new user was created [username: " + register.get("Email").toString() +"]");
+                scarabR.setConfirmMessage("SUCCESS: a new user was created [username: " 
+                        + register.get("UserName").toString() +"]");
                 data.getParameters().setString("state","showadduser");
                 data.getParameters().setString("lastAction","addeduser");
                 
@@ -212,7 +215,7 @@ public class ManageUser extends RequireLoginFirstAction
                     
                     scarabR.setConfirmMessage("SUCCESS: changes to the user have " + 
                                         " been saved [username: " + 
-                                        register.get("Email").toString() +"]");
+                                        register.get("UserName").toString() +"]");
                     data.getParameters().setString("state","showedituser");
                     data.getParameters().setString("lastAction","editeduser");
                     
@@ -223,7 +226,7 @@ public class ManageUser extends RequireLoginFirstAction
                 {
                     scarabR.setAlertMessage("ERROR: couldn't retrieve the user " + 
                                         " from the DB [username: " + 
-                                        register.get("Email").toString() +"]");
+                                        register.get("UserName").toString() +"]");
                     data.getParameters().setString("state","showedituser");                    
                 }
             }
@@ -389,7 +392,4 @@ public class ManageUser extends RequireLoginFirstAction
     {
         doSearch(data, context);
     }
-    
-
 }
-

@@ -22,12 +22,14 @@
 
 #if (($lastAction) && ($lastAction =="addeduser"))
     #set ($regGroup = $intake.Register.Default)
+    #set ($userNameData = "")
     #set ($firstNameData = "")
     #set ($lastNameData = "")
     #set ($emailData = "")
     #set ($passwordData = "")
 #else
     #set ($regGroup = $intake.Register.Default)
+    #set ($userNameData = $regGroup.UserName)
     #set ($firstNameData = $regGroup.FirstName)
     #set ($lastNameData = $regGroup.LastName)
     #set ($emailData = $regGroup.Email)
@@ -48,6 +50,13 @@
  <td>
   <input name="$regGroup.LastName.Key" value="$lastNameData" type="text" size="25" />
   #fieldErrorMsg($regGroup.LastName "")
+ </td>
+</tr>
+<tr>
+ <th>* $l10n.Username</th>
+ <td>
+  <input name="$regGroup.UserName.Key" value="$userNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.UserName "")
  </td>
 </tr>
 <tr>
