@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.17 2001/08/23 01:21:29 jon Exp $
+$Id: README.txt,v 1.18 2001/08/23 18:44:02 jon Exp $
 
 Welcome to Scarab!
 
@@ -41,6 +41,12 @@ currently doing development primarily on MySQL.
 All of the necessary .jar files for building and running Scarab are included 
 in the /lib directory and the build system is setup to include these into 
 your classpath for you.
+
+If you already have an existing webserver running on port 8080, and you
+are using Scarab's version of Tomcat, you will need to change the port
+number to another unused port number by editing the
+src/tomcat-4.0/conf/server.xml and changing the 8080 to something else.
+Once you have done this, you will need to rebuild the sandbox.
 
 
 -------------------------------------------------------------------------
@@ -115,6 +121,13 @@ NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are
 NOTE: If you already have an existing Tomcat installation and prefer
       to run Scarab from there, first build Scarab and then copy the 
       target/webapps/scarab directory into your own Tomcat installation.
+
+NOTE: If you already have an existing webserver running on port 8080,
+      and you are using Scarab's version of Tomcat, you will need to
+      change the port number to another unused port number by editing
+      the src/tomcat-4.0/conf/server.xml and changing the 8080 to
+      something else. Once you have done this, you will need to rebuild
+      the sandbox.
       
 NOTE: There may be problems building and running Scarab with Tomcat 3.2.1. 
       We have not done this testing yet. If your current Tomcat
