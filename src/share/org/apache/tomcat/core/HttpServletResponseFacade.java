@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.8 2000/04/06 00:00:14 craigmcc Exp $
- * $Revision: 1.8 $
- * $Date: 2000/04/06 00:00:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.9 2000/04/08 00:02:18 craigmcc Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/04/08 00:02:18 $
  *
  * ====================================================================
  *
@@ -153,6 +153,10 @@ implements HttpServletResponse {
     }
     
     public void sendError(int sc, String msg) throws IOException {
+	if (isCommitted())
+	    throw new IllegalStateException(sm.getString("hsrf.error.ise"));
+	else
+	    reset();
 	setStatus( sc );
 	Request request=response.getRequest();
 	request.setAttribute("javax.servlet.error.message", msg);
