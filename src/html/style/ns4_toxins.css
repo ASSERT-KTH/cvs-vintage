@@ -1,65 +1,63 @@
-/* SourceCast v1.2 TOXINS STYLE SHEET */
 
-/* SourceCast - styles start here */
 html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
 	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
-	
 html body, body th, body td, textarea, .app h3, .app h4, .app pre, .app code 	{
-	font-size: x-small;
-	voice-family: "\"}\"";
-	voice-family: inherit;
-	font-size: small;
+	font-size:	x-small;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	small
 	}
 html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body .app pre, html>body .app code	{
-	font-size: small;
+	font-size:	small
 	}
-	
-small, div#footer, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .functnbar td, .functnbar2 td {
-	font-size: xx-small !important;
-	voice-family: "\"}\"";
-	voice-family: inherit;
-	font-size: x-small !important;
+small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
+	font-size:	xx-small !important;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	x-small !important
 	}
-html>body small, html>body div#footer, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .functnbar td, html>body .functnbar2 td {
-	font-size: x-small !important;
+html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select   {
+	font-size:	x-small !important
 	}
-p, ul, ol, dl {
+p, ul, ol, dl	{
 	margin-top:	.67em;
 	margin-bottom: .67em;
-	line-height: 1.4;
+	}
+#bodycol	{
+	line-height: 1.4
 	}
 table, th, td	{
-	border: none;
+	border: none
 	}
-.app h3	{
-	padding: 5px;
-	color: white;
-	margin-right: 2px;
-	margin-left: 2px;
-	}
-.app h3 {
-	background: #369 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
-	border-bottom: 1px solid #333;
-	border-right: 1px solid #333;
+#leftcol div div {
+ margin-top: .4em
  }
-.app h4 {	background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
-	padding: 5px;
+.app h3 {
+	background: #036 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
+ }
+.app h4 {	
+ background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	color: #fff;
+	}
+.app h3, .app h4, .functnbar	 {
+	padding: 5px;
 	margin-right: 2px;
 	margin-left: 2px;
-	border-bottom: 1px solid #333;
-	border-right: 1px solid #333;
-	}
+	color: #fff;
+ }
 .app h3 a, .app h4 a {
  color: white;
- text-decoration: underline;
+ text-decoration: none
  }
-.app th {
-	background: #ccc url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
+.functnbar {
+	padding: 3px;
+	font-weight: bold;
+	background: #000
 	}
 #apphead h2 {
  margin-top: 0;
+ margin-bottom: .2em
  }
 form {
 	margin-top:	0;
@@ -86,17 +84,17 @@ h3, h4	{
  border: none; 
  margin-top: 0
  }
-dt	{
-	font-weight:	bold
-	}
 .docs p+p {
 	text-indent: 5%;
 	margin-top: -.67em
 	}
-ul, ol, dd	{
-margin-left: 0;
-padding-left: 5%
-}
+.docs .courtesylinks p {
+ text-indent: 0
+ }
+.docs ul, .docs ol, .docs dd	{
+ margin-left: 0;
+ padding-left: 5%
+ }
 .docs h3, .docs h4 {
 	margin-bottom: .1em;
  }
@@ -107,10 +105,8 @@ padding-left: 5%
 	border-top: solid 1px #ccc; 
  }
 #banner {
-	border-top: 1px solid #69c;
-	border-left: 1px solid #69c;
-	border-bottom: 2px solid #333;
-	border-right: 1px solid #036;
+	border-top: 1px solid #369;
+	border-bottom: 1px solid #003;
 	}
 #helptext th {
 	border-bottom: 1px solid #996;
@@ -122,14 +118,17 @@ padding-left: 5%
 	}
 ul.tasks {
  padding-left: 0;
- margin-left: 0;
+ margin-left: 2px;
  }
 ul.tasks li {
  display: inline;
- padding-right: 2em;
+ margin-right: 1.5em;
  }
 .tabs { 
- border-bottom: 1em #999 solid
+ border-bottom: 1em #999 solid;
+ margin-top:	.67em;
+ margin-right: 2px;
+ margin-left: 2px;
  }
 .tabs th {
 	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
@@ -140,7 +139,17 @@ ul.tasks li {
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
-/* SourceCast - styles end here */
+#navcolumn div div {
+	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
+	background-repeat: no-repeat;
+	background-position:  .5em 60%;
+ }
+#navcolumn div div div, #navcolumn div.selected {
+	background-image: none;
+	background-color: white;
+	padding-top: .2em;
+	padding-bottom: .3em;
+ }
 
 /* Scarab/App - styles start here */
 .functnbar {

@@ -1,8 +1,4 @@
-/* SourceCast v1.2 STYLE SHEET */
-@import url(/scarab/style/ns4_toxins.css);
 
-
-/* SourceCast - styles start here */
 body {
 	background: white;
 	color: black;
@@ -34,16 +30,22 @@ th, td {
 #globalnav { 
 	font-weight: bold;
 	}
-#leftcol, #bodycol	{
-	vertical-align:	top;
-	}
 #leftcol a:link, #leftcol a:visited {
 	color: blue; 
 	}
-a:active, a:hover {
-	color: #c00;
+a:active, a:hover, #leftcol a:active, #leftcol a:hover {
+	color: #f60 !important;
+	}
+#login a:link, #login a:visited {
+	color: white; 
 	text-decoration: underline;
 	}
+#login a:active, #login a:hover {
+	color: #f60 !important;
+	}
+#helptext a {
+ text-decoration: none;
+ }
 .app th {
 	background-color: #ccc;
 	}
@@ -54,9 +56,8 @@ a:active, a:hover {
 	background: #fff;
 	}
 .datatablechild th {
-	background-color: #c3c3c3;
+	background: #efefef;
 	color: #000;
-	font-weight: normal
 	}
 .datatablechild tr.a td {
 	background: #cf9;
@@ -67,6 +68,10 @@ a:active, a:hover {
 	color: black
 	}
 .alert {
+	background: #ffc;
+	font-weight: bold
+	}
+.selection {
 	background: #ffc;
 	font-weight: bold
 	}
@@ -91,13 +96,6 @@ dd	{
 #login .username {
 	font-weight: bold;
 	}
-#login a:link, #login a:visited {
-	color: white; 
-	text-decoration: underline;
-	}
-#login a:active, #login a:hover {
-	color: #ff0;
-	}
 #helptext {
 	margin-top: 2em
 	}
@@ -116,7 +114,7 @@ dd	{
  }
 .docs h4 { color: #000
  }
-#leftcol a, .tabs a		{
+.tabs a		{
 	text-decoration:	none;
 	}
 .courtesylinks {
@@ -131,16 +129,12 @@ dd	{
  margin-bottom: 0
  }
 #banner, #banner td { 
-	background: #369;
+	background: #036;
 	color: white;
+	vertical-align: middle;
 	}
 body #banner #login a { 
 	color: white;
-	}
-#banner h3 {
-	color: white;
-	padding: .25em;
-	margin: 0;
 	}
 .tabs th {
 	color: white;
@@ -153,7 +147,6 @@ body #banner #login a {
 	padding-left: 7px;
 	padding-right: 7px;
 	}
-/* SourceCast - styles end here */
 
 /* Scarab/App - styles start here */
 
