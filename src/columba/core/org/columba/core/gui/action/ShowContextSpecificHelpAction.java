@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -25,7 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.help.CSH;
-
 
 /**
  * @author frd
@@ -53,7 +53,8 @@ public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
 
         setShowToolBarText(false);
 
-        target = new CSH.DisplayHelpAfterTracking(HelpManager.getHelpBroker());
+        target = new CSH.DisplayHelpAfterTracking(
+                HelpManager.getHelpManager().getHelpBroker());
     }
 
     public void actionPerformed(ActionEvent e) {

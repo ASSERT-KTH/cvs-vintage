@@ -20,6 +20,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.checkabletree.*;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -185,8 +186,6 @@ public class ExportDialog extends JDialog implements ActionListener {
         ButtonWithMnemonic helpButton =
             new ButtonWithMnemonic(
                 MailResourceLoader.getString("global", "help"));
-        helpButton.setActionCommand("HELP");
-        helpButton.addActionListener(this);
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -196,11 +195,10 @@ public class ExportDialog extends JDialog implements ActionListener {
             "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(
-            this,
-            "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "organising_and_managing_your_email_5");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "organising_and_managing_your_email_5");
     }
 
     private void getTreeNodeIteration(TreeNode parent, List l) {
@@ -220,13 +218,6 @@ public class ExportDialog extends JDialog implements ActionListener {
 
         if (action.equals("CLOSE")) {
             setVisible(false);
-        } else if (action.equals("HELP")) {
-            URLController c = new URLController();
-
-            try {
-                c.open(new URL("help.html"));
-            } catch (MalformedURLException mue) {
-            }
         } else if (action.equals("SELECTALL")) {
             List list = new LinkedList();
             getTreeNodeIteration((TreeNode)tree.getModel().getRoot(), list);

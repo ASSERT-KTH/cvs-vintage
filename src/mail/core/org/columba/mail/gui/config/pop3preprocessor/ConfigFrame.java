@@ -284,17 +284,13 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
-        helpButton.setActionCommand("HELP");
-        helpButton.addActionListener(this);
+        //TODO: enable help for button and root pane
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
         getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
@@ -383,13 +379,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
             showFilterDialog();
 
             listView.update();
-        } else if (action.equals("HELP")) {
-            /*
-            URLController c = new URLController();
-            try {
-                    c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/Using%20Columba#x34.x2e.5"));
-            } catch (MalformedURLException mue) {}
-            */
         }
     }
 }

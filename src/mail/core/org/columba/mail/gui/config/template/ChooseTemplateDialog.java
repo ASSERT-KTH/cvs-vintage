@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.template;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -46,10 +47,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
 /**
  * Asks the user to choose a template from a list.
- *
  *
  * @author fdietz
  */
@@ -71,9 +70,7 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
         updateComponents(true);
 
         pack();
-
         setLocationRelativeTo(null);
-
         setVisible(true);
     }
 
@@ -105,7 +102,8 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "template_dialog");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "template_dialog");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "template_dialog");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -148,9 +146,6 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
         getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
         getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 

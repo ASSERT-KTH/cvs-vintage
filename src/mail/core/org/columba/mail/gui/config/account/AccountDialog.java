@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import java.awt.BorderLayout;
@@ -39,7 +40,6 @@ import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
 
 public class AccountDialog implements ActionListener {
     private JDialog dialog;
@@ -125,9 +125,7 @@ public class AccountDialog implements ActionListener {
         dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        dialog.getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(), "configuring_columba");
     }
 
     protected JPanel createButtonPanel() {
@@ -156,7 +154,7 @@ public class AccountDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));

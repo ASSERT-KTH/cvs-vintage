@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.externaltools;
 
 import net.javaprog.ui.wizard.DataLookup;
@@ -34,18 +35,16 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 import javax.help.CSH;
 
-
 /**
  * Launches external tools wizard.
  *
  * @author fdietz
  */
 public class ExternalToolsWizardLauncher {
-    ExternalToolsWizardModelListener listener;
-    DataModel data;
+    protected DataModel data;
+    protected ExternalToolsWizardModelListener listener;
 
-    public void launchFirstTimeWizard(String pluginID) {
-        final String id = pluginID;
+    public void launchWizard(final String pluginID, boolean firstTime) {
         final AbstractExternalToolsPlugin plugin;
         ExternalToolsPluginHandler handler = null;
 
@@ -69,7 +68,7 @@ public class ExternalToolsWizardLauncher {
         data.registerDataLookup("id",
             new DataLookup() {
                 public Object lookupData() {
-                    return id;
+                    return pluginID;
                 }
             });
 
@@ -80,65 +79,16 @@ public class ExternalToolsWizardLauncher {
                 }
             });
 
-        WizardModel model = new DefaultWizardModel(new Step[] {
-                    new InfoStep(), new DescriptionStep(data),
-                    new LocationStep(data)
-                });
-
-        listener = new ExternalToolsWizardModelListener(data);
-        model.addWizardModelListener(listener);
-
-        // TODO: i18n
-        Wizard wizard = new Wizard(model, "External Tools Configuration",
-                ImageLoader.getSmallImageIcon("stock_preferences.png"));
-
-        CSH.setHelpIDString(wizard, "extending_columba_2");
-        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
-
-        wizard.pack();
-        wizard.setLocationRelativeTo(null);
-        wizard.setVisible(true);
-    }
-
-    public void launchWizard(String pluginID) {
-        final String id = pluginID;
-        final AbstractExternalToolsPlugin plugin;
-        ExternalToolsPluginHandler handler = null;
-
-        try {
-            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.core.externaltools");
-        } catch (PluginHandlerNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            plugin = (AbstractExternalToolsPlugin) handler.getPlugin(pluginID,
-                    null);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-
-            return;
-        }
-
-        data = new DataModel();
-        data.registerDataLookup("id",
-            new DataLookup() {
-                public Object lookupData() {
-                    return id;
-                }
-            });
-
-        data.registerDataLookup("Plugin",
-            new DataLookup() {
-                public Object lookupData() {
-                    return plugin;
-                }
-            });
-
-        WizardModel model = new DefaultWizardModel(new Step[] {
+        WizardModel model;
+        if (firstTime) {
+            model = new DefaultWizardModel(new Step[] {
                     new DescriptionStep(data), new LocationStep(data)
-                });
+            });
+        } else {
+            model = new DefaultWizardModel(new Step[] {
+                    new InfoStep(), new DescriptionStep(data), new LocationStep(data)
+            });
+        }
 
         listener = new ExternalToolsWizardModelListener(data);
         model.addWizardModelListener(listener);
@@ -148,7 +98,7 @@ public class ExternalToolsWizardLauncher {
                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
 
         CSH.setHelpIDString(wizard, "extending_columba_2");
-        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
+        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager().getHelpBroker());
 
         wizard.pack();
         wizard.setLocationRelativeTo(null);

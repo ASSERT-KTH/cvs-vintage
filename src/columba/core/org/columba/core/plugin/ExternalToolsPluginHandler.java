@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
 import org.columba.core.main.MainInterface;
@@ -21,7 +22,6 @@ import org.columba.core.gui.externaltools.ExternalToolsWizardLauncher;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
-
 
 /**
  * Provides an easy way to integrate external apps in Columba.
@@ -101,7 +101,7 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
         if (firsttime) {
             // start the configuration wizard
             ExternalToolsWizardLauncher launcher = new ExternalToolsWizardLauncher();
-            launcher.launchFirstTimeWizard(toolID);
+            launcher.launchWizard(toolID, true);
 
             if (launcher.isFinished()) {
                 // ok, now the tool is initialized correctly

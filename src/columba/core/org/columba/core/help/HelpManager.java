@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.help;
 
 import java.awt.Component;
@@ -30,44 +31,36 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-
 /**
  * @author fdietz
  *
  * This class manages all JavaHelp relevant helpsets, its also
- * encapsulates the broker which is used for context sensitiv help
- *
+ * encapsulates the broker which is used for context sensitiv help.
+ * This class is a singleton.
  */
 public class HelpManager {
+    private static HelpManager instance;
+    
     // name of helpset resource
     final static String helpsetName = "jhelpset";
-    private static JHelp jh = null;
-    private static HelpSet hs = null;
-    private static HelpBroker hb = null;
-    private static String hsName = null; // name for the HelpSet 
-    private static String hsPath = null; // URL spec to the HelpSet
-    static String title = "";
-    private static JFrame frame;
+    private JHelp jh = null;
+    private HelpSet hs = null;
+    private HelpBroker hb = null;
+    private String hsName = null; // name for the HelpSet 
+    private String hsPath = null; // URL spec to the HelpSet
+    String title = "";
+    private JFrame frame;
 
-    public HelpManager() {
-        initialize(helpsetName, HelpManager.class.getClassLoader());
-    }
-
-    public static void openHelpFrame() {
-        if (frame == null) {
-            new HelpFrame(jh);
-            frame = HelpFrame.createFrame(hs.getTitle(), null);
-            frame.setVisible(true);
-        } else {
-            frame.setVisible(true);
-        }
-    }
-
-    protected static void initialize(String name, ClassLoader loader) {
-        URL url = HelpSet.findHelpSet(loader, name, "", Locale.getDefault());
+    /**
+     * Creates a new instance. This method is private because it should
+     * only get called from the static getHelpManager() method.
+     */
+    private HelpManager() {
+        ClassLoader loader = getClass().getClassLoader();
+        URL url = HelpSet.findHelpSet(loader, helpsetName, "", Locale.getDefault());
 
         if (url == null) {
-            url = HelpSet.findHelpSet(loader, name, ".hs", Locale.getDefault());
+            url = HelpSet.findHelpSet(loader, helpsetName, ".hs", Locale.getDefault());
 
             if (url == null) {
                 // could not find it!
@@ -78,10 +71,6 @@ public class HelpManager {
             }
         }
 
-        initialize(url, loader);
-    }
-
-    protected static void initialize(URL url, ClassLoader loader) {
         try {
             hs = new HelpSet(loader, url);
         } catch (Exception ee) {
@@ -110,24 +99,49 @@ public class HelpManager {
         jh.getCurrentNavigator().setFont(font);
     }
 
+    public void openHelpFrame() {
+        if (frame == null) {
+            new HelpFrame(jh);
+            frame = HelpFrame.createFrame(hs.getTitle(), null);
+            frame.setVisible(true);
+        } else {
+            frame.setVisible(true);
+        }
+    }
+
     /**
      * @return
      */
-    public static HelpBroker getHelpBroker() {
+    public HelpBroker getHelpBroker() {
         return hb;
     }
 
     /**
-     *
      * Associate button with topic ID.
      *
-     * topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
-     *
+     * Topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
      *
      * @param c                        component
      * @param helpID        helpID
      */
-    public static void enableHelpOnButton(Component c, String helpID) {
+    public void enableHelpOnButton(Component c, String helpID) {
         getHelpBroker().enableHelpOnButton(c, helpID, hs);
+    }
+    
+    /**
+     * Enables the F1 help key on components.
+     */
+    public void enableHelpKey(Component c, String helpID) {
+        getHelpBroker().enableHelpKey(c, helpID, hs);
+    }
+    
+    /**
+     * Returns the singleton help manager instance.
+     */
+    public static HelpManager getHelpManager() {
+        if (instance == null) {
+            instance = new HelpManager();
+        }
+        return instance;
     }
 }

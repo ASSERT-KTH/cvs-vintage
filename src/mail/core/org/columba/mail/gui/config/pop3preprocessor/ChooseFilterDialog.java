@@ -1,13 +1,24 @@
-/*
- * Created on 04.05.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+
 package org.columba.mail.gui.config.pop3preprocessor;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
@@ -113,8 +124,6 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
-        helpButton.setActionCommand("HELP");
-        helpButton.addActionListener(this);
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -123,20 +132,15 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
         getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "organising_and_managing_your_email_3");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "organising_and_managing_your_email_3");
     }
 
     public void valueChanged(ListSelectionEvent event) {
-        int index = list.getSelectedIndex();
-
-        if (index == -1) {
-            // no item selected
-            okButton.setEnabled(false);
-        } else {
-            okButton.setEnabled(true);
-        }
+        okButton.setEnabled(!list.isSelectionEmpty());
     }
 
     public String getSelection() {
@@ -157,14 +161,6 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
         } else if (action.equals("CANCEL")) {
             setVisible(false);
             success = false;
-        } else if (action.equals("HELP")) {
-            URLController c = new URLController();
-
-            try {
-                c.open(new URL(
-                        "http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
-            } catch (MalformedURLException mue) {
-            }
         }
     }
 

@@ -109,9 +109,6 @@ public class Main {
         // set application wide font
         FontProperties.setFont();
 
-        // initialze JavaHelp manager
-        new HelpManager();
-
         //MainInterface.frameModelManager = new FrameModelManager();
         addressbook.initGui();
 

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -22,13 +23,11 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-
 /**
  * Default Button which automatically sets a JavaHelp topic ID
  * based on the AbstractAction name attribute.
  * <p>
  * This is necessary to provide a complete context-specific help.
- *
  *
  * @author fdietz
  */
@@ -47,7 +46,7 @@ public class CButton extends JButton {
         String topicID = (String) action.getValue(AbstractColumbaAction.TOPIC_ID);
 
         if (topicID != null) {
-            HelpManager.enableHelpOnButton(this, topicID);
+            HelpManager.getHelpManager().enableHelpOnButton(this, topicID);
         }
     }
 }

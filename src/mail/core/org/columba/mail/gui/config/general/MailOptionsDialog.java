@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.general;
 
 import java.awt.BorderLayout;
@@ -48,7 +49,6 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.layout.FormLayout;
-
 
 /**
  * Mail General Options Dialog
@@ -345,7 +345,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "configuring_columba_7");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba_7");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "configuring_columba_7");
+        
     }
 
     protected void layoutComponents() {

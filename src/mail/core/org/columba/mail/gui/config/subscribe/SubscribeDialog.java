@@ -225,11 +225,6 @@ public class SubscribeDialog extends JDialog
         ButtonWithMnemonic helpButton =
             new ButtonWithMnemonic(
                 MailResourceLoader.getString("global", "help"));
-
-        // associate with JavaHelp
-        HelpManager.enableHelpOnButton(
-            helpButton,
-            "organising_and_managing_your_email_3");
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -240,11 +235,11 @@ public class SubscribeDialog extends JDialog
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        /*
-		 * getRootPane().registerKeyboardAction( this, "HELP",
-		 * KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-		 * JComponent.WHEN_IN_FOCUSED_WINDOW);
-		 */
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "organising_and_managing_your_email_3");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "organising_and_managing_your_email_3");
     }
 
     public void actionPerformed(ActionEvent e) {

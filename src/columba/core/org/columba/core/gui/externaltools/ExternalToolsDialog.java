@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.externaltools;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -56,7 +57,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 
 /**
  * Shows a list of external tools used in Columba.
@@ -201,8 +201,6 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
 
-        // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "extending_columba_2");
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -210,9 +208,10 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "extending_columba_2");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "extending_columba_2");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -221,7 +220,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         if (action.equals("CLOSE")) {
             setVisible(false);
         } else if (action.equals("CONFIG")) {
-            new ExternalToolsWizardLauncher().launchWizard(selection);
+            new ExternalToolsWizardLauncher().launchWizard(selection, false);
         } else if (action.equals("INFO")) {
             AbstractExternalToolsPlugin plugin = null;
 

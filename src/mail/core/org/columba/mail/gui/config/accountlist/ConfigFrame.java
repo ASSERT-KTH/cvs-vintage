@@ -60,7 +60,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
 public class ConfigFrame implements ActionListener,
     ListSelectionListener //, TreeSelectionListener
  {
@@ -256,14 +255,15 @@ public class ConfigFrame implements ActionListener,
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
-
-        // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
         buttonPanel.add(helpButton);
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         dialog.getRootPane().setDefaultButton(closeButton);
+
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba");
+        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(), "configuring_columba");
     }
 
     public void valueChanged(ListSelectionEvent e) {

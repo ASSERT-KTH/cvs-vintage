@@ -354,9 +354,6 @@ public class FolderOptionsDialog
 		getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
 		KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		getRootPane().registerKeyboardAction(this, "HELP", //$NON-NLS-1$
-		KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	protected JPanel createButtonPanel() {
@@ -383,7 +380,8 @@ public class FolderOptionsDialog
 		ButtonWithMnemonic helpButton= new ButtonWithMnemonic(MailResourceLoader.getString("global", "help")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "folder_options"); //$NON-NLS-1$
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton, "folder_options");
+                HelpManager.getHelpManager().enableHelpKey(getRootPane(), "folder_options");
 
 		JPanel buttonPanel= new JPanel();
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));

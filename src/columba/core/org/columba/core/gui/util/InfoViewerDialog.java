@@ -133,17 +133,13 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
-        helpButton.setActionCommand("HELP");
-        helpButton.addActionListener(this);
+        //TODO: associate help with button and root pane
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
         getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
-            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
@@ -152,13 +148,6 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
         if (action.equals("CLOSE")) {
             setVisible(false);
-        } else if (action.equals("HELP")) {
-            URLController c = new URLController();
-
-            try {
-                c.open(new URL("help.html"));
-            } catch (MalformedURLException mue) {
-            }
         }
     }
 }

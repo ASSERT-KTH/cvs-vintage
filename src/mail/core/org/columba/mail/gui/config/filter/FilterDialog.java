@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -46,7 +47,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-
 
 public class FilterDialog implements ActionListener {
     private JDialog dialog;
@@ -183,10 +183,6 @@ public class FilterDialog implements ActionListener {
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
-
-        // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton,
-            "organizing_and_managing_your_email_3");
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -195,13 +191,12 @@ public class FilterDialog implements ActionListener {
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        /*
-            dialog.getRootPane().registerKeyboardAction(
-                    this,
-                    "HELP",
-                    KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-                    JComponent.WHEN_IN_FOCUSED_WINDOW);
-                    */
+
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "organizing_and_managing_your_email_3");
+        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
+            "organizing_and_managing_your_email_3");
     }
 
     public void updateComponents(boolean b) {

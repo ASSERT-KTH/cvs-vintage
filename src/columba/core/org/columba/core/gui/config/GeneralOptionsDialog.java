@@ -435,7 +435,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "configuring_columba_8");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba_8");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "configuring_columba_8");
     }
 
     public void actionPerformed(ActionEvent event) {
