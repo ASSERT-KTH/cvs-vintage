@@ -49,6 +49,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
@@ -65,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -637,6 +638,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
          invocation.setCredential(SecurityAssociation.getCredential());
+         invocation.setType(InvocationType.LOCAL);
          return manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
@@ -666,6 +668,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
          invocation.setCredential(SecurityAssociation.getCredential());
+         invocation.setType(InvocationType.LOCAL);
          manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
@@ -695,6 +698,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          invocation.setTransaction(tx);
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
          invocation.setCredential(SecurityAssociation.getCredential());
+         invocation.setType(InvocationType.LOCAL);
          manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
