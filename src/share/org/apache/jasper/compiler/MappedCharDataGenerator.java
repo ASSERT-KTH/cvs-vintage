@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.2 2000/03/06 00:33:51 mandar Exp $
- * $Revision: 1.2 $
- * $Date: 2000/03/06 00:33:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.3 2001/07/03 16:27:14 hgomez Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/07/03 16:27:14 $
  *
  * ====================================================================
  * 
@@ -93,7 +93,8 @@ public class MappedCharDataGenerator extends CharDataGenerator {
 		sb.append("\\\\");
 		break;
 	    case '\r':
-		continue;
+		sb.append("\\r");
+		break;
 		/*
 		  case '\'':
 		  sb.append('\\');
@@ -101,7 +102,7 @@ public class MappedCharDataGenerator extends CharDataGenerator {
 		  break;
 		*/
 	    case '\n':
-		sb.append("\\r\\n");
+		sb.append("\\n");
 		writer.print(sb.toString());
 		writer.print("\");\n");
 		sb = new StringBuffer();

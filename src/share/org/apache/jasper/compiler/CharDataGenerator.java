@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.3 2000/07/25 02:21:08 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2000/07/25 02:21:08 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.4 2001/07/03 16:27:12 hgomez Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/07/03 16:27:12 $
  *
  * ====================================================================
  * 
@@ -108,7 +108,8 @@ public class CharDataGenerator
 		sb.append("\\\\");
 		break;
 	    case '\r':
-		continue;
+		sb.append("\\r");
+		break;
 		/*
 		  case '\'':
 		  sb.append('\\');
@@ -116,7 +117,7 @@ public class CharDataGenerator
 		  break;
 		*/
 	    case '\n':
-		sb.append("\\r\\n");
+		sb.append("\\n");
 		break;
 	    case '\t':
 		sb.append("\\t");
