@@ -30,6 +30,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * @author frd
@@ -125,7 +126,7 @@ public class ComposerModel {
 	public void setTo(Address[] a) {
 		for (int i = 0; i < a.length; i++) {
 			ContactItem item = new ContactItem();
-			item.setDisplayName(a[i].getDisplayName());
+			item.setDisplayName(a[i].getShortAddress());
 
 			item.setAddress(a[i].getMailAddress());
 
@@ -164,12 +165,18 @@ public class ComposerModel {
 
 			// for (int i = 0; i < v.size(); i++) {
 			ContactItem item = new ContactItem();
-			Address adr = new Address(str);
-			item.setDisplayName(adr.getDisplayName());
-			item.setAddress(adr.getMailAddress());
-			item.setHeader("To");
-			
-			getToList().add(item);
+			Address adr;
+			try {
+				adr = Address.parse(str);
+				item.setDisplayName(adr.getShortAddress());
+				item.setAddress(adr.getMailAddress());
+				item.setHeader("To");
+
+				getToList().add(item);
+			} catch (ParserException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
