@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.12 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.13 2002/02/19 19:30:10 jmcnally Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -161,4 +161,21 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @return a new <code>Object[]</code> with a view of the original
      */
     public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
+
+    /**
+     * Logs a message at the debug level.  Useful for "I am here" type 
+     * messages. The category is "org.tigris.scarab". 
+     *
+     * @param s message to log
+     */
+    public void log(String s);
+
+    /**
+     * Logs a message at the debug level.  Useful for "I am here" type 
+     * messages. The category in which to log is also specified. 
+     *
+     * @param category log4j Category
+     * @param s message to log
+     */
+    public void log(String category, String s);
 }
