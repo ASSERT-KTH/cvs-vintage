@@ -22,10 +22,9 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
 import org.jboss.invocation.pooled.interfaces.ServerAddress;
-import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
+import org.jboss.invocation.pooled.interfaces.PooledMarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
@@ -51,6 +50,7 @@ import org.jboss.tm.TransactionPropagationContextUtil;
  * 
  *
  * @author    <a href="mailto:bill@jboss.org">Bill Burke</a>
+ * @version $Revision: 1.11 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -104,6 +104,8 @@ public class PooledInvoker extends ServiceMBeanSupport
    protected LRUPool clientpool;
    protected LinkedList threadpool;
    protected boolean running = true;
+   /** The logging trace level flag */
+   protected boolean trace = false;
    /**
     * ObjectName of the <code>transactionManagerService</code> we use.
     * Probably should not be here -- used to set txInterceptor tx mananger.
@@ -122,15 +124,6 @@ public class PooledInvoker extends ServiceMBeanSupport
    // The following methods Override the ServiceMBeanSupport base class
    //
    ////////////////////////////////////////////////////////////////////////
-   /**
-    * Gives this JMX service a name.
-    * @return   The Name value
-    */
-   public String getName()
-   {
-      return "Optimized-Invoker";
-   }
-
 
    protected void jmxBind()
    {
@@ -144,6 +137,7 @@ public class PooledInvoker extends ServiceMBeanSupport
     */
    public void startService() throws Exception
    {
+      trace = log.isTraceEnabled();
 
       ///////////////////////////////////////////////////////////      
       // Setup the transaction stuff
@@ -178,6 +172,7 @@ public class PooledInvoker extends ServiceMBeanSupport
       clientpool.create();
       threadpool = new LinkedList();
       serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
+      serverBindPort = serverSocket.getLocalPort();
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
       ServerAddress sa = new ServerAddress(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
@@ -194,20 +189,21 @@ public class PooledInvoker extends ServiceMBeanSupport
       acceptThreads = new Thread[numAcceptThreads];
       for (int i = 0; i < numAcceptThreads; i++)
       {
-         acceptThreads[i] = new Thread(this);
+         String name = "PooledInvokerAcceptor#"+i+"-"+serverBindPort;
+         acceptThreads[i] = new Thread(this, name);
          acceptThreads[i].start();
       }
    }
 
    public void run()
    {
-      
       while (running)
       {
          try
          {
             Socket socket = serverSocket.accept();
-            //System.out.println("Thread accepted: " + Thread.currentThread());
+            if( trace )
+               log.trace("Accepted: "+socket);
             ServerThread thread = null;
             boolean newThread = false;
             
@@ -232,9 +228,11 @@ public class PooledInvoker extends ServiceMBeanSupport
                      if (thread == null)
                      {
                         clientpool.evict();
-                        log.debug("**** WAITING *****");
+                        if( trace )
+                           log.trace("Waiting for a thread...");
                         clientpool.wait();
-                        log.debug("**** WOKE UP *****");
+                        if( trace )
+                           log.trace("Notified of available thread");
                      }
                   }
                }
@@ -246,12 +244,14 @@ public class PooledInvoker extends ServiceMBeanSupport
             
             if (newThread)
             {
-               log.debug("**** ACQUIRED NEW *****");
+               if( trace )
+                  log.trace("Created a new thread, t="+thread);
                thread.start();
             }
             else
             {
-               log.debug("**** ACQUIRED OLD *****");
+               if( trace )
+                  log.trace("Reusing thread t="+thread);
                thread.wakeup(socket, timeout);
             }
          }
@@ -312,7 +312,7 @@ public class PooledInvoker extends ServiceMBeanSupport
       {
 
          // Deserialize the transaction if it is there
-         MarshalledInvocation mi = (MarshalledInvocation) invocation;
+         PooledMarshalledInvocation mi = (PooledMarshalledInvocation) invocation;
          invocation.setTransaction(importTPC(mi.getTransactionPropagationContext()));
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
