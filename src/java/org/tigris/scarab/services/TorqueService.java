@@ -50,7 +50,6 @@ import org.apache.turbine.Turbine;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.InitializationException;
 import org.apache.torque.Torque;
-import org.apache.torque.TorqueException;
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.util.Log;
 
@@ -61,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * It also creates an instance of each scarab om object to avoid deadlock.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TorqueService.java,v 1.3 2003/07/10 22:45:52 jmcnally Exp $
+ * @version $Id: TorqueService.java,v 1.4 2003/07/25 17:37:02 thierrylach Exp $
  */
 public class TorqueService
     extends BaseService
