@@ -23,7 +23,6 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
-import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.metadata.ConfigurationMetaData;
 
@@ -40,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -55,7 +54,6 @@ public class CMPPersistenceManager
 
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
-   private int commitOption;
    private boolean insertAfterEjbPostCreate;
    private boolean ejbStoreForClean;
 
@@ -76,7 +74,6 @@ public class CMPPersistenceManager
       if(con != null)
       {
          ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
-         commitOption = configuration.getCommitOption();
          ejbStoreForClean = configuration.isEjbStoreForClean();
       }
    }
@@ -304,40 +301,18 @@ public class CMPPersistenceManager
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
    {
+      Object id;
       try
       {
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_FIND);
 
-         // For now only optimize fBPK
-         if(finderMethod.getName().equals("findByPrimaryKey"))
-         {
-            if(args[0] == null)
-            {
-               throw new IllegalArgumentException("findByPrimaryKey called with null argument.");
-            }
-
-            if(commitOption != ConfigurationMetaData.B_COMMIT_OPTION
-               && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
-            {
-               Object key = ctx.getCacheKey();
-               if(key == null)
-               {
-                  key = ((EntityCache) con.getInstanceCache()).createCacheKey(args[0]);
-               }
-               if(con.getInstanceCache().isActive(key))
-               {
-                  return key; // Object is active -> it exists -> no need to call finder
-               }
-            }
-         }
+         // The store will find the entity and return the primaryKey
+         id = store.findEntity(finderMethod, args, ctx);
       }
       finally
       {
          AllowedOperationsAssociation.popInMethodFlag();
       }
-
-      // The store will find the entity and return the primaryKey
-      Object id = store.findEntity(finderMethod, args, ctx);
 
       // We return the cache key
       return ((EntityCache) con.getInstanceCache()).createCacheKey(id);

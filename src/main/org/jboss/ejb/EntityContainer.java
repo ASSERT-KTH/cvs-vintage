@@ -34,9 +34,8 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.util.collection.SerializableEnumeration;
-import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -51,7 +50,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.115 $
+ * @version $Revision: 1.116 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -606,25 +605,31 @@ public class EntityContainer
    public Object findLocal(Invocation mi)
       throws Exception
    {
-      /**
-       * As per the spec 9.6.4, entities must be synchronized with the datastore
-       * when an ejbFind<METHOD> is called.
-       */
-      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
-         synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      Method method = mi.getMethod();
+      Object[] args = mi.getArguments();
+      EntityEnterpriseContext instance = (EntityEnterpriseContext)mi.getEnterpriseContext();
 
-      // Multi-finder?
-      if (!mi.getMethod().getReturnType().equals(getLocalClass()))
+      boolean syncOnCommitOnly = metaData.getContainerConfiguration().getSyncOnCommitOnly();
+      Transaction tx = mi.getTransaction();
+
+      if (!method.getReturnType().equals(getLocalClass()))
       {
+         // as per the spec 9.6.4, entities must be synchronized with the datastore when an ejbFind<METHOD> is called.
+         if (!syncOnCommitOnly)
+         {
+            synchronizeEntitiesWithinTransaction(tx);
+         }
+
          // Iterator finder
-         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+         Collection c = getPersistenceManager().findEntities(method, args, instance);
 
          // Get the EJBObjects with that
          Collection ec = localProxyFactory.getEntityLocalCollection(c);
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
-         try {
-            if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration")))
+         try
+         {
+            if (method.getReturnType().equals(Class.forName("java.util.Enumeration")))
             {
                return java.util.Collections.enumeration(ec);
             }
@@ -632,7 +637,8 @@ public class EntityContainer
             {
                return ec;
             }
-         } catch (ClassNotFoundException e)
+         }
+         catch (ClassNotFoundException e)
          {
             // shouldn't happen
             return ec;
@@ -640,11 +646,7 @@ public class EntityContainer
       }
       else
       {
-         // Single entity finder
-         Object id = getPersistenceManager().findEntity(mi.getMethod(),
-            mi.getArguments(),
-            (EntityEnterpriseContext)mi.getEnterpriseContext());
-
+         Object id = findSingleObject(tx, method, args, instance);
          //create the EJBObject
          return localProxyFactory.getEntityEJBLocalObject(id);
       }
@@ -659,32 +661,39 @@ public class EntityContainer
     */
    public Object find(Invocation mi) throws Exception
    {
-      /**
-       * As per the spec 9.6.4, entities must be synchronized with the datastore
-       * when an ejbFind<METHOD> is called.
-       */
-      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
-         synchronizeEntitiesWithinTransaction(mi.getTransaction());
-
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null)
       {
          String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
          throw new IllegalStateException(msg);
       }
-      // Multi-finder?
-      if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
+
+      Method method = mi.getMethod();
+      Object[] args = mi.getArguments();
+      EntityEnterpriseContext instance = (EntityEnterpriseContext)mi.getEnterpriseContext();
+
+      boolean syncOnCommitOnly = metaData.getContainerConfiguration().getSyncOnCommitOnly();
+      Transaction tx = mi.getTransaction();
+
+      if (!method.getReturnType().equals(getRemoteClass()))
       {
+         // as per the spec 9.6.4, entities must be synchronized with the datastore when an ejbFind<METHOD> is called.
+         if (!syncOnCommitOnly)
+         {
+            synchronizeEntitiesWithinTransaction(tx);
+         }
+
          // Iterator finder
-         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+         Collection c = getPersistenceManager().findEntities(method, args, instance);
 
          // Get the EJBObjects with that
          Collection ec = ci.getEntityCollection(c);
 
          // BMP entity finder methods are allowed to return java.util.Enumeration.
          // We need a serializable Enumeration, so we can't use Collections.enumeration()
-         try {
-            if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration")))
+         try
+         {
+            if (method.getReturnType().equals(Class.forName("java.util.Enumeration")))
             {
                return new SerializableEnumeration(ec);
             }
@@ -692,7 +701,8 @@ public class EntityContainer
             {
                return ec;
             }
-         } catch (ClassNotFoundException e)
+         }
+         catch (ClassNotFoundException e)
          {
             // shouldn't happen
             return ec;
@@ -700,11 +710,7 @@ public class EntityContainer
       }
       else
       {
-         // Single entity finder
-         Object id = getPersistenceManager().findEntity(mi.getMethod(),
-            mi.getArguments(),
-            (EntityEnterpriseContext)mi.getEnterpriseContext());
-
+         Object id = findSingleObject(tx, method, args, instance);
          //create the EJBObject
          return (EJBObject)ci.getEntityEJBObject(id);
       }
@@ -1030,6 +1036,36 @@ public class EntityContainer
       }
    }
 
+   private Object findSingleObject(Transaction tx, Method method, Object[] args, EntityEnterpriseContext instance)
+      throws Exception
+   {
+      if(method.getName().equals("findByPrimaryKey"))
+      {
+         if(args[0] == null)
+            throw new IllegalArgumentException("findByPrimaryKey called with null argument.");
+
+         if(metaData.getContainerConfiguration().getCommitOption() != ConfigurationMetaData.B_COMMIT_OPTION)
+         {
+            Object key = instance.getCacheKey();
+            if(key == null)
+            {
+               key = ((EntityCache)instanceCache).createCacheKey(args[0]);
+            }
+
+            if(instanceCache.isActive(key))
+            {
+               return key;
+            }
+         }
+      }
+      else if(!metaData.getContainerConfiguration().getSyncOnCommitOnly())
+      {
+         EntityContainer.synchronizeEntitiesWithinTransaction(tx);
+      }
+
+      return getPersistenceManager().findEntity(method, args, instance);
+   }
+   
    // Inner classes -------------------------------------------------
 
    /**

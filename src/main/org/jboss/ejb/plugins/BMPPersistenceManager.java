@@ -11,10 +11,8 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityPersistenceManager;
-import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.ConfigurationMetaData;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -39,7 +37,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.49 $
+*  @version $Revision: 1.50 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -65,7 +63,6 @@ public class BMPPersistenceManager
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
    HashMap finderMethods = new HashMap();
-   private int commitOption;
 
    // Static --------------------------------------------------------
 
@@ -75,11 +72,6 @@ public class BMPPersistenceManager
    public void setContainer(Container c)
    {
       con = (EntityContainer)c;
-      if( con != null )
-      {
-         ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
-         commitOption = configuration.getCommitOption();
-      }
    }
 
    public void create()
@@ -601,21 +593,6 @@ public class BMPPersistenceManager
    private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    throws Exception
    {
-      // Check if findByPrimaryKey
-      // If so we check if the entity is in cache first
-      if (finderMethod.getName().equals("findByPrimaryKey")
-          && commitOption != ConfigurationMetaData.B_COMMIT_OPTION
-          && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
-      {
-         Object key = ctx.getCacheKey();
-         if (key == null)
-         {
-            key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
-         }
-         if (con.getInstanceCache().isActive(key))
-            return args[0]; // Object is active -> it exists -> no need to call finder
-      }
-
       // get the finder method
       Method callMethod = (Method)finderMethods.get(finderMethod);
 
