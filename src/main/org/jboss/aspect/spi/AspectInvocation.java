@@ -52,6 +52,8 @@ final public class AspectInvocation implements Coercible
 	}
 
     /** the aspect definition of the aspect */
+    final public AspectDefinition definition;
+    /** the interceptor stack that the method call will use */
     final public AspectInterceptorHolder[] interceptors;
     /** attachments that have been made against the aspect object */
     final public Map aspectAttachments;
@@ -79,6 +81,7 @@ final public class AspectInvocation implements Coercible
      */
     public AspectInvocation(AspectObject handler, Object aspectObject, Method method, Object[] args)
     {
+    	  this.definition = handler.definition;
         this.interceptors = handler.definition.interceptors;
         this.aspectAttachments = handler.attachments;
         this.targetObject = handler.targetObject;
