@@ -34,14 +34,28 @@ $page.setTitle("Assign users")
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
+#if ($issueIdList)
+  #foreach ($id in $issueIdList)
+    <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+  #end
+#elseif ($issueGroup.Ids.Value)
+  #foreach ($id in $issueGroup.Ids.Value)
+    <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+  #end
+#end
+#if ($issueList.size() == 1)
+  #foreach ($id in $issueList)
+  <input type="hidden" name="id" value="$id" />
+  #end
+#end
+  
 <div class="functnbar">
-<input type="submit" value="Done" />
+<input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
 </form>
 
-<a href="$link.setPage("AssignIssue.vm")">Click here</a> to select users to associate with this issue
+<p><a href="$link.setPage("AssignIssue.vm#add")">Click here</a> to select users to associate with this issue</p>
 		
-<P>
 
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
@@ -50,7 +64,15 @@ $page.setTitle("Assign users")
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="id" value="$issue.UniqueId" />
-#PassIssueIds()
+#if ($issueIdList)
+#foreach ($id in $issueIdList)
+  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+#end
+#elseif ($issueGroup.Ids.Value)
+#foreach ($id in $issueGroup.Ids.Value)
+  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+#end
+#end
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
 
@@ -69,8 +91,8 @@ $page.setTitle("Assign users")
 		<tr>
 		<th nowrap="nowrap">&#160;</th>
 		<th>Name</th>
-		<th><a href="#" title="sort">email</a></th>
-		<th>User attribute</th>
+		<th>email</th>
+		<th>Association</th>
 		</tr>
 
 	  #foreach ($userAttr in $userAttrs)
@@ -96,8 +118,8 @@ $page.setTitle("Assign users")
    </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doSave" value="Save" />&#160;
- <input type="submit" name="eventSubmit_doSave" value="Remove selected from assignee list" />
+ <input type="submit" name="eventSubmit_doSavevalues" value="Save changes" />&#160;
+ <input type="submit" name="eventSubmit_doSavevalues" value="Remove selected from assignee list" />
 </div>
   #end
 $intake.declareGroups()
@@ -105,10 +127,42 @@ $intake.declareGroups()
 #end
 
 
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+#if ($issueIdList)
+ #foreach ($id in $issueIdList)
+   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+ #end
+#elseif ($issueGroup.Ids.Value)
+ #foreach ($id in $issueGroup.Ids.Value)
+   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+ #end
+#end
+#if ($issueList.size() == 1)
+  #foreach ($id in $issueList)
+  <input type="hidden" name="id" value="$id" />
+  #end
+#end
+<div class="functnbar">
+<input type="submit" value="Done" name="eventSubmit_doDone" />
+</div>
+</form>
+
+<a name="add"></a>
+
+
 ## USER SEARCH
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#PassIssueIds()
+#if ($issueIdList)
+#foreach ($id in $issueIdList)
+  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+#end
+#elseif ($issueGroup.Ids.Value)
+#foreach ($id in $issueGroup.Ids.Value)
+  <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+#end
+#end
 
 #set ($searchString = $data.Parameters.getString("searchString"))
 
@@ -145,7 +199,7 @@ $intake.declareGroups()
 	<th nowrap="nowrap">&#160;</th>
 	<th>Name</th>
 	<th><a href="#" title="sort">email</a></th>
-	<th>User attribute</th>
+	<th>Association</th>
 	</tr>
         ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 		
@@ -193,15 +247,4 @@ $intake.declareGroups()
 
 #end
 
-#macro (PassIssueIds)
-  #if ($issueIdList)
-    #foreach ($id in $issueIdList)
-      <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-    #end
-  #elseif ($issueGroup.Ids.Value)
-    #foreach ($id in $issueGroup.Ids.Value)
-      <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-    #end
-  #end
-#end
 
