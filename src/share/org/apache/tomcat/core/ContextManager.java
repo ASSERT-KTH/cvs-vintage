@@ -61,7 +61,6 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.net.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.loader.*;
 import org.apache.tomcat.request.*;
@@ -512,11 +511,6 @@ public class ContextManager implements LogAware{
     }
 
     public void addRequestInterceptor( RequestInterceptor ri ) {
-//	if(debug>0) log("Add requestInterceptor javaClass=\"" +
-//			   ri.getClass().getName() + "\" ");
-//	requestInterceptors.addElement( ri );
-//	if( ri instanceof ContextInterceptor )
-//	    contextInterceptors.addElement( ri );
         defaultContainer.addRequestInterceptor(ri);
     }
 
@@ -532,28 +526,7 @@ public class ContextManager implements LogAware{
 	Dynamic add of interceptors is not supported.
     */
     public RequestInterceptor[] getRequestInterceptors( Request req ) {
-        Container ct=req.getContext().getContainer();
-        RequestInterceptor[] cri=ct.getRequestInterceptors();
-        RequestInterceptor[] ari=ct.getCachedInterceptors();
-        if (ari.length == 0){
-            RequestInterceptor[] gri=getRequestInterceptors();
-            if  (cri!=null && cri.length > 0) {
-                int al=cri.length+gri.length;
-                ari=new RequestInterceptor[al];
-                int i;
-                for ( i = 0 ; i < gri.length ; i++ ){
-                    ari[i]=gri[i];
-                }
-                for (int j = 0 ; j < cri.length ; j++ ){
-                    ari[i+j]=cri[j];
-                }
-            } else {
-                ari=gri;
-            }
-            ct.setCachedInterceptors(ari);
-        }
-
-	return ari;
+        return defaultContainer.getRequestInterceptors( req );
     }
 
     /** Return the context interceptors as an array.

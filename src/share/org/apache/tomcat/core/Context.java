@@ -1024,4 +1024,8 @@ public class Context implements LogAware {
 	log( "Illegal access to internal attribute ", null, Logger.ERROR);
 	return false;
     }
+
+    public void addRequestInterceptor( RequestInterceptor ri ) {
+        defaultContainer.addRequestInterceptor(ri);
+    }
 }

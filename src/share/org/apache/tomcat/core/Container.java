@@ -427,5 +427,29 @@ public class Container implements Cloneable{
         rCachedInterceptors = newRCachedInterceptors;
     }
 
+    public RequestInterceptor[] getRequestInterceptors( Request req ) {
+        Container ct=req.getContext().getContainer();
+        RequestInterceptor[] ari=ct.getCachedInterceptors();
+        if (ari.length == 0){
+            RequestInterceptor[] cri=ct.getRequestInterceptors();
+            RequestInterceptor[] gri=getRequestInterceptors();
+            if  (cri!=null && cri.length > 0) {
+                int al=cri.length+gri.length;
+                ari=new RequestInterceptor[al];
+                int i;
+                for ( i = 0 ; i < gri.length ; i++ ){
+                    ari[i]=gri[i];
+                }
+                for (int j = 0 ; j < cri.length ; j++ ){
+                    ari[i+j]=cri[j];
+                }
+            } else {
+                ari=gri;
+            }
+            ct.setCachedInterceptors(ari);
+        }
+
+	return ari;
+    }
 
 }
