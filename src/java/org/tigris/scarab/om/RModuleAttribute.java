@@ -119,17 +119,17 @@ public class RModuleAttribute
     {                
         ModuleEntity module = getScarabModule();
 
-        //if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
-        //{
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        {
             Criteria c = new Criteria()
                 .add(RModuleAttributePeer.MODULE_ID, getModuleId())
                 .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleAttributePeer.doDelete(c);
-        //} 
-        //else
-        //{
-        //    throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        //}            
+        } 
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
     }
 }
