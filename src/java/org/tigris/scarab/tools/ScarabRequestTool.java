@@ -1501,7 +1501,7 @@ try{
         int issuePos = 0;
         for (int i = 0; i<srchResults.size(); i++)
         {
-            if (srchResults.get(i).equals(issue.getIssueId()))
+            if (srchResults.get(i).equals(issue.getUniqueId()))
             {
                 issuePos = i + 1;
                 break;
@@ -1520,9 +1520,7 @@ try{
         int issuePos = getIssuePosInList();
         if (issuePos < getCurrentSearchResults().size())
         {
-            Issue nextIssue = getIssueByPk(getCurrentSearchResults()
-                                          .get(getIssuePosInList()).toString());
-            nextIssueId = nextIssue.getUniqueId();
+            nextIssueId = getCurrentSearchResults().get(getIssuePosInList()).toString();
         }
         return nextIssueId;
     }
@@ -1537,9 +1535,8 @@ try{
         int issuePos = getIssuePosInList();
         if (issuePos > 1)
         {
-            Issue prevIssue = getIssueByPk(getCurrentSearchResults()
-                                          .get(getIssuePosInList() - 2).toString());
-            prevIssueId = prevIssue.getUniqueId();
+            prevIssueId = getCurrentSearchResults()
+                                          .get(getIssuePosInList() - 2).toString();
         }
         return prevIssueId;
     }
