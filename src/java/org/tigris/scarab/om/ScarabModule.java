@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.142 2003/09/16 22:39:13 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.143 2003/09/18 18:18:05 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -125,12 +125,16 @@ public class ScarabModule
         {
             try
             {
-                domain = GlobalParameterManager
-                    .getString(GlobalParameter.MODULE_DOMAIN, this);
+                domain = Turbine.getConfiguration()
+                     .getString(ScarabConstants.WEB_DOMAIN);
+                if (domain == null || domain.trim().length() == 0) 
+                {
+                    domain = "";
+                }
             }
             catch (Exception e)
             {
-                log().error("Error getting MODULE_DOMAIN:", e);
+                log().error("Error getting WEB_DOMAIN:", e);
             }
         }
         return domain;
@@ -157,8 +161,12 @@ public class ScarabModule
     {
         if (port == null)
         {
-            port = GlobalParameterManager
-                   .getString(GlobalParameter.MODULE_PORT, this);
+            port = Turbine.getConfiguration()
+                     .getString(ScarabConstants.WEB_PORT);
+            if (port == null || port.trim().length() == 0) 
+            {
+                port = "";
+            }
         }
         return port;
     }
@@ -185,8 +193,12 @@ public class ScarabModule
     {
         if (scheme == null)
         {
-            scheme = GlobalParameterManager
-                     .getString(GlobalParameter.MODULE_SCHEME, this);
+            scheme = Turbine.getConfiguration()
+                .getString(ScarabConstants.WEB_SCHEME);
+            if (scheme == null || scheme.trim().length() == 0) 
+            {
+                scheme = "";
+            }
         }
         return scheme;
     }
@@ -213,8 +225,12 @@ public class ScarabModule
     {
         if (scriptName == null)
         {
-            scriptName = GlobalParameterManager
-                     .getString(GlobalParameter.MODULE_SCRIPT_NAME, this);
+            scriptName = Turbine.getConfiguration()
+                     .getString(ScarabConstants.WEB_SCRIPT_NAME);
+            if (scriptName == null || scriptName.trim().length() == 0) 
+            {
+                scriptName = "";
+            }            
         }
         return scriptName;
     }
@@ -603,63 +619,6 @@ public class ScarabModule
         }
     }
 
-    private void setDomainInfo()
-    {
-        // need to do this because setDomain is called a lot (unknown reason)
-        // and is passed in a null value. this way, we only set it if it isn't
-        // null.
-        if (domain != null)
-        {
-            try
-            {
-                GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_DOMAIN, this,
-                               domain.toLowerCase());
-            }
-            catch (Exception e)
-            {
-                log().error("Error setting MODULE_DOMAIN:", e);
-            }
-        }
-        if (port != null)
-        {
-            try
-            {
-                GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_PORT, this, port);
-            }
-            catch (Exception e)
-            {
-                log().error("Error setting MODULE_PORT:", e);
-            }
-        }
-        if (scheme != null)
-        {
-            try
-            {
-                GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_SCHEME, this,
-                               scheme.toLowerCase());
-            }
-            catch (Exception e)
-            {
-                log().error("Error setting MODULE_SCHEME:", e);
-            }
-        }
-        if (scriptName != null)
-        {
-            try
-            {
-                GlobalParameterManager
-                    .setString(GlobalParameter.MODULE_SCRIPT_NAME, this, scriptName);
-            }
-            catch (Exception e)
-            {
-                log().error("Error setting MODULE_SCRIPT_NAME:", e);
-            }
-        }
-    }
-
     /**
      * Saves the module into the database. Note that this
      * cannot be used within a activitySet if the module isNew()
@@ -743,9 +702,6 @@ public class ScarabModule
         {
             super.save(dbCon);
         }
-        
-        // save any updated domain information
-        setDomainInfo();
         
         // clear out the cache beause we want to make sure that
         // things get updated properly.
