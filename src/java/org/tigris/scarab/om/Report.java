@@ -107,16 +107,26 @@ public  class Report
     private static final String[] AXIS_CATEGORIES = 
         {"attributes/options", "attributes/users", "committed by/author"};
 
-    private static final String ACT_ATTRIBUTE_ID;
-    private static final String ACT_NEW_USER_ID;
-    private static final String ACT_NEW_OPTION_ID;
-    private static final String ACT_ISSUE_ID;
-    private static final String ACT_TRANSACTION_ID;
-    private static final String ACT_END_DATE;
-    private static final String TRAN_TRANSACTION_ID;
-    private static final String TRAN_CREATED_DATE;
-    private static final String TRAN_CREATED_BY;
-    private static final String TRAN_TYPE_ID;
+    private static final String ACT_ATTRIBUTE_ID = ActivityPeer.ATTRIBUTE_ID.substring(
+            ActivityPeer.ATTRIBUTE_ID.indexOf('.')+1);
+    private static final String ACT_NEW_USER_ID = ActivityPeer.NEW_USER_ID.substring(
+            ActivityPeer.NEW_USER_ID.indexOf('.')+1);
+    private static final String ACT_NEW_OPTION_ID = ActivityPeer.NEW_OPTION_ID.substring(
+            ActivityPeer.NEW_OPTION_ID.indexOf('.')+1);
+    private static final String ACT_ISSUE_ID = ActivityPeer.ISSUE_ID.substring(
+            ActivityPeer.ISSUE_ID.indexOf('.')+1);
+    private static final String ACT_TRANSACTION_ID = ActivityPeer.TRANSACTION_ID.substring(
+            ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
+    private static final String ACT_END_DATE = ActivityPeer.END_DATE.substring(
+            ActivityPeer.END_DATE.indexOf('.')+1);
+    private static final String TRAN_TRANSACTION_ID = TransactionPeer.TRANSACTION_ID.substring(
+            TransactionPeer.TRANSACTION_ID.indexOf('.')+1);
+    private static final String TRAN_CREATED_DATE = TransactionPeer.CREATED_DATE.substring(
+            TransactionPeer.CREATED_DATE.indexOf('.')+1);
+    private static final String TRAN_CREATED_BY = TransactionPeer.CREATED_BY.substring(
+            TransactionPeer.CREATED_BY.indexOf('.')+1);
+    private static final String TRAN_TYPE_ID = TransactionPeer.TYPE_ID.substring(
+            TransactionPeer.TYPE_ID.indexOf('.')+1);
 
     private int type=0;
     private ScarabUser generatedBy;
@@ -131,31 +141,6 @@ public  class Report
 
     /** used to store query key as part of Retrievable interface */ 
     private String queryKey;
-
-    static
-    {
-        // column names only
-        ACT_ATTRIBUTE_ID = ActivityPeer.ATTRIBUTE_ID.substring(
-            ActivityPeer.ATTRIBUTE_ID.indexOf('.')+1);
-        ACT_NEW_USER_ID = ActivityPeer.NEW_USER_ID.substring(
-            ActivityPeer.NEW_USER_ID.indexOf('.')+1);
-        ACT_NEW_OPTION_ID = ActivityPeer.NEW_OPTION_ID.substring(
-            ActivityPeer.NEW_OPTION_ID.indexOf('.')+1);
-        ACT_ISSUE_ID = ActivityPeer.ISSUE_ID.substring(
-            ActivityPeer.ISSUE_ID.indexOf('.')+1);
-        ACT_TRANSACTION_ID = ActivityPeer.TRANSACTION_ID.substring(
-            ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
-        ACT_END_DATE = ActivityPeer.END_DATE.substring(
-            ActivityPeer.END_DATE.indexOf('.')+1);
-        TRAN_TRANSACTION_ID = TransactionPeer.TRANSACTION_ID.substring(
-            TransactionPeer.TRANSACTION_ID.indexOf('.')+1);
-        TRAN_CREATED_DATE = TransactionPeer.CREATED_DATE.substring(
-            TransactionPeer.CREATED_DATE.indexOf('.')+1);
-        TRAN_CREATED_BY = TransactionPeer.CREATED_BY.substring(
-            TransactionPeer.CREATED_BY.indexOf('.')+1);
-        TRAN_TYPE_ID = TransactionPeer.TYPE_ID.substring(
-            TransactionPeer.TYPE_ID.indexOf('.')+1);
-    }
 
     public List getReportTypes()
     {
