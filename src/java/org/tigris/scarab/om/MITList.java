@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.30 2003/06/20 21:28:10 elicia Exp $
+ * @version $Id: MITList.java,v 1.31 2003/06/27 05:33:05 venkatesh Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -755,7 +755,7 @@ public  class MITList
             crit.add(RModuleUserAttributePeer.LIST_ID, null);
             crit.add(RModuleUserAttributePeer.MODULE_ID, 
                      getModule().getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID,
                      getIssueType().getIssueTypeId());
         }
         else 
@@ -782,15 +782,17 @@ public  class MITList
         MITListItem item = getFirstItem();
         List rmos = getModule(item)
             .getLeafRModuleOptions(attribute, getIssueType(item));
-        Iterator i = rmos.iterator();
-        while (i.hasNext()) 
+        if (rmos != null)
         {
-            RModuleOption rmo = (RModuleOption)i.next();
-            AttributeOption option = rmo.getAttributeOption();
-            if (rmo.getActive() && isCommon(option)) 
+            for (Iterator i = rmos.iterator(); i.hasNext(); )
             {
-                matchingRMOs.add(rmo);   
-            }            
+                RModuleOption rmo = (RModuleOption)i.next();
+                AttributeOption option = rmo.getAttributeOption();
+                if (rmo.getActive() && isCommon(option))
+                {
+                    matchingRMOs.add(rmo);
+                }
+            }
         }
         return matchingRMOs;
     }
@@ -808,15 +810,17 @@ public  class MITList
         MITListItem item = getFirstItem();
         List rmos = getModule(item)
             .getOptionTree(attribute, getIssueType(item));
-        Iterator i = rmos.iterator();
-        while (i.hasNext()) 
+        if (rmos != null)
         {
-            RModuleOption rmo = (RModuleOption)i.next();
-            AttributeOption option = rmo.getAttributeOption();
-            if (rmo.getActive() && isCommon(option)) 
+            for (Iterator i = rmos.iterator(); i.hasNext(); )
             {
-                matchingRMOs.add(rmo);   
-            }            
+                RModuleOption rmo = (RModuleOption)i.next();
+                AttributeOption option = rmo.getAttributeOption();
+                if (rmo.getActive() && isCommon(option))
+                {
+                    matchingRMOs.add(rmo);
+                }
+            }
         }
         return matchingRMOs;
     }
