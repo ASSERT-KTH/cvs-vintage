@@ -59,6 +59,7 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	protected DragSource      dragSource = null;
 	private   ArrayList       fDropTargets = null;
 	private   ArrayList       fDragGestureRecognizers=null;
+
 	/**
 	 * origin must be made to go in the Transferable somehow.
 	 */
@@ -70,7 +71,7 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		super(editor);
 //		dragSource = new DragSource();
 		dragSource = DragSource.getDefaultDragSource();
-		System.out.println("Visible Image support = " + dragSource.isDragImageSupported());
+//		System.out.println("Visible Image support = " + dragSource.isDragImageSupported());
 		fDropTargets = new ArrayList();
 		fDragGestureRecognizers = new ArrayList();
 	}
@@ -80,12 +81,12 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 */
 	public void viewCreated(DrawingView view) {
 		super.viewCreated(view);
-		if(Component.class.isInstance( view )/* && DNDInterface.class.isInstance( views[x] )*/) {
+		if (Component.class.isInstance( view )/* && DNDInterface.class.isInstance( views[x] )*/) {
 			Component c = (Component) view;
 			try {
-					DropTarget dt = new DropTarget(c ,DnDConstants.ACTION_COPY_OR_MOVE ,this);
-					fDropTargets.add( dt );
-					//System.out.println("View " + view.getID() + " Initialized to DND.");
+				DropTarget dt = new DropTarget(c, DnDConstants.ACTION_COPY_OR_MOVE, this);
+				fDropTargets.add(dt);
+				//System.out.println("View " + view.getID() + " Initialized to DND.");
 			}
 			catch (java.lang.NullPointerException npe) {
 				System.err.println("View Failed to initialize to DND.");
@@ -93,7 +94,7 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 				System.err.println(npe);
 			}
 		}
-		if(isActive()) {
+		if (isActive()) {
 			createDragGestureRecognizer(view, this);
 		}
 	}
@@ -101,10 +102,10 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * Send when an existing view is about to be destroyed.
 	 */
 	public void viewDestroying(DrawingView view) {
-		if(Component.class.isInstance( view )/* && DNDInterface.class.isInstance( views[x] )*/) {
+		if (Component.class.isInstance( view )/* && DNDInterface.class.isInstance( views[x] )*/) {
 			Component c = (Component) view;
 			DropTarget dt = c.getDropTarget();
-			if(dt != null ) {
+			if (dt != null ) {
 				dt.setComponent( null );
 				dt.removeDropTargetListener( this );
 			}
@@ -118,15 +119,13 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * based on Components.
 	 */
 	public void activate() {
-		if(isActive()) {
-			return;
+		DrawingView[] dv = editor().views();
+		for (int x=0;x < dv.length;x++) {
+			createDragGestureRecognizer(dv[x], this);
 		}
 		super.activate();
-		DrawingView[] dv = editor().views();
-		for(int x=0;x < dv.length;x++) {
-			createDragGestureRecognizer(dv[x],this);
-		}
 	}
+
 	/**
 	 * Called when the tool is deactivated.  This will deinitialize all the
 	 * windows which were set up to use drag and drop.  This must be done or
@@ -134,13 +133,13 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * could be taxing on the functionality of other tools.
 	 */
 	public void deactivate() {
-		if(!isActive()) {
+		if (!isActive()) {
 			return;
 		}
 
 		DrawingView [] dv = editor().views();
-		for(int x=0;x < dv.length;x++) {
-			destroyDragGestreRecognizer(dv[x],this);
+		for (int x=0;x < dv.length;x++) {
+			destroyDragGestreRecognizer(dv[x], this);
 		}
 		super.deactivate();
 	}
@@ -154,51 +153,52 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		Figure figure = view.drawing().findFigure(x, y);
 
 		if (handle != null) {
-			if( LocatorHandle.class.isInstance( handle ) ) {
-				LocatorHandle lh = (LocatorHandle) handle;
+			if (LocatorHandle.class.isInstance(handle)) {
+				LocatorHandle lh = (LocatorHandle)handle;
 				Locator loc = lh.getLocator();
-				if(RelativeLocator.class.isInstance(  loc )) {
+				if (RelativeLocator.class.isInstance(loc)) {
 					RelativeLocator rl = (RelativeLocator) loc;
-					if( rl.equals( RelativeLocator.north() ) ) {
-						view.setCursor( new Cursor( Cursor.N_RESIZE_CURSOR) );
+					if (rl.equals( RelativeLocator.north())) {
+						view.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.northEast() ) ){
-						view.setCursor( new Cursor( Cursor.NE_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.northEast())) {
+						view.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.east() ) ){
-						view.setCursor( new Cursor( Cursor.E_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.east())) {
+						view.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.southEast() ) ){
-						view.setCursor( new Cursor( Cursor.SE_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.southEast())) {
+						view.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.south() ) ){
-						view.setCursor( new Cursor( Cursor.S_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.south())) {
+						view.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.southWest() ) ){
-						view.setCursor( new Cursor( Cursor.SW_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.southWest())) {
+						view.setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.west() ) ){
-						view.setCursor( new Cursor( Cursor.W_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.west())) {
+						view.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
 					}
-					else if(rl.equals( RelativeLocator.northWest() ) ){
-						view.setCursor( new Cursor( Cursor.NW_RESIZE_CURSOR) );
+					else if (rl.equals(RelativeLocator.northWest())) {
+						view.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
 					}
 				}
 			}
 		}
 		else if (figure != null) {
-			view.setCursor(new Cursor( Cursor.MOVE_CURSOR ) );
+			view.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 		}
 		else {
 			view.setCursor(Cursor.getDefaultCursor());
 		}
 	}
+
 	/**
 	 * Handles mouse moves (if the mouse button is up).
 	 * Switches the cursors depending on whats under them.
 	 */
 	public void mouseMove(MouseEvent evt, int x, int y) {
-		setCursor(evt.getX(),evt.getY(),view());
+		setCursor(evt.getX(), evt.getY(), view());
 	}
 	/**
 	 * Handles mouse up events. The events are forwarded to the
@@ -206,22 +206,21 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 */
 	public void mouseUp(MouseEvent e, int x, int y) {
 		view().unfreezeView(); //this should probably go after child mouse up
-		if (fChild != null) // JDK1.1 doesn't guarantee mouseDown, mouseDrag, mouseUp
+		if (fChild != null) { // JDK1.1 doesn't guarantee mouseDown, mouseDrag, mouseUp
 			fChild.mouseUp(e, x, y);
+		}
 		fChild = null;
 	}
 	/**
 	 * Handles mouse down events and starts the corresponding tracker.
 	 */
-	public void mouseDown(MouseEvent e, int x, int y)
-	{
+	public void mouseDown(MouseEvent e, int x, int y) {
 		// on MS-Windows NT: AWT generates additional mouse down events
 		// when the left button is down && right button is clicked.
 		// To avoid dead locks we ignore such events
 		if (fChild != null) {
 			return;
 		}
-
 
 		view().freezeView();
 
@@ -232,10 +231,13 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		else {
 			Figure figure = drawing().findFigure(e.getX(), e.getY());
 			if (figure != null) {
-				//fChild = createDragTracker(view(), figure);
+				//fChild = createDragTracker(editor(), figure);
+				//fChild.activate();
+				fChild = null;
 				if (e.isShiftDown()) {
 				   view().toggleSelection(figure);
-				} else if( !view().selection().contains(figure)) {
+				}
+				else if (!view().isFigureSelected(figure)) {
 					view().clearSelection();
 					view().addToSelection(figure);
 				}
@@ -247,8 +249,9 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 				fChild = createAreaTracker();
 			}
 		}
-		if(fChild != null)
+		if (fChild != null) {
 			fChild.mouseDown(e, x, y);
+		}
 	}
 
 	/**
@@ -256,8 +259,9 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * current tracker.
 	 */
 	public void mouseDrag(MouseEvent e, int x, int y) {
-		if (fChild != null) // JDK1.1 doesn't guarantee mouseDown, mouseDrag, mouseUp
+		if (fChild != null) { // JDK1.1 doesn't guarantee mouseDown, mouseDrag, mouseUp
 			fChild.mouseDrag(e, x, y);
+		}
 	}
 
 	/**
@@ -267,12 +271,14 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	protected Tool createAreaTracker() {
 		return new SelectAreaTracker(editor());
 	}
+
 	/**
 	 * Factory method to create a Drag tracker. It is used to drag a figure.
 	 */
-/*	protected Tool createDragTracker(DrawingView view, Figure f) {
-		return new DragTracker(view, f);
-	}*/
+	protected Tool createDragTracker(DrawingEditor editor, Figure f) {
+		return new DragTracker(editor, f);
+	}
+
 	/**
 	 * Factory method to create a Handle tracker. It is used to track a handle.
 	 */
@@ -284,14 +290,15 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * Used to create the gesture recognizer which in effect turns on draggability.
 	 */
 	private void createDragGestureRecognizer(DrawingView dv, DragGestureListener dgl) {
-		if(Component.class.isInstance( dv ) ) {
-			Component c = (Component) dv;
+		if (Component.class.isInstance(dv)) {
+			Component c = (Component)dv;
 			DragGestureRecognizer dgr =
 						dragSource.createDefaultDragGestureRecognizer(
-							c,
-							DnDConstants.ACTION_COPY_OR_MOVE,
-							this);
-			fDragGestureRecognizers.add( dgr );
+						c,
+						DnDConstants.ACTION_COPY_OR_MOVE,
+						this);
+			//System.out.println("DragGestureRecognizer created: " + dgl);
+			fDragGestureRecognizers.add(dgr);
 		}
 	}
 	/**
@@ -302,17 +309,13 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		while(i.hasNext()) {
 			DragGestureRecognizer dgr = (DragGestureRecognizer)i.next();
 			if ( dgr.getComponent() == dv ) {
-				dgr.removeDragGestureListener( this );
-				dgr.setComponent( null );
+				dgr.removeDragGestureListener(this);
+				dgr.setComponent(null);
 				i.remove();
 				break;
 			}
 		}
 	}
-
-
-
-
 
 //DragGestureListener Interface
 	/**
@@ -321,27 +324,27 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 */
 	public void dragGestureRecognized(DragGestureEvent dge) {
 		Component c = dge.getComponent();
-		Vector selectedElements;
-		java.awt.image.BufferedImage bi;
 //        int sx=50;
 //        int sy=50;
-		if (fChild != null)
+		if (fChild != null) {
 			return;
+		}
 
-		if(DrawingView.class.isInstance( c ) ) {
+		if (DrawingView.class.isInstance(c)) {
 			boolean found = false;
-			DrawingView dv = (DrawingView) c;
-			selectedElements = dv.selectionZOrdered();
+			DrawingView dv = (DrawingView)c;
+			Vector selectedElements = dv.selectionZOrdered();
 			Iterator itr = selectedElements.iterator();
 
-			if( itr.hasNext() == false )
+			if (itr.hasNext() == false) {
 				return;
+			}
 
 			Point p = dge.getDragOrigin();
 			while ( itr.hasNext() ) {
 /*                Figure figgy = (Figure) itr.next();
-				if( figgy.containsPoint( p.x, p.y ) ) {*/
-				if( ((Figure) itr.next()).containsPoint( p.x, p.y ) ) {
+				if (figgy.containsPoint( p.x, p.y ) ) {*/
+				if (((Figure) itr.next()).containsPoint(p.x, p.y)) {
 /*                    Rectangle r = figgy.displayBox();
 					sx = r.width;
 					sy = r.height;*/
@@ -349,17 +352,17 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 					break;
 				}
 			}
-			if( found == true ) {
+			if (found == true) {
 				fChild = null;
 				origin = p;
-				MyTransferable trans = new MyTransferable( selectedElements );
+				MyTransferable trans = new MyTransferable(selectedElements);
 
 				/* SAVE FOR FUTURE DRAG IMAGE SUPPORT */
 				/* drag image support that I need to test on some supporting platform.
 				windows is not supporting this on NT so far. Ill test 98 and 2K next
 
 				boolean support = dragSource.isDragImageSupported();
-				bi = new BufferedImage(sx,sy,BufferedImage.TYPE_INT_RGB);
+				java.awt.image.BufferedImage  bi = new BufferedImage(sx,sy,BufferedImage.TYPE_INT_RGB);
 				Graphics2D g = bi.createGraphics();
 				Iterator itr2 = selectedElements.iterator();
 				while ( itr2.hasNext() ) {
@@ -388,16 +391,12 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	}
 //End DragGestureListener Interface
 
-
-
-
-
 //Begin DropTargetListener Interface
 	/**
 	 * Called when a drag operation has encountered the DropTarget.
 	 */
 	public void dragEnter(DropTargetDragEvent dtde) {
-//        System.out.println("DropTargetDragEvent-dragEnter");
+        //System.out.println("DropTargetDragEvent-dragEnter");
 		supportDropTargetDragEvent(dtde);
 	}
 	/**
@@ -411,6 +410,7 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 public void dragOver(DropTargetDragEvent dtde) {
 		supportDropTargetDragEvent(dtde);
 	 }
+
 	/**
 	 * The drag operation has terminated with a drop on this DropTarget.
 	 */
@@ -418,78 +418,83 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		Transferable trans;
 		Vector figures;
 		DrawingView lView;
-//        System.out.println("DropTargetDropEvent-drop");
+        //System.out.println("DropTargetDropEvent-drop");
 
-		if( dtde.isDataFlavorSupported( VECTORFlavor ) == true ) {
-			if( (dtde.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) != 0 ) {
-				if(dtde.isLocalTransfer() == false ) {
+		if (dtde.isDataFlavorSupported(VECTORFlavor) == true) {
+			if ((dtde.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) != 0 ) {
+				if (dtde.isLocalTransfer() == false) {
 					System.err.println("Intra-JVM Transfers not implemented for figures yet.");
 					return;
 				}
-				dtde.acceptDrop( dtde.getDropAction()  );
+				dtde.acceptDrop(dtde.getDropAction());
 
 				figures = (Vector) ProcessReceivedData(VECTORFlavor, dtde.getTransferable());
-				if( figures != null ) {
-					lView = (DrawingView) dtde.getDropTargetContext().getComponent();
+				if (figures != null) {
+					lView = (DrawingView)dtde.getDropTargetContext().getComponent();
 					lView.clearSelection();
 					Iterator itr = figures.iterator();
 					Point newP = dtde.getLocation();
 
 					int dx = newP.x - origin.x;  /* distance the mouse has moved */
 					int dy = newP.y - origin.y;  /* distance the mouse has moved */
-					while ( itr.hasNext() ) {
-						Figure f = (Figure) itr.next();
-						f.moveBy( dx, dy );
-						lView.add( f );
-						if(dtde.getDropAction() == DnDConstants.ACTION_MOVE )
-							lView.addToSelection( f );
+					while (itr.hasNext()) {
+						Figure f = (Figure)itr.next();
+						f.moveBy(dx, dy);
+						lView.add(f);
+						if (dtde.getDropAction() == DnDConstants.ACTION_MOVE)
+							lView.addToSelection(f);
 					}
 					lView.checkDamage();
 					dtde.getDropTargetContext().dropComplete(true);
 				}
-				else
+				else {
 					dtde.getDropTargetContext().dropComplete(false);
+				}
 			}
-			else
+			else {
 				dtde.rejectDrop();
+			}
 		}
-		else if(dtde.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-			System.out.println("String flavor dropped.");
+		else if (dtde.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+			//System.out.println("String flavor dropped.");
 			dtde.acceptDrop(dtde.getDropAction());
 			Object o = ProcessReceivedData(DataFlavor.stringFlavor, dtde.getTransferable());
-			if( o != null ) {
-				System.out.println("Received string flavored data.");
+			if (o != null) {
+				//System.out.println("Received string flavored data.");
 				dtde.getDropTargetContext().dropComplete(true);
 			}
-			else
+			else {
 				dtde.getDropTargetContext().dropComplete(false);
+			}
 		}
 		else if (dtde.isDataFlavorSupported(ASCIIFlavor) == true) {
-			System.out.println("ASCII Flavor dropped.");
+			//System.out.println("ASCII Flavor dropped.");
 			dtde.acceptDrop(DnDConstants.ACTION_COPY);
 			Object o = ProcessReceivedData(ASCIIFlavor, dtde.getTransferable());
-			if( o!= null ) {
-				System.out.println("Received ASCII Flavored data.");
+			if (o!= null) {
+				//System.out.println("Received ASCII Flavored data.");
 				dtde.getDropTargetContext().dropComplete(true);
-				System.out.println(o);
+				//System.out.println(o);
 			}
-			else
+			else {
 				dtde.getDropTargetContext().dropComplete(false);
+			}
 		}
-		else if(dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)){
-			System.out.println("Java File List Flavor dropped.");
+		else if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)){
+			//System.out.println("Java File List Flavor dropped.");
 			int acts = dtde.getDropAction();
 			dtde.acceptDrop(DnDConstants.ACTION_COPY);
 			java.io.File [] fList = (java.io.File[]) ProcessReceivedData(DataFlavor.javaFileListFlavor, dtde.getTransferable());
-			if(fList != null) {
-				System.out.println("Got list of files.");
-				for(int x=0; x< fList.length; x++ ) {
+			if (fList != null) {
+				//System.out.println("Got list of files.");
+				for (int x=0; x< fList.length; x++ ) {
 					System.out.println(fList[x].getAbsolutePath());
 				}
 				dtde.getDropTargetContext().dropComplete(true);
 			}
-			else
+			else {
 				dtde.getDropTargetContext().dropComplete(false);
+			}
 		}
 	}
 
@@ -497,13 +502,10 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 * Called if the user has modified the current drop gesture.
 	 */
 	public void dropActionChanged(DropTargetDragEvent dtde) {
-//        System.out.println("DropTargetDragEvent-dropActionChanged");
+        //System.out.println("DropTargetDragEvent-dropActionChanged");
 		supportDropTargetDragEvent(dtde);
 	}
 //End DropTargetListener Interface
-
-
-
 
 //Begin DragSourceListener Interface
 	/**
@@ -513,20 +515,21 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 		DrawingView view = (DrawingView) dsde.getDragSourceContext().getComponent();
 		Vector figures;
 
-//        System.out.println("DragSourceDropEvent-dragDropEnd");
-		if( dsde.getDropSuccess() == true ) {
-			if( dsde.getDropAction() == DnDConstants.ACTION_MOVE ) {
+        //System.out.println("DragSourceDropEvent-dragDropEnd");
+		if (dsde.getDropSuccess() == true) {
+			if (dsde.getDropAction() == DnDConstants.ACTION_MOVE) {
 //                System.out.println("DragSourceDropEvent-ACTION_MOVE");
 				figures = (Vector) ProcessReceivedData(VECTORFlavor, dsde.getDragSourceContext().getTransferable());
-				if( figures != null ) {
+				if (figures != null) {
 					Iterator itr = figures.iterator();
-					while ( itr.hasNext() )
-						view.remove( (Figure) itr.next() );
+					while (itr.hasNext()) {
+						view.remove((Figure)itr.next());
+					}
 					view.clearSelection();
 					view.checkDamage();
 				}
 			}
-			else if( dsde.getDropAction() == DnDConstants.ACTION_COPY ) {
+			else if (dsde.getDropAction() == DnDConstants.ACTION_COPY) {
 //                System.out.println("DragSourceDropEvent-ACTION_COPY");
 			}
 		}
@@ -536,16 +539,19 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 */
 	public void dragEnter(DragSourceDragEvent dsde) {
 	}
+
 	/**
 	 * Called as the hotspot exits a platform dependent drop site.
 	 */
 	public void dragExit(DragSourceEvent dse) {
 	}
+
 	/**
 	 * Called as the hotspot moves over a platform dependent drop site.
 	 */
 	public void dragOver(DragSourceDragEvent dsde) {
 	}
+
 	/**
 	 * Called when the user has modified the drop gesture.
 	 */
@@ -553,61 +559,62 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	}
 //End DragSourceListener Interface
 
-
-
 	/**
 	 * Tests wether the Drag event is of a type that we support handling
 	 */
 	protected static void supportDropTargetDragEvent(DropTargetDragEvent dtde) {
-		if( dtde.isDataFlavorSupported( VECTORFlavor ) == true ) {
-			if( dtde.getDropAction() == DnDConstants.ACTION_COPY ) {
-				dtde.acceptDrag( DnDConstants.ACTION_COPY  );
+		if (dtde.isDataFlavorSupported(VECTORFlavor) == true) {
+			if (dtde.getDropAction() == DnDConstants.ACTION_COPY) {
+				dtde.acceptDrag(DnDConstants.ACTION_COPY);
 			}
-			else if( dtde.getDropAction() == DnDConstants.ACTION_MOVE ) {
-				dtde.acceptDrag( DnDConstants.ACTION_MOVE  );
+			else if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) {
+				dtde.acceptDrag(DnDConstants.ACTION_MOVE);
 			}
 		}
-		else if( dtde.isDataFlavorSupported( ASCIIFlavor ) == true ) {
+		else if (dtde.isDataFlavorSupported(ASCIIFlavor) == true) {
 			dtde.acceptDrag(dtde.getDropAction());
 		}
-		else if( dtde.isDataFlavorSupported(DataFlavor.stringFlavor) == true){
+		else if (dtde.isDataFlavorSupported(DataFlavor.stringFlavor) == true) {
 			dtde.acceptDrag(dtde.getDropAction());
 		}
-		else if( dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor) == true) {
+		else if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor) == true) {
 			dtde.acceptDrag(dtde.getDropAction());
 		}
-		else
+		else {
 			dtde.rejectDrag();
+		}
 	}
+
 	/**
 	 * Will return null if the data can not be processed
 	 */
 	protected static Object ProcessReceivedData(DataFlavor flavor, Transferable transferable) {
-		if( transferable == null ) {
+		if (transferable == null) {
 			return null;
 		}
 		try {
-/*            if(flavor.equals(DataFlavor.plainTextFlavor)) {
+/*            if (flavor.equals(DataFlavor.plainTextFlavor)) {
 				//As of 1.3 use stringFlavor.getReaderForText
 				java.io.Reader reader = DataFlavor.stringFlavor.getReaderForText( transferable );
 				return reader;
-			} else*/ if(flavor.equals(DataFlavor.stringFlavor)) {
+			} else*/ if (flavor.equals(DataFlavor.stringFlavor)) {
 				String str = (String) transferable.getTransferData(DataFlavor.stringFlavor);
 				return str;
 			}
-			else if(flavor.equals(DataFlavor.javaFileListFlavor)) {
+			else if (flavor.equals(DataFlavor.javaFileListFlavor)) {
 				java.util.List aList = (java.util.List)transferable.getTransferData(DataFlavor.javaFileListFlavor);
 				java.io.File fList [] = new java.io.File[aList.size()];
 				aList.toArray(fList);
 				return aList;
-			} else if(flavor.equals(ASCIIFlavor)) {
+			}
+			else if (flavor.equals(ASCIIFlavor)) {
 				String txt = null;
 				/* this may be too much work for locally received data */
 				InputStream is = (InputStream)transferable.getTransferData(ASCIIFlavor);
 				int length = is.available();
 				byte[] bytes = new byte[length];
 				int n = is.read(bytes);
-				if(n >0 ) {
+				if (n > 0) {
 					/* seems to be a 0 tacked on the end of Windows strings.  I
 					 * havent checked other platforms.  This does not happen
 					 * with windows socket io.  strange?
@@ -621,7 +628,8 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 					txt = new String(bytes, 0, n);
 				}
 				return txt;
-			} else if(flavor.equals(VECTORFlavor)) {
+			}
+			else if (flavor.equals(VECTORFlavor)) {
 				/**
 				 * I don't think this will work for remote transfer?
 				 * Maybe it will pass the vector, but the contents?
@@ -629,18 +637,19 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 				Vector v = (Vector) transferable.getTransferData(VECTORFlavor);
 				return v;
 			}
-			else
+			else {
 				return null;
+			}
 		}
-		catch(java.io.IOException ioe) {
+		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
 			return null;
 		}
-		catch(UnsupportedFlavorException ufe) {
+		catch (UnsupportedFlavorException ufe) {
 			System.err.println(ufe);
 			return null;
 		}
-		catch(ClassCastException cce) {
+		catch (ClassCastException cce) {
 			System.err.println(cce);
 			return null;
 		}
@@ -687,28 +696,27 @@ public class DragNDropTool extends AbstractTool implements DropTargetListener,
 	 */
 	class MyTransferable implements Transferable , Serializable {
 		Object o;
+
 		public MyTransferable(Object o) {
 			this.o = o;
 		}
+
 		public DataFlavor[] getTransferDataFlavors() {
 			return new DataFlavor [] { VECTORFlavor };
 		}
+
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
-			if ( flavor.equals( VECTORFlavor ) == true )
+			if (flavor.equals( VECTORFlavor ) == true)
 				return true;
 			return false;
 		}
+
 		public Object getTransferData(DataFlavor flavor) throws
 									UnsupportedFlavorException, IOException {
-			if( isDataFlavorSupported(flavor) == false)
+			if ( isDataFlavorSupported(flavor) == false) {
 				throw new UnsupportedFlavorException( flavor );
+			}
 			return o;
 		}
 	}
-
-
-
-
-
-
 }
