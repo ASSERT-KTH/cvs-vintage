@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.26 2005/02/06 20:43:42 spestov Exp $
+ * @version $Id: Registers.java,v 1.27 2005/03/21 23:55:31 spestov Exp $
  */
 public class Registers
 {
@@ -307,6 +307,7 @@ public class Registers
 		}
 
 		registers[name] = newRegister;
+		EditBus.send(new RegisterChanged(null,name));
 	} //}}}
 
 	//{{{ setRegister() method

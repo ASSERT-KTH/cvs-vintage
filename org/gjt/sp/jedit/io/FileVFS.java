@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.52 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.53 2005/03/21 23:55:49 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -267,7 +267,10 @@ public class FileVFS extends VFS
 		} //}}}
 
 		File directory = new File(path);
-		File[] list = fsView.getFiles(directory,false);
+		File[] list = null;
+		if(directory.exists())
+			fsView.getFiles(directory,false);
+
 		if(list == null)
 		{
 			VFSManager.error(comp,path,"ioerror.directory-error-nomsg",null);

@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.350 2005/03/20 21:08:04 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.351 2005/03/21 23:55:49 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5672,13 +5672,10 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	{
 		char[] chars = text.toCharArray();
 		int characters = chars.length;
-		int words;
-		if(characters == 0)
-			words = 0;
-		else
-			words = 1;
+		int words = 0;
 		int lines = 1;
-		boolean word = false;
+		
+		boolean word = true;
 		for(int i = 0; i < chars.length; i++)
 		{
 			switch(chars[i])
@@ -5686,21 +5683,17 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			case '\r': case '\n':
 				lines++;
 			case ' ': case '\t':
+				word = true;
+				break;
+			default:
 				if(word)
 				{
 					words++;
 					word = false;
 				}
 				break;
-			default:
-				word = true;
-				break;
 			}
 		}
-
-		// Fix bug #922951 Off-by-one error in Word Count
-		if(!word)
-			words--;
 
 		Object[] args = { new Integer(characters), new Integer(words),
 			new Integer(lines) };
