@@ -1,8 +1,12 @@
+Manifest-Version: 1.0
+Created-By: @java.vm.version@ (@java.vm.vendor@)
+Specification-Title: @specification.title@
+Specification-Version: @specification.version@
+Specification-Vendor: @specification.vendor@
+Implementation-Title: @implementation.title@
+Implementation-URL: @implementation.url@
+Implementation-Version: @implementation.version@
+Implementation-Vendor: @implementation.vendor@
+Implementation-Vendor-Id: @implementation.vendor.id@
 Main-Class: org.jboss.jmx.connector.rmi.TestServer
 Class-Path: ./ ./jboss-jmx.jar ../lib/jboss-jmx.jar ./jnpserver.jar ../lib/ext/jnpserver.jar ./log4j.jar
-Specification-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@
-Specification-Version: @version.major@.@version.minor@.@version.revision@@version.tag@
-Specification-Vendor: JBoss Group, LLC
-Implementation-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@ CVSTag=@version.name@
-Implementation-Version: @version.major@.@version.minor@.@version.revision@@version.tag@ Date:@build.id@
-Implementation-Vendor: JBoss Group, LLC

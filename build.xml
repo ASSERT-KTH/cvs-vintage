@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.102 2002/07/09 23:08:53 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.103 2002/07/12 22:01:00 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -415,6 +415,7 @@
         <include name="org/jboss/jmx/**/*.java"/>
         <include name="org/jboss/logging/**/*.java"/>
         <include name="org/jboss/naming/**/*.java"/>
+        <include name="org/jboss/web/**/*.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
     </xdoclet>
@@ -553,7 +554,7 @@
     <mkdir dir="${build.lib}"/>
 
     <!-- jboss.jar -->
-    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/manifest/version.mf">
+    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
         
@@ -581,7 +582,7 @@
 
     <!-- jboss-minimal.jar -->
     <jar jarfile="${build.lib}/jboss-minimal.jar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
@@ -590,7 +591,7 @@
 
     <!-- jboss-client.jar -->
     <jar jarfile="${build.lib}/jboss-client.jar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/invocation/Invocation.class"/>
@@ -629,7 +630,7 @@
 
     <!-- jmx-rmi-adaptor.sar --> 
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -642,7 +643,7 @@
 
     <!-- jmx-ejb-adaptor.jar --> 
     <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/adaptor/ejb/**"/>
@@ -656,7 +657,7 @@
 
     <!-- jmx-ejb-connector-client.jar -->
     <jar jarfile="${build.lib}/jmx-ejb-connector-client.jar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -669,7 +670,7 @@
 
     <!-- jmx-ejb-connector-server.sar --> 
     <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
@@ -712,7 +713,7 @@
 
     <!-- jmx-rmi-connector-client.jar -->
     <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
-         manifest="${build.etc}/manifest/version.mf">
+         manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
@@ -780,7 +781,7 @@
 
     <!-- testsuite-support.jar -->
     <jar jarfile="${build.lib}/testsuite-support.jar"
-         manifest="${build.etc}/manifest/deploy.mf">
+         manifest="${build.etc}/manifest/testsuite-support.mf">
       <fileset dir="${build.classes}">
          <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
          <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
