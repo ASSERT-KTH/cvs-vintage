@@ -2,62 +2,82 @@
 <!DOCTYPE tree SYSTEM "tree.dtd">
 
 <tree>
- <folder name="Local Folders" type="columba" uid="100" accessrights="system">
+ <folder type="LocalRootFolder" uid="100" >
+  <property name="Local Folders" accessrights="system" subfolder="true" />
   
-  <folder name="Inbox" type="columba" uid="101" accessrights="system">
+  <folder type="MHFolder" uid="101">
+   <property name="Inbox" accessrights="system" subfolder="true" />
    <filterlist>
     <filter description="new filter" enabled="true">
-     <rule match="all">
-      <criterion target="subject" type="contains" pattern="pattern"/>
-     </rule>
-     <actionlist>
-      <action type="markasread"/>
-     </actionlist>
+     <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	 <actionlist>
+	  <action type="Mark as Read" />
+	 </actionlist>
     </filter>
    </filterlist>
-   
-   <folder name="Recent Messages" type="virtual" uid="19" accessrights="user" source_uid="101">
-    <filterlist>
-     <filter>
-      <rule match="all">
-       <criterion target="flags" type="is" pattern="Recent"/>
-      </rule>
-     </filter>
-    </filterlist>
-   </folder>
-   
-   <folder name="Subject contains Columba" type="virtual" uid="20" accessrights="user" source_uid="101">
-    <filterlist>
-     <filter>
-      <rule match="all">
-       <criterion target="subject" type="contains" pattern="Columba"/>
-      </rule>
-     </filter>
-    </filterlist>
-   </folder>
-   
-  </folder>
-  
-  <folder name="Drafts" type="columba" uid="102" accessrights="system"/>
-  
-  <folder name="Templates" type="columba" uid="107" accessrights="system"/>
-  
-  <folder name="Outbox" type="outbox" uid="103" accessrights="system"/>
-  
-  <folder name="Sent" type="columba" uid="104" accessrights="system"/>
-  
-  <folder name="Trash" type="columba" uid="105" accessrights="system"/>
-  
-  <folder name="Search Result" type="virtual" uid="106" accessrights="system" source_uid="101">
-   <filterlist>
+   <folder type="VirtualFolder" uid="19">
+    <property name="Recent Messages" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />	
     <filter>
-     <rule match="all">
-      <criterion target="subject" type="contains" pattern="pattern"/>
-     </rule>
+     <rules condition="match_all">
+	  <criteria type="Flags" criteria="is" pattern="Recent" />
+	 </rules>
     </filter>
-   </filterlist>
+   </folder>
+   
+   <folder type="VirtualFolder" uid="20">
+    <property name="Subject contains Columba" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="Columba" />
+	 </rules>
+	</filter>
+   </folder>
+   
+  </folder> <!-- inbox -->
+  
+  <folder type="MHFolder" uid="102">
+   <property name="Drafts" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder type="MHFolder" uid="107">
+   <property name="Templates" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder type="OutboxFolder" uid="103">
+   <property name="Outbox" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder type="MHFolder" uid="104">
+   <property name="Sent" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder type="MHFolder" uid="105">
+   <property name="Trash" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder type="VirtualFolder" uid="106">
+    <property name="Search Result" accessrights="system" subfolder="true" include_subfolders="true" source_uid="101" />
+	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	</filter>
   </folder>
    
- </folder>
+ </folder> <!-- local folders -->
   
 </tree>
+
+
+
+
+
+
+
