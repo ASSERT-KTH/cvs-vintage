@@ -170,7 +170,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 
 	// We are remapping ?
 	if( request.getAttribute("tomcat.ReloadInterceptor")!=null)
-	    return DECLINED;
+	    return 0;
 	
 	DependManager dm=(DependManager)ctx.getContainer().
 	    getNote(dependManagerNote);
