@@ -21,7 +21,11 @@
 
 <module name="Http10Connector" javaClass="org.apache.tomcat.modules.server.Http10Interceptor"/>
 
+<!-- No more present in JTC HEAD
+
 <module name="CoyoteConnector" javaClass="org.apache.coyote.tomcat3.CoyoteInterceptor"/>
+
+-->
 
 <module name="CoyoteConnector2" javaClass="org.apache.coyote.tomcat3.CoyoteInterceptor2"/>
 
