@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.15 $
+*	@version $Revision: 1.16 $
 */
 public class TxManager
 implements TransactionManager
@@ -160,7 +160,10 @@ implements TransactionManager
         
         threadTx.set(null);
         
-        return current;
+		//DEBUG Logger.debug("DisassociateThread " + ((current==null) ? "null" : Integer.toString(current.hashCode())));
+		Logger.debug("disassociateThread " + ((current==null) ? "null" : Integer.toString(current.hashCode())));
+        
+		return current;
     }
     
     public void associateThread(Transaction transaction) {
@@ -169,6 +172,10 @@ implements TransactionManager
         
         // Associate with the thread
         threadTx.set(transaction);
+		
+		//DEBUG Logger.debug("DisassociateThread " + ((transaction==null) ? "null" : Integer.toString(transaction.hashCode())));
+		Logger.debug("associateThread " + ((transaction==null) ? "null" : Integer.toString(transaction.hashCode())));
+        
     }
     
     
@@ -206,7 +213,7 @@ implements TransactionManager
     java.lang.IllegalStateException,
     SystemException
     {
-         Logger.log("commit tx "+tx.hashCode());
+         Logger.log("txManager commit tx "+tx.hashCode());
         try {
             // Look up the txCapsule and delegate
             ((TxCapsule) txCapsules.get(tx)).commit();
