@@ -59,7 +59,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupTest.java,v 1.1 2002/03/26 21:20:38 elicia Exp $
+ * @version $Id: AttributeGroupTest.java,v 1.2 2002/10/02 16:57:04 jon Exp $
  */
 public class AttributeGroupTest extends BaseTestCase
 {
@@ -98,8 +98,8 @@ public class AttributeGroupTest extends BaseTestCase
     private void testDeleteAttribute() throws Exception
     {
         System.out.println("\ntestDeleteAttribute()");
-        group.deleteAttribute(severity, getUser1());
-        group.deleteAttribute(desc, getUser1());
+        group.deleteAttribute(severity, getUser1(), getModule());
+        group.deleteAttribute(desc, getUser1(), getModule());
     }
 
     private void testAddAttribute() throws Exception
@@ -124,7 +124,7 @@ public class AttributeGroupTest extends BaseTestCase
     private void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
-        group.delete(getUser1());
+        group.delete(getUser1(), getModule());
         ScarabCache.clear();
         assertEquals(1, getModule().getAttributeGroups(getDefaultIssueType()).size());
     }
