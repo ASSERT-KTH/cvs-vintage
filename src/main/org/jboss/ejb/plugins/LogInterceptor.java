@@ -13,16 +13,16 @@ import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.ServerError;
 import java.rmi.ServerException;
-import java.util.Map;
+import java.rmi.AccessException;
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.TransactionRolledbackLocalException;
+import javax.ejb.AccessLocalException;
 import javax.transaction.TransactionRolledbackException;
 
 
-import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
@@ -38,7 +38,7 @@ import org.jboss.tm.JBossTransactionRolledbackLocalException;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -205,6 +205,15 @@ public class LogInterceptor extends AbstractInterceptor
 
    // Private -------------------------------------------------------
 
+   /**
+    PLEASE DO NOT CHANGE THIS CODE WITHOUT LOOKING AT __ALL__ OF IT TO MAKE ___SURE___
+    YOUR CHANGES ARE NECESSARY AND DO NOT BREAK LARGE AMOUNTS OF CORRECT BEHAVIOR!
+    PLEASE ADD A TEST TO DEMONSTRATE YOUR CHANGES FIX SOMETHING.
+    The rollback exceptions are tested by org.jboss.test.jca.test.XAExceptionUnitTestCase
+    * @param e
+    * @param invocation
+    * @return
+    */ 
    private Exception handleException(Throwable e, Invocation invocation)
    {
 
@@ -212,11 +221,6 @@ public class LogInterceptor extends AbstractInterceptor
       boolean isLocal =
             type == InvocationType.LOCAL ||
             type == InvocationType.LOCALHOME;
-
-      //PLEASE DO NOT CHANGE THIS CODE WITHOUT LOOKING AT __ALL__ OF IT TO MAKE ___SURE___
-      //YOUR CHANGES ARE NECESSARY AND DO NOT BREAK LARGE AMOUNTS OF CORRECT BEHAVIOR!
-      //PLEASE ADD A TEST TO DEMONSTRATE YOUR CHANGES FIX SOMETHING.
-      //The rollback exceptions are tested by org.jboss.test.jca.test.XAExceptionUnitTestCase
 
       if (e instanceof TransactionRolledbackLocalException ||
             e instanceof TransactionRolledbackException)
@@ -347,6 +351,26 @@ public class LogInterceptor extends AbstractInterceptor
             return new ServerException("EJBException:", ejbException);
          }
       }
+
+      /* Handle SecurityExceptions specially to tranform into one of the
+         security related ejb or rmi exceptions to allow users to identitify
+         them more easily.
+      */
+      if (e instanceof SecurityException)
+      {
+         SecurityException runtimeException = (SecurityException)e;
+         log.debug("SecurityException in method: " + invocation.getMethod() + ":", runtimeException);
+         if (isLocal)
+         {
+            return new AccessLocalException("SecurityException", runtimeException);
+         }
+         else
+         {
+            return new AccessException("SecurityException", runtimeException);
+         }         
+      }
+
+      // All other RuntimeException
       if (e instanceof RuntimeException)
       {
          RuntimeException runtimeException = (RuntimeException)e;
@@ -363,7 +387,7 @@ public class LogInterceptor extends AbstractInterceptor
       }
       if (e instanceof Error)
       {
-         log.error("Unexpected Error in method: " + invocation.getMethod() + ":", e);
+         log.error("Unexpected Error in method: " + invocation.getMethod(), e);
          if (isLocal)
          {
             String msg = formatException("Unexpected Error", e);
