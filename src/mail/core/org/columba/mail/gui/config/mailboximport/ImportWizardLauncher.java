@@ -61,7 +61,7 @@ public class ImportWizardLauncher {
                                 ImageLoader.getSmallImageIcon("stock_convert.png"));
                 CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
                 JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
-                wizard.setSize(700, 500);
+                wizard.pack();
                 wizard.setLocationRelativeTo(null);
                 wizard.setVisible(true);
         }

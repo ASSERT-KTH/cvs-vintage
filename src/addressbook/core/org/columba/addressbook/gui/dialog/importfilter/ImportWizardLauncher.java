@@ -64,7 +64,7 @@ public class ImportWizardLauncher {
 					"addressbookimport",
 					"title"),
 				ImageLoader.getSmallImageIcon("stock_convert.png"));
-		wizard.setSize(500, 400);
+		wizard.pack();
 		wizard.setLocationRelativeTo(null);
 		wizard.setVisible(true);
 	}
