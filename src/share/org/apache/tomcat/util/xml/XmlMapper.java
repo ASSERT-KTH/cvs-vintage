@@ -225,6 +225,44 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 			 }
 		     }
 		 );
+	// ant-like
+	addRule( "xmlmapper:taskdef",
+		 new XmlAction() {
+			 public void start(SaxContext ctx) {
+			     XmlMapper mapper=(XmlMapper)ctx;
+			     int top=ctx.getTagCount()-1;
+			     AttributeList attributes = ctx.getAttributeList( top );
+			     String match=attributes.getValue("match");
+			     if(match==null) return; //log
+			     String obj=attributes.getValue("object-create");
+			     String objA=attributes.getValue("object-create-attrib");
+			     if( obj!=null || objA!=null)
+				 mapper.addRule( match, new ObjectCreate( obj, objA));
+			     obj=attributes.getValue("set-properties");
+			     if( obj!=null)
+				 mapper.addRule( match, new SetProperties());
+			     obj=attributes.getValue("set-parent");
+			     if( obj!=null)
+				 mapper.addRule( match, new SetParent(obj));
+			     obj=attributes.getValue("add-child");
+			     objA=attributes.getValue("child-type");
+			     if( obj!=null)
+				 mapper.addRule( match, new AddChild(obj, objA));
+
+			     // Custom actions
+			     obj=attributes.getValue("action");
+			     if( obj!=null) {
+				 try {
+				     Class c=Class.forName( obj );
+				     Object o=c.newInstance();
+				     mapper.addRule( match, (XmlAction)o);
+				 } catch( Exception ex ) {
+				     System.out.println("Can't add action " + obj);
+				 }
+			     }
+			 }
+		     }
+		 );
 	
     }
     
@@ -298,7 +336,8 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 
 
     // -------------------- Factories for "common" actions --------------------
-
+    // XXX Probably it's better to use the real XmlActions, with new FooAction()
+    
     /** Create an object using for a matching tag with the given class name
      */
     public XmlAction objectCreate( String classN ) {
@@ -365,7 +404,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 }
 
 //-------------------- "Core" actions --------------------
-
+// XXX XXX XXX Need to move the "standard" actions in individual files
 /** Create an object
  */
 class ObjectCreate extends XmlAction {
