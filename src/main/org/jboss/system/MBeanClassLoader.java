@@ -15,7 +15,7 @@ import javax.management.ObjectName;
  * The pupose of MBeanCL is to load the classes on behalf of an MBean.
  * 
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -108,5 +108,10 @@ public class MBeanClassLoader
       }
       catch (Exception ignore) {}
       return null;
+   }
+
+   public URL[] getURLs()
+   {
+     return libraries.getURLs();
    }
 }
