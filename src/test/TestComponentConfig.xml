@@ -7,9 +7,9 @@
    </HSQLService-->
     <!-- Torque Component -->
     <torque>
-       <configfile>/WEB-INF/conf/Torque.properties</configfile>
+       <configfile>src/test/Torque.properties</configfile>
     </torque>
-    <mimetype mimetypes="/WEB-INF/conf/mime.types"/>
+    <mimetype mimetypes="src/conf/conf/mime.types"/>
     <upload repository="WEB-INF" sizeMax="157286400" sizeThreshold="8192"/>
     <parser/>   
     <cache cacheInitialSize="20" cacheCheckFrequency="5"/>

@@ -51,8 +51,8 @@ import java.util.List;
 
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
@@ -75,7 +75,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.62 2004/10/16 12:31:40 dep4b Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.63 2004/11/14 21:06:54 dep4b Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {

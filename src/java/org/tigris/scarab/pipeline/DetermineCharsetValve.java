@@ -59,14 +59,19 @@ import org.apache.turbine.ValveContext;
  * This valve determines the charset to use when parsing request parameters.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve.java,v 1.11 2004/11/04 20:35:28 dep4b Exp $
+ * @version $Id: DetermineCharsetValve.java,v 1.12 2004/11/14 21:06:59 dep4b Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
 {
 
-    private static final String REQUIRED_CHARSET = Turbine.getConfiguration().
+    private static String REQUIRED_CHARSET;
+    
+    public void initialize() throws Exception{
+        super.initialize();
+        REQUIRED_CHARSET = Turbine.getConfiguration().
         getString("locale.default.charset",null);
+    }
 
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)

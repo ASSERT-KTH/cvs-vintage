@@ -49,24 +49,22 @@ package org.tigris.scarab.actions.base;
 // Java Stuff
 
  // Turbine Stuff
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.log4j.Logger;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.util.parser.ValueParser;
-
-// Scarab Stuff
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  *  This is a helper class that extends TemplateAction to add
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.33 2004/03/27 00:40:05 pledbrook Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.34 2004/11/14 21:07:01 dep4b Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -258,7 +256,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public void doRefreshresultsperpage(RunData data, TemplateContext context) 
         throws Exception
     {
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         int oldResultsPerPage = params.getInt("oldResultsPerPage");
         int newResultsPerPage = params.getInt("resultsPerPage");
         int oldPageNum = params.getInt("pageNum");

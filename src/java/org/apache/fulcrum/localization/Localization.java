@@ -60,6 +60,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.fulcrum.TurbineServices;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 
 /**
  * <p>Wrapper around the TurbineLocalization Service that makes it easy
@@ -84,7 +85,7 @@ import org.apache.fulcrum.TurbineServices;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:leonardr@collab.net">Leonard Richardson</a>
- * @version $Id: Localization.java,v 1.1 2004/10/24 22:12:30 dep4b Exp $
+ * @version $Id: Localization.java,v 1.2 2004/11/14 21:06:55 dep4b Exp $
  */
 public abstract class Localization
 {
@@ -280,8 +281,14 @@ public abstract class Localization
      */
     protected static final LocalizationService getService()
     {
-        return (LocalizationService) TurbineServices.getInstance()
-                .getService(LocalizationService.SERVICE_NAME);
+        try{
+            YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                YaafiComponentService.SERVICE_NAME);
+            return (LocalizationService) yaafi.lookup(LocalizationService.class.getName());
+        } 
+        catch (Exception e) {
+            throw new RuntimeException("Problem looking up localization service", e);
+        }
     }
 
     /**

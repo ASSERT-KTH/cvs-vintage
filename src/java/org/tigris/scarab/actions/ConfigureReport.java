@@ -46,51 +46,49 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.om.NumberKey;
-
-// Scarab Stuff
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.tools.localization.L10NKeySet;
-import org.tigris.scarab.tools.localization.L10NMessage;
-import org.tigris.scarab.tools.localization.LocalizationKey;
-import org.tigris.scarab.reports.ReportBridge;
-import org.tigris.scarab.om.Report;
-import org.tigris.scarab.om.ReportPeer;
-import org.tigris.scarab.om.ReportManager;
-import org.tigris.scarab.om.AttributeValue;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.util.word.IssueSearch;
-import org.tigris.scarab.reports.ReportDefinition;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Report;
+import org.tigris.scarab.om.ReportManager;
+import org.tigris.scarab.om.ReportPeer;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.reports.ReportAxis;
+import org.tigris.scarab.reports.ReportBridge;
+import org.tigris.scarab.reports.ReportDate;
+import org.tigris.scarab.reports.ReportDefinition;
+import org.tigris.scarab.reports.ReportGroup;
 import org.tigris.scarab.reports.ReportHeading;
 import org.tigris.scarab.reports.ReportOptionAttribute;
 import org.tigris.scarab.reports.ReportUserAttribute;
-import org.tigris.scarab.reports.ReportGroup;
-import org.tigris.scarab.reports.ReportDate;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
+import org.tigris.scarab.util.word.IssueSearch;
 
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.33 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: ConfigureReport.java,v 1.34 2004/11/14 21:06:55 dep4b Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -100,17 +98,31 @@ public class ConfigureReport
 
     private static final String ADD_USER = "add_user";
     private static final String SELECTED_USER = "select_user";
+    
+    ScarabLocalizationTool l10n;
+    ScarabRequestTool scarabR;
+    ReportBridge report;
+    Intake intake;
+    ParameterParser params;
+    ScarabUser user;
 
+    private void setup(RunData data, TemplateContext context) throws Exception{
+        l10n = getLocalizationTool(context);
+        scarabR = getScarabRequestTool(context);
+        report = scarabR.getReport();
+        intake = getIntakeTool(context);
+        params = data.getParameters();
+        user = (ScarabUser)data.getUser();
+    }
+    
     public void doSaveinfo(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
-        Intake intake = getIntakeTool(context);
+        setup(data,context);
+        
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if (intake.isAllValid()) 
@@ -123,8 +135,8 @@ public class ConfigureReport
                 if (report.isReadyForCalculation()) 
                 {
                     String msg = report.isNew() ? 
-                           l10n.get("ReportUpdated") :
-                           l10n.get("ReportUpdatedNotSaved");
+                           l10n.get(L10NKeySet.ReportUpdated) :
+                           l10n.get(L10NKeySet.ReportUpdatedNotSaved);
                     scarabR.setConfirmMessage(msg);
                     setTarget(data, "reports,Info.vm");     
                 }
@@ -148,7 +160,7 @@ public class ConfigureReport
         }
         else 
         {
-            getScarabRequestTool(context).setAlertMessage(
+            scarabR.setAlertMessage(
                 l10n.get("InvalidData"));
             setTarget(data, "reports,Info.vm");            
         }
@@ -157,13 +169,14 @@ public class ConfigureReport
     public void doSelectheading(RunData data, TemplateContext context)
         throws Exception
     {
+        setup(data,context);
         // the form will carry over the selected heading. just make sure
         // to remove old intake data
-        Intake intake = getIntakeTool(context);
+        
         intake.removeAll();
         // give the user a message if they are already on the selected
         // heading, in the event they are confused.
-        ValueParser params = data.getParameters();
+        
         int level = params.getInt("heading", -1);
         int prevLevel = params.getInt("prevheading", -2);
         if (level == prevLevel) 
@@ -177,7 +190,7 @@ public class ConfigureReport
     public void doSettype(RunData data, TemplateContext context)
         throws Exception
     {
-        ValueParser params = data.getParameters();
+        setup(data,context);
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         int type = params.getInt("headingtype", 0);
@@ -185,15 +198,13 @@ public class ConfigureReport
         // remove any old data
         if (level != -1) 
         {
-            ScarabRequestTool scarabR = getScarabRequestTool(context);
-            ReportBridge report = scarabR.getReport();
+            
             ReportDefinition reportDefn = report.getReportDefinition();
             ReportAxis reportAxis = reportDefn.getAxis(axis);
             ReportHeading heading = reportAxis.getHeading(level);
             int currentType = heading.calculateType();
             if (type != currentType) 
-            {
-                ScarabLocalizationTool l10n = getLocalizationTool(context);
+            {            
                 if (currentType == 2 && 
                     !reportDefn.allowMoreHeadings(reportAxis)) 
                 {
@@ -222,19 +233,16 @@ public class ConfigureReport
     public void doAddoptions(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
-        Intake intake = getIntakeTool(context);
+        setup(data,context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if (intake.isAllValid()) 
         {
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-            ValueParser params = data.getParameters();
+
             int axis = params.getInt("axis", 0); // 0=row; 1=column
             int level = params.getInt("heading", -1);
             int type = params.getInt("headingtype", 0);
@@ -392,19 +400,15 @@ public class ConfigureReport
     public void doAddusers(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         int type = params.getInt("headingtype", 0);
@@ -456,19 +460,14 @@ public class ConfigureReport
     public void doRemoveusers(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         int type = params.getInt("headingtype", 0);
@@ -518,19 +517,15 @@ public class ConfigureReport
     public void doUpdateusers(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         int type = params.getInt("headingtype", 0);
@@ -596,19 +591,14 @@ public class ConfigureReport
     public void doRemoveheading(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         //int type = params.getInt("headingtype", 0);
@@ -633,15 +623,14 @@ public class ConfigureReport
     public void doGotoeditgroups(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ValueParser params = data.getParameters();
+        setup(data,context);
+        
         int level = params.getInt("heading", -1);
 
         // user groups is not implemented
         if (level >= 0) 
         {
-            int axis = params.getInt("axis", 0); // 0=row; 1=column
-            ReportBridge report = scarabR.getReport();
+            int axis = params.getInt("axis", 0); // 0=row; 1=column        
             ReportHeading heading = (ReportHeading)report.getReportDefinition()
                 .getAxis(axis).getReportHeadings().get(level);
             if (heading.calculateType() == 0) 
@@ -667,19 +656,15 @@ public class ConfigureReport
     public void doAddheading(RunData data, TemplateContext context) 
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-        ValueParser params = data.getParameters();
         int axisIndex = params.getInt("axis", 0); // 0=row; 1=column
         ReportAxis axis = report.getReportDefinition().getAxis(axisIndex);
         axis.addReportHeading(new ReportHeading());
@@ -693,19 +678,14 @@ public class ConfigureReport
     public void doAddgroup(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
                     
@@ -764,20 +744,15 @@ public class ConfigureReport
     public void doDeletegroup(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
         
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
-        String[] groupIndices = params.getStrings("selectgroup");
+                String[] groupIndices = params.getStrings("selectgroup");
         if (groupIndices == null || groupIndices.length == 0) 
         {
             scarabR.setAlertMessage(l10n.get("NoGroupSelected"));
@@ -818,19 +793,15 @@ public class ConfigureReport
     public void doEditgroupname(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
+        
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
         
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
@@ -863,19 +834,15 @@ public class ConfigureReport
     public void doSavegroups(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
+        
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
         ReportHeading heading = report.getReportDefinition()
@@ -958,19 +925,15 @@ public class ConfigureReport
     public void doAdddate(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-        ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
         int level = params.getInt("heading", -1);
 
@@ -1007,19 +970,15 @@ public class ConfigureReport
     public void doDeletedate(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
+        
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
         
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-
-        ValueParser params = data.getParameters();
         String[] dateIndices = params.getStrings("selectdate");
         if (dateIndices == null || dateIndices.length == 0) 
         {
@@ -1044,27 +1003,27 @@ public class ConfigureReport
     public void doRedirecttocrossmodulelist(RunData data, TemplateContext context)
          throws Exception
     {
+        setup(data,context);
         // x-module/issuetype works off of user's list, so make the report
         // list the current user's list.
-        ((ScarabUser)data.getUser()).setCurrentMITList(
-            getScarabRequestTool(context).getReport().getMITList());
+        user.setCurrentMITList(
+            report.getMITList());
         setTarget(data, "reports,XModuleList.vm");
     }
 
     public void doConfinedataset(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
+        
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
 
-        ValueParser params = data.getParameters();
+        
         if ("fixed".equals(params.getString("def_date"))) 
         {
             Calendar cal = scarabR.getCalendar();
@@ -1089,12 +1048,11 @@ public class ConfigureReport
     public void doSwaprowcol(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
+        setup(data,context);
+        
         if (!report.isEditable(user)) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");
             return;
         }
@@ -1120,30 +1078,25 @@ public class ConfigureReport
     public void doVerifyreport(RunData data, TemplateContext context)
          throws Exception
     {
-        ReportBridge report = getScarabRequestTool(context).getReport();
+        setup(data,context);
         if (report.removeStaleDefinitions()) 
         {
-            getScarabRequestTool(context)
-                .setInfoMessage(getLocalizationTool(context)
-                                 .get("ReportDefinitionModified"));
+            scarabR.setInfoMessage(l10n.get("ReportDefinitionModified"));
         }
     }
 
     public void doGeneratereport(RunData data, TemplateContext context)
          throws Exception
     {
-        ReportBridge report = getScarabRequestTool(context).getReport();
+        setup(data,context);
+
         if (report.removeStaleDefinitions()) 
         {
-            getScarabRequestTool(context)
-                .setInfoMessage(getLocalizationTool(context)
-                                 .get("ReportDefinitionModified"));
+            scarabR.setInfoMessage(l10n.get("ReportDefinitionModified"));
         }
         else if (report.getReportDefinition().reportQueryIsExpensive() ) 
         {
-            getScarabRequestTool(context)
-                .setAlertMessage(getLocalizationTool(context)
-                     .format("ReportIsTooExpensive", String.valueOf( 
+            scarabR.setAlertMessage(l10n.format("ReportIsTooExpensive", String.valueOf( 
                              report.getReportDefinition().maximumHeadings())));
         }
         else 
@@ -1212,12 +1165,11 @@ public class ConfigureReport
     public void doSavereport(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        ReportBridge report = getScarabRequestTool(context).getReport();
-        Intake intake = getIntakeTool(context);
+        setup(data,context);        
+        
         if (!report.isSavable((ScarabUser)data.getUser())) 
         {
-            setNoPermissionMessage(context);
+            setNoPermissionMessage();
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if (intake.isAllValid()) 
@@ -1234,8 +1186,7 @@ public class ConfigureReport
 
             if (report.getName() == null || report.getName().trim().length() == 0) 
             {
-                getScarabRequestTool(context)
-                    .setAlertMessage(l10n.get("SavedReportsMustHaveName"));
+                scarabR.setAlertMessage(l10n.get("SavedReportsMustHaveName"));
                 setTarget(data, "reports,Info.vm");
             }
             else 
@@ -1252,12 +1203,11 @@ public class ConfigureReport
                     || savedReport.getQueryKey().equals(report.getQueryKey()))
                 {
                     report.save();
-                    getScarabRequestTool(context)
-                        .setConfirmMessage(l10n.get("ReportSaved"));
+                    scarabR.setConfirmMessage(l10n.get("ReportSaved"));
                 }
                 else 
                 {
-                    getScarabRequestTool(context).setAlertMessage(
+                    scarabR.setAlertMessage(
                         l10n.get("ReportNameNotUnique"));
                     setTarget(data, "reports,Info.vm");
                 }
@@ -1265,7 +1215,7 @@ public class ConfigureReport
         }
         else 
         {
-            getScarabRequestTool(context).setAlertMessage(
+            scarabR.setAlertMessage(
                 l10n.get("ErrorPreventedSavingReport"));
         }
     }
@@ -1273,12 +1223,12 @@ public class ConfigureReport
     public void doDeletestoredreport(RunData data, TemplateContext context)
         throws Exception
     {
+        setup(data,context);
         ScarabUser user = (ScarabUser)data.getUser();
         String[] reportIds = data.getParameters().getStrings("report_id");
         if (reportIds == null || reportIds.length == 0) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                getLocalizationTool(context).get("MustSelectReport"));
+            scarabR.setAlertMessage(l10n.get("MustSelectReport"));
         }
         else 
         {
@@ -1296,17 +1246,20 @@ public class ConfigureReport
                     }                   
                     else 
                     {
-                        setNoPermissionMessage(context);
+                        setNoPermissionMessage();
                     }
                 }
             }
         }        
     }
 
-    private void setNoPermissionMessage(TemplateContext context)
-    {
-        getScarabRequestTool(context).setAlertMessage(
-            getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
+    private void setNoPermissionMessage()
+    {        
+        if(scarabR==null | l10n==null){
+            throw new RuntimeException("setup() method not called for action event");
+        }
+        scarabR.setAlertMessage(
+            l10n.get(NO_PERMISSION_MESSAGE));
     }
 
     /**

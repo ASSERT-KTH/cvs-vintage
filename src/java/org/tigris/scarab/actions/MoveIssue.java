@@ -46,39 +46,35 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-// Turbine Stuff
-import org.apache.turbine.Turbine;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
-
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.turbine.ParameterParser;
-
-// Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
+import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class is responsible for moving/copying an issue
@@ -86,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.68 2004/11/02 10:22:37 dabbous Exp $
+ * @version $Id: MoveIssue.java,v 1.69 2004/11/14 21:06:55 dep4b Exp $
  */
 public class MoveIssue extends BaseModifyIssue
 {

@@ -82,7 +82,9 @@ public class BaseScarabOMTestCase extends BaseTurbineTestCase {
 	private static boolean initialized = false;
 
 	public BaseScarabOMTestCase() {
-		System.setProperty("applicationRoot", "./target/scarab");
+		//System.setProperty("applicationRoot", "./target/scarab");
+        System.setProperty("applicationRoot", "./src/webapp");
+        System.setProperty("urn:avalon:home","./src/webapp");
 	}
 
 	public BaseScarabOMTestCase(String name) throws Exception {

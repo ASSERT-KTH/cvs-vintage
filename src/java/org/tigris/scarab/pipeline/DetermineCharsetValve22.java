@@ -61,15 +61,20 @@ import org.apache.turbine.pipeline.AbstractValve;
  * servlet 2.2 libraries.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve22.java,v 1.3 2004/11/04 20:35:28 dep4b Exp $
+ * @version $Id: DetermineCharsetValve22.java,v 1.4 2004/11/14 21:07:00 dep4b Exp $
  */
 public class DetermineCharsetValve22 
     extends AbstractValve
 {
 
-    private static final String REQUIRED_CHARSET = Turbine.getConfiguration().
-        getString("locale.default.charset");
+    private static String REQUIRED_CHARSET;
 
+    public void initialize() throws Exception{
+        super.initialize();
+        REQUIRED_CHARSET = Turbine.getConfiguration().
+        getString("locale.default.charset",null);
+    }
+    
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */

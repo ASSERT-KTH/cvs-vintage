@@ -57,7 +57,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import org.apache.fulcrum.TurbineServices;
-import org.tigris.scarab.services.yaaficomponent.YaafiComponentService;
+import org.apache.fulcrum.hsqldb.HSQLService;
+import org.apache.fulcrum.hsqldb.HSQLServiceImpl;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.test.BaseTurbineTestCase;
 
 /**
@@ -93,12 +95,9 @@ public class HSQLServiceTest extends BaseTurbineTestCase {
 		assertNotNull("Got no Service back", server);
 	}
 
-	public void testStart() throws Exception {
-		// start server if not already running.
-		if (!server.isStarted()) {
-			server.start();
-		}
-		assertTrue("Server was not started", server.isStarted());
+	public void testStarted() throws Exception {
+
+		assertTrue("Server was not started", server.isRunning());
 		
         // Load the HSQL Database Engine JDBC driver
         Class.forName("org.hsqldb.jdbcDriver");
@@ -111,9 +110,6 @@ public class HSQLServiceTest extends BaseTurbineTestCase {
         conn.close();
 	}
 
-	public void testStop() {
-		server.stop();
-		assertFalse("Server was not stopped", server.isStarted());
-	}
+	
 
 }

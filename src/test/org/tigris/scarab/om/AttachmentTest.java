@@ -59,7 +59,7 @@ import org.tigris.scarab.test.BaseScarabOMTestCase;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.17 2004/11/04 20:34:24 dep4b Exp $
+ * @version $Id: AttachmentTest.java,v 1.18 2004/11/14 21:07:02 dep4b Exp $
  */
 public class AttachmentTest extends BaseScarabOMTestCase
 {
@@ -117,9 +117,7 @@ public class AttachmentTest extends BaseScarabOMTestCase
 
     public void testGetRepositoryDirectory() throws Exception
     {
-        String control = new String(File.separator + "src" + 
-                File.separator + "test" + File.separator + "WEB-INF" + File.separator + 
-                "attachments");
+        String control = new String("WEB-INF" + File.separator + "attachments");
         File testPath = new File(Attachment.getRepositoryDirectory());
         assertTrue("testpath was:" + testPath.getPath(),testPath.getPath().endsWith(control));
     }

@@ -1,33 +1,33 @@
-package org.tigris.scarab;
+package org.tigris.scarab.pipeline;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
  * software developed by Collab.Net <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
- *
+ * 
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- *
- * 5. Products derived from this software may not use the "Tigris" or
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
+ * 
+ * 5. Products derived from this software may not use the "Tigris" or 
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
  * prior written permission of Collab.Net.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,41 +41,55 @@ package org.tigris.scarab;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- *
+ * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.torque.Torque;
-import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.ActivityManager;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 
 import junit.framework.TestCase;
 
+import org.apache.turbine.Pipeline;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
 /**
- * Test that we can Start torque.  Simple test for debugging database
- * connection issues
+ * Tests TurbinePipeline starts up.  Therw was an issue with the FreshenUserValve
+ * where it wasn't calling the default constructor.  This is to make sure
+ * the pipeline is created properly.
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: StartingTorqueTest.java,v 1.3 2004/11/14 21:06:59 dep4b Exp $
+ * @version $Id: PipelineCreationTest.java,v 1.1 2004/11/14 21:07:04 dep4b Exp $
  */
-public class StartingTorqueTest extends TestCase {
+public class PipelineCreationTest extends TestCase
+{
+    private Pipeline pipeline;
+    /**
+     * Constructor
+     */
+    public PipelineCreationTest(String testName)
+    {
+        super(testName);
+    }
 
-	public void testStartingTorque() {
-		try {
-			Configuration config =
-				new PropertiesConfiguration("src/test/TestTurbineResources.properties");
 
-			Torque.init(config);
-			assertTrue(Torque.isInit());
+    public void testReadingPipelineWXstream() throws Exception{
+        File file = new File("./src/conf/conf/scarab-pipeline.xml").getAbsoluteFile();
+        Reader reader = new FileReader(file);
+        XStream xstream = new XStream(new DomDriver()); // does not require XPP3 library
+        Object o = xstream.fromXML(reader);
+        Pipeline pipeline = (Pipeline)o;
+        assertEquals(18,pipeline.getValves().length);
+        assertTrue(pipeline.getValves()[9] instanceof FreshenUserValve);
+        FreshenUserValve valve = (FreshenUserValve)pipeline.getValves()[9];
+        valve.initialize();
+        assertTrue(FreshenUserValve.XMIT_SCREENS.size()>0);
+        
+        
+    }
 
-			Activity activity = ActivityManager.getInstance(new Long(1));
-			assertNotNull(activity);
-			assertEquals(1,activity.getActivityId().intValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

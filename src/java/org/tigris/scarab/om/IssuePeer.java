@@ -62,7 +62,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssuePeer.java,v 1.12 2003/02/14 18:28:20 jon Exp $
+ * @version $Id: IssuePeer.java,v 1.13 2004/11/14 21:06:54 dep4b Exp $
  */
 public class IssuePeer 
     extends org.tigris.scarab.om.BaseIssuePeer
@@ -134,6 +134,8 @@ public class IssuePeer
         {
             result = (Issue)obj;
         }
+        
+        result = BaseIssuePeer.retrieveByPK(pk);
         return result;
     }
 }

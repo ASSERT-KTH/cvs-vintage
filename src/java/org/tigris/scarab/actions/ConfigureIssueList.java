@@ -46,34 +46,30 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Comparator;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-
-import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
-
-// Scarab Stuff
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class is responsible for the user configuration of the issue list.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ConfigureIssueList.java,v 1.36 2003/08/19 23:56:35 jmcnally Exp $
+ * @version $Id: ConfigureIssueList.java,v 1.37 2004/11/14 21:06:55 dep4b Exp $
  */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {

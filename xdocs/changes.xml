@@ -7,6 +7,15 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="update">
+        Major refactoring:
+        <ul>
+            <li>Moved Yaafi service instantiation to Turbine 3 CVS</li>
+            <li>Removed old branched Fulcrum code, replaced with CVS HEAD Avalon Fulcrum components</li>
+            <li>Moved to XStream for creating the Pipeline (part of updated Turbine 3)</li>
+            <li>Cleaned up code in Search.java and ConfigureReport.java actions</li>            
+        </ul>
+      </action>  
       <action dev="epugh" type="fix" due-to="Anthony Wong" issue-id="SCB1247">
         Should show EditRole page after a new role is added
       </action>           

@@ -46,47 +46,44 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of CollabNet.
  */
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
-// Turbine Stuff 
-import org.apache.torque.om.NumberKey;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
-import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
-
-// Scarab Stuff
+import org.apache.torque.om.NumberKey;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.IssueTemplateInfoPeer;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
-import org.tigris.scarab.om.PendingGroupUserRole;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Scope;
-import org.tigris.scarab.om.IssueTemplateInfo;
-import org.tigris.scarab.om.IssueTemplateInfoPeer;
-import org.tigris.scarab.util.Email;
-import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.LocalizationKey;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.EmailContext;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.48 2004/11/02 10:22:38 dabbous Exp $
+ * @version $Id: Approval.java,v 1.49 2004/11/14 21:06:54 dep4b Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {

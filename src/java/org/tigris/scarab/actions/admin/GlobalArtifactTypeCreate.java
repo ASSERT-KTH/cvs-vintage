@@ -50,8 +50,8 @@ import java.util.List;
 
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.45 2004/04/28 22:28:15 dabbous Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.46 2004/11/14 21:06:54 dep4b Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {

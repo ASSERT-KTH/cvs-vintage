@@ -48,33 +48,32 @@ package org.tigris.scarab.actions.base;
 
 // Java Stuff
 import java.util.List;
-// Turbine Stuff
+
+import org.apache.fulcrum.intake.Retrievable;
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.log4j.Logger;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.intake.Retrievable;
-import org.apache.fulcrum.util.parser.ValueParser;
-// Scarab Stuff
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.screens.Default;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.LocalizationKey;
-import org.tigris.scarab.screens.Default;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.om.Module;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This is a badly named class which is essentially equivalent to the 
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.57 2004/11/02 10:22:38 dabbous Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.58 2004/11/14 21:07:01 dep4b Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -293,7 +292,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public void doRefreshresultsperpage(RunData data, TemplateContext context) 
         throws Exception
     {
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         int oldResultsPerPage = params.getInt("oldResultsPerPage");
         int newResultsPerPage = params.getInt("resultsPerPage");
         int oldPageNum = params.getInt("pageNum");

@@ -50,10 +50,10 @@ package org.tigris.scarab.actions;
 import java.util.List;
 
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
@@ -75,7 +75,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.39 2004/11/04 15:47:42 dep4b Exp $
+ * @version $Id: ModifyModule.java,v 1.40 2004/11/14 21:06:55 dep4b Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {

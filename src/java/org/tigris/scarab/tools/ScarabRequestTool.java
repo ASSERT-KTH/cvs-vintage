@@ -47,109 +47,112 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.Arrays;
 
-// Turbine
-import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.torque.om.ComboKey;
-import org.apache.torque.om.SimpleKey;
-import org.apache.torque.om.NumberKey;
-import org.apache.fulcrum.localization.Localization;
-import org.apache.fulcrum.intake.Intake;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.pool.RecyclableSupport;
-import org.apache.fulcrum.util.parser.StringValueParser;
-import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
-
-// Scarab
+import org.apache.fulcrum.intake.Intake;
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.localization.Localization;
+import org.apache.fulcrum.parser.ParameterParser;
+import org.apache.fulcrum.parser.StringValueParser;
+import org.apache.fulcrum.pool.Recyclable;
+import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
+import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.tool.IntakeTool;
+import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetTypePeer;
+import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentManager;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.AttributeGroupManager;
+import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeOptionPeer;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependManager;
+import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.Query;
-import org.tigris.scarab.om.QueryManager;
-import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoManager;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
-import org.tigris.scarab.om.Depend;
-import org.tigris.scarab.om.DependManager;
-import org.tigris.scarab.om.ScopePeer;
-import org.tigris.scarab.om.FrequencyPeer;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.AttributeGroup;
-import org.tigris.scarab.om.AttributeGroupManager;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentManager;
-import org.tigris.scarab.om.AttributeOption;
-import org.tigris.scarab.om.ROptionOption;
-import org.tigris.scarab.om.AttributeOptionManager;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
+import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ParentChildAttributeOption;
+import org.tigris.scarab.om.Query;
+import org.tigris.scarab.om.QueryManager;
+import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributeManager;
 import org.tigris.scarab.om.RModuleIssueType;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.ParentChildAttributeOption;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.reports.ReportBridge;
+import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ReportManager;
-import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.ActivitySetTypePeer;
-import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.om.ScopePeer;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.services.cache.ScarabCache;
-import org.tigris.scarab.tools.localization.*;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;  
-import org.tigris.scarab.util.ScarabPaginatedList;
-import org.tigris.scarab.util.SnippetRenderer;  
-import org.tigris.scarab.util.SimpleSkipFiltering;  
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.IteratorWithSize;
-import org.tigris.scarab.util.SubsetIteratorWithSize;  
-import org.tigris.scarab.util.WindowIterator;  
+import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.util.ScarabPaginatedList;
+import org.tigris.scarab.util.SimpleSkipFiltering;
+import org.tigris.scarab.util.SnippetRenderer;
+import org.tigris.scarab.util.SubsetIteratorWithSize;
+import org.tigris.scarab.util.WindowIterator;
+import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.IssueSearchFactory;
 import org.tigris.scarab.util.word.MaxConcurrentSearchException;
-import org.tigris.scarab.util.word.ComplexQueryException;
-import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.QueryResult;
+import org.tigris.scarab.util.word.SearchIndex;
 
 /**
  * This class is used by the Scarab API
  */
 public class ScarabRequestTool
-    extends RecyclableSupport
-    implements ApplicationTool
+    implements ApplicationTool,Recyclable
 {
     private static final String TIME_ZONE =
         Turbine.getConfiguration().getString("scarab.timezone", "");
 
+    /**
+     * The disposed flag.
+     */
+    private boolean disposed;
+    
     /** the object containing request specific data */
     private RunData data;
 
@@ -273,6 +276,7 @@ public class ScarabRequestTool
      */    
     public ScarabRequestTool()
     {
+        recycle();
         timezone = TIME_ZONE == null ? null : TimeZone.getTimeZone(TIME_ZONE);
     }
 
@@ -1810,6 +1814,7 @@ e.printStackTrace();
         Intake intake = new Intake();
         StringValueParser parser = new StringValueParser();
         parser.parse(query, '&', '=', true);
+        
         intake.init(parser);
         return intake;
     }
@@ -2053,7 +2058,7 @@ e.printStackTrace();
     private void resetIssueIdList(int issuePos)
     {
         IteratorWithSize idList = getCurrentSearchResults();
-        ValueParser pp = data.getParameters();
+        ParameterParser pp = data.getParameters();
         pp.remove("issueList");
         int min = issuePos - 5;
         int max = issuePos + 10;
@@ -2129,7 +2134,7 @@ e.printStackTrace();
     public List getAllIssueTemplates(IssueType issueType)
         throws Exception
     {
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         String sortColumn = params.getString("sortColumn", "name");
         String sortPolarity = params.getString("sortPolarity", "asc");
         return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
@@ -2213,7 +2218,7 @@ e.printStackTrace();
        { 
             String key = data.getParameters()
                 .getString(ScarabConstants.CURRENT_REPORT);
-            ValueParser parameters = data.getParameters();
+            ParameterParser parameters = data.getParameters();
             String id = parameters.getString("report_id");
             if (id == null || id.length() == 0) 
             {
@@ -2546,7 +2551,7 @@ e.printStackTrace();
      */
     public int getAdjustedPageNum()
     {
-        ValueParser parameters = data.getParameters();
+        ParameterParser parameters = data.getParameters();
         int resultsPerPage = parameters.getInt("resultsPerPage", 0);
         int oldResultsPerPage = parameters.getInt("oldResultsPerPage", 0);
         int pageNum = parameters.getInt("pageNum", 1);
@@ -3149,7 +3154,13 @@ e.printStackTrace();
     }
 
     // ****************** Recyclable implementation ************************
-
+    /**
+     * Recycles the object by removing its disposed flag.
+     */
+    public void recycle()
+    {
+        disposed = false;
+    }
     /**
      * Disposes the object after use. The method is called when the
      * object is returned to its pool.  The dispose method must call
@@ -3157,10 +3168,19 @@ e.printStackTrace();
      */
     public void dispose()
     {
-        super.dispose();
+        disposed = true;
         data = null;
         refresh();
     }
+    /**
+     * Checks whether the object is disposed.
+     *
+     * @return true, if the object is disposed.
+     */
+    public boolean isDisposed()
+    {
+        return disposed;
+    }    
 }
 
 

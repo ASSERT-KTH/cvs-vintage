@@ -46,16 +46,18 @@ package org.tigris.scarab.services.cache;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.WeakHashMap;
-import java.util.Iterator;
 import java.io.Serializable;
-import org.apache.fulcrum.Service;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import org.apache.fulcrum.BaseService;
-import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.InitializationException;
-import org.apache.fulcrum.pool.TurbinePool;
+import org.apache.fulcrum.Service;
+import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.pool.PoolService;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.util.Log;
 
 /**
@@ -63,7 +65,7 @@ import org.tigris.scarab.util.Log;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.10 2004/05/10 21:04:46 dabbous Exp $
+ * @version $Id: ScarabCache.java,v 1.11 2004/11/14 21:06:56 dep4b Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -119,7 +121,7 @@ public class ScarabCache
             Iterator i = map.keySet().iterator();
             while (i.hasNext()) 
             {
-                TurbinePool.putInstance(i.next());
+                getPoolService().putInstance(i.next());
             }
             map.clear();
         }
@@ -131,7 +133,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key = 
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method);
             result = getMapImpl().get(key);
         }
@@ -149,7 +151,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key = 
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1);
             result = getMapImpl().get(key);
         }
@@ -167,7 +169,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key = 
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1, arg2);
             result = getMapImpl().get(key);
         }
@@ -186,7 +188,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key = 
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1, arg2, arg3);
             result = getMapImpl().get(key);
         }
@@ -203,7 +205,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key = 
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(keys);
             result = getMapImpl().get(key);
         }
@@ -220,7 +222,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key =  
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method);
             getMapImpl().put(key, value);
         }
@@ -236,7 +238,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key =  
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1);
             getMapImpl().put(key, value);
         }
@@ -252,7 +254,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key =  
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1, arg2);
             getMapImpl().put(key, value);
         }
@@ -269,7 +271,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key =  
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(instanceOrClass, method, arg1, arg2, arg3);
             getMapImpl().put(key, value);
         }
@@ -284,7 +286,7 @@ public class ScarabCache
         try
         {
             ScarabCacheKey key =  
-                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+                (ScarabCacheKey)getPoolService().getInstance(keyClass);
             key.init(keys);
             getMapImpl().put(key, value);
         }
@@ -311,11 +313,13 @@ public class ScarabCache
 
     public static Object get(Serializable instanceOrClass, String method)
     {
+        
         return getService().getImpl(instanceOrClass, method);
     }
     public static Object get(Serializable instanceOrClass, String method,
                              Serializable arg1)
     {
+     
         return getService().getImpl(instanceOrClass, method, arg1);
     }
     public static Object get(Serializable instanceOrClass, String method,
@@ -371,5 +375,20 @@ public class ScarabCache
         return (ScarabCache) TurbineServices.getInstance()
                 .getService(ScarabCache.SERVICE_NAME);
     }
+    
+    /**
+     * Utility method for accessing the service implementation
+     * 
+     * @return a PoolService implementation instance
+     */
+    protected static PoolService getPoolService() {
+        try {
+        YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                YaafiComponentService.SERVICE_NAME);
+        return (PoolService) yaafi.lookup(PoolService.class.getName());
+        } catch (Exception e) {
+            throw new RuntimeException("Problem looking up PoolService service", e);
+        }
+    }    
 
 }

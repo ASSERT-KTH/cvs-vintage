@@ -53,7 +53,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.Turbine;
@@ -65,7 +65,7 @@ import org.tigris.scarab.util.comparators.StartsWithPredicate;
  * Action for the AppConfigurationSettings form
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: AppConfigurationSettings.java,v 1.1 2004/10/13 15:12:54 dep4b Exp $
+ * @version $Id: AppConfigurationSettings.java,v 1.2 2004/11/14 21:06:54 dep4b Exp $
  */
 public class AppConfigurationSettings 
     extends RequireLoginFirstAction

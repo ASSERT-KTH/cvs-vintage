@@ -47,12 +47,10 @@ package org.tigris.scarab;
  */ 
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.util.UnknownEntityException;
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.test.BaseScarabOMTestCase;
@@ -61,7 +59,7 @@ import org.tigris.scarab.test.BaseScarabOMTestCase;
  * Test to understand better how security works..
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: SecurityTest.java,v 1.5 2004/10/25 12:55:24 dep4b Exp $
+ * @version $Id: SecurityTest.java,v 1.6 2004/11/14 21:06:59 dep4b Exp $
  */
 public class SecurityTest extends BaseScarabOMTestCase
 {

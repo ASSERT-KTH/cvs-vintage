@@ -48,6 +48,7 @@ package org.tigris.scarab.services.yaaficomponent;
 
 
 import org.apache.fulcrum.TurbineServices;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.test.BaseTurbineTestCase;
 
 /**

@@ -46,62 +46,55 @@ package org.tigris.scarab.actions;
  * individuals on behalf of CollabNet.
  */ 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
-
 import org.apache.commons.collections.SequencedHashMap;
-
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.localization.Localization;
-
-
-// Scarab Stuff
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.ParameterParser;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.RModuleIssueType;
-import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.util.Log;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.util.IteratorWithSize;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.IssueSearchFactory;
 import org.tigris.scarab.util.word.MaxConcurrentSearchException;
-import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.QueryResult;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.tools.localization.L10NKeySet;
-import org.tigris.scarab.tools.localization.L10NMessage;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.186 2004/11/02 10:22:37 dabbous Exp $
+ * @version $Id: ReportIssue.java,v 1.187 2004/11/14 21:06:55 dep4b Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -316,7 +309,8 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         if (issue == null)
         {
-            throw new Exception(Localization.getString("IssueNoLongerValid")); //EXCEPTION
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            throw new Exception(l10n.get("IssueNoLongerValid")); //EXCEPTION
         }
         Set selectedOptions = new HashSet();
         Map conditionallyRequiredFields = new HashMap(); 

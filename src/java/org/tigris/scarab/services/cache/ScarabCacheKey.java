@@ -47,19 +47,19 @@ package org.tigris.scarab.services.cache;
  */ 
 
 import java.io.Serializable;
+
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.fulcrum.pool.Recyclable;
 import org.apache.log4j.Logger;
-import org.apache.fulcrum.pool.RecyclableSupport;
 
 /** 
  *
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCacheKey.java,v 1.9 2003/03/28 00:01:15 jon Exp $
+ * @version $Id: ScarabCacheKey.java,v 1.10 2004/11/14 21:06:56 dep4b Exp $
  */
 public class ScarabCacheKey
-    extends RecyclableSupport
-    implements Serializable
+    implements Serializable, Recyclable
 {
     private static final Logger LOG = 
         Logger.getLogger("org.apache.torque");
@@ -72,8 +72,14 @@ public class ScarabCacheKey
     private Serializable arg3;
     private Serializable[] moreThanThree;
 
+    /**
+     * The disposed flag.
+     */
+    private boolean disposed;
+    
     public ScarabCacheKey()
     {
+        recycle();
     }
     
     public ScarabCacheKey(Serializable instanceOrClass, String method)
@@ -281,7 +287,13 @@ public class ScarabCacheKey
     }
 
     // ****************** Recyclable implementation ************************
-
+    /**
+     * Recycles the object by removing its disposed flag.
+     */
+    public void recycle()
+    {
+        disposed = false;
+    }
     /**
      * Disposes the object after use. The method is called when the
      * object is returned to its pool.  The dispose method must call
@@ -289,7 +301,7 @@ public class ScarabCacheKey
      */
     public void dispose()
     {
-        super.dispose();
+        disposed = true;
         instanceOrClass = null;
         method = null;
         arg1 = null;
@@ -297,4 +309,13 @@ public class ScarabCacheKey
         arg3 = null;
         moreThanThree = null;
     }
+    /**
+     * Checks whether the object is disposed.
+     *
+     * @return true, if the object is disposed.
+     */
+    public boolean isDisposed()
+    {
+        return disposed;
+    }    
 }

@@ -46,41 +46,41 @@ package org.tigris.scarab.pipeline;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.IOException;
-import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
-import org.apache.turbine.TurbineException;
-import org.apache.turbine.pipeline.AbstractValve;
-import org.apache.turbine.ValveContext;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
-
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.IssueType;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TurbineException;
+import org.apache.turbine.ValveContext;
+import org.apache.turbine.pipeline.AbstractValve;
 import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.31 2004/05/10 21:04:46 dabbous Exp $
+ * @version $Id: FreshenUserValve.java,v 1.32 2004/11/14 21:06:59 dep4b Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
 {
-    private static final Map XMIT_SCREENS = new HashMap();
+    protected static final Map XMIT_SCREENS = new HashMap();
 
-    public FreshenUserValve()
-    {
+    
+    public void initialize() throws Exception {
         XMIT_SCREENS.put("IssueTypeList.vm", null);
         XMIT_SCREENS.put("AdvancedQuery.vm", null);
         XMIT_SCREENS.put("Search.vm", null);
@@ -99,6 +99,7 @@ public class FreshenUserValve
         XMIT_SCREENS.put("reports,Report_1.vm", null);
         // this is not a real .vm file, but a pointer to a java screen class
         XMIT_SCREENS.put("IssueListExport.vm", null);
+        
     }
 
     /**
@@ -142,8 +143,10 @@ public class FreshenUserValve
         // remove the current module/issuetype list, if needed
         String removeMitKey = 
             parameters.getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
+        String target = data.getTarget();
+        boolean xmitScreen =XMIT_SCREENS.containsKey(target); 
         if (removeMitKey != null 
-            || !XMIT_SCREENS.containsKey(data.getTarget()))
+            || !xmitScreen)
         {
             Log.get().debug("xmit list set to null");
             user.setCurrentMITList(null);

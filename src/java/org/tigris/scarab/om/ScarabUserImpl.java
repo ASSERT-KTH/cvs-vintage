@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.120 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.121 2004/11/14 21:06:54 dep4b Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -843,7 +843,8 @@ public class ScarabUserImpl
      */
     public MITList getCurrentMITList()
     {
-        return internalUser.getCurrentMITList();
+        MITList mitList = internalUser.getCurrentMITList();
+        return mitList;
     }
 
     /**

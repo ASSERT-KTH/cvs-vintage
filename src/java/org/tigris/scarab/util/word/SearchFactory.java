@@ -54,7 +54,7 @@ import org.tigris.scarab.util.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.17 2004/05/10 21:04:50 dabbous Exp $
+ * @version $Id: SearchFactory.java,v 1.18 2004/11/14 21:07:00 dep4b Exp $
  */
 public class SearchFactory
 {
@@ -62,6 +62,8 @@ public class SearchFactory
 
     static
     {
+       
+       
         String className = Turbine.getConfiguration()
             .getString(SearchIndex.CLASS_NAME);
         Class si = null;

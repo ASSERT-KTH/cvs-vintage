@@ -46,32 +46,28 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashSet;
 import java.util.Set;
 
-// Turbine Stuff 
-import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateContext;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.turbine.RunData;
-
-import org.apache.fulcrum.util.parser.ValueParser;
-
-// Scarab Stuff
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
 import org.tigris.scarab.actions.base.BaseModifyIssue;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserManager;
-import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.util.EmailContext;
@@ -80,7 +76,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.106 2004/11/02 13:09:20 dabbous Exp $
+ * @version $Id: AssignIssue.java,v 1.107 2004/11/14 21:06:55 dep4b Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -97,7 +93,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Map userMap = user.getAssociatedUsersMap();
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         String[] userIds = params.getStrings(ADD_USER);
         if (userIds != null && userIds.length > 0) 
         {
@@ -179,7 +175,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context); 
         Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         String[] selectedUsers =  params.getStrings(SELECTED_USER);
         if (selectedUsers != null && selectedUsers.length > 0) 
         {
@@ -215,7 +211,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
-        ValueParser params = data.getParameters();
+        ParameterParser params = data.getParameters();
         String[] selectedUsers =  params.getStrings(SELECTED_USER);
         if (selectedUsers != null && selectedUsers.length > 0) 
         {
@@ -445,8 +441,8 @@ public class AssignIssue extends BaseModifyIssue
     public void doPerform(RunData data, TemplateContext context) 
         throws Exception
     {
-        ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
+        
+        Object[] keys =  data.getParameters().getKeys();
         try
         {
             for (int i =0; i<keys.length; i++)

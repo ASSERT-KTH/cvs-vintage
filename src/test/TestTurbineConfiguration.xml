@@ -2,8 +2,6 @@
 
 <configuration>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="TestCase.properties"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="TestDatabaseSettings.properties"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="../../src/conf/conf/CustomSettings.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="../../src/conf/conf/Scarab.properties"/>  
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="../../src/conf/conf/PermissionMapping.properties"/>    
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="../../src/conf/conf/TurbineResources.properties"/>

@@ -46,11 +46,14 @@ package org.tigris.scarab.test;
  * individuals on behalf of Collab.Net.
  */ 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.fulcrum.TurbineServices;
 import org.apache.turbine.TurbineConfig;
+import org.apache.turbine.TurbineConstants;
 import org.apache.turbine.TurbineXmlConfig;
 /**
  * Test case that just starts up Turbine.  All Scarab specific
@@ -102,8 +105,12 @@ public class BaseTurbineTestCase extends TestCase {
 		File directoryFile = new File("src/test");
 		String directory = directoryFile.getAbsolutePath();
 
-		tc =
-		    new TurbineXmlConfig(directory, "TestTurbineConfiguration.xml");
+        Map params = new HashMap();
+        params.put(TurbineXmlConfig.CONFIGURATION_PATH_KEY,"../test/TestTurbineConfiguration.xml");
+        params.put(TurbineConstants.APPLICATION_ROOT,"src/webapp");
+		/*tc =
+		    new TurbineXmlConfig(directory, "TestTurbineConfiguration.xml");*/
+        tc = new TurbineXmlConfig(directory,params);
 		tc.init();
 		
 	}

@@ -47,21 +47,19 @@ package org.tigris.scarab.actions.admin;
  */ 
 
 // Turbine Stuff 
-import org.apache.turbine.TemplateContext;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
-
-// Scarab Stuff
+import org.apache.turbine.TemplateContext;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.GlobalParameterPeer;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  * Action for the GlobalEmailSettings form
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: GlobalEmailSettings.java,v 1.4 2003/04/17 22:52:47 jon Exp $
+ * @version $Id: GlobalEmailSettings.java,v 1.5 2004/11/14 21:06:54 dep4b Exp $
  */
 public class GlobalEmailSettings 
     extends RequireLoginFirstAction

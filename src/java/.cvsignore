@@ -6,3 +6,4 @@ report.scarab.om.generation
 cache.ccf
 InitDbScarabBundle*.properties
 ScarabBundle*.properties
+report.org.apache.commons.grant.GrantProject@*.om.generation

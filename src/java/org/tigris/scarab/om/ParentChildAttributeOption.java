@@ -46,19 +46,17 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.torque.TorqueException;
-import org.apache.fulcrum.intake.Retrievable;
-
-import org.apache.fulcrum.cache.TurbineGlobalCacheService;
-import org.apache.fulcrum.localization.Localization;
-import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.cache.CachedObject;
 import org.apache.fulcrum.cache.GlobalCacheService;
-import org.apache.fulcrum.TurbineServices;
-
+import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.intake.Retrievable;
+import org.apache.fulcrum.localization.Localization;
+import org.apache.torque.TorqueException;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -66,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.21 2004/05/10 21:04:45 dabbous Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.22 2004/11/14 21:06:54 dep4b Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable
@@ -120,9 +118,7 @@ public class ParentChildAttributeOption
     public static ParentChildAttributeOption getInstance(
                                 Integer parent, Integer child)
     {
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
+        GlobalCacheService tgcs =getGlobalCacheService();
 
         String key = getCacheKey(parent, child);
         ParentChildAttributeOption pcao = null;
@@ -305,9 +301,7 @@ public class ParentChildAttributeOption
      */
     public static void doRemoveFromCache(Integer parent, Integer child)
     {
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
+        GlobalCacheService tgcs =getGlobalCacheService();
 
         String key = getCacheKey(parent, child);
         tgcs.removeObject(key);
@@ -385,4 +379,21 @@ public class ParentChildAttributeOption
         roo.setRelationshipId(OptionRelationship.PARENT_CHILD);
         roo.save();
     }
+    
+    /**
+     * Gets the <code>GlobalCacheService</code> implementation.
+     *
+     * @return the GlobalCacheService implementation.
+     */
+    protected static final GlobalCacheService getGlobalCacheService()
+    {
+        try{
+            YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                YaafiComponentService.SERVICE_NAME);
+            return (GlobalCacheService) yaafi.lookup(GlobalCacheService.class.getName());
+        } 
+        catch (Exception e) {
+            throw new RuntimeException("Problem looking up GlobalCacheService service", e);
+        }
+    }    
 }

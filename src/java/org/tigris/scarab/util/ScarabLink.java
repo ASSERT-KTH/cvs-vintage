@@ -48,10 +48,10 @@ package org.tigris.scarab.util;
 
 import java.util.Enumeration;
 
+import org.apache.fulcrum.parser.ParameterParser;
+import org.apache.fulcrum.parser.ValueParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
-import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.turbine.DynamicURI;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.TemplateLink;
@@ -68,7 +68,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.70 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ScarabLink.java,v 1.71 2004/11/14 21:07:04 dep4b Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering

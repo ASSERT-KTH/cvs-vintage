@@ -59,8 +59,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.mimetype.MimeTypeServiceFacade;
+import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.Turbine;
@@ -96,7 +96,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.190 2004/11/04 20:35:27 dep4b Exp $
+ * @version $Id: ModifyIssue.java,v 1.191 2004/11/14 21:06:55 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
