@@ -57,7 +57,7 @@ abstract class DOMMember extends DOMNode implements IDOMMember {
 	 * The original inclusive source range of the
 	 * member's modifiers in the document, or -1's if
 	 * the member did not originally have modifiers in
-	 * the source code (i.e. default protection).
+	 * the source code (that is, package default visibility).
 	 */
 	 protected int[] fModifierRange;
 
@@ -94,7 +94,7 @@ DOMMember() {
  *		is the first character of the first modifier for this member, and
  *		the second integer is the last whitespace character preceeding the
  *		next part of this member declaration. If there are no modifiers present
- *		in this node's source code (i.e. default protection), this array
+ *		in this node's source code (that is, package default visibility), this array
  *		contains two -1's.
  */
 DOMMember(char[] document, int[] sourceRange, String name, int[] nameRange, int[] commentRange, int flags, int[] modifierRange) {
