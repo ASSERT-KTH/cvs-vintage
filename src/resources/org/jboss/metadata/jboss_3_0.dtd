@@ -6,8 +6,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.4 2002/02/14 20:04:55 mikesr Exp $
-$Revision: 1.4 $
+$Id: jboss_3_0.dtd,v 1.5 2002/03/11 01:37:48 reverbel Exp $
+$Revision: 1.5 $
 
 Overview of the architecture of jboss.xml
 
@@ -96,6 +96,7 @@ Overview of the architecture of jboss.xml
       <instance-cache />
       <persistence-manager />
       <transaction-manager />
+      <web-class-loader />
       <locking-policy />
       <container-invoker-conf />
       <container-cache-conf />
@@ -476,15 +477,20 @@ Overview of the architecture of jboss.xml
     - Standard CMP EntityBean
     - Clustered CMP 2.x EntityBean
     - Clustered CMP EntityBean
+    - IIOP CMP 2.x EntityBean
+    - IIOP CMP EntityBean
     - jdk 1.2.2 CMP EntityBean
     - Standard Stateless SessionBean
-    - jdk 1.2.2 Stateless SessionBean
     - Clustered Stateless SessionBean
+    - IIOP Stateless SessionBean
+    - jdk 1.2.2 Stateless SessionBean
     - Standard Stateful SessionBean
-    - jdk 1.2.2 Stateful SessionBean
     - Clustered Stateful SessionBean
+    - IIOP Stateful SessionBean
+    - jdk 1.2.2 Stateful SessionBean
     - Standard BMP EntityBean
     - Clustered BMP EntityBean
+    - IIOP BMP EntityBean
     - jdk 1.2.2 BMP EntityBean
     - Standard message Driven Bean
   
@@ -507,7 +513,7 @@ Overview of the architecture of jboss.xml
   
   Used in: container-configurations
 -->
-<!ELEMENT container-configuration (container-name, call-logging?, container-invoker?, container-interceptors?, instance-pool?, instance-cache?, persistence-manager?, transaction-manager?, locking-policy?, container-invoker-conf?, container-cache-conf?, container-pool-conf?, commit-option?, optiond-refresh-rate?, (security-domain | (role-mapping-manager, authentication-module))?)>
+<!ELEMENT container-configuration (container-name, call-logging?, container-invoker?, container-interceptors?, instance-pool?, instance-cache?, persistence-manager?, transaction-manager?, web-class-loader?, locking-policy?, container-invoker-conf?, container-cache-conf?, container-pool-conf?, commit-option?, optiond-refresh-rate?, (security-domain | (role-mapping-manager, authentication-module))?)>
 
 <!--
   The container-name element gives the name of the configuration being
@@ -637,6 +643,15 @@ Overview of the architecture of jboss.xml
   Used in: container-configuration
 -->
 <!ELEMENT transaction-manager (#PCDATA)>
+
+<!--
+  The web-class-loader element gives the class name of the web classloader
+  jboss must use for in this configuration. This class must be a subclass
+  of org.jboss.web.WebClassLoader. The default is org.jboss.web.WebClassLoader.
+  
+  Used in: container-configuration
+-->
+<!ELEMENT web-class-loader (#PCDATA)>
 
 <!--
   The container-invoker-conf element holds configuration data for the
