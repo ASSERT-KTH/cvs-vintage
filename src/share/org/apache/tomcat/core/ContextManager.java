@@ -213,6 +213,15 @@ public final class ContextManager {
     // the embedding application loader. @see getParentLoader
     private ClassLoader parentLoader;
 
+    // the common class loader, shared by container and apps
+    private ClassLoader commonLoader;
+
+    // the container class loader, used to load all container modules
+    private ClassLoader containerLoader;
+
+    // the webapp loader, with classes shared by all webapps.
+    private ClassLoader appsLoader;
+
     private Hashtable properties=new Hashtable();
     
     /**
@@ -360,6 +369,30 @@ public final class ContextManager {
 
     public final ClassLoader getParentLoader() {
 	return parentLoader;
+    }
+
+    public final void setCommonLoader( ClassLoader cl ) {
+	commonLoader=cl;
+    }
+
+    public final ClassLoader getCommonLoader() {
+	return commonLoader;
+    }
+
+    public final void setContainerLoader( ClassLoader cl ) {
+	containerLoader=cl;
+    }
+
+    public final ClassLoader getContainerLoader() {
+	return containerLoader;
+    }
+
+    public final void setAppsLoader( ClassLoader cl ) {
+	appsLoader=cl;
+    }
+
+    public final ClassLoader getAppsLoader() {
+	return appsLoader;
     }
 
     /** Default container. The interceptors for this container will
@@ -518,6 +551,12 @@ public final class ContextManager {
 		for( int i=0; i<existingI.length; i++ ) {
 		    existingI[i].addContext( this, ctx );
 		}
+	    } catch( TomcatException ex ) {
+		log( "Error adding context " + ctx , ex );
+		continue; 
+	    }
+	    try {
+		// set state may throw exception
 		ctx.setState( Context.STATE_ADDED );
 		log("Adding  " +  ctx.toString());
 	    } catch( TomcatException ex ) {

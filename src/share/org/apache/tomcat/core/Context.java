@@ -484,17 +484,23 @@ public final class Context {
 	    for( int i=0; i< cI.length; i++ ) {
 		if( cI[i].getContext() != this )
 		    continue; // not ours, don't have to initialize it.
-		cI[i].addInterceptor( contextM, this , cI[i] ); 
-		BaseInterceptor existingI[]=defaultContainer.getInterceptors();
-		for( int j=0; j<existingI.length; j++ ) {
-		    if( existingI[j] != cI[i] )
-			existingI[j].addInterceptor( contextM, this, cI[i] );
+		try {
+		    cI[i].addInterceptor( contextM, this , cI[i] ); 
+		    BaseInterceptor existingI[]=defaultContainer.
+			getInterceptors();
+		    for( int j=0; j<existingI.length; j++ ) {
+			if( existingI[j] != cI[i] )
+			    existingI[j].addInterceptor( contextM,
+							 this, cI[i] );
+		    }
+		    
+		    // set all local interceptors 
+		    cI[i].setContextManager( contextM );
+		    cI[i].engineInit( contextM );
+		    cI[i].addContext( contextM, this );
+		} catch( TomcatException ex ) {
+		    log("Error adding module " + cI[i] + " to " + this , ex);
 		}
-		
-		// set all local interceptors 
-		cI[i].setContextManager( contextM );
-		cI[i].engineInit( contextM );
-		cI[i].addContext( contextM, this );
 	    }
 	}
 	this.state=state;
