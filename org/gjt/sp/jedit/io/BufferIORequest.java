@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.18 2002/03/10 04:12:50 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.19 2002/03/10 05:12:04 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -601,9 +601,10 @@ public class BufferIORequest extends WorkRequest
 					&& jEdit.getBooleanProperty("twoStageSave");
 				if(twoStageSave)
 				{
-					savePath = vfs.getParentOfPath(path)
-						+ '#' + vfs.getFileName(path)
-						+ "#save#";
+					savePath = MiscUtilities.constructPath(
+						vfs.getParentOfPath(path),
+						'#' + vfs.getFileName(path)
+						+ "#save#");
 				}
 				else
 					savePath = path;

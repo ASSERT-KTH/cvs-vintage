@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.11 2002/01/02 04:49:58 spestov Exp $
+ * @author $Id: VFS.java,v 1.12 2002/03/10 05:12:04 spestov Exp $
  */
 public abstract class VFS
 {
@@ -153,10 +153,12 @@ public abstract class VFS
 			return path;
 
 		int count = Math.max(0,path.length() - 2);
-		int index1 = path.lastIndexOf(File.separatorChar,count);
-		int index2 = path.lastIndexOf('/',count);
+		int index = Math.max(path.lastIndexOf('/',count),
+			path.lastIndexOf(File.separatorChar,count));
+		if(index == -1)
+			index = path.indexOf(':');
 
-		return path.substring(Math.max(index1,index2) + 1);
+		return path.substring(index + 1);
 	} //}}}
 
 	//{{{ getParentOfPath() method
