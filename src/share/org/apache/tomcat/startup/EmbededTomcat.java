@@ -132,6 +132,9 @@ public class EmbededTomcat {
 
     String home=null;
     String installDir=null;
+
+    int httpPort=8080;
+    int ajpPort=0;
     
     Hashtable attributes=new Hashtable();
     
@@ -241,6 +244,20 @@ public class EmbededTomcat {
 	serverXml=false;
     }
 
+    /** Used from estart ( i.e. no server.xml, minimal config )
+     */
+    public void setHttpPort( int port ) {
+        httpPort=port;
+    }
+
+    /** Set the port for ajp connections.
+     *  If not set, ajp will not be enabled.
+     *  Used for estart.
+     */
+    public void setAjpPort( int port ) {
+        ajpPort=port;
+    }
+    
     /** Dummy, "-run" on the command line.
      */
     public void setRun(boolean b) {
@@ -670,8 +687,10 @@ public class EmbededTomcat {
     public void addDefaultConnectors()
 	throws TomcatException
     {
-	addEndpoint( 8080, null, null );
-	addAjpEndpoint( 8007, null, null );
+        if( httpPort > 0 )
+            addEndpoint( httpPort, null, null );
+        if( ajpPort >0 ) 
+            addAjpEndpoint( ajpPort, null, null );
     }
     
     // -------------------- execute() --------------------
@@ -1073,13 +1092,15 @@ public class EmbededTomcat {
 	out.println("    -config file (or -f file)  Use this file instead of server.xml");
         out.println("    -debug level               Sets specified debug level on EmbeddedTomcat,");
         out.println("                                   ContextManager, \"Xml\" modules, and contexts");
-        out.println("    -estart                    Starts Tomcat without reading server.xml");
         out.println("    -help                      Show this usage report");
 	out.println("    -home dir                  Use this directory as tomcat.home");
 	out.println("    -install dir (or -i dir)   Use this directory as tomcat.install");
         out.println("    -jkconf                    Write mod_jk configuration files, without");
         out.println("                                   starting Tomcat");
         out.println("    -sandbox                   Enable security manager (includes java.policy)");
+        out.println("    -estart                    Starts Tomcat without reading server.xml");
+        out.println("    -httpPort                  HTTP port to use in 'estart' mode");
+        out.println("    -ajpPort                   AJP port to use in 'estart' mode");
         out.println("Note: the '-' on the options is optional.");
         out.println();
     }
