@@ -104,12 +104,14 @@ public final class SimpleFacadeManager implements FacadeManager {
     }
 
     public HttpServletRequest createHttpServletRequestFacade(Request req) {
-	if( req.getContext() != ctx ) return null; // throw
+	Context reqCtx=req.getContext();
+	if( reqCtx != ctx && reqCtx != null ) return null; // throw
 	return new HttpServletRequestFacade(req);
     }
 
     public HttpServletResponse createHttpServletResponseFacade(Response res) {
-	if( res.getRequest().getContext() != ctx ) return null; // throw
+	Context resCtx=res.getRequest().getContext();
+	if( resCtx != ctx && resCtx != null ) return null; // throw
 	return new HttpServletResponseFacade(res);
     }
 

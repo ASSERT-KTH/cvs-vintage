@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.7 2000/05/30 14:08:23 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/30 14:08:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.8 2000/05/30 15:40:14 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/30 15:40:14 $
  *
  * ====================================================================
  *
@@ -124,6 +124,8 @@ public class ThreadPool  {
      */
     protected boolean stopThePool;
 
+    static int debug=0;
+    
     public ThreadPool() {
         maxThreads      = MAX_THREADS;
         maxSpareThreads = MAX_SPARE_THREADS;
@@ -334,6 +336,10 @@ public class ThreadPool  {
         currentThreadCount = toOpen;
     }
 
+    void log( String s ) {
+	System.out.println("ThreadPool: " + s );
+    }
+    
     /** Periodically execute an action - cleanup in this case
      */
     class MonitorRunnable implements Runnable {
@@ -428,10 +434,19 @@ public class ThreadPool  {
                             this.wait();
                         }
                     }
+		    if( toRun == null ) {
+			if( p.debug>0) p.log( "No toRun ???");
+		    }
+		    
+		    if( shouldTerminate ) {
+			if( p.debug>0) p.log( "Terminate");
+			break;
+		    }
 
                     // Check if should execute a runnable.
                     try {
 			if( noThData ) {
+			    if( p.debug>0) p.log( "Getting new thread data");
 			    thData=toRun.getInitData();
 			    noThData=false;
 			}
@@ -460,6 +475,9 @@ public class ThreadPool  {
         }
 
         public synchronized void runIt(ThreadPoolRunnable toRun) {
+	    if( toRun == null ) {
+		throw new NullPointerException("No Runnable");
+	    }
             this.toRun = toRun;
             shouldRun = true;
             this.notify();

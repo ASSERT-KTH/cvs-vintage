@@ -122,6 +122,7 @@ public class ByteBuffer {
     public void recycle() {
 	bytesWritten=0;
 	count=0;
+	pos=0;
     }
 
     public Object getParent() {

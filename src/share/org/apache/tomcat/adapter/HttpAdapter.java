@@ -205,7 +205,9 @@ public final class HttpAdapter implements BufferListener {
 	    }
 	    sout.write( ev.getByteBuffer(), ev.getOffset(), ev.getLength() );
 	} catch( IOException ex ) {
-	    ex.printStackTrace();
+	    if( ! "Broken pipe".equals(ex.getMessage())) {
+		ex.printStackTrace();
+	    }
 	}
     }
 
@@ -312,7 +314,7 @@ public final class HttpAdapter implements BufferListener {
 	count = BuffTool.readLine(in, buf, 0, buf.length);
 	
 	if (count < 0  ) {
-	    System.out.println("No request");
+	    //	    System.out.println("No request");
 	    // 	    System.out.println("Request too long ");
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	    return;

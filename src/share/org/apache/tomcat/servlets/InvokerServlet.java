@@ -155,6 +155,7 @@ public class InvokerServlet extends TomcatInternalServlet {
         // try the easy one -- lookup by name
 	if( context == null ) {
 	    System.out.println("Servlet called before init. Need to keep it disabled, sync at startup");
+	    return;
 	}
         ServletWrapper wrapper = context.getServletByName(servletName);
 
