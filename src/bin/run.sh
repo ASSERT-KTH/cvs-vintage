@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.34 2002/02/07 00:29:31 user57 Exp $ ###
+### $Id: run.sh,v 1.35 2002/02/16 04:52:15 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -89,24 +89,25 @@ fi
 
 # Display our environment
 echo "================================================================================"
-echo " JBoss Bootstrap Environment"
 echo ""
-echo " JBOSS_HOME: $JBOSS_HOME"
+echo "  JBoss Bootstrap Environment"
 echo ""
-echo " JAVA: $JAVA"
+echo "  JBOSS_HOME: $JBOSS_HOME"
 echo ""
-echo " JAVA_OPTS: $JAVA_OPTS"
+echo "  JAVA: $JAVA"
 echo ""
-echo " CLASSPATH: $JBOSS_CLASSPATH"
+echo "  JAVA_OPTS: $JAVA_OPTS"
+echo ""
+echo "  CLASSPATH: $JBOSS_CLASSPATH"
 echo ""
 echo "================================================================================"
 echo ""
 
 # Make sure we are in the correctly directory
-cd $startdir
+cd "$startdir"
 
 # Execute the JVM
 exec $JAVA \
     $JAVA_OPTS \
-    -classpath $JBOSS_CLASSPATH \
+    -classpath "$JBOSS_CLASSPATH" \
     org.jboss.Main "$@"
