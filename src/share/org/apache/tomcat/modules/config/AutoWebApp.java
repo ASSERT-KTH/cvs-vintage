@@ -204,15 +204,17 @@ public class AutoWebApp extends BaseInterceptor {
 	if(host==null) host="DEFAULT";
 
 	String path="/" + unEscapePath( name );
-	log("Auto-Adding " + name + " " + host + " " + path );
 	if( path.equals("/ROOT") )
 	    path="";
 
 	Hashtable loaded=(Hashtable)hosts.get(host);
 	if( loaded != null && loaded.get( path ) != null ) {
-	    log( "Already loaded");
+	    log( "Already loaded: " + host + ":" +
+		 ( "".equals(path) ? "/" : path ) );
 	    return; // already loaded
 	}
+	log("Auto-Adding " + host + ":" +
+	    ( "".equals(path) ? "/" : path ) );
 
 	if (dir.isDirectory()) {
 	    Context ctx=new Context();
