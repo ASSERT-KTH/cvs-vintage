@@ -17,7 +17,7 @@ package org.columba.core.config;
 
 import org.columba.core.xml.XmlElement;
 
-public class DefaultItem {
+public class DefaultItem implements Cloneable {
 	XmlElement root;
 	//private Document document;
 
@@ -442,4 +442,14 @@ public class DefaultItem {
 		return hashCode;
 	}
 
+	/** {@inheritDoc} */
+	public Object clone() {
+		try {
+			DefaultItem other = (DefaultItem) super.clone();
+			other.root = (XmlElement) root.clone(); // make a deep copy
+			return other;
+		} catch (CloneNotSupportedException cnse) {
+			throw new InternalError("Could not clone DefaultItem: " + cnse);
+		}
+	}
 }
