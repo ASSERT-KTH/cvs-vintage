@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.32 2003/06/30 18:00:23 linus Exp $
+// $Id: DisplayTextTree.java,v 1.33 2003/08/22 19:45:15 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Category;
-
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
 import org.argouml.cognitive.ToDoItem;
@@ -49,7 +48,6 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.uml.generator.GeneratorDisplay;
 import org.argouml.uml.ui.UMLTreeCellRenderer;
-
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
@@ -89,6 +87,7 @@ public class DisplayTextTree extends JTree implements TargetListener {
         putClientProperty("JTree.lineStyle", "Angled");
         setRootVisible(false);
         setShowsRootHandles(true);
+        setToolTipText("Tree"); // Enables tooltips for tree. Won't be shown.
 
         this.setRowHeight(18); 
 
