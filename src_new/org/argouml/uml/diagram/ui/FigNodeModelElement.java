@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.63 2003/05/05 10:57:40 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.64 2003/05/08 12:47:41 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -508,6 +508,13 @@ public abstract class FigNodeModelElement
             } catch (ParseException pe) {
                 ProjectBrowser.getInstance().getStatusBar().showStatus(
                     "Error: " + pe + " at " + pe.getErrorOffset());
+                // if there was a problem parsing,
+                // then reset the text in the fig - because the model was not
+                // updated.
+                if(me.getName() != null)
+                    ft.setText(me.getName());
+                else
+                    ft.setText("");
             }
             //me.setName(ft.getText());
         }
