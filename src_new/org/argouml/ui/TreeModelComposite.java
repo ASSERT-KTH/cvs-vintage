@@ -35,7 +35,7 @@ import org.apache.log4j.Category;
  * that determine how to link parents to children in the tree. Those
  * rules can now be found in PerspectiveSupport.
  *
- * <p>$Id: TreeModelComposite.java,v 1.14 2003/05/04 19:45:15 kataka Exp $
+ * <p>$Id: TreeModelComposite.java,v 1.15 2003/05/05 06:47:44 kataka Exp $
  */
 public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
@@ -73,16 +73,11 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);
-            if (tm instanceof AbstractGoRule) {
-                ((AbstractGoRule)tm).setCacheable(parent, true);
-            }
+            TreeModel tm = (TreeModel)_goRules.elementAt(i);     
             int childCount = tm.getChildCount(parent);
-            if (index < childCount)
+            if (index < childCount) {              
                 return tm.getChild(parent, index);
-            if (tm instanceof AbstractGoRule) {
-                ((AbstractGoRule)tm).setCacheable(parent, false);
-            }
+            }          
             index -= childCount;
         }
         return null;
@@ -106,17 +101,12 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
         int childCount = 0;
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);
-            if (tm instanceof AbstractGoRule) {
-                ((AbstractGoRule)tm).setCacheable(parent, true);
-            }
+            TreeModel tm = (TreeModel)_goRules.elementAt(i);           
             int childIndex = tm.getIndexOfChild(parent, child);
-            if (childIndex != -1)
+            if (childIndex != -1) {               
                 return childIndex + childCount;
-            childCount += tm.getChildCount(parent);
-            if (tm instanceof AbstractGoRule) {
-                ((AbstractGoRule)tm).setCacheable(parent, false);
             }
+            childCount += tm.getChildCount(parent);          
         }
         cat.debug("child not found!");
 

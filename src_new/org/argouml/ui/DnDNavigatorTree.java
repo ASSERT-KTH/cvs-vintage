@@ -45,7 +45,7 @@ import org.argouml.model.uml.UmlHelper;
 /**
  * This class extends the default Argo JTree with Drag and drop capabilities.
  *
- * <p>$Id: DnDNavigatorTree.java,v 1.2 2003/04/29 19:40:55 kataka Exp $
+ * <p>$Id: DnDNavigatorTree.java,v 1.3 2003/05/05 06:47:44 kataka Exp $
  *
  * @author  alexb
  * @since Created on 16 April 2003
@@ -92,6 +92,7 @@ DragSourceListener{
         
         //Get the selected node from the JTree
         _selectedTreePath = getSelectionPath();
+        if (_selectedTreePath == null) return;
         Object dragNode = _selectedTreePath.getLastPathComponent();
         if (dragNode != null) {
             

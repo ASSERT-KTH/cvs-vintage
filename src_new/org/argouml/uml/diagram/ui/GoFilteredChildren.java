@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoFilteredChildren.java,v 1.12 2003/05/04 19:45:15 kataka Exp $
+// $Id: GoFilteredChildren.java,v 1.13 2003/05/05 06:47:44 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -68,21 +68,18 @@ public class GoFilteredChildren extends AbstractGoRule {
         return _name;
     }
 
-    public Object getChild(Object parent, int index) {
-        _tm.setCacheable(parent, true);
+    public Object getChild(Object parent, int index) {  
         int unfilteredCount = _tm.getChildCount(parent);
         int filteredCount = 0;
         for (int i = 0; i < unfilteredCount; ++i) {
             Object kid = _tm.getChild(parent, i);
             if (_pred.predicate(kid)) {
-                if (filteredCount == index) {
-                    _tm.setCacheable(parent, false);                
+                if (filteredCount == index) {             
                     return kid;
                 }
                 filteredCount++;
             }
-        }
-        _tm.setCacheable(parent, false);    
+        } 
         return null;
     }
 
