@@ -17,7 +17,7 @@ rem                implementation.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.25 2000/07/18 06:00:09 craigmcc Exp $
+rem $Id: tomcat.bat,v 1.26 2000/07/25 03:21:19 craigmcc Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -48,6 +48,8 @@ set CP=%CP%;%CLASSPATH%
 :noClasspath
 set CP=%CP%;%JAVA_HOME%\lib\tools.jar
 echo Using CLASSPATH: %CP%
+echo Using JAVA_HOME: %JAVA_HOME%
+echo Using TOMCAT_HOME: %TOMCAT_HOME%
 
 
 rem ----- Execute The Requested Command -------------------------------------

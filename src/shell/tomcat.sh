@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.17 2000/05/26 18:55:33 costin Exp $
+# $Id: tomcat.sh,v 1.18 2000/07/25 03:21:20 craigmcc Exp $
 
 # Shell script to start and stop the server
 
@@ -118,6 +118,8 @@ export CLASSPATH
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
+  echo Using JAVA_HOME: ${JAVA_HOME}
+  echo Using TOMCAT_HOME: ${TOMCAT_HOME}
   if [ "$1" = "-security" ] ; then
     echo Starting with a SecurityManager
     $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
@@ -129,12 +131,16 @@ if [ "$1" = "start" ] ; then
 elif [ "$1" = "stop" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
+  echo Using JAVA_HOME: ${JAVA_HOME}
+  echo Using TOMCAT_HOME: ${TOMCAT_HOME}
   $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat -stop "$@"
 #   $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
 
 elif [ "$1" = "run" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
+  echo Using JAVA_HOME: ${JAVA_HOME}
+  echo Using TOMCAT_HOME: ${TOMCAT_HOME}
   if [ "$1" = "-security" ] ; then
     echo Starting with a SecurityManager
     $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@"
