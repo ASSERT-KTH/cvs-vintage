@@ -30,7 +30,8 @@ import org.jboss.logging.Logger;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.3 $
+*   @author Daniel OConnor (docodan@mvcsoft.com)
+*   @version $Revision: 1.4 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer
@@ -117,6 +118,17 @@ extends Container
     {
        throw new Error("Not valid for MessageDriven beans");
     }
+    
+    public Class getLocalClass() 
+    {
+       throw new Error("Not valid for MessageDriven beans");
+    }
+   
+    public Class getLocalHomeClass() 
+    {
+       throw new Error("Not valid for MessageDriven beans");
+    }
+    
     
     // Container implementation - overridden here ----------------------
     public void init()

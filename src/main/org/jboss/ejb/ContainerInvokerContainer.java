@@ -21,7 +21,8 @@ import javax.naming.Name;
  *
  *	@see ContainerInvoker
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *      @author Daniel OConnor (docodan@mvcsoft.com)
+ *	@version $Revision: 1.3 $
  */
 public interface ContainerInvokerContainer
 {
@@ -29,7 +30,11 @@ public interface ContainerInvokerContainer
    public Class getHomeClass();
    
    public Class getRemoteClass();
+   
+   public Class getLocalHomeClass();
+   
+   public Class getLocalClass();
 	
-	public ContainerInvoker getContainerInvoker();
+   public ContainerInvoker getContainerInvoker();
 }
 

@@ -29,7 +29,8 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.15 $
+*   @author Daniel OConnor (docodan@mvcsoft.com)
+*   @version $Revision: 1.16 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -44,7 +45,11 @@ public class StatelessSessionContainer
     // This is the Remote interface class
     protected Class remoteInterface;
     
-    // These are the mappings between the home interface methods and the container methods
+    protected Class localHomeInterface;
+   
+    protected Class localInterface;
+
+   // These are the mappings between the home interface methods and the container methods
     protected Map homeMapping;
     
     // These are the mappings between the remote interface methods and the bean methods
@@ -124,6 +129,17 @@ public class StatelessSessionContainer
     {
        return remoteInterface;
     }
+    
+   public Class getLocalClass() 
+   {
+      return localInterface;
+   }
+   
+   public Class getLocalHomeClass() 
+   {
+      return localHomeInterface;
+   }
+    
     
     // Container implementation --------------------------------------
     public void init()
