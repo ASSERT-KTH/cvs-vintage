@@ -1,5 +1,24 @@
 $page.setTitle("Add/Edit attribute group")
 
+#macro (AttributeGroupBar $val)
+<div class="functnbar$val">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><div>Screen options</div>
+<input type="submit" value="Save" name="eventSubmit_doModifygroup" />&#160;
+<input type="submit" value="Back" name="eventSubmit_doBack"  />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+<td nowrap="nowrap"><div>Attributes</div>
+<input type="submit" value="Add" name="eventSubmit_doGotoattributeselect" />&#160;
+<!-- FIXME: <input type="submit" value="Copy" />&#160; -->
+<input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;
+<!-- FIXME: <input type="submit" value="Resort" /> -->
+</td>
+</table>
+</div>
+#end
+
 <div class="app" id="div2-1-4-0">
 <h2>$page.Title</h2>
 
@@ -9,27 +28,15 @@ $page.setTitle("Add/Edit attribute group")
 <form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AttributeGroup.vm"/>
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm"/>
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm"/>
+<input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+
 <input type="hidden" name="groupId" value="$groupId">
 #if ($issueTypeId && $issueTypeId.length() > 0)
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 #end
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><div>Screen options</div>
-<input type="submit" value="Save" name="eventSubmit_doModifygroup" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-<td nowrap="nowrap"><div>Attributes</div>
-<input type="submit" value="Add new" name="eventSubmit_doGotoattributeselect" />&#160;
-<!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-<input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;
-<!-- FIXME: <input type="submit" value="Resort" /> -->
-</td>
-</table>
-</div>
+#AttributeGroupBar("")
 
 <h3>Attribute group details</h3>
 
@@ -86,24 +93,11 @@ $page.setTitle("Add/Edit attribute group")
 </table>
 
 #else
-    <p><strong class="alert">There are no attributes in this group.</strong></p>
+  <h3>Attributes in this group</h3>
+  <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
 #end
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><div>Screen options</div>
-<input type="submit" value="Save" name="eventSubmit_doModifygroup" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-<td nowrap="nowrap"><div>Attributes</div>
-<input type="submit" value="Add new" name="eventSubmit_doGotoattributeselect" />&#160;
-<!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-<input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;
-<!-- FIXME: <input type="submit" value="Resort" /> -->
-</td>
-</table>
-</div>
+#AttributeGroupBar("2")
 
 $intake.declareGroups()
 </form>
