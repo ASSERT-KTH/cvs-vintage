@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.42 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.43 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui;
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -55,7 +54,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(Object)
      */
     public UMLDiagram createDiagram(Object namespace) {
-        if (!ModelFacade.isANamespace(namespace)) {
+        if (!Model.getFacade().isANamespace(namespace)) {
             LOG.error("No namespace as argument");
             LOG.error(namespace);
             throw new IllegalArgumentException(
@@ -63,24 +62,24 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         }
         Object target = TargetManager.getInstance().getModelTarget();
         Object collaboration = null;
-        if (ModelFacade.isAOperation(target)) {
+        if (Model.getFacade().isAOperation(target)) {
             collaboration = Model.getCollaborationsFactory()
                             .buildCollaboration(namespace, target);
-        } else if (ModelFacade.isAClassifier(target)) {
+        } else if (Model.getFacade().isAClassifier(target)) {
             collaboration = Model.getCollaborationsFactory()
                             .buildCollaboration(namespace, target);
-//        } else if (ModelFacade.isAModel(target)) {
+//        } else if (Model.getFacade().isAModel(target)) {
 //            collaboration = Model.getCollaborationsFactory()
 //                            .buildCollaboration(target);
-//        } else if (ModelFacade.isAInteraction(target)) {
-//            collaboration = ModelFacade.getContext(target);
+//        } else if (Model.getFacade().isAInteraction(target)) {
+//            collaboration = Model.getFacade().getContext(target);
 //        } else if (target instanceof UMLCollaborationDiagram) {
 //            Object owner = ((UMLCollaborationDiagram) target).getOwner();
-//            if (ModelFacade.isACollaboration(owner)) {
+//            if (Model.getFacade().isACollaboration(owner)) {
 //                //preventing backward compat problems
 //                collaboration = owner;
 //            }
-//        } else if (ModelFacade.isACollaboration(target)) {
+//        } else if (Model.getFacade().isACollaboration(target)) {
 //            collaboration = target;
 //        } else {
 //            collaboration =
@@ -96,7 +95,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(java.lang.Object)
      */
     public boolean isValidNamespace(Object handle) {
-        if (!ModelFacade.isANamespace(handle)) {
+        if (!Model.getFacade().isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);
             throw new IllegalArgumentException(
@@ -112,11 +111,11 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
      */
     public boolean shouldBeEnabled() {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (ModelFacade.isAOperation(target))
+        if (Model.getFacade().isAOperation(target))
             return super.shouldBeEnabled()
                 && Model.getCollaborationsHelper()
                     .isAddingCollaborationAllowed(target);
-        else if (ModelFacade.isANamespace(target))
+        else if (Model.getFacade().isANamespace(target))
                 return super.shouldBeEnabled() && isValidNamespace(target);
         return false;
     }

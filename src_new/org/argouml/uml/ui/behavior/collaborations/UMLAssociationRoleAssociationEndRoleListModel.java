@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.16 2005/01/20 23:20:31 linus Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.17 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
 /**
@@ -51,15 +50,15 @@ public class UMLAssociationRoleAssociationEndRoleListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(ModelFacade.getConnections(getTarget()));
+        setAllElements(Model.getFacade().getConnections(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return org.argouml.model.ModelFacade.isAAssociationEndRole(o)
-            && ModelFacade.getConnections(getTarget()).contains(o);
+        return Model.getFacade().isAAssociationEndRole(o)
+            && Model.getFacade().getConnections(getTarget()).contains(o);
     }
 
     /**
@@ -67,7 +66,7 @@ public class UMLAssociationRoleAssociationEndRoleListModel
      */
     public void swap(int index1, int index2) {
         Object assocrole = getTarget();
-        List c = new ArrayList(ModelFacade.getConnections(assocrole));
+        List c = new ArrayList(Model.getFacade().getConnections(assocrole));
         Object mem1 = c.get(index1);
         Object mem2 = c.get(index2);
         c.set(index1, mem2);

@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.62 2005/01/29 20:08:27 linus Exp $
+// $Id: PropPanelMessage.java,v 1.63 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,7 +132,7 @@ public class PropPanelMessage extends PropPanelModelElement {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (org.argouml.model.ModelFacade.isAMessage(target)) {
+            if (Model.getFacade().isAMessage(target)) {
                 Model.getCommonBehaviorFactory().buildAction(target);
                 super.actionPerformed(e);
             }

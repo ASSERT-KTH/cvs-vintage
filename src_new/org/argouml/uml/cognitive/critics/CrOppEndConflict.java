@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.11 2005/01/02 10:08:15 linus Exp $
+// $Id: CrOppEndConflict.java,v 1.12 2005/01/30 20:47:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.List;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1
@@ -61,13 +60,13 @@ public class CrOppEndConflict extends CrUML {
      */
     public boolean predicate2(Object dm, Designer dsgr) {
         boolean problem = NO_PROBLEM;
-        if (ModelFacade.isAClassifier(dm)) {
+        if (Model.getFacade().isAClassifier(dm)) {
             Collection col = Model.getCoreHelper().getAssociations(dm);
             List names = new ArrayList();
             Iterator it = col.iterator();
             String name = null;
             while (it.hasNext()) {
-                name = ModelFacade.getName(it.next());
+                name = Model.getFacade().getName(it.next());
                 if (name == null || name.equals("")) {
                     continue;
                 }

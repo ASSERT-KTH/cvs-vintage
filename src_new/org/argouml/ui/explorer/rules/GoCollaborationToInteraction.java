@@ -1,5 +1,5 @@
-// $Id: GoCollaborationToInteraction.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoCollaborationToInteraction.java,v 1.2 2005/01/30 20:47:48 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for Collaboration->Interaction.
@@ -48,16 +48,16 @@ public class GoCollaborationToInteraction extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (!ModelFacade.isACollaboration(parent))
+	if (!Model.getFacade().isACollaboration(parent))
 	    return null;
-	return ModelFacade.getInteractions(parent);
+	return Model.getFacade().getInteractions(parent);
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isACollaboration(parent)) {
+        if (Model.getFacade().isACollaboration(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

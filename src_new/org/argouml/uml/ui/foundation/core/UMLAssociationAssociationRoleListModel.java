@@ -1,4 +1,4 @@
-// $Id: UMLAssociationAssociationRoleListModel.java,v 1.10 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLAssociationAssociationRoleListModel.java,v 1.11 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,15 +46,16 @@ public class UMLAssociationAssociationRoleListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null)
-            setAllElements(ModelFacade.getAssociationRoles(getTarget()));
+        if (getTarget() != null) {
+            setAllElements(Model.getFacade().getAssociationRoles(getTarget()));
+        }
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return org.argouml.model.ModelFacade.isAAssociationRole(o)
-            && ModelFacade.getAssociationRoles(getTarget()).contains(o);
+        return Model.getFacade().isAAssociationRole(o)
+            && Model.getFacade().getAssociationRoles(getTarget()).contains(o);
     }
 }

@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.25 2005/01/10 16:24:17 mvw Exp $
+// $Id: FigFinalState.java,v 1.26 2005/01/30 20:48:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.activity.ui.SelectionActionState;
-import org.argouml.model.ModelFacade;
-
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -122,8 +121,8 @@ public class FigFinalState extends FigStateVertex {
         Selection sel = null;
         if (getOwner() != null) {
             pstate = getOwner();
-            if (ModelFacade.isAActivityGraph(ModelFacade.getStateMachine(
-                            ModelFacade.getContainer(pstate)))) {
+            if (Model.getFacade().isAActivityGraph(Model.getFacade().getStateMachine(
+                            Model.getFacade().getContainer(pstate)))) {
                 sel = new SelectionActionState(this);
                 ((SelectionActionState) sel).setOutgoingButtonEnabled(false);
             } else {

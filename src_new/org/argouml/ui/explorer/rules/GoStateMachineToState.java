@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToState.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// $Id: GoStateMachineToState.java,v 1.3 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * PerspectiveRule to navigate from statemachine to the subvertices of
@@ -53,9 +53,9 @@ public class GoStateMachineToState extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 
-        if (ModelFacade.isAStateMachine(parent)) {
-            if (ModelFacade.getTop(parent) != null) {
-                return ModelFacade.getSubvertices(ModelFacade.getTop(parent));
+        if (Model.getFacade().isAStateMachine(parent)) {
+            if (Model.getFacade().getTop(parent) != null) {
+                return Model.getFacade().getSubvertices(Model.getFacade().getTop(parent));
             }
         }
         return null;
@@ -65,11 +65,11 @@ public class GoStateMachineToState extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAStateMachine(parent)) {
+        if (Model.getFacade().isAStateMachine(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
-	    if (ModelFacade.getTop(parent) != null)
-		set.add(ModelFacade.getTop(parent));
+	    if (Model.getFacade().getTop(parent) != null)
+		set.add(Model.getFacade().getTop(parent));
 	    return set;
 	}
 	return null;

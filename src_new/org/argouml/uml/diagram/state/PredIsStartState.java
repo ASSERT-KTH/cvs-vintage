@@ -1,4 +1,4 @@
-// $Id: PredIsStartState.java,v 1.11 2005/01/30 14:05:22 linus Exp $
+// $Id: PredIsStartState.java,v 1.12 2005/01/30 20:48:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.state;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.Predicate;
 
 /**
@@ -45,9 +44,9 @@ public class PredIsStartState implements Predicate {
      * @see org.tigris.gef.util.Predicate#predicate(java.lang.Object)
      */
     public boolean predicate(Object obj) {
-	return (ModelFacade.isAPseudostate(obj))
+	return (Model.getFacade().isAPseudostate(obj))
 	    && (Model.getPseudostateKind().getInitial().equals(
-                ModelFacade.getKind(obj)));
+                Model.getFacade().getKind(obj)));
     }
 
     /**

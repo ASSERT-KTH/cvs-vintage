@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.31 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.32 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.31 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.32 2005/01/30 20:47:48 linus Exp $
 
 package org.argouml.uml.ui;
 
@@ -31,7 +31,7 @@ import java.awt.event.ActionEvent;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -85,16 +85,16 @@ public abstract class ActionAddDiagram extends UMLAction {
         Project p = ProjectManager.getManager().getCurrentProject();
         Object target = TargetManager.getInstance().getModelTarget();
         Object ns = null;
-        if (target == null || !ModelFacade.isABase(target)) {
+        if (target == null || !Model.getFacade().isABase(target)) {
             target = p.getRoot();
         }
-        if (ModelFacade.isANamespace(target)) {
+        if (Model.getFacade().isANamespace(target)) {
             ns = target;
         } else {
             Object owner = null;
-            if (ModelFacade.isABase(target)) {
-                owner = ModelFacade.getModelElementContainer(target);
-                if (owner != null && ModelFacade.isANamespace(owner)) {
+            if (Model.getFacade().isABase(target)) {
+                owner = Model.getFacade().getModelElementContainer(target);
+                if (owner != null && Model.getFacade().isANamespace(owner)) {
                     ns = owner;
                 }
             }

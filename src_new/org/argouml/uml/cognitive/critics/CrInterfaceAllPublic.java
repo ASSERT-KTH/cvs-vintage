@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.14 2005/01/30 14:05:10 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.15 2005/01/30 20:47:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrInterfaceAllPublic.java,v 1.14 2005/01/30 14:05:10 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.15 2005/01/30 20:47:42 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -31,7 +31,6 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Well-formedness rule [3] for MInterface. See page 32 of UML 1.1
@@ -57,21 +56,21 @@ public class CrInterfaceAllPublic extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAInterface(dm))) {
+	if (!(Model.getFacade().isAInterface(dm))) {
 	    return NO_PROBLEM;
 	}
 	Object inf = /*(MInterface)*/ dm;
-	Collection bf = ModelFacade.getFeatures(inf);
+	Collection bf = Model.getFacade().getFeatures(inf);
 	if (bf == null) {
 	    return NO_PROBLEM;
 	}
 	Iterator features = bf.iterator();
 	while (features.hasNext()) {
 	    Object f = /*(MFeature)*/ features.next();
-	    if (ModelFacade.getVisibility(f) == null) {
+	    if (Model.getFacade().getVisibility(f) == null) {
 	        return NO_PROBLEM;
 	    }
-	    if (!ModelFacade.getVisibility(f)
+	    if (!Model.getFacade().getVisibility(f)
                 .equals(Model.getVisibilityKind().getPublic())) {
 	        return PROBLEM_FOUND;
 	    }

@@ -1,4 +1,4 @@
-// $Id: UMLWizard.java,v 1.5 2005/01/11 21:03:30 mvw Exp $
+// $Id: UMLWizard.java,v 1.6 2005/01/30 20:47:41 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ui.Wizard;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.tigris.gef.util.VectorSet;
 
 
@@ -83,7 +83,7 @@ public abstract class UMLWizard extends Wizard {
         if (suggestion != null) return suggestion;
         Object me = getModelElement();
         if (me != null) {
-            String n = ModelFacade.getName(me);
+            String n = Model.getFacade().getName(me);
             return n;
         }
         return "";

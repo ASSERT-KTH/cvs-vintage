@@ -1,4 +1,4 @@
-// $Id: UMLMetaClassComboBoxModel.java,v 1.5 2005/01/09 14:59:11 linus Exp $
+// $Id: UMLMetaClassComboBoxModel.java,v 1.6 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
@@ -69,7 +69,7 @@ public class UMLMetaClassComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ModelFacade.getBaseClass(getTarget());
+            return Model.getFacade().getBaseClass(getTarget());
         }
         return null;
     }

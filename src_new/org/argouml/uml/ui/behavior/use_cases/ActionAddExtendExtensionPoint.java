@@ -1,4 +1,4 @@
-// $Id: ActionAddExtendExtensionPoint.java,v 1.16 2005/01/20 23:20:27 linus Exp $
+// $Id: ActionAddExtendExtensionPoint.java,v 1.17 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
@@ -63,8 +62,8 @@ public class ActionAddExtendExtensionPoint
         Vector ret = new Vector();
         if (getTarget() != null) {
             Object extend = /*(MExtend)*/getTarget();
-            Collection c = ModelFacade.getExtensionPoints(
-                    ModelFacade.getBase(extend));
+            Collection c = Model.getFacade().getExtensionPoints(
+                    Model.getFacade().getBase(extend));
             ret.addAll(c);
         }
         return ret;
@@ -83,7 +82,7 @@ public class ActionAddExtendExtensionPoint
      */
     protected Vector getSelected() {
         Vector ret = new Vector();
-        ret.addAll(ModelFacade.getExtensionPoints(getTarget()));
+        ret.addAll(Model.getFacade().getExtensionPoints(getTarget()));
         return ret;
     }
 

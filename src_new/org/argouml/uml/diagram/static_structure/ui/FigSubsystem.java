@@ -1,5 +1,5 @@
-// $Id: FigSubsystem.java,v 1.11 2004/08/04 19:58:33 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: FigSubsystem.java,v 1.12 2005/01/30 20:48:00 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigSubsystem.java,v 1.11 2004/08/04 19:58:33 mvw Exp $
+// $Id: FigSubsystem.java,v 1.12 2005/01/30 20:48:00 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -30,7 +30,7 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 
@@ -66,9 +66,9 @@ public class FigSubsystem extends FigPackage {
         this();
         setOwner(node);
 
-        if (ModelFacade.isASubsystem(node)
-                && (ModelFacade.getName(node) != null)) {
-            getNameFig().setText(ModelFacade.getName(node));
+        if (Model.getFacade().isASubsystem(node)
+                && (Model.getFacade().getName(node) != null)) {
+            getNameFig().setText(Model.getFacade().getName(node));
         }
     }
 

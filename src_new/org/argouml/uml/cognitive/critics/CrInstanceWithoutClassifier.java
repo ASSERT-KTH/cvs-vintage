@@ -1,4 +1,4 @@
-// $Id: CrInstanceWithoutClassifier.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrInstanceWithoutClassifier.java,v 1.15 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,17 +26,18 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.util.VectorSet;
 
 /**
  * A critic to detect when an object in a deployment-diagram
- * is not inside a component or a component-instance
+ * is not inside a component or a component-instance.
  *
  * @author 5eichler
  */
@@ -106,11 +107,14 @@ public class CrInstanceWithoutClassifier extends CrUML {
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement figNodeModelElement = (FigNodeModelElement) obj;
 	    if (figNodeModelElement != null
-                && (ModelFacade.isAInstance(figNodeModelElement.getOwner()))) {
+                && (Model.getFacade().isAInstance(
+                        figNodeModelElement.getOwner()))) {
 		Object instance = figNodeModelElement.getOwner();
 		if (instance != null) {
-		    Collection col = ModelFacade.getClassifiers(instance);
-		    if (col.size() > 0) continue;
+		    Collection col = Model.getFacade().getClassifiers(instance);
+		    if (col.size() > 0) {
+		        continue;
+		    }
 		}
 		if (offs == null) {
 		    offs = new VectorSet();

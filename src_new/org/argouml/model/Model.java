@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.9 2005/01/30 14:05:19 linus Exp $
+// $Id: Model.java,v 1.10 2005/01/30 20:47:58 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,18 @@ public final class Model {
      */
     public static void setImplementation(ModelImplementation newImpl) {
         impl = newImpl;
+    }
+
+    /**
+     * Get the facade.<p>
+     *
+     * The facade is probably the most used interface. It contains recognizers
+     * and getters for all method kinds.
+     *
+     * @return The facade object.
+     */
+    public static Facade getFacade() {
+        return impl.getFacade();
     }
 
     /**

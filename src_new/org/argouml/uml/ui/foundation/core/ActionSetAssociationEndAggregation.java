@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.14 2005/01/30 14:05:10 linus Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.15 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -76,7 +75,7 @@ public class ActionSetAssociationEndAggregation extends UMLAction {
             String actionCommand = source.getActionCommand();
             Object target = ((UMLRadioButtonPanel) source.getParent())
                 .getTarget();
-            if (ModelFacade.isAAssociationEnd(target)) {
+            if (Model.getFacade().isAAssociationEnd(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MAggregationKind*/ kind = null;
                 if (actionCommand.equals(AGGREGATE_COMMAND)) {

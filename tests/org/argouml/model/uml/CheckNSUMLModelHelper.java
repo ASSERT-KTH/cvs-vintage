@@ -1,4 +1,4 @@
-// $Id: CheckNSUMLModelHelper.java,v 1.4 2005/01/30 10:08:09 linus Exp $
+// $Id: CheckNSUMLModelHelper.java,v 1.5 2005/01/30 20:47:58 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MClass;
@@ -105,7 +104,7 @@ public final class CheckNSUMLModelHelper {
 	TestCase.assertTrue("toString() corrupt in " + c,
 		      mo.toString() instanceof String);
 	TestCase.assertTrue("getUMLClassName() corrupt in " + c,
-		      ModelFacade.getUMLClassName(mo) instanceof String);
+		      Model.getFacade().getUMLClassName(mo) instanceof String);
 
 	TestCase.assertTrue(
             "getUMLClassName() different from expected in " + c,

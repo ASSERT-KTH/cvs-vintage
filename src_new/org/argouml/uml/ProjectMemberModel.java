@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.33 2005/01/09 14:58:33 linus Exp $
+// $Id: ProjectMemberModel.java,v 1.34 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,9 @@
 
 package org.argouml.uml;
 
-import org.argouml.kernel.Project;
 import org.argouml.kernel.AbstractProjectMember;
-import org.argouml.model.ModelFacade;
+import org.argouml.kernel.Project;
+import org.argouml.model.Model;
 
 /**
  * @author Piotr Kaminski
@@ -48,7 +48,7 @@ public class ProjectMemberModel extends AbstractProjectMember {
 
         super(p.getBaseName() + FILE_EXT, p);
 
-        if (!ModelFacade.isAModel(m))
+        if (!Model.getFacade().isAModel(m))
             throw new IllegalArgumentException();
 
         setModel(m);

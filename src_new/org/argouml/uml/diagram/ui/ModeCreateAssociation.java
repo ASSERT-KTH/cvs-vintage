@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.9 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: ModeCreateAssociation.java,v 1.10 2005/01/30 20:47:54 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
@@ -91,7 +90,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
         if (underMouse instanceof FigAssociation  && _npoints == 0) {
             oldFigAssociation = (FigEdge) underMouse;
             association = oldFigAssociation.getOwner();
-            associationEnds = ModelFacade.getConnections(association);
+            associationEnds = Model.getFacade().getConnections(association);
             oldFigAssociation.setOwner(null);
             newFigNodeAssociation = placeTempNode(me);
             underMouse = newFigNodeAssociation;
@@ -172,7 +171,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                     figNode.setX(x - figNode.getWidth() / 2);
                     figNode.setY(y - figNode.getHeight() / 2);
                     editor.add(figNode);
-                    associationEnds = ModelFacade.getConnections(assoc);
+                    associationEnds = Model.getFacade().getConnections(assoc);
                     Iterator it = associationEnds.iterator();
                     mutableGraphModel.addEdge(it.next());
                     mutableGraphModel.addEdge(it.next());
@@ -204,7 +203,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
 
                 Object edgeType = getArg("edgeClass");
                 if (edgeType.equals(Model.getMetaTypes().getAssociation())
-                        && ModelFacade.isAAssociation(foundPort)) {
+                        && Model.getFacade().isAAssociation(foundPort)) {
                     edgeType = Model.getMetaTypes().getAssociationEnd();
                 }
                 if (edgeType != null) {

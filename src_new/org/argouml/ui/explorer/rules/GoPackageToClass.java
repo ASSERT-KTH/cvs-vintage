@@ -1,4 +1,4 @@
-// $Id: GoPackageToClass.java,v 1.5 2005/01/29 20:08:23 linus Exp $
+// $Id: GoPackageToClass.java,v 1.6 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Rule for Package->Class.
@@ -48,7 +47,7 @@ public class GoPackageToClass extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAPackage(parent)) {
+	if (Model.getFacade().isAPackage(parent)) {
 	    return Model.getModelManagementHelper()
                 .getAllModelElementsOfKind(parent,
                         Model.getMetaTypes().getUMLClass());

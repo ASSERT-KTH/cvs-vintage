@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.35 2005/01/30 14:05:18 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.36 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
@@ -447,8 +446,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 
     private void postProcessEdge() {
         LOG.debug("postprocessing " + newEdge);
-        if (ModelFacade.isAAssociation(newEdge)) {
-            Collection conns = ModelFacade.getConnections(newEdge);
+        if (Model.getFacade().isAAssociation(newEdge)) {
+            Collection conns = Model.getFacade().getConnections(newEdge);
             Iterator iter = conns.iterator();
             Object associationEnd0 = iter.next();
             Model.getCoreHelper().setAggregation(associationEnd0,

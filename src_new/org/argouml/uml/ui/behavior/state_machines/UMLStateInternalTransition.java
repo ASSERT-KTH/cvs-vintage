@@ -1,4 +1,4 @@
-// $Id: UMLStateInternalTransition.java,v 1.9 2005/01/09 14:59:07 linus Exp $
+// $Id: UMLStateInternalTransition.java,v 1.10 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -44,14 +44,14 @@ public class UMLStateInternalTransition extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(ModelFacade.getInternalTransitions(getTarget()));
+        setAllElements(Model.getFacade().getInternalTransitions(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return ModelFacade.getInternalTransitions(getTarget())
+        return Model.getFacade().getInternalTransitions(getTarget())
             .contains(element);
     }
 

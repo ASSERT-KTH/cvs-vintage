@@ -1,5 +1,5 @@
-// $Id: TestProjectManager.java,v 1.7 2004/09/24 20:17:25 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: TestProjectManager.java,v 1.8 2005/01/30 20:48:33 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@ package org.argouml.kernel;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * @since Nov 22, 2002
@@ -50,6 +50,6 @@ public class TestProjectManager extends TestCase {
     public void testMakeEmptyProject() {
 	Project p = ProjectManager.getManager().makeEmptyProject();
 	assertEquals(2, p.getDiagrams().size());
-        assertEquals("untitledModel", ModelFacade.getName(p.getModel()));
+        assertEquals("untitledModel", Model.getFacade().getName(p.getModel()));
     }
 }

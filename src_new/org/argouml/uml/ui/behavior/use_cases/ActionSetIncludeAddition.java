@@ -1,4 +1,4 @@
-// $Id: ActionSetIncludeAddition.java,v 1.14 2005/01/20 23:20:27 linus Exp $
+// $Id: ActionSetIncludeAddition.java,v 1.15 2005/01/30 20:47:46 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -63,14 +62,16 @@ public class ActionSetIncludeAddition extends UMLAction {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newAddition = /*(MUseCase)*/ combo.getSelectedItem();
             Object o = combo.getTarget();
-            if (org.argouml.model.ModelFacade.isAInclude(o)) {
+            if (Model.getFacade().isAInclude(o)) {
                 include = /*(MInclude)*/ o;
                 o = combo.getSelectedItem();
-                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
+                if (Model.getFacade().isAUseCase(o)) {
                     newAddition = /*(MUseCase)*/ o;
-                    oldBase = ModelFacade.getAddition(include);
+                    oldBase = Model.getFacade().getAddition(include);
                     if (newAddition != oldBase) {
-                        Model.getUseCasesHelper().setAddition(include, newAddition);
+                        Model.getUseCasesHelper().setAddition(
+                                include,
+                                newAddition);
                     }
                 } else {
                     if (o != null && o.equals("")) {

@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.7 2005/01/30 14:05:10 linus Exp $
+// $Id: ActionSetParameterDirectionKind.java,v 1.8 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -82,7 +81,7 @@ public class ActionSetParameterDirectionKind extends UMLAction {
             String actionCommand = source.getActionCommand();
             Object target = ((UMLRadioButtonPanel) source.getParent())
                     .getTarget();
-            if (ModelFacade.isAParameter(target)) {
+            if (Model.getFacade().isAParameter(target)) {
                 Object m = /* (MModelElement) */target;
                 Object kind = null;
                 if (actionCommand.equals(IN_COMMAND)) {

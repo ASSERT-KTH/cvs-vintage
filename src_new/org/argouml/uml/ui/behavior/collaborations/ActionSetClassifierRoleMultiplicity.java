@@ -1,4 +1,4 @@
-// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.4 2005/01/20 23:20:31 linus Exp $
+// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.5 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionSetMultiplicity;
 
 
@@ -53,8 +52,8 @@ public class ActionSetClassifierRoleMultiplicity extends ActionSetMultiplicity {
      */
     public void setSelectedItem(Object item, Object target) {
         if (target != null
-                && ModelFacade.isAClassifierRole(target)) {
-            if (org.argouml.model.ModelFacade.isAMultiplicity(item)) {
+                && Model.getFacade().isAClassifierRole(target)) {
+            if (Model.getFacade().isAMultiplicity(item)) {
                 Model.getCoreHelper().setMultiplicity(target, item);
             } else {
                 Model.getCoreHelper().setMultiplicity(target, null);

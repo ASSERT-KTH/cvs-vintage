@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationRepresentedClassifierListModel.java,v 1.14 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLCollaborationRepresentedClassifierListModel.java,v 1.15 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -48,15 +48,15 @@ public class UMLCollaborationRepresentedClassifierListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getRepresentedClassifier(getTarget()));
+        addElement(Model.getFacade().getRepresentedClassifier(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ elem) {
-        return org.argouml.model.ModelFacade.isAClassifier(elem)
-            && ModelFacade.getRepresentedClassifier(getTarget()) == elem;
+        return Model.getFacade().isAClassifier(elem)
+            && Model.getFacade().getRepresentedClassifier(getTarget()) == elem;
     }
 
 }

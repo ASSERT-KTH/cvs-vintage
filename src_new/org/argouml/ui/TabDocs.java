@@ -1,4 +1,4 @@
-// $Id: TabDocs.java,v 1.11 2005/01/09 14:58:13 linus Exp $
+// $Id: TabDocs.java,v 1.12 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,7 @@
 
 package org.argouml.ui;
 
-import org.apache.log4j.Logger;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.DocumentationManager;
 import org.tigris.gef.presentation.Fig;
@@ -35,9 +34,6 @@ import org.tigris.gef.presentation.Fig;
  *
  */
 public class TabDocs extends TabText {
-    private static final Logger LOG =
-        Logger.getLogger(TabDocs.class);
-
     /**
      * The constructor.
      *
@@ -54,7 +50,7 @@ public class TabDocs extends TabText {
 	    (modelObject instanceof Fig)
 	    ? ((Fig) modelObject).getOwner()
 	    : modelObject;
-	return !(ModelFacade.isAElement(modelObject))
+	return !(Model.getFacade().isAElement(modelObject))
 	    ? null
 	    : DocumentationManager.getDocs(modelObject, "");
     }
@@ -68,7 +64,9 @@ public class TabDocs extends TabText {
 	    (modelObject instanceof Fig)
 	    ? ((Fig) modelObject).getOwner()
 	    : modelObject;
-	if (modelObject == null) return;
+	if (modelObject == null) {
+	    return;
+	}
 	DocumentationManager.setDocs(modelObject, s);
     }
 

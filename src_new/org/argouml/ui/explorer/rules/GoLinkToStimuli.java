@@ -1,4 +1,4 @@
-// $Id: GoLinkToStimuli.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// $Id: GoLinkToStimuli.java,v 1.3 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkToStimuli.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// $Id: GoLinkToStimuli.java,v 1.3 2005/01/30 20:47:47 linus Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for Link->Stimuli.
@@ -41,9 +41,9 @@ public class GoLinkToStimuli extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (!ModelFacade.isALink(parent))
+	if (!Model.getFacade().isALink(parent))
 	    return null;
-	return ModelFacade.getStimuli(parent);
+	return Model.getFacade().getStimuli(parent);
     }
 
     /**
@@ -57,7 +57,7 @@ public class GoLinkToStimuli extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isALink(parent)) {
+        if (Model.getFacade().isALink(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

@@ -1,4 +1,4 @@
-// $Id: GoModelElementToComment.java,v 1.11 2005/01/09 14:58:32 linus Exp $
+// $Id: GoModelElementToComment.java,v 1.12 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoModelElementToComment.java,v 1.11 2005/01/09 14:58:32 linus Exp $
+// $Id: GoModelElementToComment.java,v 1.12 2005/01/30 20:47:47 linus Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Go rule for the package perspective to show the comments belonging to some
@@ -47,8 +47,8 @@ public class GoModelElementToComment extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (ModelFacade.isAModelElement(parent)) {
-            return ModelFacade.getComments(parent);
+        if (Model.getFacade().isAModelElement(parent)) {
+            return Model.getFacade().getComments(parent);
         }
         return null;
     }
@@ -64,7 +64,7 @@ public class GoModelElementToComment extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAModelElement(parent)) {
+        if (Model.getFacade().isAModelElement(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

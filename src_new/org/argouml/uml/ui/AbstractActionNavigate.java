@@ -1,4 +1,4 @@
-// $Id: AbstractActionNavigate.java,v 1.7 2005/01/09 14:59:00 linus Exp $
+// $Id: AbstractActionNavigate.java,v 1.8 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import javax.swing.Icon;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
@@ -90,7 +90,7 @@ public abstract class AbstractActionNavigate extends UMLAction {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (ModelFacade.isAModelElement(target)) {
+        if (Model.getFacade().isAModelElement(target)) {
             Object elem = /* (MModelElement) */target;
             Object nav = navigateTo(elem);
             if (nav != null) {

@@ -1,4 +1,4 @@
-// $Id: TMResults.java,v 1.15 2005/01/09 14:58:33 linus Exp $
+// $Id: TMResults.java,v 1.16 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Diagram;
 
@@ -153,16 +153,16 @@ public class TMResults extends AbstractTableModel {
 		return countNodesAndEdges(d);
             }
         }
-        if (ModelFacade.isAModelElement(rowObj)) {
+        if (Model.getFacade().isAModelElement(rowObj)) {
             Diagram d = null;
             if (diagrams != null) {
                 d = (Diagram) diagrams.elementAt(row);
             }
             switch (col) {
 	    case 0 : // the name of this type of ModelElement
-		return ModelFacade.getUMLClassName(rowObj);
+		return Model.getFacade().getUMLClassName(rowObj);
 	    case 1 : // the name of this instance of ModelElement
-		return ModelFacade.getName(rowObj);
+		return Model.getFacade().getName(rowObj);
 	    case 2 : // the name of the parent diagram instance
 		return (d == null)
 		    ? Translator.localize("dialog.find.not-applicable")

@@ -1,5 +1,5 @@
-// $Id: PredIsFinalState.java,v 1.7 2004/09/29 18:46:28 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: PredIsFinalState.java,v 1.8 2005/01/30 20:48:15 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.state;
 
+import org.argouml.model.Model;
 import org.tigris.gef.util.Predicate;
 
 /**
@@ -43,7 +44,7 @@ public class PredIsFinalState implements Predicate {
      * @see org.tigris.gef.util.Predicate#predicate(java.lang.Object)
      */
     public boolean predicate(Object obj) {
-	return (org.argouml.model.ModelFacade.isAFinalState(obj));
+	return (Model.getFacade().isAFinalState(obj));
     }
 
     /**

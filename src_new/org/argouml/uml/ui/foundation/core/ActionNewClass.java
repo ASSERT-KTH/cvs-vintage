@@ -1,4 +1,4 @@
-// $Id: ActionNewClass.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionNewClass.java,v 1.5 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -54,9 +53,9 @@ public class ActionNewClass extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
+        if (Model.getFacade().isAClassifier(target)) {
             Object classifier = target;
-            Object ns = ModelFacade.getNamespace(classifier);
+            Object ns = Model.getFacade().getNamespace(classifier);
             if (ns != null) {
                 Object peer = Model.getCoreFactory().buildClass(ns);
                 TargetManager.getInstance().setTarget(peer);

@@ -1,4 +1,4 @@
-// $Id: UMLInstanceReceiverStimulusListModel.java,v 1.3 2005/01/09 14:59:07 linus Exp $
+// $Id: UMLInstanceReceiverStimulusListModel.java,v 1.4 2005/01/30 20:47:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.common_behavior;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * ListModel for the stimuli an instance receives
+ * ListModel for the stimuli an instance receives.
  *
  * @author mkl
  *
@@ -49,14 +48,14 @@ public class UMLInstanceReceiverStimulusListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getStimuli2(getTarget()));
+        addElement(Model.getFacade().getStimuli2(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return ModelFacade.getStimuli2(getTarget()).contains(element);
+        return Model.getFacade().getStimuli2(getTarget()).contains(element);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTargetFlowListModel.java,v 1.12 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLModelElementTargetFlowListModel.java,v 1.13 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,7 +46,7 @@ public class UMLModelElementTargetFlowListModel
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(ModelFacade.getTargetFlows(getTarget()));
+            setAllElements(Model.getFacade().getTargetFlows(getTarget()));
         }
     }
 
@@ -55,8 +55,8 @@ public class UMLModelElementTargetFlowListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return ModelFacade.isAFlow(o)
-            && ModelFacade.getTargetFlows(getTarget()).contains(o);
+        return Model.getFacade().isAFlow(o)
+            && Model.getFacade().getTargetFlows(getTarget()).contains(o);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetObjectFlowStateClassifier.java,v 1.5 2005/01/20 23:20:35 linus Exp $
+// $Id: ActionSetObjectFlowStateClassifier.java,v 1.6 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -63,12 +62,12 @@ public class ActionSetObjectFlowStateClassifier extends UMLAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object ofs = box.getTarget();
-            if (ModelFacade.isAObjectFlowState(ofs)) {
-                oldClassifier = ModelFacade.getType(ofs);
+            if (Model.getFacade().isAObjectFlowState(ofs)) {
+                oldClassifier = Model.getFacade().getType(ofs);
                 m = ofs;
             }
             Object cl = box.getSelectedItem();
-            if (ModelFacade.isAClassifier(cl)) {
+            if (Model.getFacade().isAClassifier(cl)) {
                 newClassifier = cl;
             }
         }

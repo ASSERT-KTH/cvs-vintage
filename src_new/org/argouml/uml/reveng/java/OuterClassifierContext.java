@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.22 2005/01/09 14:58:59 linus Exp $
+// $Id: OuterClassifierContext.java,v 1.23 2005/01/30 20:48:15 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.reveng.java;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.reveng.ImportClassLoader;
 
 /**
@@ -68,7 +67,7 @@ class OuterClassifierContext extends Context {
     public Object getInterface(String name)
 	throws ClassifierNotFoundException {
         // Search in classifier
-        Object mInterface = ModelFacade.lookupIn(mClassifier, name);
+        Object mInterface = Model.getFacade().lookupIn(mClassifier, name);
 
 	if (mInterface == null) {
 	    Class classifier;
@@ -76,7 +75,7 @@ class OuterClassifierContext extends Context {
 	    try {
 
 		// Special case for model
-		if (ModelFacade.isAModel(mPackage)) {
+		if (Model.getFacade().isAModel(mPackage)) {
 		    classifier = Class.forName(namePrefix + name);
 		}
 		else {
@@ -100,7 +99,7 @@ class OuterClassifierContext extends Context {
                 // try USER classpath
                 try {
                     // Special case for model
-                    if (ModelFacade.isAModel(mPackage)) {
+                    if (Model.getFacade().isAModel(mPackage)) {
                         classifier = Class.forName(namePrefix + name);
                         classifier =
 			    ImportClassLoader.getInstance()
@@ -147,7 +146,7 @@ class OuterClassifierContext extends Context {
     public Object get(String name)
 	throws ClassifierNotFoundException {
 	// Search in classifier
-	Object iClassifier = ModelFacade.lookupIn(mClassifier, name);
+	Object iClassifier = Model.getFacade().lookupIn(mClassifier, name);
 
 	if (iClassifier == null) {
 	    Class classifier;
@@ -155,7 +154,7 @@ class OuterClassifierContext extends Context {
 	    try {
 
 		// Special case for model
-		if (ModelFacade.isAModel(mPackage)) {
+		if (Model.getFacade().isAModel(mPackage)) {
 		    classifier = Class.forName(namePrefix + name);
 		}
 		else {
@@ -181,7 +180,7 @@ class OuterClassifierContext extends Context {
                 try {
 
                     // Special case for model
-                    if (ModelFacade.isAModel(mPackage)) {
+                    if (Model.getFacade().isAModel(mPackage)) {
                         classifier =
 			    ImportClassLoader.getInstance()
 			        .loadClass(namePrefix + name);

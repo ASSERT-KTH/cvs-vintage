@@ -1,4 +1,4 @@
-// $Id: ActionAddDataType.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionAddDataType.java,v 1.5 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -56,18 +55,18 @@ public class ActionAddDataType extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
         Object ns = null;
-        if (ModelFacade.isANamespace(target))
+        if (Model.getFacade().isANamespace(target))
             ns = target;
-        if (ModelFacade.isAParameter(target))
-            if (ModelFacade.getModelElementContainer(target) != null)
-                target = ModelFacade.getModelElementContainer(target);
-        if (ModelFacade.isAFeature(target))
-            if (ModelFacade.getOwner(target) != null)
-                target = ModelFacade.getOwner(target);
-        if (ModelFacade.isAEvent(target))
-            ns = ModelFacade.getNamespace(target);
-        if (ModelFacade.isAClassifier(target))
-            ns = ModelFacade.getNamespace(target);
+        if (Model.getFacade().isAParameter(target))
+            if (Model.getFacade().getModelElementContainer(target) != null)
+                target = Model.getFacade().getModelElementContainer(target);
+        if (Model.getFacade().isAFeature(target))
+            if (Model.getFacade().getOwner(target) != null)
+                target = Model.getFacade().getOwner(target);
+        if (Model.getFacade().isAEvent(target))
+            ns = Model.getFacade().getNamespace(target);
+        if (Model.getFacade().isAClassifier(target))
+            ns = Model.getFacade().getNamespace(target);
 
         Object newDt = Model.getCoreFactory().buildDataType("", ns);
         TargetManager.getInstance().setTarget(newDt);

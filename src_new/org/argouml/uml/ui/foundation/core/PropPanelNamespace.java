@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.25 2005/01/20 23:20:24 linus Exp $
+// $Id: PropPanelNamespace.java,v 1.26 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.tigris.swidgets.Orientation;
@@ -73,7 +72,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
      */
     public void addClass() {
         Object target = getTarget();
-        if (ModelFacade.isANamespace(target)) {
+        if (Model.getFacade().isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
             Object ownedElem = Model.getCoreFactory().buildClass();
             Model.getCoreHelper().addOwnedElement(ns, ownedElem);
@@ -86,7 +85,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
      */
     public void addInterface() {
         Object target = getTarget();
-        if (ModelFacade.isANamespace(target)) {
+        if (Model.getFacade().isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
             Object ownedElem = Model.getCoreFactory().createInterface();
             Model.getCoreHelper().addOwnedElement(ns, ownedElem);
@@ -99,7 +98,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
      */
     public void addPackage() {
         Object target = getTarget();
-        if (ModelFacade.isANamespace(target)) {
+        if (Model.getFacade().isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
             Object ownedElem = Model.getModelManagementFactory()
                 .createPackage();

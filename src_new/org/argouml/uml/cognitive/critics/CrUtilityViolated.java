@@ -1,4 +1,4 @@
-// $Id: CrUtilityViolated.java,v 1.13 2005/01/02 10:08:15 linus Exp $
+// $Id: CrUtilityViolated.java,v 1.14 2005/01/30 20:47:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A critic to detect when a class can never have instances (of
@@ -60,10 +59,10 @@ public class CrUtilityViolated extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
         // we could check for base class of the stereotype but the
 	// condition normally covers it all.
-        if (!(ModelFacade.isAClassifier(dm))) {
+        if (!(Model.getFacade().isAClassifier(dm))) {
             return NO_PROBLEM;
         }
-	if (!(ModelFacade.isUtility(dm))) {
+	if (!(Model.getFacade().isUtility(dm))) {
 	    return NO_PROBLEM;
 	}
 
@@ -75,17 +74,17 @@ public class CrUtilityViolated extends CrUML {
 	Iterator it = classesToCheck.iterator();
 	while (it.hasNext()) {
 	    Object o = it.next();
-	    if (!ModelFacade.isAInterface(o)) {
-		Iterator it2 = ModelFacade.getAttributes(o).iterator();
+	    if (!Model.getFacade().isAInterface(o)) {
+		Iterator it2 = Model.getFacade().getAttributes(o).iterator();
 		while (it2.hasNext()) {
-		    if (ModelFacade.isInstanceScope(it2.next())) {
+		    if (Model.getFacade().isInstanceScope(it2.next())) {
 			return PROBLEM_FOUND;
 		    }
 		}
 	    }
-	    Iterator it2 = ModelFacade.getOperations(o).iterator();
+	    Iterator it2 = Model.getFacade().getOperations(o).iterator();
 	    while (it2.hasNext()) {
-		if (ModelFacade.isInstanceScope(it2.next())) {
+		if (Model.getFacade().isInstanceScope(it2.next())) {
 		    return PROBLEM_FOUND;
 		}
 	    }

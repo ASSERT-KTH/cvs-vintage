@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTop.java,v 1.10 2005/01/09 14:58:32 linus Exp $
+// $Id: GoStateMachineToTop.java,v 1.11 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for Statemachine->Top State.
@@ -49,9 +49,9 @@ public class GoStateMachineToTop extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAStateMachine(parent)) {
+	if (Model.getFacade().isAStateMachine(parent)) {
             ArrayList list = new ArrayList();
-            list.add(ModelFacade.getTop(parent));
+            list.add(Model.getFacade().getTop(parent));
 	    return list;
 	}
 	return null;
@@ -61,7 +61,7 @@ public class GoStateMachineToTop extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAStateMachine(parent)) {
+        if (Model.getFacade().isAStateMachine(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

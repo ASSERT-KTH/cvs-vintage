@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.17 2005/01/02 10:08:15 linus Exp $
+// $Id: CrCircularInheritance.java,v 1.18 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.SuperclassGen;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.util.VectorSet;
@@ -67,7 +66,7 @@ public class CrCircularInheritance extends CrUML {
      */
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
-	if (ModelFacade.isAGeneralizableElement(dm)) {
+	if (Model.getFacade().isAGeneralizableElement(dm)) {
 	    try {
 		Model.getCoreHelper().getChildren(dm);
 	    } catch (IllegalStateException ex) {

@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.11 2005/01/29 16:28:45 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.12 2005/01/30 20:48:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.cognitive.critics.CrUML;
 
 // related to issue 570
@@ -55,7 +54,7 @@ public class CrMultipleRealization extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAInterface(dm))) {
+	if (!(Model.getFacade().isAInterface(dm))) {
 	    return NO_PROBLEM;
 	}
 	Object inter = /*(MInterface)*/ dm;

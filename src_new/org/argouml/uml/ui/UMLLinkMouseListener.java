@@ -1,4 +1,4 @@
-// $Id: UMLLinkMouseListener.java,v 1.4 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLLinkMouseListener.java,v 1.5 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
 
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
@@ -86,7 +87,7 @@ public class UMLLinkMouseListener implements MouseListener {
                 && SwingUtilities.isLeftMouseButton(e)) {
 
             Object o = owner.getSelectedValue();
-            if (org.argouml.model.ModelFacade.isAModelElement(o)) {
+            if (Model.getFacade().isAModelElement(o)) {
                 TargetManager.getInstance().setTarget(o);
             }
             e.consume();

@@ -1,4 +1,4 @@
-// $Id: OperationCodePiece.java,v 1.14 2005/01/09 14:58:06 linus Exp $
+// $Id: OperationCodePiece.java,v 1.15 2005/01/30 20:48:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,11 @@ package org.argouml.language.java.generator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Iterator;
-import org.argouml.model.ModelFacade;
+
+import org.argouml.model.Model;
 
 /**
  * This code piece represents an operation declaration.
@@ -40,10 +41,14 @@ import org.argouml.model.ModelFacade;
  * @author Marcus Andersson andersson@users.sourceforge.net
  */
 public class OperationCodePiece extends NamedCodePiece {
-    /** The code piece this operation represents. */
+    /**
+     * The code piece this operation represents.
+     */
     private CodePiece operationDef;
 
-    /** The name of the operation. */
+    /**
+     * The name of the operation.
+     */
     private String name;
 
     /**
@@ -127,8 +132,8 @@ public class OperationCodePiece extends NamedCodePiece {
 
         for (Iterator j = features.iterator(); j.hasNext() && !found;) {
             Object feature = /*(MFeature)*/ j.next();
-            if (ModelFacade.getName(feature).equals(name)
-                    && ModelFacade.isAOperation(feature)) {
+            if (Model.getFacade().getName(feature).equals(name)
+                    && Model.getFacade().isAOperation(feature)) {
                 found = true;
                 parseState.newFeature(feature);
                 Object mOperation = /*(MOperation)*/ feature;

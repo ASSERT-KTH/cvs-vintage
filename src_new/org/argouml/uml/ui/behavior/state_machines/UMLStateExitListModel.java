@@ -1,4 +1,4 @@
-// $Id: UMLStateExitListModel.java,v 1.8 2005/01/09 14:59:07 linus Exp $
+// $Id: UMLStateExitListModel.java,v 1.9 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -45,14 +45,14 @@ public class UMLStateExitListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getExit(getTarget()));
+        addElement(Model.getFacade().getExit(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return element == ModelFacade.getExit(getTarget());
+        return element == Model.getFacade().getExit(getTarget());
     }
 
 }

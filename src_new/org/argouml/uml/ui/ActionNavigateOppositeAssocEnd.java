@@ -1,4 +1,4 @@
-// $Id: ActionNavigateOppositeAssocEnd.java,v 1.5 2005/01/11 21:03:32 mvw Exp $
+// $Id: ActionNavigateOppositeAssocEnd.java,v 1.6 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * navigate to opposite association end.
@@ -45,7 +45,7 @@ public class ActionNavigateOppositeAssocEnd extends AbstractActionNavigate {
      * @see org.argouml.uml.ui.AbstractActionNavigate#navigateTo(java.lang.Object)
      */
     protected Object navigateTo(Object source) {
-        return ModelFacade.getOppositeEnd(source);
+        return Model.getFacade().getOppositeEnd(source);
     }
 
     /**

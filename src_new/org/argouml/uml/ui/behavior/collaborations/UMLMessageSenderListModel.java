@@ -1,4 +1,4 @@
-// $Id: UMLMessageSenderListModel.java,v 1.10 2005/01/09 14:59:06 linus Exp $
+// $Id: UMLMessageSenderListModel.java,v 1.11 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,14 +46,14 @@ public class UMLMessageSenderListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getSender(getTarget()));
+        addElement(Model.getFacade().getSender(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ elem) {
-        return ModelFacade.getSender(getTarget()) == elem;
+        return Model.getFacade().getSender(getTarget()) == elem;
     }
 
 }

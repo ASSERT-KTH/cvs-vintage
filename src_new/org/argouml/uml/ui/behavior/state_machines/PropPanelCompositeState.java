@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.24 2005/01/21 21:10:14 mvw Exp $
+// $Id: PropPanelCompositeState.java,v 1.25 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.tigris.swidgets.Orientation;
-import org.argouml.util.ConfigLoader;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.util.ConfigLoader;
+import org.tigris.swidgets.Orientation;
 
 /**
  * The properties panel for a Composite State.
@@ -100,8 +100,9 @@ public class PropPanelCompositeState extends PropPanelState {
      * the substate vertex list.
      */
     protected void initialize() {
-	subverticesList = new UMLCompositeStateSubvertexList(
-            new UMLCompositeStateSubvertexListModel());
+	subverticesList =
+	    new UMLCompositeStateSubvertexList(
+	            new UMLCompositeStateSubvertexListModel());
     }
 
     /**
@@ -112,15 +113,13 @@ public class PropPanelCompositeState extends PropPanelState {
             Object source = e.getSource();
             if (source != null
                     && source instanceof TargetManager) {
-                Object target = 
+                Object target =
                     ((TargetManager) e.getSource()).getModelTarget();
-                if (ModelFacade.isAConcurrentRegion(target)) {
+                if (Model.getFacade().isAConcurrentRegion(target)) {
                     getTitleLabel().setText("Concurrent Region");
-                }
-                else if (ModelFacade.isConcurrent(target)) {
+                } else if (Model.getFacade().isConcurrent(target)) {
                     getTitleLabel().setText("Concurrent Composite State");
-                }
-                else {
+                } else {
                     getTitleLabel().setText("Composite State");
                 }
             }

@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaborationDiagram.java,v 1.13 2005/01/09 14:58:32 linus Exp $
+// $Id: GoOperationToCollaborationDiagram.java,v 1.14 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,10 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
@@ -49,9 +49,9 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (ModelFacade.isAOperation(parent)) {
+        if (Model.getFacade().isAOperation(parent)) {
             Object operation = parent; //MOperation
-            Collection col = ModelFacade.getCollaborations(operation);
+            Collection col = Model.getFacade().getCollaborations(operation);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
             Vector diagrams = p.getDiagrams();

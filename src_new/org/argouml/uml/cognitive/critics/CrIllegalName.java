@@ -1,4 +1,4 @@
-// $Id: CrIllegalName.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrIllegalName.java,v 1.13 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,9 @@
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
+
 import org.argouml.cognitive.Designer;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * A critic to detect whether a model element name is legally formed.
@@ -50,10 +51,14 @@ public class CrIllegalName extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
+	if (!(Model.getFacade().isAModelElement(dm))) {
+	    return NO_PROBLEM;
+	}
 	Object me = /*(MModelElement)*/ dm;
-	String meName = ModelFacade.getName(me);
-	if (meName == null || meName.equals("")) return NO_PROBLEM;
+	String meName = Model.getFacade().getName(me);
+	if (meName == null || meName.equals("")) {
+	    return NO_PROBLEM;
+	}
 	String nameStr = meName;
 	int len = nameStr.length();
 
@@ -62,8 +67,9 @@ public class CrIllegalName extends CrUML {
 	for (int i = 0; i < len; i++) {
 	    char c = nameStr.charAt(i);
 	    if (!(Character.isLetterOrDigit(c) || c == '_'
-	        || (c == ' ' && ModelFacade.isAStateVertex(me))))
-		return PROBLEM_FOUND;
+	        || (c == ' ' && Model.getFacade().isAStateVertex(me)))) {
+	        return PROBLEM_FOUND;
+	    }
 	}
 	return NO_PROBLEM;
     }

@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.22 2005/01/09 14:59:03 linus Exp $
+// $Id: TabSrc.java,v 1.23 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.application.events.ArgoNotationEventListener;
 import org.argouml.language.ui.NotationComboBox;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.TabText;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
@@ -87,7 +87,7 @@ public class TabSrc
     protected String genText(Object modelObject) {
         modelObject = (modelObject instanceof Fig)
             ? ((Fig) modelObject).getOwner() : modelObject;
-        if (!ModelFacade.isAElement(modelObject))
+        if (!Model.getFacade().isAElement(modelObject))
             return null;
 
         LOG.debug("TabSrc getting src for " + modelObject);
@@ -129,7 +129,7 @@ public class TabSrc
         super.setTarget(t);
         notationName = null;
         setShouldBeEnabled(false);
-        if (ModelFacade.isAModelElement(t))
+        if (Model.getFacade().isAModelElement(t))
             setShouldBeEnabled(true);
         // If the target is a notation context, use its notation.
         if (t instanceof NotationContext) {
@@ -165,7 +165,7 @@ public class TabSrc
         target = (target instanceof Fig) ? ((Fig) target).getOwner() : target;
 
         setShouldBeEnabled(false);
-        if (ModelFacade.isAModelElement(target)) {
+        if (Model.getFacade().isAModelElement(target)) {
             setShouldBeEnabled(true);
         }
 

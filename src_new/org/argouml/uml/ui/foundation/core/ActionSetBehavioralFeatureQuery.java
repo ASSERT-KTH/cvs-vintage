@@ -1,4 +1,4 @@
-// $Id: ActionSetBehavioralFeatureQuery.java,v 1.5 2005/01/20 23:20:25 linus Exp $
+// $Id: ActionSetBehavioralFeatureQuery.java,v 1.6 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class ActionSetBehavioralFeatureQuery extends UMLAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
+            if (Model.getFacade().isABehavioralFeature(target)) {
                 Object m = /*(MGeneralizableElement)*/ target;
                 Model.getCoreHelper().setQuery(m, source.isSelected());
             }

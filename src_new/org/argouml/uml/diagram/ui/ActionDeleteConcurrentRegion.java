@@ -1,4 +1,4 @@
-// $Id: ActionDeleteConcurrentRegion.java,v 1.1 2005/01/21 21:09:47 mvw Exp $
+// $Id: ActionDeleteConcurrentRegion.java,v 1.2 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.FigCompositeState;
 import org.argouml.uml.diagram.state.ui.FigConcurrentRegion;
@@ -100,7 +99,7 @@ public class ActionDeleteConcurrentRegion extends UMLAction {
             Rectangle encBound;
             Project p = ProjectManager.getManager().getCurrentProject();
 
-            if (ModelFacade.isAConcurrentRegion(f.getOwner()))
+            if (Model.getFacade().isAConcurrentRegion(f.getOwner()))
                 encloser = f.getEnclosingFig();
 
             Vector nodesInside;
@@ -108,7 +107,7 @@ public class ActionDeleteConcurrentRegion extends UMLAction {
             int index = nodesInside.indexOf(f);
             Rectangle r = f.getBounds();
             encBound = encloser.getBounds();
-            if (ModelFacade.isAConcurrentRegion(f.getOwner()))
+            if (Model.getFacade().isAConcurrentRegion(f.getOwner()))
                 p.moveToTrash(f.getOwner());
             //It wasnt the last region
             if (index < nodesInside.size() - 1) {

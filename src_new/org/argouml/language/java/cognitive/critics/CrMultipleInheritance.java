@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.12 2005/01/09 14:58:06 linus Exp $
+// $Id: CrMultipleInheritance.java,v 1.13 2005/01/30 20:48:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ui.Wizard;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.critics.CrUML;
 import org.argouml.uml.cognitive.critics.WizCueCards;
 
@@ -55,13 +55,16 @@ public class CrMultipleInheritance extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object designMaterial, Designer dsgr) {
-	if (!(ModelFacade.isAClassifier(designMaterial))) return NO_PROBLEM;
-	Object cls = /*(MClassifier)*/ designMaterial;
-	Collection gen = ModelFacade.getGeneralizations(cls);
-	if (gen != null && gen.size() > 1)
-	    return PROBLEM_FOUND;
-	else
+	if (!(Model.getFacade().isAClassifier(designMaterial))) {
 	    return NO_PROBLEM;
+	}
+	Object cls = /*(MClassifier)*/ designMaterial;
+	Collection gen = Model.getFacade().getGeneralizations(cls);
+	if (gen != null && gen.size() > 1) {
+	    return PROBLEM_FOUND;
+	} else {
+	    return NO_PROBLEM;
+	}
     }
 
     /**
@@ -74,7 +77,7 @@ public class CrMultipleInheritance extends CrUML {
 	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object modelElement = /*(MModelElement)*/
 	        item.getOffenders().elementAt(0);
-	    String nameStr = ModelFacade.getName(modelElement);
+	    String nameStr = Model.getFacade().getName(modelElement);
 	    wcc.addCue("Remove the generalization arrow to one of the base "
 		   + "classes of {name}.");
 	    wcc.addCue("Optionally, use the MInterface tool to create a new "

@@ -1,4 +1,4 @@
-// $Id: SelectionComponent.java,v 1.25 2005/01/30 01:21:55 bobtarling Exp $
+// $Id: SelectionComponent.java,v 1.26 2005/01/30 20:48:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
 import org.tigris.gef.base.Editor;
@@ -201,8 +200,8 @@ public class SelectionComponent extends SelectionWButtons {
      */
     public Object addCompClassAbove(MutableGraphModel mgm, Object component,
 				    Object newComponent) {
-        if (!ModelFacade.isAComponent(component)
-	    || !ModelFacade.isAComponent(newComponent)) {
+        if (!Model.getFacade().isAComponent(component)
+	    || !Model.getFacade().isAComponent(newComponent)) {
                throw new IllegalArgumentException();
         }
 	return mgm.connect(component, newComponent,
@@ -217,8 +216,8 @@ public class SelectionComponent extends SelectionWButtons {
      */
     public Object addCompClassBelow(MutableGraphModel mgm, Object component,
 				    Object newComponent) {
-        if (!ModelFacade.isAComponent(component)
-	    || !ModelFacade.isAComponent(newComponent)) {
+        if (!Model.getFacade().isAComponent(component)
+	    || !Model.getFacade().isAComponent(newComponent)) {
                throw new IllegalArgumentException();
         }
 	return mgm.connect(component, newComponent,
@@ -233,8 +232,8 @@ public class SelectionComponent extends SelectionWButtons {
      */
     public Object addCompClassRight(MutableGraphModel mgm, Object component,
 				    Object newComponent) {
-        if (!ModelFacade.isAComponent(component)
-	    || !ModelFacade.isAComponent(newComponent)) {
+        if (!Model.getFacade().isAComponent(component)
+	    || !Model.getFacade().isAComponent(newComponent)) {
                throw new IllegalArgumentException();
         }
 	return mgm.connect(component, newComponent,
@@ -249,8 +248,8 @@ public class SelectionComponent extends SelectionWButtons {
      */
     public Object addCompClassLeft(MutableGraphModel mgm, Object component,
 				    Object newComponent) {
-        if (!ModelFacade.isAComponent(component)
-	    || !ModelFacade.isAComponent(newComponent)) {
+        if (!Model.getFacade().isAComponent(component)
+	    || !Model.getFacade().isAComponent(newComponent)) {
                throw new IllegalArgumentException();
         }
 	return mgm.connect(component, newComponent,

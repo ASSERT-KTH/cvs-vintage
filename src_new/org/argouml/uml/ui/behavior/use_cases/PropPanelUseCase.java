@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.63 2005/01/20 23:20:27 linus Exp $
+// $Id: PropPanelUseCase.java,v 1.64 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateNamespace;
@@ -134,8 +133,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (ModelFacade.isAUseCase(target)) {
-                Object ns = ModelFacade.getNamespace(target);
+            if (Model.getFacade().isAUseCase(target)) {
+                Object ns = Model.getFacade().getNamespace(target);
                 if (ns != null) {
                     Object useCase = Model.getUseCasesFactory()
                         .createUseCase();
@@ -172,7 +171,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (ModelFacade.isAUseCase(target)) {
+            if (Model.getFacade().isAUseCase(target)) {
                 TargetManager.getInstance().setTarget(
                     Model.getUseCasesFactory().buildExtensionPoint(target));
                 super.actionPerformed(e);

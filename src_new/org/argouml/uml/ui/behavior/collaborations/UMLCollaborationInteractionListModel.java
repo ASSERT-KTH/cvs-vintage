@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationInteractionListModel.java,v 1.14 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLCollaborationInteractionListModel.java,v 1.15 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -45,15 +45,15 @@ public class UMLCollaborationInteractionListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(ModelFacade.getInteractions(getTarget()));
+        setAllElements(Model.getFacade().getInteractions(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ elem) {
-        return ModelFacade.isAInteraction(elem)
-            && ModelFacade.getContext(elem) == getTarget();
+        return Model.getFacade().isAInteraction(elem)
+            && Model.getFacade().getContext(elem) == getTarget();
     }
 
 }

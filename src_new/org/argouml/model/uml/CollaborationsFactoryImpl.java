@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.11 2005/01/29 16:28:45 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.12 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.CollaborationsFactory;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MFactory;
 import ru.novosoft.uml.behavior.collaborations.MAssociationEndRole;
@@ -374,11 +373,13 @@ public class CollaborationsFactoryImpl
         Object from = nsmodel.getCoreHelper().getSource(link);
         Object to = nsmodel.getCoreHelper().getDestination(link);
         Object classifierRoleFrom =
-            ModelFacade.getClassifiers(from).iterator().next();
+            nsmodel.getFacade().getClassifiers(from).iterator().next();
         Object classifierRoleTo =
-            ModelFacade.getClassifiers(to).iterator().next();
-        Object collaboration = ModelFacade.getNamespace(classifierRoleFrom);
-        if (collaboration != ModelFacade.getNamespace(classifierRoleTo)) {
+            nsmodel.getFacade().getClassifiers(to).iterator().next();
+        Object collaboration =
+            nsmodel.getFacade().getNamespace(classifierRoleFrom);
+        if (collaboration
+                != nsmodel.getFacade().getNamespace(classifierRoleTo)) {
             throw new IllegalStateException("ClassifierRoles do not belong "
                     + "to the same collaboration");
         }

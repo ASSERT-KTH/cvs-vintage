@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.25 2005/01/29 20:08:22 linus Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.26 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -64,8 +63,8 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
         setElements(Model.getModelManagementHelper()
                 .getAllModelElementsOfKindWithModel(model,
                         Model.getMetaTypes().getUseCase()));
-        if (ModelFacade.getExtension(extend) != null) {
-            removeElement(ModelFacade.getExtension(extend));
+        if (Model.getFacade().getExtension(extend) != null) {
+            removeElement(Model.getFacade().getExtension(extend));
         }
     }
 
@@ -74,7 +73,7 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ModelFacade.getBase(getTarget());
+            return Model.getFacade().getBase(getTarget());
         }
         return null;
     }
@@ -83,7 +82,7 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return org.argouml.model.ModelFacade.isAUseCase(element);
+        return Model.getFacade().isAUseCase(element);
     }
 
 }

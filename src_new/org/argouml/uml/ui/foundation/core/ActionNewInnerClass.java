@@ -1,4 +1,4 @@
-// $Id: ActionNewInnerClass.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionNewInnerClass.java,v 1.5 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class ActionNewInnerClass extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
+        if (Model.getFacade().isAClassifier(target)) {
             Object classifier = /* (MClassifier) */target;
             Object inner = Model.getCoreFactory().buildClass(classifier);
             TargetManager.getInstance().setTarget(inner);

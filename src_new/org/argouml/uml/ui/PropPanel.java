@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.106 2005/01/29 20:08:23 linus Exp $
+// $Id: PropPanel.java,v 1.107 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,6 @@ import javax.swing.event.EventListenerList;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
@@ -359,7 +358,7 @@ public abstract class PropPanel
                 listenerList = registrateTargetListeners(this);
             }
 
-            if (ModelFacade.isAModelElement(target)) {
+            if (Model.getFacade().isAModelElement(target)) {
                 modelElement = target;
             }
 
@@ -446,7 +445,7 @@ public abstract class PropPanel
      */
     public boolean shouldBeEnabled(Object t) {
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
-        return ModelFacade.isAModelElement(t);
+        return Model.getFacade().isAModelElement(t);
     }
 
     /**
@@ -513,8 +512,8 @@ public abstract class PropPanel
     protected Object getDisplayNamespace() {
         Object ns = null;
         Object theTarget = getTarget();
-        if (ModelFacade.isAModelElement(theTarget)) {
-            ns = ModelFacade.getNamespace(theTarget);
+        if (Model.getFacade().isAModelElement(theTarget)) {
+            ns = Model.getFacade().getNamespace(theTarget);
         }
         return ns;
     }
@@ -617,8 +616,9 @@ public abstract class PropPanel
      */
     public void removeElement() {
         Object theTarget = getTarget();
-        if (ModelFacade.isABase(theTarget)) {
-            Object newTarget = ModelFacade.getModelElementContainer(theTarget);
+        if (Model.getFacade().isABase(theTarget)) {
+            Object newTarget =
+                Model.getFacade().getModelElementContainer(theTarget);
             Object base = theTarget;
             TargetManager.getInstance().setTarget(base);
             ActionEvent event = new ActionEvent(this, 1, "delete");

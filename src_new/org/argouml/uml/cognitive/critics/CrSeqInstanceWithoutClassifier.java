@@ -1,4 +1,4 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.15 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,11 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.util.VectorSet;
@@ -104,10 +105,10 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement fn = (FigNodeModelElement) obj;
-	    if (fn != null && (ModelFacade.isAInstance(fn.getOwner()))) {
+	    if (fn != null && (Model.getFacade().isAInstance(fn.getOwner()))) {
 		Object minst = /*(MInstance)*/ fn.getOwner();
 		if (minst != null) {
-		    Collection col = ModelFacade.getClassifiers(minst);
+		    Collection col = Model.getFacade().getClassifiers(minst);
 		    if (col.size() > 0) continue;
 		}
 		if (offs == null) {

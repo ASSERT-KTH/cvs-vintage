@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndMultiplicityComboBoxModel.java,v 1.2 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLAssociationEndMultiplicityComboBoxModel.java,v 1.3 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 
 /**
@@ -47,9 +47,9 @@ public class UMLAssociationEndMultiplicityComboBoxModel extends
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null
-                && (org.argouml.model.ModelFacade
-                        .isAAssociationEnd(getTarget())))
-                return ModelFacade.getMultiplicity(getTarget());
+                && (Model.getFacade().isAAssociationEnd(getTarget()))) {
+            return Model.getFacade().getMultiplicity(getTarget());
+        }
         return null;
     }
 

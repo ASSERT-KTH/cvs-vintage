@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.17 2005/01/09 14:58:58 linus Exp $
+// $Id: FigExtend.java,v 1.18 2005/01/30 20:48:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 
 import org.argouml.application.api.Notation;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
@@ -222,7 +222,7 @@ public class FigExtend extends FigEdgeModelElement {
         // condition set. We call the main generate method, which will realise
         // this is a MExpression (subclass) and invoke the correct method.
         Object/*MBooleanExpression*/ c =
-            ModelFacade.getCondition(extend);
+            Model.getFacade().getCondition(extend);
 
         if (c == null) {
             condition.setText("");

@@ -1,4 +1,4 @@
-// $Id: GoStateToExit.java,v 1.11 2005/01/09 14:58:32 linus Exp $
+// $Id: GoStateToExit.java,v 1.12 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for navigation from a State to its Exit action.
@@ -44,10 +44,10 @@ public class GoStateToExit extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (ModelFacade.isAState(parent)
-	        && ModelFacade.getExit(parent) != null) {
+        if (Model.getFacade().isAState(parent)
+	        && Model.getFacade().getExit(parent) != null) {
             Vector children = new Vector();
-            children.add(ModelFacade.getExit(parent));
+            children.add(Model.getFacade().getExit(parent));
             return children;
         }
         return null;
@@ -57,7 +57,7 @@ public class GoStateToExit extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAState(parent)) {
+        if (Model.getFacade().isAState(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrDupRoleNames.java,v 1.15 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,9 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
 import java.util.Vector;
+
 import org.argouml.cognitive.Designer;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 
 // Use Model through Facade
@@ -104,12 +105,12 @@ public class CrDupRoleNames extends CrUML {
 
         // Only work for associations
 
-        if (!(ModelFacade.isAAssociation(dm))) {
+        if (!(Model.getFacade().isAAssociation(dm))) {
             return NO_PROBLEM;
         }
 
 	// No problem if this is an association role.
-	if (ModelFacade.isAAssociationRole(dm)) {
+	if (Model.getFacade().isAAssociationRole(dm)) {
 	    return NO_PROBLEM;
 	}
 
@@ -120,9 +121,9 @@ public class CrDupRoleNames extends CrUML {
 
         Vector   namesSeen = new Vector();
 
-        Iterator conns = ModelFacade.getConnections(dm).iterator();
+        Iterator conns = Model.getFacade().getConnections(dm).iterator();
         while (conns.hasNext()) {
-            String name = ModelFacade.getName(conns.next());
+            String name = Model.getFacade().getName(conns.next());
 
             // Ignore non-existent and empty names
 

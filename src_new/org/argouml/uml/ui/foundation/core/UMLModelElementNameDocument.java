@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNameDocument.java,v 1.8 2005/01/20 23:20:24 linus Exp $
+// $Id: UMLModelElementNameDocument.java,v 1.9 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
@@ -52,7 +51,7 @@ public class UMLModelElementNameDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
      */
     protected String getProperty() {
-        return ModelFacade.getName(getTarget());
+        return Model.getFacade().getName(getTarget());
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetClassifierInStateInState.java,v 1.5 2005/01/20 23:20:35 linus Exp $
+// $Id: ActionSetClassifierInStateInState.java,v 1.6 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Collection;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -57,11 +56,11 @@ class ActionSetClassifierInStateInState extends UMLAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object cis = box.getTarget();
-            if (ModelFacade.isAClassifierInState(cis)) {
-                Collection c = ModelFacade.getInStates(cis);
+            if (Model.getFacade().isAClassifierInState(cis)) {
+                Collection c = Model.getFacade().getInStates(cis);
 
                 Object state = box.getSelectedItem();
-                if (ModelFacade.isAState(state)) {
+                if (Model.getFacade().isAState(state)) {
                     if (!c.contains(state)) {
                         Model.getActivityGraphsHelper().addInState(cis, state);
 

@@ -1,4 +1,4 @@
-// $Id: FigSubactivityState.java,v 1.7 2005/01/10 16:24:16 mvw Exp $
+// $Id: FigSubactivityState.java,v 1.8 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.util.Iterator;
 
 import org.argouml.application.api.Notation;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.state.ui.FigStateVertex;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigGroup;
@@ -271,7 +270,7 @@ public class FigSubactivityState extends FigStateVertex {
             updateNameText();
             damage();
         } else
-            if (ModelFacade.getEntry(getOwner()) == mee.getSource()) {
+            if (Model.getFacade().getEntry(getOwner()) == mee.getSource()) {
                 updateNameText();
                 damage();
             }

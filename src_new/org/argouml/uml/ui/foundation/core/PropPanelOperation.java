@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.78 2005/01/20 23:20:24 linus Exp $
+// $Id: PropPanelOperation.java,v 1.79 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
@@ -63,9 +62,9 @@ public class PropPanelOperation extends PropPanelFeature {
          * anytime a stereotype, namespace or classifier
          * has its name, ownedElement or baseClass changed
          * anywhere in the model. */
-//        Object[] namesToWatch = {ModelFacade.STEREOTYPE,
-//            ModelFacade.NAMESPACE, ModelFacade.CLASSIFIER,
-//            ModelFacade.PARAMETER};
+//        Object[] namesToWatch = {Model.getFacade().STEREOTYPE,
+//            Model.getFacade().NAMESPACE, Model.getFacade().CLASSIFIER,
+//            Model.getFacade().PARAMETER};
 //        setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
@@ -123,14 +122,16 @@ public class PropPanelOperation extends PropPanelFeature {
      */
     public void addRaisedSignal(Integer index) {
         Object target = getTarget();
-        if (ModelFacade.isAOperation(target)) {
+        if (Model.getFacade().isAOperation(target)) {
             Object oper = /* (MOperation) */target;
             Object newSignal = Model.getCommonBehaviorFactory()
                     .createSignal();
                     //((MOperation)oper).getFactory().createSignal();
 
-            Model.getCoreHelper().addOwnedElement(ModelFacade.getNamespace(ModelFacade
-                    .getOwner(oper)), newSignal);
+            Model.getCoreHelper().addOwnedElement(
+                    Model.getFacade().getNamespace(
+                            Model.getFacade().getOwner(oper)),
+                    newSignal);
             Model.getCoreHelper().addRaisedSignal(oper, newSignal);
             TargetManager.getInstance().setTarget(newSignal);
         }
@@ -141,7 +142,7 @@ public class PropPanelOperation extends PropPanelFeature {
      */
     public void buttonAddRaisedSignal() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAOperation(target)) {
+        if (Model.getFacade().isAOperation(target)) {
             addRaisedSignal(new Integer(1));
         }
     }
@@ -162,7 +163,7 @@ public class PropPanelOperation extends PropPanelFeature {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (org.argouml.model.ModelFacade.isAOperation(target)) {
+            if (Model.getFacade().isAOperation(target)) {
                 addRaisedSignal(new Integer(1));
                 super.actionPerformed(e);
             }
@@ -179,10 +180,11 @@ public class PropPanelOperation extends PropPanelFeature {
     protected Object getDisplayNamespace() {
         Object namespace = null;
         Object target = getTarget();
-        if (ModelFacade.isAAttribute(target)) {
-            if (ModelFacade.getOwner(target) != null) {
-                namespace = ModelFacade.getNamespace(ModelFacade
-                        .getOwner(target));
+        if (Model.getFacade().isAAttribute(target)) {
+            if (Model.getFacade().getOwner(target) != null) {
+                namespace =
+                    Model.getFacade().getNamespace(
+                            Model.getFacade().getOwner(target));
             }
         }
         return namespace;

@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.9 2005/01/30 14:05:18 linus Exp $
+// $Id: ActionAggregation.java,v 1.10 2005/01/30 20:47:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -79,7 +78,7 @@ public class ActionAggregation extends UMLAction {
      * @param s "src" or "dest". Anything else is interpreted as "dest".
      */
     protected ActionAggregation(Object/*MAggregationKind*/ a, String s) {
-	super(ModelFacade.getName(a), true, NO_ICON);
+	super(Model.getFacade().getName(a), true, NO_ICON);
 	str = s;
 	agg = a;
     }
@@ -97,7 +96,7 @@ public class ActionAggregation extends UMLAction {
 	    Selection sel = (Selection) sels.firstElement();
 	    Fig f = sel.getContent();
 	    Object owner = ((FigEdgeModelElement) f).getOwner();
-	    Collection ascEnds = ModelFacade.getConnections(owner);
+	    Collection ascEnds = Model.getFacade().getConnections(owner);
             Iterator iter = ascEnds.iterator();
 	    Object ascEnd = null;
 	    if (str.equals("src")) {

@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.19 2005/01/29 20:08:22 linus Exp $
+// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.20 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.Set;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -57,7 +56,7 @@ public class UMLGeneralizationPowertypeComboBoxModel
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ModelFacade.getPowertype(getTarget());
+            return Model.getFacade().getPowertype(getTarget());
         }
         return null;
     }
@@ -85,7 +84,7 @@ public class UMLGeneralizationPowertypeComboBoxModel
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return org.argouml.model.ModelFacade.isAClassifier(element);
+        return Model.getFacade().isAClassifier(element);
     }
 
 }

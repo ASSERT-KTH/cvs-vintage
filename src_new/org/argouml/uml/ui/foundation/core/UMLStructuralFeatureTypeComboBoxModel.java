@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.18 2005/01/29 20:08:22 linus Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.19 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.util.TreeSet;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -60,7 +59,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return org.argouml.model.ModelFacade.isAClassifier(element);
+        return Model.getFacade().isAClassifier(element);
     }
 
     /**
@@ -93,8 +92,8 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
         Set elements = new TreeSet(new Comparator() {
             public int compare(Object o1, Object o2) {
                 try {
-                    String name1 = ModelFacade.getName(o1);
-                    String name2 = ModelFacade.getName(o2);
+                    String name1 = Model.getFacade().getName(o1);
+                    String name2 = Model.getFacade().getName(o2);
                     name1 = (name1 != null ? name1 : "");
                     name2 = (name2 != null ? name2 : "");
 
@@ -134,7 +133,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
     protected Object getSelectedModelElement() {
         Object o = null;
         if (getTarget() != null) {
-            o = org.argouml.model.ModelFacade.getType(getTarget());
+            o = Model.getFacade().getType(getTarget());
         }
         if (o == null) {
             o = " ";

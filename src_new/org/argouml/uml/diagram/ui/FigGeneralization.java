@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.20 2005/01/09 14:58:56 linus Exp $
+// $Id: FigGeneralization.java,v 1.21 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.beans.PropertyChangeEvent;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadTriangle;
@@ -130,7 +129,7 @@ public class FigGeneralization extends FigEdgeModelElement {
   	if (me == null) {
 	    return;
   	}
-  	String disc = (String) ModelFacade.getDiscriminator(me);
+  	String disc = (String) Model.getFacade().getDiscriminator(me);
   	if (disc == null) {
 	    disc = "";
   	}
@@ -150,12 +149,12 @@ public class FigGeneralization extends FigEdgeModelElement {
      */
     public void setOwner(Object own) {
 	super.setOwner(own);
-	if (org.argouml.model.ModelFacade.isAGeneralization(own)) {
+	if (Model.getFacade().isAGeneralization(own)) {
 	    Object gen = own;	// MGeneralization
 	    Object subType =
-		ModelFacade.getChild(gen); // MGeneralizableElement
+		Model.getFacade().getChild(gen); // MGeneralizableElement
 	    Object superType =
-		ModelFacade.getParent(gen); // MGeneralizableElement
+		Model.getFacade().getParent(gen); // MGeneralizableElement
 	    // due to errors in earlier releases of argouml it can
 	    // happen that there is a generalization without a child
 	    // or parent.
@@ -196,8 +195,8 @@ public class FigGeneralization extends FigEdgeModelElement {
         Fig destFig = getDestFigNode();
         Object source = sourceFig.getOwner();
         Object dest = destFig.getOwner();
-        if (ModelFacade.isAGeneralizableElement(source)
-	        && ModelFacade.isAGeneralizableElement(dest)) {
+        if (Model.getFacade().isAGeneralizableElement(source)
+	        && Model.getFacade().isAGeneralizableElement(dest)) {
             setOwner(Model.getCoreFactory().buildGeneralization(source,
 								  dest));
         }

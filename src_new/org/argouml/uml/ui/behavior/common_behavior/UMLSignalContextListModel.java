@@ -1,4 +1,4 @@
-// $Id: UMLSignalContextListModel.java,v 1.2 2005/01/09 14:59:07 linus Exp $
+// $Id: UMLSignalContextListModel.java,v 1.3 2005/01/30 20:47:59 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -38,9 +38,11 @@ public class UMLSignalContextListModel extends UMLModelElementListModel2 {
      * The constructor.
      */
     public UMLSignalContextListModel() {
-        /* The event to listen to is "context", so that model updates
+        /*
+         * The event to listen to is "context", so that model updates
          * get shown in the list. Reproduce this by adding a new operation,
-         * and see the result displayed in the list. */
+         * and see the result displayed in the list.
+         */
         super("context");
     }
 
@@ -48,16 +50,17 @@ public class UMLSignalContextListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null)
-            setAllElements(ModelFacade.getContexts(getTarget()));
+        if (getTarget() != null) {
+            setAllElements(Model.getFacade().getContexts(getTarget()));
+        }
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.isABehavioralFeature(element)
-        && ModelFacade.getContexts(getTarget()).contains(element);
+        return Model.getFacade().isABehavioralFeature(element)
+        && Model.getFacade().getContexts(getTarget()).contains(element);
     }
 
 }

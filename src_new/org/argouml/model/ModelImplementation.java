@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.4 2005/01/30 14:05:19 linus Exp $
+// $Id: ModelImplementation.java,v 1.5 2005/01/30 20:47:56 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,13 @@ package org.argouml.model;
  * class finding all helpers and factories.
  */
 public interface ModelImplementation {
+    /**
+     * Get the facade.
+     *
+     * @return The facade object.
+     */
+    Facade getFacade();
+
     /**
      * Get the event pump.
      *

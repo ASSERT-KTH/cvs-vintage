@@ -1,4 +1,4 @@
-// $Id: ActionNewActionForMessage.java,v 1.2 2005/01/02 10:08:16 linus Exp $
+// $Id: ActionNewActionForMessage.java,v 1.3 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 /**
  * Action to build a new action to some message.
@@ -64,7 +63,7 @@ public class ActionNewActionForMessage extends AbstractActionNewModelElement {
      */
     public boolean isEnabled() {
         if (getTarget() != null) {
-            return ModelFacade.getAction(getTarget()) == null;
+            return Model.getFacade().getAction(getTarget()) == null;
         }
         return false;
     }

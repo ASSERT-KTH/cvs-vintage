@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.22 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.23 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,11 @@
 
 package org.argouml.uml.ui;
 
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.apache.log4j.Logger;
 
 /** Action to trigger creation of a deployment diagram.
  *  @stereotype singleton
@@ -67,7 +67,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
         // a deployment diagram shows something about the whole model
         // according to the uml spec
 	handle = ProjectManager.getManager().getCurrentProject().getRoot();
-        if (!ModelFacade.isANamespace(handle)) {
+        if (!Model.getFacade().isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);
             throw new IllegalArgumentException(
@@ -84,7 +84,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
         // a deployment diagram shows something about the whole model
         // according to the uml spec
         handle = ProjectManager.getManager().getCurrentProject().getRoot();
-        if (!ModelFacade.isANamespace(handle)) {
+        if (!Model.getFacade().isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);
             throw new IllegalArgumentException(
@@ -95,7 +95,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
         // may only occur as child of the model or in a package
         return (
 		ns == ProjectManager.getManager().getCurrentProject().getModel()
-                || ModelFacade.isAPackage(ns));
+                || Model.getFacade().isAPackage(ns));
     }
 
 } /* end class ActionDeploymentDiagram */

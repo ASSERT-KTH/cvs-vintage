@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.26 2005/01/29 16:28:47 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.27 2005/01/30 20:48:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.UIManager;
 import org.apache.log4j.Logger;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.util.namespace.StringNamespace;
 import org.tigris.gef.util.ResourceLoader;
 
@@ -265,9 +264,9 @@ public final class ResourceLoaderWrapper {
 
 	Icon icon = (Icon) iconCache.get(value.getClass());
 
-        if (ModelFacade.isAPseudostate(value)) {
+        if (Model.getFacade().isAPseudostate(value)) {
 
-            Object kind = ModelFacade.getKind(value);
+            Object kind = Model.getFacade().getKind(value);
             DataTypesHelper helper = Model.getDataTypesHelper();
             if (helper.equalsINITIALKind(kind)) {
                 icon = initialStateIcon;
@@ -294,15 +293,15 @@ public final class ResourceLoaderWrapper {
             // icon = _FinalStateIcon;
         }
 
-        if (ModelFacade.isAAbstraction(value)) {
+        if (Model.getFacade().isAAbstraction(value)) {
             icon = realizeIcon;
         }
         // needs more work: sending and receiving icons
-        if (ModelFacade.isASignal(value)) {
+        if (Model.getFacade().isASignal(value)) {
             icon = signalIcon;
         }
 
-        if (ModelFacade.isAComment(value)) {
+        if (Model.getFacade().isAComment(value)) {
             icon = commentIcon;
         }
 

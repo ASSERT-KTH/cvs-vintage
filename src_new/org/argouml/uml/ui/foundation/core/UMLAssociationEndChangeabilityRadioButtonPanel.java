@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.9 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.10 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
@@ -70,7 +70,7 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel
     public void buildModel() {
         if (getTarget() != null) {
             Object target = /*(MAssociationEnd)*/ getTarget();
-            Object kind = ModelFacade.getChangeability(target);
+            Object kind = Model.getFacade().getChangeability(target);
             if (kind == null
                 || kind.equals(ActionSetChangeability.CHANGEABLE_COMMAND)) {
                 setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
@@ -80,8 +80,9 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel
 		} else
 		    if (kind.equals(ActionSetChangeability.FROZEN_COMMAND)) {
 			setSelected(ActionSetChangeability.FROZEN_COMMAND);
-		    } else
-			setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
+		    } else {
+		        setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
+		    }
         }
     }
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.53 2005/01/29 20:08:22 linus Exp $
+// $Id: PropPanelGeneralization.java,v 1.54 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JTextField;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -111,8 +110,8 @@ public class PropPanelGeneralization extends PropPanelModelElement {
      */
     public void navigateUp() {
         Object target = getTarget();
-        if (ModelFacade.isAModelElement(target)) {
-            Object namespace = ModelFacade.getNamespace(target);
+        if (Model.getFacade().isAModelElement(target)) {
+            Object namespace = Model.getFacade().getNamespace(target);
             if (namespace != null) {
                 TargetManager.getInstance().setTarget(namespace);
             }

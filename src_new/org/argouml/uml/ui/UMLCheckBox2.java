@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.22 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLCheckBox2.java,v 1.23 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui;
 import javax.swing.Action;
 import javax.swing.JCheckBox;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -132,12 +132,12 @@ public abstract class UMLCheckBox2
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (ModelFacade.isABase(checkBoxTarget)) {
+        if (Model.getFacade().isABase(checkBoxTarget)) {
             UmlModelEventPump.getPump().removeModelEventListener(this,
                     checkBoxTarget, propertySetName);
         }
 
-        if (ModelFacade.isABase(target)) {
+        if (Model.getFacade().isABase(target)) {
             checkBoxTarget = target;
 	    // UmlModelEventPump.getPump()
 	    // .removeModelEventListener(this, (MBase)_target,

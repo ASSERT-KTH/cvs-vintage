@@ -1,4 +1,4 @@
-// $Id: UMLMessageActionListModel.java,v 1.12 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLMessageActionListModel.java,v 1.13 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // $header$
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,7 +46,7 @@ public class UMLMessageActionListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getAction(getTarget()));
+        addElement(Model.getFacade().getAction(getTarget()));
     }
 
 
@@ -54,8 +54,8 @@ public class UMLMessageActionListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ elem) {
-        return ModelFacade.isAAction(elem)
-            && ModelFacade.getAction(getTarget()) == elem;
+        return Model.getFacade().isAAction(elem)
+            && Model.getFacade().getAction(getTarget()) == elem;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetExtendBase.java,v 1.15 2005/01/20 23:20:27 linus Exp $
+// $Id: ActionSetExtendBase.java,v 1.16 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -63,12 +62,12 @@ public class ActionSetExtendBase extends UMLAction {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newBase = /*(MUseCase)*/ combo.getSelectedItem();
             Object o = combo.getTarget();
-            if (org.argouml.model.ModelFacade.isAExtend(o)) {
+            if (Model.getFacade().isAExtend(o)) {
                 extend = /*(MExtend)*/ o;
                 o = combo.getSelectedItem();
-                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
+                if (Model.getFacade().isAUseCase(o)) {
                     newBase = /*(MUseCase)*/ o;
-                    oldBase = ModelFacade.getBase(extend);
+                    oldBase = Model.getFacade().getBase(extend);
                     if (newBase != oldBase) {
                         Model.getUseCasesHelper().setBase(extend, newBase);
                     }

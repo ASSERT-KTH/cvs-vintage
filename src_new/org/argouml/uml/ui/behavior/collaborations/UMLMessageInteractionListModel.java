@@ -1,4 +1,4 @@
-// $Id: UMLMessageInteractionListModel.java,v 1.10 2005/01/09 14:59:06 linus Exp $
+// $Id: UMLMessageInteractionListModel.java,v 1.11 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -45,9 +45,9 @@ public class UMLMessageInteractionListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (org.argouml.model.ModelFacade.isAMessage(getTarget())) {
+        if (Model.getFacade().isAMessage(getTarget())) {
             removeAllElements();
-            addElement(ModelFacade.getInteraction(getTarget()));
+            addElement(Model.getFacade().getInteraction(getTarget()));
         }
     }
 
@@ -55,8 +55,8 @@ public class UMLMessageInteractionListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return org.argouml.model.ModelFacade.isAInteraction(element)
-            && ModelFacade.getInteraction(getTarget()) == element;
+        return Model.getFacade().isAInteraction(element)
+            && Model.getFacade().getInteraction(getTarget()) == element;
     }
 
 }

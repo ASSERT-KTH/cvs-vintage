@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBoxModel.java,v 1.24 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLMessageActivatorComboBoxModel.java,v 1.25 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -52,7 +51,7 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
      */
     protected void buildModelList() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAMessage(target)) {
+        if (Model.getFacade().isAMessage(target)) {
             Object mes = /*(MMessage)*/ target;
             removeAllElements();
             // fill the list with items
@@ -66,11 +65,11 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object m) {
-        return ((org.argouml.model.ModelFacade.isAMessage(m))
+        return ((Model.getFacade().isAMessage(m))
                 && m != getTarget()
-                && !ModelFacade.getPredecessors((getTarget())).contains(m)
-                && ModelFacade.getInteraction(m)
-                    == ModelFacade.getInteraction((getTarget())));
+                && !Model.getFacade().getPredecessors((getTarget())).contains(m)
+                && Model.getFacade().getInteraction(m)
+                    == Model.getFacade().getInteraction((getTarget())));
     }
 
     /**
@@ -78,7 +77,7 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ModelFacade.getActivator(getTarget());
+            return Model.getFacade().getActivator(getTarget());
         }
         return null;
     }
@@ -87,15 +86,15 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#setTarget(java.lang.Object)
      */
     protected void setTarget(Object target) {
-        if (ModelFacade.isAMessage(getTarget())) {
-            Object inter = ModelFacade.getInteraction(getTarget());
+        if (Model.getFacade().isAMessage(getTarget())) {
+            Object inter = Model.getFacade().getInteraction(getTarget());
             if (inter != null)
                 UmlModelEventPump.getPump().removeModelEventListener(this,
                         inter, "message");
         }
         super.setTarget(target);
-        if (ModelFacade.isAMessage(target)) {
-            Object inter = ModelFacade.getInteraction(target);
+        if (Model.getFacade().isAMessage(target)) {
+            Object inter = Model.getFacade().getInteraction(target);
             if (inter != null)
                 UmlModelEventPump.getPump().addModelEventListener(this,
                         inter, "message");

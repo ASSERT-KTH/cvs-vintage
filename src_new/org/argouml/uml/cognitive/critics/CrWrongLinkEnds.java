@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.16 2005/01/09 14:58:36 linus Exp $
+// $Id: CrWrongLinkEnds.java,v 1.17 2005/01/30 20:47:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,11 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigLink;
 import org.tigris.gef.util.VectorSet;
@@ -108,21 +109,21 @@ public class CrWrongLinkEnds extends CrUML {
                 continue;
             }
 	    FigLink figLink = (FigLink) obj;
-	    if (!(ModelFacade.isALink(figLink.getOwner()))) continue;
+	    if (!(Model.getFacade().isALink(figLink.getOwner()))) continue;
 	    Object link = figLink.getOwner();
-	    Collection ends = ModelFacade.getConnections(link);
+	    Collection ends = Model.getFacade().getConnections(link);
 	    if (ends != null && (ends.size() > 0)) {
 		int count = 0;
 		Iterator it = ends.iterator();
 		while (it.hasNext()) {
-                    Object instance = ModelFacade.getInstance(it.next());
-                    Collection residencies = ModelFacade.getResidents(instance);
+                    Object instance = Model.getFacade().getInstance(it.next());
+                    Collection residencies = Model.getFacade().getResidents(instance);
 		    if (residencies != null
 			&& (residencies.size() > 0))
 			count = count + 2;
 
                     Object component =
-                        ModelFacade.getComponentInstance(instance);
+                        Model.getFacade().getComponentInstance(instance);
 		    if (component != null)
 			count = count + 1;
 		}

@@ -1,4 +1,4 @@
-// $Id: ActionBooleanTaggedValue.java,v 1.8 2005/01/20 23:20:37 linus Exp $
+// $Id: ActionBooleanTaggedValue.java,v 1.9 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * An action which can be used to create arbritary tagged values which hold
@@ -67,13 +66,13 @@ public class ActionBooleanTaggedValue extends UMLAction {
         UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
         Object obj = source.getTarget();
 
-        if (!ModelFacade.isAModelElement(obj)) {
+        if (!Model.getFacade().isAModelElement(obj)) {
             return;
         }
 
         boolean newState = source.isSelected();
 
-        Object taggedValue = ModelFacade.getTaggedValue(obj, tagName);
+        Object taggedValue = Model.getFacade().getTaggedValue(obj, tagName);
         if (taggedValue == null) {
             taggedValue =
                 Model.getExtensionMechanismsFactory().createTaggedValue();

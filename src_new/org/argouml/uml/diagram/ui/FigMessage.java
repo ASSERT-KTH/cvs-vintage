@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.33 2005/01/29 22:45:12 mvw Exp $
+// $Id: FigMessage.java,v 1.34 2005/01/30 20:47:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.FigAssociationRole;
 import org.argouml.uml.generator.ParserDisplay;
@@ -304,8 +304,8 @@ public class FigMessage extends FigNodeModelElement {
     protected void updateArrow() {
   	Object mes = getOwner(); // MMessage
 	if (mes == null || getLayer() == null) return;
-	Object sender = ModelFacade.getSender(mes); // MClassifierRole
-	Object receiver = ModelFacade.getReceiver(mes); // MClassifierRole
+	Object sender = Model.getFacade().getSender(mes); // MClassifierRole
+	Object receiver = Model.getFacade().getReceiver(mes); // MClassifierRole
 	Fig senderPort = getLayer().presentationFor(sender);
 	Fig receiverPort = getLayer().presentationFor(receiver);
 	if (senderPort == null || receiverPort == null) return;
@@ -331,7 +331,7 @@ public class FigMessage extends FigNodeModelElement {
     public void addPathItemToFigAssociationRole(Layer lay) {
 
 	Object associationRole =
-	    ModelFacade.getCommunicationConnection(getOwner());
+	    Model.getFacade().getCommunicationConnection(getOwner());
 	if (associationRole != null && lay != null) {
 	    FigAssociationRole figAssocRole =
 		(FigAssociationRole) lay.presentationFor(associationRole);

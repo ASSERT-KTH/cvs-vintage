@@ -1,4 +1,4 @@
-// $Id: CrUselessAbstract.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.15 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 
 
-// $Id: CrUselessAbstract.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.15 2005/01/30 20:47:39 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Enumeration;
@@ -32,8 +32,7 @@ import java.util.Vector;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
-import org.argouml.model.ModelFacade;
-
+import org.argouml.model.Model;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationEmpty;
 import org.tigris.gef.util.VectorSet;
@@ -61,16 +60,16 @@ public class CrUselessAbstract extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClass(dm))) return false;
+	if (!(Model.getFacade().isAClass(dm))) return false;
 	Object cls = /*(MClass)*/ dm;
-	if (!ModelFacade.isAbstract(cls))
+	if (!Model.getFacade().isAbstract(cls))
 	    return false;  // original class was not abstract
 	VectorSet derived =
 	    (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
 	Enumeration subclasses = derived.elements();
 	while (subclasses.hasMoreElements()) {
 	    Object c = /*(MClass)*/ subclasses.nextElement();
-	    if (!ModelFacade.isAbstract(c))
+	    if (!Model.getFacade().isAbstract(c))
 		return false;  // found a concrete subclass
 	}
 	return true; // no concrete subclasses defined, this class is "useless"
@@ -83,7 +82,7 @@ public class CrUselessAbstract extends CrUML {
 class ChildGenDerivedClasses implements ChildGenerator {
     public Enumeration gen(Object o) {
 	Object c = /*(MClass)*/ o;
-	Vector specs = new Vector(ModelFacade.getSpecializations(c));
+	Vector specs = new Vector(Model.getFacade().getSpecializations(c));
 	if (specs == null) {
 	    return EnumerationEmpty.theInstance();
 	}
@@ -93,7 +92,7 @@ class ChildGenDerivedClasses implements ChildGenerator {
 	Enumeration elems = specs.elements();
 	while (elems.hasMoreElements()) {
 	    Object g = /*(MGeneralization)*/ elems.nextElement();
-	    Object ge = ModelFacade.getChild(g);
+	    Object ge = Model.getFacade().getChild(g);
 	    if (ge != null) {
 		specClasses.addElement(ge);
 	    }

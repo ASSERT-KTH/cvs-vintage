@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.24 2005/01/29 20:08:22 linus Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.25 2005/01/30 20:47:46 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -58,12 +57,12 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
             return;
         }
         List list = new ArrayList();
-        Object ns = ModelFacade.getNamespace(inc);
+        Object ns = Model.getFacade().getNamespace(inc);
         list.addAll(Model.getModelManagementHelper()
                 .getAllModelElementsOfKind(
                         ns,
                         Model.getMetaTypes().getUseCase()));
-        list.remove(ModelFacade.getAddition(inc));
+        list.remove(Model.getFacade().getAddition(inc));
         addAll(list);
     }
 
@@ -72,7 +71,7 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ModelFacade.getBase(getTarget());
+            return Model.getFacade().getBase(getTarget());
         }
         return null;
     }
@@ -81,9 +80,9 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.isAUseCase(element)
-            && ModelFacade.getNamespace(element)
-                == ModelFacade.getNamespace(getTarget());
+        return Model.getFacade().isAUseCase(element)
+            && Model.getFacade().getNamespace(element)
+                == Model.getFacade().getNamespace(getTarget());
     }
 
 }

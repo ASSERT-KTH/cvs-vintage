@@ -1,4 +1,4 @@
-// $Id: ActionGenerateOne.java,v 1.14 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionGenerateOne.java,v 1.15 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.generator.ui.ClassGenerationDialog;
@@ -73,8 +73,8 @@ public class ActionGenerateOne extends UMLAction {
             if (target instanceof Fig) {
                 target = ((Fig) target).getOwner();
             }
-            if (ModelFacade.isAClass(target)
-                || ModelFacade.isAInterface(target)) {
+            if (Model.getFacade().isAClass(target)
+                || Model.getFacade().isAInterface(target)) {
                 classes.add(target);
             }
         }
@@ -115,8 +115,8 @@ public class ActionGenerateOne extends UMLAction {
             if (target instanceof Fig) {
                 target = ((Fig) target).getOwner();
             }
-            if (ModelFacade.isAClass(target)
-                || ModelFacade.isAInterface(target)) {
+            if (Model.getFacade().isAClass(target)
+                || Model.getFacade().isAInterface(target)) {
                 foundOne = true;
                 break;
             }

@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.26 2005/01/09 14:59:12 linus Exp $
+// $Id: PropPanelSubsystem.java,v 1.27 2005/01/30 20:48:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.PropPanelButton2;
@@ -88,7 +87,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (ModelFacade.isAClassifier(target)) {
+            if (Model.getFacade().isAClassifier(target)) {
                 Project p = ProjectManager.getManager().getCurrentProject();
                 Collection pCListeners = p.findFigsForMember(target);
                 Object model = p.getModel();

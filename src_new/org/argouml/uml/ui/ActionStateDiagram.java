@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.37 2005/01/09 14:59:02 linus Exp $
+// $Id: ActionStateDiagram.java,v 1.38 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -62,7 +61,8 @@ public class ActionStateDiagram extends ActionAddDiagram {
         Object/*MStateMachine*/ machine =
             Model.getStateMachinesFactory().buildStateMachine(target);
         UMLStateDiagram d =
-            new UMLStateDiagram(ModelFacade.getNamespace(machine), machine);
+            new UMLStateDiagram(
+                    Model.getFacade().getNamespace(machine), machine);
         return d;
     }
 
@@ -81,7 +81,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(Object)
      */
     public boolean isValidNamespace(Object handle) {
-        if (!ModelFacade.isANamespace(handle)) {
+        if (!Model.getFacade().isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);
             throw new IllegalArgumentException(

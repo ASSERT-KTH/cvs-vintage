@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.16 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.17 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -59,13 +58,13 @@ public class ActionSetModelElementStereotype extends UMLAction {
         Object target = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
-            if (ModelFacade.isAStereotype(combo.getSelectedItem()))
+            if (Model.getFacade().isAStereotype(combo.getSelectedItem()))
                 newStereo = /*(MStereotype)*/ combo.getSelectedItem();
-            if (ModelFacade.isAModelElement(combo.getTarget())) {
+            if (Model.getFacade().isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
                 oldStereo = null;
-                if (ModelFacade.getStereotypes(target).size() > 0) {
-                    oldStereo = ModelFacade.getStereotypes(target)
+                if (Model.getFacade().getStereotypes(target).size() > 0) {
+                    oldStereo = Model.getFacade().getStereotypes(target)
                         .iterator().next();
                 }
             }
@@ -77,7 +76,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
 		newStereo = /*(MStereotype)*/
 		    Model.getModelManagementHelper().getCorrespondingElement(
 				  newStereo,
-				  ModelFacade.getModel(target));
+				  Model.getFacade().getModel(target));
 	    }
             Model.getExtensionMechanismsHelper()
                 .setStereoType(target, newStereo);

@@ -1,5 +1,5 @@
-// $Id: GoSummaryToOperation.java,v 1.12 2004/09/04 06:59:49 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoSummaryToOperation.java,v 1.13 2005/01/30 20:47:48 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for Summary->Operation.
@@ -52,7 +52,7 @@ public class GoSummaryToOperation extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 	if (parent instanceof OperationsNode) {
-	    return ModelFacade.getOperations(
+	    return Model.getFacade().getOperations(
 		    ((OperationsNode) parent).getParent());
 	}
 	return null;

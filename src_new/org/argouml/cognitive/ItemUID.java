@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.17 2005/01/09 14:58:04 linus Exp $
+// $Id: ItemUID.java,v 1.18 2005/01/30 20:48:34 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.UUIDHelper;
 
 /**
@@ -157,7 +157,7 @@ public class ItemUID {
      * @return	The ID of the object, or null.
      */
     protected static String readObjectID(Object obj) {
-        if (ModelFacade.isABase(obj)) {
+        if (Model.getFacade().isABase(obj)) {
             return UUIDHelper.getInstance().getUUID(obj);
         }
 	/*
@@ -226,7 +226,7 @@ public class ItemUID {
      * @return	The new ID of the object, or null.
      */
     protected static String createObjectID(Object obj) {
-	if (ModelFacade.isABase(obj)) {
+	if (Model.getFacade().isABase(obj)) {
 	    return null;
 	}
 

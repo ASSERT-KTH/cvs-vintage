@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.13 2005/01/30 14:05:23 linus Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.14 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A model for multiplicities. This model is instantiated with a few default
@@ -60,7 +59,7 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return org.argouml.model.ModelFacade.isAMultiplicity(element);
+        return Model.getFacade().isAMultiplicity(element);
     }
 
     /**
@@ -69,8 +68,8 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         setElements(multiplicityList);
 	Object t = getTarget();
-	if (ModelFacade.isAModelElement(t)) {
-	    addElement(ModelFacade.getMultiplicity(t));
+	if (Model.getFacade().isAModelElement(t)) {
+	    addElement(Model.getFacade().getMultiplicity(t));
 	}
     }
 
@@ -94,7 +93,7 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      */
     public void setSelectedItem(Object anItem) {
         if (!contains(anItem)
-	    && org.argouml.model.ModelFacade.isAMultiplicity(anItem)) {
+	    && Model.getFacade().isAMultiplicity(anItem)) {
 
             addElement(anItem);
 

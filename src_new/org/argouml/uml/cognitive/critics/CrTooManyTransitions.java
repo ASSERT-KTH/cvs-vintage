@@ -1,4 +1,4 @@
-// $Id: CrTooManyTransitions.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrTooManyTransitions.java,v 1.13 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,9 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
+
 import org.argouml.cognitive.Designer;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /** A critic to detect when a state has too many ingoing and
  * outgoing transitions.
@@ -51,12 +52,12 @@ public class CrTooManyTransitions extends AbstractCrTooMany {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
+	if (!(Model.getFacade().isAStateVertex(dm))) return NO_PROBLEM;
 	Object sv = /*(MStateVertex)*/ dm;
 
 	int threshold = getThreshold();
-	Collection in = ModelFacade.getIncomings(sv);
-	Collection out = ModelFacade.getOutgoings(sv);
+	Collection in = Model.getFacade().getIncomings(sv);
+	Collection out = Model.getFacade().getOutgoings(sv);
 	int inSize = (in == null) ? 0 : in.size();
 	int outSize = (out == null) ? 0 : out.size();
 	if (inSize + outSize <= threshold) return NO_PROBLEM;

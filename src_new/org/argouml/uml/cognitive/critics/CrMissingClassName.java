@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.17 2005/01/09 14:58:36 linus Exp $
+// $Id: CrMissingClassName.java,v 1.18 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,12 @@
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1
@@ -52,11 +53,14 @@ public class CrMissingClassName extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
+	if (!(Model.getFacade().isAModelElement(dm))) {
+	    return NO_PROBLEM;
+	}
 	Object e = /*(MModelElement)*/ dm;
-	String myName = ModelFacade.getName(e);
-	if (myName == null || myName.equals("") || myName.length() == 0)
+	String myName = Model.getFacade().getName(e);
+	if (myName == null || myName.equals("") || myName.length() == 0) {
 	    return PROBLEM_FOUND;
+	}
 	return NO_PROBLEM;
     }
 
@@ -78,10 +82,12 @@ public class CrMissingClassName extends CrUML {
 	    String ins = "Set the name of this class.";
 	    String sug = "ClassName";
 	    int count = 1;
-	    if (ModelFacade.getNamespace(me) != null)
-		count = ModelFacade
-		    .getOwnedElements(ModelFacade.getNamespace(me)).size();
-	    sug = ModelFacade.getUMLClassName(me) + (count + 1);
+	    if (Model.getFacade().getNamespace(me) != null) {
+		count =
+		    Model.getFacade().getOwnedElements(
+		            Model.getFacade().getNamespace(me)).size();
+	    }
+	    sug = Model.getFacade().getUMLClassName(me) + (count + 1);
 	    ((WizMEName) w).setInstructions(ins);
 	    ((WizMEName) w).setSuggestion(sug);
 	}

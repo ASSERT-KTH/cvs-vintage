@@ -1,5 +1,5 @@
-// $Id: UMLStateMachineTransitionListModel.java,v 1.7 2004/02/08 12:45:26 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: UMLStateMachineTransitionListModel.java,v 1.8 2005/01/30 20:47:43 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,14 +46,14 @@ public class UMLStateMachineTransitionListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(ModelFacade.getTransitions(getTarget()));
+        setAllElements(Model.getFacade().getTransitions(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return ModelFacade.getTransitions(getTarget()).contains(element);
+        return Model.getFacade().getTransitions(getTarget()).contains(element);
     }
 
 }

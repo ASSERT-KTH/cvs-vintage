@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.14 2005/01/29 16:28:45 linus Exp $
+// $Id: TestParserDisplay.java,v 1.15 2005/01/30 20:48:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -151,7 +150,7 @@ public class TestParserDisplay extends TestCase {
         } catch (ParseException e) {
             fail("Could not parse expression " + text);
         }
-        assertEquals(name, ModelFacade.getName(ro));
+        assertEquals(name, Model.getFacade().getName(ro));
     }
 
     private void checkType(MAttribute attr, String text, String type) {
@@ -453,7 +452,7 @@ public class TestParserDisplay extends TestCase {
 
 	try {
 	    ParserDisplay.SINGLETON.parseClassifierRole(cr, text);
-	    c = ModelFacade.getBases(cr);
+	    c = Model.getFacade().getBases(cr);
 	    it = c.iterator();
 	checkAllValid :
 	    while (it.hasNext()) {

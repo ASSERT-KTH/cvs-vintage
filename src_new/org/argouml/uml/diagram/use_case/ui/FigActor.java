@@ -1,5 +1,5 @@
-// $Id: FigActor.java,v 1.24 2004/12/31 00:53:12 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: FigActor.java,v 1.25 2005/01/30 20:48:35 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -280,7 +280,7 @@ public class FigActor extends FigNodeModelElement {
             updateStereotypeText();
             damage = true;
         }
-        if (mee != null && ModelFacade.getStereotypes(getOwner())
+        if (mee != null && Model.getFacade().getStereotypes(getOwner())
                                 .contains(mee.getSource())) {
             updateStereotypeText();
             damage = true;
@@ -314,7 +314,7 @@ public class FigActor extends FigNodeModelElement {
             return;
         }
         Object cls = /*(MClass)*/ getOwner();
-        if (ModelFacade.isAbstract(cls)) {
+        if (Model.getFacade().isAbstract(cls)) {
             getNameFig().setFont(getItalicLabelFont());
 	} else {
             getNameFig().setFont(getLabelFont());

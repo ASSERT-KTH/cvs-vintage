@@ -1,4 +1,4 @@
-// $Id: PredicateFind.java,v 1.8 2005/01/09 14:58:33 linus Exp $
+// $Id: PredicateFind.java,v 1.9 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,8 @@
 
 package org.argouml.uml;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.tigris.gef.base.Diagram;
-
 import org.tigris.gef.util.Predicate;
 import org.tigris.gef.util.PredicateTrue;
 
@@ -76,7 +75,7 @@ public class PredicateFind implements Predicate {
      * @return true if the name of the given package is equal
      */
     public boolean matchPackage(Object/*MModel*/ m) {
-	boolean res = packageName.predicate(ModelFacade.getName(m));
+	boolean res = packageName.predicate(Model.getFacade().getName(m));
 	return res;
     }
 
@@ -84,10 +83,10 @@ public class PredicateFind implements Predicate {
      * @see org.tigris.gef.util.Predicate#predicate(java.lang.Object)
      */
     public boolean predicate(Object o) {
-	if (!(ModelFacade.isAModelElement(o))) return false;
+	if (!(Model.getFacade().isAModelElement(o))) return false;
 	Object me = /*(MModelElement)*/ o;
 	return theType.predicate(me) && specific.predicate(me)
-	    && elementName.predicate(ModelFacade.getName(me));
+	    && elementName.predicate(Model.getFacade().getName(me));
     }
 
 } /* end class PredicateFind */

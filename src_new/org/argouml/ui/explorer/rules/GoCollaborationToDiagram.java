@@ -1,5 +1,5 @@
-// $Id: GoCollaborationToDiagram.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoCollaborationToDiagram.java,v 1.2 2005/01/30 20:47:47 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,7 +31,7 @@ import java.util.Vector;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
 /**
@@ -51,7 +51,7 @@ public class GoCollaborationToDiagram extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (!ModelFacade.isACollaboration(parent))
+        if (!Model.getFacade().isACollaboration(parent))
             return null;
 
         Project p = ProjectManager.getManager().getCurrentProject();

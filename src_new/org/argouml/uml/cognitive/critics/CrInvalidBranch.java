@@ -1,4 +1,4 @@
-// $Id: CrInvalidBranch.java,v 1.11 2005/01/30 14:05:10 linus Exp $
+// $Id: CrInvalidBranch.java,v 1.12 2005/01/30 20:47:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A critic to detect when a Branch (i.e. Choice or Junction)
@@ -68,18 +67,18 @@ public class CrInvalidBranch extends CrUML {
      * @return boolean problem found
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAPseudostate(dm))) {
+	if (!(Model.getFacade().isAPseudostate(dm))) {
 	    return NO_PROBLEM;
 	}
-	Object k = ModelFacade.getPseudostateKind(dm);
-	if ((!ModelFacade.equalsPseudostateKind(k,
+	Object k = Model.getFacade().getPseudostateKind(dm);
+	if ((!Model.getFacade().equalsPseudostateKind(k,
 	        Model.getPseudostateKind().getBranch()))
-            && (!ModelFacade.equalsPseudostateKind(k,
+            && (!Model.getFacade().equalsPseudostateKind(k,
                     Model.getPseudostateKind().getJunction()))) {
 	    return NO_PROBLEM;
 	}
-	Collection outgoing = ModelFacade.getOutgoings(dm);
-	Collection incoming = ModelFacade.getIncomings(dm);
+	Collection outgoing = Model.getFacade().getOutgoings(dm);
+	Collection incoming = Model.getFacade().getIncomings(dm);
 	int nOutgoing = outgoing == null ? 0 : outgoing.size();
 	int nIncoming = incoming == null ? 0 : incoming.size();
 	if (nIncoming < 1) {

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.6 2005/01/26 22:11:50 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.7 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.argouml.model.ExtensionMechanismsHelper;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -245,7 +244,8 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
         if (clazz == null || stereo == null) {
             return false;
         }
-        if (getMetaModelName(clazz).equals(ModelFacade.getBaseClass(stereo))) {
+        if (getMetaModelName(clazz)
+                .equals(nsmodel.getFacade().getBaseClass(stereo))) {
             return true;
         } else {
             if (getMetaModelName(clazz).equals("ModelElement")) {
@@ -302,7 +302,7 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
 	    stereotype =
 		nsmodel.getModelManagementHelper().getCorrespondingElement(
 			stereotype,
-			ModelFacade.getModel(modelElement),
+			nsmodel.getFacade().getModel(modelElement),
 			true);
 	}
         nsmodel.getCoreHelper().setStereotype(modelElement, stereotype);

@@ -1,4 +1,4 @@
-// $Id: TestUmlNamespace.java,v 1.10 2005/01/29 20:08:22 linus Exp $
+// $Id: TestUmlNamespace.java,v 1.11 2005/01/30 20:47:58 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.model.uml;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 
 /**
@@ -33,7 +32,8 @@ import org.argouml.model.ModelFacade;
  */
 public class TestUmlNamespace extends GenericUmlObjectTestFixture {
     /**
-     * Constructor for FakeUmlModelFacadeTest.
+     * Constructor.
+     *
      * @param arg0 test name
      */
     public TestUmlNamespace(String arg0) {
@@ -49,8 +49,8 @@ public class TestUmlNamespace extends GenericUmlObjectTestFixture {
 	    Model.getUmlFactory().buildNode(
 	            Model.getMetaTypes().getNamespace());
 	assertNotNull("Didn't create object", o);
-	assertTrue("Should be a base", ModelFacade.isABase(o));
-	assertTrue("Should be a namespace", ModelFacade.isANamespace(o));
+	assertTrue("Should be a base", Model.getFacade().isABase(o));
+	assertTrue("Should be a namespace", Model.getFacade().isANamespace(o));
 	runTruthTests(o);
     }
 

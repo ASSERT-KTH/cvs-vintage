@@ -1,4 +1,4 @@
-// $Id: SuperclassGen.java,v 1.11 2005/01/09 14:58:33 linus Exp $
+// $Id: SuperclassGen.java,v 1.12 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
-import org.argouml.model.ModelFacade;
+
+import org.argouml.model.Model;
 import org.tigris.gef.util.ChildGenerator;
 
 /** Utility class to generate the children of a class.  In this case
@@ -43,12 +44,12 @@ public class SuperclassGen implements ChildGenerator {
         Vector res = new Vector();
 
         Object/* MGeneralizableElement */ge = o;
-        Collection generalizations = ModelFacade.getGeneralizations(ge);
+        Collection generalizations = Model.getFacade().getGeneralizations(ge);
         if (generalizations == null) return res.elements();
         Iterator gens = generalizations.iterator();
         while (gens.hasNext()) {
             Object/* MGeneralization */g = gens.next();
-            res.add(ModelFacade.getParent(g));
+            res.add(Model.getFacade().getParent(g));
         }
         return res.elements();
     }

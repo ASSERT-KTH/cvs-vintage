@@ -1,4 +1,4 @@
-// $Id: ModeCreateLink.java,v 1.8 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: ModeCreateLink.java,v 1.9 2005/01/30 20:48:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,7 +200,8 @@ public class ModeCreateLink extends ModeCreate {
                 Fig destPortFig = destFigNode.getPortFig(foundPort);
                 Object edgeType = getArg("edgeClass");
                 if (edgeType != null) {
-                    newEdge = mgm.connect(startPort, foundPort, (Class) edgeType);
+                    newEdge =
+                        mgm.connect(startPort, foundPort, (Class) edgeType);
                 } else {
                     newEdge = mgm.connect(startPort, foundPort);
                 }

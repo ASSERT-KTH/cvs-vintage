@@ -1,4 +1,4 @@
-// $Id: UMLDiscriminatorNameDocument.java,v 1.5 2005/01/20 23:20:24 linus Exp $
+// $Id: UMLDiscriminatorNameDocument.java,v 1.6 2005/01/30 20:47:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
@@ -54,7 +53,7 @@ public class UMLDiscriminatorNameDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
      */
     protected String getProperty() {
-        return (String) ModelFacade.getDiscriminator(getTarget());
+        return (String) Model.getFacade().getDiscriminator(getTarget());
     }
 
 }

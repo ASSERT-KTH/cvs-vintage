@@ -1,4 +1,4 @@
-// $Id: CrNoTransitions.java,v 1.16 2005/01/30 14:05:10 linus Exp $
+// $Id: CrNoTransitions.java,v 1.17 2005/01/30 20:47:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A critic to detect when a state has no outgoing transitions.
@@ -58,22 +57,22 @@ public class CrNoTransitions extends CrUML {
      * @return boolean problem found
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAStateVertex(dm))) {
+	if (!(Model.getFacade().isAStateVertex(dm))) {
 	    return NO_PROBLEM;
 	}
 	Object sv = /*(MStateVertex)*/ dm;
-	if (ModelFacade.isAState(sv)) {
-	    Object sm = ModelFacade.getStateMachine(sv);
-	    if (sm != null && ModelFacade.getTop(sm) == sv) {
+	if (Model.getFacade().isAState(sv)) {
+	    Object sm = Model.getFacade().getStateMachine(sv);
+	    if (sm != null && Model.getFacade().getTop(sm) == sv) {
 	        return NO_PROBLEM;
 	    }
 	}
-	Collection outgoing = ModelFacade.getOutgoings(sv);
-	Collection incoming = ModelFacade.getIncomings(sv);
+	Collection outgoing = Model.getFacade().getOutgoings(sv);
+	Collection incoming = Model.getFacade().getIncomings(sv);
 	boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
 	boolean needsIncoming = incoming == null || incoming.size() == 0;
-	if (ModelFacade.isAPseudostate(sv)) {
-	    Object k = ModelFacade.getPseudostateKind(sv);
+	if (Model.getFacade().isAPseudostate(sv)) {
+	    Object k = Model.getFacade().getPseudostateKind(sv);
 	    if (k.equals(Model.getPseudostateKind().getBranch())) {
 	        return NO_PROBLEM;
 	    }
@@ -84,7 +83,7 @@ public class CrNoTransitions extends CrUML {
                 needsIncoming = false;
             }
 	}
-	if (ModelFacade.isAFinalState(sv)) {
+	if (Model.getFacade().isAFinalState(sv)) {
 	    needsOutgoing = false;
 	}
 

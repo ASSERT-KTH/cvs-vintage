@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.67 2005/01/30 14:05:06 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.68 2005/01/30 20:48:02 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
@@ -103,7 +102,7 @@ public class UMLClassDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#setNamespace(java.lang.Object)
      */
     public void setNamespace(Object ns) {
-        if (!ModelFacade.isANamespace(ns)) {
+        if (!Model.getFacade().isANamespace(ns)) {
             LOG.error("Illegal argument. "
                   + "Object " + ns + " is not a namespace");
             throw new IllegalArgumentException("Illegal argument. "
@@ -114,7 +113,7 @@ public class UMLClassDiagram extends UMLDiagram {
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
         gm.setNamespace(ns);
         LayerPerspective lay =
-            new LayerPerspectiveMutable(ModelFacade.getName(ns), gm);
+            new LayerPerspectiveMutable(Model.getFacade().getName(ns), gm);
         ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
         lay.setGraphNodeRenderer(rend);
         lay.setGraphEdgeRenderer(rend);

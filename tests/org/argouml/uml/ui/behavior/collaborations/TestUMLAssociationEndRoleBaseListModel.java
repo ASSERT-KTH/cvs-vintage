@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.19 2005/01/30 09:17:25 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.20 2005/01/30 20:48:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -104,7 +103,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         Model.getUmlFactory().delete(elem);
         Model.getUmlFactory().delete(assocRole);
 
-        Collection connections = ModelFacade.getConnections(baseAssoc);
+        Collection connections = Model.getFacade().getConnections(baseAssoc);
         Model.getUmlFactory().delete(baseAssoc);
 
         Iterator iter = connections.iterator();

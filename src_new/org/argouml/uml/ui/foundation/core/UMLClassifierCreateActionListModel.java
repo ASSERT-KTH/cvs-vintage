@@ -1,4 +1,4 @@
-// $Id: UMLClassifierCreateActionListModel.java,v 1.6 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLClassifierCreateActionListModel.java,v 1.7 2005/01/30 20:47:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -47,7 +47,7 @@ public class UMLClassifierCreateActionListModel
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(ModelFacade.getCreateActions(getTarget()));
+            setAllElements(Model.getFacade().getCreateActions(getTarget()));
         }
     }
 
@@ -55,7 +55,8 @@ public class UMLClassifierCreateActionListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return ModelFacade.getCreateActions(getTarget()).contains(element);
+        return Model.getFacade().getCreateActions(getTarget())
+        	.contains(element);
     }
 
 }

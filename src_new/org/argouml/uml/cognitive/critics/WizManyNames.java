@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.16 2005/01/20 23:20:35 linus Exp $
+// $Id: WizManyNames.java,v 1.17 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepManyTextFields;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A non-modal wizard to help the user change the name of a
@@ -79,7 +78,7 @@ public class WizManyNames extends UMLWizard {
 		int size = mes.size();
 		for (int i = 0; i < size; i++) {
 		    Object me = /*(MModelElement)*/ mes.elementAt(i);
-		    names.addElement(ModelFacade.getName(me));
+		    names.addElement(Model.getFacade().getName(me));
 		}
 		step1 = new WizStepManyTextFields(this, instructions, names);
 	    }

@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.11 2005/01/02 16:43:51 linus Exp $
+// $Id: CrAlreadyRealizes.java,v 1.12 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Set;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Critic to detect whether a class implements unneedded realizations through
@@ -58,7 +57,7 @@ public class CrAlreadyRealizes extends CrUML {
      */
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
-	if (ModelFacade.isAClass(dm)) {
+	if (Model.getFacade().isAClass(dm)) {
 	    Collection col =
 		Model.getCoreHelper().getAllRealizedInterfaces(dm);
 	    Set set = new HashSet();

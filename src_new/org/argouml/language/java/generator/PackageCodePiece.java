@@ -1,4 +1,4 @@
-// $Id: PackageCodePiece.java,v 1.12 2005/01/09 14:58:06 linus Exp $
+// $Id: PackageCodePiece.java,v 1.13 2005/01/30 20:48:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Stack;
-import org.argouml.model.ModelFacade;
+
+import org.argouml.model.Model;
 
 /**
  * This code piece represents a package declaration.
@@ -38,7 +39,9 @@ import org.argouml.model.ModelFacade;
  * @author Marcus Andersson andersson@users.sourceforge.net
  */
 public class PackageCodePiece extends NamedCodePiece {
-    /** The code piece for the package identifier. */
+    /**
+     * The code piece for the package identifier.
+     */
     private CodePiece identifier;
 
     /**
@@ -108,7 +111,7 @@ public class PackageCodePiece extends NamedCodePiece {
 	ParseState parseState = (ParseState) parseStateStack.peek();
 	Object mNamespace = parseState.getNamespace();
 
-	if (!(ModelFacade.isAModel(mNamespace))) {
+	if (!(Model.getFacade().isAModel(mNamespace))) {
 	    writer.write("package ");
 	    writer.write(GeneratorJava.getInstance()
 			 .getPackageName(mNamespace));

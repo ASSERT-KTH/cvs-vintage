@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.9 2005/01/24 19:12:49 mvw Exp $
+// $Id: CommentEdge.java,v 1.10 2005/01/30 20:48:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.diagram.static_structure.ui;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.UUIDManager;
 import org.argouml.uml.diagram.use_case.ui.UseCaseDiagramRenderer;
 
@@ -106,11 +105,11 @@ public class CommentEdge {
      * Commit suicide. Adapt the UML model.
      */
     public void delete() {
-        if (ModelFacade.isAComment(source)) {
+        if (Model.getFacade().isAComment(source)) {
             Model.getCoreHelper().removeAnnotatedElement(source, dest);
         } else {
             // not save to presume the destination is the comment
-            if (ModelFacade.isAComment(dest))
+            if (Model.getFacade().isAComment(dest))
                 Model.getCoreHelper().removeAnnotatedElement(dest, source);
         }
     }

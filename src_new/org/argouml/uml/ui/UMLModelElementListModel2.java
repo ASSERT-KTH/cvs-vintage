@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.30 2005/01/11 13:03:16 bobtarling Exp $
+// $Id: UMLModelElementListModel2.java,v 1.31 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JPopupMenu;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
@@ -271,16 +271,16 @@ public abstract class UMLModelElementListModel2
     public void setTarget(Object theNewTarget) {
         theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
-        if (ModelFacade.isABase(theNewTarget)
+        if (Model.getFacade().isABase(theNewTarget)
                 || theNewTarget instanceof Diagram) {
-            if (ModelFacade.isABase(listTarget)) {
+            if (Model.getFacade().isABase(listTarget)) {
                 UmlModelEventPump.getPump()
 		    .removeModelEventListener(this,
 					      /*(MBase)*/listTarget,
 					      eventName);
             }
 
-            if (ModelFacade.isABase(theNewTarget)) {
+            if (Model.getFacade().isABase(theNewTarget)) {
                 listTarget = theNewTarget;
                 // UmlModelEventPump.getPump()
                 // .removeModelEventListener(this, (MBase)_target,

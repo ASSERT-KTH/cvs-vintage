@@ -1,4 +1,4 @@
-// $Id: CrFinalSubclassed.java,v 1.11 2005/01/09 14:58:36 linus Exp $
+// $Id: CrFinalSubclassed.java,v 1.12 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,19 +22,19 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrFinalSubclassed.java,v 1.11 2005/01/09 14:58:36 linus Exp $
+// $Id: CrFinalSubclassed.java,v 1.12 2005/01/30 20:47:38 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
-// Use model through ModelFacade
-
-/** Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
- *  Semantics. OMG document ad/97-08-04.
- *  In UML 1.3 it is rule [2] in section 2.5.3.18 page 2-54.
+/**
+ * Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
+ * Semantics. OMG document ad/97-08-04.
+ * In UML 1.3 it is rule [2] in section 2.5.3.18 page 2-54.
  *
  * @author jrobbins
  */
@@ -57,15 +57,15 @@ public class CrFinalSubclassed extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!ModelFacade.isAGeneralizableElement(dm)) {
+	if (!Model.getFacade().isAGeneralizableElement(dm)) {
 	    return NO_PROBLEM;
 	}
 
-	if (!ModelFacade.isLeaf(dm)) {
+	if (!Model.getFacade().isLeaf(dm)) {
 	    return NO_PROBLEM;
 	}
 
-	Iterator specs = ModelFacade.getSpecializations(dm).iterator();
+	Iterator specs = Model.getFacade().getSpecializations(dm).iterator();
 	return specs.hasNext() ? PROBLEM_FOUND : NO_PROBLEM;
     }
 

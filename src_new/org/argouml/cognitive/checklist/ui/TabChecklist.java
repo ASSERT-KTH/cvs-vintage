@@ -1,4 +1,4 @@
-// $Id: TabChecklist.java,v 1.26 2005/01/09 14:58:05 linus Exp $
+// $Id: TabChecklist.java,v 1.27 2005/01/30 20:48:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,6 @@ import org.argouml.cognitive.checklist.CheckManager;
 import org.argouml.cognitive.checklist.Checklist;
 import org.argouml.cognitive.checklist.ChecklistStatus;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -284,11 +283,11 @@ class TableModelChecklist extends AbstractTableModel
      * @param t the new target
      */
     public void setTarget(Object t) {
-	if (ModelFacade.isAElement(target)) {
+	if (Model.getFacade().isAElement(target)) {
 	    Model.getPump().removeModelEventListener(this, target);
 	}
 	target = t;
-	if (ModelFacade.isAElement(target)) {
+	if (Model.getFacade().isAElement(target)) {
 	    Model.getPump().addModelEventListener(this, target, "name");
 	}
 	fireTableStructureChanged();

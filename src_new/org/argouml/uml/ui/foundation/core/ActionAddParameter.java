@@ -1,4 +1,4 @@
-// $Id: ActionAddParameter.java,v 1.6 2005/01/09 21:10:42 linus Exp $
+// $Id: ActionAddParameter.java,v 1.7 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -60,8 +59,8 @@ class ActionAddParameter extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
         Object feature = null;
-        if (ModelFacade.isAParameter(target)) {
-            feature = ModelFacade.getBehavioralFeature(target);
+        if (Model.getFacade().isAParameter(target)) {
+            feature = Model.getFacade().getBehavioralFeature(target);
             if (feature != null) {
                 Project currentProject =
                     ProjectManager.getManager().getCurrentProject();

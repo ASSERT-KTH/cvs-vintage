@@ -1,4 +1,4 @@
-// $Id: CrClassWithoutComponent.java,v 1.16 2005/01/09 14:58:36 linus Exp $
+// $Id: CrClassWithoutComponent.java,v 1.17 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrClassWithoutComponent.java,v 1.16 2005/01/09 14:58:36 linus Exp $
+// $Id: CrClassWithoutComponent.java,v 1.17 2005/01/30 20:47:38 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.tigris.gef.util.VectorSet;
@@ -106,7 +107,7 @@ public class CrClassWithoutComponent extends CrUML {
 	    if (!(obj instanceof FigClass)) continue;
 	    FigClass fc = (FigClass) obj;
 	    if (fc.getEnclosingFig() == null
-		|| (!(ModelFacade.isAComponent(fc.getEnclosingFig()
+		|| (!(Model.getFacade().isAComponent(fc.getEnclosingFig()
 		                                        .getOwner())))) {
 		if (offs == null) {
 		    offs = new VectorSet();

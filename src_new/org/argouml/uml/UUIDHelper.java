@@ -1,4 +1,4 @@
-// $Id: UUIDHelper.java,v 1.3 2005/01/09 14:58:33 linus Exp $
+// $Id: UUIDHelper.java,v 1.4 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.uml;
 
 import org.apache.log4j.Logger;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 /**
@@ -74,7 +74,7 @@ public class UUIDHelper {
         if (base instanceof CommentEdge) {
             return (String) ((CommentEdge) base).getUUID();
         }
-        return ModelFacade.getUUID(base);
+        return Model.getFacade().getUUID(base);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.16 2005/01/09 14:59:05 linus Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.17 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
@@ -65,7 +64,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      */
     protected Vector getSelected() {
         Vector vec = new Vector();
-        vec.addAll(ModelFacade.getBases(getTarget()));
+        vec.addAll(Model.getFacade().getBases(getTarget()));
         return vec;
     }
 

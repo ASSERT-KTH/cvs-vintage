@@ -1,4 +1,4 @@
-// $Id: FigConcurrentRegion.java,v 1.1 2005/01/21 21:09:46 mvw Exp $
+// $Id: FigConcurrentRegion.java,v 1.2 2005/01/30 20:48:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.ActionAddConcurrentRegion;
 import org.argouml.uml.diagram.ui.ActionDeleteConcurrentRegion;
@@ -532,20 +531,20 @@ public class FigConcurrentRegion extends FigState
                     if (!((Collection) trCollection).isEmpty())
                         tr = ((Collection) trCollection).iterator().next();
                     if (tr != null
-                            && ModelFacade.isATransition(tr))
+                            && Model.getFacade().isATransition(tr))
                     {
                         Model.getCommonBehaviorHelper().setTarget(tr, 
-                                ModelFacade.getContainer(owner));
+                                Model.getFacade().getContainer(owner));
                     }
                 }
                 else if (eName == "outgoing") {
                     if (!((Collection) trCollection).isEmpty())
                         tr = ((Collection) trCollection).iterator().next();
                     if (tr != null
-                            && ModelFacade.isATransition(tr))
+                            && Model.getFacade().isATransition(tr))
                     {
                         Model.getStateMachinesHelper().setSource(tr,
-                                ModelFacade.getContainer(owner));
+                                Model.getFacade().getContainer(owner));
                     }
                 }
             }

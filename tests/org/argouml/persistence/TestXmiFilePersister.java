@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.11 2005/01/20 23:20:41 linus Exp $
+// $Id: TestXmiFilePersister.java,v 1.12 2005/01/30 20:48:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,11 @@ import junit.framework.TestCase;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Testclass for the XMIReader. Placeholder for all saving/loading tests
  * concerning XMIReader (like the dreaded ClassCastException issues).
+ *
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 17, 2003
  */
@@ -61,15 +61,20 @@ public class TestXmiFilePersister extends TestCase {
         try {
             Project p = ProjectManager.getManager().makeEmptyProject();
             Object clazz = Model.getCoreFactory().buildClass(p.getModel());
-            Collection propertyChangeListeners = ProjectManager.getManager()
-                .getCurrentProject().findFigsForMember(clazz);
-            Object model = ProjectManager.getManager()
-                .getCurrentProject().getModel();
-            Object voidType = ProjectManager.getManager()
-                .getCurrentProject().findType("void");
-            Object oper = Model.getCoreFactory().buildOperation(clazz, model,
+            Collection propertyChangeListeners =
+                ProjectManager.getManager()
+                	.getCurrentProject().findFigsForMember(clazz);
+            Object model =
+                ProjectManager.getManager()
+                	.getCurrentProject().getModel();
+            Object voidType =
+                ProjectManager.getManager()
+                	.getCurrentProject().findType("void");
+            Object oper =
+                Model.getCoreFactory().buildOperation(clazz, model,
                         voidType, propertyChangeListeners);
-            Model.getCoreHelper().setType(ModelFacade.getParameter(oper, 0),
+            Model.getCoreHelper().setType(
+                    Model.getFacade().getParameter(oper, 0),
                     p.findType("String"));
             File file = new File("test.xmi");
             XmiFilePersister persister = new XmiFilePersister();

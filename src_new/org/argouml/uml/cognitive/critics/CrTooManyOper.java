@@ -1,4 +1,4 @@
-// $Id: CrTooManyOper.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// $Id: CrTooManyOper.java,v 1.15 2005/01/30 20:47:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,9 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /** A critic to detect when a classifier has to many operations).
  *  TODO: exclude getter and setter operations from count
@@ -50,15 +51,15 @@ public class CrTooManyOper extends AbstractCrTooMany {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
+	if (!(Model.getFacade().isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;
 	// TODO: consider inherited attributes?
 	int threshold = getThreshold();
-	Collection str = ModelFacade.getFeatures(cls);
+	Collection str = Model.getFacade().getFeatures(cls);
 	if (str == null) return NO_PROBLEM;
 	int n = 0;
 	for (Iterator iter = str.iterator(); iter.hasNext();) {
-	    if (ModelFacade.isABehavioralFeature(iter.next()))
+	    if (Model.getFacade().isABehavioralFeature(iter.next()))
 		n++;
 	}
 	if (n <= threshold) return NO_PROBLEM;

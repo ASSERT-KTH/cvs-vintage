@@ -1,4 +1,4 @@
-// $Id: CrDupParamName.java,v 1.15 2005/01/09 14:58:36 linus Exp $
+// $Id: CrDupParamName.java,v 1.16 2005/01/30 20:47:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,10 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
 import java.util.Vector;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Well-formedness rule [1] for MBehavioralFeature. See page 28 of UML 1.1
@@ -54,20 +55,20 @@ public class CrDupParamName extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!ModelFacade.isABehavioralFeature(dm)) {
+	if (!Model.getFacade().isABehavioralFeature(dm)) {
 	    return NO_PROBLEM;
 	}
 
 	Object bf = /*(MBehavioralFeature)*/ dm;
 	Vector namesSeen = new Vector();
-	Iterator params = ModelFacade.getParameters(bf).iterator();
+	Iterator params = Model.getFacade().getParameters(bf).iterator();
 	while (params.hasNext()) {
 	    Object p = /*(MParameter)*/ params.next();
-	    if (ModelFacade.isReturn(p)) {
+	    if (Model.getFacade().isReturn(p)) {
 		continue;
 	    }
 
-	    String pName = ModelFacade.getName(p);
+	    String pName = Model.getFacade().getName(p);
 	    if (pName == null || "".equals(pName)) {
 		continue;
 	    }

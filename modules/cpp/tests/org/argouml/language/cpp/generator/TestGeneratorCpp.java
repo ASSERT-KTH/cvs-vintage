@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.9 2005/01/20 23:20:41 linus Exp $
+// $Id: TestGeneratorCpp.java,v 1.10 2005/01/30 20:48:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import junit.framework.TestSuite;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Tests for the GeneratorCpp class.
@@ -90,7 +89,7 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
      * Test of generateOperation method.
      */
     public void testGenerateOperationAndIssue2862() {
-        Collection params = ModelFacade.getParameters(getFooMethod());
+        Collection params = Model.getFacade().getParameters(getFooMethod());
         assertEquals(1, params.size());
         Object returnVal = params.iterator().next();
         Model.getCoreHelper().setTaggedValue(returnVal, "pointer", "true");

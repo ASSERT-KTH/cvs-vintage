@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.10 2005/01/30 14:05:18 linus Exp $
+// $Id: ActionSetChangeability.java,v 1.11 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -74,8 +73,8 @@ public class ActionSetChangeability extends UMLAction {
             String actionCommand = source.getActionCommand();
             Object target =
                 ((UMLRadioButtonPanel) source.getParent()).getTarget();
-            if (ModelFacade.isAAssociationEnd(target)
-		|| ModelFacade.isAAttribute(target)) {
+            if (Model.getFacade().isAAssociationEnd(target)
+		|| Model.getFacade().isAAttribute(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MChangeableKind*/ kind = null;
                 if (actionCommand.equals(CHANGEABLE_COMMAND)) {

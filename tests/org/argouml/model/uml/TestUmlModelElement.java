@@ -1,4 +1,4 @@
-// $Id: TestUmlModelElement.java,v 1.10 2005/01/29 20:08:22 linus Exp $
+// $Id: TestUmlModelElement.java,v 1.11 2005/01/30 20:47:58 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.model.uml;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 
 /**
@@ -33,7 +32,8 @@ import org.argouml.model.ModelFacade;
  */
 public class TestUmlModelElement extends GenericUmlObjectTestFixture {
     /**
-     * Constructor for FakeUmlModelFacadeTest.
+     * Constructor.
+     *
      * @param arg0 test name
      */
     public TestUmlModelElement(String arg0) {
@@ -48,9 +48,9 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture {
 	Object me =
 	    Model.getUmlFactory().buildNode(Model.getMetaTypes().getObject());
 	assertNotNull("Didn't create object", me);
-	assertTrue("Should be a base", ModelFacade.isABase(me));
+	assertTrue("Should be a base", Model.getFacade().isABase(me));
 	assertTrue("Should be a model element",
-		   ModelFacade.isAModelElement(me));
+		   Model.getFacade().isAModelElement(me));
 	runTruthTests(me);
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionNewActor.java,v 1.6 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionNewActor.java,v 1.7 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.Action;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -56,7 +55,7 @@ class ActionNewActor extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (ModelFacade.isAActor(target)) {
+        if (Model.getFacade().isAActor(target)) {
             Object model =
                 ProjectManager.getManager().getCurrentProject().getModel();
             TargetManager.getInstance().setTarget(

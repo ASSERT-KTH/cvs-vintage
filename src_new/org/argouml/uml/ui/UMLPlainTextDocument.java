@@ -1,4 +1,4 @@
-// $Id: UMLPlainTextDocument.java,v 1.27 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLPlainTextDocument.java,v 1.28 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.text.PlainDocument;
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.ModelEventPump;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
@@ -108,7 +107,7 @@ public abstract class UMLPlainTextDocument
      */
     public final void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (ModelFacade.isABase(target)) {
+        if (Model.getFacade().isABase(target)) {
             ModelEventPump eventPump = Model.getPump();
             if (panelTarget != null) {
                 eventPump.removeModelEventListener(this, panelTarget,

@@ -1,4 +1,4 @@
-// $Id: ActionSetFeatureOwner.java,v 1.11 2005/01/20 23:20:25 linus Exp $
+// $Id: ActionSetFeatureOwner.java,v 1.12 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -63,12 +62,12 @@ public class ActionSetFeatureOwner extends UMLAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object o = box.getTarget();
-            if (ModelFacade.isAFeature(o)) {
+            if (Model.getFacade().isAFeature(o)) {
                 feature = /*(MFeature)*/ o;
-                oldClassifier = ModelFacade.getOwner(feature);
+                oldClassifier = Model.getFacade().getOwner(feature);
             }
             o = box.getSelectedItem();
-            if (ModelFacade.isAClassifier(o)) {
+            if (Model.getFacade().isAClassifier(o)) {
                 newClassifier = /*(MClassifier)*/ o;
             }
         }

@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndMultiplicity.java,v 1.4 2005/01/20 23:20:25 linus Exp $
+// $Id: ActionSetAssociationEndMultiplicity.java,v 1.5 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionSetMultiplicity;
 
 
@@ -54,8 +53,8 @@ public class ActionSetAssociationEndMultiplicity extends ActionSetMultiplicity {
      */
     public void setSelectedItem(Object item, Object target) {
         if (target != null
-                && ModelFacade.isAAssociationEnd(target)) {
-            if (ModelFacade.isAMultiplicity(item)) {
+                && Model.getFacade().isAAssociationEnd(target)) {
+            if (Model.getFacade().isAMultiplicity(item)) {
                 Model.getCoreHelper().setMultiplicity(target, item);
             } else {
                 Model.getCoreHelper().setMultiplicity(target, null);

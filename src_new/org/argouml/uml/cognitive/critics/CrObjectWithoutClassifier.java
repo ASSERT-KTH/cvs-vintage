@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutClassifier.java,v 1.13 2005/01/09 14:58:36 linus Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.14 2005/01/30 20:47:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,11 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.tigris.gef.util.VectorSet;
@@ -107,7 +108,7 @@ public class CrObjectWithoutClassifier extends CrUML {
 	    if (fo != null) {
 		Object mobj = /*(MObject)*/ fo.getOwner();
 		if (mobj != null) {
-		    Collection col = ModelFacade.getClassifiers(mobj);
+		    Collection col = Model.getFacade().getClassifiers(mobj);
 		    if (col.size() > 0) continue;
 		}
 		if (offs == null) {

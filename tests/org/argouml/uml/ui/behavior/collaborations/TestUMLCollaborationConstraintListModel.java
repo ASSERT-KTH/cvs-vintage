@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationConstraintListModel.java,v 1.13 2005/01/20 23:20:26 linus Exp $
+// $Id: TestUMLCollaborationConstraintListModel.java,v 1.14 2005/01/30 20:48:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,9 @@ public class TestUMLCollaborationConstraintListModel
         Object[] constraints = new Object[10];
         for (int i = 0; i < constraints.length; i++) {
             constraints[i] = Model.getCoreFactory().createConstraint();
-            Model.getCollaborationsHelper().addConstrainingElement(getElem(), constraints[i]);
+            Model.getCollaborationsHelper().addConstrainingElement(
+                    getElem(),
+                    constraints[i]);
         }
         return constraints;
     }
@@ -75,7 +77,9 @@ public class TestUMLCollaborationConstraintListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            Model.getCollaborationsHelper().removeConstrainingElement(getElem(), elements[i]);
+            Model.getCollaborationsHelper().removeConstrainingElement(
+                    getElem(),
+                    elements[i]);
         }
     }
 

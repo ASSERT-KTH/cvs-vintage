@@ -1,4 +1,4 @@
-// $Id: ActionNavigateAssociation.java,v 1.2 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionNavigateAssociation.java,v 1.3 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * navigate to the association.
@@ -38,7 +38,7 @@ public class ActionNavigateAssociation extends AbstractActionNavigate {
      * @see org.argouml.uml.ui.AbstractActionNavigate#navigateTo(java.lang.Object)
      */
     protected Object navigateTo(Object source) {
-        return ModelFacade.getAssociation(source);
+        return Model.getFacade().getAssociation(source);
     }
 
 }

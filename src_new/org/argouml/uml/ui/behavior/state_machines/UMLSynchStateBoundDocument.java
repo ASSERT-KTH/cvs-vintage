@@ -1,4 +1,4 @@
-// $Id: UMLSynchStateBoundDocument.java,v 1.1 2005/01/26 16:02:15 mvw Exp $
+// $Id: UMLSynchStateBoundDocument.java,v 1.2 2005/01/30 20:47:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 import javax.swing.text.AttributeSet;
@@ -59,7 +58,7 @@ public class UMLSynchStateBoundDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
      */
     protected String getProperty() {
-        int bound = ModelFacade.getBound(getTarget());
+        int bound = Model.getFacade().getBound(getTarget());
         if (bound <= 0)
             return "*";
         else

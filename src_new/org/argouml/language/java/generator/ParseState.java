@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.10 2005/01/09 14:58:06 linus Exp $
+// $Id: ParseState.java,v 1.11 2005/01/30 20:48:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,22 +31,31 @@
 package org.argouml.language.java.generator;
 
 import java.util.Vector;
-import org.argouml.model.ModelFacade;
+
+import org.argouml.model.Model;
 /**
    This class handles information during the replacement of code
    pieces. One parse state for each classifier handled.
 */
 public class ParseState {
-    /** The current namespace. */
+    /**
+     * The current namespace.
+     */
     private Object namespace;
 
-    /** The inner classes not found yet */
+    /**
+     * The inner classes not found yet.
+     */
     private Vector newInnerClasses;
 
-    /** The features not found yet */
+    /**
+     * The features not found yet.
+     */
     private Vector newFeatures;
 
-    /** The current classifier */
+    /**
+     * The current classifier.
+     */
     private Object mClassifier;
 
     /**
@@ -55,12 +64,13 @@ public class ParseState {
      * @param handle is the namespace the classifier belongs to.
      */
     public ParseState(Object handle) {
-        if (ModelFacade.isAClassifier(handle)) {
+        if (Model.getFacade().isAClassifier(handle)) {
             this.mClassifier = handle;
             namespace = handle;
-            newFeatures = new Vector(ModelFacade.getFeatures(mClassifier));
+            newFeatures =
+                new Vector(Model.getFacade().getFeatures(mClassifier));
             newInnerClasses =
-                new Vector(ModelFacade.getOwnedElements(mClassifier));
+                new Vector(Model.getFacade().getOwnedElements(mClassifier));
         } else {
             this.mClassifier = null;
             namespace = handle;
@@ -76,7 +86,7 @@ public class ParseState {
        @return The new classifier.
      */
     public Object newClassifier(String name) {
-	Object mc = ModelFacade.lookupIn(namespace, name);
+	Object mc = Model.getFacade().lookupIn(namespace, name);
 	if (mc != null) {
 	    newInnerClasses.remove(mc);
 	}
@@ -136,9 +146,10 @@ public class ParseState {
      */
     public Vector getAssociationEnds() {
         Vector result = new Vector();
-        if (mClassifier == null)
+        if (mClassifier == null) {
             return result;
-        result.addAll(ModelFacade.getAssociationEnds(mClassifier));
+        }
+        result.addAll(Model.getFacade().getAssociationEnds(mClassifier));
         return result;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryImpl.java,v 1.7 2005/01/29 16:28:42 linus Exp $
+// $Id: CommonBehaviorFactoryImpl.java,v 1.8 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.CommonBehaviorFactory;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MFactory;
 import ru.novosoft.uml.behavior.activity_graphs.MActionState;
@@ -418,12 +417,12 @@ public class CommonBehaviorFactoryImpl
         Object action = createCallAction();
         nsmodel.getCoreHelper().setName(action, "action");
         nsmodel.getCollaborationsHelper().setAction(message, action);
-        Object interaction = ModelFacade.getInteraction(message);
+        Object interaction = nsmodel.getFacade().getInteraction(message);
         if (interaction != null
-            && ModelFacade.getContext(interaction) != null) {
+            && nsmodel.getFacade().getContext(interaction) != null) {
             nsmodel.getCoreHelper().setNamespace(
                 action,
-                ModelFacade.getContext(interaction));
+                nsmodel.getFacade().getContext(interaction));
         } else {
             throw new IllegalStateException(
                 "In buildaction: message does not "

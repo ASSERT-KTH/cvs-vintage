@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.65 2005/01/30 14:05:20 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.66 2005/01/30 20:48:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.collaboration.CollabDiagramGraphModel;
@@ -126,7 +125,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         Iterator it = figs.iterator();
         while (it.hasNext()) {
             Fig f = (Fig) it.next();
-            if (ModelFacade.isAMessage(f.getOwner())) {
+            if (Model.getFacade().isAMessage(f.getOwner())) {
                 res++;
             }
         }
@@ -150,7 +149,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * @author psager@tigris.org Jan. 24, 2002
      */
     public void setNamespace(Object handle) {
-        if (!ModelFacade.isANamespace(handle)) {
+        if (!Model.getFacade().isANamespace(handle)) {
             LOG.error(
                 "Illegal argument. Object " + handle + " is not a namespace");
             throw new IllegalArgumentException(
@@ -160,7 +159,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         CollabDiagramGraphModel gm = new CollabDiagramGraphModel();
         gm.setCollaboration(collaboration);
         LayerPerspective lay =
-            new LayerPerspectiveMutable(ModelFacade.getName(handle), gm);
+            new LayerPerspectiveMutable(Model.getFacade().getName(handle), gm);
         CollabDiagramRenderer rend = new CollabDiagramRenderer(); // singleton
         lay.setGraphNodeRenderer(rend);
         lay.setGraphEdgeRenderer(rend);
@@ -213,14 +212,14 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             LOG.error("Collaboration Diagram does not belong to a namespace");
             return;
         }
-        Collection ownedElements = ModelFacade.getOwnedElements(getNamespace());
+        Collection ownedElements = Model.getFacade().getOwnedElements(getNamespace());
         Iterator oeIterator = ownedElements.iterator();
         Layer lay = getLayer();
         while (oeIterator.hasNext()) {
             Object me = /*(MModelElement)*/
 		oeIterator.next();
-            if (org.argouml.model.ModelFacade.isAAssociationRole(me)) {
-                messages = ModelFacade.getMessages(me);
+            if (Model.getFacade().isAAssociationRole(me)) {
+                messages = Model.getFacade().getMessages(me);
                 msgIterator = messages.iterator();
                 while (msgIterator.hasNext()) {
                     Object message = /*(MMessage)*/

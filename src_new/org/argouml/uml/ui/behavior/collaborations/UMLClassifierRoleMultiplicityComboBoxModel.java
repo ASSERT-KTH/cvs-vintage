@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleMultiplicityComboBoxModel.java,v 1.2 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLClassifierRoleMultiplicityComboBoxModel.java,v 1.3 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 
 
@@ -49,9 +49,9 @@ public class UMLClassifierRoleMultiplicityComboBoxModel extends
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null
-                && (org.argouml.model.ModelFacade
-                        .isAClassifierRole(getTarget())))
-                return ModelFacade.getMultiplicity(getTarget());
+                && (Model.getFacade().isAClassifierRole(getTarget()))) {
+            return Model.getFacade().getMultiplicity(getTarget());
+        }
         return null;
     }
 

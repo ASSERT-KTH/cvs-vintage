@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.54 2005/01/20 23:20:36 linus Exp $
+// $Id: PropPanelSignal.java,v 1.55 2005/01/30 20:47:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
@@ -103,8 +102,8 @@ public class PropPanelSignal extends PropPanelModelElement {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (ModelFacade.isASignal(target)) {
-                Object ns = ModelFacade.getNamespace(target);
+            if (Model.getFacade().isASignal(target)) {
+                Object ns = Model.getFacade().getNamespace(target);
                 if (ns != null) {
                     Object newSig = Model.getCommonBehaviorFactory()
                         .createSignal();

@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSpecificationDocument.java,v 1.4 2005/01/20 23:20:36 linus Exp $
+// $Id: UMLReceptionSpecificationDocument.java,v 1.5 2005/01/30 20:47:59 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
@@ -46,7 +45,7 @@ public class UMLReceptionSpecificationDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#setProperty(java.lang.String)
      */
     protected void setProperty(String text) {
-        if (ModelFacade.isAReception(getTarget())) {
+        if (Model.getFacade().isAReception(getTarget())) {
             Model.getCommonBehaviorHelper().setSpecification(getTarget(), text);
         }
 
@@ -56,8 +55,8 @@ public class UMLReceptionSpecificationDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
      */
     protected String getProperty() {
-        if (ModelFacade.isAReception(getTarget())) { return ModelFacade
-                .getSpecification(getTarget());
+        if (Model.getFacade().isAReception(getTarget())) {
+            return Model.getFacade().getSpecification(getTarget());
         }
         return null;
     }

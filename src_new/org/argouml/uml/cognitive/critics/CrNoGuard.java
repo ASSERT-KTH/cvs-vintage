@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.12 2005/01/30 14:05:10 linus Exp $
+// $Id: CrNoGuard.java,v 1.13 2005/01/30 20:47:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 
 /**
@@ -54,25 +53,27 @@ public class CrNoGuard extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isATransition(dm))) {
+	if (!(Model.getFacade().isATransition(dm))) {
 	    return NO_PROBLEM;
 	}
-	Object sv = ModelFacade.getSource(dm);
-	if (!(ModelFacade.isAPseudostate(sv))) {
+	Object sv = Model.getFacade().getSource(dm);
+	if (!(Model.getFacade().isAPseudostate(sv))) {
 	    return NO_PROBLEM;
 	}
-	if (!ModelFacade.equalsPseudostateKind(
-	        ModelFacade.getPseudostateKind(sv),
+	if (!Model.getFacade().equalsPseudostateKind(
+	        Model.getFacade().getPseudostateKind(sv),
 	        Model.getPseudostateKind().getBranch())) {
 	    return NO_PROBLEM;
 	}
-	Object g = /*(MGuard)*/ ModelFacade.getGuard(dm);
+	Object g = /*(MGuard)*/ Model.getFacade().getGuard(dm);
 	boolean noGuard =
 	    (g == null
-            || ModelFacade.getExpression(g) == null
-            || ModelFacade.getBody(ModelFacade.getExpression(g)) == null
-            || ((String) ModelFacade.getBody(ModelFacade.getExpression(g)))
-                                                    .length() == 0);
+            || Model.getFacade().getExpression(g) == null
+            || Model.getFacade().getBody(
+                    Model.getFacade().getExpression(g)) == null
+            || ((String) Model.getFacade().getBody(
+                    Model.getFacade().getExpression(g)))
+                    	.length() == 0);
 	if (noGuard) {
 	    return PROBLEM_FOUND;
 	}

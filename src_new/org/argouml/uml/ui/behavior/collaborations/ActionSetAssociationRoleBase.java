@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.18 2005/01/09 14:59:05 linus Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.19 2005/01/30 20:47:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -60,8 +59,9 @@ public class ActionSetAssociationRoleBase extends UMLAction {
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
             selected = source.getSelectedItem();
-            if (ModelFacade.isAAssociation(selected)
-                    && ModelFacade.isAAssociationRole(source.getTarget())) {
+            if (Model.getFacade().isAAssociation(selected)
+                    && Model.getFacade().isAAssociationRole(
+                            source.getTarget())) {
                 Model.getCollaborationsHelper()
                     .setBase(source.getTarget(), selected);
             }

@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.13 2005/01/09 14:58:44 linus Exp $
+// $Id: FigModel.java,v 1.14 2005/01/30 20:48:02 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.13 2005/01/09 14:58:44 linus Exp $
+// $Id: FigModel.java,v 1.14 2005/01/30 20:48:02 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -30,7 +30,7 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 
@@ -67,8 +67,8 @@ public class FigModel extends FigPackage {
         this();
         setOwner(node);
 
-        if (ModelFacade.isAModel(node) && ModelFacade.getName(node) != null) {
-            getNameFig().setText(ModelFacade.getName(node));
+        if (Model.getFacade().isAModel(node) && Model.getFacade().getName(node) != null) {
+            getNameFig().setText(Model.getFacade().getName(node));
         }
     }
 

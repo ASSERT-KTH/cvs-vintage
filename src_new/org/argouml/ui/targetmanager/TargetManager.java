@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.40 2005/01/26 01:22:00 bobtarling Exp $
+// $Id: TargetManager.java,v 1.41 2005/01/30 20:48:46 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import javax.swing.event.EventListenerList;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.Actions;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Diagram;
@@ -274,7 +274,7 @@ public final class TargetManager {
             while (it.hasNext()) {
                 WeakReference ref = (WeakReference) it.next();
                 Object historyObject = ref.get();
-                if (ModelFacade.isAModelElement(o)) {
+                if (Model.getFacade().isAModelElement(o)) {
                     historyObject =
                         historyObject instanceof Fig
 			? ((Fig) historyObject).getOwner()
@@ -709,12 +709,12 @@ public final class TargetManager {
     private Object determineModelTarget(Object target) {
         if (target instanceof Fig) {
             Object owner = ((Fig) target).getOwner();
-            if (ModelFacade.isABase(owner)) {
+            if (Model.getFacade().isABase(owner)) {
                 target = owner;
             }
         }
         return target instanceof UMLDiagram
-            || ModelFacade.isABase(target) ? target : null;
+            || Model.getFacade().isABase(target) ? target : null;
 
     }
 

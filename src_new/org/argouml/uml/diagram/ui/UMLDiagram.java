@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.66 2005/01/23 21:08:59 mvw Exp $
+// $Id: UMLDiagram.java,v 1.67 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
@@ -94,7 +93,7 @@ public abstract class UMLDiagram
      * Tool to add a comment node.
      */
     private static Action actionComment =
-//	new RadioAction(new CmdCreateNode(ModelFacade.COMMENT, "Note"));
+//	new RadioAction(new CmdCreateNode(Model.getFacade().COMMENT, "Note"));
         new RadioAction(new ActionAddNote());
         
     /**
@@ -169,7 +168,7 @@ public abstract class UMLDiagram
     public UMLDiagram(Object ns) {
         this();
 
-        if (!ModelFacade.isANamespace(ns))
+        if (!Model.getFacade().isANamespace(ns))
             throw new IllegalArgumentException();
 
         setNamespace(ns);
@@ -193,7 +192,7 @@ public abstract class UMLDiagram
      */
     public void initialize(Object owner) {
         super.initialize(owner);
-        if (org.argouml.model.ModelFacade.isANamespace(owner))
+        if (Model.getFacade().isANamespace(owner))
             setNamespace(owner);
         else
             LOG.debug("unknown object in UMLDiagram initialize:" + owner);
@@ -217,7 +216,7 @@ public abstract class UMLDiagram
      * @param ns the namespace for the diagram
      */
     public void setNamespace(Object ns) {
-        if (!ModelFacade.isANamespace(ns)) {
+        if (!Model.getFacade().isANamespace(ns)) {
             LOG.error("Not a namespace");
             LOG.error(ns);
             throw new IllegalArgumentException("Given object not a namespace");

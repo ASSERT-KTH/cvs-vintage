@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.13 2005/01/30 20:47:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrAssocNameConflict.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.13 2005/01/30 20:47:40 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Well-formedness rule [2] for MNamespace. See page 33 of UML 1.1
@@ -56,13 +57,13 @@ public class CrAssocNameConflict extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isANamespace(dm))) return NO_PROBLEM;
-	Collection oes = ModelFacade.getOwnedElements(dm);
+	if (!(Model.getFacade().isANamespace(dm))) return NO_PROBLEM;
+	Collection oes = Model.getFacade().getOwnedElements(dm);
 	if (oes == null) return NO_PROBLEM;
 	Vector namesSeen = new Vector();
 	Iterator elems = oes.iterator();
 	while (elems.hasNext()) {
-	    if (!ModelFacade.isAAssociation(elems.next())) continue;
+	    if (!Model.getFacade().isAAssociation(elems.next())) continue;
 	    // TODO: not implemented yet
 	}
 	return NO_PROBLEM;

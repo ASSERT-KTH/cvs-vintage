@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.13 2005/01/20 23:20:24 linus Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.14 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
 /**
@@ -56,7 +55,7 @@ public class UMLClassifierParameterListModel
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(ModelFacade.getParameters(getTarget()));
+            setAllElements(Model.getFacade().getParameters(getTarget()));
         }
     }
 
@@ -64,7 +63,7 @@ public class UMLClassifierParameterListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.getParameters(getTarget()).contains(element);
+        return Model.getFacade().getParameters(getTarget()).contains(element);
     }
 
     /**
@@ -72,11 +71,11 @@ public class UMLClassifierParameterListModel
      */
     public void swap(int index1, int index2) {
         Object classifier = getTarget();
-        List c = new ArrayList(ModelFacade.getParameters(classifier));
+        List c = new ArrayList(Model.getFacade().getParameters(classifier));
         /* The following does not work, because NSUML does not
          * fire an update event, since no parameters were added or removed...
         Collections.swap(c, index1, index2);
-        ModelFacade.setParameters(classifier, c);
+        Model.getFacade().setParameters(classifier, c);
         ... So, lets delete them first, then add them in reverse: */
         Object mem1 = c.get(index1);
         Object mem2 = c.get(index2);

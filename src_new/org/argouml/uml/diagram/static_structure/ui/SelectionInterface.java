@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.28 2005/01/30 01:21:55 bobtarling Exp $
+// $Id: SelectionInterface.java,v 1.29 2005/01/30 20:47:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
 import org.tigris.gef.base.Editor;
@@ -182,8 +181,8 @@ public class SelectionInterface extends SelectionWButtons {
     public Object addRealization(MutableGraphModel mgm, Object interf4ce,
 				 Object cl4ss) {
 
-        if (!ModelFacade.isAClass(cl4ss)
-	        || !ModelFacade.isAInterface(interf4ce)) {
+        if (!Model.getFacade().isAClass(cl4ss)
+	        || !Model.getFacade().isAInterface(interf4ce)) {
             throw new IllegalArgumentException();
 	}
 

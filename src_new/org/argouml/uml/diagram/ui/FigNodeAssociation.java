@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.4 2005/01/24 23:15:57 bobtarling Exp $
+// $Id: FigNodeAssociation.java,v 1.5 2005/01/30 20:47:53 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
@@ -175,7 +175,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
             return;
         }
         Object assoc =  getOwner();
-        if (ModelFacade.isAbstract(assoc)) {
+        if (Model.getFacade().isAbstract(assoc)) {
             getNameFig().setFont(getItalicLabelFont());
         } else {
             getNameFig().setFont(getLabelFont());

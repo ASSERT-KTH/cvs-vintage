@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.6 2005/01/20 23:20:27 linus Exp $
+// $Id: ActionAddPackage.java,v 1.7 2005/01/30 20:48:32 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -55,7 +54,7 @@ class ActionAddPackage extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (ModelFacade.isAPackage(target)) {
+        if (Model.getFacade().isAPackage(target)) {
             Object newPackage =
                 Model.getModelManagementFactory().createPackage();
             Model.getCoreHelper().addOwnedElement(target, newPackage);

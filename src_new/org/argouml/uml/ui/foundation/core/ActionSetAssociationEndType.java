@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndType.java,v 1.14 2005/01/20 23:20:24 linus Exp $
+// $Id: ActionSetAssociationEndType.java,v 1.15 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -61,12 +60,12 @@ public class ActionSetAssociationEndType extends UMLAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object o = box.getTarget();
-            if (ModelFacade.isAAssociationEnd(o)) {
+            if (Model.getFacade().isAAssociationEnd(o)) {
                 end = /*(MAssociationEnd)*/ o;
-                oldClassifier = ModelFacade.getType(end);
+                oldClassifier = Model.getFacade().getType(end);
             }
             o = box.getSelectedItem();
-            if (ModelFacade.isAClassifier(o)) {
+            if (Model.getFacade().isAClassifier(o)) {
                 newClassifier = /*(MClassifier)*/ o;
             }
         }

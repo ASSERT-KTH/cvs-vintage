@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer.java,v 1.12 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLListCellRenderer.java,v 1.13 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,8 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
+
+import org.argouml.model.Model;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -106,16 +108,18 @@ public class UMLListCellRenderer extends DefaultListCellRenderer {
             lab.setText("\"\"");
             return lab;
         }
-        if (!(org.argouml.model.ModelFacade.isAModelElement(value)))
+        if (!(Model.getFacade().isAModelElement(value))) {
             return lab;
-        String name = org.argouml.model.ModelFacade.getName(value);
+        }
+        String name = Model.getFacade().getName(value);
         if (name == null) {
             lab.setText("(null anon)");
             return lab;
         }
         String nameStr = name;
-        if (nameStr.length() == 0)
+        if (nameStr.length() == 0) {
             nameStr = "(anon)";
+        }
         lab.setText(nameStr);
         nameStr = nameStr + " ";
         lab.setToolTipText(nameStr);

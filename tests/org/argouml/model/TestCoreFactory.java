@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.3 2005/01/30 10:08:09 linus Exp $
+// $Id: TestCoreFactory.java,v 1.4 2005/01/30 20:48:11 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,16 +284,17 @@ public class TestCoreFactory extends TestCase {
 	Object elem = Model.getModelManagementFactory().createModel();
 	Object con = Model.getCoreFactory().buildConstraint(elem);
 	assertNull("Namespace is unexpectly set",
-            ModelFacade.getNamespace(con));
+            Model.getFacade().getNamespace(con));
 	assertTrue(
 		   "Constrained element is not set",
-		   !ModelFacade.getConstrainedElements(con).isEmpty());
+		   !Model.getFacade().getConstrainedElements(con).isEmpty());
 	assertTrue("Constraint is not set",
-	        !ModelFacade.getConstraints(elem).isEmpty());
+	        !Model.getFacade().getConstraints(elem).isEmpty());
 	Model.getCoreHelper().setNamespace(elem,
 	        Model.getCoreFactory().createNamespace());
 	con = Model.getCoreFactory().buildConstraint(elem);
-	assertNotNull("Namespace is not set", ModelFacade.getNamespace(con));
+	assertNotNull("Namespace is not set",
+	        Model.getFacade().getNamespace(con));
     }
 
     /**

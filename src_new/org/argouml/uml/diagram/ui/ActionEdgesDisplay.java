@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.9 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionEdgesDisplay.java,v 1.10 2005/01/30 20:47:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,7 @@ public class ActionEdgesDisplay extends UMLAction {
 
             if (show) { // add
                 mgm.addNodeRelatedEdges(owner);
-//                Collection c = ModelFacade.getComments(owner);
+//                Collection c = Model.getFacade().getComments(owner);
 //                Iterator i = c.iterator();
 //                while (i.hasNext()) {
 //                    Object annotatedElement = i.next();
@@ -113,7 +113,7 @@ public class ActionEdgesDisplay extends UMLAction {
                         fig.removeFromDiagram();
                 }
                 //The next does not yet work for comment edges:
-//                Collection c = ModelFacade.getComments(owner);
+//                Collection c = Model.getFacade().getComments(owner);
 //                Iterator i = c.iterator();
 //                while (i.hasNext()) {
 //                    Object annotatedElement = i.next();

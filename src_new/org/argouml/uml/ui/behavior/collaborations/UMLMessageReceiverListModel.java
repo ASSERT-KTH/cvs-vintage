@@ -1,5 +1,5 @@
-// $Id: UMLMessageReceiverListModel.java,v 1.10 2004/02/08 12:45:26 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: UMLMessageReceiverListModel.java,v 1.11 2005/01/30 20:47:49 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,7 @@
 // $header$
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,14 +46,14 @@ public class UMLMessageReceiverListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getReceiver(getTarget()));
+        addElement(Model.getFacade().getReceiver(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return ModelFacade.getReceiver(getTarget()) == element;
+        return Model.getFacade().getReceiver(getTarget()) == element;
     }
 
 }

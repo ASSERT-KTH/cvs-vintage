@@ -1,4 +1,4 @@
-// $Id: ActionSetElementOwnershipSpecification.java,v 1.11 2005/01/20 23:20:25 linus Exp $
+// $Id: ActionSetElementOwnershipSpecification.java,v 1.12 2005/01/30 20:47:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
 /**
@@ -56,10 +55,10 @@ public class ActionSetElementOwnershipSpecification extends UMLAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (ModelFacade.isAModelElement(target)) {
+            if (Model.getFacade().isAModelElement(target)) {
                 Object m = /*(MModelElement)*/ target;
                 Model.getCoreHelper().setSpecification(m,
-                        !ModelFacade.isSpecification(m));
+                        !Model.getFacade().isSpecification(m));
             }
         }
     }

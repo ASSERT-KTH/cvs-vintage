@@ -1,4 +1,4 @@
-// $Id: SourcePathControllerImpl.java,v 1.10 2005/01/29 20:08:23 linus Exp $
+// $Id: SourcePathControllerImpl.java,v 1.11 2005/01/30 20:47:48 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import java.util.Iterator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * Implements the source path controller.
@@ -46,7 +45,7 @@ public class SourcePathControllerImpl implements SourcePathController {
 
     /**
      * The string used to store source path string as tagged value.
-     * [Shouldn't this be in ModelFacade?]
+     * [Shouldn't this be in the Model subsystem?]
      */
     private static final String SRC_PATH_TAG = "src_path";
 
@@ -54,9 +53,10 @@ public class SourcePathControllerImpl implements SourcePathController {
      * @see org.argouml.uml.ui.SourcePathController#getSourcePath(java.lang.Object)
      */
     public File getSourcePath(Object modelElement) {
-        Object tv = ModelFacade.getTaggedValue(modelElement, SRC_PATH_TAG);
+        Object tv =
+            Model.getFacade().getTaggedValue(modelElement, SRC_PATH_TAG);
         if (tv != null) {
-            String srcPath = ModelFacade.getValueOfTag(tv);
+            String srcPath = Model.getFacade().getValueOfTag(tv);
             if (srcPath != null) {
                 return new File(srcPath);
             }

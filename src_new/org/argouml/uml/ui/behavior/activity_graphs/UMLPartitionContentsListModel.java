@@ -1,4 +1,4 @@
-// $Id: UMLPartitionContentsListModel.java,v 1.3 2005/01/09 14:59:04 linus Exp $
+// $Id: UMLPartitionContentsListModel.java,v 1.4 2005/01/30 20:48:14 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 
@@ -50,7 +50,7 @@ public class UMLPartitionContentsListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(ModelFacade.getContents(getTarget()));
+        addElement(Model.getFacade().getContents(getTarget()));
         // TODO: Auto-generated method stub
 
     }

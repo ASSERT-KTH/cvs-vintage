@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTransition.java,v 1.12 2005/01/09 14:58:32 linus Exp $
+// $Id: GoStateMachineToTransition.java,v 1.13 2005/01/30 20:47:47 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * Rule for Statemachine->Transition.
@@ -50,8 +50,8 @@ public class GoStateMachineToTransition extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAStateMachine(parent)) {
-	    return ModelFacade.getTransitions(parent);
+	if (Model.getFacade().isAStateMachine(parent)) {
+	    return Model.getFacade().getTransitions(parent);
 	}
 	return null;
     }
@@ -60,7 +60,7 @@ public class GoStateMachineToTransition extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAStateMachine(parent)) {
+        if (Model.getFacade().isAStateMachine(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;
