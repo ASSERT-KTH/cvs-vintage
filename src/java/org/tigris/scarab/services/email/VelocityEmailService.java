@@ -54,27 +54,27 @@ package org.tigris.scarab.services.email;
  * <http://www.apache.org/>.
  */
 
-import java.util.List;
-import java.util.Vector;
-import java.util.Iterator;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.io.OutputStreamWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.configuration.ConfigurationConverter;
+import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.ServiceException;
+import org.apache.fulcrum.template.BaseTemplateEngineService;
+import org.apache.fulcrum.template.TemplateContext;
+import org.apache.fulcrum.velocity.ContextAdapter;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.context.InternalEventContext;
 import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.fulcrum.ServiceException;
-import org.apache.fulcrum.InitializationException;
-import org.apache.fulcrum.template.TemplateContext;
-import org.apache.fulcrum.template.BaseTemplateEngineService;
-import org.apache.commons.configuration.ConfigurationConverter;
-import org.apache.fulcrum.velocity.ContextAdapter;
-
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -105,7 +105,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
- * @version $Id: VelocityEmailService.java,v 1.6 2004/01/31 16:09:54 dep4b Exp $
+ * @version $Id: VelocityEmailService.java,v 1.7 2004/04/07 20:08:11 dep4b Exp $
  */
 public class VelocityEmailService
     extends BaseTemplateEngineService
@@ -459,7 +459,7 @@ public class VelocityEmailService
         // collect them into a separate vector
         // to avoid concurrent modification exceptions.
         String key;
-        Vector keys = new Vector();
+        List keys = new ArrayList();
         for (Iterator i = getConfiguration().getKeys(); i.hasNext();)
         {
             key = (String) i.next();
