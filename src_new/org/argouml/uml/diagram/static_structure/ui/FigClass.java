@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.80 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: FigClass.java,v 1.81 2003/12/05 19:04:16 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1051,7 +1051,7 @@ public class FigClass extends FigNodeModelElement {
             while (iter.hasNext()) {
                 Object sf = /*(MStructuralFeature)*/ iter.next();
                 // update the listeners
-                UmlModelEventPump.getPump().removeModelEventListener(this, sf);
+//                UmlModelEventPump.getPump().removeModelEventListener(this, sf);
                 UmlModelEventPump.getPump().addModelEventListener(this, sf);
                 if (figs.size() <= acounter) {
                     attr =
@@ -1110,7 +1110,7 @@ public class FigClass extends FigNodeModelElement {
             while (iter.hasNext()) {
                 Object bf = /*(MBehavioralFeature)*/ iter.next();
                 // update the listeners
-                UmlModelEventPump.getPump().removeModelEventListener(this, bf);
+//                UmlModelEventPump.getPump().removeModelEventListener(this, bf);
                 UmlModelEventPump.getPump().addModelEventListener(this, bf);
                 if (figs.size() <= ocounter) {
                     oper =
@@ -1241,15 +1241,17 @@ public class FigClass extends FigNodeModelElement {
     }
 
     /**
+     * FigClass does not need postLoad(), this implementation is empty.
+     *
      * @see org.tigris.gef.presentation.Fig#postLoad()
      */
     public void postLoad() {      
-        super.postLoad();
-        Object owner = getOwner();
-        if (owner != null && ModelFacade.isAbstract(owner)) {
-            Font font = _name.getFont();              
-            _name.setFont(font.deriveFont(Font.ITALIC));
-        }
+//        super.postLoad();
+//        Object owner = getOwner();
+//        if (owner != null && ModelFacade.isAbstract(owner)) {
+//            Font font = _name.getFont();              
+//            _name.setFont(font.deriveFont(Font.ITALIC));
+//        }
         
     }
 
