@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.13 2003/11/24 16:34:59 jjones Exp $
+// $Id: LookAndFeelMgr.java,v 1.14 2003/12/17 19:15:57 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ package org.argouml.ui;
 
 import java.awt.Font;
 
+import javax.swing.AbstractAction;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -358,7 +359,11 @@ public class LookAndFeelMgr {
     }
     
     public Font getStandardFont() {
-        return UIManager.getDefaults().getFont("TextField.font");
+        Font font = UIManager.getDefaults().getFont("TextField.font");
+        if (font == null) {
+            font = (new javax.swing.JTextField()).getFont();
+        }
+        return font;
     }
 
     public Font getSmallFont() {
