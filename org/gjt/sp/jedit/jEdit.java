@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.188 2003/07/23 06:08:54 spestov Exp $
+ * @version $Id: jEdit.java,v 1.189 2003/07/28 18:54:13 spestov Exp $
  */
 public class jEdit
 {
@@ -931,14 +931,35 @@ public class jEdit
 	 */
 	public static EditPlugin getPlugin(String name)
 	{
+		return getPlugin(name, false);
+	} //}}}
+
+	//{{{ getPlugin(String, boolean) method
+	/**
+	 * Returns the plugin with the specified class name. If
+	 * <code>loadIfNecessary</code> is true, the plugin will be activated in
+	 * case it has not yet been started.
+	 * @since jEdit 4.2pre4
+	 */
+	public static EditPlugin getPlugin(String name, boolean loadIfNecessary)
+	{
 		EditPlugin[] plugins = getPlugins();
+		EditPlugin plugin = null;
 		for(int i = 0; i < plugins.length; i++)
 		{
 			if(plugins[i].getClassName().equals(name))
-				return plugins[i];
+				plugin = plugins[i];
+			if(loadIfNecessary)
+			{
+				if(plugin instanceof EditPlugin.Deferred)
+				{
+					plugin.getPluginJAR().activatePlugin();
+					plugin = plugin.getPluginJAR().getPlugin();
+				}
+			}
 		}
 
-		return null;
+		return plugin;
 	} //}}}
 
 	//{{{ getPlugins() method

@@ -60,7 +60,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.53 2003/07/14 23:00:54 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.54 2003/07/28 18:54:13 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -1181,8 +1181,10 @@ loop:		for(int counter = 0; ; counter++)
 							buf.append('\t');
 							break;
 						default:
-							/* fall through */
+							buf.append(ch);
+							break;
 						}
+						break;
 					default:
 						buf.append(ch);
 						break;
