@@ -987,6 +987,26 @@ try{
         return FrequencyPeer.getFrequencies();
     }
 
+    public Intake getConditionalIntake(String parameter)
+        throws Exception
+    {
+        Intake intake = null;
+        String param = data.getParameters().getString(parameter);
+        if ( param == null ) 
+        {            
+            intake = getIntakeTool();
+        }
+        else 
+        {
+            intake = new Intake();
+            StringValueParser parser = new StringValueParser();
+            parser.parse(param, '&', '=', true);
+            intake.init(parser);
+        }
+
+        return intake;
+    }
+
     /**
      * Get a new SearchIssue object. 
      *
@@ -1036,7 +1056,6 @@ try{
         {
            String currentQuery = user.getTemp(ScarabConstants
                                               .CURRENT_QUERY).toString();
-           Log.debug(currentQuery);
            intake = parseQuery(currentQuery);
         }
         
