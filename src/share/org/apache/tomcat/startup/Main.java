@@ -66,13 +66,12 @@ import java.util.Hashtable;
 import java.util.*;
 import java.net.*;
 
-// XXX This should be replaced by JdkCompat
-import org.apache.tomcat.util.compat.SimpleClassLoader;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 
 // Depends:
 // JDK1.1
-// tomcat.util.IntrospectionUtils, SimpleClassLoader
+// tomcat.util.IntrospectionUtils, util.compat
 
 /**
  * Starter for Tomcat.
@@ -167,7 +166,8 @@ public class Main {
 	return commonBase;
     }
 
-
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    
     void execute( String args[] ) throws Exception {
 
         try {
@@ -182,30 +182,29 @@ public class Main {
             Vector serverUrlV =getClassPathV(getServerDir());
             for(int i=0; i < serverUrlV.size();i++)
                 urlV.addElement(serverUrlV.elementAt(i));
-	    urlV.addElement( new URL( "file", null , System.getProperty( "java.home" ) +"/../lib/tools.jar"));
+	    urlV.addElement( new URL( "file", null ,
+				      System.getProperty( "java.home" ) +
+				      "/../lib/tools.jar"));
             URL[] serverClassPath=getURLs(urlV);
-            // ClassLoader for webapps it uses a shared dir as repository, distinct from lib
+            // ClassLoader for webapps it uses a shared dir as repository,
+	    // distinct from lib
 
             URL[] sharedClassPath=getURLs(getClassPathV(getSharedDir()));
             URL[] commonClassPath=getURLs(getClassPathV(getCommonDir()));
-	    // XXX Should be: JdkCompat.newClassLoaderInstance !!
-	    ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
-	    ClassLoader sharedCl= IntrospectionUtils.getURLClassLoader(sharedClassPath , commonCl );
-            ClassLoader serverCl= IntrospectionUtils.getURLClassLoader(serverClassPath , commonCl );
-	    if( commonCl==null ) {
-		commonCl=new SimpleClassLoader(commonClassPath, parentL);
-		sharedCl=new SimpleClassLoader(sharedClassPath, commonCl);
-		serverCl=new SimpleClassLoader(serverClassPath, commonCl);
-            }
 
-            //System.out.println("commonCl:"+commonCl);
-            //System.out.println("sharedCl:"+sharedCl);
-            //System.out.println("serverCl:"+serverCl);
+	    ClassLoader commonCl=
+		jdk11Compat.newClassLoaderInstance(commonClassPath , parentL );
+	    ClassLoader sharedCl=
+		jdk11Compat.newClassLoaderInstance(sharedClassPath ,commonCl );
+            ClassLoader serverCl=
+		jdk11Compat.newClassLoaderInstance(serverClassPath ,commonCl);
+
 	    Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
 	    Object proxy=cls.newInstance();
 
             IntrospectionUtils.setAttribute( proxy,"args", args );
-            IntrospectionUtils.setAttribute( proxy,"parentClassLoader", sharedCl );
+            IntrospectionUtils.setAttribute( proxy,"parentClassLoader",
+					     sharedCl );
             IntrospectionUtils.execute(  proxy, "executeWithAttributes" );
 	    return;
 	} catch( Exception ex ) {
