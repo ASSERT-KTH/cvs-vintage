@@ -57,7 +57,7 @@ public class ComposerController
 	private AccountController accountController;
 	private EditorController editorController;
 	private HeaderController headerController;
-	private MessageComposer messageComposer;
+	//private MessageComposer messageComposer;
 	private CharsetManager charsetManager;
 	private ComposerSpellCheck composerSpellCheck;
 
@@ -423,7 +423,7 @@ public class ComposerController
 	 * @return MessageComposer
 	 */
 	public MessageComposer getMessageComposer() {
-		return messageComposer;
+		return new MessageComposer(this);
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class ComposerController
 
 		editorController = new EditorController(this);
 
-		messageComposer = new MessageComposer(this);
+		//messageComposer = new MessageComposer(this);
 
 		//composerInterface.composerFolder = new TempFolder();
 
@@ -507,6 +507,7 @@ public class ComposerController
 	 */
 	public void close() {
 	
+		
 		ColumbaLogger.log.info("closing ComposerController");
 
 		view.saveWindowPosition();

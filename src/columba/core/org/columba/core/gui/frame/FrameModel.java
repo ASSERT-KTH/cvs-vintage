@@ -107,7 +107,7 @@ public class FrameModel {
 			list.remove(c);
 	}
 
-	public static void openView(String id) {
+	public static AbstractFrameController openView(String id) {
 		/*
 		XmlElement view = new XmlElement("view");
 		view.addAttribute("id", id);
@@ -124,5 +124,7 @@ public class FrameModel {
 		AbstractFrameController c = createFrameController(id, null);
 
 		c.openView();
+		
+		return c;
 	}
 }

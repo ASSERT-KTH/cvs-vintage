@@ -8,11 +8,10 @@ package org.columba.mail.gui.messageframe;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.message.MessageController;
-import org.columba.mail.gui.table.FilterToolbar;
-import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 /**
  * @author frd
@@ -27,7 +26,29 @@ public class MessageFrameController extends MailFrameController {
 	 */
 	public MessageFrameController(ViewItem viewItem) {
 		super(viewItem);
-		
+
+	}
+
+	public void selectInbox() {
+		Folder inboxFolder = (Folder) MainInterface.treeModel.getFolder(101);
+		try {
+
+			Object[] uids = inboxFolder.getUids(null);
+			if (uids.length > 0) {
+				Object uid = uids[0];
+
+				Object[] newUids = new Object[1];
+				newUids[0] = uid;
+
+				FolderCommandReference[] r = new FolderCommandReference[1];
+				r[0] = new FolderCommandReference(inboxFolder, newUids);
+
+				getSelectionManager().getHandler("mail.table").setSelection(r);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 	}
 
 	/* (non-Javadoc)
@@ -38,18 +59,13 @@ public class MessageFrameController extends MailFrameController {
 
 		view.setFolderInfoPanel(folderInfoPanel);
 
-		view.init(
-			
-			messageController.getView(),
-			statusBar);
+		view.init(messageController.getView(), statusBar);
 
 		view.pack();
-		
+
 		view.setVisible(true);
 
 		return view;
 	}
-
-	
 
 }
