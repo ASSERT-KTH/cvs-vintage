@@ -179,7 +179,7 @@ public class Transaction
 
         if (subject == null)
         {
-            te.setSubject("[" + issue.getScarabModule().getName().toUpperCase() + "] Issue #" + issue.getUniqueId() + " modified");
+            te.setSubject("[" + issue.getScarabModule().getRealName().toUpperCase() + "] Issue #" + issue.getUniqueId() + " modified");
         }
         else
         {
