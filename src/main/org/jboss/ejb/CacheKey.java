@@ -21,7 +21,7 @@ import java.rmi.MarshalledObject;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -68,7 +68,8 @@ public class CacheKey
 	try {
 	    // Equals rely on the MarshalledObject itself
 	    mo =  new MarshalledObject(id);
-	    // Make a copy just in case somebody re-uses the instance
+	    // Make a copy of the id to enforce copy semantics and 
+	    // allow reuse of the original primary key
 	    this.id = mo.get();
 	    // Precompute the hashCode (speed)
 	    hashCode = mo.hashCode();
