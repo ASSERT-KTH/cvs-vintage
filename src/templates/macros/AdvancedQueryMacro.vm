@@ -300,16 +300,22 @@ from:&#160;<input type="text" size="20"
     <option value="">$l10n.Choose</option>
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attribute = $attrValues.get($attKey).Attribute )
-   <option value="$attribute.AttributeId">
+   <option value="$attribute.AttributeId"
+     #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
+          selected="selected" #end>
        $attribute.Name
    </option>
 #end
 </select>&#160;
 <select name="$searchGroup.SortPolarity.Key">
-    <option value="asc">
+    <option value="asc"
+     #if ($searchGroup.SortPolarity.Value.equals("asc"))
+          selected="selected" #end>
         $l10n.Ascending
     </option>
-    <option value="desc">
+    <option value="desc"
+     #if ($searchGroup.SortPolarity.Value.equals("desc"))
+          selected="selected" #end>
         $l10n.Descending
     </option>
 </select>
@@ -318,7 +324,7 @@ from:&#160;<input type="text" size="20"
 <tr>
 <th width="120">$l10n.IssuesPerPage</th>
 <td>
-#resultsPerPageRadioSelect($resultsPerPage)
+#resultsPerPageRadioSelect($data.getParameters().getInt("resultsperpage", 25))
 </td>
 </tr>
 </table>
