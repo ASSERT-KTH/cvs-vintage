@@ -12,6 +12,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.File;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.management.*;
 
@@ -28,7 +32,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see HypersonicDatabaseMBean
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.6 $
+ *   @author Peter Fagerlund pf@iprobot.se @see stopService()
+ *   @version $Revision: 1.7 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
@@ -139,5 +144,51 @@ public class HypersonicDatabase
       log.log("Database started");
    }
 
-   // Protected -----------------------------------------------------
+    /**
+    *    @author Peter Fagerlund pf@iprobot.com
+    *    
+    *    We now close the connection clean by calling the
+    *    serverSocket throught jdbc. The MBeanServer calls 
+    *    this method at closing time
+    */
+    public void stopService()
+    {
+        Connection connection;
+        Statement statement;
+
+        String cmd              = "SHUTDOWN";
+        String jdbcDriver       = "org.hsql.jdbcDriver";
+        String dbStrVersion_1_4 = "jdbc:HypersonicSQL:hsql://localhost:"+port;
+        String dbStrVersion_1_6 = "jdbc:hsqldb:hsql://localhost:"+port;
+        String user             = "sa";
+        String password         = "";
+
+        try
+        {
+            new org.hsql.jdbcDriver();
+            Class.forName(jdbcDriver).newInstance();
+            connection=DriverManager.getConnection(dbStrVersion_1_4, user, password);
+            statement=connection.createStatement();
+            statement.executeQuery(cmd);
+
+            log.log("Database closed clean");
+            return;
+
+        } catch(ClassNotFoundException cnfe)
+        {
+            log.log("ClassNotFound " + cnfe.getMessage());
+        } catch(IllegalAccessException iae)
+        {
+            log.log("Illegal Access  " + iae.getMessage());
+        } catch(InstantiationException ie)
+        {
+            log.log("Instantiation " + ie.getMessage());
+        } catch(SQLException sqle)
+        {
+            log.log("SQL " + sqle.getMessage());
+        }
+        log.log("Database unable to close clean");
+    }
+
+    // Protected -----------------------------------------------------
 }
