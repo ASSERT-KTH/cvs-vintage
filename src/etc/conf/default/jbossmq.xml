@@ -67,10 +67,10 @@
 	</InvocationLayer>
 	<InvocationLayer>
 		<Name>INVM</Name>
-		<TopicConnectionFactoryJNDI>INVMTopicConnectionFactory</TopicConnectionFactoryJNDI>
-		<QueueConnectionFactoryJNDI>INVMQueueConnectionFactory</QueueConnectionFactoryJNDI>
-		<XATopicConnectionFactoryJNDI>INVMXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
-		<XAQueueConnectionFactoryJNDI>INVMXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
+		<TopicConnectionFactoryJNDI>java:/INVMTopicConnectionFactory</TopicConnectionFactoryJNDI>
+		<QueueConnectionFactoryJNDI>java:/INVMQueueConnectionFactory</QueueConnectionFactoryJNDI>
+		<XATopicConnectionFactoryJNDI>java:/INVMXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
+		<XAQueueConnectionFactoryJNDI>java:/INVMXAQueueConnectionFactory</XAQueueConnectionFactoryJNDI>
 		<ReceiverClass>org.jbossmq.distributed.server.ConnectionReceiverINVM</ReceiverClass>
 		<ServerClass>org.jbossmq.distributed.server.DistributedJMSServerINVM</ServerClass>
 	</InvocationLayer>

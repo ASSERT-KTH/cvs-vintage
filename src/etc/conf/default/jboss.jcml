@@ -169,8 +169,8 @@
   <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=JBossMQProvider">
     <attribute name="ProviderName">DefaultJMSProvider</attribute>
     <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.JBossMQProvider</attribute>
-    <attribute name="QueueFactoryRef">INVMXAQueueConnectionFactory</attribute>
-    <attribute name="TopicFactoryRef">INVMXATopicConnectionFactory</attribute>
+    <attribute name="QueueFactoryRef">java:/INVMXAQueueConnectionFactory</attribute>
+    <attribute name="TopicFactoryRef">java:/INVMXATopicConnectionFactory</attribute>
   </mbean>
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader" name=":service=ServerSessionPoolMBean,name=StdJMSPool">
     <attribute name="PoolName">StdJMSPool</attribute>
