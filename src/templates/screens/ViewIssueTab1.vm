@@ -90,7 +90,7 @@
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="$l10n.SaveChanges" name="eventSubmit_doSubmitattributes" />
+<input type="submit" value="$l10n.Done" name="eventSubmit_doSubmitattributes" />
 </div>
 #end
 
