@@ -18,7 +18,7 @@ import javax.ejb.EJBException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.proxy.InvocationHandler;
+import org.jboss.proxy.compiler.InvocationHandler;
 
 /**
  * EntityBridgeInvocationHandler is the invocation hander used by the CMP 2.x
@@ -33,7 +33,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    protected EntityContainer container;
