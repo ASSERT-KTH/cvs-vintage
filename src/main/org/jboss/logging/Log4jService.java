@@ -38,7 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
@@ -109,7 +109,6 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         URL url = loader.getResource(configurationPath);
         if( url == null )
             throw new FileNotFoundException("Failed to find logj4 props: "+configurationPath);
-        this.category = Category.getRoot();
         if( refreshFlag )
         {
             // configurationPath is a file path
@@ -120,6 +119,7 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         {
             PropertyConfigurator.configure(url);
         }
+        this.category = Category.getRoot();
         category.info("Started Log4jService, config="+url);
     }
     /** Stops the log4j framework by calling the Category.shutdown() method.
