@@ -3,12 +3,18 @@
 #set ($reportIsEditable = $report.isEditable($data.User))
 #set ($axisIndex = $data.Parameters.getInt("axis"))
 #set ($isRow = ($axisIndex == 0))
+#set ($otherAxisIndex = 0)
+#set ($otherAxisType = 0)
 #if ($isRow)
   #set ($rowCol = "Row")
+  #set ($otherAxisIndex = 1)
 #else
   #set ($rowCol = "Column")
 #end
-
+#set ($otherHeadings = $reportDefn.getAxis($otherAxisIndex).ReportHeadings)
+#if (!$otherHeadings.isEmpty())
+  #set ($otherAxisType = $otherHeadings.get(0).calculateType())
+#end
 <div class="app" id="div2-4-1-step1">
 
 <div class="tabs">
@@ -142,7 +148,7 @@
 #if ($userAttrs && !$userAttrs.isEmpty())
           <option value="1" #if ($selectedType == 1)selected="selected"#end>$l10n.UsersByUserAttribute</option>
 #end
-  #if (!$headings || $singleHeading)
+  #if ((!$headings || $singleHeading) && $otherAxisType != 2)
           <option value="2" #if ($selectedType == 2)selected="selected"#end>$l10n.DatesOrDatesRanges</option>
   #end
         </select>
