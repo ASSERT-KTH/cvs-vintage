@@ -328,6 +328,18 @@ public abstract class LocalFolder extends Folder {
 
 		return searchEngine;
 	}
+	
+	/**
+	 * Set new search engine
+	 * 
+	 * @see org.columba.mail.folder.search
+	 * 
+	 * @param engine		new search engine
+	 */
+	public void setSearchEngine( AbstractSearchEngine engine)
+	{
+		this.searchEngine = engine;
+	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object[], org.columba.core.command.WorkerStatusController)

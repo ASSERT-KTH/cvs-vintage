@@ -221,6 +221,7 @@ public class LuceneSearchEngine
 			// FIXME
 			//field = criteria.getHeaderItemString().toLowerCase();
 			field = criteria.getHeaderItemString();
+			
 
 			TokenStream tokenStream =
 				analyzer.tokenStream(

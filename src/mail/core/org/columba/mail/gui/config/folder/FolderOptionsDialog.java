@@ -21,22 +21,36 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import org.columba.core.gui.util.CTabbedPane;
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.command.ExportFolderCommand;
+import org.columba.mail.folder.command.RenameFolderCommand;
+import org.columba.mail.folder.command.SyncSearchEngineCommand;
+import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.LocalSearchEngine;
+import org.columba.mail.folder.search.LuceneSearchEngine;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -73,10 +87,39 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 	JLabel sizeLabel2;
 
 	JButton exportButton;
-	
+
 	MultiLineLabel enableLabel;
 	JCheckBox enableTextIndexingCheckBox;
 
+	boolean renameFolder;
+	String oldFolderName = null;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param folder			selected folder
+	 * @param renameFolder		this is a "rename folder" operation
+	 */
+	public FolderOptionsDialog(Folder folder, boolean renameFolder) {
+		this(folder);
+
+		this.renameFolder = renameFolder;
+
+		oldFolderName = folder.getName();
+
+		// focus name textfield
+		if (renameFolder) {
+			nameTextField.selectAll();
+			nameTextField.requestFocus();
+		}
+
+	}
+
+	/**
+	 * Default constructor 
+	 * 
+	 * @param folder		selected folder
+	 */
 	public FolderOptionsDialog(Folder folder) {
 		super();
 		this.folder = folder;
@@ -90,6 +133,10 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(null);
 
 		setVisible(true);
+
+		nameTextField.selectAll();
+		nameTextField.requestFocus();
+
 	}
 
 	protected JPanel createGeneralPanel() {
@@ -147,7 +194,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 			new FormLayout(
 				"6dlu, right:max(25dlu;default), 3dlu, default, fill:0dlu:grow",
 			// 3 columns
-			"pref, 3dlu, pref, 6dlu, pref, 3dlu, 0dlu");
+	"pref, 3dlu, pref, 6dlu, pref, 3dlu, 0dlu");
 
 		// create a form builder
 		PanelBuilder builder = new PanelBuilder(layout);
@@ -155,11 +202,11 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
 		// create EmptyBorder between components and dialog-frame 
 		builder.setDefaultDialogBorder();
-		
+
 		builder.addSeparator("Full-text indexing");
-		
-		builder.add(enableLabel, cc.xywh(1,3,5,1));
-		builder.add(enableTextIndexingCheckBox, cc.xywh(2,5,4,1));
+
+		builder.add(enableLabel, cc.xywh(1, 3, 5, 1));
+		builder.add(enableTextIndexingCheckBox, cc.xywh(2, 5, 4, 1));
 
 		return builder.getPanel();
 	}
@@ -193,20 +240,24 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 		locationLabel2 = new JLabel("");
 
 		exportButton = new JButton("Export...");
-		
+		exportButton.setActionCommand("EXPORT");
+		exportButton.addActionListener(this);
+
 		enableTextIndexingCheckBox = new JCheckBox("Enable full-text indexing");
-		
-		enableLabel = new MultiLineLabel("This is an experimental feature. Enable this only if you know what your are doing!");
+
+		enableLabel =
+			new MultiLineLabel("This is an experimental feature. Enable this only if you know what your are doing!");
 		enableLabel.setFont(boldFont);
-		
-		JPanel mainPanel = new JPanel();
+
+		/*
 		CTabbedPane tp = new CTabbedPane();
 		tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-
+		
 		tp.add("General Options", createGeneralPanel());
 		tp.add("Advanced", createAdvancedPanel());
+		*/
 
-		getContentPane().add(tp, BorderLayout.CENTER);
+		getContentPane().add(createGeneralPanel(), BorderLayout.CENTER);
 
 		getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
 		getRootPane().registerKeyboardAction(
@@ -224,8 +275,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 	protected JPanel createButtonPanel() {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
+		bottom.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
 		//bottom.add( Box.createHorizontalStrut());
 
@@ -249,6 +300,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 		HelpManager.enableHelpOnButton(helpButton, "folder_options");
 
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
@@ -273,7 +325,53 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
 			locationLabel2.setText(folder.getDirectoryFile().getPath());
 
+			// only local folders have an full-text indexing capability
+			if (folder instanceof LocalFolder) {
+				FolderItem item = folder.getFolderItem();
+				boolean bool = item.getBoolean("property", "enable_lucene");
+
+				enableTextIndexingCheckBox.setSelected(bool);
+			} else
+				enableTextIndexingCheckBox.setEnabled(false);
+
 		} else {
+			if (renameFolder) {
+				if (!oldFolderName.equals(nameTextField.getText())) {
+					// user changed folder name
+
+					FolderCommandReference[] r = new FolderCommandReference[1];
+					r[0] = new FolderCommandReference(folder);
+					r[0].setFolderName(nameTextField.getText());
+					MainInterface.processor.addOp(new RenameFolderCommand(r));
+				}
+			}
+
+			//	only local folders have an full-text indexing capability
+			if (folder instanceof LocalFolder) {
+
+				FolderItem item = folder.getFolderItem();
+				boolean bool = enableTextIndexingCheckBox.isSelected();
+				item.set("property", "enable_lucene", bool);
+
+				// cast to Local Folder is safe here
+				LocalFolder localFolder = (LocalFolder) folder;
+
+				AbstractSearchEngine engine = null;
+				if (bool) {
+					engine = new LuceneSearchEngine(localFolder);
+					localFolder.setSearchEngine(engine);
+
+					// execute resyncing command
+					FolderCommandReference[] r = new FolderCommandReference[1];
+					r[0] = new FolderCommandReference(folder);
+					MainInterface.processor.addOp(
+						new SyncSearchEngineCommand(r));
+				} else {
+					engine = new LocalSearchEngine(localFolder);
+					localFolder.setSearchEngine(engine);
+				}
+
+			}
 
 		}
 	}
@@ -281,11 +379,33 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String action = arg0.getActionCommand();
 
-		if (action.equals("CLOSE")) {
+		if (action.equals("CANCEL")) {
+
+			setVisible(false);
+		} else if (action.equals("OK")) {
+
+			setVisible(false);
+			updateComponents(false);
+		} else if (action.equals("EXPORT")) {
+
+			File destFile = null;
+
+			// ask the user about the destination file
+			JFileChooser chooser = new JFileChooser();
+
+			int result = chooser.showOpenDialog(this);
+			if (result == JFileChooser.APPROVE_OPTION) {
+				File file = chooser.getSelectedFile();
+
+				destFile = file;
+			}
 
 			setVisible(false);
 
-			updateComponents(false);
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference(folder);
+			r[0].setDestFile(destFile);
+			MainInterface.processor.addOp(new ExportFolderCommand(r));
 		}
 
 	}
