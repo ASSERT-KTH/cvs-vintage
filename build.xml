@@ -161,7 +161,6 @@ Have fun ... your Columba Team!
 			<exclude name="columba.jar"/>
 			<exclude name="README"/>
 			<exclude name="CHANGES"/>
-			<exclude name="LICENSE"/>
 			<exclude name="AUTHORS"/>
 			<include name="res/ACKNOWLEDGEMENT"/>
 			<include name="res/CONTRIBUTORS"/>
