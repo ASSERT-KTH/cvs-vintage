@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.6 1999/11/01 22:24:17 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/01 22:24:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.7 1999/11/10 18:59:22 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/11/10 18:59:22 $
  *
  * ====================================================================
  *
@@ -122,6 +122,16 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
 	    reqA.readNextRequest(response );
 
+	    // XXX temporary fix for getServerName
+	    String hostHeader = request.getHeader("host");
+	    //  if it's not null, Request.getServerName() will take care
+	    if (hostHeader == null) {
+		// XXX
+		// we need a better solution here
+		InetAddress localAddress = socket.getLocalAddress();
+		reqA.setServerName(localAddress.getHostName());
+	    }
+ 
 	    contextM.service( request, response );
 
 	    try {
