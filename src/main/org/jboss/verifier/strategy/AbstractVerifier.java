@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.43 2004/03/27 13:01:30 tdiesler Exp $
+ * $Id: AbstractVerifier.java,v 1.44 2005/03/08 23:50:32 ejort Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
+
+import javax.jms.Message;
 
 // non-standard class dependencies
 import org.jboss.metadata.BeanMetaData;
@@ -83,7 +85,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -626,7 +628,16 @@ public abstract class AbstractVerifier
     */
    public boolean isOnMessageMethod( Method m )
    {
-      return (m.getName().startsWith("onMessage"));
+      if ("onMessage".equals(m.getName()))
+      {
+         Class[] paramTypes = m.getParameterTypes();
+         if (paramTypes.length == 1)
+         {
+            if (Message.class.equals(paramTypes[0]))
+               return true;
+         }
+      }
+      return false;
    }
 
    /**
