@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.15 2002/04/12 03:38:32 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.16 2002/04/14 01:12:05 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -119,16 +119,14 @@ public class EJBVerifier20 extends AbstractVerifier {
 
         remoteHomeVerified   = verifyEntityHome(entity);
         localHomeVerified   = verifyEntityLocalHome(entity);
-        System.out.println("WARNING: EJBVerifier2.0 Entity Bean verification not complete");
-        if (entity != null) return;
+        remoteVerified = verifyEntityRemote(entity);
+        localVerified = verifyEntityLocal(entity);
+        pkVerified     = verifyPrimaryKey(entity);
 
         if (entity.isCMP())
           beanVerified   = verifyCMPEntityBean(entity);
         else if (entity.isBMP())
           beanVerified   = verifyBMPEntityBean(entity);
-        remoteVerified = verifyEntityRemote(entity);
-        localVerified = verifyEntityLocal(entity);
-        pkVerified     = verifyPrimaryKey(entity);
 
         /*
          * The entity bean MUST implement either a remote home and remote, or 
@@ -1400,7 +1398,8 @@ public class EJBVerifier20 extends AbstractVerifier {
                     }
 
                     if (entity.isCMP() && hasMatchingEJBFind(bean, method)) {
-                        fireSpecViolationEvent(entity, method, new Section("10.6.2.h"));
+                        System.out.println("Method is "+method.getName());
+                        fireSpecViolationEvent(entity, method, new Section("10.6.2.j"));
                         status = false;
                     } else if (entity.isBMP()) {
                         if (!hasMatchingEJBFind(bean, method)) {
@@ -1960,39 +1959,35 @@ public class EJBVerifier20 extends AbstractVerifier {
              * Spec 10.6.2
              */
 
-			/*try {  This isn't quite working right yet,so I'll leave it off
-                it = entity.getCMPFields();
-                while(it.hasNext()) {
-                    String fieldName = (String)it.next();
-			        String getName = "get" + fieldName.substring(0,1).toUpperCase() +
-				                     fieldName.substring(1);
-                    try {
-				        Method m = bean.getDeclaredMethod(getName, new Class[0]);
-				    } catch (NoSuchMethodException nsme) {
-                        fireSpecViolationEvent(entity, new Section("10.6.2.g"));
-                        status = false;
-				    }
-				    String setName = "set" + fieldName.substring(0,1).toUpperCase() +
-				                     fieldName.substring(1);
-                    Field field = bean.getField(fieldName);
-                    Class[] args = new Class[1];
-				    args[0] = field.getType();
+            it = entity.getCMPFields();
+            while(it.hasNext()) {
+                String fieldName = (String)it.next();
+			    String getName = "get" + fieldName.substring(0,1).toUpperCase() +
+			                  fieldName.substring(1);
+	            Class fieldType = null;
+                try {
+			        Method m = bean.getDeclaredMethod(getName, new Class[0]);
+				    fieldType = m.getReturnType();
+				} catch (NoSuchMethodException nsme) {
+                    fireSpecViolationEvent(entity, new Section("10.6.2.g"));
+                    status = false;
+				}
+				String setName = "set" + fieldName.substring(0,1).toUpperCase() +
+				                 fieldName.substring(1);
+                Class[] args = new Class[1];
+				args[0] = fieldType;
+                try {
+				    Method m = bean.getDeclaredMethod(setName, args);
+				} catch (NoSuchMethodException nsme) {
+                    args[0] = classloader.loadClass("java.util.Collection");
                     try {
 				        Method m = bean.getDeclaredMethod(setName, args);
-				    } catch (NoSuchMethodException nsme) {
-                        args[0] = classloader.loadClass("java.util.Collection");
-                        try {
-				            Method m = bean.getDeclaredMethod(setName, args);
-                        } catch (NoSuchMethodException nsme2) {
-                            fireSpecViolationEvent(entity, new Section("10.6.2.h"));
-                            status = false;
-                        }
-				    }
-	             }				 
-             } catch (NoSuchFieldException nsfe) {
-                 fireSpecViolationEvent(entity, new Section("10.6.2.j"));
-                 status = false;
-			 }*/
+                    } catch (NoSuchMethodException nsme2) {
+                        fireSpecViolationEvent(entity, new Section("10.6.2.h"));
+                        status = false;
+                    }
+				}
+			}
 
             /*
              * The ejbSelect(...) method signatures MUST follow these rules:
@@ -2301,6 +2296,37 @@ public class EJBVerifier20 extends AbstractVerifier {
                     }
                 }
             }
+
+            /*
+             * The ejbHome(...) method signatures MUST follow these rules:
+             *
+             *      - The method name MUST have ejbHome as its prefix.
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as static.
+             *      - The method MUST NOT define the java.rmi.RemoteException
+             *
+             * Spec 10.6.6
+             */
+
+            Iterator it = getEjbHomeMethods(bean);
+            while (it.hasNext()) {
+                Method ejbHome = (Method)it.next();
+                if (!isPublic(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.a"));
+                    status = false;
+                }
+
+                if (isStatic(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.b"));
+                    status = false;
+                }
+
+                if (throwsRemoteException(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.c"));
+                    status = false;
+                }
+            }
+
         }
         catch (ClassNotFoundException e) {
 
@@ -2340,6 +2366,7 @@ public class EJBVerifier20 extends AbstractVerifier {
             if (cmp) fireSpecViolationEvent(entity, new Section("10.6.13.d"));
             else fireSpecViolationEvent(entity, new Section("12.2.12.d"));
             status = false;  // Can't do any other checks if the class is null!
+			return status;
 		}
 
         /**
@@ -2407,40 +2434,49 @@ public class EJBVerifier20 extends AbstractVerifier {
                 fireSpecViolationEvent(entity, new Section("dd.a"));
                 status = false;
             }
+
             try {
-                Class fieldClass = classloader.loadClass(entity.getEjbClass());
-                Field field = null;
+                /**
+                 * The primary keyfield MUST be a CMP field within the entity bean.
+				 *
+                 * Spec 10.8.1
+                 */
+                Iterator it = entity.getCMPFields();
+                boolean found = false;
+                while(it.hasNext()) {
+                    String fieldName = (String)it.next();
+                    if(fieldName.equals(entity.getPrimKeyField())) {
+                        found = true;
+                    break;
+                    }
+                }
+
+                if(!found) {
+                    status = false;
+                    fireSpecViolationEvent(entity, new Section("10.8.1.b"));
+                }
+
                 try {
                     /**
                      * The class of the primary key field MUST match the primary key
-                     * class specified for the entity bean.
+                     * class specified for the entity bean.  We figure out the class
+					 * of this field by getting the return type of the get<FieldName>
+					 * accessor method.
 					 *
                      * Spec 10.8.1
                      */
-                    field = fieldClass.getField(entity.getPrimKeyField());
-                    if(!entity.getPrimaryKeyClass().equals(field.getType().getName())) {
+
+                    Class beanClass = classloader.loadClass(entity.getEjbClass());
+				    String pkField = entity.getPrimKeyField();
+				    String methodName = "get" + pkField.substring(0,1).toUpperCase() +
+				                        pkField.substring(1);
+                    Method method = beanClass.getMethod(methodName, new Class[0]);
+                    if(!entity.getPrimaryKeyClass().equals(method.getReturnType().getName())) {
                         status = false;
                         fireSpecViolationEvent(entity, new Section("10.8.1.a"));
                     }
-                    /**
-                     * The primary keyfield MUST be a CMP field within the entity bean.
-					 *
-                     * Spec 10.8.1
-                     */
-                    Iterator it = entity.getCMPFields();
-                    boolean found = false;
-                    while(it.hasNext()) {
-                        String fieldName = (String)it.next();
-                        if(fieldName.equals(entity.getPrimKeyField())) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found) {
-                        status = false;
-                        fireSpecViolationEvent(entity, new Section("10.8.1.b"));
-                    }
-                } catch(NoSuchFieldException e) {
+
+                } catch(NoSuchMethodException e) {
                     /**
                      * The primary keyfield MUST be a CMP field within the entity bean.
 					 *
