@@ -1,126 +1,167 @@
 <project name="Tomcat" default="main" basedir=".">
   <property name="build.compiler" value="classic"/>
-  <property name="dest" value="../build/tomcat"/>
 
-  <target name="main">
-    <mkdir dir="${dest}"/>
-    <mkdir dir="${dest}"/>
-    <mkdir dir="${dest}/classes"/>
-    <mkdir dir="${dest}/etc"/>
-    <mkdir dir="${dest}/src"/>
-    <mkdir dir="${dest}/lib"/>
-    <copydir src="src/webpages" dest="${dest}/webpages"/>
-    <copydir src="src/examples" dest="${dest}/examples"/>
-    <copydir src="src/share/javax" dest="${dest}/src/javax"/>
-    <copyfile src="../jakarta-tools/projectx-tr2.jar"
-     dest="${dest}/lib/xml.jar"/>
-    
-    <!-- XXX move all this copyfile stuff into a seperate dir so that
-         we can just copy the dir into the correct location!!! -->
-    
-    <copyfile src="src/shell/startup.sh" dest="${dest}/startserver"/>
-    <copyfile src="src/shell/startup.bat"
-     dest="${dest}/startserver.bat"/>
-    <copyfile src="src/shell/shutdown.sh" dest="${dest}/stopserver"/>
-    <copyfile src="src/shell/shutdown.bat"
-     dest="${dest}/stopserver.bat"/>
+  <property name="tomcat.build" value="../build/tomcat"/>
+  <property name="tomcat.home" value="../dist/tomcat"/>
+
+  <!-- classpath needed when compiling tomcat tests 
+       We use build/classes since there is 1 dependency to internal tomcat classes 
+    -->
+  <property name="test.classpath" value="${tomcat.build}/classes:../jakarta-tools/moo.jar" />
+
+  <!-- Create directories, copy static files -->
+  <target name="prepare">
+    <mkdir dir="${tomcat.build}"/>
+    <mkdir dir="${tomcat.build}/classes"/>
+    <mkdir dir="${tomcat.build}/etc"/>
+    <mkdir dir="${tomcat.build}/src"/>
+    <mkdir dir="${tomcat.build}/lib"/>
+
+    <copydir src="src/webpages" dest="${tomcat.build}/webpages"/>
+    <copydir src="src/examples" dest="${tomcat.build}/examples"/>
+    <copydir src="src/share/javax" dest="${tomcat.build}/src/javax"/>
+    <copyfile src="../jakarta-tools/projectx-tr2.jar" dest="${tomcat.build}/lib/xml.jar"/>
+
+    <copydir src="src/shell" dest="${tomcat.build}" />
+
+    <!-- XXX clean this up ! -->
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-     dest="${dest}/server.xml"/>
+           dest="${tomcat.build}/server.xml"/>
+    <!-- XXX Where should it be ? -->
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-     dest="${dest}/etc/server.xml"/>
+            dest="${tomcat.build}/etc/server.xml"/>
     <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
-     dest="${dest}/etc/server.dtd"/>
+     dest="${tomcat.build}/etc/server.dtd"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-     dest="${dest}/etc/web.xml"/>
+     dest="${tomcat.build}/etc/web.xml"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-     dest="${dest}/etc/web.dtd"/>
-    <copyfile src="LICENSE" dest="${dest}/LICENSE"/>
-    <copyfile src="src/etc/readme" dest="${dest}/README"/>
-    <copyfile src="src/etc/faq" dest="${dest}/FAQ"/>
-    <copyfile src="src/etc/SimpleStartup.java"
-     dest="${dest}/etc/SimpleStartup.java"/>
+     dest="${tomcat.build}/etc/web.dtd"/>
 
-    <javac srcdir="src/share" destdir="${dest}/classes"
-     classpath="${dest}/lib/xml.jar" debug="on"/>
+    <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
+    <copyfile src="src/etc/readme" dest="${tomcat.build}/README"/>
+    <copyfile src="src/etc/faq" dest="${tomcat.build}/FAQ"/>
+
+    <copyfile src="src/etc/SimpleStartup.java"
+              dest="${tomcat.build}/etc/SimpleStartup.java"/>
+  </target>
+
+  <target name="main" depends="prepare">
+    <javac srcdir="src/share" destdir="${tomcat.build}/classes"
+     classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
     <javac srcdir="src/examples/WEB-INF/classes"
-     destdir="${dest}/examples/WEB-INF/classes"
-     classpath="${dest}/classes"/>
+     destdir="${tomcat.build}/examples/WEB-INF/classes"
+     classpath="${tomcat.build}/classes"/>
 
     <javac srcdir="src/examples/jsp/plugin/applet"
-     destdir="${dest}/examples/jsp/plugin/applet"/>
+     destdir="${tomcat.build}/examples/jsp/plugin/applet"/>
 
-    <rmic base="${dest}/classes"
+    <rmic base="${tomcat.build}/classes"
      class="org.apache.tomcat.shell.AdminImpl"/>
 
-     <javac srcdir="${dest}/examples/WEB-INF/classes/jsp/tags"
-            destdir="${dest}/examples/WEB-INF/classes/jsp/tags"
-            classpath="${dest}/classes"/>
-     <mkdir dir="${dest}/examples/jsp/libs"/>
-     <jar jarfile="${dest}/examples/jsp/libs/taglib.jar" 
-          basedir="${dest}/examples/WEB-INF/classes/jsp/tags"
+    <javac srcdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
+            destdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
+            classpath="${tomcat.build}/classes"/>
+     <mkdir dir="${tomcat.build}/examples/jsp/libs"/>
+     <jar jarfile="${tomcat.build}/examples/jsp/libs/taglib.jar" 
+          basedir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
           items="examples,META-INF/taglib.tld"/>
 
-	  
   </target>
 
   <target name="dist" depends="main">
-    <jar jarfile="${dest}/webserver.jar"
-        basedir="${dest}/classes"
-        items="org/apache/tomcat"/>
-    <jar jarfile="${dest}/lib/servlet.jar"
-        basedir="${dest}/classes"
+    <!-- cut & paste of "prepare", with tomcat.home instead of tomcat_build 
+         XXX create "parametrized" targets
+         XXX do we need all the files in tomcat_build ??
+      -->
+    <mkdir dir="${tomcat.home}" />
+    <mkdir dir="${tomcat.home}/lib" />
+    <mkdir dir="${tomcat.home}/etc" />
+    <mkdir dir="${tomcat.home}/src" />
+    <mkdir dir="${tomcat.home}/examples" />
+    <mkdir dir="${tomcat.home}/webpages" />
+
+    <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
+    <copyfile src="../jakarta-tools/projectx-tr2.jar" dest="${tomcat.home}/lib/xml.jar"/>
+
+    <copydir src="src/shell" dest="${tomcat.home}" />
+
+    <!-- XXX clean this up ! -->
+    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
+           dest="${tomcat.home}/server.xml"/>
+    <!-- XXX Where should it be ? -->
+    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
+            dest="${tomcat.home}/etc/server.xml"/>
+    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
+     dest="${tomcat.home}/etc/server.dtd"/>
+    <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
+     dest="${tomcat.home}/etc/web.xml"/>
+    <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
+     dest="${tomcat.home}/etc/web.dtd"/>
+
+    <copyfile src="src/etc/license.txt" dest="${tomcat.home}/LICENSE"/>
+    <copyfile src="src/etc/readme" dest="${tomcat.home}/README"/>
+    <copyfile src="src/etc/faq" dest="${tomcat.home}/FAQ"/>
+    <copyfile src="src/etc/SimpleStartup.java"
+              dest="${tomcat.home}/etc/SimpleStartup.java"/>
+
+    <copydir src="${tomcat.build}/webpages" dest="${tomcat.home}/webpages"/>
+    <copydir src="${tomcat.build}/examples" dest="${tomcat.home}/examples"/>
+
+    <!-- XXX add manifest for autorun! -->
+    <jar jarfile="${tomcat.home}/webserver.jar"
+        basedir="${tomcat.build}/classes"
+        items="org/apache/tomcat"/> 
+    <jar jarfile="${tomcat.home}/lib/servlet.jar"
+        basedir="${tomcat.build}/classes"
         items="javax/servlet"/>
-    <jar jarfile="${dest}/lib/jasper.jar"
-        basedir="${dest}/classes"
+    <jar jarfile="${tomcat.home}/lib/jasper.jar"
+        basedir="${tomcat.build}/classes"
         items="org/apache/jasper"/>
-    <deltree dir="${dest}/classes"/> 
   </target>
 
   <target name="test" depends="main">
-    <mkdir dir="./test"/>
-    <mkdir dir="./test/tomcat"/>
-    <mkdir dir="./test/tomcat/classes"/>
-    <mkdir dir="./test/tomcat/lib"/>
+    <mkdir dir="${tomcat.build}/test"/>
+    <mkdir dir="${tomcat.build}/test/classes"/>
+    <mkdir dir="${tomcat.build}/test/lib"/>
 
     <copydir src="src/tests/webpages"
-        dest="./test/tomcat/webpages"/>
+        dest="${tomcat.build}/test/webpages"/>
 
-    <copyfile src="src/shell/runtest.sh"
-        dest="./test/tomcat/runtest"/>
-    <copyfile src="src/shell/runtest.bat"
-        dest="./test/tomcat/runtest.bat"/>
+    <copydir src="src/tests/bin" dest="${tomcat.build}/test"/>
     <copyfile src="src/tests/server.xml"
-        dest="./test/tomcat/server.xml"/>
+        dest="${tomcat.build}/test/server.xml"/>
     <copyfile src="src/tests/testlist.txt"
-        dest="./test/tomcat/testlist.txt"/>
-    <copyfile src="src/lib/moo.jar"
-        dest="./test/tomcat/lib/moo.jar"/>
+        dest="${tomcat.build}/test/testlist.txt"/>
+    <copyfile src="../jakarta-tools/moo.jar"
+        dest="${tomcat.build}/test/lib/moo.jar"/>
+    <copyfile src="../jakarta-tools/moo.jar"
+        dest="${tomcat.build}/test/webpages/WEB-INF/lib/moo.jar"/>
 
     <javac srcdir="src/tests/share"
-        destdir="./test/tomcat/classes"
-        classpath="${dest}/classes:${dest}/lib/servlet.jar:${dest}/webserver.jar:../jakarta-tools/moo.jar"/>
+        destdir="${tomcat.build}/test/classes"
+        classpath="${test.classpath}"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
-        destdir="./test/tomcat/webpages/WEB-INF/classes"
-        classpath="${dest}/classes:${dest}/lib/servlet.jar"/>
+        destdir="${tomcat.build}/test/webpages/WEB-INF/classes"
+        classpath="${test.classpath}"/>
+
   </target>
 
   <target name="servlet">
 
-    <mkdir dir="${dest}"/>
-    <mkdir dir="${dest}/classes"/>
+    <mkdir dir="${tomcat.build}"/>
+    <mkdir dir="${tomcat.build}/classes"/>
 
-    <javac srcdir="src/share/javax" destdir="${dest}/classes"/>
+    <javac srcdir="src/share/javax" destdir="${tomcat.build}/classes"/>
 
     <jar jarfile="../jakarta-tools/servlet-2.2.0.jar"
-        basedir="${dest}/classes"
+        basedir="${tomcat.build}/classes"
         items="javax"/>
-
   </target>
 
   <target name="clean">
-    <deltree dir="${dest}"/>
+    <deltree dir="${tomcat.build}"/>
   </target>
 
-    <target name="all" depends="clean,main,dist,test"/>
+  <target name="all" depends="clean,main,dist,test"/>
   
 </project>
