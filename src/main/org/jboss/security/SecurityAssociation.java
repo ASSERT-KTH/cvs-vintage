@@ -9,6 +9,7 @@ package org.jboss.security;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import javax.security.auth.Subject;
 
 /** The SecurityAssociation class maintains the security principal and
 credentials. This can be done on either a singleton basis or a thread
@@ -32,27 +33,33 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
  */
 public final class SecurityAssociation
 {
    /** A flag indicating if security information is global or thread local */
    private static boolean server;
-   /** The SecurityAssociation principal used when the server flag if false */
+   /** The SecurityAssociation principal used when the server flag is false */
    private static Principal principal;
-   /** The SecurityAssociation credential used when the server flag if false */
+   /** The SecurityAssociation credential used when the server flag is false */
    private static Object credential;
-   /** The SecurityAssociation principal used when the server flag if true */
+   /** The SecurityAssociation Subject used when the server flag is false */
+   private static Subject subject;
+
+   /** The SecurityAssociation principal used when the server flag is true */
    private static ThreadLocal threadPrincipal;
-   /** The SecurityAssociation credential used when the server flag if true */
+   /** The SecurityAssociation credential used when the server flag is true */
    private static ThreadLocal threadCredential;
+   /** The SecurityAssociation Subject used when the server flag is true */
+   private static ThreadLocal threadSubject;
+
    /** Thread local stacks of run-as principal roles used to implement J2EE
     run-as identity propagation */
    private static RunAsThreadLocalStack threadRunAsStacks = new RunAsThreadLocalStack();
-   /** The permission required to access getPrincpal and getCredential */
+   /** The permission required to access getPrincpal, getCredential, getSubject */
    private static final RuntimePermission getPrincipalInfoPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.getPrincipalInfo");
-   /** The permission required to access setPrincpal and setCredential */
+   /** The permission required to access setPrincpal, setCredential, setSubject */
    private static final RuntimePermission setPrincipalInfoPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo");
    /** The permission required to access setServer */
@@ -75,11 +82,13 @@ public final class SecurityAssociation
       {
          threadPrincipal = new ThreadLocal();
          threadCredential = new ThreadLocal();
+         threadSubject = new ThreadLocal();
       }
       else
       {
          threadPrincipal = new InheritableThreadLocal();
          threadCredential = new InheritableThreadLocal();
+         threadSubject = new InheritableThreadLocal();
       }
    }
 
@@ -129,6 +138,28 @@ public final class SecurityAssociation
          return credential;
    }
 
+   /** Get the current Subject information.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.getPrincipalInfo")
+    </code>
+    permission to ensure it's ok to access principal information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @return Subject, the current Subject identity.
+    */
+   public static Subject getSubject()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(getPrincipalInfoPermission);
+
+      if (server)
+         return (Subject) threadSubject.get();
+      else
+         return subject;
+   }
+
    /** Set the current principal information.
     If a security manager is present, then this method calls the security
     manager's <code>checkPermission</code> method with a
@@ -174,6 +205,57 @@ public final class SecurityAssociation
          threadCredential.set( credential );
       else
          SecurityAssociation.credential = credential;
+   }
+
+   /** Set the current Subject information.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo")
+    </code>
+    permission to ensure it's ok to access principal information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @param principal, the current principal identity.
+    */
+   public static void setSubject(Subject subject)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(setPrincipalInfoPermission);
+
+      if (server)
+         threadSubject.set( subject );
+      else
+         SecurityAssociation.subject = subject;
+   }
+
+   /** Clear all principal information.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo")
+    </code>
+    permission to ensure it's ok to access principal information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @param principal, the current principal identity.
+    */
+   public static void clear()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(setPrincipalInfoPermission);
+      if( server == true )
+      {
+         threadPrincipal.set(null);
+         threadCredential.set(null);
+         threadSubject.set(null);
+      }
+      else
+      {
+         SecurityAssociation.principal = null;
+         SecurityAssociation.credential = null;
+         SecurityAssociation.subject = null;
+      }
    }
 
    /** Push the current thread of control's run-as principal role.
