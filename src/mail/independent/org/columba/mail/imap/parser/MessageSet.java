@@ -58,7 +58,7 @@ public class MessageSet {
 			Integer uid1 = new Integer(Integer.parseInt((String) uids[0]));
 			Integer uid2 = new Integer(Integer.parseInt((String) uids[1]));
 			
-			return uid1.toString()+":"+uid2.toString();
+			return uid1.toString()+","+uid2.toString();
 		}
 
 		for (int i = 0; i < uids.length; i++) {
