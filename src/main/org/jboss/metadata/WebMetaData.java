@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import javax.management.MalformedObjectNameException;
 
 import org.jboss.deployment.DeploymentException;
@@ -31,7 +32,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class WebMetaData extends MetaData
 {
@@ -51,7 +52,7 @@ public class WebMetaData extends MetaData
    private ArrayList environmentEntries = new ArrayList();
    /** web.xml security-constraint <WebSecurityMetaData> */
    private ArrayList securityContraints = new ArrayList();
-   /** The security-roles */
+   /** The HashMap<String, SecurityRoleMetaData> for the security-roles */
    private HashMap securityRoles = new HashMap();
    /** web.xml ejb-refs */
    private HashMap ejbReferences = new HashMap();
@@ -59,8 +60,8 @@ public class WebMetaData extends MetaData
    private HashMap ejbLocalReferences = new HashMap();
    /** The web.xml service-refs */
    private HashMap serviceReferences = new HashMap();
-   /** web.xml security-role-refs */
-   // private ArrayList securityRoleReferences = new ArrayList();
+   /** web.xml security-role-refs <String servlet-name, ArrayList<SecurityRoleRefMetaData>> */
+   private HashMap securityRoleReferences = new HashMap();
    /** The web.xml distributable flag */
    private boolean distributable = false;
    /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
@@ -263,18 +264,47 @@ public class WebMetaData extends MetaData
       return securityContraints.iterator();
    }
 
+   /**
+    * 
+    */
+   public Map getSecurityRoleRefs()
+   {
+      return this.securityRoleReferences;
+   }
+
    /** Get the optional map of security role/user mapping.
+    * @return Map<String, SecurityRoleMetaData>
     */
    public Map getSecurityRoles()
    {
       return new HashMap(securityRoles);
    }
 
-   /** Get the optional servlet-mappings
+   /**
+    * Get the security-role names from the web.xml descriptor
+    * @return Set<String> of the security-role names from the web.xml
+    */ 
+   public Set getSecurityRoleNames()
+   {
+      return new HashSet(securityRoles.keySet());
+   }
+
+   /**
+    * Get the servlet-name values from the web.xml descriptor
+    * @return Set<String> of the servlet-names from the servlet-mappings
     */
    public HashMap getServletMappings()
    {
       return servletMappings;
+   }
+
+   /**
+    * Get the servlet-name values from the web.xml descriptor
+    * @return Set<String> of the servlet-names from the servlet-mappings
+    */ 
+   public Set getServletNames()
+   {
+      return new HashSet(servletMappings.keySet());
    }
 
    /**
@@ -406,8 +436,26 @@ public class WebMetaData extends MetaData
     */
    protected void importWebXml(Element webApp) throws DeploymentException
    {
+      // Parse the web-app/servlet/security-role-ref elements
+      Iterator iterator = getChildrenByTagName(webApp, "servlet");
+      while( iterator.hasNext() )
+      {
+         Element servlet = (Element) iterator.next();
+         String servletName = getElementContent(getUniqueChild(servlet, "servlet-name"));
+         Iterator roleRefs = getChildrenByTagName(servlet, "security-role-ref");
+         ArrayList roleNames = new ArrayList();
+         while( roleRefs.hasNext() )
+         {
+            Element roleRefElem = (Element) roleRefs.next();
+            SecurityRoleRefMetaData roleRef = new SecurityRoleRefMetaData(); 
+            roleRef.importEjbJarXml(roleRefElem);
+            roleNames.add(roleRef);
+         }
+         securityRoleReferences.put(servletName, roleNames);
+      }
+
       // Parse the web-app/servlet-mapping elements
-      Iterator iterator = getChildrenByTagName(webApp, "servlet-mapping");
+      iterator = getChildrenByTagName(webApp, "servlet-mapping");
       while( iterator.hasNext() )
       {
          Element servletMapping = (Element) iterator.next();
@@ -535,7 +583,7 @@ public class WebMetaData extends MetaData
          }
       }
 
-      // set the security roles (optional)
+      // Get the web-app/security-role elements (optional)
       iterator = getChildrenByTagName(webApp, "security-role");
       while (iterator.hasNext())
       {
