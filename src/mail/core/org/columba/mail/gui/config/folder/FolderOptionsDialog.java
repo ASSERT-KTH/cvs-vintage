@@ -281,13 +281,15 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic cancelButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic okButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
@@ -295,7 +297,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 		okButton.setDefaultCapable(true);
 		getRootPane().setDefaultButton(okButton);
 
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "folder_options");
@@ -399,6 +402,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 				File file = chooser.getSelectedFile();
 
 				destFile = file;
+			} else {
+				return;
 			}
 
 			setVisible(false);

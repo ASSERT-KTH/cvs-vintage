@@ -204,7 +204,6 @@ public class ExportDialog
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-		
 		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(450, 300));
 		scrollPane.getViewport().setBackground(Color.white);
@@ -222,7 +221,8 @@ public class ExportDialog
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
@@ -271,8 +271,8 @@ public class ExportDialog
 					// -> add default one
 					map.put(node, Boolean.TRUE);
 				}
-				
-				 ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
+
+				((DefaultTreeModel) tree.getModel()).nodeChanged(node);
 				// I need revalidate if node is root.  but why?
 				if (row == 0) {
 					tree.revalidate();
@@ -298,9 +298,7 @@ public class ExportDialog
 			} catch (MalformedURLException mue) {
 			}
 		} else if (action.equals("EXPORT")) {
-			
-			
-			
+
 			File destFile = null;
 
 			// ask the user about the destination file
@@ -311,39 +309,40 @@ public class ExportDialog
 				File file = chooser.getSelectedFile();
 
 				destFile = file;
-			}
+			} else
+				return;
 
 			setVisible(false);
-			
+
 			// get list of all folders
 			Iterator it = map.keySet().iterator();
-			
+
 			Vector v = new Vector();
-			
+
 			// get list of all selected folders
 			while (it.hasNext()) {
 				DefaultMutableTreeNode node =
 					(DefaultMutableTreeNode) it.next();
-			
+
 				Boolean export = (Boolean) map.get(node);
-			
+
 				if (export.equals(Boolean.TRUE)) {
 					v.add(node);
 				}
 			}
-			
+
 			// create command reference array for the command
 			FolderCommandReference[] r = new FolderCommandReference[v.size()];
 			for (int i = 0; i < v.size(); i++) {
 				FolderTreeNode node = (FolderTreeNode) v.get(i);
-			
+
 				r[i] = new FolderCommandReference(node);
 				r[i].setDestFile(destFile);
 			}
-			
+
 			// execute the command
 			MainInterface.processor.addOp(new ExportFolderCommand(r));
-			
+
 		}
 
 	}
