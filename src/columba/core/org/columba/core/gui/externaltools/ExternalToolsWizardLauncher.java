@@ -35,6 +35,71 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 public class ExternalToolsWizardLauncher {
 
 	ExternalToolsWizardModelListener listener;
+	
+	DataModel data;
+
+	public void launchFirstTimeWizard(String pluginID) {
+
+		final String id = pluginID;
+		final AbstractExternalToolsPlugin plugin;
+		ExternalToolsPluginHandler handler = null;
+
+		try {
+			handler =
+				(
+					ExternalToolsPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.core.externaltools");
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			plugin =
+				(AbstractExternalToolsPlugin) handler.getPlugin(pluginID, null);
+
+		} catch (Exception e1) {
+
+			e1.printStackTrace();
+
+			return;
+		}
+
+		data = new DataModel();
+		data.registerDataLookup("id", new DataLookup() {
+			public Object lookupData() {
+				return id;
+			}
+		});
+
+		data.registerDataLookup("Plugin", new DataLookup() {
+			public Object lookupData() {
+				return plugin;
+			}
+		});
+
+		WizardModel model =
+			new DefaultWizardModel(
+				new Step[] {
+					new InfoStep(data),
+					new DescriptionStep(data),
+					new LocationStep(data)});
+
+		listener = new ExternalToolsWizardModelListener(data);
+		model.addWizardModelListener(listener);
+
+		// TODO: i18n
+		Wizard wizard = new Wizard(model, "External Tools Configuration", null);
+
+		// TODO: add JavaHelp id
+		//CSH.setHelpIDString(wizard, "");
+		//JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
+
+		wizard.pack();
+		wizard.setLocationRelativeTo(null);
+		wizard.setVisible(true);
+	}
 
 	public void launchWizard(String pluginID) {
 
@@ -64,7 +129,7 @@ public class ExternalToolsWizardLauncher {
 			return;
 		}
 
-		DataModel data = new DataModel();
+		data = new DataModel();
 		data.registerDataLookup("id", new DataLookup() {
 			public Object lookupData() {
 				return id;
@@ -79,7 +144,9 @@ public class ExternalToolsWizardLauncher {
 
 		WizardModel model =
 			new DefaultWizardModel(
-				new Step[] { new InfoStep(data), new LocationStep(data)});
+				new Step[] {
+					new DescriptionStep(data),
+					new LocationStep(data)});
 
 		listener = new ExternalToolsWizardModelListener(data);
 		model.addWizardModelListener(listener);
@@ -95,8 +162,17 @@ public class ExternalToolsWizardLauncher {
 		wizard.setLocationRelativeTo(null);
 		wizard.setVisible(true);
 	}
+	
+	
 
 	public boolean isFinished() {
-		return listener.isFinished(); 
+		return listener.isFinished();
 	}
+	/**
+	 * @return
+	 */
+	public DataModel getData() {
+		return data;
+	}
+
 }

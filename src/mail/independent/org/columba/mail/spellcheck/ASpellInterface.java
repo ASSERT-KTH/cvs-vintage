@@ -24,81 +24,74 @@ import java.io.StringWriter;
 import org.columba.mail.spellcheck.cswilly.FileSpellChecker;
 import org.columba.mail.spellcheck.cswilly.SpellException;
 
-public class ASpellInterface
-{
-    public static final String ASPELL_EXE_PROP = "ASpellExecutable";
+public class ASpellInterface {
 
-    private static FileSpellChecker fileSpellChecker = null;
-    private static String aspellExeFilename;
+	private static FileSpellChecker fileSpellChecker = null;
+	private static String aspellExeFilename;
 
-    public static  String checkBuffer(String buffer)
-    {
-        String checkedBuffer;
-        FileSpellChecker checker = null;
+	public static String checkBuffer(String buffer) {
+		String checkedBuffer;
+		FileSpellChecker checker = null;
 
-        try
-        {
-            BufferedReader input = new BufferedReader(new StringReader(buffer));
-            StringWriter stringWriter = new StringWriter(buffer.length());
-            BufferedWriter output = new BufferedWriter(stringWriter);
+		try {
+			BufferedReader input = new BufferedReader(new StringReader(buffer));
+			StringWriter stringWriter = new StringWriter(buffer.length());
+			BufferedWriter output = new BufferedWriter(stringWriter);
 
-            checker = getFileSpellChecker();
+			checker = getFileSpellChecker();
 
-            boolean checkingNotCanceled = checker.checkFile(input, output);
+			boolean checkingNotCanceled = checker.checkFile(input, output);
 
-            input.close();
-            output.close();
+			input.close();
+			output.close();
 
-            if (checkingNotCanceled)
-                checkedBuffer = stringWriter.toString();
-            else
-                checkedBuffer = null;
-        }
-        catch (SpellException e)
-        {
-            String msg = "Cannot check selection.\nError (Aspell) is: " + e.getMessage();
-            System.out.println(msg);
-            checkedBuffer = null;
-        }
-        catch (IOException e)
-        {
-            String msg = "Cannot check selection.\nError (Interface) is: " + e.getMessage();
-            System.out.println(msg);
-            checkedBuffer = null;
-        }
+			if (checkingNotCanceled)
+				checkedBuffer = stringWriter.toString();
+			else
+				checkedBuffer = null;
+		} catch (SpellException e) {
+			String msg =
+				"Cannot check selection.\nError (Aspell) is: " + e.getMessage();
+			System.out.println(msg);
+			checkedBuffer = null;
+		} catch (IOException e) {
+			String msg =
+				"Cannot check selection.\nError (Interface) is: "
+					+ e.getMessage();
+			System.out.println(msg);
+			checkedBuffer = null;
+		}
 
-        return checkedBuffer;
-    }
+		return checkedBuffer;
+	}
 
-    private static FileSpellChecker getFileSpellChecker()
-    {
-        String aspellExeFilename = getAspellExeFilename();
+	private static FileSpellChecker getFileSpellChecker() {
+		String aspellExeFilename = getAspellExeFilename();
 
-        if (fileSpellChecker == null)
-        {
-            fileSpellChecker = new FileSpellChecker(aspellExeFilename);
-        }
-        else if (!aspellExeFilename.equals(fileSpellChecker.getAspellExeFilename()))
-        {
-            fileSpellChecker.stop();
-            fileSpellChecker = new FileSpellChecker(aspellExeFilename);
-        }
+		if (fileSpellChecker == null) {
+			fileSpellChecker = new FileSpellChecker(aspellExeFilename);
+		} 
+		else if (
+			!aspellExeFilename.equals(
+				fileSpellChecker.getAspellExeFilename())) {
+			fileSpellChecker.stop();
+			fileSpellChecker = new FileSpellChecker(aspellExeFilename);
+		}
+		
+		return fileSpellChecker;
+	}
 
-        return fileSpellChecker;
-    }
+	public static String getAspellExeFilename() {
 
-    public static String getAspellExeFilename()
-    {
-        if (aspellExeFilename == null || aspellExeFilename.equals(""))
-        {
-            aspellExeFilename = "aspell.exe";
-        }
+		if (aspellExeFilename == null || aspellExeFilename.equals("")) {
+			aspellExeFilename = "aspell.exe";
+		}
 
-        return aspellExeFilename;
-    }
+		return aspellExeFilename;
 
-    public static void setAspellExeFilename(String exeFilename)
-    {
-        aspellExeFilename = exeFilename;
-    }
+	}
+
+	public static void setAspellExeFilename(String exeFilename) {
+		aspellExeFilename = exeFilename;
+	}
 }

@@ -91,14 +91,16 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
 			// start the configuration wizard
 			ExternalToolsWizardLauncher launcher =
 				new ExternalToolsWizardLauncher();
-			launcher.launchWizard(toolID);
+			launcher.launchFirstTimeWizard(toolID);
 
 			if (launcher.isFinished()) {
+			
 				// ok, now the tool is initialized correctly
 
-				String location = root.getAttribute("location");
-
-				File file = new File(location);
+				XmlElement r = getConfiguration(toolID);
+				File file = new File(r.getAttribute("location"));
+				
+				
 
 				return file;
 			}

@@ -109,11 +109,31 @@ public class LocationStep extends AbstractStep implements ActionListener {
 			font = font.deriveFont(Font.BOLD);
 			label2.setFont(font);
 			JPanel p = new JPanel();
-			p.setLayout(new BorderLayout(0,10));
+			p.setLayout(new BorderLayout(0, 10));
 			p.add(label, BorderLayout.NORTH);
 			p.add(label2, BorderLayout.CENTER);
 
 			panel.add(p, BorderLayout.NORTH);
+
+			JPanel bottom = new JPanel();
+			bottom.setLayout( new BorderLayout(0,5) );
+			
+			WizardTextField middlePanel = new WizardTextField();
+			LabelWithMnemonic sourceLabel =
+				new LabelWithMnemonic("Choose &Location:");
+			middlePanel.add(sourceLabel);
+
+			sourceButton = new JButton("Browse...");
+			sourceLabel.setLabelFor(sourceButton);
+			sourceButton.addActionListener(this);
+			middlePanel.add(sourceButton);
+
+			bottom.add( middlePanel, BorderLayout.CENTER);
+			
+			MultiLineLabel l = new MultiLineLabel("If you wish to, you can overwrite these settings manually here:");
+			bottom.add(l, BorderLayout.NORTH);
+			
+			panel.add(bottom, BorderLayout.SOUTH);
 
 			updateCanFinish();
 		}

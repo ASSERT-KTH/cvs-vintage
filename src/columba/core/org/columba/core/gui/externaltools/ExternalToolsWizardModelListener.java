@@ -42,6 +42,7 @@ public class ExternalToolsWizardModelListener implements WizardModelListener {
 
 	public void wizardFinished(WizardModelEvent e) {
 
+		
 		// get selected plugin
 		AbstractExternalToolsPlugin plugin =
 			(AbstractExternalToolsPlugin) data.getData("Plugin");
@@ -66,6 +67,7 @@ public class ExternalToolsWizardModelListener implements WizardModelListener {
 				break;
 			}
 		}
+		
 		
 		finished = true;
 	}

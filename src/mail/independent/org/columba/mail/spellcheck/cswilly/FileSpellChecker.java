@@ -73,11 +73,12 @@ public
         _aspellExeFilename = aspellExeFilename;
     }
 
+	
     public FileSpellChecker()
     {
         this("O:\\local\\aspell\\aspell.exe");
     }
-
+	
     /**
      * @return <i>true</i> if file completely checked and <i>false</i> if the user
      * interupted the checking.

@@ -16,7 +16,8 @@
 
 package org.columba.mail.gui.composer;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
 
@@ -26,10 +27,30 @@ public class ComposerSpellCheck {
 
 	public ComposerSpellCheck(ComposerController composerController) {
 		this.composerController = composerController;
+
+		
+		ExternalToolsPluginHandler handler = null;
+		try {
+			handler =
+				(
+					ExternalToolsPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.core.externaltools");
+			ASpellInterface.setAspellExeFilename(
+				handler.getLocationOfExternalTool("aspell").getPath());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		/*
 		spellCheckConfig =
 			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
 		ASpellInterface.setAspellExeFilename(
 			spellCheckConfig.get("executable"));
+		*/	
 	}
 
 	public String checkText(String text) {
