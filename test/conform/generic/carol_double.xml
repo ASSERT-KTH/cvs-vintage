@@ -3,7 +3,7 @@
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
  - The contents of this file are subject to the LGPL Licence 
  - 
- - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Author:              <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
  - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
  -
  - Compilation directive for testing a basic server with carol over sun jrmp
@@ -13,29 +13,26 @@
  - to call this projecrt set the properties : 
  -                      stub.jar.name1, stub.jar.name2,
  -                      client.properties.file.name1,  client.properties.file.name2,
- -                      server.properties.file.name1,  server.properties.file.name2
+ -                      server.properties.file.name,
  -                      name.server.class.name1, name.server.option1
  -                      name.server.class.name2, name.server.option2
- -                      test.client.pkg1, test.client.pkg2,
  -                      test.client.jvm.xtra1,    test.client.jvm.xtra2
  -->
-<project name="carol.test.double.server" default="all" >
-
+<project name="carol.tests" default="all" >
   <!-- test result location -->
   <property name="report.dir"  value="${test.dist.results}/${test.name}"/>
+  <property name="parallel.report.dir1"  value="${report.dir}/parallel1"/>
+  <property name="parallel.report.dir2"  value="${report.dir}/parallel2"/>
 
   <!-- test tmp location -->
   <property name="test.tmp.client1"               value="${test.tmp}/client/1"/>
-  <property name="test.tmp.registry1"             value="${test.tmp}/registry/1"/>
   <property name="test.tmp.client2"               value="${test.tmp}/client/2"/>
-  <property name="test.tmp.registry2"             value="${test.tmp}/registry/2"/>
   <property name="test.tmp.server"                value="${test.tmp}/server"/>
   <property name="test.multi.jvmargs"             value="-Djava.security.policy=${test.ext}/java.policy"/>
   <property name="test.client.jvmarg1"            value="${test.client.jvm.xtra1}"/>
   <property name="test.client.jvmarg2"            value="${test.client.jvm.xtra2}"/>
   <property name="trace.properties.file.name"     value="trace.properties"/>
 
-  <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="test.client.classpath1"> 
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
@@ -64,6 +61,30 @@
     <pathelement location="${test.tmp.client2}"/>
   </path>
 
+  <path id="test.server.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset> 
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar"/>
+      <include name="**/${stub.jar.name1}"/>  
+      <include name="**/${stub.jar.name2}"/>   
+    </fileset> 
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset> 
+    <pathelement location="${test.tmp.server}"/>
+  </path>
+
+
+  <!--
+   ======================================================================
+   BEGIN properties and paths needed by those tests that use the registry
+   ======================================================================
+  -->
+  <property name="test.tmp.registry1"             value="${test.tmp}/registry/1"/>
+  <property name="test.tmp.registry2"             value="${test.tmp}/registry/2"/>
+
   <path id="test.name.server.classpath1">
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
@@ -89,131 +110,161 @@
       <include name="**/${stub.jar.name2}"/>      
     </fileset> 
   </path>
+  <!--
+   ======================================================================
+   END properties and paths needed by those tests that use the registry
+   ======================================================================
+  -->
 
-  <path id="test.server.classpath">
-    <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset> 
-    <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name1}"/>  
-      <include name="**/${stub.jar.name2}"/>   
-    </fileset> 
-    <fileset dir="${test.externals}">
-      <include name="**/*.jar"/>
-    </fileset> 
-    <pathelement location="${test.tmp.server}"/>
-  </path>
-  
+
   <target name="all">
-    <antcall  target="purge.tmp.dir"/>
-    <antcall  target="build.tmp.dir"/>
-    <antcall  target="launch.test.double"/>
+    <antcall  target="rebuild.tmp.dirs"/>
+    <antcall  target="launch.test"/>
   </target>
 
-  <!-- lauching directories purge and creation -->
-   <target name="purge.tmp.dir">
-    <delete dir="${test.tmp.client1}"/>
-    <delete dir="${test.tmp.registry1}"/>
-    <delete dir="${test.tmp.client2}"/>
-    <delete dir="${test.tmp.registry2}"/>
+  <!-- launching directories purge and creation -->
+  <target name="rebuild.tmp.dirs" depends="_rebuild.tmp.registry.dirs">
     <delete dir="${test.tmp.server}"/>
-  </target>
-
-  <target name="build.tmp.dir">
-    <mkdir dir="${test.tmp.client1}"/>  
-    <mkdir dir="${test.tmp.registry1}"/>
-    <mkdir dir="${test.tmp.client2}"/>    
-    <mkdir dir="${test.tmp.registry2}"/>
     <mkdir dir="${test.tmp.server}"/>
 
-    <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client1}/carol.properties" /> 
-    <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client2}/carol.properties" /> 
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
-
     <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" /> 
-
+ 
+    <antcall target="_rebuild.tmp.dir1"/>
+    <antcall target="_rebuild.tmp.dir2"/>
   </target>
 
-  <!-- test launching --> 
-  <!-- those tests are launch with a parallele task -->
-  <target name="launch.test.double">
-    
+  <target name="_rebuild.tmp.dir1">
+    <delete dir="${test.tmp.client1}"/>
+    <mkdir dir="${test.tmp.client1}"/>  
+
+    <copy file="${test.ext}/${client.properties.file.name1}"
+          tofile="${test.tmp.client1}/carol.properties" />
+  </target>
+
+  <target name="_rebuild.tmp.dir2" if="client.properties.file.name2">
+    <delete dir="${test.tmp.client2}"/>
+    <mkdir dir="${test.tmp.client2}"/>  
+
+    <copy file="${test.ext}/${client.properties.file.name2}"
+          tofile="${test.tmp.client2}/carol.properties" />
+  </target>
+
+  <target name="_runtests">
+    <sleep seconds="10"/>
+    <mkdir dir="${_report.dir}"/>
+    <junit printsummary="yes" 
+      haltonfailure="no"
+      haltonerror="no"
+      fork="yes" >
+      <classpath refid="${_test.client.classpath}" />
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${_report.dir}">
+        <fileset dir="${test.src}">
+          <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="start.server">
+    <sleep seconds="3"/>
+    <java
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer"
+      fork="true"
+      timeout="20000">
+
+      <jvmarg line="${test.multi.jvmargs}"/>
+      <classpath refid="test.server.classpath"/>
+    </java>
+  </target>
+
+  <target name="reports" if="is.jvm.1.4" >
+    <antcall target="report">
+      <param name="_report.dir" value="${parallel.report.dir1}"/>
+    </antcall>
+
+    <antcall target="maybe.report2"/>
+  </target>
+
+  <!-- Only generate this report, if there has been a second junit process -->
+  <target name="maybe.report2" if="stub.jar.name2">
+    <antcall target="report">
+      <param name="_report.dir" value="${parallel.report.dir2}"/>
+    </antcall>
+  </target>
+
+  <target name="report">
+    <mkdir dir="${_report.dir}/html" />
+
+    <junitreport todir="${_report.dir}">
+      <fileset dir="${_report.dir}">
+	<include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${_report.dir}/html"/>
+    </junitreport>
+  </target>
+
+  <target name="launch.test">
     <condition property="is.jvm.1.4">
       <equals  arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
 
     <parallel>
-      <java classname="${name.server.class.name1}" fork="true" timeout="30000">
-	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
-	<arg line="${name.server.option1}"/>	
-	<classpath refid="test.name.server.classpath1"/>
-      </java>
+      <!-- maybe start nameservers -->
+      <antcall target="start.nameserver1"/>
+      <antcall target="start.nameserver2"/>
 
-      <java classname="${name.server.class.name2}" fork="true" timeout="30000">
-	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
-	<arg line="${name.server.option2}"/>	
-	<classpath refid="test.name.server.classpath2"/>
-      </java>
+      <antcall target="start.server"/>
 
-      <sequential>
-	<sleep seconds="3"/>
-	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="20000">
-	  <jvmarg line="${test.multi.jvmargs}"/>
-	  <classpath refid="test.server.classpath"/>
-	</java>
-      </sequential>
+      <antcall target="_runtests">
+        <param name="_report.dir" value="${parallel.report.dir1}"/>
+        <param name="_test.client.classpath" value="test.client.classpath1"/>
+      </antcall>
 
-      <sequential>
-	<sleep seconds="10"/>
-	<delete dir="${report.dir}" />
-	<mkdir dir="${report.dir}" />
-	<mkdir dir="${report.dir}/html" />
-	<junit printsummary="yes" 
-	  haltonfailure="no"
-	  haltonerror="no"
-	  fork="yes" >
-	  <classpath refid="test.client.classpath1" />
-	  <formatter type="xml"/>
-	  <batchtest fork="yes" todir="${report.dir}">
-	    <fileset dir="${test.src}">
-	      <include name="${test.client.pkg1}/*Tests.java" />
-	    </fileset>
-	  </batchtest>
-	</junit>
-      </sequential>
-
-      <sequential>
-	<sleep seconds="10"/>
-	<mkdir dir="${report.dir}" />
-	<mkdir dir="${report.dir}/html" />
-	<junit printsummary="yes" 
-	  haltonfailure="no"
-	  haltonerror="no"
-	  fork="yes" >
-	  <classpath refid="test.client.classpath2" />
-	  <formatter type="xml"/>
-	  <batchtest fork="yes" todir="${report.dir}">
-	    <fileset dir="${test.src}">
-	      <include name="${test.client.pkg2}/*Tests.java" />
-	    </fileset>
-	  </batchtest>
-	</junit>
-      </sequential>
-
+      <antcall target="_runtests">
+        <param name="_report.dir" value="${parallel.report.dir2}"/>
+        <param name="_test.client.classpath" value="test.client.classpath2"/>
+      </antcall>
     </parallel>
 
-    <antcall  target="report"/>
+    <antcall  target="reports"/>
   </target> 
 
-  <target name="report" if="is.jvm.1.4" >
-    <junitreport todir="${report.dir}">
-      <fileset dir="${report.dir}">
-	<include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${report.dir}/html"/>
-    </junitreport>
+
+  <!--
+   ======================================================================
+   The following targets are only executed by those tests that use a registry.
+  -->
+
+  <target name="_rebuild.tmp.registry.dirs"
+    depends="_rebuild.tmp.registry.dir1,_rebuild.tmp.registry.dir2"/>
+
+  <target name="_rebuild.tmp.registry.dir1" if="test.tmp.registry1">
+    <delete dir="${test.tmp.registry1}"/>
+    <mkdir dir="${test.tmp.registry1}"/>
+  </target>
+
+  <target name="_rebuild.tmp.registry.dir2" if="test.tmp.registry2">
+    <delete dir="${test.tmp.registry2}"/>
+    <mkdir dir="${test.tmp.registry2}"/>
+  </target>
+
+  <target name="start.nameserver1" if="name.server.class.name1">
+    <java classname="${name.server.class.name1}" fork="true" timeout="30000">
+      <jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
+      <arg line="${name.server.option1}"/>	
+      <classpath refid="test.name.server.classpath1"/>
+    </java>
+  </target>
+
+  <target name="start.nameserver2" if="name.server.class.name2">
+    <java classname="${name.server.class.name2}" fork="true" timeout="30000">
+      <jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
+      <arg line="${name.server.option2}"/>	
+      <classpath refid="test.name.server.classpath2"/>
+    </java>
   </target>
 
 </project>

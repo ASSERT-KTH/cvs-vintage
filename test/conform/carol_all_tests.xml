@@ -1,5 +1,17 @@
 <project name="carol.all.test" default="test.all" >
 
+  <property name="orb.initializer.class"
+    value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+
+  <property name="transient.name.server"
+    value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+
+  <property name="manageable.registry"
+    value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
+
+  <property name="jrmi.registry"
+    value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
+
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
@@ -45,52 +57,48 @@
   <!-- *********     TEST SINGLE    *******-->
   <!-- ************************************-->
   <target name="single.jeremie">
-    <ant antfile="conform/generic/carol_single.xml">
-      <property name="stub.jar.name" value="jeremie_stub.jar"/>
-      <property name="client.properties.file.name" value="jeremie_carol.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
+      <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="server.properties.file.name" value="jeremie_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
-      <property name="name.server.option" value="2001"/>
+      <property name="name.server.class.name1" value="${jrmi.registry}"/>
+      <property name="name.server.option1" value="2001"/>
       <property name="test.name"          value="jeremie"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/> 
     </ant>
   </target>
 
   <target name="single.iiop" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_single.xml">
-      <property name="stub.jar.name" value="suniiop.jar"/>
-      <property name="client.properties.file.name" value="iiop_carol.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="suniiop.jar"/>
+      <property name="client.properties.file.name1" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="iiop_carol.properties"/>
-      <property name="name.server.class.name" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
-      <property name="name.server.option" value="-ORBInitialPort 2000"/>
+      <property name="name.server.class.name1" value="${transient.name.server}"/>
+      <property name="name.server.option1" value="-ORBInitialPort 2000"/>
       <property name="test.name"          value="suniiop"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
     </ant>
   </target> 
 
 
   <target name="single.jrmp1.1">
-    <ant antfile="conform/generic/carol_single.xml">
-      <property name="stub.jar.name" value="sunjrmp1.1.jar"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="client.class.name" value=""/>
-      <property name="client.properties.file.name" value="jrmp_carol.properties"/>
+      <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
-      <property name="name.server.option" value="1099"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
+      <property name="name.server.option1" value="1099"/>
       <property name="test.name"          value="sunjrmp1.1"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
     </ant>
   </target>
 
   <target name="single.jrmp1.2">
-    <ant antfile="conform/generic/carol_single.xml">
-      <property name="stub.jar.name" value="sunjrmp1.2.jar"/>
-      <property name="client.properties.file.name" value="jrmp_carol.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
+      <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
-      <property name="name.server.option" value="1099"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
+      <property name="name.server.option1" value="1099"/>
       <property name="test.name"          value="sunjrmp1.2"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
     </ant>
   </target> 
  
@@ -98,43 +106,37 @@
   <!-- *********     TEST SINGLE WITHOUT NAME SERVER    *******-->
   <!-- ********************************************************-->
   <target name="single.nons.jeremie">
-    <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="jeremie_stub.jar"/>
-      <property name="client.properties.file.name" value="jeremie_carol_nons.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
+      <property name="client.properties.file.name1" value="jeremie_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jeremie_carol_nons.properties"/>
       <property name="test.name"          value="jeremie.nons"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/> 
     </ant>
   </target>
 
    <target name="single.nons.iiop" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="suniiop.jar"/>
-      <property name="client.properties.file.name" value="iiop_carol_nons.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="suniiop.jar"/>
+      <property name="client.properties.file.name1" value="iiop_carol_nons.properties"/>
       <property name="server.properties.file.name" value="iiop_carol_nons.properties"/>
       <property name="test.name"          value="suniiop.nons"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
     </ant>
   </target> 
 
   <target name="single.nons.jrmp1.1">
-    <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="sunjrmp1.1.jar"/>
-      <property name="client.properties.file.name" value="jrmp_carol_nons.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
+      <property name="client.properties.file.name1" value="jrmp_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.name"          value="sunjrmp1.1.nons"/>
     </ant>
   </target>
 
   <target name="single.nons.jrmp1.2">
-    <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="sunjrmp1.2.jar"/>
-      <property name="client.properties.file.name" value="jrmp_carol_nons.properties"/>
+    <ant antfile="conform/generic/carol_double.xml">
+      <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
+      <property name="client.properties.file.name1" value="jrmp_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
-      <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.name"          value="sunjrmp1.2.nons"/>
     </ant>
   </target> 
@@ -149,14 +151,12 @@
       <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisunjeremie_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
+      <property name="name.server.class.name1" value="${jrmi.registry}"/>
       <property name="name.server.option1" value="2001"/>
-      <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+      <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
       <property name="test.name"            value="multi_suniiop_jeremie"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra2" value=""/>
     </ant>
   </target>  
@@ -168,14 +168,12 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
-      <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+      <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.1"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra2" value=""/>
     </ant>
   </target> 
@@ -187,15 +185,13 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
-      <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+      <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.2"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target> 
 
@@ -206,15 +202,13 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
-      <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+      <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
       <property name="test.name"            value="multi_sunjrmp1.1_suniiop"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target>  
 
@@ -225,15 +219,13 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
+      <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
-      <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
+      <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
       <property name="test.name"            value="multi_sunjrmp1.2_suniiop"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target>
  
@@ -241,77 +233,67 @@
   <!-- *********     TEST MULTI WITHOUT NAME SERVERS    *******-->
   <!-- ********************************************************-->
   <target name="multi.nons.suniiop.jeremie" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_double_nons.xml">
+    <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="jeremie_stub.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisunjeremie_carol_nons.properties"/>
       <property name="test.name"            value="multi_suniiop_jeremie.nons"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra2" value=""/>
     </ant>
   </target>  
 
   <target name="multi.nons.suniiop.sunjrmp1.1" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_double_nons.xml">
+    <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol_nons.properties"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.1.nons"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra2" value=""/>
     </ant>
   </target> 
 
   <target name="multi.nons.suniiop.sunjrmp1.2" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_double_nons.xml">
+    <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol_nons.properties"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.2.nons"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target> 
 
   <target name="multi.nons.sunjrmp1.1.suniiop" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_double_nons.xml">
+    <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol_nons.properties"/>
       <property name="test.name"            value="multi_sunjrmp1.1_suniiop.nons"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target>  
 
   <target name="multi.nons.sunjrmp1.2.suniiop" if="is.jvm.1.4">
-    <ant antfile="conform/generic/carol_double_nons.xml">
+    <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol_nons.properties"/>
       <property name="test.name"            value="multi_sunjrmp1.2_suniiop.nons"/>
-      <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.client.jvm.xtra1" value=""/>
-      <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
-      <property name="test.client.jvm.xtra2" value="-D.org.omg.PortableInterceptor.ORBInitializerClass.org.objectweb.owis.common.jtests.interceptor.iiop.IIOPInitilizer"/>
+      <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
     </ant>
   </target> 
 
