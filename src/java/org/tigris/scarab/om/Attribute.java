@@ -205,6 +205,10 @@ public class Attribute
         return (AttributeOption)optionsMap.get(pk);
     }
 
+    public AttributeOption getAttributeOption(String optionID)
+    {
+        return getAttributeOption(new NumberKey(optionID));
+    }
 
     public AttributeOption[] getAttributeOptions(boolean includeDeleted)
         throws Exception
