@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
@@ -33,7 +33,7 @@ import org.columba.mail.message.MimePartTree;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class ViewMessageCommand extends FolderCommand {
 
@@ -72,64 +72,66 @@ public class ViewMessageCommand extends FolderCommand {
 
 		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
 
-		// FIXME
-		/*
-		boolean viewhtml =
+        if(mimePartTree != null){
+          // FIXME
+          /*
+            boolean viewhtml =
 			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.getHtmlViewer();
-		*/
+            .getMainFrameOptionsConfig()
+            .getWindowItem()
+            .getHtmlViewer();
+          */
 
-		
-		XmlElement html =
+
+          XmlElement html =
 			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-				"/options/html");
-		boolean viewhtml =
+                                                          "/options/html");
+          boolean viewhtml =
 			new Boolean(html.getAttribute("prefer")).booleanValue();
-		
-		//boolean viewhtml = true;
-		// Which Bodypart shall be shown? (html/plain)
 
-		if (viewhtml)
+          //boolean viewhtml = true;
+          // Which Bodypart shall be shown? (html/plain)
+
+          if (viewhtml)
 			bodyPart = mimePartTree.getFirstTextPart("html");
-		else
+          else
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 
-		if (bodyPart == null) {
+          if (bodyPart == null) {
 			bodyPart = new MimePart();
 			bodyPart.setBody(new String("<No Message-Text>"));
-		} else
+          } else
 			bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress(), wsc);
-
+        }
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateGUI() throws Exception {
+  public void updateGUI() throws Exception {
 
-		AttachmentSelectionHandler h = ((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment"));
-		if ( h!= null)
-			h.setMessage(folder, uid);
+    AttachmentSelectionHandler h = ((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment"));
+    if ( h!= null)
+      h.setMessage(folder, uid);
 
-		
-			((MailFrameController) frameController)
-						.messageController
-						.showMessage(
-				header,
-				bodyPart,
-				mimePartTree);
 
-			
-			if (header.getFlags().getSeen() == false) {
-				((MailFrameController) frameController)
-					.tableController
-					.getMarkAsReadTimer()
-					.restart((FolderCommandReference)getReferences()[0]);
-			}
+    if(header != null && bodyPart != null){
+      ((MailFrameController) frameController)
+        .messageController
+        .showMessage(
+                     header,
+                     bodyPart,
+                     mimePartTree);
 
-		}
+
+      if (header.getFlags().getSeen() == false) {
+        ((MailFrameController) frameController)
+          .tableController
+          .getMarkAsReadTimer()
+          .restart((FolderCommandReference)getReferences()[0]);
+      }
+    }
+  }
 
 		/**
 		 * @see org.columba.core.command.Command#execute(Worker)

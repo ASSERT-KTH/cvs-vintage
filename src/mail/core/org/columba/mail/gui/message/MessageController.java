@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.message;
@@ -105,7 +105,7 @@ public class MessageController
 		keys[2] = new String("Date");
 		keys[3] = new String("To");
 		*/
-		
+
 		MainInterface.charsetManager.addCharsetListener(this);
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
@@ -119,17 +119,17 @@ public class MessageController
 
 		/*
 		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
-		
+
 		FolderTreeNode treeNode = reference[0].getFolder();
 		Object[] uids = reference[0].getUids();
-		
+
 		// this is no message-viewing action,
 		// but a selection of multiple messages
 		if ( uids.length > 1 ) return;
-		
+
 		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setFolder(treeNode);
 		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setUids(uids);
-		
+
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(
 				mailFrameController,
@@ -177,75 +177,78 @@ public class MessageController
 		this.uid = o;
 	}
 
-	public void showMessage(
-		HeaderInterface header,
-		MimePart bodyPart,
-		MimePartTree mimePartTree)
-		throws Exception {
+	public void showMessage(HeaderInterface header,
+                            MimePart bodyPart,
+                            MimePartTree mimePartTree)
+      throws Exception {
 
-		XmlElement html =
-			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-				"/options/html");
-		boolean htmlViewer =
-			new Boolean(html.getAttribute("prefer")).booleanValue();
+      if(header == null || bodyPart == null){
+        return;
+      }
 
-		// Which Charset shall we use ?
+      XmlElement html =
+        MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+                                                        "/options/html");
+      boolean htmlViewer =
+        new Boolean(html.getAttribute("prefer")).booleanValue();
 
-		String charset;
+      // Which Charset shall we use ?
 
-		if (activeCharset.equals("auto"))
-			charset = bodyPart.getHeader().getContentParameter("charset");
-		else
-			charset = activeCharset;
+      String charset;
 
-		Decoder decoder =
-			CoderRouter.getDecoder(
-				bodyPart.getHeader().contentTransferEncoding);
+      if (activeCharset.equals("auto"))
+        charset = bodyPart.getHeader().getContentParameter("charset");
+      else
+        charset = activeCharset;
 
-		// Shall we use the HTML-Viewer?
+      Decoder decoder =
+        CoderRouter.getDecoder(
+                               bodyPart.getHeader().contentTransferEncoding);
 
-		htmlViewer =
-			bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
+      // Shall we use the HTML-Viewer?
 
-		// Update the MessageHeaderPane
-		/*
+      htmlViewer =
+        bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
+
+      // Update the MessageHeaderPane
+      /*
 		messageHeader.setValues(message);
-		*/
+      */
 
-		String decodedBody = null;
+      String decodedBody = null;
 
-		// Decode the Text using the specified Charset				
-		try {
-			decodedBody = decoder.decode(bodyPart.getBody(), charset);
-		} catch (UnsupportedEncodingException ex) {
-			// If Charset not supported fall back to standard Charset
+      // Decode the Text using the specified Charset
+      try {
+        decodedBody = decoder.decode(bodyPart.getBody(), charset);
+      } catch (UnsupportedEncodingException ex) {
+        // If Charset not supported fall back to standard Charset
 
-			try {
-				decodedBody = decoder.decode(bodyPart.getBody(), null);
-			} catch (UnsupportedEncodingException never) {
+        try {
+          decodedBody = decoder.decode(bodyPart.getBody(), null);
+        } catch (UnsupportedEncodingException never) {
 
-			}
-		}
+        }
+      }
 
-		boolean hasAttachments = false;
+      boolean hasAttachments = false;
 
-		
-		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().contentType.equals("text")))
-			hasAttachments = true;
 
-			getMailFrameController().attachmentController.setMimePartTree(
-							mimePartTree);
-							/*
+      if ((mimePartTree.count() > 1)
+          || (!mimePartTree.get(0).getHeader().contentType.equals("text")))
+        hasAttachments = true;
+
+      getMailFrameController().attachmentController.setMimePartTree(
+                                                                    mimePartTree);
+      /*
 		if (hasAttachments)
-			getMailFrameController().attachmentController.setMimePartTree(
-				mimePartTree);
+        getMailFrameController().attachmentController.setMimePartTree(
+        mimePartTree);
 		else
-			getMailFrameController().attachmentController.setMimePartTree(null);
-		*/
-		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
+        getMailFrameController().attachmentController.setMimePartTree(null);
+      */
+      getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
 
-		getView().getVerticalScrollBar().setValue(0);
+      getView().getVerticalScrollBar().setValue(0);
 
 	}
 
@@ -256,33 +259,33 @@ public class MessageController
 
 	}
 	/*
-	 * 
+	 *
 	public MessageActionListener getActionListener()
 	{
 		return actionListener;
 	}
-	
+
 	public MessageFocusListener getFocusListener()
 	{
 		return focusListener;
 	}
-	
+
 	public String getAddress()
 	{
 		HyperlinkTextViewer viewer =
 			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-	
+
 		if (viewer != null)
 			return viewer.getAddress();
 		else
 			return new String();
 	}
-	
+
 	public String getLink()
 	{
 		HyperlinkTextViewer viewer =
 			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-	
+
 		if (viewer != null)
 			return viewer.getLink();
 		else
@@ -290,9 +293,9 @@ public class MessageController
 	}
 	*/
 
-	/*	
+	/*
 	public void charsetChanged( CharsetEvent e ) {
-		activeCharset = e.getValue();				
+		activeCharset = e.getValue();
 	}
 	*/
 
@@ -307,15 +310,15 @@ public class MessageController
 			} else {
 				URL url = e.getURL();
 				if (url != null) {
-		
+
 					if (url.getProtocol().equalsIgnoreCase("mailto")) {
 						// found email address
 						URLController c = new URLController();
 						JPopupMenu menu = c.createContactMenu(url.getFile());
 						menu.setVisible(true);
-		
+
 					} else {
-		
+
 						URLController c = new URLController();
 						c.open(url);
 					}

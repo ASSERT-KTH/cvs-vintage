@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 //
@@ -556,7 +556,8 @@ public class IMAPFolder extends RemoteFolder {
 
 		Object[] uids2 = getUids(worker);
 
-		for (int i = 0; i < uids.length; i++) {
+        if(uids2 != null){
+          for (int i = 0; i < uids2.length; i++) {
 			Object uid = uids2[i];
 
 			ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
@@ -566,16 +567,16 @@ public class IMAPFolder extends RemoteFolder {
 			ColumbaLogger.log.debug("expunged=" + expunged);
 
 			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
+              // move message to trash
 
-				ColumbaLogger.log.debug(
-					"moving message with UID " + uid + " to trash");
+              ColumbaLogger.log.debug("moving message with UID " + uid
+                                      + " to trash");
 
-				// remove message
-				headerList.remove(uid);
-
+              // remove message
+              headerList.remove(uid);
 			}
-		}
+          }
+        }
 	}
 
 	/**
@@ -643,19 +644,19 @@ public class IMAPFolder extends RemoteFolder {
 		/*
 		try {
 			ListInfo[] listInfo = store.lsub("\"\"", "\""+getImapPath()+getStore().getDelimiter()+"*\"");
-		
+
 			for (int i = 0; i < listInfo.length; i++) {
 				ListInfo info = listInfo[i];
 				String name = info.getName();
 				System.out.println("creating folder=" + name);
-		
+
 				boolean hasChildren = info.hasChildren();
-		
+
 				Hashtable attributes = getAttributes();
 				attributes.put("name", listInfo[i].getSource());
 				addSubFolder(attributes);
-		
-				
+
+
 			}
 		} catch (Exception ex) {
 		}
@@ -684,7 +685,7 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public boolean tryToGetLock(Object locker) {
 		// IMAP Folders have no own lock ,but share the lock from the Root
-		// to ensure that only one operation can be processed simultanous		
+		// to ensure that only one operation can be processed simultanous
 
 		return getRootFolder().tryToGetLock(locker);
 	}

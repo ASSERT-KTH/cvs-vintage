@@ -1,7 +1,7 @@
 /*
  * Created on 12.03.2003
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package org.columba.core.gui.menu;
@@ -23,7 +23,7 @@ import org.columba.core.xml.XmlElement;
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PopupMenuGenerator extends AbstractMenuGenerator {
@@ -80,13 +80,12 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 									"org.columba.core.action")).getAction(
 								next.getAttribute("action"),
 								frameController);
-
-						menu.add(action);
-
+                        if(action != null){
+                          menu.add(action);
+                        }
 					} catch (Exception e) {
-						
-						ColumbaLogger.log.error(e+": "+next.getAttribute("action"));
-						
+                      ColumbaLogger.log.error(e+": "
+                                              +next.getAttribute("action"));
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {

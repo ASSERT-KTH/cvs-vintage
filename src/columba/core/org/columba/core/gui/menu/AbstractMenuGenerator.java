@@ -1,7 +1,7 @@
 /*
  * Created on 12.03.2003
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package org.columba.core.gui.menu;
@@ -27,7 +27,7 @@ import org.columba.core.xml.XmlIO;
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractMenuGenerator {
@@ -37,7 +37,7 @@ public abstract class AbstractMenuGenerator {
 	protected AbstractFrameController frameController;
 
 	/**
-	 * 
+	 *
 	 */
 	public AbstractMenuGenerator(
 		AbstractFrameController frameController,
@@ -79,9 +79,9 @@ public abstract class AbstractMenuGenerator {
 	}
 
 	public void extendMenu(XmlElement menuExtension) {
-		
-		
-		
+
+
+
 		XmlElement menu, extension;
 		String menuName = menuExtension.getAttribute("name");
 		String extensionName = menuExtension.getAttribute("extensionpoint");
@@ -100,9 +100,9 @@ public abstract class AbstractMenuGenerator {
 				createExtension(menu, (XmlElement) menuExtension.clone(), extensionName);
 			}
 		}
-		
-		
-		
+
+
+
 	}
 
 	private void createExtension(
@@ -158,7 +158,7 @@ protected JMenu createMenu(XmlElement menuElement) {
 
 protected void createMenuEntries(JMenu menu, ListIterator it) {
 	boolean lastWasSeparator = false;
-	
+
 	while (it.hasNext()) {
 		XmlElement next = (XmlElement) it.next();
 		String name = next.getName();
@@ -175,13 +175,13 @@ protected void createMenuEntries(JMenu menu, ListIterator it) {
 								"org.columba.core.action")).getAction(
 							next.getAttribute("action"),
 							frameController);
-
-					menu.add(action);
-					
-					lastWasSeparator = false;
+                    if(action != null){
+                      menu.add(action);
+                      lastWasSeparator = false;
+                    }
 
 				} catch (Exception e) {
-					ColumbaLogger.log.error(e);
+                  ColumbaLogger.log.error(e);
 				}
 			} else if (next.getAttribute("checkboxaction") != null) {
 				try {
@@ -195,13 +195,15 @@ protected void createMenuEntries(JMenu menu, ListIterator it) {
 									"org.columba.core.action")).getAction(
 							next.getAttribute("checkboxaction"),
 							frameController);
-					JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(action);
-					menu.add(menuitem);
-					action.setCheckBoxMenuItem(menuitem);
-
-					lastWasSeparator = false;
+                    if(action != null){
+                      JCheckBoxMenuItem menuitem =
+                        new JCheckBoxMenuItem(action);
+                      menu.add(menuitem);
+                      action.setCheckBoxMenuItem(menuitem);
+                      lastWasSeparator = false;
+                    }
 				} catch (Exception e) {
-					ColumbaLogger.log.error(e);
+                  ColumbaLogger.log.error(e);
 				}
 			} else if (next.getAttribute("imenu") != null) {
 				try {
