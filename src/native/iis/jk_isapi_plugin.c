@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -198,8 +198,12 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
 {
     static char crlf[3] = { (char)13, (char)10, '\0' };
 
+    jk_log(logger, JK_LOG_DEBUG, 
+           "Into jk_ws_service_t::start_response\n");
+
     if(status < 100 || status > 1000) {
-        jk_log(logger, JK_LOG_ERROR, "jk_ws_service_t::start_response, invalid status %d\n", status);
+        jk_log(logger, JK_LOG_ERROR, 
+               "jk_ws_service_t::start_response, invalid status %d\n", status);
         return JK_FALSE;
     }
 
@@ -267,6 +271,7 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
 
     jk_log(logger, JK_LOG_ERROR, 
            "jk_ws_service_t::start_response, NULL parameters\n");
+
     return JK_FALSE;
 }
 
@@ -275,6 +280,9 @@ static int JK_METHOD read(jk_ws_service_t *s,
                           unsigned l,
                           unsigned *a)
 {
+    jk_log(logger, JK_LOG_DEBUG, 
+           "Into jk_ws_service_t::read\n");
+
     if(s && s->ws_private && b && a) {
         isapi_private_data_t *p = s->ws_private;
         
@@ -306,7 +314,8 @@ static int JK_METHOD read(jk_ws_service_t *s,
                 if(p->lpEcb->ReadClient(p->lpEcb->ConnID, buf, &l)) {
                     *a += l;            
                 } else {
-                    jk_log(logger, JK_LOG_ERROR, "jk_ws_service_t::read, ReadClient failed\n");
+                    jk_log(logger, JK_LOG_ERROR, 
+                           "jk_ws_service_t::read, ReadClient failed\n");
                     return JK_FALSE;
                 }                   
             }
@@ -314,7 +323,8 @@ static int JK_METHOD read(jk_ws_service_t *s,
         return JK_TRUE;
     }
 
-    jk_log(logger, JK_LOG_ERROR, "jk_ws_service_t::read, NULL parameters\n");
+    jk_log(logger, JK_LOG_ERROR, 
+           "jk_ws_service_t::read, NULL parameters\n");
     return JK_FALSE;
 }
 
@@ -322,6 +332,9 @@ static int JK_METHOD write(jk_ws_service_t *s,
                            const void *b,
                            unsigned l)
 {
+    jk_log(logger, JK_LOG_DEBUG, 
+           "Into jk_ws_service_t::write\n");
+
     if(s && s->ws_private && b) {
         isapi_private_data_t *p = s->ws_private;
 
@@ -339,7 +352,8 @@ static int JK_METHOD write(jk_ws_service_t *s,
                                           buf + written, 
                                           &try_to_write, 
                                           0)) {
-                    jk_log(logger, JK_LOG_ERROR, "jk_ws_service_t::write, WriteClient failed\n");
+                    jk_log(logger, JK_LOG_ERROR, 
+                           "jk_ws_service_t::write, WriteClient failed\n");
                     return JK_FALSE;
                 }
                 written += try_to_write;
@@ -349,7 +363,10 @@ static int JK_METHOD write(jk_ws_service_t *s,
         return JK_TRUE;
 
     }
-    jk_log(logger, JK_LOG_ERROR, "jk_ws_service_t::write, NULL parameters\n");
+
+    jk_log(logger, JK_LOG_ERROR, 
+           "jk_ws_service_t::write, NULL parameters\n");
+
     return JK_FALSE;
 }
 
@@ -388,6 +405,9 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
         char *query;
         DWORD sz = sizeof(uri);
 
+        jk_log(logger, JK_LOG_DEBUG, 
+               "HttpFilterProc started\n");
+
         /*
          * Just in case somebody set these headers in the request!
          */
@@ -395,6 +415,8 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
 	    p->SetHeader(pfc, WORKER_HEADER_NAME, NULL);
         
         if(!p->GetHeader(pfc, "url", (LPVOID)uri, (LPDWORD)&sz)) {
+            jk_log(logger, JK_LOG_ERROR, 
+                   "HttpFilterProc error while getting the url\n");
             return SF_STATUS_REQ_ERROR;
         }
 
@@ -404,7 +426,9 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
             if(query) {
                 *query = '\0';
             }
-            jk_log(logger, JK_LOG_DEBUG, "In HttpFilterProc test redirection of %s\n", uri);
+            jk_log(logger, JK_LOG_DEBUG, 
+                   "In HttpFilterProc test redirection of %s\n", 
+                   uri);
             worker = map_uri_to_worker(uw_map, uri, logger);                
             if(query) {
                 *query = '?';
@@ -413,25 +437,40 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
             if(worker) {
                 /* This is a servlet, should redirect ... */
                 jk_log(logger, JK_LOG_DEBUG, 
-                       "In HttpFilterProc %s should redirect to %s\n", 
+                       "HttpFilterProc [%s] is a servlet url - should redirect to %s\n", 
                        uri, worker);
 
                 
 				if(!p->AddHeader(pfc, URI_HEADER_NAME, uri) || 
                    !p->AddHeader(pfc, WORKER_HEADER_NAME, worker) ||
                    !p->SetHeader(pfc, "url", extension_uri)) {
+                    jk_log(logger, JK_LOG_ERROR, 
+                           "HttpFilterProc error while adding request headers\n");
                     return SF_STATUS_REQ_ERROR;
                 }
-            } 
+            } else {
+                jk_log(logger, JK_LOG_DEBUG, 
+                       "HttpFilterProc [%s] is not a servlet url\n", 
+                       uri);
+            }
+
             /*
              * Check if somebody is feading us with his own TOMCAT data headers.
              * We reject such postings !
              */
+            jk_log(logger, JK_LOG_DEBUG, 
+                   "HttpFilterProc check if [%s] is points to the web-inf directory\n", 
+                   uri);
+
             if(uri_is_web_inf(uri)) {
                 char crlf[3] = { (char)13, (char)10, '\0' };
                 char ctype[30];
                 char *msg = "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>";
                 DWORD len = strlen(msg);
+
+                jk_log(logger, JK_LOG_EMERG, 
+                       "HttpFilterProc [%s] points to the web-inf directory.\nSomebody try to hack into the site!!!\n", 
+                       uri);
 
                 sprintf(ctype, 
                         "Content-Type:text/html%s%s", 
@@ -475,6 +514,9 @@ DWORD WINAPI HttpExtensionProc(LPEXTENSION_CONTROL_BLOCK  lpEcb)
 
     lpEcb->dwHttpStatusCode = HTTP_STATUS_SERVER_ERROR;
 
+    jk_log(logger, JK_LOG_DEBUG, 
+           "HttpExtensionProc started\n");
+
     if(is_inited) {
         isapi_private_data_t private_data;
         jk_ws_service_t s;
@@ -492,6 +534,12 @@ DWORD WINAPI HttpExtensionProc(LPEXTENSION_CONTROL_BLOCK  lpEcb)
 
         if(init_ws_service(&private_data, &s, &worker_name)) {
             jk_worker_t *worker = wc_get_worker_for_name(worker_name, logger);
+
+            jk_log(logger, JK_LOG_DEBUG, 
+                   "HttpExtensionProc %s a worker for name %s\n", 
+                   worker ? "got" : "could not get",
+                   worker_name);
+
             if(worker) {
                 jk_endpoint_t *e = NULL;
                 if(worker->get_endpoint(worker, &e, logger)) {
@@ -499,12 +547,24 @@ DWORD WINAPI HttpExtensionProc(LPEXTENSION_CONTROL_BLOCK  lpEcb)
                     if(e->service(e, &s, logger, &recover)) {
                         rc = HSE_STATUS_SUCCESS_AND_KEEP_CONN;
                         lpEcb->dwHttpStatusCode = HTTP_STATUS_OK;
+                        jk_log(logger, JK_LOG_DEBUG, 
+                               "HttpExtensionProc service() returned OK\n");
+                    } else {
+                        jk_log(logger, JK_LOG_ERROR, 
+                               "HttpExtensionProc error, service() failed\n");
                     }
                     e->done(&e, logger);
                 }
+            } else {
+                jk_log(logger, JK_LOG_ERROR, 
+                       "HttpExtensionProc error, could not get a worker for name %s\n",
+                       worker_name);
             }
         }
         jk_close_pool(&private_data.p);     
+    } else {
+        jk_log(logger, JK_LOG_ERROR, 
+               "HttpExtensionProc error, not initialized\n");
     }
 
     return rc;

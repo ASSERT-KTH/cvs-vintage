@@ -108,10 +108,6 @@ SOURCE=..\jk\jk_ajp13_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp23_worker.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\jk\jk_connect.c
 # End Source File
 # Begin Source File
