@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.68 2002/06/27 04:50:21 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.69 2002/06/27 22:17:14 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -782,7 +782,7 @@ public class ScarabUserImpl
     {
         internalUser.setEnterIssueRedirect(templateCode);
     }
-
+                
     /**
      * The template/tab to show for the home page.
      */
@@ -860,6 +860,16 @@ public class ScarabUserImpl
     {
         internalUser.clearCurrentMITList();
     }
+
+    public boolean canMakeTransition(NumberKey fromOptionId, 
+                                     NumberKey toOptionId,
+                                     Issue issue,
+                                     Module module,               
+                                     IssueType issueType)
+        throws Exception
+   {
+        return true;
+   }
 
     /**
      * The current module

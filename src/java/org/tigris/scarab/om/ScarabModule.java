@@ -58,6 +58,7 @@ import java.util.Collections;
 import org.apache.log4j.Category;
 
 // Turbine classes
+import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -104,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.118 2002/06/20 18:13:37 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.119 2002/06/27 22:17:14 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -598,6 +599,15 @@ public class ScarabModule
     {
         return Turbine.getConfiguration()
             .getStringArray(ScarabConstants.AUTO_APPROVED_ROLES);
+    }
+
+    /**
+     * Gets all module roles.
+     */
+    public List getRoles() 
+        throws Exception
+    {
+        return new ArrayList(0);
     }
 }
 

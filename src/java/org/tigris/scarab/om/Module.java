@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.47 2002/06/27 04:24:40 jmcnally Exp $
+ * @version $Id: Module.java,v 1.48 2002/06/27 22:17:14 elicia Exp $
  */
 public interface Module
     extends Serializable
@@ -454,5 +454,7 @@ public interface Module
     public boolean isGlobalModule();
 
     public String toString();
+ 
+    public List getRoles() throws Exception;
 }
 
