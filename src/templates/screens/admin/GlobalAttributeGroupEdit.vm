@@ -12,7 +12,7 @@
 
 <form method="post" action="$link.setPage("admin,GlobalAttributeGroupEdit.vm")">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit">
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeSelect.vm" />
 <input type="hidden" name="groupId" value="$groupId" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
