@@ -35,7 +35,10 @@ public class Identity {
         this.e = e;
         address = Address.parse(e.getAttribute("address"));
         address.setDisplayName(e.getAttribute("name"));
-        replyToAddress = Address.parse(e.getAttribute("reply_address"));
+        String value = e.getAttribute("reply_address");
+        if (value != null && value.length() > 0) {
+            replyToAddress = Address.parse(value);
+        }
     }
     
     public Address getAddress() {
