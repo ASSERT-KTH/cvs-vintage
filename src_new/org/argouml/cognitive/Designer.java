@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.23 2003/12/09 14:36:40 mkl Exp $
+// $Id: Designer.java,v 1.24 2003/12/13 23:01:40 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.23 2003/12/09 14:36:40 mkl Exp $
+// $Id: Designer.java,v 1.24 2003/12/13 23:01:40 alexb Exp $
 
 package org.argouml.cognitive;
 
@@ -253,7 +253,7 @@ public class Designer
             
             // the critiquing thread should wait if disabled.
             synchronized (this) {
-                if(!_autoCritique){
+                while(!_autoCritique){
                     try{
                         this.wait();
                     }catch (InterruptedException ignore) {

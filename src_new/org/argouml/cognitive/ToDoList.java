@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.19 2003/11/30 22:05:41 alexb Exp $
+// $Id: ToDoList.java,v 1.20 2003/12/13 23:01:40 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.19 2003/11/30 22:05:41 alexb Exp $
+// $Id: ToDoList.java,v 1.20 2003/12/13 23:01:40 alexb Exp $
 
 package org.argouml.cognitive;
 
@@ -173,7 +173,7 @@ public class ToDoList extends Observable implements Runnable, Serializable {
             
             // the validity checking thread should wait if disabled.
             synchronized (this) {
-                if(isPaused){
+                while(isPaused){
                     try{
                         this.wait();
                     }catch (InterruptedException ignore) {
