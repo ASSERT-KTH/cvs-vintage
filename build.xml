@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.39 2001/12/03 04:33:06 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.40 2001/12/03 04:44:19 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -192,8 +192,9 @@ os.version:      ${os.version}
     <property name="sun.jsse.root" value="${project.thirdparty}/sun/jsse"/>
     <property name="sun.jsse.lib" value="${sun.jsse.root}/lib"/>
     <path id="sun.jsse.classpath">
-      <pathelement path="${sun.jaas.lib}/jsse.jar"/>
-      <pathelement path="${sun.jaas.lib}/jnet.jar"/>
+      <fileset dir="${sun.jsse.lib}">
+        <include name="**/*.jar"/>
+      </fileset>
     </path>
 
     <!-- JavaBeans Activation Framework (JAF) -->
