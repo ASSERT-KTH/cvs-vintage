@@ -6,3 +6,5 @@ Install Inno Setup from:	http://www.jrsoftware.org/isinfo.php
 Open the context-menu with Windows Explorer and select "compile".
 
 This will automatically create "/ColumbaSetup.exe".
+
+Edit the columba_setup.iss to adjust the Version info and to bundle a JRE
