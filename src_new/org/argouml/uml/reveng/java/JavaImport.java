@@ -24,13 +24,9 @@
 package org.argouml.uml.reveng.java;
 
 import java.io.*;
-import antlr.collections.AST;
-import antlr.collections.impl.*;
-import antlr.*;
 import org.argouml.kernel.*;
 import org.argouml.uml.reveng.*;
 import org.argouml.application.api.*;
-import org.tigris.gef.base.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +35,8 @@ import java.awt.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.15 $
- * $Date: 2003/02/23 17:47:14 $
+ * $Revision: 1.16 $
+ * $Date: 2003/03/07 08:00:03 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -51,8 +47,6 @@ public class JavaImport {
     static private JRadioButton attribute;
 
     static private JRadioButton datatype;
-
-    static private JCheckBox create_diagrams;
 
     /**
      * Get the panel that lets the user set reverse engineering
@@ -126,22 +120,11 @@ public class JavaImport {
 		      new GridBagConstraints(GridBagConstraints.RELATIVE,
 					     GridBagConstraints.RELATIVE,
 					     GridBagConstraints.REMAINDER,
-					     1,
+		                 GridBagConstraints.REMAINDER,
 					     1.0, 1.0,
 					     GridBagConstraints.NORTHWEST,
 					     GridBagConstraints.NONE,
 					     new Insets(0, 5, 5, 5),
-					     0, 0));
-            create_diagrams = new JCheckBox("Create diagrams from imported code", true);
-            configPanel.add(create_diagrams,
-		      new GridBagConstraints(GridBagConstraints.RELATIVE,
-					     GridBagConstraints.RELATIVE,
-					     GridBagConstraints.REMAINDER,
-					     GridBagConstraints.REMAINDER,
-					     1.0, 1.0,
-					     GridBagConstraints.NORTHWEST,
-					     GridBagConstraints.NONE,
-					     new Insets(5, 5, 0, 5),
 					     0, 0));
 	}
 	return configPanel;
@@ -167,7 +150,7 @@ public class JavaImport {
 
 	// Create a modeller for the parser
 	Modeller modeller = new Modeller(p.getModel(),
-                                         create_diagrams.isSelected()?diagram:null,
+                                         diagram,
 					 attribute.isSelected(),
 					 datatype.isSelected());
 
