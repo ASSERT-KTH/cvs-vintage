@@ -80,7 +80,7 @@ public class Response {
     
     public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 
-    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+    public static final String DEFAULT_CHAR_ENCODING = "ISO-8859-1";
 
     public static final String LOCALE_DEFAULT="en";
 
@@ -113,7 +113,7 @@ public class Response {
     // holds request error URI
     String errorURI=null;
 
-    // 
+    // content type set by user, not including encoding
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
@@ -410,6 +410,9 @@ public class Response {
         return locale;
     }
 
+    /** Called explicitely by user to set the Content-Language and
+     *  the default encoding
+     */
     public void setLocale(Locale locale) {
         if (locale == null || included) {
             return;  // throw an exception?
@@ -421,11 +424,16 @@ public class Response {
         // Set the contentLanguage for header output
         contentLanguage = locale.getLanguage();
 
-        // Set the contentType for header output
-        // Use the setContentType() method so encoding is set properly
-        String newType = ContentType.constructLocalizedContentType(contentType,
-								   locale);
-        setContentType(newType);
+	// Wrong: if setLocale is called after setContentType, it'll override
+	// the user-value with the default value.
+        // String newType = ContentType.constructLocalizedContentType(
+	// contentType, locale);
+	//        setContentType(newType);
+
+	// Guessing charset from language is inexact - it's better to
+	// not do it.
+	// setContentType must take priority
+	//	characterEncoding = LocaleToCharsetMap.getCharset( locale );
 
 	// only one header !
 	headers.setValue("Content-Language").setString( contentLanguage);
