@@ -187,11 +187,11 @@ public class OffsetConnector extends LocatorConnector {
     /**
      * Resets offsets for an existing OffsetConnector. Called when dragging
      * a ChangeConnectionHandle.
-     * @see CH.ifa.draw.standard.ChangeConnectionHandle
+     * @see org.jhotdraw.standard.ChangeConnectionHandle
      *     
      * @param x - x coordinate of point moved to
      * @param y - y coordinate of point moved to
-     * @see CH.ifa.draw.framework.Connector#connectorMovedTo(int, int)
+     * @see org.jhotdraw.framework.Connector#connectorMovedTo(int, int)
      */
     public Point connectorMovedTo(int x, int y) {
         calculateFigureConstrainedOffsets(x, y);
@@ -223,7 +223,7 @@ public class OffsetConnector extends LocatorConnector {
      * Gets the connection point. If the owner is resized the connection
      * points are (visually) preserved provided they lie on the box of the 
      * resized figure.
-     * @see CH.ifa.draw.standard.AbstractConnector#findPoint(CH.ifa.draw.framework.ConnectionFigure)
+     * @see org.jhotdraw.standard.AbstractConnector#findPoint(org.jhotdraw.framework.ConnectionFigure)
      */ 
     protected Point findPoint(ConnectionFigure connection) {
         Rectangle r = owner().displayBox();
