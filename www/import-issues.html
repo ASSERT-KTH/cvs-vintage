@@ -7,15 +7,15 @@
 <body bgcolor="#ffffff">
 
 <h3>Importing issue data</h3>
-<h5>$Id: import-issues.html,v 1.2 2003/01/23 18:06:00 jon Exp $</h5>
+<h5>$Id: import-issues.html,v 1.3 2003/03/19 18:46:54 stack Exp $</h5>
 
 <p>
 Scarab has the ability to export XML issues and then import them back
-in. For now, there is a lot of pre-requirements in order for this to
+in. For now, there are a lot of pre-requirements in order for this to
 happen successfully (see below). We cannot stress strongly enough that
 you backup your database before you do this import as the code is in its
-early early alpha stages. One thing that is known to not work entirely
-yet is the import of the dependency information. I have also not done a
+early alpha stages. One thing that is known to not work entirely
+is the import of the dependency information. I have also not done a
 lot of testing of the update-same-db import-type, just the
 create-same-db import-type.
 </p>
@@ -29,14 +29,14 @@ import-type element in the XML file:
   <strong>&lt;import-type&gt;create-same-db&lt;/import-type&gt;</strong> - 
   This means that when doing an import, all issues being imported will be 
   considered new issues, any pre-existing data will be ignored and all data
-  in the XML file will be imported as new data. Right now, this is the same
+  in the XML file will be imported as new data. Right now, this has the same
   behavior as create-different-db.
 </p>
 <p>
   <strong>&lt;import-type&gt;create-different-db&lt;/import-type&gt;</strong> - 
   This means that when doing an import, all issues being imported will be 
   considered new issues, any pre-existing data will be ignored and all data
-  in the XML file will be imported as new data. Right now, this is the same
+  in the XML file will be imported as new data. Right now, this has the same
   behavior as create-same-db.
 </p>
 <p>
@@ -48,37 +48,47 @@ import-type element in the XML file:
 </p>
 
 <p>
-The current pre-requirements for a successful import is that all of the
+The current pre-requirements for a successful import are that all of the
 modules, usernames, issue/artifact types, attributes, attribute options
-referenced in the XML file must exist in the system. If they cannot be
-found, then exceptions will be thrown and you must start over with a
-backup of the data in your database. I plan on having a validation phase
-which checks to make sure the data exists in the database before doing
-the import, but for now, we just want to make sure that an import works
-correctly before doing the validation.
+referenced in the XML file must already exist in the system. If they cannot
+be found, the import will fail.
 </p>
 
 <p>
-To perform the import, one needs to setup some properties and then
-execute the scarab/build/import.xml file. The properties can be defined
-in a ~/build.properties file (or ~/scarab.build.properties,
+Importing can be done via the UI into a running scarab or via an ImportIssues 
+ant task.
+</p>  
+
+<p>
+The import issues screen can be found under <strong>Admin->Modules</strong>
+in the navigation bar.  The import issues UI can be asked to give back the 
+issue import results as xml by setting the value of the form input 'format' 
+field to 'xml'.  Such a feature might be used scripting a mass import of 
+issues via HTTP POST.
+</p>
+
+<p>
+To perform the import via ant, one needs to setup some properties
+and then execute the scarab/build/import.xml file. The properties can be
+defined in a ~/build.properties file (or ~/scarab.build.properties,
 scarab/build.properties, etc. Look at the top of the import.xml file
 for the various locations which can be used.)
 </p>
 
 <p>
-The important properties which can be defined are:
+The important properties to define are:
 </p>
 
 <ul>
-    <li><strong>scarab.import.issues.xml</strong> - The relative or absolute path to the file 
-    which is going to be used to import the issues. Default: ../src/dtd/scarab-issues-export.xml</li>
-    <li><strong>scarab.import.config.file</strong> - The path to the xml import configuration
-    file which defines the log4j settings and other variables. Default:
-    /WEB-INF/conf/xmlimport.properties</li>
-    <li><strong>scarab.import.trprops.file</strong> - The path to the TurbineResources.properties
-    file which defines things like the connection to the database. Default: 
-    /WEB-INF/conf/TurbineResources.properties</li>
+    <li><strong>scarab.import.issues.xml</strong> - The relative or absolute
+    path to the file which is going to be used to import the issues.
+    Default: ../src/dtd/scarab-issues-export.xml</li>
+    <li><strong>scarab.import.config.file</strong> - The path to the xml
+    import configuration file which defines the log4j settings and other 
+    variables. Default: /WEB-INF/conf/xmlimport.properties</li>
+    <li><strong>scarab.import.trprops.file</strong> - The path to the 
+    TurbineResources.properties file which defines things like the connection
+    to the database. Default: /WEB-INF/conf/TurbineResources.properties</li>
 </ul>
 
 <p>
@@ -92,6 +102,10 @@ You should then see the debugging output sent to the screen. If you see an
 exception, please make sure to 
 <a href="mailto:jon@latchkey.com?subject=xml import problems">send it to me</a> 
 so that I can look into fixing it.
+</p>
+
+<p>
+See the xml import <a href="xmlimport/faq.html">FAQ</a> to learn more.
 </p>
 
 </body>
