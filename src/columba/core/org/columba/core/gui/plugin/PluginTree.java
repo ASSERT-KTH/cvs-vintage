@@ -139,5 +139,14 @@ public class PluginTree extends TreeTable {
 			map.put(c, node);
 		}
 	}
+	
+	public void removePluginNode(PluginNode node)
+	{
+		// notify tree
+		node.removeFromParent();
+		
+		// notify table
+		model.fireTableDataChanged();
+	}
 
 }

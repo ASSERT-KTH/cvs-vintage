@@ -29,7 +29,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -41,6 +40,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
@@ -307,7 +307,18 @@ public class PluginManagerDialog
 				new InfoViewerDialog(url);
 
 		} else if (action.equals("OPTIONS")) {
+
 		} else if (action.equals("REMOVE")) {
+			// get plugin directory
+			File directory =
+				MainInterface.pluginManager.getFolder(selectedNode.getId());
+				
+			// delete plugin from disk
+			DirectoryIO.delete(directory);
+			
+			// remove plugin from view
+			table.removePluginNode(selectedNode);
+			
 		} else if (action.equals("INSTALL")) {
 			JFileChooser chooser = new JFileChooser();
 
@@ -361,21 +372,14 @@ public class PluginManagerDialog
 		// extract plugin
 		ZipFileIO.extract(file, destination);
 
-		
-		JOptionPane.showMessageDialog(
-			this,
-			"Plugin will be started on next startup of Columba");
-		
-		/*
-		 * TODO: extract the plugin-folder name
-		 * 
-		 * if this works you don't have to restart Columba,
-		 * the plugin will be loaded automatically 
-		 * 
-		 
-		   File pluginFolder=null;
-		   MainInterface.pluginManager.addPlugin(pluginFolder);
-		*/
+		File pluginDirectory = ZipFileIO.getFirstFile(file);
+		if (pluginDirectory.isDirectory()) {
+			MainInterface.pluginManager.addPlugin(pluginDirectory);
+		} else {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog("Failure while trying to install plugin.\n");
+		}
+
 	}
 
 }
