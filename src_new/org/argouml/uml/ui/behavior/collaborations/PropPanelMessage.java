@@ -26,7 +26,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.15 2002/10/08 20:04:37 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.16 2002/10/11 20:51:18 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -70,6 +70,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 
     addField(Argo.localize("UMLMenu", "label.name"), nameField);
     addField(Argo.localize("UMLMenu", "label.stereotype"), stereotypeBox);
+    addField(Argo.localize("UMLMenu", "label.namespace"), namespaceScroll);
 
     JList senderList = new UMLLinkedList(this, new UMLMessageSenderListModel(this));
     senderList.setVisibleRowCount(1);

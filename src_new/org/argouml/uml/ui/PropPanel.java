@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.31 2002/10/08 20:04:35 kataka Exp $
+// $Id: PropPanel.java,v 1.32 2002/10/11 20:51:18 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -685,18 +685,6 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
         }
     }
 
-    public boolean isAcceptibleStereotype(MModelElement element) {
-        boolean isAcceptible = false;
-        if(element instanceof MStereotype) {
-            String baseClass = ((MStereotype) element).getBaseClass();
-            isAcceptible = true;
-            if(baseClass != null && !baseClass.equals("ModelElement")) {
-                isAcceptible = isAcceptibleBaseMetaClass(baseClass);
-            }
-        }
-        return isAcceptible;
-    }
-
     /**
      *   This function is used to determine what stereotypes are appropriate
      *   to list in the stereotype combo box.
@@ -708,9 +696,14 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
      *       Typically the baseClass attribute for a Stereotype.
      *   @return true if target type of the panel is an instance
      *       of the metaclass or a derived metaclass.
+     * 
+     * Jaap Branderhorst 2002-10-11 removed this. Refactored it in such a way
+     * that the valid stereotypes are determined on basis of the baseclass string
+     * of stereotype
      */
-    abstract protected boolean isAcceptibleBaseMetaClass(String baseClass);
+   //  abstract protected boolean isAcceptibleBaseMetaClass(String baseClass);
 
+/*
     public void setStereotype(MStereotype stereotype) {
         Object target = getTarget();
         if(target instanceof MModelElement) {
@@ -726,5 +719,6 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
         }
         return stereotype;
     }
+    */
 
 } /* end class PropPanel */

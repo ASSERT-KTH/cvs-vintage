@@ -24,7 +24,7 @@
 // File: PropPanelExtensionPoint.java
 // Classes: PropPanelExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelExtensionPoint.java,v 1.5 2002/10/10 21:34:30 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.6 2002/10/11 20:51:18 kataka Exp $
 
 // 27 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
 // proper Extend implementation with Use Cases
@@ -87,7 +87,6 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
         addField(Argo.localize("UMLMenu", "label.stereotype"), 
             new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceComboBox);
         
         // Our location (a String). We can pass in the get and set methods from
         // NSUML associated with the NSUML type. Allow the location label to

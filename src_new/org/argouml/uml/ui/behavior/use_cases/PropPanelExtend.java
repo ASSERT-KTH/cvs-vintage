@@ -24,7 +24,7 @@
 // File: PropPanelExtend.java
 // Classes: PropPanelExtend
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelExtend.java,v 1.7 2002/10/10 21:34:30 kataka Exp $
+// $Id: PropPanelExtend.java,v 1.8 2002/10/11 20:51:18 kataka Exp $
 
 // 22 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
 // proper Extend implementation with Use Cases
@@ -77,7 +77,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
         addField(Argo.localize("UMLMenu", "label.stereotype"), 
             new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceComboBox);
+        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceScroll);
 
         add(LabelledLayout.getSeperator());
             
