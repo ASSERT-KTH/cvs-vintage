@@ -15,8 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
@@ -33,6 +36,7 @@ import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
+import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
@@ -84,6 +88,14 @@ public class TreeController implements TreeWillExpandListener {
 			new MessageTransferHandler(
 				((TableOwner) getMailFrameController()).getTableController()));
 
+		/*
+		getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
+			"RENAME");
+		RenameFolderAction action = new RenameFolderAction(mailFrameController);
+		getView().getActionMap().put("RENAME", action);
+		*/
+		
 	}
 
 	public TreeModel getModel() {
@@ -154,10 +166,10 @@ public class TreeController implements TreeWillExpandListener {
 		// -> list of folders gets synchronized 
 		FolderCommandReference[] cr = new FolderCommandReference[1];
 		cr[0] = new FolderCommandReference(treeNode);
-
+		
 		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
 		*/
-		
+
 		// save expanded state
 		saveExpandedState(treeNode, e.getPath());
 	}

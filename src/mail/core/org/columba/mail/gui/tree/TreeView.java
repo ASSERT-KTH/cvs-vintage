@@ -83,16 +83,7 @@ public class TreeView extends DndTree {
 			expand(child);
 		}
 
-		/*
-		int rowCount = getRowCount();
 		
-		expandRow(0);
-		rowCount = getRowCount();
-		
-		expandRow(1);
-		
-		repaint();
-		*/
 	}
 
 }

@@ -28,6 +28,25 @@ All Rights Reserved.
 
 Provides all abstract classes for a folder-orentiented datastorage.
 
+<p>
+Every folder class subclasses {@link FolderTreeNode}, which is basically only
+a mutable treenode, which uses the tree.xml configuration file as {@link TreeModel}.
+</p>
+
+<p>
+Unlike {@link FolderTreeNode} which doesn't contain messages, {@link Folder} should
+be subclasses by every mailbox.
+</p>
+
+<p>
+{@link LocalFolder} is used by all local folders and builds a plugin-like approach
+to make it easy to add new mailbox formats in the futue.
+</p>
+
+<p>
+{@link FolderFactory} follows the factory pattern in providing methods to create
+new folders.
+</p>
 
 </body>
 </html>

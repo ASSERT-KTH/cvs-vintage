@@ -27,12 +27,14 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Represents a treenode and is the abstract class every folder
+ * extends.
+ * <p>
+ * In comparison to {@link Folder} it doesn't contain messages.
+ * <p>
+ * see tree.xml configuration file
+ * 
+ * @author fdietz
  */
 public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
@@ -42,13 +44,14 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 	protected final static ImageIcon expandedIcon =
 		ImageLoader.getSmallImageIcon("folder-open.png");
 
+	// folderitem wraps xml configuration from tree.xml
 	protected FolderItem node;
+	
+	// locking mechanism
 	protected Lock myLock;
 
+	// the next new folder will get this UID
 	private static int nextUid = 0;
-
-	//private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
-	//private final Class[] STRING_ARG = new Class[] { String.class };
 
 	public FolderTreeNode(String name, String type) {
 		super();
@@ -78,21 +81,11 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 	}
 
 	/**
-		 * Method getSelectionTreePath.
-		 * @return TreePath
-		 */
+	 * Method getSelectionTreePath.
+	 * @return TreePath
+	 */
 	public TreePath getSelectionTreePath() {
-		//TreeNodeList list = new TreeNodeList( getTreePath() );
-		/*
-		TreeNode[] treeNodes = getPathToRoot(this, 0);
-		TreePath path = new TreePath(treeNodes[0]);
-		
-		for (int i = 1; i < treeNodes.length; i++) {
-			Folder folder = (Folder) treeNodes[i];
-			path.pathByAddingChild(folder);
-		}
-		return path;
-		*/
+
 		return new TreePath(getPathToRoot(this, 0));
 	}
 
@@ -108,6 +101,48 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 		return expandedIcon;
 	}
 
+	public XmlElement getNode() {
+		return node.getRoot();
+	}
+
+	public FolderItem getFolderItem() {
+		return node;
+	}
+
+	/**
+		 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
+		 */
+	public String getName() {
+		String name = null;
+
+		FolderItem item = getFolderItem();
+		name = item.get("property", "name");
+
+		return name;
+	}
+
+	/**
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+	 */
+	public void setName(String newName) {
+
+		FolderItem item = getFolderItem();
+		item.set("property", "name", newName);
+
+	}
+
+	/**
+	 * Method getCommandReference.
+	 * 
+	 * @param r
+	 * @return FolderCommandReference[]
+	 */
+	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
+		return r;
+	}
+
+	/********************************** locking mechanism ****************************/
+
 	public boolean tryToGetLock(Object locker) {
 		return myLock.tryToGetLock(locker);
 	}
@@ -116,13 +151,7 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 		myLock.release();
 	}
 
-	public XmlElement getNode() {
-		return node.getRoot();
-	}
-
-	public FolderItem getFolderItem() {
-		return node;
-	}
+	/**************************** treenode management *******************************/
 
 	public void insert(FolderTreeNode newFolder, int newIndex) {
 
@@ -163,18 +192,7 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 			}
 		}
 
-		//oldParent.fireTreeNodeStructureUpdate();
-		//fireTreeNodeStructureUpdate();
 	}
-
-	/*
-	public void removeFromParent() {
-		AdapterNode childAdapterNode = getNode();
-		childAdapterNode.remove();
-	
-		super.removeFromParent();
-	}
-	*/
 
 	public void removeFolder() throws Exception {
 		// remove XmlElement
@@ -190,20 +208,6 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 		getNode().addElement(child.getNode());
 	}
 
-	/*
-	public void remove(FolderTreeNode childNode) {
-		FolderTreeNode childFolder = (FolderTreeNode) childNode;
-		AdapterNode childAdapterNode = childFolder.getNode();
-		childAdapterNode.remove();
-	
-		int index = getIndex(childFolder);
-		children.removeElementAt(index);
-		//fireTreeNodeStructureUpdate();
-	
-		//return childFolder;
-	}
-	*/
-
 	public FolderTreeNode findChildWithName(String str, boolean recurse) {
 		for (int i = 0; i < getChildCount(); i++) {
 			FolderTreeNode child = (FolderTreeNode) getChildAt(i);
@@ -211,9 +215,9 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
 			if (name.equalsIgnoreCase(str)) {
 				return child;
-			} else if( recurse ){
-				FolderTreeNode subchild = child.findChildWithName(str,true);
-				if( subchild != null ) {
+			} else if (recurse) {
+				FolderTreeNode subchild = child.findChildWithName(str, true);
+				if (subchild != null) {
 					return subchild;
 				}
 			}
@@ -221,7 +225,7 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 		return null;
 	}
 
-	public FolderTreeNode findChildWithUID(int uid, boolean recurse ) {
+	public FolderTreeNode findChildWithUID(int uid, boolean recurse) {
 		for (int i = 0; i < getChildCount(); i++) {
 			FolderTreeNode child = (Folder) getChildAt(i);
 			int childUid = child.getUid();
@@ -229,35 +233,14 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 			if (uid == childUid) {
 				return child;
 			} else if (recurse) {
-				FolderTreeNode subchild = child.findChildWithUID(uid,true);
-				if( subchild != null ) {
+				FolderTreeNode subchild = child.findChildWithUID(uid, true);
+				if (subchild != null) {
 					return subchild;
-				}				
+				}
 			}
 		}
 		return null;
 	}
-
-	/*
-	public void append(Folder newFolder) {
-		Folder oldParent = (Folder) newFolder.getParent();
-		int oldIndex = oldParent.getIndex(newFolder);
-		oldParent.remove(oldIndex);
-	
-		AdapterNode oldParentNode = oldParent.getNode();
-		AdapterNode newChildNode = newFolder.getNode();
-		oldParentNode.removeChild(newChildNode);
-	
-		newFolder.setParent(this);
-		children.add(newFolder);
-	
-		AdapterNode newParentNode = node;
-		newParentNode.appendChild(newChildNode);
-	
-		// oldParent.fireTreeNodeStructureUpdate();
-		// fireTreeNodeStructureUpdate();
-	}
-	*/
 
 	/**
 	 * Sets the node.
@@ -273,34 +256,6 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 			node.set("uid", nextUid++);
 		}
 	}
-
-	/**
-		 * Method isParent.
-		 * @param folder
-		 * @return boolean
-		 */
-
-	/*
-	public boolean isParent(FolderTreeNode folder) {
-	
-		FolderTreeNode parent = (FolderTreeNode) folder.getParent();
-		if (parent == null)
-			return false;
-	
-		//while ( parent.getUid() != 100 )
-		while (parent.getFolderItem() != null) {
-	
-			if (parent.getUid() == getUid()) {
-	
-				return true;
-			}
-	
-			parent = (FolderTreeNode) parent.getParent();
-		}
-	
-		return false;
-	}
-	*/
 
 	/**
 	 * 
@@ -326,48 +281,15 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
 	}
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
-	 */
-	public String getName() {
-		String name = null;
-
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
-
-		return name;
-	}
+	/********************* capabilities **************************************/
 
 	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-	 */
-	public void setName(String newName) {
-
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
-
-	}
-
-	/**
-	 * Method getCommandReference.
+	 * Does this treenode support adding messages?
 	 * 
-	 * @param r
-	 * @return FolderCommandReference[]
+	 * @return	true, if this folder is able to contain messages, false otherwise
+	 * 
 	 */
-	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
-		return r;
+	public boolean supportsAddMessage() {
+		return false;
 	}
-
-	/*
-	public void insert( FolderTreeNode child, int index )
-	{
-		
-		
-		super.insert(child, index );
-		
-		getFolderItem().getRoot().insertElement(child.getFolderItem().getRoot(), index );
-		
-		
-	}
-	*/
 }

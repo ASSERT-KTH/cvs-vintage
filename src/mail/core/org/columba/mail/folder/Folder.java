@@ -542,4 +542,11 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 */
 	public abstract Object addMessage(InputStream in) throws Exception;
 
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
+	 */
+	public boolean supportsAddMessage() {
+		return true;
+	}
+
 }

@@ -21,12 +21,14 @@ import org.columba.ristretto.message.io.FileSource;
 
 
 /**
- * @author freddy
+ * Interface for local folders. This is a complete separation from the
+ * headercache and the datastorage method.
+ * <p>
+ * This makes it very easy to add new mailbox formats.
+ * 
+ * @see org.columba.mail.folder.LocalFolder
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public interface DataStorageInterface {
 	public void saveMessage( String source, Object uid ) throws Exception;

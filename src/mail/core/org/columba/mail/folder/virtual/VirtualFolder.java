@@ -108,13 +108,11 @@ public class VirtualFolder extends Folder {
 		return new SearchFrame(frameController, this);
 	}
 
-	public boolean exists(Object uid)
-		throws Exception {
+	public boolean exists(Object uid) throws Exception {
 		return headerList.containsKey(uid);
 	}
 
-	public HeaderList getHeaderList()
-		throws Exception {
+	public HeaderList getHeaderList() throws Exception {
 
 		headerList.clear();
 		getMessageFolderInfo().clear();
@@ -146,7 +144,11 @@ public class VirtualFolder extends Folder {
 		VirtualFolder newFolder = null;
 		try {
 
-			newFolder = (VirtualFolder) FolderFactory.getInstance().createChild(searchFolder, name, "VirtualFolder");
+			newFolder =
+				(VirtualFolder) FolderFactory.getInstance().createChild(
+					searchFolder,
+					name,
+					"VirtualFolder");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 
@@ -235,8 +237,7 @@ public class VirtualFolder extends Folder {
 
 	}
 
-	protected void applySearch()
-		throws Exception {
+	protected void applySearch() throws Exception {
 
 		int uid = getFolderItem().getInteger("property", "source_uid");
 		Folder srcFolder = (Folder) MainInterface.treeModel.getFolder(uid);
@@ -268,10 +269,7 @@ public class VirtualFolder extends Folder {
 
 	}
 
-	protected void applySearch(
-		Folder parent,
-		Filter filter)
-		throws Exception {
+	protected void applySearch(Folder parent, Filter filter) throws Exception {
 
 		Folder folder = parent;
 
@@ -280,10 +278,9 @@ public class VirtualFolder extends Folder {
 
 			for (int i = 0; i < resultUids.length; i++) {
 				HeaderInterface header =
-					(HeaderInterface) folder.getMessageHeader(
-						resultUids[i]);
+					(HeaderInterface) folder.getMessageHeader(resultUids[i]);
 				try {
-					if ( header != null )
+					if (header != null)
 						add((ColumbaHeader) header, folder, resultUids[i]);
 				} catch (Exception ex) {
 					System.out.println("Search exception: " + ex.getMessage());
@@ -389,9 +386,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
 	 */
-	public Object addMessage(
-		ColumbaMessage message)
-		throws Exception {
+	public Object addMessage(ColumbaMessage message) throws Exception {
 		return null;
 	}
 
@@ -399,27 +394,20 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(String, WorkerStatusController)
 	 */
 
-	public Object addMessage(String source)
-		throws Exception {
+	public Object addMessage(String source) throws Exception {
 		return null;
 	}
-
-	
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int, WorkerStatusController)
 	 */
-	public void markMessage(
-		Object[] uids,
-		int variant)
-		throws Exception {
+	public void markMessage(Object[] uids, int variant) throws Exception {
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
 	 */
-	public void removeMessage(Object uid)
-		throws Exception {
+	public void removeMessage(Object uid) throws Exception {
 
 		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
 
@@ -434,9 +422,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimePart(Object, Integer[], WorkerStatusController)
 	 */
-	public MimePart getMimePart(
-		Object uid,
-		Integer[] address)
+	public MimePart getMimePart(Object uid, Integer[] address)
 		throws Exception {
 
 		return null;
@@ -446,8 +432,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object, WorkerStatusController)
 	 */
-	public String getMessageSource(Object uid)
-		throws Exception {
+	public String getMessageSource(Object uid) throws Exception {
 
 		return null;
 	}
@@ -455,9 +440,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
 	 */
-	public MimeTree getMimePartTree(
-		Object uid)
-		throws Exception {
+	public MimeTree getMimePartTree(Object uid) throws Exception {
 
 		return null;
 	}
@@ -465,9 +448,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object, WorkerStatusController)
 	 */
-	public ColumbaHeader getMessageHeader(
-		Object uid)
-		throws Exception {
+	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 
 		return (ColumbaHeader) headerList.get(uid);
 	}
@@ -475,9 +456,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessage(Object, WorkerStatusController)
 	 */
-	public ColumbaMessage getMessage(
-		Object uid,
-		WorkerStatusController worker)
+	public ColumbaMessage getMessage(Object uid, WorkerStatusController worker)
 		throws Exception {
 
 		return null;
@@ -487,16 +466,12 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter, Object[], WorkerStatusController)
 	 */
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids)
+	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
 		return null;
 	}
 
-	public Object[] searchMessages(
-		Filter filter)
-		throws Exception {
+	public Object[] searchMessages(Filter filter) throws Exception {
 		return null;
 	}
 
@@ -522,15 +497,16 @@ public class VirtualFolder extends Folder {
 		FolderCommandReference[] newReference = null;
 
 		Object[] uids = r[0].getUids();
-		
+
 		// if we didn't pass uid array here, use all message in this virtual folder
 		try {
-			if ( uids == null ) uids = getUids();
+			if (uids == null)
+				uids = getUids();
 		} catch (Exception e1) {
-			
+
 			e1.printStackTrace();
 		}
-		
+
 		if (uids == null)
 			return r;
 
@@ -607,7 +583,7 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids() throws Exception {
-		
+
 		int count = headerList.count();
 		Object[] uids = new Object[count];
 		int i = 0;
@@ -626,10 +602,10 @@ public class VirtualFolder extends Folder {
 
 		FolderItem item = getFolderItem();
 		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");		
-		item.set("property", "include_subfolders", "true");		
+		item.set("property", "subfolder", "true");
+		item.set("property", "include_subfolders", "true");
 		item.set("property", "source_uid", "101");
-		
+
 		headerList = new HeaderList();
 
 		XmlElement filterElement = node.getElement("filter");
@@ -654,7 +630,7 @@ public class VirtualFolder extends Folder {
 
 			getFolderItem().getRoot().addElement(f.getRoot());
 		}
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -706,6 +682,18 @@ public class VirtualFolder extends Folder {
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 		throws Exception {
 		return null;
+	}
+
+	/**
+	 * 
+	 * VirtualFolder doesn't allow adding messages, in comparison to 
+	 * other regular mailbox folders.
+	 * 
+	 * 
+	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
+	 */
+	public boolean supportsAddMessage() {
+		return false;
 	}
 
 }

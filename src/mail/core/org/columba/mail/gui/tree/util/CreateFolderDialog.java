@@ -18,6 +18,7 @@ package org.columba.mail.gui.tree.util;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,7 +118,9 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		builder.appendRow("fill:d:grow");
 		builder.nextLine(2);
 
-		builder.append(new JScrollPane(tree), 3);
+		JScrollPane scrollPane = new JScrollPane(tree);
+		scrollPane.setPreferredSize( new Dimension(200,300));
+		builder.append(scrollPane, 3);
 		
 		contentPane.add( builder.getPanel(), BorderLayout.CENTER);
 

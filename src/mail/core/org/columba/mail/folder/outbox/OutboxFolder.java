@@ -157,4 +157,16 @@ public class OutboxFolder extends CachedMHFolder {
 
 		}
 	}
+	/**
+	 * 
+	 * OutboxFolder doesn't allow adding messages, in comparison to 
+	 * other regular mailbox folders.
+	 * 
+	 * 
+	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
+	 */
+	public boolean supportsAddMessage() {
+		return false;
+	}
+
 }
