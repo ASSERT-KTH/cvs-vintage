@@ -11,6 +11,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import javax.security.auth.Subject;
 
+import org.jboss.logging.Logger;
+
 /** The SecurityAssociation class maintains the security principal and
 credentials. This can be done on either a singleton basis or a thread
 local basis depending on the server property. When the server property has
@@ -33,10 +35,13 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.17 $
+@version $Revision: 1.18 $
  */
 public final class SecurityAssociation
 {
+   private static Logger log = Logger.getLogger(SecurityAssociation.class);
+   /** A flag indicating if trace level logging should be performed */
+   private static boolean trace;
    /** A flag indicating if security information is global or thread local */
    private static boolean server;
    /** The SecurityAssociation principal used when the server flag is false */
@@ -84,6 +89,7 @@ public final class SecurityAssociation
          // Ignore and use the default
       }
       
+      trace = log.isTraceEnabled();
       if( useThreadLocal )
       {
          threadPrincipal = new ThreadLocal();
@@ -190,6 +196,8 @@ public final class SecurityAssociation
       if( sm != null )
          sm.checkPermission(setPrincipalInfoPermission);
 
+      if( trace )
+         log.trace("setPrincipal, p="+principal+", server="+server);
       if (server)
          threadPrincipal.set( principal );
       else
@@ -237,6 +245,8 @@ public final class SecurityAssociation
       if( sm != null )
          sm.checkPermission(setPrincipalInfoPermission);
 
+      if( trace )
+         log.trace("setSubject, s="+subject+", server="+server);
       if (server)
          threadSubject.set( subject );
       else
@@ -257,6 +267,9 @@ public final class SecurityAssociation
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
          sm.checkPermission(setPrincipalInfoPermission);
+
+      if( trace )
+         log.trace("clear, server="+server);
       if( server == true )
       {
          threadPrincipal.set(null);
@@ -278,6 +291,8 @@ public final class SecurityAssociation
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
          sm.checkPermission(setRunAsIdentity);
+      if( trace )
+         log.trace("pushRunAsIdentity, runAs="+runAs);
       threadRunAsStacks.push(runAs);
    }
    /** Pop the current thread of control's run-as identity.
@@ -288,6 +303,8 @@ public final class SecurityAssociation
       if( sm != null )
          sm.checkPermission(setRunAsIdentity);
       RunAsIdentity runAs = threadRunAsStacks.pop();
+      if( trace )
+         log.trace("popRunAsIdentity, runAs="+runAs);
       return runAs;
    }
 
