@@ -61,7 +61,7 @@ import org.jboss.tm.TxManager;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.41 $
+* @version $Revision: 1.42 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -107,202 +107,157 @@ import org.jboss.tm.TxManager;
 * </ol>
 */
 public class EntityInstanceInterceptor
-extends AbstractInterceptor
+   extends AbstractInterceptor
 {
-	// Constants -----------------------------------------------------
+   // Constants -----------------------------------------------------
 	
-	// Attributes ----------------------------------------------------
+   // Attributes ----------------------------------------------------
 	
-	protected EntityContainer container;
+   protected EntityContainer container;
 	
-	// Static --------------------------------------------------------
+   // Static --------------------------------------------------------
 	
 	/** Use a JBoss custom log4j category for trace level logging */
-	static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntityInstanceInterceptor.class);
+   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntityInstanceInterceptor.class);
 	
-	// Constructors --------------------------------------------------
+   // Constructors --------------------------------------------------
 	
 	// Public --------------------------------------------------------
 	
-	public void setContainer(Container container)
-	{
-		this.container = (EntityContainer)container;
-	}
+   public void setContainer(Container container)
+   {
+      this.container = (EntityContainer)container;
+   }
 	
-	public Container getContainer()
-	{
-		return container;
-	}
+   public Container getContainer()
+   {
+      return container;
+   }
 	
-	// Interceptor implementation --------------------------------------
+   // Interceptor implementation --------------------------------------
 	
-	public Object invokeHome(MethodInvocation mi)
-	throws Exception
-	{
-		// Get context
-		EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
+   public Object invokeHome(MethodInvocation mi)
+      throws Exception
+   {
+      // Get context
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
 		
 		// Pass it to the method invocation
-		mi.setEnterpriseContext(ctx);
+      mi.setEnterpriseContext(ctx);
 		
-		// Give it the transaction
-		ctx.setTransaction(mi.getTransaction());
+      // Give it the transaction
+      ctx.setTransaction(mi.getTransaction());
 		
-		try
-		{
-			// Invoke through interceptors
-			return getNext().invokeHome(mi);
-		} 
-		finally
-		{         
+      try
+      {
+         // Invoke through interceptors
+         return getNext().invokeHome(mi);
+      } 
+      finally
+      {         
 			
-			// Is the context now with an identity? in which case we need to insert
-			if (ctx.getId() != null)
-			{
+         // Is the context now with an identity? in which case we need to insert
+         if (ctx.getId() != null)
+         {
 				
-				BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+            BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
 				
-				lock.sync(); // lock all access to BeanLock
+            lock.sync(); // lock all access to BeanLock
 				
-				try {
+            try {
 					
-					// Set the transaction on the lock it will protect the instance
-					lock.setTransaction(ctx.getTransaction());
+               // Set the transaction on the lock it will protect the instance
+               lock.setTransaction(ctx.getTransaction());
 					
-					// marcf: possible race on creation and usage
-					// insert instance in cache, 
-					container.getInstanceCache().insert(ctx);
+               // marcf: possible race on creation and usage
+               // insert instance in cache, 
+               container.getInstanceCache().insert(ctx);
 					
-				}
-				finally
-				{
-					lock.releaseSync();
+            }
+            finally
+            {
+               lock.releaseSync();
 					
-					container.getLockManager().removeLockRef(ctx.getCacheKey());
-				}
-			}
-			//Do not send back to pools in any case, let the instance be GC'ed
-		}
-	}
+               container.getLockManager().removeLockRef(ctx.getCacheKey());
+            }
+         }
+         //Do not send back to pools in any case, let the instance be GC'ed
+      }
+   }
 	
-	public Object invoke(MethodInvocation mi)
-	throws Exception
-	{
+   public Object invoke(MethodInvocation mi)
+      throws Exception
+   {
 		
-		// The key
-		CacheKey key = (CacheKey) mi.getId();
+      // The key
+      CacheKey key = (CacheKey) mi.getId();
 		
-		// The context
-		EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
+      // The context
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
 		
-		boolean trace = log.isTraceEnabled();
-		if( trace ) log.trace("Begin invoke, key="+key);
+      boolean trace = log.isTraceEnabled();
+      if( trace ) log.trace("Begin invoke, key="+key);
 			
-		// Associate transaction, in the new design the lock already has the transaction from the 
-		// previous interceptor
-		ctx.setTransaction(mi.getTransaction());
+      // Associate transaction, in the new design the lock already has the transaction from the 
+      // previous interceptor
+      ctx.setTransaction(mi.getTransaction());
 		
-		// Set context on the method invocation
-		mi.setEnterpriseContext(ctx);
+      // Set context on the method invocation
+      mi.setEnterpriseContext(ctx);
 		
-		boolean exceptionThrown = false;
+      boolean exceptionThrown = false;
 		
-		try
-		{	
-			return getNext().invoke(mi);
-		}
-		catch (RemoteException e)
-		{
-			exceptionThrown = true;
-			throw e;
-		} catch (RuntimeException e)
-		{
-			exceptionThrown = true;
-			throw e;
-		} catch (Error e)
-		{
-			exceptionThrown = true;
-			throw e;
-		} 
-		finally
-		{
-			// ctx can be null if cache.get throws an Exception, for
-			// example when activating a bean.
-			if (ctx != null)
-			{				
+      try
+      {	
+         return getNext().invoke(mi);
+      }
+      catch (RemoteException e)
+      {
+         exceptionThrown = true;
+         throw e;
+      } catch (RuntimeException e)
+      {
+         exceptionThrown = true;
+         throw e;
+      } catch (Error e)
+      {
+         exceptionThrown = true;
+         throw e;
+      } 
+      finally
+      {
+         // ctx can be null if cache.get throws an Exception, for
+         // example when activating a bean.
+         if (ctx != null)
+         {				
 				// If an exception has been thrown, 
-				if (exceptionThrown && 					
-					// if tx, the ctx has been registered in an InstanceSynchronization. 
-					// that will remove the context, so we shouldn't.
-					// if no synchronization then we need to do it by hand
-					!ctx.hasTxSynchronization()) 
-				{
-					// Discard instance
-					// EJB 1.1 spec 12.3.1
-					container.getInstanceCache().remove(key);
+            if (exceptionThrown && 					
+                // if tx, the ctx has been registered in an InstanceSynchronization. 
+                // that will remove the context, so we shouldn't.
+                // if no synchronization then we need to do it by hand
+                !ctx.hasTxSynchronization()) 
+            {
+               // Discard instance
+               // EJB 1.1 spec 12.3.1
+               container.getInstanceCache().remove(key);
 					
-					if( trace ) log.trace("Ending invoke, exceptionThrown, ctx="+ctx);
-				}
-				else if (ctx.getId() == null)
-				{
-					// The key from the MethodInvocation still identifies the right cachekey
-					container.getInstanceCache().remove(key);
+               if( trace ) log.trace("Ending invoke, exceptionThrown, ctx="+ctx);
+            }
+            else if (ctx.getId() == null)
+            {
+               // The key from the MethodInvocation still identifies the right cachekey
+               container.getInstanceCache().remove(key);
 					
-					if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);
-						// no more pool return
-				}
-			}
+               if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);
+               // no more pool return
+            }
+         }
 			
-			if( trace )	log.trace("End invoke, key="+key+", ctx="+ctx);
+         if( trace )	log.trace("End invoke, key="+key+", ctx="+ctx);
 		
-		}	// end invoke		
-	}
+      }	// end invoke		
+   }
 	
-	// Private --------------------------------------------------------
-	
-	private static Method getEJBHome;
-	private static Method getHandle;
-	private static Method getPrimaryKey;
-	private static Method isIdentical;
-	private static Method remove;
-	
-	static
-	{
-		try
-		{
-			Class[] noArg = new Class[0];
-			getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-			getHandle = EJBObject.class.getMethod("getHandle", noArg);
-			getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-			isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-			remove = EJBObject.class.getMethod("remove", noArg);
-		}
-		catch (Exception x) {x.printStackTrace();}
-	}
-	
-	private boolean isCallAllowed(MethodInvocation mi)
-	{
-		boolean reentrant = ((EntityMetaData)container.getBeanMetaData()).isReentrant();
-		
-		if (reentrant)
-		{
-			return true;
-		}
-		else
-		{
-			Method m = mi.getMethod();
-			if (m.equals(getEJBHome) ||
-				m.equals(getHandle) ||
-				m.equals(getPrimaryKey) ||
-				m.equals(isIdentical) ||
-				m.equals(remove))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
 }
 
 
