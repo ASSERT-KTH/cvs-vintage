@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.40 2004/07/25 09:21:41 mkl Exp $
+// $Id: UMLComboBoxModel2.java,v 1.41 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,8 @@ public abstract class UMLComboBoxModel2
     /**
      * @see ru.novosoft.uml.MElementListener#listRoleItemSet(MElementEvent)
      */
-    public void listRoleItemSet(MElementEvent e) { }
+    public void listRoleItemSet(MElementEvent e) { 
+        }
 
     /**
      * If the property that this comboboxmodel depicts is changed by the NSUML
@@ -143,7 +144,8 @@ public abstract class UMLComboBoxModel2
     /**
      * @see ru.novosoft.uml.MElementListener#recovered(MElementEvent)
      */
-    public void recovered(MElementEvent e) { }
+    public void recovered(MElementEvent e) { 
+        }
 
     /**
      * @see ru.novosoft.uml.MElementListener#removed(MElementEvent)
@@ -517,7 +519,9 @@ public abstract class UMLComboBoxModel2
     /**
      * @see TargetListener#targetAdded(TargetEvent)
      */
-    public void targetAdded(TargetEvent e) { }
+    public void targetAdded(TargetEvent e) {
+        setTarget(e.getNewTarget());
+    }
 
     /**
      * @see TargetListener#targetRemoved(TargetEvent)

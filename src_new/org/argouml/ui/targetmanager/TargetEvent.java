@@ -1,4 +1,4 @@
-// $Id: TargetEvent.java,v 1.6 2003/09/19 21:28:42 d00mst Exp $
+// $Id: TargetEvent.java,v 1.7 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 package org.argouml.ui.targetmanager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A targetevent indicating that the target of ArgoUML has changed 
@@ -110,6 +114,42 @@ public class TargetEvent extends EventObject {
      */
     public Object getNewTarget() {
         return _newTargets == null || _newTargets.length < 1 ? null : _newTargets[0];
+    }
+    
+    /**
+     * Gets the targets that are removed from the selection
+     * @return the removed targets
+     */
+    public Object[] getRemovedTargets() {
+        List removedTargets = new ArrayList();
+        List oldTargets = Arrays.asList(_oldTargets);
+        List newTargets = Arrays.asList(_newTargets);
+        Iterator it = oldTargets.iterator();
+        while (it.hasNext()) {
+            Object o = it.next();
+            if (!newTargets.contains(o)) {
+                removedTargets.add(o);
+            }
+        }
+        return removedTargets.toArray();
+    }
+    
+    /**
+     * Returns the targets that are added to the selection
+     * @return the added targets
+     */
+    public Object[] getAddedTargets() {
+        List addedTargets = new ArrayList();
+        List oldTargets = Arrays.asList(_oldTargets);
+        List newTargets = Arrays.asList(_newTargets);
+        Iterator it = newTargets.iterator();
+        while (it.hasNext()) {
+            Object o = it.next();
+            if (!oldTargets.contains(o)) {
+                addedTargets.add(o);
+            }
+        }
+        return addedTargets.toArray();
     }
 }
 

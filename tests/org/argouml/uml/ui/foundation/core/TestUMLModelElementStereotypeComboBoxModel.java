@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.9 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
@@ -85,6 +86,7 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         super.tearDown();
         UmlFactory.getFactory().delete(elem);
         MFactoryImpl.setEventPolicy(oldEventPolicy);
+        UmlModelEventPump.getPump().cleanUp();
         model = null;
     }
     

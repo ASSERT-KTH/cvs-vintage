@@ -1,4 +1,4 @@
-// $Id: TargetListener.java,v 1.2 2003/04/29 19:25:07 kataka Exp $
+// $Id: TargetListener.java,v 1.3 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,9 @@ package org.argouml.ui.targetmanager;
 import java.util.EventListener;
 
 /**
- * @author gebruiker
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Listener for target events. 
+ * 
+ * @author jaap.branderhorst@xs4all.nl
  */
 public interface TargetListener extends EventListener {
     

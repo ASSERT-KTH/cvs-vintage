@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.42 2004/07/23 17:53:51 linus Exp $
+// $Id: ModelManagementHelper.java,v 1.43 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model.uml.modelmanagement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -174,8 +175,7 @@ public class ModelManagementHelper {
     }
 
     /**
-     * Returns all modelelements found in this namespace and its children
-     * that are of some class kind the projectbrowser model
+     * Returns all modelelements of the given kind
      *
      * @param kind is the class kind
      * @return Collection
@@ -185,7 +185,12 @@ public class ModelManagementHelper {
             return Collections.EMPTY_LIST;
         Project p = ProjectManager.getManager().getCurrentProject();
         MNamespace model = (MModel) p.getRoot();
-        return getAllModelElementsOfKind(model, kind);
+        Collection ret = getAllModelElementsOfKind(model, kind);
+        if (kind.isAssignableFrom(model.getClass())) {
+            ret = new ArrayList(ret);
+            ret.add(model);
+        }
+        return ret;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.16 2004/04/23 00:08:25 d00mst Exp $
+// $Id: TestUmlModelEventPump.java,v 1.17 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -171,23 +171,6 @@ public class TestUmlModelEventPump extends TestCase {
 						    new EventKey(2, "name"));
         assertTrue(list.length > 0);
         assertTrue(Arrays.asList(list).contains(listener));
-    }
-
-    /**
-     * Tests wether an exception is thrown if one tries to register a listener
-     * to a class that is no subclass of MBase
-     */
-    public void testAddNonMBaseClassListener() {
-        try {
-            UmlModelEventPump.getPump()
-		.addClassModelEventListener(listener,
-					    Object.class,
-					    new String[] {
-						"name"
-					    });
-            fail();
-        } catch (Exception ex) {
-        }
     }
 
     /**

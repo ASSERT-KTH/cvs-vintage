@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.5 2004/04/07 13:26:27 d00mst Exp $
+// $Id: ActionAddAttribute.java,v 1.6 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
@@ -40,19 +38,10 @@ import org.argouml.uml.ui.UMLChangeAction;
  * @stereotype singleton
  */
 public class ActionAddAttribute extends UMLChangeAction {
+    
+    public static ActionAddAttribute SINGLETON = new ActionAddAttribute();    
 
-    ////////////////////////////////////////////////////////////////
-    // static variables
-
-    public static ActionAddAttribute SINGLETON = new ActionAddAttribute();
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
-    public ActionAddAttribute() { super("button.new-attribute"); }
-
-    ////////////////////////////////////////////////////////////////
-    // main methods
+    public ActionAddAttribute() { super("button.new-attribute"); }    
 
     public void actionPerformed(ActionEvent ae) {	
 	Object target = TargetManager.getInstance().getModelTarget();

@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.16 2004/07/17 22:29:05 linus Exp $
+// $Id: StylePanel.java,v 1.17 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,6 +172,7 @@ public class StylePanel extends TabSpawnable implements TabFigTarget,
      *      TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
+        setTarget(e.getNewTarget());
     }
 
     /**

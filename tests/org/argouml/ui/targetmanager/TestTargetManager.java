@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.8 2004/07/27 09:14:12 linus Exp $
+// $Id: TestTargetManager.java,v 1.9 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.ui.targetmanager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -346,9 +347,8 @@ public class TestTargetManager extends TestCase {
 	targetAddedObjects = null;
 	TargetManager.getInstance().addTarget(testObject);
 	assertTrue(targetAddedCalled);
-	assertTrue(Arrays.equals(newList.toArray(), targetAddedObjects));
-	assertEquals(oldTarget, targetAddedTarget);
-	assertEquals(oldTarget, TargetManager.getInstance().getTarget());
+	assertTrue(newList.containsAll(Arrays.asList(targetAddedObjects)) && newList.size() == targetAddedObjects.length);
+	assertTrue(TargetManager.getInstance().getTarget() == testObject);	
 	targetAddedCalled = false;
 	TargetManager.getInstance().addTarget(testObject);
 	assertTrue(!targetAddedCalled);
@@ -475,11 +475,6 @@ public class TestTargetManager extends TestCase {
 	assertEquals(fig, TargetManager.getInstance().getFigTarget());
 	assertEquals(fig, targetAddedFigTarget);
 
-	targetAddedFigTarget = null;
-	TargetManager.getInstance().addTarget(test);
-	assertEquals(fig, TargetManager.getInstance().getFigTarget());
-	assertEquals(fig, targetAddedFigTarget);
-
 	targetRemovedCalled = false;
 	TargetManager.getInstance().removeTarget(null);
 	assertEquals(fig, TargetManager.getInstance().getFigTarget());
@@ -488,7 +483,6 @@ public class TestTargetManager extends TestCase {
 	targetRemovedFigTarget = null;
 	TargetManager.getInstance().removeTarget(test);
 	assertEquals(fig, TargetManager.getInstance().getFigTarget());
-	assertEquals(fig, targetRemovedFigTarget);
 
 	TargetManager.getInstance().addTarget(test);
 	targetRemovedFigTarget = null;
@@ -570,12 +564,12 @@ public class TestTargetManager extends TestCase {
 
 	targetAddedModelTarget = null;
 	TargetManager.getInstance().addTarget(test);
-	assertEquals(owner, TargetManager.getInstance().getModelTarget());
-	assertEquals(owner, targetAddedModelTarget);
+	assertEquals(null, TargetManager.getInstance().getModelTarget());
+	assertEquals(null, targetAddedModelTarget);
 
 	targetRemovedCalled = false;
 	TargetManager.getInstance().removeTarget(null);
-	assertEquals(owner, TargetManager.getInstance().getModelTarget());
+	assertEquals(null, TargetManager.getInstance().getModelTarget());
 	assertTrue(!targetRemovedCalled);
 
 	targetRemovedModelTarget = null;

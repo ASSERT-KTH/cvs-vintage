@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.19 2004/07/26 08:33:34 mkl Exp $
+// $Id: UMLComboBox2.java,v 1.20 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,7 +111,9 @@ public class UMLComboBox2
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        // we stay on the first target, so no need to do anything
+        if (e.getNewTarget() != getTarget()) {
+            removeActionListener(this);
+        }
     }
     
     /**

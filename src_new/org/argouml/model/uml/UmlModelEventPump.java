@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.39 2004/07/30 17:09:13 linus Exp $
+// $Id: UmlModelEventPump.java,v 1.40 2004/07/31 22:30:21 kataka Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,12 +196,14 @@ public final class UmlModelEventPump implements MElementListener {
         if (col == Collections.EMPTY_LIST)
             col = new ArrayList();
         
+        /*
         if (modelClass.isAssignableFrom(MModel.class)) {
             Object root =
                 ProjectManager.getManager().getCurrentProject().getRoot();
             if (root != null)
                 col.add(root);
         }
+        */
         modelClass = formatClass(modelClass);
         EventKey[] keys = _definition.getEventTypes(modelClass, eventName);
         Iterator it = col.iterator();
@@ -743,9 +745,10 @@ public final class UmlModelEventPump implements MElementListener {
 
     /**
      * Clears the hashmaps with listeners. This is only needed by the
-     * JUnit tests.  Therefore the visibility is 'default'.
+     * JUnit tests.  It's an implementation detail that the visibility is public. THIS METHOD SHOULD NOT BE 
+     * USED OUTSIDE JUNIT TESTS.
      */
-    void cleanUp() {
+    public void cleanUp() {
         _listenerMap = null;
         _listenerMap = new EventListenerHashMap();
         _classListenerMap = null;
@@ -1241,7 +1244,7 @@ class ClassListenerHashMap {
         EventListenerList[] lists = new EventListenerList[hierarchy.length];
         EventListenerList list = null;
         for (int i = 0; i < lists.length; i++) {
-            list = (EventListenerList) _listenerMap.get(hierarchy[i]);
+            list = (EventListenerList) _listenerMap.get(hierarchy[i].getName());
             lists[i] = list == null ? new EventListenerList() : list;
         }
         return lists;

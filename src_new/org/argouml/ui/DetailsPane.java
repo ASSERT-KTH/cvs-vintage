@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.39 2004/07/24 10:42:40 linus Exp $
+// $Id: DetailsPane.java,v 1.40 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -563,16 +563,17 @@ public class DetailsPane
      * @see TargetListener#targetAdded(TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        // we can neglect this, the detailspane allways selects the
-        // first target in a set of targets. The first target can only
-        // be changed in a targetRemoved or a TargetSet event
+        Object target = e.getNewTarget();
+        setTarget(target);
         fireTargetAdded(e);
     }
 
     /**
      * @see TargetListener#targetRemoved(TargetEvent)
      */
-    public void targetRemoved(TargetEvent e) {        
+    public void targetRemoved(TargetEvent e) {
+        Object target = e.getNewTarget();
+        setTarget(target);
         fireTargetRemoved(e);
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.11 2004/07/24 15:44:47 mkl Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.12 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -268,6 +268,7 @@ public abstract class UMLRadioButtonPanel
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
+        setTarget(e.getNewTarget());
     }
 
     /**

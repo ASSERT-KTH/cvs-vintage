@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.128 2004/07/23 17:53:53 linus Exp $
+// $Id: ProjectBrowser.java,v 1.129 2004/07/31 22:30:22 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -759,12 +759,24 @@ public class ProjectBrowser
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
+        Object target = e.getNewTarget();
+        if (target instanceof ArgoDiagram) {
+	    // ProjectManager.getManager().getCurrentProject().
+	    // setActiveDiagram((ArgoDiagram) target);
+            updateTitle();
+        }
     }
 
     /**
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
+        Object target = e.getNewTarget();
+        if (target instanceof ArgoDiagram) {
+	    // ProjectManager.getManager().getCurrentProject().
+	    // setActiveDiagram((ArgoDiagram) target);
+            updateTitle();
+        }
     }
 
     /**
@@ -773,8 +785,8 @@ public class ProjectBrowser
     public void targetSet(TargetEvent e) {
         Object target = e.getNewTarget();
         if (target instanceof ArgoDiagram) {
-	    ProjectManager.getManager().getCurrentProject().
-		setActiveDiagram((ArgoDiagram) target);
+	    // ProjectManager.getManager().getCurrentProject().
+	    // setActiveDiagram((ArgoDiagram) target);
             updateTitle();
         }
     }    

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.20 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLModelElementListModel2.java,v 1.21 2004/07/31 22:30:23 kataka Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -362,7 +362,9 @@ public abstract class UMLModelElementListModel2
     /**
      * @see TargetListener#targetAdded(TargetEvent)
      */
-    public void targetAdded(TargetEvent e) { }
+    public void targetAdded(TargetEvent e) {
+        setTarget(e.getNewTarget());
+    }
 
     /**
      * @see TargetListener#targetRemoved(TargetEvent)
