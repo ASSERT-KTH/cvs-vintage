@@ -15,10 +15,12 @@ import javax.management.MBeanRegistration;
 import javax.transaction.TransactionManager;
 import javax.naming.InitialContext;
 
-import org.jboss.proxy.ejb.GenericProxy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
+import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
+import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
@@ -27,7 +29,7 @@ import org.jboss.logging.Logger;
  * The Invoker is a local gate in the JMX system.
  *  
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
@@ -36,12 +38,12 @@ public class LocalInvoker
    protected void createService() throws Exception
    {
       // note on design: We need to call it ourselves as opposed to 
-      // letting the client JRMPDelegate look it 
+      // letting the client InvokerInterceptor look it 
       // up through the use of Registry, the reason being including
       // the classes in the client. 
       // If we move to a JNDI format (with local calls) for the
       // registry we could remove the call below
-      JRMPInvokerProxy.setLocal(this);
+      InvokerInterceptor.setLocal(this);
       
       Registry.bind(serviceName, this);
    }
@@ -50,8 +52,12 @@ public class LocalInvoker
    {
       InitialContext ctx = new InitialContext();
       try {
+         
+         /**
+          * FIXME marcf: what is this doing here?
+          */
          TransactionManager tm = (TransactionManager)ctx.lookup("java:/TransactionManager");
-         GenericProxy.setTransactionManager(tm);
+         TransactionInterceptor.setTransactionManager(tm);
       }
       finally {
          ctx.close();
@@ -87,7 +93,7 @@ public class LocalInvoker
       try
       {         
          ObjectName mbean = (ObjectName)
-            Registry.lookup((Integer)invocation.getContainer());
+            Registry.lookup((Integer)invocation.getObjectName());
          
          return server.invoke(mbean,
                               "",
