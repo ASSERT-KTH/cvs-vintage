@@ -98,7 +98,7 @@ public class WebXmlReader extends BaseInterceptor {
     static class WebXmlErrorHandler implements ErrorHandler{
 	Context ctx;
 	XmlMapper xm;
-	boolean ok;
+	boolean ok=true;
 	WebXmlErrorHandler( XmlMapper xm,Context ctx ) {
 	    this.ctx=ctx;
 	    this.xm=xm;
@@ -106,21 +106,27 @@ public class WebXmlReader extends BaseInterceptor {
 
 	public void warning (SAXParseException exception)
 	    throws SAXException {
+	    ok=false;
 	    ctx.log("web.xml: Warning " + exception );
 	    ctx.log(xm.positionToString());
 	}
 	public void error (SAXParseException exception)
 	    throws SAXException
 	{
+	    ok=false;
 	    ctx.log("web.xml: Error " + exception );
 	    ctx.log(xm.positionToString());
 	}
 	public void fatalError (SAXParseException exception)
 	    throws SAXException
 	{
+	    ok=false;
 	    ctx.log("web.xml: Fatal error " + exception );
 	    ctx.log(xm.positionToString());
 	    throw new SAXException( "Fatal error " + exception );
+	}
+	public boolean isOk() {
+	    return ok;
 	}
     }
     
@@ -133,13 +139,15 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
+	    WebXmlErrorHandler xeh=null;
 	    File v=new File( ctx.getWorkDir(), "webxmlval.txt" );
 	    if( validate ) {
 		if( ! v.exists() || 
 		    v.lastModified() < f.lastModified() ) {
 		    ctx.log("Validating web.xml");
 		    xh.setValidating(true);
-		    xh.setErrorHandler( new WebXmlErrorHandler( xh, ctx ) );
+		    xeh=new WebXmlErrorHandler( xh, ctx ); 
+		    xh.setErrorHandler( xeh );
 		}
 	    }
 
@@ -229,7 +237,8 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    Object ctx1=xh.readXml(f, ctx);
 
-	    if( validate ) {
+	    if( validate && xeh != null && xeh.isOk() ) {
+		// don't create the validation mark if an error was detected
 		try {
 		    FileOutputStream fos=new FileOutputStream( v );
 		    fos.write( 1 );
