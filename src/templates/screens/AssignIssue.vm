@@ -68,7 +68,7 @@ $l10n.ChangesSavedOnDone
 </ul>
 </div>
 
-#set ($assoUsers =  $scarabR.AssociatedUsers)
+#set ($assoUsers =  $data.User.AssociatedUsersMap)
 #set ($pair = $assoUsers.get($issue.IssueId))
     #if ($pair.size() == 0)
      <p class="alert">$l10n.NoneAssigned.</p>
