@@ -2319,4 +2319,8 @@ try{
         refresh();
     }
     
+    public String getVersion()
+    {
+        return "@VERSION@-@BUILD_DATE@";
+    }
 }
