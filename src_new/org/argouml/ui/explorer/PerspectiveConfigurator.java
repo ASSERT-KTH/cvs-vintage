@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.15 2004/10/24 13:28:43 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.16 2004/10/25 18:03:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,7 +208,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
         JScrollPane persScroll = new JScrollPane(perspectiveList,
 			    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        persPanel.add(renameTextField, BorderLayout.PAGE_START);
+        persPanel.add(renameTextField, BorderLayout.NORTH);
         persPanel.add(persScroll, BorderLayout.CENTER);
         c.gridx = 0;	  c.gridy = 1;
         c.gridwidth = 4;
