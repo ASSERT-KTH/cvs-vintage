@@ -1,5 +1,5 @@
 <!ELEMENT activities ( activity+ ) >
-<!ELEMENT activity ( attribute | description | id | new-option | new-value | old-option | old-value )* >
+<!ELEMENT activity ( id?, attribute, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, description ) >
 <!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
 <!ELEMENT activity-sets ( activity-set+ ) >
 <!ELEMENT artifact-type ( #PCDATA ) >
@@ -25,10 +25,14 @@
 <!ELEMENT modified-date ( format, timestamp ) >
 <!ELEMENT module ( id, parent-id, name, owner, description, url, domain, code ) >
 <!ELEMENT name ( #PCDATA ) >
-<!ELEMENT new-option ( #PCDATA ) >
-<!ELEMENT new-value ( #PCDATA ) >
+<!ELEMENT old-numeric-value ( #PCDATA ) >
+<!ELEMENT new-numeric-value ( #PCDATA ) >
+<!ELEMENT old-user ( #PCDATA ) >
+<!ELEMENT new-user ( #PCDATA ) >
 <!ELEMENT old-option ( #PCDATA ) >
+<!ELEMENT new-option ( #PCDATA ) >
 <!ELEMENT old-value ( #PCDATA ) >
+<!ELEMENT new-value ( #PCDATA ) >
 <!ELEMENT owner ( #PCDATA ) >
 <!ELEMENT parent ( #PCDATA ) >
 <!ELEMENT parent-id ( #PCDATA ) >
