@@ -174,12 +174,12 @@
   </select>
 #end
 
-#macro (templateTypeSelectBox $issue)
-  #set ($group = $intake.Issue.mapTo($issue))
-  <select name="$group.TypeId.Key">
-  #foreach ($type in $issue.getTemplateTypes())
-    <option value = "$type.IssueTypeId" #if( $type.IssueTypeId.equals("$issue.TypeId")) selected="selected" #end>
-    $type.Name
+#macro (templateTypeSelectBox $templateInfo)
+  #set ($group = $intake.IssueTemplateInfo.mapTo($templateInfo))
+  <select name="$group.ScopeId.Key">
+  #foreach ($scope in $scarabR.getScopes())
+    <option value = "$scope.ScopeId" #if( $scope.ScopeId.equals("$issue.ScopeId")) selected="selected" #end>
+    $scope.Name
     </option>
   #end
   </select>
