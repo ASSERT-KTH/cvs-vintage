@@ -20,6 +20,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -97,7 +98,7 @@ public class RemoveFolderAction
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
-			if (folder != null) {
+			if (folder != null && folder instanceof Folder ) {
 
 				FolderItem item = folder.getFolderItem();
 				if (item.get("property", "accessrights").equals("user"))
