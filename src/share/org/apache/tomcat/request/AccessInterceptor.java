@@ -312,7 +312,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    }
 	    return true;
 	case Container.EXTENSION_MAP:
-	    return ctPath.substring( 1 ).equals( URLUtil.getExtension( path ));
+	    return ctPath.substring( 1 ).equals(FileUtil.getExtension( path ));
 	case Container.PATH_MAP:
 	    return path.equals( ctPath );
 	}
@@ -343,7 +343,7 @@ class BasicAuthHandler extends Handler {
     
     BasicAuthHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.basicAuthHandler";
     }
 
@@ -390,7 +390,7 @@ class FormAuthHandler extends Handler {
     
     FormAuthHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formAuthHandler";
     }
 
@@ -448,7 +448,7 @@ class FormSecurityCheckHandler extends Handler {
     
     FormSecurityCheckHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formSecurityCheck";
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.15 2000/11/11 15:19:42 larryi Exp $
- * $Revision: 1.15 $
- * $Date: 2000/11/11 15:19:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.16 2000/12/08 23:18:53 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/12/08 23:18:53 $
  *
  * ====================================================================
  *
@@ -323,5 +323,29 @@ public class FileUtil {
         }
     }
     
+    public static String removeLast( String s) {
+	int i = s.lastIndexOf("/");
+	
+	if (i > 0) {
+	    s = s.substring(0, i);
+	} else if (i == 0 && ! s.equals("/")) {
+	    s = "/";
+	} else {
+	    s = "";
+	}
+	return s;
+    }
+
+    public static String getExtension( String path ) {
+        int i = path.lastIndexOf(".");
+	int j = path.lastIndexOf("/");
+
+	if ((i > 0) && (i > j))
+	    return path.substring(i);
+	else
+	    return null;
+    }
+
+
 
 }

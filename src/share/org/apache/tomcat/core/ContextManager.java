@@ -895,7 +895,7 @@ public final class ContextManager implements LogAware{
 
     // -------------------- Error handling --------------------
 
-    /** Called for error-codes. Will call the error hook.
+    /** Called for error-codes. Will call the error hook with a status code.
      */
     public final void handleStatus( Request req, Response res, int code ) {
 	if( code!=0 )
@@ -912,7 +912,7 @@ public final class ContextManager implements LogAware{
     }
 
     /**
-     *  Call error hook
+     *  Call error hook with an exception code.
      */
     public final void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];

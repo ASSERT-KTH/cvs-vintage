@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.5 2000/11/30 17:34:12 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/11/30 17:34:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.6 2000/12/08 23:18:54 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/12/08 23:18:54 $
  *
  * ====================================================================
  *
@@ -227,7 +227,7 @@ public class PrefixMapper {
 	    container = myMap.prefixMappedServlets.get(s);
 	    
 	    if (container == null) {
-		s=URLUtil.removeLast( s );
+		s=FileUtil.removeLast( s );
 	    }  else {
 		if( myMap.mapCacheEnabled ) {
 		    // XXX implement LRU or another replacement alghoritm

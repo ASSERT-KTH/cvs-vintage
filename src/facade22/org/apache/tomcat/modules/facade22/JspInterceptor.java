@@ -219,7 +219,7 @@ public class JspInterceptor extends BaseInterceptor {
 		    log( "Added mapping " + servletPath +
 			 " path=" + servletPath );
 	    }
-	    wrapper.setServletClass( classN );
+	    wrapper.setServletClassName( classN );
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
 	    // set initial exception on the servlet if one is present
 	    if ( jspInfo.isExceptionPresent() ) {

@@ -40,10 +40,10 @@ public class WebXmlReader extends BaseInterceptor {
     private Handler addServlet( Context ctx, String name, String classN )
 	throws TomcatException
     {
-	Handler sw=new ServletWrapper(); // ctx.createHandler();
+	ServletWrapper sw=new ServletWrapper(); // ctx.createHandler();
 	sw.setContext(ctx);
 	sw.setServletName( name );
-	sw.setServletClass( classN);
+	sw.setServletClassName( classN);
 	ctx.addServlet( sw );
 	sw.setLoadOnStartUp( -2147483646 );
 	return sw;

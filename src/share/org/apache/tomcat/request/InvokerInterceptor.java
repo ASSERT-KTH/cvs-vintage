@@ -150,7 +150,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	    // 	    sw.setContext(ctx);
 	    // 	    sw.setServletName(servletName);
 	    //	    ctx.addServlet( sw );
-	    sw.setServletClass( servletName );
+	    //	    sw.setServletClass( servletName );
 	    sw.setOrigin( Handler.ORIGIN_INVOKER );
 	    wrapper=sw;
 

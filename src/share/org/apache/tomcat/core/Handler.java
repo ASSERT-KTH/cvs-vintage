@@ -59,24 +59,44 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.util.collections.EmptyEnumeration;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 /**
- * The class that will generate the actual response.
+ * The class that will generate the actual response or response fragment.
  * Each Handler has a "name" that will determine the content that
  * it will handle.
- * 
- * @author costin@dnt.ro
+ *
+ * The choice to not use "mime/type" as Apache, NES, IIS
+ * is based on the fact that most of the time servlets have "names", and
+ * the mime handling is very different in servlet API.
+ * It is possible to use mime types as a name, and special interceptors can
+ * take advantage of that ( to better integrate with the server ), but
+ * this is not a basic feature.
+ *
+ * Handlers will implement doService, doInit, doDestroy - all methods are
+ * protected and can't be called from outside. This ensures the only entry
+ * points are service(), init(), destroy() and the state and error handling
+ * is consistent.
+ *
+ * Common properties:
+ * <ul>
+ *   <li>name
+ *   <li>configuration parameters
+ *   <li>
+ * </ul>
+ *
+ * @author Costin Manolache
  */
 public class Handler {
-    /** ServletWrapper counts. The accounting design is not
-	final, but all this is needed to tune up tomcat
-	( and to understand and be able to implement a good
-	solution )
-    */
+    /** accounting - various informations we capture about servlet
+     *	execution.
+     *  // XXX Not implemented
+     *  @see org.apache.tomcat.util.Counters
+     */
     public static final int ACC_LAST_ACCESSED=0;
     public static final int ACC_INVOCATION_COUNT=1;
     public static final int ACC_SERVICE_TIME=2;
@@ -86,29 +106,54 @@ public class Handler {
     
     public static final int ACCOUNTS=6;
 
-    /** The servlet was declared in web.xml
+    // -------------------- Origin --------------------
+    /** The handler is declared in a configuration file.
      */
     public static final int ORIGIN_WEB_XML=0;
+    /** The handler is automatically added by an "invoker" interceptor,
+     *  that is able to add new servlets based on request
+     */
     public static final int ORIGIN_INVOKER=1;
+    /** The handler is automatically added by an interceptor that
+     * implements a templating system.
+     */
     public static final int ORIGIN_JSP=2;
     /** any tomcat-specific component that can
 	register mappings that are "re-generable",
 	i.e. can be recreated - the mapping can
-	safely be removed. Jsp and invoker are particular
-	cases
+	safely be removed.
     */
     public static final int ORIGIN_DYNAMIC=3;
-    /** The servlet was added by the admin, it should be saved
-	preferably in web.xml
-    */
+    /** The handler was added by the admin interface, it should be saved
+     *	preferably in web.xml
+     */
     public static final int ORIGIN_ADMIN=4;
+
+    /** This handler is created internally by tomcat
+     */
+    public static final int ORIGIN_INTERNAL=5;
+
+    // -------------------- State --------------------
+
+    public static final int STATE_NEW=0;
+
+    public static final int STATE_ADDED=1;
+
+    public static final int STATE_READY=2;
+
+    public static final int STATE_TEMP_DISABLED=3;
+
+    public static final int STATE_DISABLED=4;
+    
 
     // -------------------- Properties --------------------
     protected Context context;
     protected ContextManager contextM;
-
+    
     protected String name;
 
+    protected int state=STATE_NEW;
+    
     /** True if it can handle requests.
 	404 or error if not.
     */
@@ -116,15 +161,10 @@ public class Handler {
     
     Hashtable initArgs=null;
 
-    
     // who creates the servlet definition
     protected int origin;
 
-    protected boolean internal=false;
-
     protected String path;
-
-    protected String servletClassName;
 
     protected String servletName;
 
@@ -136,82 +176,76 @@ public class Handler {
     
     // Debug
     protected int debug=0;
+    protected Log logger=null;
     protected String debugHead=null;
 
     private Counters cntr=new Counters( ACCOUNTS );
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
 
     // -------------------- Constructor --------------------
-    
+
+    /** Creates a new handler.
+     */
     public Handler() {
     }
 
-    public void setContext( Context context) {
+    /** A handler "belongs" to a single application ( many->one ).
+     *  We don't support handlers that spawn multiple Contexts -
+     *  the model is simpler because we can set the security constraints,
+     *  properties, etc on a application basis.
+     */
+    public final void setContext( Context context) {
         this.context = context;
 	contextM=context.getContextManager();
+	logger=context.getLog();
     }
 
-    public Context getContext() {
+    /** Return the context associated with the handler
+     */
+    public final Context getContext() {
 	return context;
     }
 
-    public void reload() {
+    public int getState() {
+	return state;
     }
 
-    public boolean isInternal() {
-	return internal;
+    public void setState( int i ) {
+	this.state=i;
     }
     
-    public String getName() {
+    // -------------------- configuration --------------------
+
+    public final String getName() {
 	return name;
     }
 
-    public void setName(String servletName) {
-        this.name=servletName;
+    public final void setName(String handlerName) {
+        this.name=handlerName;
     }
 
     /** Who created this servlet definition - default is 0, i.e. the
-	web.xml mapping. It can also be the Invoker, the admin ( by using a
-	web interface), JSP engine or something else.
-	
-	Tomcat can do special actions - for example remove non-used
-	mappings if the source is the invoker or a similar component
-    */
-    public void setOrigin( int origin ) {
+     *	web.xml mapping. It can also be the Invoker, the admin ( by using a
+     *  web interface), JSP engine or something else.
+     * 
+     *  Tomcat can do special actions - for example remove non-used
+     *	mappings if the source is the invoker or a similar component
+     */
+    public final void setOrigin( int origin ) {
 	this.origin=origin;
     }
-
-    public int getOrigin() {
+    
+    public final int getOrigin() {
 	return origin;
     }
 
-    /** Accounting
+    /** Accounting information
      */
     public final Counters getCounters() {
 	return cntr;
     }
 
     // -------------------- Common servlet attributes
-    public String getServletName() {
-	if(name!=null) return name;
-	return path;
-    }
-
-    public void setServletName(String servletName) {
-        this.servletName=servletName;
-	name=servletName;
-    }
-
-    public String getServletClass() {
-        return this.servletClassName;
-    }
-
-    public void setServletClass(String servletClassName) {
-	if( name==null ) name=servletClassName;
-	this.servletClassName = servletClassName;
-	initialized=false;
-    }
-
     public void setLoadOnStartUp( int level ) {
 	loadOnStartup=level;
     }
@@ -264,10 +298,16 @@ public class Handler {
 
     public void setPath(String path) {
         this.path = path;
+	if( name==null )
+	    name=path; // the path will serve as servlet name if not set
     }
 
     // -------------------- Init params
-    
+
+    /** Add configuration properties associated with this handler.
+     *  This is a non-final method, handler may override it with an
+     *  improved/specialized version.
+     */
     public void addInitParam( String name, String value ) {
 	if( initArgs==null) {
 	    initArgs=new Hashtable();
@@ -295,7 +335,7 @@ public class Handler {
 
     /** Destroy a handler, and notify all the interested interceptors
      */
-    public void destroy() throws Exception {
+    public final void destroy() throws Exception {
 	if ( ! initialized ) {
 	    errorException = null;
 	    return;// already destroyed or not init.
@@ -312,7 +352,7 @@ public class Handler {
 
     /** Call the init method, and notify all interested listeners.
      */
-    public void init()
+    public /* final */ void init()
 	throws Exception
     {
 	// if initialized, then we were sync blocked when first init() succeeded
@@ -322,6 +362,7 @@ public class Handler {
 	if (errorException != null) throw errorException;
 	try {
 	    doInit();
+	    initialized=true;
 	} catch( Exception ex ) {
 	    // save error, assume permanent
 	    setErrorException(ex);
@@ -349,7 +390,7 @@ public class Handler {
      *  Tomcat should be able to handle and log any other exception ( including
      *  runtime exceptions )
      */
-    public /*final*/ void service(Request req, Response res)
+    public final void service(Request req, Response res)
 	throws Exception
     {
 	if( ! initialized ) {
@@ -371,7 +412,7 @@ public class Handler {
 	    if ( ex != null ) {
 		// save error state on request and response
 		saveError( req, res, ex );
-		context.log("Exception in init  " + ex.getMessage(), ex );
+		log("Exception in init  " + ex.getMessage(), ex );
 		// if in included, defer handling to higher level
 		if (res.isIncluded()) return;
 		// handle init error since at top level
@@ -383,13 +424,14 @@ public class Handler {
 	    }
 	}
 	
-	if( ! internal ) {
-	    BaseInterceptor reqI[]=
-		req.getContainer().getInterceptors(Container.H_preService);
-	    for( int i=0; i< reqI.length; i++ ) {
-		reqI[i].preService( req, res );
-	    }
+	//	if( ! internal ) {
+	// no distinction for internal handlers !
+	BaseInterceptor reqI[]=
+	    req.getContainer().getInterceptors(Container.H_preService);
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].preService( req, res );
 	}
+	//}
 
 	try {
 	    doService( req, res );
@@ -399,13 +441,12 @@ public class Handler {
 	}
 
 	// continue with the postService
-	if( ! internal ) {
-	    BaseInterceptor reqI[]=
-		req.getContainer().getInterceptors(Container.H_postService);
-	    for( int i=0; i< reqI.length; i++ ) {
-		reqI[i].postService( req, res );
-	    }
+	//	if( ! internal ) {
+	reqI=req.getContainer().getInterceptors(Container.H_postService);
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].postService( req, res );
 	}
+	//	}
 
 	// if no error
 	if( ! res.isExceptionPresent() ) return;
@@ -415,20 +456,23 @@ public class Handler {
 	contextM.handleError( req, res, res.getErrorException() );
     }
 
-    // -------------------- Abstract methods --------------------
+    // -------------------- methods you can override --------------------
+
+    /** Reload notification. This hook is called whenever the
+     *  application ( this handler ) is reloaded
+     */
+    public void reload() {
+    }
         
     /** This method will be called when the handler
-	is removed ( by admin or timeout ). Various handlers
-	can implement this, but it can't be called from outside.
-	( the "guarded" doDestroy is public )
-    */
+     *	is removed ( by admin or timeout ).
+     */
     protected void doDestroy() throws Exception {
 
     }
 
     /** Initialize the handler. Handler can override this
-	method to initialize themself.
-	The method must set initialised=true if successfull.
+     *	method to initialize themself.
      */
     protected void doInit() throws Exception
     {
@@ -436,7 +480,10 @@ public class Handler {
     }
 
     /** This is the actual content generator. Can't be called
-	from outside.
+     *  from outside.
+     *
+     *  This method can't be called directly, you must use service(),
+     *  which also tests the initialization and deals with the errors.
      */
     protected void doService(Request req, Response res)
 	throws Exception
@@ -450,27 +497,41 @@ public class Handler {
 	return name;
     }
 
+    /** Debug level for this handler.
+     */
     public final void setDebug( int d ) {
 	debug=d;
     }
 
     protected final void log( String s ) {
-	context.log(s);
+	if ( logger==null ) 
+	    contextM.log(s);
+	else 
+	    logger.log(s);
     }
 
     protected final void log( String s, Throwable t ) {
-	context.log(s, t);
+	if(logger==null )
+	    contextM.log(s, t);
+	else
+	    logger.log(s, t);
     }
 
     // --------------- Error Handling ----------------
 
-    public final void saveError( Request req, Response res, Exception ex ) {
+    /** If an error happens during init or service it will be saved in
+     *  request and response.
+     */
+    // XXX error handling in Handler shouldn't be exposed to childs, need
+    // simplifications
+    protected final void saveError( Request req, Response res, Exception ex ) {
 	// save current exception on the request
 	req.setErrorException( ex );
 	// if the first exception, save info on the response
 	if ( ! res.isExceptionPresent() ) {
 	    res.setErrorException( ex );
-	    res.setErrorURI( (String)req.getAttribute("javax.servlet.include.request_uri") );
+	    res.setErrorURI( (String)req.
+			  getAttribute("javax.servlet.include.request_uri"));
 	}
     }
 

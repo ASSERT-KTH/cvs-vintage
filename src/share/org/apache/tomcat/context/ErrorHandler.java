@@ -336,7 +336,7 @@ class NotFoundHandler extends Handler {
     
     NotFoundHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.notFoundHandler";
     }
 
@@ -389,7 +389,7 @@ class ExceptionHandler extends Handler {
 
     ExceptionHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.exceptionHandler";
     }
 
@@ -463,7 +463,7 @@ class StatusHandler extends Handler {
 
     StatusHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.statusHandler";
     }
     
@@ -524,7 +524,7 @@ class RedirectHandler extends Handler {
 
     RedirectHandler() {
 	initialized=true;
-	internal=true;
+	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.redirectHandler";
     }
 

@@ -108,7 +108,7 @@ public abstract class Logger {
       
     // Usefull for subclasses
     private static final String separator = System.getProperty("line.separator", "\n");
-    public static final char[] NEWLINE=separator.toCharArray();;
+    public static final char[] NEWLINE=separator.toCharArray();
 
 
     /**

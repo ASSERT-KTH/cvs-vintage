@@ -356,7 +356,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	String path = req.getServletPath(); // we haven't matched any prefix,
 	if( path == null ) return null;
 
-	String extension=URLUtil.getExtension( path );
+	String extension=FileUtil.getExtension( path );
 	if( extension == null ) return null;
 
 	if(debug>0)

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.5 2000/02/25 20:10:46 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/25 20:10:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.6 2000/12/08 23:18:34 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/12/08 23:18:34 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -110,7 +110,7 @@ public class CommandLineCompiler extends Compiler implements Mangler {
         }
         computeClassFileName();
         computeJavaFileName();
-    };
+    }
 
 
     /**
@@ -119,7 +119,7 @@ public class CommandLineCompiler extends Compiler implements Mangler {
      */
     public boolean isOutDated() {
         return true;
-    };
+    }
 
 
     public final void computeJavaFileName() {

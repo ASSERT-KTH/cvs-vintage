@@ -68,6 +68,14 @@ import javax.servlet.http.*;
 
 /**
  * Class used to represent a servlet inside a Context.
+ *
+ * It will deal with all servlet-specific issues:
+ * - load on startup
+ * - servlet class name ( dynamic loading )
+ * - init parameters
+ * - security roles/mappings ( per servlet )
+ * - jsp that acts like a servlet ( web.xml )
+ * - reloading
  * 
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
@@ -101,6 +109,10 @@ public class ServletWrapper extends Handler {
     // is running ( this have to be revisited !) 
     protected long lastAccessed;
     protected int serviceCount = 0;
+    protected String servletClassName;
+
+    // special case for "jsp servlet"
+    boolean jspServletInitialized=false;
     
     //    int loadOnStartup=0;
 
@@ -109,14 +121,10 @@ public class ServletWrapper extends Handler {
     public ServletWrapper() {
     }
 
-    public void setContext( Context context) {
-	super.setContext( context );
-	isReloadable=context.getReloadable();
-        configF = new ServletConfigImpl(this);
-    }
-
     public String toString() {
-	return name + "(" + servletClassName + "/" + path + ")";
+	if( path==null )
+	    return "Servlet " + name + "(" + servletClassName  + ")";
+	return "Jsp " + name + "(" + path + ")";
     }
     
     // -------------------- Servlet specific properties 
@@ -139,10 +147,6 @@ public class ServletWrapper extends Handler {
 	isReloadable = reloadable;
     }
 
-    public String getName() {
-	return getServletName();
-    }
-    
     public String getServletName() {
 	if(name!=null) return name;
 	return path;
@@ -173,10 +177,13 @@ public class ServletWrapper extends Handler {
         return this.servletClassName;
     }
 
-    public void setServletClass(String servletClassName) {
-	super.setServletClass( servletClassName );
+    public void setServletClassName(String servletClassName) {
 	servlet=null; // reset the servlet, if it was set
 	servletClass=null;
+	this.servletClassName=servletClassName;
+    }
+    public void setServletClass(String servletClassName) {
+	setServletClassName(servletClassName);
     }
 
     public Exception getErrorException() {
@@ -233,6 +240,8 @@ public class ServletWrapper extends Handler {
 
     public void setPath(String path) {
         this.path = path;
+	if( name==null )
+	    name=path; // the path will serve as servlet name if not set
     }
 
     // -------------------- 
@@ -304,8 +313,14 @@ public class ServletWrapper extends Handler {
 	// ( and easier to read )
 	// 	log("LoadServlet " + servletClass + " "
 	// 			   + servletClassName);
+
+	// default
+	if( servletClassName==null )
+	    servletClassName=servletName;
+	
 	if (servletClass == null) {
 	    if (servletClassName == null) {
+		// It happens :-(
 		throw new IllegalStateException("Can't happen - classname "
 						+ "is null, who added this ?");
 	    }
@@ -334,9 +349,12 @@ public class ServletWrapper extends Handler {
 
        // make sure the servlet is loaded before calling preInit
 	// Jsp case - maybe another Jsp engine is used
-	if( servlet==null && path != null &&  servletClassName == null) {
-	    log("Calling handleJspInit " + servletClassName);
+
+	if( servlet==null && path != null && ! jspServletInitialized ) {
+	    //	    log("Calling handleJspInit " + servletClassName);
+	    // dual mode
 	    handleJspInit();
+	    jspServletInitialized=true;
 	}
 
 	if( servlet==null ) {
@@ -376,6 +394,9 @@ public class ServletWrapper extends Handler {
     protected void doInit()
 	throws Exception
     {
+	isReloadable=context.getReloadable();
+        configF = new ServletConfigImpl(this);
+
 	// ASSERT synchronized at higher level, initialized must be false
 	try {
 	    final Servlet sinstance = servlet;
@@ -394,11 +415,7 @@ public class ServletWrapper extends Handler {
 	}
     }
 
-    /** Override service to hook reloading - it can be done in a clean
-	interceptor. It also hooks jsp - we should have a separate
-	JspHandler
-    */
-    public void service(Request req, Response res) 
+    protected void doService(Request req, Response res)
 	throws Exception
     {
 	// <servlet><jsp-file> case
@@ -428,14 +445,6 @@ public class ServletWrapper extends Handler {
 			" unavailable time expired, trying again ");
 	}
 
-	// we reach here of there is no error or the exception has expired
-	// will do an init
-	super.service( req, res );
-    }
-
-    protected void doService(Request req, Response res)
-	throws Exception
-    {
 	// Get facades - each req have one facade per context
 	// the facade itself is very light.
 
@@ -458,6 +467,7 @@ public class ServletWrapper extends Handler {
 	try {
 	    doService( reqF, resF );
 	} catch ( Exception ex ) {
+	    // support for UnavailableException
 	    if ( ex instanceof UnavailableException ) {
 		// if error not set
 		if ( ! isExceptionPresent() ) {
@@ -471,8 +481,7 @@ public class ServletWrapper extends Handler {
 		    }
 		}
 	    }
-	    // save error state on request and response
-	    saveError( req, res, ex );
+	    throw ex; // will be saved/handled by Handler
 	}
     }
 
@@ -490,6 +499,8 @@ public class ServletWrapper extends Handler {
     }
 
     // -------------------- Jsp hooks
+    ServletWrapper jspServletW=null;
+    
     // <servlet><jsp-file> case - we know it's a jsp
     void handleJspInit() {
 	// XXX Jsp Servlet is initialized, the servlet is not generated -
@@ -498,7 +509,7 @@ public class ServletWrapper extends Handler {
 	// I don't think that ever worked anyway - and I don't think
 	// it can work without integrating Jsp handling into tomcat
 	// ( using interceptor )
-	ServletWrapper jspServletW = (ServletWrapper)context.getServletByName("jsp");
+	jspServletW = (ServletWrapper)context.getServletByName("jsp");
 	servletClassName = jspServletW.getServletClass();
     }
 
