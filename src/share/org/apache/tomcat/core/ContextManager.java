@@ -71,11 +71,10 @@ import java.util.*;
 
 /**
  * A collection class representing the Contexts associated with a particular
- * Server.  The managed Contexts can be accessed directly by name, or
- * indirectly by requesting the Context responsible for processing a
- * particular path.  One particular Context can be distinguished as the
- * default Context, which is selected to process paths for which no other
- * Context is responsible.
+ * Server.  The managed Contexts can be accessed by path.
+ *
+ * It also store global default properties - the server name and port ( returned by
+ * getServerName(), etc) and workdir.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -97,6 +96,10 @@ public class ContextManager {
      */
     private Hashtable contexts = new Hashtable();
 
+    public static final String DEFAULT_HOSTNAME="localhost";
+    public static final int DEFAULT_PORT=8080;
+    public static final int DEFAULT_WORK_DIR="work";
+    
     /**
      * The virtual host name for the Server this ContextManager
      * is associated with.
@@ -109,6 +112,7 @@ public class ContextManager {
      */
     int port;
 
+    String workDir;
 
     /**
      * Construct a new ContextManager instance with default values.
@@ -151,8 +155,7 @@ public class ContextManager {
     }
     
     /**
-     * Removes a context from service.
-     * XXX Should this be synchronized?
+     * Shut down and removes a context from service.
      *
      * @param name Name of the Context to be removed
      */
@@ -169,7 +172,8 @@ public class ContextManager {
 	}
     }
 
-
+    // -------------------- Defaults for all contexts --------------------
+    
     /**
      * Sets the port number on which this server listens.
      *
@@ -179,15 +183,13 @@ public class ContextManager {
 	this.port=port;
     }
 
-
     /**
      * Gets the port number on which this server listens.
      */
-
     public int getPort() {
+	if(port==0) port=DEFAULT_PORT;
 	return port;
     }
-
 
     /**
      * Sets the virtual host name of this server.
@@ -198,16 +200,30 @@ public class ContextManager {
 	this.hostname=host;
     }
 
-
     /**
      * Gets the virtual host name of this server.
      */
-
     public String getHostName() {
+	if(hostname==null)
+	    hostname=DEFAULT_HOSTNAME;
 	return hostname;
     }
 
+    /**
+     * WorkDir property - where all temporary files will be created
+     */ 
+    public void setWorkDir( String wd ) {
+	this.workDir=wd;
+    }
 
+    public void getWorkDir() {
+	if( workDir==null)
+	    workDir=DEFAULT_WORK_DIR;
+	return workDir;
+    }
+    
+    // -------------------- Request processing / subRequest --------------------
+    
     /** Common for all connectors, needs to be shared in order to avoid
 	code duplication
     */
@@ -268,7 +284,7 @@ public class ContextManager {
     int internalRequestParsing( Request req ) {
 	return mapperInterceptor.handleRequest( req );
     }
-    
+
     public Context getContextByPath(String path ) {
 	// XXX XXX XXX need to create a sub-request !!!!
 	// 
