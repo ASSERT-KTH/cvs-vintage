@@ -105,13 +105,7 @@ public class ToolbarButton extends JButton {
 
 		}
 		
-		/*
-		if ( WITH_TEXT == true )
-		{
-			boolean showText = a.isShowToolbarText();
-			if ( showText == false ) setText("");
-		}
-		*/
+		
 	}
 
 	public boolean isFocusTraversable() {
