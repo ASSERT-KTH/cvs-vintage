@@ -101,7 +101,7 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 
 #foreach ($su in $currentQuery.RQueryUsers)
   ## FIXME: this should not reference ScarabUserImpl!!!!!!!!!!!!!!!!!!!!!!!
-  #set ($user = $su.ScarabUserImpl)
+  #set ($user = $su.ScarabUser)
   #indexedRows($velocityCount)
    <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
    <td><a href="mailto:$user.Email">$user.FirstName $user.LastName</a></td>
