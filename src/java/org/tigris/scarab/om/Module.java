@@ -70,7 +70,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.37 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: Module.java,v 1.38 2002/03/14 01:31:13 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -158,7 +158,7 @@ public interface Module
     public ObjectKey getPrimaryKey();
     public void setPrimaryKey(ObjectKey key) throws Exception;
     public NumberKey getModuleId();
-    public void setModuleId(NumberKey v) throws Exception;
+    public void setModuleId(NumberKey v) throws TorqueException;
     
 /** @deprecated THESE WILL BE DEPRECATED */
     public NumberKey getQaContactId();
