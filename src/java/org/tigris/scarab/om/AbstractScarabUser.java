@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.om;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet <http://www.collab.net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -26,7 +26,7 @@ package org.tigris.scarab.om;
  * 
  * 5. Products derived from this software may not use the "Tigris" or 
  * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
+ * prior written permission of CollabNet.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@ package org.tigris.scarab.om;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
+ * individuals on behalf of CollabNet.
  */ 
 
 import java.util.Collections;
@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.73 2003/04/04 18:28:52 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.74 2003/04/10 17:50:04 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -673,11 +673,11 @@ public abstract class AbstractScarabUser
      * 3 = View Issue. 4 = Issue Types index.
      */
     public int getEnterIssueRedirect()
-        throws Exception
+        throws TorqueException
     {
         if (enterIssueRedirect == 0)
         {
-            UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+            UserPreference up = UserPreferenceManager.getInstance(getUserId());
             if (up != null && up.getEnterIssueRedirect() != 0)
             {
                 enterIssueRedirect = up.getEnterIssueRedirect();
@@ -696,7 +696,7 @@ public abstract class AbstractScarabUser
     public void setEnterIssueRedirect(int templateCode)
         throws Exception
     {
-        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setEnterIssueRedirect(templateCode);
         up.save();
         enterIssueRedirect = templateCode;
@@ -715,10 +715,10 @@ public abstract class AbstractScarabUser
      * @see ScarabUser#getHomePage(Module)
      */
     public String getHomePage(Module module)
-        throws Exception
+        throws TorqueException
     {
         String homePage = null;
-        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         homePage = up.getHomePage();
         int i=0;
         while (homePage == null || !isHomePageValid(homePage, module)) 
@@ -752,14 +752,13 @@ public abstract class AbstractScarabUser
         return result;
     }
 
-    
     /**
      * @see ScarabUser#setHomePage(String)
      */
     public void setHomePage(String homePage)
         throws Exception
     {
-        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setHomePage(homePage);
         up.save();
     }

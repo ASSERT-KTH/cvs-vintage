@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.om;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet <http://www.collab.net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -26,7 +26,7 @@ package org.tigris.scarab.om;
  * 
  * 5. Products derived from this software may not use the "Tigris" or 
  * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
+ * prior written permission of CollabNet.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@ package org.tigris.scarab.om;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
+ * individuals on behalf of CollabNet.
  */ 
 
 import org.apache.torque.TorqueException;
@@ -55,44 +55,23 @@ import org.apache.torque.TorqueException;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.8 2003/04/09 18:04:22 elicia Exp $
+ * @version $Id: UserPreference.java,v 1.9 2003/04/10 17:50:04 dlr Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference
 {
     /**
-     * Gets a UserPreference object
-     * @return new UserPreference object
-     * @deprecated Use UserPreferenceManager.getInstance()
+     * This method truncates the preference length at 255 characters,
+     * as the database column is onl 255 characters. This should not
+     * have an adverse affect because the <code>Accept-Language</code>
+     * header parser generally only needs the first few characters.
+     *
+     * @param lang The Locale information.
      */
-    public static UserPreference getInstance()
-        throws TorqueException
-    {
-        return UserPreferenceManager.getInstance();
-    }
-
-    /**
-     * Gets a UserPrefernce object for a specific user
-     * @return null if userid could not be found
-     * @deprecated Use UserPreferenceManager.getInstance(Integer)
-     */
-    public static UserPreference getInstance(Integer userid)
-        throws Exception
-    {
-        return UserPreferenceManager.getInstance(userid);
-    }
-    
-    /**
-     * Internally, this method will trim the String length
-     * to 255 characters if it is greater than 255 because
-     * the database column is onl 255 characters. This should
-     * not have an adverse affect because the AcceptLanguage header
-     * parser really only needs the first few characters.
-     */
-    public void setAcceptLanguage(String lang)
+    public void setLanguage(String lang)
     {
         String newLang = (lang != null && lang.length() > 255) ? 
-                         lang.substring(0,254) : lang;
+                         lang.substring(0, 255) : lang;
         super.setLanguage(newLang);
     }
 }

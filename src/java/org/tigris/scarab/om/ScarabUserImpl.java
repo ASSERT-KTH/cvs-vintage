@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.om;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet <http://www.collab.net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -26,7 +26,7 @@ package org.tigris.scarab.om;
  * 
  * 5. Products derived from this software may not use the "Tigris" or 
  * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
+ * prior written permission of CollabNet.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@ package org.tigris.scarab.om;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
+ * individuals on behalf of CollabNet.
  */ 
 
 import java.util.Arrays;
@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.98 2003/04/09 18:04:22 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.99 2003/04/10 17:50:04 dlr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -708,7 +708,7 @@ public class ScarabUserImpl
         {
             throw new Exception("Userid cannot be null");
         }
-        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         if (expire == null)
         {
             Calendar cal = Calendar.getInstance();
@@ -992,7 +992,7 @@ public class ScarabUserImpl
     public void setLocale(String acceptLanguage)
         throws Exception
     {
-        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setAcceptLanguage(acceptLanguage);
         up.save();
         locale = Localization.getLocale(acceptLanguage);
@@ -1006,7 +1006,7 @@ public class ScarabUserImpl
     {
         if (locale == null)
         {
-            UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
+            UserPreference up = UserPreferenceManager.getInstance(getUserId());
             String header = up.getLanguage();
             locale = Localization.getLocale(header);
         }

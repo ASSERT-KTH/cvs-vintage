@@ -52,7 +52,7 @@ import org.apache.torque.TorqueException;
  * This is the manager for the UserPreferences
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserPreferenceManager.java,v 1.5 2003/04/04 18:28:52 jon Exp $
+ * @version $Id: UserPreferenceManager.java,v 1.6 2003/04/10 17:50:04 dlr Exp $
  */
 public class UserPreferenceManager
     extends BaseUserPreferenceManager
@@ -69,13 +69,18 @@ public class UserPreferenceManager
         setRegion(getClassName().replace('.', '_'));
     }
 
-    public static UserPreference getUserPreference(Integer userid)
-        throws Exception
+    /**
+     * @throws IllegalArgumentException If <code>userid</code> is
+     * <code>null</code>.
+     */
+    public static UserPreference getInstance(Integer userid)
+        throws TorqueException
     {
         if (userid == null)
         {
-            throw new Exception("Userid cannot be null");
+            throw new IllegalArgumentException("User ID cannot be null");
         }
+
         UserPreference up = null;
         try
         {
