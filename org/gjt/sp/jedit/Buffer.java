@@ -54,7 +54,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.112 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: Buffer.java,v 1.113 2003/01/25 00:36:50 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2476,7 +2476,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 				if(line.regionMatches(false,
 					i,EXPLICIT_START,0,3))
 					i += 2;
-				else
+				else if(lineBrackets >= 0)
 					lineBrackets++;
 			}
 		} //}}}
