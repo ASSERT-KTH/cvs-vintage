@@ -494,6 +494,8 @@ public final class ContextManager implements LogAware{
 	if( context.getState() == Context.STATE_READY )
 	    shutdownContext( context );
 
+	contextsV.removeElement(context);
+
 	if( context.getState() == Context.STATE_DISABLED )
 	    return;
 	
@@ -505,7 +507,6 @@ public final class ContextManager implements LogAware{
 	    cI[i].removeContext( this, context );
 	}
 
-	contextsV.removeElement(context);
     }
 
 
