@@ -33,7 +33,6 @@
     #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
     | <a href="$nextLink">&raquo;</a> next
   #end
-    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 #end
 
 
@@ -59,6 +58,7 @@
 	
 
 	<h3>Search Results</h3>
+    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 
 	<div class="datatable">
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -77,11 +77,7 @@
 #foreach ($issue in $issueList)
 
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
+        #rows ()
 		<td><input type="checkbox" name="selected_$issue.IssueId" /></td>
 		<td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
