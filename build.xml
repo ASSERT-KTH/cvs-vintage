@@ -423,6 +423,7 @@
       
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
+	<mkdir dir="${tomcat.build}/webapps/admin/WEB-INF/lib"/>
     <copy todir="${tomcat.build}/webapps/admin">
       <fileset dir="src/admin"/>
     </copy>
