@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2004 Slava Pestov
+ * Copyright (C) 1999, 2005 Slava Pestov
  * Portions copyright (C) 2000 Ollie Rutherfurd
  *
  * This program is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.335 2005/01/15 21:30:30 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.336 2005/01/20 01:04:24 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3230,6 +3230,11 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			return;
 		}
 
+
+		/* Null before addNotify() */
+		if(hiddenCursor != null)
+			getPainter().setCursor(hiddenCursor);
+
 		if(ch == ' ' && Abbrevs.getExpandOnInput()
 			&& Abbrevs.expandAbbrev(view,false))
 			return;
@@ -4675,6 +4680,12 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		if(buffer.isLoaded())
 			recalculateLastPhysicalLine();
 		propertiesChanged();
+		
+		hiddenCursor = getToolkit().createCustomCursor(
+			getGraphicsConfiguration()
+			.createCompatibleImage(1,1,
+			Transparency.BITMASK),
+			new Point(0,0),"Hidden");
 	} //}}}
 
 	//{{{ removeNotify() method
@@ -4722,6 +4733,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 		if(!evt.isConsumed())
 			super.processKeyEvent(evt);
+			
 	} //}}}
 
 	//{{{ addTopComponent() method
@@ -5236,6 +5248,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//}}}
 
 	//{{{ Instance variables
+	private Cursor hiddenCursor;
+
 	private View view;
 	private Gutter gutter;
 	private TextAreaPainter painter;
