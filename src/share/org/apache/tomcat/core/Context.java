@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.2 1999/10/11 02:42:36 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/11 02:42:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.3 1999/10/14 23:57:33 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/14 23:57:33 $
  *
  * ====================================================================
  *
@@ -516,9 +516,12 @@ public class Context {
     }
 
     public Object getAttribute(String name) {
-	Object o = attributes.get(name);
-
-        return attributes.get(name);
+        if (name.equals("servlet.classpath"))
+            return getClassPath();
+        else {
+            Object o = attributes.get(name);
+            return attributes.get(name);
+        }
     }
 
     public Enumeration getAttributeNames() {
