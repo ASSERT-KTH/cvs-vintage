@@ -795,6 +795,22 @@ public class Issue
             .add(AttachmentPeer.DELETED, 0);
         return (List) AttachmentPeer.doSelect(crit);
     }
+    
+    /**
+     * Get attachments that are not deleted
+     */
+    public List getExistingAttachments() throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttachmentPeer.ISSUE_ID, getIssueId())
+            .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
+                     AttachmentPeer.ATTACHMENT_TYPE_ID)
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 
+                                    Attachment.FILE__PK)
+            .add(AttachmentPeer.DELETED, 0);
+        return (List) AttachmentPeer.doSelect(crit);
+        
+    }
 
     /**
      * Gets default history limit for this module-issue type.
@@ -1392,7 +1408,7 @@ public class Issue
             templateInfo.setApproved(true);
             templateInfo.save();
             if (approved)
-            {
+            {        
                 setTypeId(IssueType.GLOBAL_TEMPLATE__PK);
             }
             save();
