@@ -148,7 +148,14 @@ public class DefaultErrorPage extends HttpServlet {
 	response.setContentType("text/html");
 
 	StringBuffer buf = new StringBuffer();
-	buf.append("<h1>Error: " + sc + "</h1>\r\n");
+	if( response.isIncluded() ) {
+	    buf.append("<h1>Included servlet error: " );
+	}  else {
+	    buf.append("<h1>Error: ");
+	    }
+	buf.append( sc + "</h1>\r\n");
+	// More info - where it happended"
+	buf.append("<h2>Location: " + request.getRequestURI() + "</h2>");
 	buf.append(msg + "\r\n");
 
 	if( response.isUsingStream() ) {

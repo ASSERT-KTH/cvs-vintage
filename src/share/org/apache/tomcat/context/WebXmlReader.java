@@ -42,7 +42,11 @@ public class WebXmlReader extends BaseInterceptor {
 
     void processFile( Context ctx, String file) {
 	try {
-	    File f=new File(file);	
+	    File f=new File(file);
+	    if( ! f.exists() ) {
+		ctx.log( "File not found, using defaults " + file );
+		return;
+	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
 	    if( ctx.getDebug() > 5 ) xh.setDebug( 2 );

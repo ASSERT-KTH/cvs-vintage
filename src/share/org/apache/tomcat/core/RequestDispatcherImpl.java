@@ -124,6 +124,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     {
 	Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
         Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
+
 	// according to specs
 	if (realResponse.isStarted()) 
 	    throw new IllegalStateException(sm.getString("rdi.forward.ise"));
@@ -172,6 +173,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	// Implement the spec that "no changes in response, only write"
 	// can also be done by setting the response to 0.9 mode ( as Apache does!)
 	//	IncludedResponse iResponse = new IncludedResponse(realResponse);
+	boolean old_included=realResponse.isIncluded();
+	if( ! old_included ) {
+	    realResponse.setIncluded( true );
+	}
 
 	// Here the spec is very special, pay attention
 
@@ -245,9 +250,6 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	addQueryString( realRequest, queryString );
 
-// 	System.out.println("Lookup : " + subRequest );
-// 	System.out.println();
-// 	System.out.println("Req: " + realRequest);
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
@@ -267,6 +269,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 				 old_path_info);
 	replaceAttribute( realRequest, "javax.servlet.include.query_string",
 				 old_query_string);
+	// revert to the response behavior
+	if( ! old_included ) {
+	    realResponse.setIncluded( false );
+	}
     }
 
 	

@@ -115,6 +115,18 @@ public interface Response {
 
     public PrintWriter getWriter() throws IOException ;
 
+    /** True if we are in an included servlet
+     */
+    public boolean isIncluded();
+
+    /** The response will not set any header or the status line -
+     *  it can only write to the output stream or flush.
+     *  This is used to implement RD.include() and can be used for
+     *  HTTP/0.9
+     */
+    public void setIncluded(boolean b);
+	
+    
     // -------------------- Buffering --------------------
     
     public int getBufferSize() ;

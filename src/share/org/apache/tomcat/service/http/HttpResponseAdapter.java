@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.6 2000/02/03 07:11:55 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/03 07:11:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.7 2000/02/16 17:13:24 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/16 17:13:24 $
  *
  * ====================================================================
  *
@@ -118,12 +118,12 @@ public class HttpResponseAdapter extends  ResponseImpl {
 		String value=values[i];
 		headersSB.setLength(0);
 		headersSB.append(name).append(": ").append(value).append("\r\n");
-		try {
-		    sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
-		} catch( IOException ex ) {
-		    ex.printStackTrace();
-		    //XXX mark the error - should abandon everything 
-		}
+		//		try {
+		sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
+		//		} catch( IOException ex ) {
+		//		    ex.printStackTrace();
+		//XXX mark the error - should abandon everything 
+		//}
 	    }
 	}
 	sout.write( CRLF, 0, 2 );

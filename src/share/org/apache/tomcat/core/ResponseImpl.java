@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.14 2000/02/14 04:59:39 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/02/14 04:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.15 2000/02/16 17:13:23 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/02/16 17:13:23 $
  *
  * ====================================================================
  *
@@ -102,6 +102,8 @@ public class ResponseImpl implements Response {
     protected boolean started = false;
     protected boolean committed = false;
 
+    boolean notIncluded=true;
+    
     StringBuffer body=new StringBuffer();
 
     public ResponseImpl() {
@@ -123,6 +125,24 @@ public class ResponseImpl implements Response {
     }
 
     /* -------------------- */
+
+    // Included response behavior
+    public boolean isIncluded() {
+	return ! notIncluded;
+    }
+
+    public void setIncluded( boolean incl ) {
+	notIncluded= ! incl;
+	if( incl ) {
+	    // included behavior, no header output,
+	    // no status change on errors.
+	    // XXX we can optimize a bit - replace headers with
+	    // an new Hashtable we can throw away. 
+	} else {
+	    // move back to normal behavior.
+
+	}
+    }
     
     public boolean isStarted() {
 	return started;
@@ -143,7 +163,7 @@ public class ResponseImpl implements Response {
 	out.recycle();
 	started = false;
 	committed = false;
-
+	notIncluded=true;
 	// adapter
 	status=-1;
 	body.setLength(0);
@@ -158,11 +178,14 @@ public class ResponseImpl implements Response {
 	    out.reallyFlush();
 	    out.close();
 	} catch (SocketException e) {
+	    if(request!=null) request.getContext().log("Socket Exception" + request.getRequestURI());	    	    
 	    return;  // munch
-	} catch (IOException e) {
-	    if("Broken pipe".equals(e.getMessage()))
+	} catch (IOException ex) {
+	    if( "Broken pipe".equals(ex.getMessage())) {
+		if(request!=null) request.getContext().log("Broken pipe " + request.getRequestURI());
 		return;
-	    throw e;
+	    }
+	    throw ex;
 	}
     }
 
@@ -215,11 +238,11 @@ public class ResponseImpl implements Response {
     }
 
     public void setHeader(String name, String value) {
-	headers.putHeader(name, value);
+	if( notIncluded ) headers.putHeader(name, value);
     }
 
     public void addHeader(String name, String value) {
-        headers.addHeader(name, value);
+        if( notIncluded ) headers.addHeader(name, value);
     }
 
     public int getBufferSize() {
@@ -265,7 +288,7 @@ public class ResponseImpl implements Response {
         // Clear the cookies and such
 
         // Clear the headers
-        headers.clear();
+        if( notIncluded) headers.clear();
     }
 
     public void flushBuffer() throws IOException {
@@ -286,14 +309,14 @@ public class ResponseImpl implements Response {
 
 	// let CM notify interceptors and give a chance to fix
 	// the headers
-	if(request.getContext() != null) 
+	if(request.getContext() != null && notIncluded ) 
 	    request.getContext().getContextManager().doBeforeBody(request, this);
 
 	// No action.. 
     }
 
     public void addCookie(Cookie cookie) {
-	userCookies.addElement(cookie);
+	if( notIncluded ) userCookies.addElement(cookie);
     }
 
     public Enumeration getCookies() {
@@ -301,7 +324,7 @@ public class ResponseImpl implements Response {
     }
 
     public void setSessionId( String id ) {
-	sessionId=id;
+	if( notIncluded ) sessionId=id;
     }
 
     public String getSessionId() {
@@ -313,7 +336,7 @@ public class ResponseImpl implements Response {
     }
 
     public void setLocale(Locale locale) {
-        if (locale == null) {
+        if (locale == null || ! notIncluded) {
             return;  // throw an exception?
         }
 
@@ -355,7 +378,8 @@ public class ResponseImpl implements Response {
     }
 
     public void setContentType(String contentType) {
-        this.contentType = contentType;
+        if( ! notIncluded ) return;
+	this.contentType = contentType;
 	String encoding = RequestUtil.getCharsetFromContentType(contentType);
         if (encoding != null) {
 	    characterEncoding = encoding;
@@ -368,6 +392,7 @@ public class ResponseImpl implements Response {
     }
     
     public void setContentLength(int contentLength) {
+        if( ! notIncluded ) return;
 	this.contentLength = contentLength;
 	addHeader("Content-Length", (new Integer(contentLength)).toString());
     }
@@ -384,6 +409,7 @@ public class ResponseImpl implements Response {
     /** Set the response status 
      */ 
     public void setStatus( int status ) {
+	if( ! notIncluded ) return;
 	this.status=status;
     }
 

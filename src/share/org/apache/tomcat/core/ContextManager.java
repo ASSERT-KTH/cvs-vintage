@@ -525,6 +525,8 @@ public class ContextManager {
 	    
 	} catch (Exception e) {
 	    if(e instanceof IOException && "Broken pipe".equals(e.getMessage()) ) {
+		log("Broken pipe " + rrequest.getRequestURI());
+		return;
 	    }
 	    // XXX
 	    // this isn't what we want, we want to log the problem somehow

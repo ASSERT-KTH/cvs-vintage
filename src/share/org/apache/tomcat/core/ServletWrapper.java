@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.27 2000/02/16 05:44:34 costin Exp $
- * $Revision: 1.27 $
- * $Date: 2000/02/16 05:44:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.28 2000/02/16 17:13:23 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/02/16 17:13:23 $
  *
  * ====================================================================
  *
@@ -158,7 +158,7 @@ public class ServletWrapper {
         this.path = path;
     }
 
-    String getServletDescription() {
+    public String getServletDescription() {
         return this.description;
     }
 
@@ -251,7 +251,7 @@ public class ServletWrapper {
     }
 
     // XXX XXX need to go directly to Jsp API 
-    public void handleJspRequest(final HttpServletRequestFacade request,
+    void handleJspRequest(final HttpServletRequestFacade request,
 			      final HttpServletResponseFacade response)
 	throws IOException
     {
