@@ -19,7 +19,7 @@ import org.jboss.ejb.EnterpriseContext;
  * JNDI environment to be set.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class StatelessSessionInstanceInterceptor extends AbstractInterceptor
 {
@@ -71,6 +71,10 @@ public class StatelessSessionInstanceInterceptor extends AbstractInterceptor
          {
             getContainer().getInstancePool().free(
                   (EnterpriseContext)invocation.getEnterpriseContext());
+         }
+         else
+         {
+            getContainer().getInstancePool().discard(ctx);
          }
       }
    }
