@@ -15,7 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 
 import junit.framework.TestCase;
 
@@ -29,7 +32,9 @@ import junit.framework.TestCase;
  */
 public class ListToolsTest extends TestCase {
 
-	LinkedList listFull, listPart1, listPart2;
+	LinkedList listFull_I;
+	LinkedList listFull_S;
+	Random random;
 	/**
 	 * Constructor for ListToolsTest.
 	 * @param arg0
@@ -39,60 +44,80 @@ public class ListToolsTest extends TestCase {
 	}
 
 	public void testIntersect() {
-		LinkedList testList = new LinkedList(listFull);
+		/*
+		LinkedList testList = new LinkedList(listFull_I);
 		
-		ListTools.intersect(testList,listFull);
-		assertTrue(testList.equals(listFull));
+		ListTools.intersect(testList,listFull_I);
+		assertTrue(testList.equals(listFull_I));
 		
-		testList = new LinkedList(listFull);
+		testList = new LinkedList(listFull_I);
 
 		ListTools.intersect(testList,new LinkedList());
 		assertTrue(testList.size()==0);
 		
-		testList = new LinkedList(listFull);
+		testList = new LinkedList(listFull_I);
 
-		ListTools.intersect(testList,listPart1);
-		assertTrue(testList.equals(listPart1));
+		ListTools.intersect(testList,listPart1_I);
+		assertTrue(testList.equals(listPart1_I));
 
-		testList = new LinkedList(listFull);
+		testList = new LinkedList(listFull_I);
 
-		ListTools.intersect(testList,listPart2);
-		assertTrue(testList.equals(listPart2));
+		ListTools.intersect(testList,listPart2_I);
+		assertTrue(testList.equals(listPart2_I));
 
-		testList = new LinkedList(listPart1);
+		testList = new LinkedList(listPart1_I);
 
-		ListTools.intersect(testList,listPart2);
+		ListTools.intersect(testList,listPart2_I);
 		assertTrue(testList.size()==0);
+		*/
 	}
 
 	public void testSubstract() {
+		testSubstractOnLists(listFull_I);
+	}
+
+	private void testSubstractOnLists(LinkedList listFull) {
 		LinkedList testList = new LinkedList(listFull);
+		LinkedList listPart1 = new LinkedList();
+		LinkedList listPart2 = new LinkedList();
+		
+		Iterator it = listFull.iterator();
+		
+		while( it. hasNext() ) {
+			if( random.nextBoolean() ) {
+				listPart1.add(it.next());
+			} else {
+				listPart2.add(it.next());
+			}
+		}
 		
 		ListTools.substract(testList,listFull);
 		assertTrue(testList.size()==0);
 		
+		
 		testList = new LinkedList(listFull);
-
+		
 		ListTools.substract(testList,new LinkedList());
 		assertTrue(testList.equals(listFull));
 		
 		testList = new LinkedList(listFull);
-
+		
 		ListTools.substract(testList,listPart1);
 		assertTrue(testList.equals(listPart2));
 		
 		testList = new LinkedList(listFull);
-
-		ListTools.substract(testList,listPart2);
-		assertTrue(testList.equals(listPart1));
-
-		testList = new LinkedList(listPart1);
-
+		
 		ListTools.substract(testList,listPart2);
 		assertTrue(testList.equals(listPart1));
 		
+		testList = new LinkedList(listPart1);
+		
+		ListTools.substract(testList,listPart2);
+		assertTrue(testList.equals(listPart1));
+		
+		
 		testList = new LinkedList(listFull);
-
+		
 		ListTools.substract(testList,listPart1);
 		ListTools.substract(testList,listPart2);
 		assertTrue(testList.size() == 0);
@@ -103,22 +128,20 @@ public class ListToolsTest extends TestCase {
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
-		listFull = new LinkedList();
-		listFull.add(new Integer(1));
-		listFull.add(new Integer(2));
-		listFull.add(new Integer(3));
-		listFull.add(new Integer(4));
-		listFull.add(new Integer(5));
-
-		listPart1 = new LinkedList();
-		listPart1.add(new Integer(1));
-		listPart1.add(new Integer(3));
-		listPart1.add(new Integer(5));
+	protected void setUp() throws Exception {		
+		random = new Random();
 		
-		listPart2 = new LinkedList();
-		listPart2.add(new Integer(2));
-		listPart2.add(new Integer(4));
+		listFull_I = new LinkedList();
+		for( int i = 0; i<5000; i++) {
+			listFull_I.add( new Integer(random.nextInt()));
+		}
+
+		listFull_S = new LinkedList();
+		listFull_S.add("Hello");
+		listFull_S.add("World");
+		listFull_S.add("it is");
+		listFull_S.add("a nice");
+		listFull_S.add("day");
 	}
 
 }

@@ -28,7 +28,7 @@ import java.util.ListIterator;
  * Window>Preferences>Java>Code Generation.
  */
 public class ListTools {
-	
+
 	private static int compare(int a, int b) {
 		if (a < b) {
 			return -1;
@@ -39,87 +39,91 @@ public class ListTools {
 		}
 	}
 
-	
+	/**
+	 * Intersect two Lists that contain Objects that implement
+	 * the Comparable Interface. The Result is in List a and sorted. 
+	 * Be aware that List b gets also sorted!
+	 * 
+	 * @param a
+	 * @param b
+	 */
 	public static void intersect(List a, List b) {
-	ListIterator aIt, bIt;
+		ListIterator aIt, bIt;
 
-	if( a.size() == 0) {
-		return;
-	}
+		if (a.size() == 0) {
+			return;
+		}
 
-	if( b.size()==0 ) {
-		a.clear();
-		return;
-	}
+		if (b.size() == 0) {
+			a.clear();
+			return;
+		}
 
-	Collections.sort(a);
-	Collections.sort(b);
+		Collections.sort(a);
+		Collections.sort(b);
 
-	aIt = a.listIterator();
-	bIt = b.listIterator();
+		aIt = a.listIterator();
+		bIt = b.listIterator();
 
-	Integer aVal, bVal;
+		Comparable aVal, bVal;
 
-	aVal = (Integer) aIt.next();
-	bVal = (Integer) bIt.next();
+		aVal = (Comparable) aIt.next();
+		bVal = (Comparable) bIt.next();
 
-	boolean loop = true; 
+		boolean loop = true;
+		int compareResult;
 
-	while (loop) {
-		switch (compare(aVal.intValue(), bVal.intValue())) {
-			case -1 :
-				{ // a < b
+		while (loop) {
+			compareResult = aVal.compareTo(bVal);
+			if (compareResult < 0) { // a < b
+				aIt.remove();
+				if (aIt.hasNext())
+					aVal = (Comparable) aIt.next();
+				else {
+					return;
+				}
+			} else if (compareResult == 0) { // a == b
+				if (aIt.hasNext()) {
+					aVal = (Comparable) aIt.next();
+				} else {
+					loop = false;
+					return;
+				}
+
+				if (bIt.hasNext()) {
+					bVal = (Comparable) bIt.next();
+				} else {
+					loop = false;
 					aIt.remove();
-					if( aIt.hasNext())
-						aVal = (Integer) aIt.next();
-					else {
-						return;
-					}
-					break;
 				}
-			case 0 :
-				{ // a == b
-					if (aIt.hasNext()) {
-						aVal = (Integer) aIt.next();
-					} else {
-						loop = false;
-						return;
-					}
+			} else { // a > b
+				if (bIt.hasNext()) {
+					bVal = (Comparable) bIt.next();
+				} else {
+					loop = false;
+					aIt.remove();
+				}
+			}
+		}
 
-					if (bIt.hasNext()) {
-						bVal = (Integer) bIt.next();
-					} else {
-						loop = false;
-						aIt.remove();
-					}
-				
-					break;
-				}
-			case 1 :
-				{ // a > b
-					if (bIt.hasNext()) {
-						bVal = (Integer) bIt.next();
-					} else {
-						loop = false;
-						aIt.remove();
-					}
-				}
+		while (aIt.hasNext()) {
+			aIt.next();
+			aIt.remove();
 		}
 	}
-		
-	while(aIt.hasNext()) {
-		aIt.next();
-		aIt.remove();
-	}
-}
 
-
-
-
+	/**
+	 * Subtract two Lists that contain Objects that implement
+	 * the Comparable Interface. The Result is in List a and sorted. 
+	 * Be aware that List b gets also sorted!
+	 * 
+	 * @param a
+	 * @param b
+	 */
 	public static void substract(List a, List b) {
 		ListIterator aIt, bIt;
 
-		if( (a.size() == 0) || (b.size()==0))
+		if ((a.size() == 0) || (b.size() == 0))
 			return;
 
 		Collections.sort(a);
@@ -128,54 +132,45 @@ public class ListTools {
 		aIt = a.listIterator();
 		bIt = b.listIterator();
 
-		Integer aVal, bVal;
+		Comparable aVal, bVal;
 
-		aVal = (Integer) aIt.next();
-		bVal = (Integer) bIt.next();
+		aVal = (Comparable) aIt.next();
+		bVal = (Comparable) bIt.next();
 
-		boolean loop = true; 
+		boolean loop = true;
+		int compareResult;
 
 		while (loop) {
-			switch (compare(aVal.intValue(), bVal.intValue())) {
-				case -1 :
-					{ // a < b
-						if( aIt.hasNext()) {
-							aVal = (Integer) aIt.next();
-						} else {
-							return;
-						}
-						break;
-					}
-				case 0 :
-					{ // a == b
-						aIt.remove();
-						if (aIt.hasNext())
-							aVal = (Integer) aIt.next();
-						else {
-							return;
-						}
+			compareResult = aVal.compareTo(bVal);
+			if (compareResult < 0) { // a < b
+				if (aIt.hasNext()) {
+					aVal = (Comparable) aIt.next();
+				} else {
+					return;
+				}
+			} else if (compareResult == 0) { // a == b
+				aIt.remove();
+				if (aIt.hasNext())
+					aVal = (Comparable) aIt.next();
+				else {
+					return;
+				}
 
-						if (bIt.hasNext())
-							bVal = (Integer) bIt.next();
-						else {
-							return;
-						}
-
-						break;
-					}
-				case 1 :
-					{ // a > b
-						if (bIt.hasNext()) {
-							bVal = (Integer) bIt.next();
-						} else {
-							return;
-						}
-					}
+				if (bIt.hasNext())
+					bVal = (Comparable) bIt.next();
+				else {
+					return;
+				}
+			} else { // a > b
+				if (bIt.hasNext()) {
+					bVal = (Comparable) bIt.next();
+				} else {
+					return;
+				}
 			}
+
 		}
 
 	}
-	
-
 
 }

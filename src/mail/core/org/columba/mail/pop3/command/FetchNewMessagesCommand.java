@@ -15,7 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
@@ -77,11 +78,11 @@ public class FetchNewMessagesCommand extends Command {
 		totalMessageCount = server.getMessageCount(worker);
 
 		try {
-			Vector newUIDList = fetchUIDList(totalMessageCount, worker);
+			List newUIDList = fetchUIDList(totalMessageCount, worker);
 
-			Vector messageSizeList = fetchMessageSizes(worker);
+			List messageSizeList = fetchMessageSizes(worker);
 
-			Vector newMessagesUIDList = synchronize(newUIDList);
+			List newMessagesUIDList = synchronize(newUIDList);
 
 			downloadNewMessages(
 				newUIDList,
@@ -108,7 +109,7 @@ public class FetchNewMessagesCommand extends Command {
 		Worker worker)
 		throws Exception {
 		// server message numbers start with 1
-		// whereas Vector numbers start with 0
+		// whereas List numbers start with 0
 		//  -> always increase fetch number
 		Message message = server.getMessage(index + 1, serverUID, worker);
 		message.getHeader().set(
@@ -151,9 +152,9 @@ public class FetchNewMessagesCommand extends Command {
 	}
 
 	protected int calculateTotalSize(
-		Vector newUIDList,
-		Vector messageSizeList,
-		Vector newMessagesUIDList) {
+		List newUIDList,
+		List messageSizeList,
+		List newMessagesUIDList) {
 		int totalSize = 0;
 
 		for (int i = 0; i < newMessagesUIDList.size(); i++) {
@@ -163,7 +164,7 @@ public class FetchNewMessagesCommand extends Command {
 
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
 			int index = newUIDList.indexOf(serverUID);
-			//ColumbaLogger.log.info("vector index=" + index + " server index=" + (index + 1));
+			//ColumbaLogger.log.info("List index=" + index + " server index=" + (index + 1));
 
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			//size = Math.round(size / 1024);
@@ -174,13 +175,15 @@ public class FetchNewMessagesCommand extends Command {
 		return totalSize;
 	}
 
-	public void downloadNewMessages(Vector newUIDList, Vector messageSizeList,
-		Vector newMessagesUIDList, Worker worker) throws Exception {
-                
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("need to fetch " + newMessagesUIDList.size() + " messages.");
-                }
-
+	public void downloadNewMessages(
+		List newUIDList,
+		List messageSizeList,
+		List newMessagesUIDList,
+		Worker worker)
+		throws Exception {
+			if (MainInterface.DEBUG) {
+							ColumbaLogger.log.info("need to fetch " + newMessagesUIDList.size() + " messages.");
+					}
 		int totalSize =
 			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
 
@@ -201,6 +204,8 @@ public class FetchNewMessagesCommand extends Command {
 
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
 			int index = newUIDList.indexOf(serverUID);
+			ColumbaLogger.log.info(
+				"List index=" + index + " server index=" + (index + 1));
 			if (MainInterface.DEBUG) {
                                 ColumbaLogger.log.info("vector index=" + index + " server index=" + (index + 1));
                         }
@@ -208,7 +213,9 @@ public class FetchNewMessagesCommand extends Command {
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
 
-			if (server.getAccountItem().getPopItem()
+			if (server
+				.getAccountItem()
+				.getPopItem()
 				.getBoolean("enable_limit")) {
 				// check if message isn't too big to download
 				int maxSize =
@@ -223,37 +230,39 @@ public class FetchNewMessagesCommand extends Command {
 				}
 			}
 
-			downloadMessage(index,
+			downloadMessage(
+				index,
 				Integer.parseInt((String) messageSizeList.get(index)),
-				serverUID, worker);
+				serverUID,
+				worker);
 		}
 
 	}
 
-	public Vector synchronize(Vector newUIDList) throws Exception {
+	public List synchronize(List newUIDList) throws Exception {
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("synchronize local UID-list with remote UID-list");
-                }
+						ColumbaLogger.log.info("synchronize local UID-list with remote UID-list");
+				}
 		// synchronize local UID-list with server 		
-		Vector newMessagesUIDList = server.synchronize(newUIDList);
+		List newMessagesUIDList = server.synchronize(newUIDList);
 
 		return newMessagesUIDList;
 	}
 
-	public Vector fetchMessageSizes(WorkerStatusController worker)
+	public List fetchMessageSizes(WorkerStatusController worker)
 		throws Exception {
 
 		log("Fetching message size list...", worker);
 		// fetch message-size list 		
-		Vector messageSizeList = server.getMessageSizeList(worker);
+		List messageSizeList = server.getMessageSizeList(worker);
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("fetched message-size-list capacity=" + messageSizeList.size());
-                }
+						ColumbaLogger.log.info("fetched message-size-list capacity=" + messageSizeList.size());
+				}
 		return messageSizeList;
 
 	}
 
-	public Vector fetchUIDList(
+	public List fetchUIDList(
 		int totalMessageCount,
 		WorkerStatusController worker)
 		throws Exception {
@@ -261,10 +270,11 @@ public class FetchNewMessagesCommand extends Command {
 
 		log("Fetch UID list...", worker);
 
-		Vector newUIDList = server.getUIDList(totalMessageCount, worker);
+		List newUIDList = server.getUIDList(totalMessageCount, worker);
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("fetched UID-list capacity=" + newUIDList.size());
-                }
+						ColumbaLogger.log.info("fetched UID-list capacity=" + newUIDList.size());
+				}
+
 		return newUIDList;
 	}
 

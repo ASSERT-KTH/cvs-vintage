@@ -16,7 +16,7 @@
 package org.columba.mail.pop3.command;
 
 import java.net.URL;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
@@ -63,11 +63,11 @@ public class CheckForNewMessagesCommand extends Command {
 		int totalMessageCount = server.getMessageCount(worker);
 
 		try {
-			Vector newUIDList = command.fetchUIDList(totalMessageCount, worker);
+			List newUIDList = command.fetchUIDList(totalMessageCount, worker);
 
-			Vector messageSizeList = command.fetchMessageSizes(worker);
+			List messageSizeList = command.fetchMessageSizes(worker);
 
-			Vector newMessagesUIDList = command.synchronize(newUIDList);
+			List newMessagesUIDList = command.synchronize(newUIDList);
 
 			int newMessagesCount = newMessagesUIDList.size();
 			if ((newMessagesCount > 0)

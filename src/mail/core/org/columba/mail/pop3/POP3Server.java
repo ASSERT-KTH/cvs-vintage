@@ -16,12 +16,17 @@
 package org.columba.mail.pop3;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.ListTools;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -30,7 +35,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.pop3.protocol.POP3Protocol;
-import org.columba.core.main.MainInterface;
 
 public class POP3Server {
 
@@ -138,38 +142,23 @@ public class POP3Server {
 		return false;
 	}
 
-	public Vector synchronize(Vector newList) throws Exception {
-		Vector result = new Vector();
-		HeaderList headerList = headerCache.getHeaderList();
-
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			String str = (String) e.nextElement();
-
-			if (existsRemotely(str, newList) == true) {
-				// mail exists on server
-				//  -> keep it
-			} else {
-				// mail doesn't exist on server
-				//  -> remove it from local cache
-				ColumbaLogger.log.debug("remove uid=" + str);
-				headerList.remove(str);
-			}
+	public List synchronize(List newList) throws Exception {
+		LinkedList headerUids = new LinkedList();
+		Enumeration keys = headerCache.getHeaderList().keys();
+		while( keys.hasMoreElements() ) {
+			headerUids.add(keys.nextElement());
 		}
-
-		for (int i = 0; i < newList.size(); i++) {
-			Object str = newList.get(i);
-
-			if (existsLocally(str, headerList) == false) {
-				// new message on server
-
-				result.add(str);
-				ColumbaLogger.log.debug("adding uid=" + str);
-				//System.out.println("download:" + str);
-
-			}
+ 		LinkedList newUids = new LinkedList( newList );
+		
+		ListTools.substract(newUids,headerUids);
+		
+		ListTools.substract(headerUids, new ArrayList(newList));
+		Iterator it = headerUids.iterator();
+		while( it.hasNext() ) {
+			headerCache.getHeaderList().remove(it.next());
 		}
-
-		return result;
+		
+		return newUids;
 	}
 
 	public void deleteMessages(int[] indexes, WorkerStatusController worker) throws Exception {
