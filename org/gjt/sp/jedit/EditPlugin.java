@@ -86,7 +86,7 @@ import org.gjt.sp.jedit.gui.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.23 2003/04/28 03:55:29 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.24 2003/04/28 21:17:39 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -224,13 +224,12 @@ public abstract class EditPlugin
 		if(menuItemName != null)
 			return GUIUtilities.loadMenuItem(menuItemName);
 
-		String menuItemNames = jEdit.getProperty("plugin." +
-			getClassName() + ".menu");
-		if(menuItemNames != null)
+		String menuProperty = "plugin." + getClassName() + ".menu";
+		if(jEdit.getProperty(menuProperty) != null)
 		{
 			String pluginName = jEdit.getProperty("plugin." +
 				getClassName() + ".name");
-			return new EnhancedMenu(pluginName,menuItemNames);
+			return new EnhancedMenu(menuProperty,pluginName);
 		}
 
 		return null;

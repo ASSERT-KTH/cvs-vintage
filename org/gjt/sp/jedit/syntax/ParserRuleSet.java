@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.21 2003/04/28 01:35:28 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.22 2003/04/28 21:17:41 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -65,6 +65,12 @@ public class ParserRuleSet
 	public String getSetName()
 	{
 		return setName;
+	} //}}}
+
+	//{{{ getName() method
+	public String getName()
+	{
+		return modeName + "::" + setName;
 	} //}}}
 
 	//{{{ getProperties() method

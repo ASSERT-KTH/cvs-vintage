@@ -82,7 +82,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.30 2003/04/24 02:29:42 spestov Exp $
+ * @author $Id: VFS.java,v 1.31 2003/04/28 21:17:41 spestov Exp $
  */
 public abstract class VFS
 {
@@ -988,7 +988,6 @@ public abstract class VFS
 						jEdit.getColorProperty(
 						"vfs.browser.colors." + i + ".color",
 						Color.black)));
-					i++;
 				}
 				catch(REException e)
 				{
@@ -996,6 +995,8 @@ public abstract class VFS
 						+ glob);
 					Log.log(Log.ERROR,VFS.class,e);
 				}
+
+				i++;
 			}
 		}
 	} //}}}

@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.79 2003/04/28 01:35:24 spestov Exp $
+ * @version $Id: View.java,v 1.80 2003/04/28 21:17:39 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1389,7 +1389,6 @@ public class View extends JFrame implements EBComponent
 		showFullPath = jEdit.getBooleanProperty("view.showFullPath");
 		updateTitle();
 
-		dockableWindowManager.propertiesChanged();
 		status.propertiesChanged();
 
 		removeToolBar(status);
