@@ -6,137 +6,215 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.rmi.RemoteException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
 import java.security.Principal;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
+import javax.ejb.EJBContext;
+import javax.ejb.EntityContext;
+import javax.ejb.SessionContext;
+import javax.naming.InitialContext;
+import javax.security.auth.Subject;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.ContainerInvoker;
+import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.MethodInvocation;
 
-import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
-
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SecurityProxy;
+import org.jboss.security.SecurityProxyFactory;
 
+/** The SecurityInterceptor is where the EJB declarative security model
+is enforced. It is also the layer where user's can introduce custom
+security via the SecurityProxy delegation model.
 
-/**
- *   <description>
- *
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.10 $
- */
-public class SecurityInterceptor
-   extends AbstractInterceptor
+@author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
+@author Scott_Stark@displayscape.com
+@version $Revision: 1.11 $
+*/
+public class SecurityInterceptor extends AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
+    /** The JNDI name of the SecurityProxyFactory used to wrap security
+        proxy objects that do not implement the SecurityProxy interface
+     */
+    public final String SECURITY_PROXY_FACTORY_NAME = "java:/SecurityProxyFactory";
 
-   // Attributes ----------------------------------------------------
-   protected Container container;
-   protected EJBSecurityManager securityManager;
-   protected RealmMapping realmMapping;
+    /**
+     * @clientCardinality 0..1
+     * @supplierCardinality 1 
+     */
+    protected Container container;
+    protected EJBSecurityManager securityManager;
+    protected RealmMapping realmMapping;
 
-   // Static --------------------------------------------------------
+    /**
+     * @supplierCardinality 0..1
+     * @clientCardinality 1 
+     */
+    protected SecurityProxy securityProxy;
 
-   // Constructors --------------------------------------------------
+    public SecurityInterceptor()
+    {
+    }
 
-   // Public --------------------------------------------------------
-   public void setContainer(Container container)
-   {
-   	this.container = container;
-    securityManager = container.getSecurityManager();
-    realmMapping = container.getRealmMapping();
-   }
+    public void setContainer(Container container)
+    {
+        this.container = container;
+        securityManager = container.getSecurityManager();
+        realmMapping = container.getRealmMapping();
+        Object secProxy = container.getSecurityProxy();
+        if( secProxy != null )
+        {
+            /* If this is not a SecurityProxy instance then use the default
+                SecurityProxy implementation
+            */
+            if( (secProxy instanceof SecurityProxy) == false )
+            {
+                try
+                {
+                    // Get default SecurityProxyFactory from JNDI at
+                    InitialContext iniCtx = new InitialContext();
+                    SecurityProxyFactory proxyFactory = (SecurityProxyFactory) iniCtx.lookup(SECURITY_PROXY_FACTORY_NAME);
+                    securityProxy = proxyFactory.create(secProxy);
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Failed to initialze DefaultSecurityProxy");
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                securityProxy = (SecurityProxy) secProxy;
+            }
 
-   public  Container getContainer()
-   {
-   	return container;
-   }
+            // Initialize the securityProxy
+            try
+            {
+                ContainerInvokerContainer ic = (ContainerInvokerContainer) container;
+                Class beanHome = ic.getHomeClass();
+                Class beanRemote = ic.getRemoteClass();
+                securityProxy.init(beanHome, beanRemote, securityManager);
+            }
+            catch(Exception e)
+            {
+                System.out.println("Failed to initialze SecurityProxy");
+                e.printStackTrace();
+            }
+            System.out.println("Initialized SecurityProxy="+securityProxy);
+        }
+    }
+
+    public Container getContainer()
+    {
+        return container;
+    }
 
    // Container implementation --------------------------------------
-   public void start()
-      throws Exception
-   {
-      super.start();
+    public void start() throws Exception
+    {
+        super.start();
+    }
+
+    public Object invokeHome(MethodInvocation mi) throws Exception
+    {
+        // Authenticate the subject and apply any declarative security checks
+        checkSecurityAssociation(mi, true);
+        // Apply any custom security checks
+        if( securityProxy != null )
+        {
+            EJBContext ctx = mi.getEnterpriseContext().getEJBContext();
+            Object[] args = mi.getArguments();
+            securityProxy.setEJBContext(ctx);
+            try
+            {
+                securityProxy.invokeHome(mi.getMethod(), args);
+            }
+            catch(SecurityException e)
+            {
+                Principal principal = mi.getPrincipal();
+                String msg = "SecurityProxy.invokeHome exception, principal="+principal;
+                Logger.error(msg);
+                SecurityException se = new SecurityException(msg);
+                throw new RemoteException("SecurityProxy.invokeHome failure", se);
+            }
+        }
+        return getNext().invokeHome(mi);
+    }
+    public Object invoke(MethodInvocation mi) throws Exception
+    {
+        // Authenticate the subject and apply any declarative security checks
+        checkSecurityAssociation(mi, false);
+        // Apply any custom security checks
+        if( securityProxy != null )
+        {
+            Object bean = mi.getEnterpriseContext().getInstance();
+            EJBContext ctx = mi.getEnterpriseContext().getEJBContext();
+            Object[] args = mi.getArguments();
+            securityProxy.setEJBContext(ctx);
+            try
+            {
+                securityProxy.invoke(mi.getMethod(), args, bean);
+            }
+            catch(SecurityException e)
+            {
+                Principal principal = mi.getPrincipal();
+                String msg = "SecurityProxy.invoke exception, principal="+principal;
+                Logger.error(msg);
+                SecurityException se = new SecurityException(msg);
+                throw new RemoteException("SecurityProxy.invoke failure", se);
+            }
+        }
+        return getNext().invoke(mi);
+    }
+
+    private void checkSecurityAssociation(MethodInvocation mi, boolean home)
+        throws Exception
+    {
+        // if this isn't ok, bean shouldn't deploy
+        if (securityManager == null)
+        {
+            return;
+        }
+        if (realmMapping == null)
+        {
+            throw new RemoteException("checkSecurityAssociation", new SecurityException("Role mapping manager has not been set"));
+        }
+
+        // Check the security info from the method invocation
+        Principal principal = mi.getPrincipal();
+        Object credential = mi.getCredential();
+        if( principal == null || securityManager.isValid(principal, credential) == false )
+        {
+            Logger.error("Authentication exception, principal="+principal);
+            SecurityException e = new SecurityException("Authentication exception");
+            throw new RemoteException("checkSecurityAssociation", e);
+        }
+        else
+        {
+            SecurityAssociation.setPrincipal( principal );
+            SecurityAssociation.setCredential( credential );
+        }
+
+        Set methodRoles = container.getMethodPermissions(mi.getMethod(), home);
+        /* If the method has no assigned roles or the user does not have at
+           least one of the roles then access is denied.
+        */
+        if( methodRoles == null || realmMapping.doesUserHaveRole(principal, methodRoles) == false )
+        {
+            Logger.error("Illegal access, principal="+principal);
+            SecurityException e = new SecurityException("Illegal access exception");
+            throw new RemoteException("checkSecurityAssociation", e);
+        }
    }
 
-   private void checkSecurityAssociation( MethodInvocation mi, boolean home)
-    throws Exception
-   {
-      // if this isn't ok, bean shouldn't deploy
-      if (securityManager == null) {
-          return;
-      }
-      if (realmMapping == null) {
-          throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Role mapping manager has not been set"));
-      }
-
-     // Check the security info from the method invocation
-     Principal principal = mi.getPrincipal();
-     Object credential = mi.getCredential();
-     if (principal == null || !securityManager.isValid( principal, credential ))
-     {
-        // should log illegal access
-        throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Authentication exception"));
-     }
-     else
-     {
-        SecurityAssociation.setPrincipal( principal );
-        SecurityAssociation.setCredential( credential );
-     }
-      Set methodPermissions = container.getMethodPermissions( mi.getMethod(), home );
-
-      if (methodPermissions != null && !realmMapping.doesUserHaveRole( principal, methodPermissions ))
-      {
-        // should log illegal access
-        throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Illegal access exception"));
-      }
-   }
-
-   public Object invokeHome(MethodInvocation mi)
-      throws Exception
-   {
-      checkSecurityAssociation( mi, true );
-      return getNext().invokeHome(mi);
-   }
-
-   /**
-    *   This method does invocation interpositioning of tx and security,
-    *   retrieves the instance from an object table, and invokes the method
-    *   on the particular instance
-    *
-    * @param   id
-    * @param   m
-    * @param   args
-    * @return
-    * @exception   Exception
-    */
-   public Object invoke(MethodInvocation mi)
-      throws Exception
-   {
-      checkSecurityAssociation( mi, false );
-      return getNext().invoke(mi);
-   }
-
-   // Private -------------------------------------------------------
 }
-
