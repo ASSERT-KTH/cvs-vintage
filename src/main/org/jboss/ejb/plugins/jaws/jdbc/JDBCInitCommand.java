@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -52,13 +52,18 @@ public class JDBCInitCommand
          
          sql += (first ? "" : ",") +
                 cmpField.getColumnName() + " " +
-                cmpField.getSQLType() +
-                // If the current field is the primary key field,
-                // add the constraint that this field is primary key.
-                // This is useful for some dbase editors like MS Access 97
-                // that require this information for better editing.
-                (jawsEntity.getPrimKeyField().equals(cmpField.getColumnName())?
-                	" CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY":"");
+                cmpField.getSQLType();
+                
+		 // if primary key defined in ejb-jar.xml
+         if (jawsEntity.getPrimKeyField() != null)  {
+	                // If the current field is the primary key field,
+	                // add the constraint that this field is primary key.
+	                // This is useful for some dbase editors like MS Access 97
+	                // that require this information for better editing.
+	                sql += (jawsEntity.getPrimKeyField().equals(cmpField.getColumnName())?
+	                	" CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY":"");
+         }
+         
          first = false;
       }
 
