@@ -87,6 +87,9 @@ import java.lang.reflect.*;
  */
 public class BaseInterceptor
 {
+    public static final int DECLINED=-1;
+    public static final int OK=0;
+    
     protected ContextManager cm;
     protected Container ct;
     // null for "global" interceptors

@@ -50,6 +50,8 @@ public class J2EEInterceptor extends BaseInterceptor {
     private static final String HTTP_ERROR_LOG = "web.error.log";
     private static final int BUFFER_SIZE = 1024;
 
+    int userNote;
+    int passwordNote;
     // auth
     private static int MAX_COUNT = 5;
     private static int SLEEP_TIME = 5000; // milliseconds....
@@ -65,6 +67,11 @@ public class J2EEInterceptor extends BaseInterceptor {
 
     public void engineInit( ContextManager cm ) throws TomcatException {
 	super.engineInit(cm);
+	userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+			       "credentials.user");
+	passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+				   "credentials.password");
+
 	debug=10;
     }
     
@@ -72,7 +79,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	throws TomcatException
     {
     }
-    
+
     public int preService(Request request, Response response) {
 	Context ctx = request.getContext();
 	Handler sw=request.getHandler();
@@ -180,13 +187,9 @@ public class J2EEInterceptor extends BaseInterceptor {
     public int authenticate( Request req, Response res ) {
 	Context ctx=req.getContext();
 	
-	// Extract the credentials
-	Hashtable cred=new Hashtable();
-	SecurityTools.credentials( req, cred );
-
 	// This realm will use only username and password callbacks
-	String user=(String)cred.get("username");
-	String password=(String)cred.get("password");
+	String user=(String)req.getNote( userNote );
+	String password=(String)req.getNote( passwordNote );;
 	if( debug>0 ) log( "Try to auth " + user + " " + password);
 
 	if( user==null || password == null ) {
@@ -232,8 +235,8 @@ public class J2EEInterceptor extends BaseInterceptor {
 
     public int authorize( Request req, Response response, String roles[] )
     {
-	if( roles==null ) {
-	    return 0;
+	if( roles==null || roles.length==0 ) {
+	    return OK;
 	}
 	
 	Context ctx=req.getContext();
@@ -245,11 +248,12 @@ public class J2EEInterceptor extends BaseInterceptor {
 	    appName=wbd.getApplication().getName();
 	if( debug>0) log("appname=" + appName);
 
+	// call back the authenticate hooks
 	String user=req.getRemoteUser();
 	if( user==null ) {
 	    // Need auth, but have no user/pass
 	    if( debug>0) log("no username");
-	    return HttpServletResponse.SC_UNAUTHORIZED;
+	    return DECLINED;
 	}
 	String userRoles[]=null;
 
@@ -267,7 +271,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	    if(isUserInRole(appName, mappedRole) ) {
 		if( debug>0 ) log("Role match " +
 				  roles[i] + " " +  mappedRole);
-		return 0;
+		return OK;
 	    }
 	    if( debug>0 ) log("Role match failed " +
 			      roles[i] + " " + mappedRole);
@@ -275,7 +279,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	
 	if( debug>0  ) log("UnAuthorized " +
 					role + " " + mappedRole);
- 	return HttpServletResponse.SC_UNAUTHORIZED;
+ 	return DECLINED;
 	// XXX check transport
     }
 

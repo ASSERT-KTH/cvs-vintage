@@ -678,14 +678,16 @@ public final class ContextManager implements LogAware{
 		// Call all authorization callbacks. 
 		for( int i=0; i< reqI.length; i++ ) {
 		    status = reqI[i].authorize( req, res, roles );
-		    if ( status != 0 ) {
+		    if ( status != BaseInterceptor.DECLINED ) {
 			break;
 		    }
 		}
 	    }
-	    if( status > 200 ) {
+	    if( status != BaseInterceptor.OK ) {
 		if( debug > 0)
-		    log("Authorize error " + req + " " + status);
+		    log("Unauthorized " + req + " " + status);
+		if( status==BaseInterceptor.DECLINED )
+		    status=401; // unauthorized
 		handleStatus( req, res, status );
 		return;
 	    }

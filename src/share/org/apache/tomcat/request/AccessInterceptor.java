@@ -281,33 +281,37 @@ public class AccessInterceptor extends  BaseInterceptor  {
  	return 0;
     }
 
+    /** Handle authorization for requests where certain roles are
+     *  requires, and a user/password scheme is used to authenticate
+     *  the user ( BASIC, FORM ) and find the user roles.
+     */
     public int authorize( Request req, Response response, String roles[] )
     {
         if( roles==null || roles.length==0 ) {
             // request doesn't need authentication
-            return 0;
+            return OK;
         }
 
 	// will call authenticate() hooks to get the user
         String user=req.getRemoteUser();
         if( user==null )
-	    return 401;
+	    return DECLINED; // we know only about user/password auth
 
         if( debug > 0 ) log( "Controled access for " + user + " " +
                      req + " " + req.getContainer() );
 
         String userRoles[]= req.getUserRoles();
         if ( userRoles == null )
-            return 401;
+            return DECLINED; // no user roles - can't handle
 
 	for( int i=0; i< userRoles.length; i ++ ) {
 	    for( int j=0; j< roles.length; i ++ )
 		if( userRoles[i]!=null && userRoles[i].equals( roles[j] ))
-		    return 0;
+		    return OK; // found the right role
 	}
 
         if( debug > 0 ) log( "UnAuthorized " + roles[0] );
-        return 401;
+        return DECLINED; // couldn't find the role - maybe someone else can
     }
 
     /** Find if a pattern is matched by a container

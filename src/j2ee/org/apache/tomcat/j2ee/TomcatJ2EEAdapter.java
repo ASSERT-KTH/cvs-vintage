@@ -40,14 +40,14 @@ public class TomcatJ2EEAdapter extends WebService {
     
     public void addApplicationAdapter( Object adapter ) {
 	try {
-	    server.addApplicationAdapter( adapter );
+	    server.addApplicationAdapter( (BaseInterceptor)adapter );
 	} catch(TomcatException ex ) {
 	    ex.printStackTrace();
 	}
     }
     
     public void setWorkDir( String dir ) {
-	server.setWorkDir( dir );
+	cm.setWorkDir( dir );
     }
     
     public void addEndpoint( int port, InetAddress addr ,
@@ -75,7 +75,7 @@ public class TomcatJ2EEAdapter extends WebService {
     
     public  ServletContext addContext( String ctxPath, URL docRoot ) {
 	try {
-	    Context ctx=(Context)server.addContext( ctxPath, docRoot);
+	    Context ctx=(Context)server.addContext( ctxPath, docRoot, null);
 	    contexts.put( ctx.getFacade(), ctx );
 	    return (ServletContext)ctx.getFacade();
 	} catch(TomcatException ex ) {
@@ -121,7 +121,7 @@ public class TomcatJ2EEAdapter extends WebService {
 
     public  ServletContext getServletContext( String host,
 					      String cpath ) {
-	Context ctx=(Context)server.getServletContext(host, cpath);
+	Context ctx=server.getContext(host, cpath);
 	return (ServletContext)ctx.getFacade();
     }
     
