@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.27 2003/02/28 04:28:35 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.28 2003/02/28 17:49:55 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -435,8 +435,6 @@ public class VFSFileChooserDialog extends EnhancedDialog
 				{
 					String currentText = filenameField.getText();
 					int caret = filenameField.getCaretPosition();
-					if(MiscUtilities.isAbsolutePath(currentText))
-						caret -= MiscUtilities.getParentOfPath(currentText).length();
 
 					BrowserView view = browser.getBrowserView();
 					view.selectNone();
@@ -455,17 +453,26 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 						String newText;
 						if(MiscUtilities.isAbsolutePath(currentText)
-							&& !currentText.startsWith(browser.getPath()))
+							&& !currentText.startsWith(browser.getDirectory()))
+						{
 							newText = path;
-						else if(parent.equals(browser.getDirectory()))
-							newText = name;
+						}
 						else
-							newText = path;
+						{
+							if(MiscUtilities.isAbsolutePath(currentText))
+								caret -= MiscUtilities.getParentOfPath(currentText).length();
+							if(parent.equals(browser.getDirectory()))
+								newText = name;
+							else
+							{
+								caret += parent.length() + 1;
+								newText = path;
+							}
+						}
+
 						filenameField.setText(newText);
 						filenameField.setCaretPosition(
 							newText.length());
-						if(MiscUtilities.isAbsolutePath(newText))
-							caret += parent.length() + 1;
 						filenameField.moveCaretPosition(
 							caret);
 					}

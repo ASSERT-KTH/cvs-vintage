@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.10 2003/02/07 21:57:28 spestov Exp $
+ * @version $Id: EditServer.java,v 1.11 2003/02/28 17:49:52 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -113,8 +113,6 @@ public class EditServer extends Thread
 	//{{{ run() method
 	public void run()
 	{
-		boolean abort = false;
-
 		for(;;)
 		{
 			if(abort)
@@ -243,7 +241,15 @@ public class EditServer extends Thread
 	// stopServer() method
 	void stopServer()
 	{
-		stop();
+		abort = true;
+		try
+		{
+			socket.close();
+		}
+		catch(IOException io)
+		{
+		}
+
 		new File(portFile).delete();
 	} //}}}
 
@@ -254,6 +260,7 @@ public class EditServer extends Thread
 	private ServerSocket socket;
 	private int authKey;
 	private boolean ok;
+	private boolean abort;
 	//}}}
 
 	//{{{ handleClient() method
