@@ -4,8 +4,8 @@
 
 <options>
  <gui>
-  <table> 
-   <columnlist>
+  <table selected="Date" ascending="true"> 
+   <columnlist >
     <column name="Status" position="0" size="23" enabled="true" />
     <column name="Attachment" position="1" size="23" enabled="true" />
    	<column name="Flagged" position="2" size="23" enabled="true" />
@@ -22,8 +22,6 @@
    	<column name="References" position="13" size="100" enabled="false" />
    	<column name="Content-Type" position="14" size="100" enabled="false" />
    </columnlist>
-   <selected name="Date" />
-   <ascending type="true" />
   </table>
   <viewlist>
    <view id="0" >
