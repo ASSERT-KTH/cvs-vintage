@@ -58,7 +58,7 @@
 #if (!$rmits || $rmits.isEmpty())
    <p class="alert">There are no issue types in this module.</p>
 <div class="functnbar3">
-<input type="submit" value="Create new"  name="eventSubmit_doGotoothertemplate"/>
+<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>
 </div>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -94,7 +94,7 @@
 #if (!$rmits || !$rmits.isEmpty())
 <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
 #end
-<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 #if (!$rmits || !$rmits.isEmpty())
 <input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />
