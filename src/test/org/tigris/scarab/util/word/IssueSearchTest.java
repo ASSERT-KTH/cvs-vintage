@@ -61,11 +61,11 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.4 2003/07/17 17:57:14 jmcnally Exp $
+ * @version $Id: IssueSearchTest.java,v 1.5 2003/07/25 17:31:20 thierrylach Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
-    IssueSearch search;
+    private IssueSearch search;
 
     /**
      * Creates a new instance.

@@ -46,10 +46,6 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-
-import org.apache.torque.om.NumberKey;
-
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
@@ -66,11 +62,11 @@ import org.tigris.scarab.om.ScarabUser;
  * given in millis.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchFactoryTest.java,v 1.1 2003/07/17 17:57:14 jmcnally Exp $
+ * @version $Id: IssueSearchFactoryTest.java,v 1.2 2003/07/25 17:31:20 thierrylach Exp $
  */
 public class IssueSearchFactoryTest extends BaseTestCase
 {
-    IssueSearch search;
+    private IssueSearch search;
 
     /**
      * Creates a new instance.
@@ -200,7 +196,8 @@ public class IssueSearchFactoryTest extends BaseTestCase
         ScarabUser user = getUser1();
 
 
-        for (int i = 0; i < pts.length; i++) {
+        for (int i = 0; i < pts.length; i++)
+        {
             pts[i] = new ISFactoryTest(threadGroup, holdTime, 
                                        issueSearchFactory,
                                        module, it, user);
@@ -231,7 +228,8 @@ public class IssueSearchFactoryTest extends BaseTestCase
 
     private static int currentThreadCount = 0;
 
-    private class ISFactoryTest implements Runnable {
+    private class ISFactoryTest implements Runnable
+    {
         /**
          * The number of milliseconds to hold the object
          */
@@ -261,7 +259,8 @@ public class IssueSearchFactoryTest extends BaseTestCase
             thread.start();
         }
 
-        public void run() {
+        public void run()
+        {
             isRun = true;
             runCounter = 0;
             while (isRun) 
@@ -294,7 +293,8 @@ public class IssueSearchFactoryTest extends BaseTestCase
             state = "Stopped";
         }
 
-        public void stop() {
+        public void stop()
+        {
             isRun = false;
         }
         
