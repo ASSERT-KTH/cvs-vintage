@@ -90,7 +90,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </div>
 
 <div class="functnbar3">
-   <input type="submit" value="save"  name="eventSubmit_doSaveattributedata" />
+   <input type="submit" value="Save"  name="eventSubmit_doSaveattributedata" />
 </div>
 
 
@@ -179,7 +179,9 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="add new"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="save"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="add new"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="delete selected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
 
 <p><small>Please note: Once created, Attribute Options cannot be deleted
