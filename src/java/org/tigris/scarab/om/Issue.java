@@ -449,7 +449,9 @@ public class Issue
     public Vector getActivity() throws Exception  
     {
         Criteria crit = new Criteria()
-            .add(ActivityPeer.ISSUE_ID, getIssueId());
+            .add(ActivityPeer.ISSUE_ID, getIssueId())
+            .setLimit(10)
+            .addOrderByColumn(ActivityPeer.TRANSACTION_ID);
         return ActivityPeer.doSelect(crit);
     }
 
