@@ -26,7 +26,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -184,10 +184,10 @@ public abstract class BeanMetaData extends MetaData {
 		// set the classes
 		// Not for MessageDriven
 		if (!messageDriven) {
-		    homeClass = getElementContent(getUniqueChild(element, "home"));
-		    remoteClass = getElementContent(getUniqueChild(element, "remote"));
-                    localHomeClass = getElementContent(getUniqueChild(element, "local-home"));
-                    localClass = getElementContent(getUniqueChild(element, "local"));
+		    homeClass = getElementContent(getOptionalChild(element, "home"));
+		    remoteClass = getElementContent(getOptionalChild(element, "remote"));
+                    localHomeClass = getElementContent(getOptionalChild(element, "local-home"));
+                    localClass = getElementContent(getOptionalChild(element, "local"));
 		}
 		ejbClass = getElementContent(getUniqueChild(element, "ejb-class"));
 		
