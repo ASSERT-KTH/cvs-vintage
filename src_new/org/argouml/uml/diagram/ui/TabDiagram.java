@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.49 2005/01/09 14:58:57 linus Exp $
+// $Id: TabDiagram.java,v 1.50 2005/01/11 11:26:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -405,6 +405,10 @@ public class TabDiagram
  * they are in the clipping area.
  * @author jaap.branderhorst@xs4all.nl
  * @since Apr 13, 2003
+ * @deprecated Bob Tarling 11 Jan 2005. This has been corrected in GEF.
+ * Please do not fix GEF in ArgoUML, contribute to GEF project. Because
+ * of this we currently miss out on GEF features.
+ * Remove this on the next GEF release after 0.10.10
  */
 class ArgoJGraph extends JGraph {
 
