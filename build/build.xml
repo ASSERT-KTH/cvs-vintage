@@ -30,6 +30,7 @@
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
+    <property name="src.schema.dir" value="${src.dir}/schema"/>
     <property name="src.webapp.dir" value="${src.dir}/webapp"/>
     <property name="src.webinf.dir" value="${src.webapp.dir}/WEB-INF"/>
     <property name="src.templates.dir" value="${src.webinf.dir}/templates"/>    
@@ -295,17 +296,17 @@
     <!-- ================================================================== -->
     <target name="torque-copy-all-schema">
         <!-- copy the schema's to the torque directory -->
-        <copy file="${src.sql.dir}/${project}-schema.xml" 
+        <copy file="${src.schema.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true">
           <filterset>
             <filter token="SCARAB_MODULE_CODE_LENGTH" value="${scarab.module.code.length}"/>
           </filterset>
         </copy>
-        <copy file="${src.sql.dir}/id-table-schema.xml" 
+        <copy file="${src.schema.dir}/id-table-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
-        <copy file="${src.sql.dir}/turbine-schema.xml" 
+        <copy file="${src.schema.dir}/turbine-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
     </target>
@@ -317,9 +318,9 @@
         <echo message="checking: ${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
         <uptodate property="schema.uptodate"
                   targetfile="${build.sql.scarab}/${scarab.database.type}/${project}.sql">
-            <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
-            <srcfiles dir="${src.sql.dir}" includes="${project}-schema.xml"/>
+            <srcfiles dir="${src.schema.dir}" includes="turbine-schema.xml"/>
+            <srcfiles dir="${src.schema.dir}" includes="id-table-schema.xml"/>
+            <srcfiles dir="${src.schema.dir}" includes="${project}-schema.xml"/>
             <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
             <srcfiles dir="${basedir}" includes="${configuration.file}"/>
@@ -673,13 +674,13 @@
         <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
         <uptodate property="datadtd.uptodate"
             targetfile="${src.sql.dir}/${project}-data.dtd">
-            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+            <srcfiles dir="${src.schema.dir}" includes="scarab-schema.xml"/>
         </uptodate>
     </target>
 
     <target name="datadtd" depends="datadtd-check,compile"
             unless="datadtd.uptodate">
-        <copy file="${src.sql.dir}/${project}-schema.xml"
+        <copy file="${src.schema.dir}/${project}-schema.xml"
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props"
               overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
@@ -702,11 +703,11 @@
     <!-- Generate SQL from data XML                                         -->
     <!-- ================================================================== -->
     <target name="datasql" depends="prepare,datadtd,compile">
-        <copy file="${src.sql.dir}/${project}-schema.xml"
+        <copy file="${src.schema.dir}/${project}-schema.xml"
             todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.sql.dir}/${project}-data.xml"
+        <copy file="${src.schema.dir}/${project}-data.xml"
             todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.sql.dir}/${project}-data.dtd"
+        <copy file="${src.schema.dir}/${project}-data.dtd"
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             tofile="${torque.dir.scarab}/build.properties"
@@ -947,7 +948,7 @@
                        distribution located at ${lib.repo}/xalan-j_2_3_1"/>
         <java classname="org.apache.xalan.xslt.Process" fork="yes"
               args="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl 
-                    -IN  ${src.sql.dir}/scarab-schema.xml 
+                    -IN  ${src.schema.dir}/scarab-schema.xml 
                     -OUT ${src.sql.dir}/scarab-schema.html">
            <!-- it seems ant is treating these as jvmarg ??
            <arg value="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl"/>

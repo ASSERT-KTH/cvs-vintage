@@ -13,7 +13,7 @@
 <!-- users and security.                                                  -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>       -->
-<!-- @version $Id: turbine-schema.xml,v 1.6 2004/01/31 01:13:42 dep4b Exp $     -->
+<!-- @version $Id: turbine-schema.xml,v 1.1 2004/05/13 15:02:17 thierrylach Exp $     -->
 <!-- ==================================================================== -->
 
 <database name="scarab">
