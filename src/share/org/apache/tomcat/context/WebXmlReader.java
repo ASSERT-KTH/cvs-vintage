@@ -43,27 +43,27 @@ public class WebXmlReader extends BaseInterceptor {
 	    // XXX make it configurable
 	    File default_xml=new File( home + "/conf/web.xml" );
 
-	    // try the default ( installation ) 
+	    // try the default ( installation )
 	    if( ! default_xml.exists() ) {
 		String tchome=ctx.getContextManager().getInstallDir();
 		if( tchome != null )
 		    default_xml=new File( tchome + "/conf/web.xml");
 	    }
-	    
+
 	    if( ! default_xml.exists() )
 		throw new TomcatException("Can't find default web.xml configuration");
-	    
-	    processFile(ctx, default_xml.toString(),
-			"file://" + default_dtd.toString());
+
+	    String dtdURL = "file:" + default_dtd.toString();
+
+	    processFile(ctx, default_xml.toString(), dtdURL);
 	    ctx.expectUserWelcomeFiles();
-	    
+
 	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
 	    // if relative, base it to cm.home
 	    if (!inf_xml.isAbsolute())
 		inf_xml = new File(home, inf_xml.toString());
 
-	    processFile(ctx, inf_xml.toString(),
-			"file://" + default_dtd.toString());
+	    processFile(ctx, inf_xml.toString(), dtdURL);
 	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
