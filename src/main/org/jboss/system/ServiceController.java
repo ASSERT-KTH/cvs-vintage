@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.9 $ <p>
+ * @version $Revision: 1.10 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -382,11 +382,20 @@ public class ServiceController
       log.info("Stopped " + serviceCounter + " services");
    }
 
+
    /**
     * #Description of the Method
     */
    public void destroy()
    {
+
+    // We now iterate the destroy one and one to be able to filter out
+    // some services and are handeling this code in the class Shutdown
+    // until we have a new (un)dependency mechanism ...  
+
+    log.info("ServiceController destroy commented out for now ...");
+
+    /*
       log.info("Destroying " + services.size() + " services");
 
       List servicesCopy = new ArrayList(services);
@@ -415,6 +424,7 @@ public class ServiceController
       }
       
       log.info("Destroyed " + serviceCounter + " services");
+      */
    }
 
    /**
