@@ -7,6 +7,7 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import java.util.HashMap;
 import javax.ejb.EJBException;
 
 /**
@@ -23,7 +24,7 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCTypeComplex implements JDBCType {
    private JDBCTypeComplexProperty[] properties;
@@ -32,8 +33,12 @@ public class JDBCTypeComplex implements JDBCType {
    private int[] jdbcTypes;   
    private String[] sqlTypes;
    private Class fieldType;
+   private HashMap propertiesByName = new HashMap();
 
-   public JDBCTypeComplex(JDBCTypeComplexProperty[] properties, Class fieldType) {
+   public JDBCTypeComplex(
+         JDBCTypeComplexProperty[] properties,
+         Class fieldType) {
+
       this.properties = properties;
       this.fieldType = fieldType;
       
@@ -57,6 +62,10 @@ public class JDBCTypeComplex implements JDBCType {
          sqlTypes[i] = properties[i].getSQLType();
       }
       
+      for(int i=0; i<properties.length; i++) {
+         propertiesByName.put(properties[i].getPropertyName(), properties[i]);
+      }
+      
    }
 
    public String[] getColumnNames() {
@@ -75,9 +84,34 @@ public class JDBCTypeComplex implements JDBCType {
       return sqlTypes;
    }
    
+   public JDBCTypeComplexProperty[] getProperties() {
+      return properties;
+   }
+
+   private JDBCTypeComplexProperty getProperty(String propertyName) {
+      JDBCTypeComplexProperty prop = 
+            (JDBCTypeComplexProperty )propertiesByName.get(propertyName);
+      if(prop == null) {
+         throw new EJBException(fieldType.getName() + 
+               " does not have a property named " + propertyName);
+      }
+      return prop;
+   }
+   
    public Object getColumnValue(int index, Object value) {
+      return getColumnValue(properties[index], value);
+   }
+
+   public Object getColumnValue(String propertyName, Object value) {
+      return getColumnValue(getProperty(propertyName), value);
+   }
+
+   private Object getColumnValue(
+         JDBCTypeComplexProperty property,
+         Object value) {
+
       try {
-         return properties[index].getColumnValue(value);
+         return property.getColumnValue(value);
       } catch(Exception e) {
          e.printStackTrace();
          throw new EJBException("Error getting column value", e);
@@ -85,6 +119,22 @@ public class JDBCTypeComplex implements JDBCType {
    }
 
    public Object setColumnValue(int index, Object value, Object columnValue) {
+      return setColumnValue(properties[index], value, columnValue);
+   }
+
+   public Object setColumnValue(
+         String propertyName,
+         Object value, 
+         Object columnValue) {
+
+      return setColumnValue(getProperty(propertyName), value, columnValue);
+   }
+   
+   public Object setColumnValue(
+         JDBCTypeComplexProperty property,
+         Object value,
+         Object columnValue) {
+
       if(value==null && columnValue==null) {
          // nothing to do
          return null;
@@ -94,7 +144,7 @@ public class JDBCTypeComplex implements JDBCType {
          if(value == null) {
             value = fieldType.newInstance();
          }
-         return properties[index].setColumnValue(value, columnValue);
+         return property.setColumnValue(value, columnValue);
       } catch(Exception e) {
          e.printStackTrace();
          throw new EJBException("Error setting column value", e);
