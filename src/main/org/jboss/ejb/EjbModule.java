@@ -67,7 +67,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -114,10 +114,8 @@ public class EjbModule
    
    private final DeploymentInfo deploymentInfo;   
 
-   /** Application Object Name (JSR-77) **/
-   private String applicationName;
    /** Module Object Name (JSR-77) **/
-   private String moduleName;
+   private ObjectName moduleName;
 
    private ServiceControllerMBean serviceController;
 
@@ -238,24 +236,15 @@ public class EjbModule
       return deploymentInfo.url;
    }
 
-   /**
-   * @return Application Name if this is a standalone EJB module (JAR file)
-   *         otherwise null
-   **/
-   public String getApplicationName() {
-      return applicationName;
-   }
-   
-   public void setApplicationName( String pApplicationName ) {
-      applicationName = pApplicationName;
-   }
 	
-   public String getModuleName() {
+   public ObjectName getModuleName() 
+   {
       return moduleName;
    }
    
-   public void setModuleName( String pModuleName ) {
-      moduleName = pModuleName;
+   public void setModuleName(final ObjectName ModuleName) 
+   {
+      this.moduleName = ModuleName;
    }
 	
    // Service implementation ----------------------------------------
@@ -271,18 +260,6 @@ public class EjbModule
       // Create JSR-77 EJB-Module
       int sepPos = getName().lastIndexOf( "/" );
       String lName = getName().substring(sepPos >= 0 ? sepPos + 1 : 0);
-      // If Parent is not set then this is a standalone EJB module
-      // therefore create the JSR-77 application beforehand
-      if( deploymentInfo.parent == null ) {
-         ObjectName lApplication = org.jboss.management.j2ee.J2EEApplication.create(
-            server,
-            lName,
-            null
-         );
-         if( lApplication != null ) {
-            setApplicationName( lApplication.toString() );
-         }
-      }
       ObjectName lModule = 
          org.jboss.management.j2ee.EjbModule.create(
             server,
@@ -292,7 +269,7 @@ public class EjbModule
          );
       if( lModule != null ) 
       {
-         setModuleName( lModule.toString() );
+         setModuleName( lModule );
       }
       //Set up the beans in this module.
       for (Iterator beans = ((ApplicationMetaData) deploymentInfo.metaData).getEnterpriseBeans(); beans.hasNext(); ) 
@@ -310,7 +287,7 @@ public class EjbModule
             throw e;
          } // end of try-catch
       }
-      //only one iteration should be necessary!!!!!!!!!!!!!!!!!!   
+      //only one iteration should be necessary, but we won't sweat it.   
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
@@ -321,7 +298,7 @@ public class EjbModule
          log.debug( "Application.create(), create JSR-77 EJB-Component" );
          ObjectName lEJB = EJB.create(
             server,
-            getModuleName(),
+            getModuleName().toString(),
             con.getBeanMetaData()
          );
          if (debug) {
@@ -395,15 +372,10 @@ public class EjbModule
             //log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
          } // end of try-catch
       }
-      log.info( "Remove EJB Module: " + getModuleName() );
+      log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
-      {
-         org.jboss.management.j2ee.EjbModule.destroy(server, getModuleName() );
-      }
-      log.info( "Remove Application: " + getApplicationName() );
-      if( getApplicationName() != null )
-      {
-         org.jboss.management.j2ee.J2EEApplication.destroy( server, getApplicationName() );
+      {  
+         org.jboss.management.j2ee.EjbModule.destroy(server, getModuleName().toString() );
       }
    }
 	

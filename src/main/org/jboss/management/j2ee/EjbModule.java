@@ -6,34 +6,37 @@
  */
 package org.jboss.management.j2ee;
 
-import java.net.URL;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
 
+
+
+
+import java.net.URL;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.management.AttributeChangeNotification;
-import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
-
 import javax.management.j2ee.EJB;
 import javax.management.j2ee.J2EEApplication;
 import javax.management.j2ee.J2EEServer;
 import javax.management.j2ee.JVM;
-
-import java.security.InvalidParameterException;
-
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBean;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -55,6 +58,8 @@ public class EjbModule
    private List mEJBs = new ArrayList();
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
+   //used to see if we should remove our parent when we are destroyed.
+   private static final Map iCreatedParent = new HashMap();
 
    // Static --------------------------------------------------------
    
@@ -72,20 +77,48 @@ public class EjbModule
       Logger lLog = Logger.getLogger( EjbModule.class );
       String lDD = null;
       ObjectName lApplication = null;
+      boolean fakeParent = false;
       try {
-         ObjectName lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
-             null
-         ).iterator().next();
+         ObjectName serverQuery = new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" );
+         Set servers = pServer.queryNames(serverQuery, null);
+         if (servers.size() != 1) 
+         {
+            lLog.error("Wrong number of servers found, should be 1: " + servers.size());
+            return null; 
+         } // end of if ()
+         
+         ObjectName lServer = (ObjectName)servers.iterator().next();
+
          String lServerName = lServer.getKeyPropertyList().get( "type" ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
+
          lLog.debug( "EjbModule.create(), server name: " + lServerName );
-         lApplication = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEApplication" +
-                ",name=" + pApplicationName + "," + lServerName + ",*"
-             ),
-             null
-         ).iterator().next();
+
+         ObjectName parentAppQuery =  new ObjectName( J2EEManagedObject.getDomainName() + 
+                                                      ":type=J2EEApplication" +
+                                                      ",name=" + pApplicationName + 
+                                                      "," + lServerName + ",*");
+
+         Set parentApps =  pServer.queryNames(parentAppQuery, null);
+
+         if (parentApps.size() == 0) 
+         {
+            lApplication = org.jboss.management.j2ee.J2EEApplication.create(pServer,
+                                                  pApplicationName,
+                                                  null);
+            fakeParent = true;
+            
+         } // end of if ()
+         else if (parentApps.size() == 1) 
+         {
+            lApplication = (ObjectName)parentApps.iterator().next();
+         } // end of if ()
+         else
+         {
+            lLog.error("more than one parent app for this ejb-module: " + parentApps.size());
+            return null;
+         } // end of else
+         
          // First get the deployement descriptor
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.EJB );
       }
@@ -94,13 +127,13 @@ public class EjbModule
          return null;
       }
       try {
-         // Now create the J2EEApplication
+         // Now create the J2EE EJB module
          lLog.debug(
             "Create EJB-Module, name: " + pName +
             ", application: " + lApplication +
             ", dd: " + lDD
          );
-         return pServer.createMBean(
+         ObjectName ejbModule = pServer.createMBean(
             "org.jboss.management.j2ee.EjbModule",
             null,
             new Object[] {
@@ -114,6 +147,13 @@ public class EjbModule
                String.class.getName()
             }
          ).getObjectName();
+         //remember if we created our parent, if we did we have to kill it on destroy.
+         if (fakeParent) 
+         {
+            iCreatedParent.put(ejbModule, lApplication);
+         } // end of if ()
+         return ejbModule;
+         
       }
       catch( Exception e ) {
          lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
@@ -124,8 +164,17 @@ public class EjbModule
    public static void destroy( MBeanServer pServer, String pModuleName ) {
       Logger lLog = Logger.getLogger( EjbModule.class );
       try {
+         ObjectName name = new ObjectName(pModuleName);
          // Now remove the EjbModule
-         pServer.unregisterMBean( new ObjectName( pModuleName ) );
+         pServer.unregisterMBean(name);
+         ObjectName parent = (ObjectName)iCreatedParent.get(name);
+         if (parent != null) 
+         {
+            lLog.info( "Remove fake JSR-77 parent Application: " + parent.toString() );
+            org.jboss.management.j2ee.J2EEApplication.destroy(pServer, parent.toString());
+            
+         } // end of if ()
+         
       }
       catch( Exception e ) {
          lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
