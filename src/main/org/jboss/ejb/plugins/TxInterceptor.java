@@ -38,7 +38,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class TxInterceptor
 extends AbstractInterceptor
@@ -139,11 +139,11 @@ extends AbstractInterceptor
         // New transaction is the new transaction this might start
        Transaction newTransaction = null;
        
-//       Logger.log("Current transaction in MI is "+mi.getTransaction()); 
-//       Logger.log("Current method "+mi.getMethod());           
+//DEBUG       Logger.log("Current transaction in MI is "+mi.getTransaction()); 
+//DEBUG       Logger.log("Current method "+mi.getMethod().getName());           
        byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
 
-// DEBUG  	printMethod(mi.getMethod(), transType);
+   	printMethod(mi.getMethod(), transType);
        
        switch (transType) {
          
@@ -165,7 +165,7 @@ extends AbstractInterceptor
               
           if (oldTransaction == null) { // No tx running
                  
-              //DEBUG               Logger.debug("Begin tx");
+              Logger.debug("Begin tx");
                  
               // Create tx 
               tm.begin();
@@ -219,13 +219,16 @@ extends AbstractInterceptor
           } 
           
           finally {
-              
+            
+			 //DEBUG Logger.log("In finally");
+			  
               // Only do something if we started the transaction
               if (newTransaction != null) {
                  
                  // Marked rollback
                  if (newTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
               
+			  		Logger.log("rolling back");	
                    // actually roll it back 
                    newTransaction.rollback();
                  }
@@ -233,6 +236,7 @@ extends AbstractInterceptor
                  //Still running
                  else if(newTransaction.getStatus() == Status.STATUS_ACTIVE) {
                    
+				   Logger.log("commiting");
                    // Commit tx
                    // This will happen if
                    // a) everything goes well
@@ -243,7 +247,7 @@ extends AbstractInterceptor
                  // reassociate the oldTransaction with the methodInvocation (even null)
                  mi.setTransaction(oldTransaction);
               }
-          }
+          	}
          }
           
          case MetaData.TX_SUPPORTS: {
@@ -373,11 +377,11 @@ extends AbstractInterceptor
        if(b != null) return b.byteValue();
          
        BeanMetaData bmd = container.getBeanMetaData();
-       Logger.log("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
+       //DEBUG Logger.log("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
        byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
        
        // provide default if method is not found in descriptor 
-       if (result == MetaData.TX_UNKNOWN) result = MetaData.TX_SUPPORTS;
+       if (result == MetaData.TX_UNKNOWN) result = MetaData.TX_REQUIRED;
        
        methodTx.put(m, new Byte(result));
        return result;
