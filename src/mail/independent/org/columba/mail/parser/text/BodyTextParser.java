@@ -93,11 +93,14 @@ public class BodyTextParser {
 		/* RIYAD: Lets use regexp and simplify the code, they are superfast */
 		String[] textLines = text.split("\n");
 		/* Make the buffer the size of the original text + 2 new chars per each line */
-		buffer = new StringBuffer(text.length() + 2 * textLines.length);
+		buffer = new StringBuffer(text.length() + 2 * (textLines.length+1));
 		
-		for(int i = 0; i < textLines.length; i++)
+		for(int i = 0; i < textLines.length; i++) {
 			buffer.append(prefix).append(textLines[i]);
-		
+
+			// dont forget the linebreak!
+			buffer.append("\n");
+		}
 		return buffer.toString();
 	}
 }
