@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.110 2004/09/03 15:19:29 ejort Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.111 2004/09/04 14:15:28 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -32,6 +32,48 @@
       <attribute name="JTAService">jboss:service=TransactionManager</attribute>
       <attribute name="UserTransactionService">jboss:service=ClientUserTransaction</attribute>
       <attribute name="RMI_IIOPService">jboss:service=CorbaORB</attribute>
+   </mbean>
+
+   <!-- ==================================================================== -->
+   <!-- XMBean Persistence                                                   -->
+   <!-- ==================================================================== -->   
+   <mbean code="org.jboss.system.pm.AttributePersistenceService"
+      name="jboss:service=AttributePersistenceService"
+      xmbean-dd="resource:xmdesc/AttributePersistenceService-xmbean.xml">
+      <!-- the AttributePersistenceService is persistent, itself -->
+           
+      <!--
+      <attribute name="AttributePersistenceManagerClass">org.jboss.system.pm.XMLAttributePersistenceManager</attribute>
+      <attribute name="AttributePersistenceManagerConfig">
+         <data-directory>data/xmbean-attrs</data-directory>
+      </attribute>      
+      <attribute name="ApmDestroyOnServiceStop">false</attribute>
+      <attribute name="VersionTag"></attribute>
+      -->
+   </mbean>
+
+   <!-- A Thread pool service -->
+   <mbean code="org.jboss.util.threadpool.BasicThreadPool"
+      name="jboss.system:service=ThreadPool">
+      <attribute name="Name">JBoss System Threads</attribute>
+      <attribute name="ThreadGroupName">System Threads</attribute>
+      <!-- How long a thread will live without any tasks in MS -->
+      <attribute name="KeepAliveTime">60000</attribute>
+      <!-- The min number of threads in the pool -->
+      <attribute name="MinimumPoolSize">1</attribute>
+      <!-- The max number of threads in the pool -->
+      <attribute name="MaximumPoolSize">10</attribute>
+      <!-- The max number of tasks before the queue is full -->
+      <attribute name="MaximumQueueSize">1000</attribute>
+      <!-- The behavior of the pool when a task is added and the queue is full.
+      abort - a RuntimeException is thrown
+      run - the calling thread executes the task
+      wait - the calling thread blocks until the queue has room
+      discard - the task is silently discarded without being run
+      discardOldest - check to see if a task is about to complete and enque
+         the new task if possible, else run the task in the calling thread
+      -->
+      <attribute name="BlockingMode">run</attribute>
    </mbean>
 
    <!-- Preload all custom editors for VMs that don't use the thread
@@ -122,24 +164,6 @@
       <!-- Should resources and non-EJB classes be downloadable -->
       <attribute name="DownloadServerClasses">true</attribute>
    </mbean>
-
-   <!-- ==================================================================== -->
-   <!-- XMBean Persistence                                                   -->
-   <!-- ==================================================================== -->   
-   <mbean code="org.jboss.system.pm.AttributePersistenceService"
-      name="jboss:service=AttributePersistenceService"
-      xmbean-dd="resource:xmdesc/AttributePersistenceService-xmbean.xml">
-      <!-- the AttributePersistenceService is persistent, itself -->
-           
-      <!--
-      <attribute name="AttributePersistenceManagerClass">org.jboss.system.pm.XMLAttributePersistenceManager</attribute>
-      <attribute name="AttributePersistenceManagerConfig">
-         <data-directory>data/xmbean-attrs</data-directory>
-      </attribute>      
-      <attribute name="ApmDestroyOnServiceStop">false</attribute>
-      <attribute name="VersionTag"></attribute>
-      -->
-   </mbean>
    
    <!-- ==================================================================== -->
    <!-- JNDI                                                                 -->
@@ -160,6 +184,9 @@
       <!-- The RMI service bind address. Empty == all addresses
        -->
       <attribute name="RmiBindAddress"></attribute>
+      <!-- The thread pool service used to control the bootstrap lookups -->
+      <depends optional-attribute-name="LookupPool"
+         proxy-type="attribute">jboss.system:service=ThreadPool</depends>
    </mbean>
 
    <mbean code="org.jboss.naming.JNDIView"
