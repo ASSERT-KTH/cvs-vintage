@@ -65,12 +65,13 @@ import org.tigris.scarab.services.module.ModuleEntity;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.2 2001/07/05 00:49:04 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.3 2001/07/10 19:07:01 jmcnally Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
     private static final String CURRENT_MODULE = "CURRENT_MODULE";
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
+    private static final String REPORTING_ISSUE_START_POINT = "RISP";
 
     /**
         Call the superclass constructor to initialize this object.
@@ -322,10 +323,34 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         if ( issue == null ) 
         {
             removeTemp(REPORTING_ISSUE);
+            setReportingIssueStartPoint(null);
         }
         else 
         {
             setTemp(REPORTING_ISSUE, issue);            
+        }
+    }
+
+    public String getReportingIssueStartPoint() throws Exception
+    {
+        String template = (String) getTemp(REPORTING_ISSUE_START_POINT);
+        if ( template == null ) 
+        {
+            template = "entry,Wizard3.vm";            
+        }
+        
+        return template;
+    }
+
+    public void setReportingIssueStartPoint(String template)
+    {
+        if ( template == null ) 
+        {
+            removeTemp(REPORTING_ISSUE_START_POINT);
+        }
+        else 
+        {
+            setTemp(REPORTING_ISSUE_START_POINT, template);            
         }
     }
 

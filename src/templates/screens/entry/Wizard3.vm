@@ -128,7 +128,16 @@
        </div>
       </div>
 
-      <p>workflow options:&#160; <input type="radio" name="foo" /> return to 2.1.0 <input type="radio" name="foo" /> return to 2.0.0 <input type="radio" name="foo" /> return to 2.1.3</p>
+      <p>
+      workflow options:&#160 return to&#160; 
+      <input type="radio" name="nextTemplate" 
+          value="$scarabR.User.ReportingIssueStartPoint"/> 
+          2.1.0 (Enter Issue) 
+      <input type="radio" name="nextTemplate" value="Index.vm" /> 
+          2.0.0 (Start Page) 
+      <input type="radio" name="nextTemplate" value="AssignIssue.vm"/> 
+          2.1.3 (Assign Issue) - not implemented
+      </p>
 
       <div class="grouper">
        <p><input type="submit" name="eventSubmit_doEnterissue" value="Submit Issue" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
