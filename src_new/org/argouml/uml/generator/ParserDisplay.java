@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.103 2004/04/06 20:05:32 mvw Exp $
+// $Id: ParserDisplay.java,v 1.104 2004/04/15 19:04:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.103 2004/04/06 20:05:32 mvw Exp $
+// $Id: ParserDisplay.java,v 1.104 2004/04/15 19:04:14 mvw Exp $
 
 
 
@@ -2021,6 +2021,9 @@ public class ParserDisplay extends Parser {
 
     /** Parse user input for state bodies and assign the individual
      *  lines to according actions or transistions.
+     *  The user input consists of multiple lines like:
+     *      action-label / action-expression
+     *  or the format of a regulat transition - see parseTransition().
      *  The words "entry", "do" and "exit" are case-independent.
      *  @param  st       The State object.
      *  @param  s        The string to parse.
