@@ -29,6 +29,8 @@ package org.objectweb.carol.jtests.conform.interceptor.jrmp;
 
 // java import 
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 // carol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext;
@@ -47,13 +49,20 @@ public class DummyServerServiceContext extends  JServiceContext {
      */
     String address = null;
 
+
+    /**
+     * empty constructor for Externalizable
+     */
+    public DummyServerServiceContext() {
+    }
+
     /**
      * constructor
      * @param int the context_id
      * @param byte[] the context data
      */
     public DummyServerServiceContext(int context_id, String address) {
-	super(context_id, null);
+	this.context_id=context_id;
 	this.address = address;
     }
 
@@ -61,4 +70,21 @@ public class DummyServerServiceContext extends  JServiceContext {
 	return "Server Dummy Context From "+ address;
     }
 
+    /**
+     * readExternal
+     * @param in the ObjectInput 
+     */
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+	context_id = in.readInt();
+	address = (String)in.readObject();
+    }
+
+    /**
+     * writeExternal
+     * @param out the object output stream 
+    */
+    public void writeExternal(ObjectOutput out) throws IOException {
+	out.writeInt(context_id);
+	out.writeObject(address);        
+    }
 }

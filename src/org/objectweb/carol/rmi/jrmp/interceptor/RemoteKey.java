@@ -84,14 +84,14 @@ public class RemoteKey {
 	} 
     }
     /**
-     * @return
+     * @return byte arrays
      */
     public byte[] getInetA() {
         return inetA;
     }
 
     /**
-     * @return
+     * @return UID server uid 
      */
     public UID getUid() {
         return uid;

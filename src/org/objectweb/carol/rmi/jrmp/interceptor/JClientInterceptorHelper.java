@@ -197,10 +197,17 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
 	    if (TraceCarol.isDebugRmiCarol()) {
 		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput remote, request="+request);
 	    }
+	    int sz = in.readInt();
 	    if (request) {
-		return (JServiceContext [])in.readObject();
+		JServiceContext [] jcs = new JServiceContext[sz];
+		for (int i=0; i<sz; i++) {
+		    jcs[i] = (JServiceContext)in.readObject();
+		}
+		return jcs;
 	    } else {
-		in.readObject();
+		for (int i=0; i<sz; i++) {
+		    in.readObject();
+		}
 		return null;
 	    }
 	} else if (ctxValue==LOCAL_CTX) {
@@ -251,7 +258,11 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
 	    }
 	    // send remotes service context
 	    out.writeInt(REMOTE_CTX);
-	    out.writeObject(ri.get_all_request_service_context());
+	    JServiceContext [] jcs = ri.get_all_request_service_context();
+	    out.writeInt(jcs.length);
+	    for (int i=0; i<jcs.length; i++) {
+		out.writeObject(jcs[i]);
+	    }
 	}
     }
 }

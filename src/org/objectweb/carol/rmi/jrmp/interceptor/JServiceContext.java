@@ -28,7 +28,7 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 //java import
-import java.io.Serializable;
+import java.io.Externalizable;
 
 /** 
  * Class <code>JServiceContext</code> is the CAROL JRMP Service context
@@ -37,32 +37,16 @@ import java.io.Serializable;
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public class JServiceContext implements Serializable {
-    
-    /**
-     * Construct an empty service context
-     */
-    public JServiceContext() {
-    }
-
-    /**
-     * constructor
-     * @param int the context_id
-     * @param byte[] the context data
-     */
-    public JServiceContext(int context_id, byte[] context_data) {
-	this.context_id = context_id;
-	this.context_data = context_data;
-    }
+public abstract class JServiceContext implements Externalizable {
 
     /**
      * the JServiceContext id 
      */ 
     public int context_id;
-	
-
+    
     /**
-     * the JServiceContext data
+     * Construct an empty service context
      */
-    public byte[] context_data;
+    public JServiceContext() {
+    }   
 }
