@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.31 2005/01/15 12:51:09 bobtarling Exp $
+// $Id: FigMessage.java,v 1.32 2005/01/29 22:42:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,6 +78,7 @@ public class FigMessage extends FigNodeModelElement {
      * The main constructor
      */
     public FigMessage() {
+        setShadowSize(0); // Issue 2714. 
 	getNameFig().setLineWidth(0);
 	getNameFig().setMultiLine(false);
 	getNameFig().setFilled(false);
