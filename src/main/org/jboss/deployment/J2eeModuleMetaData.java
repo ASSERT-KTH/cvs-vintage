@@ -6,7 +6,7 @@
  */
 package org.jboss.deployment;
 
-// $Id: J2eeModuleMetaData.java,v 1.9 2004/04/22 20:36:40 ejort Exp $
+// $Id: J2eeModuleMetaData.java,v 1.10 2004/08/14 01:04:00 starksm Exp $
 
 import org.jboss.metadata.MetaData;
 
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class J2eeModuleMetaData
         extends MetaData
@@ -28,7 +28,8 @@ public class J2eeModuleMetaData
    public static final int CLIENT = 2;
    public static final int CONNECTOR = 3;
    public static final int SERVICE = 4;
-   private static final String[] tags = {"ejb", "web", "java", "connector", "service"};
+   public static final int HAR = 5;
+   private static final String[] tags = {"ejb", "web", "java", "connector", "service", "har"};
 
    // Attributes ----------------------------------------------------
    int type;
@@ -114,7 +115,15 @@ public class J2eeModuleMetaData
             {
                case SERVICE:
                   if (jbossSpecific == false)
+                  {
                      throw new DeploymentException("Service archives must be in jboss-app.xml");
+                  } // end of if ()
+                  //fall through.
+               case HAR:
+                  if (jbossSpecific == false)
+                  {
+                     throw new DeploymentException("Hibernate archives must be in jboss-app.xml");
+                  }
                case EJB:
                case CLIENT:
                case CONNECTOR:
@@ -134,7 +143,7 @@ public class J2eeModuleMetaData
          if (done == false)
          {
             StringBuffer msg = new StringBuffer("Invalid module content, must be one of: ");
-            for (int i = 0; i < tags.length; i++)
+            for (int i = 0; i < tags.length; i ++)
             {
                msg.append(tags[i]);
                msg.append(", ");
