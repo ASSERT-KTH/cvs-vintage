@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.2 1999/10/11 02:42:32 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/11 02:42:32 $
  *
  * ====================================================================
  * 
@@ -102,7 +102,7 @@ public final class Options {
      * I want to see my generated servlets. Which directory are they
      * in?
      */
-    public File scratchDir = new File(System.getProperty("java.io.tmpdir"));
+    public File scratchDir;
     
     /**
      * Need to have this as is for versions 4 and 5 of IE. Can be set from
@@ -159,6 +159,11 @@ public final class Options {
      * ServletConfig and ServletContext. 
      */
     public Options(ServletConfig config, ServletContext context) {
+	// XXX it will be overriden latter, and JDK1.2 specific.
+	// can we remove it?
+	String scratchDirName=System.getProperty("java.io.tmpdir");
+	if( scratchDirName != null ) 
+	    scratchDir = new File(scratchDirName );
         String keepgen = config.getInitParameter("keepgenerated");
         if (keepgen != null) {
             if (keepgen.equalsIgnoreCase("true"))

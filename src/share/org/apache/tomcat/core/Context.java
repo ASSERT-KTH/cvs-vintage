@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.1 1999/10/09 00:30:01 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.2 1999/10/11 02:42:36 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/11 02:42:36 $
  *
  * ====================================================================
  *
@@ -926,6 +926,7 @@ public class Context {
 	    try {
 	        result.getWrapper().loadServlet(); 
 	    } catch (Exception ee) {
+		ee.printStackTrace();
 	        String msg = sm.getString("context.loadServlet.e",
 		    servletName);
 
