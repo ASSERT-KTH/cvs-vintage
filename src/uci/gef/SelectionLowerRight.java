@@ -28,7 +28,7 @@
 // File: SelectionLowerRight.java
 // Classes: SelectionLowerRight
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionLowerRight.java,v 1.1 1998/09/17 18:48:19 jrobbins Exp $
+// $Id: SelectionLowerRight.java,v 1.2 1998/10/09 01:05:03 jrobbins Exp $
 
 package uci.gef;
 
@@ -99,7 +99,7 @@ public class SelectionLowerRight extends Selection {
     int minWidth = minSize.width, minHeight = minSize.height;
     switch (hand.index) {
     case -1:
-      _content.translate(mX + anX, mY + anY);
+      _content.translate(anX - mX, anY - mY);
       return;
     case 0: break;
     case 1: break;

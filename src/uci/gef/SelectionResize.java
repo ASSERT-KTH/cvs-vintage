@@ -28,7 +28,7 @@
 // File: SelectionResize.java
 // Classes: SelectionResize
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionResize.java,v 1.6 1998/07/17 22:54:13 jrobbins Exp $
+// $Id: SelectionResize.java,v 1.7 1998/10/09 01:05:04 jrobbins Exp $
 
 package uci.gef;
 
@@ -115,7 +115,7 @@ public class SelectionResize extends Selection {
     int minWidth = minSize.width, minHeight = minSize.height;
     switch (hand.index) {
     case -1:
-      _content.translate(mX + anX, mY + anY);
+      _content.translate(anX - mX , anY - mY);
       return;
     case 0:
       newW = x + w - mX;

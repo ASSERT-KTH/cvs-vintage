@@ -27,7 +27,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.3 1998/09/10 21:42:16 jrobbins Exp $
+// $Id: FigLink.java,v 1.4 1998/10/09 01:05:40 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -37,24 +37,29 @@ import java.awt.*;
 import uci.gef.*;
 import uci.uml.ui.*;
 import uci.uml.Foundation.Core.*;
+import uci.uml.Behavioral_Elements.Common_Behavior.*;
 
-public class FigLink extends FigEdgeLine {
+public class FigLink extends FigEdgeModelElement {
 
   public FigLink(Object edge) {
-    super();
-    setOwner(edge);
+    super(edge);
 
     // set whatever arrow heads and colors are appropriate
     _fig.setLineColor(Color.black);
     setBetweenNearestPoints(true);
-
+    modelChanged();
   }
 
   public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
-    Element elmt = (Element) getOwner();
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(elmt);
+    Link l = (Link) getOwner();
+    if (l == null) return;
+//     try {
+//       // needs-more-work: remove from Instances
+//       l.setLinkEnd(new Vector());
+//     }
+//     catch (PropertyVetoException pve) {
+//       System.out.println("could not remove Link");
+//     }
     super.dispose();
   }
   

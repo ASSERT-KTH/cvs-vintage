@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.6 1998/10/08 00:06:41 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.7 1998/10/09 01:05:39 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -215,9 +215,13 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     ModelElement me = (ModelElement) getOwner();
     if (me == null) return;
     Vector stereos = me.getStereotype();
-    if (stereos == null || stereos.size() == 0) return;
+    if (stereos == null || stereos.size() == 0) {
+      _stereo.setText("");
+      return;
+    }
     String stereoStr = ((Stereotype) stereos.elementAt(0)).getName().getBody();
-    _stereo.setText("<<" + stereoStr + ">>");
+    if (stereoStr.length() == 0) _stereo.setText("");
+    else _stereo.setText("<<" + stereoStr + ">>");
   }
 
   /** needs-more-work: When the user deletes a ModelElement, it is

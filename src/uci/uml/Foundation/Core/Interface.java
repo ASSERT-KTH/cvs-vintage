@@ -53,5 +53,5 @@ public class Interface extends Classifier {
     return "Interface";
   }
 
-
+  static final long serialVersionUID = -3937436986575605464L;
 }

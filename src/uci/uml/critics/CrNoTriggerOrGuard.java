@@ -27,7 +27,7 @@
 // File: CrNoTriggerOrGuard.java
 // Classes: CrNoTriggerOrGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTriggerOrGuard.java,v 1.1 1998/10/08 00:04:43 jrobbins Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.2 1998/10/09 01:05:25 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -48,8 +48,8 @@ public class CrNoTriggerOrGuard extends CrUML {
        "transition to be taken.  If only a guard is used, the transition "+
        "is taken when the condition becomes true.\n\n" +
        "This problem must be resolved to complete the state machine.\n\n"+
-       "To fix this, select the Transition and use the \"Props\" tab, or "+
-       "select the Transition and type some text of the form:\n"+
+       "To fix this, select the Transition and use the \"Properties\" "+
+       "tab, or select the Transition and type some text of the form:\n"+
        "TRIGGER [GUARD] / ACTION\n"+
        "Where TRIGGER is an event name, GUARD is a boolean expression, "+
        "and ACTION is an action to be performed when the Transition is "+

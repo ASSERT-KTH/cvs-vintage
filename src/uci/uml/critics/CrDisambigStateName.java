@@ -27,7 +27,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.1 1998/10/08 00:04:23 jrobbins Exp $
+// $Id: CrDisambigStateName.java,v 1.2 1998/10/09 01:05:23 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,7 +51,8 @@ public class CrDisambigStateName extends CrUML {
        "Clear and unambiguous naming is key to code generation and "+
        "the understandability and maintainability of the design. \n\n"+
        "To fix this, use the FixIt button, or manually select one of the "+
-       "conflicting states and use the \"Props\" tab to change their names.");
+       "conflicting states and use the \"Properties\" tab to change "+
+       "their names.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
   }

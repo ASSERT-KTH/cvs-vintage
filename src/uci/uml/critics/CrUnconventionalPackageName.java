@@ -24,10 +24,10 @@
 
 
 
-// File: CrUnconventionalClassName.java
-// Classes: CrUnconventionalClassName
+// File: CrUnconventionalPackageName.java
+// Classes: CrUnconventionalPackageName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.13 1998/10/09 01:05:26 jrobbins Exp $
+// $Id: CrUnconventionalPackageName.java,v 1.1 1998/10/09 01:05:26 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -41,29 +41,34 @@ import uci.uml.Foundation.Data_Types.*;
 import uci.uml.Model_Management.*;
 
 
-public class CrUnconventionalClassName extends CrUML {
+public class CrUnconventionalPackageName extends CrUML {
 
-  public CrUnconventionalClassName() {
-    setHeadline("Capitalize Class Name {name}");
-    sd("Normally classes begin with a capital letter. The name '{name}' "+
-       "is unconventional because it does not begin with a capital.\n\n"+
+  public CrUnconventionalPackageName() {
+    setHeadline("Revise Package Name {name}");
+    sd("Normally package names are written in all lower case with "+
+       "periods used to indicate \"nested\" packages.  "+
+       "The name '{name}' "+
+       "is unconventional because it is not all lower case with periods.\n\n"+
        "Following good naming conventions help to improve "+
        "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select {name} "+
+       "To fix this, use the \"Next>\" button, or manually select {name} "+
        "and use the Properties tab to give it a different name.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof Classifier)) return NO_PROBLEM;
-    Classifier cls = (Classifier) dm;
-    Name myName = cls.getName();
+    if (!(dm instanceof Model)) return NO_PROBLEM;
+    Model m = (Model) dm;
+    Name myName = m.getName();
     if (myName == null || myName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String nameStr = myName.getBody();
     if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
-    char initialChar = nameStr.charAt(0);
-    if (!Character.isUpperCase(initialChar)) return PROBLEM_FOUND;
+    int size = nameStr.length();
+    for (int i = 0; i < size; i++) {
+      char c = nameStr.charAt(i);
+      if (!Character.isLowerCase(c) && c != '.') return PROBLEM_FOUND;
+    }
     return NO_PROBLEM;
   }
 
@@ -71,5 +76,5 @@ public class CrUnconventionalClassName extends CrUML {
     return ClClassName.TheInstance;
   }
 
-} /* end class CrUnconventionalClassName */
+} /* end class CrUnconventionalPackageName */
 

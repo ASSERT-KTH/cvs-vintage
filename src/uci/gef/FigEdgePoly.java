@@ -27,7 +27,7 @@
 // File: FigEdgePoly.java
 // Classes: FigEdgePoly
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigEdgePoly.java,v 1.1 1998/10/08 00:09:51 jrobbins Exp $
+// $Id: FigEdgePoly.java,v 1.2 1998/10/09 01:05:01 jrobbins Exp $
 
 package uci.gef;
 
@@ -307,6 +307,12 @@ public class FigEdgePoly extends FigEdge {
   public void setPoints(Handle h, int mX, int mY) {
     moveVertex(h, mX, mY, false);
     calcBounds();
+  }
+
+  /** Add a point to this polygon. Fires PropertyChange with "bounds". */
+  public void insertPoint(int i, int x, int y) {
+    FigPoly p = ((FigPoly) _fig);
+    p.insertPoint(i,x,y);
   }
 
   private static Handle _TempHandle = new Handle(0);

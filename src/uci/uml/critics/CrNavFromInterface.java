@@ -27,7 +27,7 @@
 // File: CrNavFromInterface.java
 // Classes: CrNavFromInterface.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNavFromInterface.java,v 1.1 1998/10/08 00:04:38 jrobbins Exp $
+// $Id: CrNavFromInterface.java,v 1.2 1998/10/09 01:05:24 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -48,10 +48,10 @@ public class CrNavFromInterface extends CrUML {
        "This part of the design should be changed before you can generate "+
        "code from this design.  If you do generate code before fixing this "+
        "problem, the code will not match the design.\n\n"+
-       "To fix this, select the Association and use the \"Props\" tab to "+
-       "uncheck Navigable for the end touching the Interface.  The "+
-       "Association should then appear with an stick arrowhead pointed away "+
-       "from the Interface.");
+       "To fix this, select the Association and use the \"Properties\" "+
+       "tab to uncheck Navigable for the end touching the Interface.  "+
+       "The Association should then appear with an stick arrowhead pointed "+
+       "away from the Interface.");
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setKnowledgeTypes(Critic.KT_SYNTAX);
   }

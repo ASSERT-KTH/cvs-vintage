@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.12 1998/07/02 02:52:46 jrobbins Exp $
+// $Id: ModeModify.java,v 1.13 1998/10/09 01:05:02 jrobbins Exp $
 
 package uci.gef;
 
@@ -147,8 +147,14 @@ public class ModeModify extends Mode {
 	Globals.showStatus("Moving objects vertically");
       }
     }
-    if (_constraint == HORIZONTAL_CONSTRAINT)  dy = 0;
-    if (_constraint == VERTICAL_CONSTRAINT)  dx = 0;
+    if (_constraint == HORIZONTAL_CONSTRAINT)  {
+      dy = 0;
+      snapY = _anchor.y;
+    }
+    if (_constraint == VERTICAL_CONSTRAINT)  {
+      dx = 0;
+      snapX = _anchor.x;
+    }
     if (dx == 0 && dy == 0) { me.consume(); return; }
 
     sm.startTrans();
@@ -185,8 +191,8 @@ public class ModeModify extends Mode {
       return;
     }
     /* needs-more-work: _anchor point sign convention is backwards */
-    _anchor.x = sm.getBounds().x - x;
-    _anchor.y = sm.getBounds().y - y;
+    _anchor.x = x;
+    _anchor.y = y;
     _curHandle.index = sm.hitHandle(new Rectangle(x-4, y-4, 8, 8));
     sm.endTrans();
     synchronized (snapPt) {

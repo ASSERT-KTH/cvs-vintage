@@ -27,7 +27,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.3 1998/10/08 00:06:44 jrobbins Exp $
+// $Id: FigRealization.java,v 1.4 1998/10/09 01:05:40 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -48,6 +48,7 @@ public class FigRealization extends FigEdgeModelElement {
     endArrow.setFillColor(Color.white);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+    modelChanged();
   }
 
   public void setFig(Fig f) {
@@ -55,20 +56,20 @@ public class FigRealization extends FigEdgeModelElement {
     _fig.setDashed(true);
   }
 
-   public void dispose() {
-     Realization r = (Realization) getOwner();
-     if (r == null) return;
-     Classifier sup = r.getSupertype();
-     Classifier sub = r.getSubtype();
-     try {
-       sup.removeRealization(r);
-       sub.removeSpecification(r);
-     }
-     catch (PropertyVetoException pve) {
-       System.out.println("could not remove Realization");
-     }
-     super.dispose();
-   }
+  public void dispose() {
+    Realization r = (Realization) getOwner();
+    if (r == null) return;
+    Classifier sup = r.getSupertype();
+    Classifier sub = r.getSubtype();
+    try {
+      sup.removeRealization(r);
+      sub.removeSpecification(r);
+    }
+    catch (PropertyVetoException pve) {
+      System.out.println("could not remove Realization");
+    }
+    super.dispose();
+  }
 
 
   protected boolean canEdit(Fig f) { return false; }

@@ -27,7 +27,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.11 1998/10/08 00:06:38 jrobbins Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.12 1998/10/09 01:05:37 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -179,7 +179,9 @@ implements MutableGraphModel, VetoableChangeListener {
 
   /** Return true if the given object is a valid edge in this graph */
   public boolean canAddEdge(Object edge)  {
-    return (edge instanceof Association) || (edge instanceof Generalization); 
+    return (edge instanceof Association) || (edge instanceof Generalization) ||
+      (edge instanceof Dependency) || (edge instanceof Link) ||
+      (edge instanceof Realization);
   }
 
   /** Remove the given node from the graph. */
@@ -215,7 +217,7 @@ implements MutableGraphModel, VetoableChangeListener {
     // needs-more-work: assumes public
     try {
       if (edge instanceof ModelElement) {
-	       _model.addPublicOwnedElement((ModelElement) edge);
+	_model.addPublicOwnedElement((ModelElement) edge);
       }
     }
     catch (PropertyVetoException pve) {

@@ -24,62 +24,38 @@
 
 
 
-// File: FigGeneralization.java
-// Classes: FigGeneralization
-// Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.10 1998/10/09 01:05:39 jrobbins Exp $
 
+package uci.uml.ui;
 
-package uci.uml.visual;
-
+//import jargo.kernel.*;
 import java.awt.*;
-import java.beans.*;
+import java.awt.event.*;
 import java.util.*;
+import java.beans.*;
+import com.sun.java.swing.*;
+import com.sun.java.swing.event.*;
+import com.sun.java.swing.tree.*;
+import com.sun.java.swing.text.*;
+//import com.sun.java.swing.border.*;
 
-import uci.gef.*;
-import uci.uml.ui.*;
+import uci.util.*;
 import uci.uml.Foundation.Core.*;
-//import uci.uml.Foundation.Extension_Mechanisms.*;
+import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Foundation.Extension_Mechanisms.*;
+import uci.uml.Model_Management.*;
 
-public class FigGeneralization extends FigEdgeModelElement {
 
-  public FigGeneralization(Object edge) {
-    super(edge);
-    addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+public class PropPanelDependency extends PropPanel
+implements TabModelTarget, DocumentListener {
 
-    ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
-    endArrow.setFillColor(Color.white);
+  ////////////////////////////////////////////////////////////////
+  // constructors
 
-    setDestArrowHead(endArrow);
-    setBetweenNearestPoints(true);
-    modelChanged();
+  public PropPanelDependency() {
+    super("Dependency");
+
+    remove(_nameField);
+    remove(_nameLabel);
   }
 
-   public void dispose() {
-     Generalization g = (Generalization) getOwner();
-     if (g == null) return;
-     GeneralizableElement sup = g.getSupertype();
-     GeneralizableElement sub = g.getSubtype();
-     try {
-       sup.removeSpecialization(g);
-       sub.removeGeneralization(g);
-     }
-     catch (PropertyVetoException pve) {
-       System.out.println("could not remove Generalization");
-     }
-     super.dispose();
-   }
-
-  protected boolean canEdit(Fig f) { return false; }
-  
-  /** This is called aftern any part of the UML ModelElement has
-   *  changed. This method automatically updates the name FigText.
-   *  Subclasses should override and update other parts. */
-  protected void modelChanged() {
-    // do not set _name
-    updateStereotypeText();
-  }
-
-
-} /* end class FigGeneralization */
-
+} /* end class PropPanelDependency */
