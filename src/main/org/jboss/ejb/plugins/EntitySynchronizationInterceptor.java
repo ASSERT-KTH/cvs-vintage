@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.33 $
+*   @version $Revision: 1.34 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -204,7 +204,7 @@ extends AbstractInterceptor
        Transaction tx = mi.getTransaction();
 
        //Commit Option D....
-       if(!validContexts.contains(ctx.getId())){
+       if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION && !validContexts.contains(ctx.getId())){
 		   //bean isn't in cache
 		   //so set valid to false so that we load...
 		   ctx.setValid(false);
