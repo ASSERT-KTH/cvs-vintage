@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | D E V E L O P E M E N T  N O T E S                                         |
 ------------------------------------------------------------------------------
-$Id: DEVELOPMENT.txt,v 1.4 2001/01/03 02:59:44 jon Exp $
+$Id: DEVELOPMENT.txt,v 1.5 2001/05/06 23:50:23 jon Exp $
 
             Below are some notes for doing development with Scarab.
 
@@ -46,4 +46,12 @@ If you make a change to a .java file and then recompile, you need to wait at
 least 3 seconds (this is configurable in Tomcat's server.xml file near the 
 bottom) for the classloader to notice that the class has changed and
 reload it.
+
+To get Scarab to auto-build Turbine from Turbine's CVS HEAD, you need to 
+add the following to your ~/.ant.properties file:
+scarab.turbine.version=2.2-dev
+
+To use Jikes as your compiler, add the following to your ~/.ant.properties 
+file: build.compiler=jikes
+
 ------------------------------------------------------------------------------
