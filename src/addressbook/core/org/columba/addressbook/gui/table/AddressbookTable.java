@@ -404,6 +404,7 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 		//AdapterNode child = null;
 
 		int row = table.getSelectedRow();
+		if (row == -1) return null;
 
 		HeaderItem item = addressbookModel.getHeaderItem(row);
 		Object uid = item.getUid();

@@ -414,8 +414,8 @@ public class AddressbookActionListener implements ActionListener {
 			addressbookInterface.table.setFolder(folder);
 
 		} else if (command.equals(propertiesAction.getActionCommand())) {
-
 			Object uid = addressbookInterface.table.getSelectedUid();
+			if (uid == null) return;
 			HeaderItem item = addressbookInterface.table.getSelectedItem();
 			/*
 			AddressbookXmlConfig config =
