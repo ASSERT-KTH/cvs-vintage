@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.40 2004/02/29 12:35:39 linus Exp $
+// $Id: UmlFactory.java,v 1.41 2004/06/30 10:10:36 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -361,6 +361,10 @@ public class UmlFactory extends AbstractUmlModelFactory {
             new ObjectCreateInfo(MActor.class, factory, "createActor"));
         elements.put(Uml.CLASS,
             new ObjectCreateInfo(MClass.class, factory, "createClass"));
+        elements.put(Uml.EXCEPTION,
+            new ObjectCreateInfo(MException.class,
+                factory,
+                "createException"));
         elements.put(Uml.CLASSIFIER,
             new ObjectCreateInfo(
                 MClassifier.class,

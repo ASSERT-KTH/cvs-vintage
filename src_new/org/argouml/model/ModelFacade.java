@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.189 2004/06/30 00:22:08 d00mst Exp $
+// $Id: ModelFacade.java,v 1.190 2004/06/30 10:10:37 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -223,6 +223,7 @@ public class ModelFacade {
     public static final Object CLASSIFIER_ROLE = MClassifierRole.class;
     public static final Object COMPONENT = MComponent.class;
     public static final Object COMPONENT_INSTANCE = MComponentInstance.class;
+    public static final Object EXCEPTION = MException.class;
     public static final Object INSTANCE = MInstance.class;
     public static final Object INTERFACE = MInterface.class;
     public static final Object NODE = MNode.class;
