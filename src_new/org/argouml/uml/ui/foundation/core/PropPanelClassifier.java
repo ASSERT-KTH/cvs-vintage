@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.49 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelClassifier.java,v 1.50 2004/11/22 20:52:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,7 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
      */
     public void addOperation() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
+        if (ModelFacade.isAClassifier(target)) {
             Object newOper =
                 UmlFactory.getFactory().getCore().buildOperation(
                     /*(MClassifier)*/ target);
@@ -154,7 +154,7 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
      */
     public void addAttribute() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
+        if (ModelFacade.isAClassifier(target)) {
             Object cls = /*(MClassifier)*/ target;
             Object attr =
                 UmlFactory.getFactory().getCore().buildAttribute(cls);
