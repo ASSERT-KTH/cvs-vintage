@@ -7,9 +7,6 @@
   <body>
     <h1>Basic Data Entry Use Cases</h1>
 
-<!-- --------------------------------------------------------------- -->
-
-
 <a name="UC-01"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
@@ -23,14 +20,17 @@
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
     <td bgcolor="white" valign="top">
-       User enters an issue, duplicates are avoided if possible.  If
-       it is a duplicate, the correct existing issue gains a vote.  If
-       a new issue is entered, it is well specified and actonable.
+       User enters an issue, duplicates are avoided if possible. The
+       static fields of an issue are entered first along with a short
+       description. This is used to look for duplicate issues. If it is
+       a duplicate, the currently selected issue gains a vote.  If a new
+       issue is entered, it is well specified and actionable.
     </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td>
-    <td bgcolor="white" valign="top"><a href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+    <td bgcolor="white" valign="top">
+        <a href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
@@ -57,7 +57,8 @@
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
-    <td bgcolor="white" valign="top">New issue is entered, or matching existing issue has vote increased.
+    <td bgcolor="white" valign="top">
+        New issue is entered, or matching existing issue has vote increased.
     </td>
   </tr>
   <tr>
@@ -75,58 +76,68 @@
        Does the user have limited votes?<br>
        Do the forms help users enter good issue reports?<br>
        No anonymous users can post issues<br>
-       At what point do users ahve to log in?<br>
+       At what point do users have to log in?
+       <font color="green">Users need to log in before making modifications
+       to the system. In other words, in order for the system to track 
+       modifications a user makes, the user needs to be logged in.</font>
+       <br>
        Admin use case to to put which fields in the NewIssueBox<br>
     </td>
   </tr>
   <tr>
     <td bgcolor="white"  COLSPAN="2" valign="top"><b>Main Success Scenario:</b>
       <ol>
-        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given project 
-        <li> User: log in as non-guest if not already
+        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given project </li>
+        <li> User: log in as non-guest if not already</li>
         <li> User: enter fields in <a href="ProjectIssues.html#NewIssueBox">NewIssueBox</a>, hit submit
            <ul>
-            <li> choose type of issue
-            <li> enter summary
-            <li> enter platform, os
-            <li> enter severity, priority (role specific)
+            <li> choose type of issue</li>
+            <li> enter summary</li>
+            <li> enter platform, os</li>
+            <li> enter severity, priority (role specific)</li>
            </ul>
-        <li> Scarab: checks for duplicates
+        </li>
+        <li> Scarab: checks for duplicates<li>
         <li> If duplicates found:
            <ol type="a">
-           <li> Scarab: display <a href="Deduplicate.html">Deduplicate</a> Page
-           <li> User: review list of duplicates
-           <li> If dup matches user's issue:
-             <ul type='a'>
-               <li> User: vote for matching issue
-             </ul>
-
-           <li> If no match:
-             <ul type='a'>
-               <li> User: indicate no match
-             </ul>
-
+               <li> Scarab: display <a href="Deduplicate.html">Deduplicate</a> Page</li>
+               <li> User: review list of duplicates</li>
+               <li> If dup matches user's issue:
+                    <ul type='a'>
+                        <li> User: vote for matching issue</li>
+                    </ul>
+               </li>
+           
+               <li> If no match:
+                   <ul type='a'>
+                       <li> User: indicate no match and show the next found potential duplicate issue. If no more 
+                       duplicate issues, then show <a href="NewIssueDetails.html">NewIssueDetails</a> page</li>
+                   </ul>
+               </li>
            </ol>
-        <li> Scarab: display <a href="NewIssueDetails.html">NewIssueDetails</a> page
-        <li> User: enter fields and hit submit
-        <li> Scarab: validate data or bounce back to prev screen
-        <li> Scarab: store values in database
-        <li> Scarab: display <a href="NewIssueAddendum.html">NewIssueAddendum</a> page with  <a                      href="IssueChangedConfirmation.html">IssueChangedConfirmation</a>
-        <li> User: opts to attach a file to issue and hit enter.
+        </li>
+        
+        <li> Scarab: display <a href="NewIssueDetails.html">NewIssueDetails</a> page</li>
+        <li> User: enter fields and hit submit</li>
+        <li> Scarab: validate data and show next screen or bounce back to current screen with previous
+                    information populated again.</li>
+        <li> Scarab: store values in database</li>
+        <li> Scarab: display <a href="NewIssueAddendum.html">NewIssueAddendum</a> page with  
+            <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a></li>
+        <li> User: options to attach a file to issue. Scarab: needs to track and deal with this properly.</li>
         <li> Scarab: display <a href="ProjectIssues.html">ProjectIssues</a> page 
-                     with <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+                     with <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a> </li>
       </ol>
     </td>
   </tr>
   <tr>
     <td bgcolor="white"  COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b>
       <ul>
-        <li> None
+        <li> None</li>
       </ul>
     </td>
   </tr>
 </table>
-<br><hr><br>
 
   </body>
 </html>
