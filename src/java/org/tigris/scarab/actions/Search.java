@@ -85,7 +85,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.51 2002/01/18 17:11:08 jmcnally Exp $
+    @version $Id: Search.java,v 1.52 2002/01/18 18:35:27 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -262,6 +262,7 @@ public class Search extends RequireLoginFirstAction
             // doRunstoredquery()
             if (StringUtils.isNumeric(go))
             {
+                data.getParameters().add("queryId", go);
                 doRunstoredquery(data, context);
             }
             else
@@ -327,7 +328,7 @@ public class Search extends RequireLoginFirstAction
     }
 
     /**
-        redirects to AssignIssue.
+        redirects to AdvancedQuery.
     */
     public void doRefinequery(RunData data, TemplateContext context)
          throws Exception
