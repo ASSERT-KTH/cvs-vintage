@@ -8,9 +8,13 @@ Target:
   <option>requestMap</option>
   <option>post</option>
   <option>wrong_request</option>
-  <option>unavailable</option>
   <option>restricted</option>
   <option>jsp</option>
+  <option>unavailable</option>
+  <option>headers</option>
+  <option>security_chk_url</option>
+  <option>security_chk</option>
+  <option>aaa</option>
   <option>special</option>
   <option>tomcat-standalone</option>
   <option>tomcat-apache</option>
