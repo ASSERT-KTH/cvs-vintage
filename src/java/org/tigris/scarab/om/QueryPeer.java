@@ -182,15 +182,16 @@ public class QueryPeer
         throws Exception
     {
         List queries = null;
-        Serializable[] key = {QUERY_PEER, GET_USER_QUERIES, user};
-        Object obj = QueryManager.getMethodResult().get(key);
+        Object obj = QueryManager.getMethodResult()
+            .get(QUERY_PEER, GET_USER_QUERIES, user);
         if (obj == null) 
         {
             Criteria crit = new Criteria()
                 .add(QueryPeer.DELETED, 0);
             crit.add(QueryPeer.USER_ID, user.getUserId());
             queries = QueryPeer.doSelect(crit);
-            QueryManager.getMethodResult().put(queries, key);
+            QueryManager.getMethodResult()
+                .put(queries, QUERY_PEER, GET_USER_QUERIES, user);
         }
         else 
         {
@@ -203,8 +204,8 @@ public class QueryPeer
         throws Exception
     {
         List queries = null;
-        Serializable[] key = {QUERY_PEER, GET_MODULE_QUERIES, module};
-        Object obj = QueryManager.getMethodResult().get(key);
+        Object obj = QueryManager.getMethodResult()
+            .get(QUERY_PEER, GET_MODULE_QUERIES, module);
         if (obj == null) 
         {
             Criteria crit = new Criteria()
@@ -212,7 +213,8 @@ public class QueryPeer
             crit.add(QueryPeer.MODULE_ID, module.getModuleId());
             crit.add(QueryPeer.SCOPE_ID, Scope.MODULE__PK);
             queries = QueryPeer.doSelect(crit);
-            QueryManager.getMethodResult().put(queries, key);
+            QueryManager.getMethodResult()
+                .put(queries, QUERY_PEER, GET_MODULE_QUERIES, module);
          }
         else 
         {

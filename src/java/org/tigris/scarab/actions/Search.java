@@ -55,7 +55,7 @@ import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-
+import org.apache.torque.om.NumberKey;
 import org.apache.commons.lang.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.110 2003/02/18 01:14:27 elicia Exp $
+ * @version $Id: Search.java,v 1.111 2003/02/19 23:19:36 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -565,17 +565,16 @@ public class Search extends RequireLoginFirstAction
         {
             prevQueries.addAll(QueryPeer.getModuleQueries(module));
         }
-        List prevNames = new ArrayList(prevQueries.size());
-        if (prevQueries != null && prevQueries.size() > 0)
+        if (prevQueries != null && !prevQueries.isEmpty())
         {
-            for (int i=0; i<prevQueries.size(); i++)
+            NumberKey pk = query.getQueryId();
+            String name = query.getName();
+            for (Iterator i = prevQueries.iterator(); 
+                 i.hasNext() && !areThereDupes;)
             {
-                Query tempQuery = (Query)prevQueries.get(i);
-                prevNames.add(tempQuery.getName());
-            }
-            if (prevNames.contains(query.getName()))
-            {
-               areThereDupes = true;
+                Query tempQuery = (Query)i.next();
+                areThereDupes = !pk.equals(tempQuery.getQueryId()) &&
+                    name.equals(tempQuery.getName());
             }
         }
         return areThereDupes;
