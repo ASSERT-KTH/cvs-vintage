@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 // Turbine classes
 import org.apache.turbine.Turbine;
@@ -82,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.5 2002/01/30 07:32:40 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.6 2002/02/07 19:30:57 maartenc Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -160,7 +161,15 @@ public class LuceneAdapter
                 StringBuffer fullQuery = new StringBuffer(100);
 
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
-                String query = (String)queryText.get(j);
+                String enteredQuery = (String) queryText.get(j);
+                String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
+                StringTokenizer tokens = new StringTokenizer(enteredQuery, invalidChars);
+                String query = "";
+                while (tokens.hasMoreTokens())
+                {
+                    query = query.concat(" " + tokens.nextToken());
+                }
+                query = query.trim();
 
                 if ( ids != null && ids.length != 0 ) 
                 {
