@@ -137,7 +137,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if (!$userAttrs.isEmpty())
 #foreach ($userAttr in $userAttrs)
-   #set ($rma = $module.getRModuleAttribute($userAttr, $issueType, "user"))
+   #set ($rma = $module.getRModuleAttribute($userAttr, $issueType))
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
    #set ($maxNum = $userAttrs.size())
  #indexedRows($velocityCount)
