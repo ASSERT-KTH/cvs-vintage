@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.26 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: TabSpawnable.java,v 1.27 2004/12/27 20:14:09 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,12 +34,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-import org.argouml.cognitive.ui.TabToDo;
 import org.argouml.i18n.Translator;
 import org.tigris.swidgets.Orientable;
 import org.tigris.swidgets.Orientation;
-import org.argouml.uml.diagram.ui.TabDiagram;
-import org.argouml.uml.ui.TabModelTarget;
 
 /**
  * A subclass of JPanel that can act as a tab in the DetailsPane or
@@ -167,19 +164,19 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
         TabSpawnable newPanel = (TabSpawnable) clone();
         if (newPanel == null) return null; //failed to clone
 
-        if (newPanel instanceof TabToDo) {
-            TabToDo me = (TabToDo) this;
-            TabToDo it = (TabToDo) newPanel;
-            it.setTarget(me.getTarget());
-        } else if (newPanel instanceof TabModelTarget) {
-            TabModelTarget me = (TabModelTarget) this;
-            TabModelTarget it = (TabModelTarget) newPanel;
-            it.setTarget(me.getTarget());
-        } else if (newPanel instanceof TabDiagram) {
-            TabDiagram me = (TabDiagram) this;
-            TabDiagram it = (TabDiagram) newPanel;
-            it.setTarget(me.getTarget());
-        }
+//        if (newPanel instanceof TabToDo) {
+//            TabToDo me = (TabToDo) this;
+//            TabToDo it = (TabToDo) newPanel;
+//            it.setTarget(me.getTarget());
+//        } else if (newPanel instanceof TabModelTarget) {
+//            TabModelTarget me = (TabModelTarget) this;
+//            TabModelTarget it = (TabModelTarget) newPanel;
+//            it.setTarget(me.getTarget());
+//        } else if (newPanel instanceof TabDiagram) {
+//            TabDiagram me = (TabDiagram) this;
+//            TabDiagram it = (TabDiagram) newPanel;
+//            it.setTarget(me.getTarget());
+//        }
 
         newPanel.setTitle(Translator.localize(title));
 
