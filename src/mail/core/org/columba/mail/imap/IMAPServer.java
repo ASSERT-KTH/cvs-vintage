@@ -609,6 +609,9 @@ public class IMAPServer implements IMAPListener {
 			// Here we get the new mailboxinfo for the folder
 			messageFolderInfo = protocol.select(path);
 			
+			// Set the readOnly flag
+			folder.setReadOnly(!messageFolderInfo.isWriteAccess());
+			
 			// Convert to a MailboxStatus
 			selectedStatus = new MailboxStatus(messageFolderInfo);
 			
@@ -1722,18 +1725,6 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IMAPException
 	 */
 	public boolean isSelected(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
-		/*
-		try {
-			if (protocol.getState() != IMAPProtocol.LOGOUT
-					&& (System.currentTimeMillis() - lastNoop) > NOOP_INTERVAL) {
-				lastNoop = System.currentTimeMillis();
-				protocol.noop();
-			}
-		} catch (IMAPException e) {
-			// dont care
-		}
-		*/
-
 		return (protocol.getState() == IMAPProtocol.SELECTED && protocol
 				.getSelectedMailbox().equals(folder.getImapPath()));
 	}

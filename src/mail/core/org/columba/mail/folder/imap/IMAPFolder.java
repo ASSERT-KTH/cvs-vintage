@@ -105,7 +105,15 @@ public class IMAPFolder extends RemoteFolder {
 	 *  
 	 */
 	private HeaderListStorage attributeStorage;
+	
+	private boolean readOnly;
 
+	/**
+	 * @see org.columba.mail.folder.MailboxInterface#isReadOnly()
+	 */
+	public boolean isReadOnly() {
+		return readOnly;
+	}
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
 	 */
@@ -984,4 +992,10 @@ public class IMAPFolder extends RemoteFolder {
 		}
 	}
 
+	/**
+	 * @param readOnly The readOnly to set.
+	 */
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
 }
