@@ -151,6 +151,11 @@
                      includes="**/*.css" defaultexcludes="no"/>
         </copy>
 
+        <copy todir="${build.project}/style" filtering="yes">
+            <fileset dir="${src.html.dir}"
+                     includes="**/*.css" defaultexcludes="no"/>
+        </copy>
+
         <copy todir="${build.project}/images" filtering="no">
             <fileset dir="${src.images.dir}" defaultexcludes="no"/>
             <fileset dir="${build.dir}/${tigris-style}/images"
