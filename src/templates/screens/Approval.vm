@@ -6,7 +6,9 @@ $page.setTitle("Approve/reject user submitted items")
 
 <form action="$link.setPage("Approval.vm")" method="get">
 <input type="hidden" name="action" value="admin.Approval" />
-<input type="hidden" name="nextTemplate" value="Approval.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Approval.vm" />
+
+<h3>Open submissions</h3>
 
 #set ($module = $scarabR.CurrentModule)
 #if (($module.UnapprovedQueries.isEmpty()) && ($module.UnapprovedTemplates.isEmpty()))
@@ -33,8 +35,8 @@ $page.setTitle("Approve/reject user submitted items")
    <th>Date</th>
    <th>Type</th>
    <th>Submitted by</th>
-  ## <th>Project</th>
-  ## <th>User role</th>
+   <th>Project</th>
+   <th>User role</th>
    <th>Name</th>
    <th>Description</th>
    <th>Comments</th>

@@ -2,7 +2,7 @@ $page.setTitle("View Issue")
 
 <div class="app" id="viewissue">
 
-#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm").toString())
+#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ViewIssue.vm").toString())
 
 #if ($data.Parameters.getString("issue_id"))
   #set ($currentIssueId = $data.Parameters.getString("issue_id"))

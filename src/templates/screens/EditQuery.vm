@@ -15,7 +15,7 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 
 <h3>Query: $currentQuery.Name</h3>
 
-#set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm").toString())
+#set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "EditQuery.vm").toString())
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
@@ -59,7 +59,7 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 
 <h3>Attributes</h3>
 
-#set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "IssueList.vm").toString())
+#set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "IssueList.vm").toString())
 <form action="$action" method="get">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="searchType" value="advanced" />

@@ -3,7 +3,7 @@ $page.setTitle("Identified as duplicate")
 <div id="wizard2" class="app">
 
 #set ($currentIssue = $scarabR.ReportingIssue)
-#set ($action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm").toString())
+#set ($action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "entry,Wizard3.vm").toString())
 
 <h2>$page.Title</h2>
 

@@ -14,7 +14,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></li>
 <li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a></li>
 <li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue (one-step)</a></li>
-<li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
+<li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Links.vm")">Configure Issue List</a></li>
 <li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
 <li><a href="$link.setPage("SaveTemplate.vm")">Create Enter Issue Template</a></li>

@@ -3,7 +3,6 @@ $page.setTitle("Enter issue")
 <div id="wizard1" class="app">
 
 #set ($issue = $scarabR.ReportingIssue)
-#set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
@@ -20,13 +19,16 @@ $page.setTitle("Enter issue")
 </table>
 </div>
 
-<form name="ReportForm" method="get" action="$action">
+<form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
-<input type="reset" value="Reset" /></td>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+  <input type="reset" value="Reset" />
+  </td>
  </tr>
 </table>
 </div>

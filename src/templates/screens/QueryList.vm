@@ -19,7 +19,7 @@ $page.setTitle("Stored query list")
  to create a new stored query.</strong></p>
 #else
 
-#set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm").toString())
+#set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "QueryList.vm").toString())
 <form method="post" action="$action">
 
 <div class="functnbar">

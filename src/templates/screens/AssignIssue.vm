@@ -29,7 +29,7 @@ $page.setTitle("Assign users to issue")
 #end
 
 #if ( !$actionLink )
- #set ($actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm").toString())
+ #set ($actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Index.vm").toString())
 #end
 <form action="$actionLink" method="get">
 

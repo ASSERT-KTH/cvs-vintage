@@ -1,6 +1,6 @@
 $page.setTitle("Template list")
 
-#set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
+#set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 #if (($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty()))

@@ -4,7 +4,7 @@ $page.setTitle("Copy/move issue")
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm").toString())
+#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "MoveIssue2.vm").toString())
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($moduleId = $data.Parameters.getString("module_id"))

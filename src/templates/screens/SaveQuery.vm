@@ -1,6 +1,6 @@
 $page.setTitle("Save Query")
 
-#set ($action = $link.setPage("SaveQuery.vm").setAction("Search").addPathInfo("nextTemplate", "QueryList.vm").toString())
+#set ($action = $link.setPage("SaveQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "QueryList.vm").toString())
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query))
 #set ($user = $data.User)

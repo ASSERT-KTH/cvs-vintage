@@ -8,7 +8,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
@@ -37,7 +37,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 #set ($attgroup = $intake.Attribute.mapTo($attribute))
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($attgroup.Deleted)</td>
-<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("nextTemplate","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">edit</a>)</td>
+<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">edit</a>)</td>
 <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )

@@ -6,7 +6,7 @@ $page.setTitle("Custom Search")
 <h2>$page.Title</h2>
 
 <form action="$link.setPage("Search.vm")" method="get">
-<input type="hidden" name="nextTemplate" value="IssueList.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="custom" />
 

@@ -19,7 +19,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
 
 <h3>Attribute Info</h3>
@@ -86,7 +86,7 @@ $intake.declareGroups()
 #if ($attType.AttributeClass.Name.equals("select-one"))
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
 #datatitle ("Attribute Options")
 #set ($pcaos = $attribute.ParentChildAttributeOptions)

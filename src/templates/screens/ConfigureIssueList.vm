@@ -4,7 +4,7 @@ $page.setTitle("Add/remove attributes from view")
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "ConfigureIssueList.vm").toString())
+#set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ConfigureIssueList.vm").toString())
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($moduleAttributes = $module.getRModuleAttributes(true))
