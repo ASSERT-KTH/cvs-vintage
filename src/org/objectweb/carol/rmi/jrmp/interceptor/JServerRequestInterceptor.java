@@ -61,6 +61,7 @@ public interface JServerRequestInterceptor {
 
 
     /*
+     * @deprecated
      * send other with context 
      * @param JServerRequestInfo the jrmp server request information
      * @exception IOException if an exception occur with the ObjectOutput      

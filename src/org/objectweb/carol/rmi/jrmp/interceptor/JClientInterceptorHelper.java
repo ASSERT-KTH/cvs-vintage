@@ -134,6 +134,9 @@ public class JClientInterceptorHelper {
 
     /*
      * Receive other interception
+     *
+     * @deprecated
+     *
      * @param ObjectInput in
      * @param ClientRequestInterceptor All interceptor for this context
      * @exception IOException if an exception occur with the ObjectOutput      

@@ -96,9 +96,9 @@ public class JRemoteCall extends StreamRemoteCall {
                         throw new UnmarshalException("Return type not Exception");
                     }
             } else {
-		ObjectInput in = getInputStream();
-		// note that 
-		JClientInterceptorHelper.receive_other(in, cis);
+		// There is no other receive context propagation
+		// The other case is generaly a network problem, so there is 
+		// no context propagation inside from the server 
                 throw e;
             }
         }
