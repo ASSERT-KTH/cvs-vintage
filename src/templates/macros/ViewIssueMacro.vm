@@ -134,7 +134,9 @@
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
+          <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+              <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+          </th>
 
           <th>URL:</th>
 
@@ -253,13 +255,13 @@
          #else 
             <tr class="b">
          #end
-          <td><a href="ViewIssue.vm?id=$parent.IssueId">$parent.UniqueId</a></td>
+          <td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.IssueId)">$parent.UniqueId</a></td>
 
-          <td><a href="ViewIssue.vm?id=$parent.IssueId">
              #set ($parentAttrValues = $parent.AllAttributeValuesMap)
-             #set($attVal =  $parentAttrValues.get("SUMMARY"))
-             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-           $attVal.Value</a></td>
+             #set ($attVal = $parentAttrValues.get("SUMMARY"))
+          <td>
+            <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.IssueId)">$attVal.Value</a>
+          </td>
 
           <td>
    #if ($canEdit)
@@ -313,13 +315,13 @@
             <tr class="b">
          #end
 
-          <td><a href="ViewIssue.vm?id=$child.IssueId">$child.UniqueId</a></td>
+          <td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.IssueId)">$child.UniqueId</a></td>
 
-          <td><a href="ViewIssue.vm?id=$child.IssueId">
-             #set ($childAttrValues = $child.AllAttributeValuesMap)
-             #set($attVal =  $childAttrValues.get("SUMMARY"))
-             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-           $attVal.Value</a></td>
+          #set ($childAttrValues = $child.AllAttributeValuesMap)
+          #set($attVal =  $childAttrValues.get("SUMMARY"))
+          <td>
+            <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.IssueId)">$attVal.Value</a>
+          </td>
 
            <td>
     #if ($canEdit)
@@ -363,7 +365,7 @@
         <tr>
          <th width="60">$format.getDate($scarabG.DateFormat, $comment.CreatedDate)
        #set ( $commentUser = $scarabR.getUser($comment.CreatedBy) )
-         <a href="mailto:$commentUser.Email">$commentUser.UserName</a>
+         <a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a>
          </th>
 
          <td>
@@ -456,16 +458,14 @@
 
 #if ($currentIssue.isHistoryLong())
    #if ($fullHistory.equals("true"))
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssueId).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm") ) 
+        #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false") ) 
         <p><a href="$historyLink">hide complete history</p></a>
    #else
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPage("ViewIssue.vm").setPathInfo("id", $currentIssueId).setPathInfo("fullhistory", "true") )
+        #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true") )
         <p><a href="$historyLink">show complete history</p></a>
    #end
 #end
 
-
-      <p><input type="submit" value="cancel" class="button" />&#160;</p>
 #end
 
 #end
