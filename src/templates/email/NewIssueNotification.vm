@@ -5,14 +5,19 @@ $l10n.YouCanViewIssue:
 
     $link.getIssueIdLink($issue)
 
-$l10n.Type:        $issue.RModuleIssueType.DisplayName
-$l10n.IssueId:    $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
+$l10n.Type
+ $issue.RModuleIssueType.DisplayName
 
-$l10n.ReportedBy: $user.Name
-             $user.UserName ($user.Email)
+$l10n.IssueId
+ $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
+
+
+$l10n.ReportedBy
+ $user.Name
+ $user.UserName ($user.Email)
 
 $l10n.NewIssueDetails:
----------------------------------------------------------------------
+---------------------------------------------------------
 
 #foreach ($desc in $uniqueActivityDescriptions)
 $desc
@@ -23,7 +28,7 @@ $l10n.Reason:
 $attachmentData
 #end
 
----------------------------------------------------------------------
+---------------------------------------------------------
 $l10n.EmailFooterA
 $l10n.EmailFooterB
 $l10n.EmailFooterC
