@@ -49,7 +49,6 @@ Go to your $link.setPage("ReportList.vm").setLabel("saved reports list").
 </div>
 
 <input type="hidden" name="overwrite" value="true" />
-#addReportHiddenInputs($report "reports,SaveReport.vm")
 $intake.declareGroups()
 </form>
 </div>
