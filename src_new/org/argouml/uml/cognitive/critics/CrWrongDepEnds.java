@@ -1,4 +1,4 @@
-// $Id: CrWrongDepEnds.java,v 1.16 2005/01/30 20:47:38 linus Exp $
+// $Id: CrWrongDepEnds.java,v 1.17 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,12 +122,14 @@ public class CrWrongDepEnds extends CrUML {
 		    Object moe = /*(MModelElement)*/ it.next();
 		    if (Model.getFacade().isAObject(moe)) {
 			Object objSup = /*(MObject)*/ moe;
-			if (Model.getFacade().getElementResidences(objSup) != null
-			    && (Model.getFacade().getElementResidences(objSup).size()
-			                                        > 0)) {
+			if (Model.getFacade().getElementResidences(objSup) 
+			        != null
+			    && (Model.getFacade().getElementResidences(objSup)
+			            .size() > 0)) {
 			    count += 2;
                         }
-			if (Model.getFacade().getComponentInstance(objSup) != null) {
+			if (Model.getFacade().getComponentInstance(objSup) 
+			        != null) {
 			    count++;
                         }
 		    }
@@ -140,12 +142,14 @@ public class CrWrongDepEnds extends CrUML {
 		    Object moe = /*(MModelElement)*/ it.next();
 		    if (Model.getFacade().isAObject(moe)) {
 			Object objCli = /*(MObject)*/ moe;
-			if (Model.getFacade().getElementResidences(objCli) != null
-			    && (Model.getFacade().getElementResidences(objCli).size()
-			                                            > 0)) {
+			if (Model.getFacade().getElementResidences(objCli) 
+			        != null
+			    && (Model.getFacade().getElementResidences(objCli)
+			            .size() > 0)) {
 			    count += 2;
                         }
-			if (Model.getFacade().getComponentInstance(objCli) != null) {
+			if (Model.getFacade().getComponentInstance(objCli) 
+			        != null) {
 			    count++;
                         }
 		    }

@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.19 2005/01/30 20:47:39 linus Exp $
+// $Id: WizBreakCircularComp.java,v 1.20 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,8 +114,8 @@ public class WizBreakCircularComp extends UMLWizard {
 		Object toEnd =
 		    new ArrayList(Model.getFacade().getConnections(asc)).get(0);
 		if (toEnd == fromEnd) {
-		    toEnd =
-		        new ArrayList(Model.getFacade().getConnections(asc)).get(1);
+		    toEnd = new ArrayList(
+		            Model.getFacade().getConnections(asc)).get(1);
 		}
 		Object toType = Model.getFacade().getType(toEnd);
 		String ascName = GeneratorDisplay.getInstance()
@@ -200,8 +200,8 @@ public class WizBreakCircularComp extends UMLWizard {
 	    ////////////////
 	case 3:
 	    if (selectedAsc != null) {
-		List conns =
-		    new ArrayList(Model.getFacade().getConnections(selectedAsc));
+		List conns = new ArrayList(
+		        Model.getFacade().getConnections(selectedAsc));
 		Object ae0 = /*(MAssociationEnd)*/ conns.get(0);
 		Object ae1 = /*(MAssociationEnd)*/ conns.get(1);
 		try {

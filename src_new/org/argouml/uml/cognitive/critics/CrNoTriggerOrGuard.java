@@ -1,4 +1,4 @@
-// $Id: CrNoTriggerOrGuard.java,v 1.13 2005/01/30 20:47:41 linus Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrNoTriggerOrGuard.java,v 1.13 2005/01/30 20:47:41 linus Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -67,9 +67,10 @@ public class CrNoTriggerOrGuard extends CrUML {
 	if (hasTrigger) return NO_PROBLEM;
 	boolean noGuard = (g == null
             || Model.getFacade().getExpression(g) == null
-            || Model.getFacade().getBody(Model.getFacade().getExpression(g)) == null
-            || Model.getFacade().getBody(Model.getFacade().getExpression(g)).toString()
-                                .length() == 0);
+            || Model.getFacade().getBody(
+                Model.getFacade().getExpression(g)) == null
+            || Model.getFacade().getBody(
+                Model.getFacade().getExpression(g)).toString().length() == 0);
 	if (noGuard) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

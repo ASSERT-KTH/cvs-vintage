@@ -1,4 +1,4 @@
-// $Id: CrInterfaceWithoutComponent.java,v 1.17 2005/01/30 20:47:38 linus Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.18 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,8 +108,8 @@ public class CrInterfaceWithoutComponent extends CrUML {
 	    if (!(obj instanceof FigInterface)) continue;
 	    FigInterface fi = (FigInterface) obj;
 	    Fig enclosing = fi.getEnclosingFig();
-	    if (enclosing == null
-		    || (!(Model.getFacade().isAComponent(enclosing.getOwner())))) {
+	    if (enclosing == null || (!(Model.getFacade()
+	            .isAComponent(enclosing.getOwner())))) {
 		if (offs == null) {
 		    offs = new VectorSet();
 		    offs.addElement(dd);

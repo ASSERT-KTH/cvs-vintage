@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.18 2005/01/20 23:20:35 linus Exp $
+// $Id: WizMEName.java,v 1.19 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class WizMEName extends UMLWizard {
 	case 1:
 	    if (step1 == null) {
 		step1 = new WizStepTextField(this, instructions,
-					      label, getSuggestion());
+					      label, offerSuggestion());
 	    }
 	    return step1;
 	}
@@ -88,7 +88,7 @@ public class WizMEName extends UMLWizard {
      */
     public void setSuggestion(String s) {
         origSuggest = s;
-        suggestion = s;
+        setSuggestion(s);
     }
 
 
@@ -120,7 +120,7 @@ public class WizMEName extends UMLWizard {
 	LOG.debug("doAction " + oldStep);
 	switch (oldStep) {
 	case 1:
-	    String newName = suggestion;
+	    String newName = getSuggestion();
 	    if (step1 != null) newName = step1.getText();
 	    try {
 		Object me = getModelElement();

@@ -1,4 +1,4 @@
-// $Id: WizAddInstanceVariable.java,v 1.14 2005/01/20 23:20:35 linus Exp $
+// $Id: WizAddInstanceVariable.java,v 1.15 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class WizAddInstanceVariable extends UMLWizard {
 
         switch (oldStep) {
         case 1:
-            String newName = suggestion;
+            String newName = getSuggestion();
             if (step1 != null) {
                 newName = step1.getText();
             }
@@ -109,7 +109,7 @@ public class WizAddInstanceVariable extends UMLWizard {
 	    if (step1 == null) {
 		step1 =
 		    new WizStepTextField(this, instructions,
-		            label, getSuggestion());
+		            label, offerSuggestion());
 	    }
 	    return step1;
         }

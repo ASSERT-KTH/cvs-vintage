@@ -1,4 +1,4 @@
-// $Id: CrNWayAgg.java,v 1.15 2005/01/30 20:47:42 linus Exp $
+// $Id: CrNWayAgg.java,v 1.16 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,8 @@ public class CrNWayAgg extends CrUML {
         Iterator assocEnds = conns.iterator();
         while (assocEnds.hasNext()) {
             Object ae = /*(MAssociationEnd)*/ assocEnds.next();
-            if (Model.getFacade().isAggregate(ae) || Model.getFacade().isComposite(ae)) {
+            if (Model.getFacade().isAggregate(ae) 
+                    || Model.getFacade().isComposite(ae)) {
                 return PROBLEM_FOUND;
             }
         }

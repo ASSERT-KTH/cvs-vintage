@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.18 2005/01/30 20:47:39 linus Exp $
+// $Id: WizNavigable.java,v 1.19 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,8 +126,10 @@ public class WizNavigable extends UMLWizard {
 		    new ArrayList(Model.getFacade().getConnections(asc)).get(0);
 		Object ae1 = /*(MAssociationEnd)*/
 		    new ArrayList(Model.getFacade().getConnections(asc)).get(1);
-		Model.getCoreHelper().setNavigable(ae0, choice == 0 || choice == 2);
-		Model.getCoreHelper().setNavigable(ae1, choice == 1 || choice == 2);
+		Model.getCoreHelper().setNavigable(ae0, 
+		        choice == 0 || choice == 2);
+		Model.getCoreHelper().setNavigable(ae1, 
+		        choice == 1 || choice == 2);
 	    }
 	    catch (Exception pve) {
 		LOG.error("could not set navigablity", pve);

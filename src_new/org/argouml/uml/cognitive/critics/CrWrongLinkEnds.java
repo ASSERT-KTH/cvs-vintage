@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.17 2005/01/30 20:47:35 linus Exp $
+// $Id: CrWrongLinkEnds.java,v 1.18 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,8 @@ public class CrWrongLinkEnds extends CrUML {
 		Iterator it = ends.iterator();
 		while (it.hasNext()) {
                     Object instance = Model.getFacade().getInstance(it.next());
-                    Collection residencies = Model.getFacade().getResidents(instance);
+                    Collection residencies = 
+                        Model.getFacade().getResidents(instance);
 		    if (residencies != null
 			&& (residencies.size() > 0))
 			count = count + 2;

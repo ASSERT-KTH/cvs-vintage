@@ -1,4 +1,4 @@
-// $Id: ChildGenFind.java,v 1.13 2005/01/30 20:48:32 linus Exp $
+// $Id: ChildGenFind.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,7 +131,8 @@ public class ChildGenFind implements ChildGenerator {
 	    Object s = /*(MState)*/ o;
 	    //Vector interns = s.getInternalTransition();
 	    //if (interns != null) return interns.elements();
-	    return new Vector(Model.getFacade().getInternalTransitions(s)).elements();
+	    return new Vector(
+                Model.getFacade().getInternalTransitions(s)).elements();
 	}
 
 	if (Model.getFacade().isATransition(o)) {

@@ -1,4 +1,4 @@
-// $Id: UMLWizard.java,v 1.6 2005/01/30 20:47:41 linus Exp $
+// $Id: UMLWizard.java,v 1.7 2005/02/13 12:55:15 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public abstract class UMLWizard extends Wizard {
     /**
      * The suggestion string.
      */
-    protected String suggestion;
+    private String suggestion;
 
     /**
      * The constructor.
@@ -79,7 +79,7 @@ public abstract class UMLWizard extends Wizard {
     /**
      * @return the suggestion string
      */
-    public String getSuggestion() {
+    public String offerSuggestion() {
         if (suggestion != null) return suggestion;
         Object me = getModelElement();
         if (me != null) {
@@ -96,4 +96,10 @@ public abstract class UMLWizard extends Wizard {
 	suggestion = s;
     }
 
+    /**
+     * @return returns the suggestion string
+     */
+    public String getSuggestion() {
+        return suggestion;
+    }
 }
