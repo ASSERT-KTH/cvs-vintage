@@ -3,6 +3,9 @@
 
 <!ELEMENT Server (Logger | ContextManager )* >
 
+<!-- A log channel, can be set per context manager, per
+     context or per Interceptor
+-->
 <!ELEMENT Logger EMPTY >
 <!ATTLIST Logger
           name                CDATA #REQUIRED
@@ -46,10 +49,20 @@
 <!ATTLIST Host
           name       CDATA #REQUIRED >
 
-<!ELEMENT Context EMPTY >
+<!ELEMENT Context ( Logger | ServletLogger ) >
 <!ATTLIST Context
           path       CDATA #REQUIRED
           docBase    CDATA #REQUIRED 
           reloadable CDATA #IMPLIED
           trusted    CDATA #IMPLIED
           debug      CDATA #IMPLIED >
+
+
+<!-- Indicate the context's servlet logger - 
+     where the output of servlet.log() goes 
+-->
+<!ELEMENT ServletLogger EMPTY >
+<!ATTLIST ServletLogger
+          name                CDATA #REQUIRED
+          verbosityLevel      CDATA #IMPLIED
+          path                CDATA #IMPLIED >

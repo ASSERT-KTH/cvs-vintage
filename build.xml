@@ -224,6 +224,7 @@
     <jar jarfile="${tomcat.build}/lib/servlet22/facade22.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/facade/**" /> 
+      <include name="org/apache/tomcat/modules/facade22/**" />    
     </jar>
     <!-- Copy the file in lib/ too, for tomcat.sh use ( until this is 
          fixed for multiple facades 
@@ -231,6 +232,7 @@
     <jar jarfile="${tomcat.build}/lib/facade22.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/facade/**" /> 
+      <include name="org/apache/tomcat/modules/facade22/**" />    
     </jar>
   </target>
 

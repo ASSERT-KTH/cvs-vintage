@@ -125,7 +125,7 @@ public class ServerXmlHelper {
 	xh.addRule( "ContextManager/Context/RequestInterceptor",
 		    xh.addChild( "addRequestInterceptor",
 				 "org.apache.tomcat.core.BaseInterceptor"));
-
+	
 	// Virtual host support.
 	// Push a host object on the stack
  	xh.addRule( "ContextManager/Host", new XmlAction() {
@@ -201,6 +201,22 @@ public class ServerXmlHelper {
 	xh.addRule("Server/Logger", 
 		   xh.addChild("addLogger",
 			       "org.apache.tomcat.logging.Logger") );
+
+	xh.addRule("Context/Logger",
+		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+	xh.addRule("Context/Logger", xh.setProperties());
+	xh.addRule("Context/Logger", 
+		   xh.addChild("setLogger",
+			       "org.apache.tomcat.logging.Logger") );
+
+	xh.addRule("Context/ServletLogger",
+		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+	xh.addRule("Context/ServletLogger", xh.setProperties());
+	xh.addRule("Context/ServletLogger", 
+		   xh.addChild("setServletLogger",
+			       "org.apache.tomcat.logging.Logger") );
+
+
     }
 
     /**

@@ -97,7 +97,7 @@ import java.util.*;
  */
 public class Context implements LogAware {
     // Proprietary attribute names for contexts - defined
-    // here so we can document them.
+    // here so we can document them
 
     /** Private tomcat attribute names
      */
@@ -111,7 +111,7 @@ public class Context implements LogAware {
     public static final String ATTRIB_PROTECTION_DOMAIN=
 	"org.apache.tomcat.protection_domain";
 
-	/** Workdir - a place where the servlets are allowed to write
+    /** Workdir - a place where the servlets are allowed to write
      */
     public static final String ATTRIB_WORKDIR="org.apache.tomcat.workdir";
 
@@ -125,34 +125,35 @@ public class Context implements LogAware {
     // -------------------- internal properties
     // context "id"
     private String path = "";
+
+    // directory where the context files are located.
     private String docBase;
 
     // Absolute path to docBase if file-system based
-    private String absPath; 
+    private String absPath;
+    
     // internal state / related objects
     private ContextManager contextM;
     private Object contextFacade;
 
-    boolean reloadable=true; // XXX change default to false after testing
+    boolean reloadable=true; 
 
+    // XXX Use a better repository
     private Hashtable attributes = new Hashtable();
 
+    // directory with write-permissions for servlets
     private File workDir;
-
-    // Security Permissions for webapps and jsp for this context
-    Object perms = null;
-    Object protectionDomain;
- 
-    //    private RequestSecurityProvider rsProvider;
 
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
 
     // -------------------- from web.xml
     private Hashtable initializationParameters = new Hashtable();
+
     // all welcome files that are added are treated as "system default"
     private boolean expectUserWelcomeFiles=false;
     private Vector welcomeFiles = new Vector();
+    
     private Hashtable errorPages = new Hashtable();
     private String description = null;
     private boolean isDistributable = false;
@@ -230,6 +231,13 @@ public class Context implements LogAware {
 
     public void setContextManager(ContextManager cm) {
 	contextM=cm;
+	// let the contextmanager know about our local logger
+	// ( and open it, adjust the path, etc )
+	if( loghelper!=null && loghelper.getLogger() != null )
+	    contextM.addLogger( loghelper.getLogger() );
+	if( loghelperServlet != null &&
+	    loghelperServlet.getLogger() != null)
+	    contextM.addLogger( loghelperServlet.getLogger() );
     }
 
     /** The servlet API variant that will be used for requests in this
@@ -892,7 +900,21 @@ public class Context implements LogAware {
     }
 
     public void setLogger(Logger logger) {
+	if (loghelper == null) {
+	    loghelper = new Logger.Helper
+		("tc_log",
+		 (vhost==null ? "" : vhost + ":" )  +  path);
+	}
 	loghelper.setLogger(logger);
+    }
+
+    public void setServletLogger(Logger logger) {
+	if (loghelperServlet == null) {
+	    loghelperServlet = new Logger.Helper
+		("servlet_log",
+		 (vhost==null ? "" : vhost + ":" )  +  path);
+	}
+	loghelperServlet.setLogger(logger);
     }
 
     public Logger.Helper getLoggerHelper() {

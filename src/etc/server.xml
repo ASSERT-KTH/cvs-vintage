@@ -4,11 +4,12 @@
 -->
 
 <Server>
-    <!-- Debug low-level events in XmlMapper startup -->
+  <!-- Debug low-level events in XmlMapper startup 
     <xmlmapper:debug level="0" />
+  -->
 
-    <!-- 
-
+  <!-- 
+  
     Logging:
 
          Logging in Tomcat is quite flexible; we can either have a log
@@ -284,13 +285,21 @@
          -->
 
          <Context path="/examples" 
-                 docBase="webapps/examples" 
-                 debug="0" 
-                 reloadable="true" > 
-        <RequestInterceptor 
-            className="org.apache.tomcat.request.SimpleRealm" 
-            filename="conf/example-users.xml"
-            debug="0" />
+            docBase="webapps/examples" 
+            debug="0" 
+	    reloadable="true" > 
+           <RequestInterceptor 
+              className="org.apache.tomcat.request.SimpleRealm" 
+              filename="conf/example-users.xml"
+              debug="0" />
+            <Logger name="example_tc_log" 
+              path="logs/examples.log"
+              verbosityLevel = "INFORMATION" 
+             />
+            <ServletLogger name="example_servlet_log" 
+              path="logs/servlet_examples.log"
+              verbosityLevel = "INFORMATION" 
+             />
         </Context>
 
         <!-- Admin context will use tomcat.core to add/remove/get info about
