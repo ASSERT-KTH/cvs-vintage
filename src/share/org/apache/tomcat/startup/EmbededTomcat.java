@@ -182,13 +182,26 @@ public class EmbededTomcat { // extends WebService
 	}
     }
 
+    Hashtable extraClassPaths=new Hashtable();
 
     /** The application may want to add an application-specific path
 	to the context.
     */
-    public void addClassPath( ServletContext ctx, String cpath ) {
-	if(debug>-1) log( "addClassPath " + ctx.getRealPath("") + " " +
+    public void addClassPath( ServletContext context, String cpath ) {
+	if(debug>-1) log( "addClassPath " + context.getRealPath("") + " " +
 			  cpath );
+
+	try {
+	    Vector cp=(Vector)extraClassPaths.get(context);
+	    if( cp == null ) {
+		cp=new Vector();
+		extraClassPaths.put( context, cp );
+	    }
+	    cp.addElement( cpath );
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	}
+	
 	// XXX This functionality can be achieved by setting it in the parent
 	// class loader ( i.e. the loader that is used to load tomcat ).
 
@@ -219,6 +232,22 @@ public class EmbededTomcat { // extends WebService
 	    }
 	    Context ctx=facadeM.getRealContext( sctx );
 	    contextM.initContext( ctx );
+
+	    ServletLoader sl=ctx.getServletLoader();
+	    System.out.println("ServletLoader: " + sl );
+	    Object pd=ctx.getProtectionDomain();
+	    System.out.println("Ctx.pd " + pd);
+
+	    // Add any extra cpaths
+	    Vector cp=(Vector)extraClassPaths.get( sctx );
+	    if( cp!=null ) {
+		for( int i=0; i<cp.size(); i++ ) {
+		    String cpath=(String)cp.elementAt(i);
+		    sl.addRepository( new File(cpath), pd);
+		}
+	    }
+
+
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}
@@ -321,6 +350,10 @@ public class EmbededTomcat { // extends WebService
 	SimpleMapper1 mapI=new SimpleMapper1();
 	addRequestInterceptor( mapI );
 	mapI.setDebug(20);
+
+	InvokerInterceptor invI=new InvokerInterceptor();
+	addRequestInterceptor( invI );
+	invI.setDebug(20);
 	
 	addRequestInterceptor( new StandardSessionInterceptor());
 	

@@ -221,10 +221,4 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    throw new TomcatException( ex );
 	}
     }
-
-
-    private void log( String s ) {
-	System.out.println("StandardSessionInterceptor: " + s );
-    }
-
 }

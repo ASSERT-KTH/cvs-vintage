@@ -102,13 +102,6 @@ public final class JDBCRealm extends BaseInterceptor {
 
     // ----------------------------------------------------- Instance Variables
 
-
-
-    /**
-     * The debugging detail level for this component.
-     */
-    private int debug = 0;
-
     /**
      * The connection to the database.
      */
@@ -179,24 +172,6 @@ public final class JDBCRealm extends BaseInterceptor {
 
     // ------------------------------------------------------------- Properties
 
-
-
-    /**
-     * Return the debugging detail level for this component.
-     */
-    public int getDebug() {
-	    return (this.debug);
-    }
-
-
-    /**
-     * Set the debugging detail level for this component.
-     *
-     * @param debug The new debugging detail level
-     */
-    public void setDebug(int debug) {
-	this.debug = debug;
-    }
 
     /**
      * Set the JDBC driver that will be used.
@@ -439,10 +414,6 @@ public final class JDBCRealm extends BaseInterceptor {
       }
     }
 
-
-    void log( String s ) {
-	    cm.log("JDBCRealm: " + s );
-    }
     public void setContextManager( ContextManager cm ) {
       super.setContextManager( cm );
 

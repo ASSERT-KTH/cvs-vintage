@@ -82,15 +82,10 @@ import org.xml.sax.*;
 public class SimpleRealm extends  BaseInterceptor {
 
     MemoryRealm memoryRealm;
-    int debug=0;
     ContextManager cm;
     int reqRolesNote;
     
     public SimpleRealm() {
-    }
-
-    void log( String s ) {
-	cm.log("SimpleRealm: " + s );
     }
 
     /** Set the context manager. To keep it simple we don't support
@@ -111,11 +106,6 @@ public class SimpleRealm extends  BaseInterceptor {
 	}
     }
 
-    public void setDebug( int d ) {
-	debug=d;
-    }
-
-    
     public void contextInit( Context ctx)
 	throws TomcatException
     {

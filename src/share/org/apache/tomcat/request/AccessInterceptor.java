@@ -83,7 +83,6 @@ import java.util.*;
  *  concepts - I think we can do that, but need to experiment with that)
  */
 public class AccessInterceptor extends  BaseInterceptor  {
-    int debug=0;
     ContextManager cm;
 
     // Security mapping note
@@ -95,20 +94,6 @@ public class AccessInterceptor extends  BaseInterceptor  {
     
     public AccessInterceptor() {
     }
-
-    /* -------------------- Support functions -------------------- */
-    public void setDebug( int i ) {
-	if( debug > 0 || i>0)
-	    System.out.println("setDebug " + i );
-    }
-    
-    void log( String msg ) {
-	if( cm==null) 
-	    System.out.println("AccessInterceptor: " + msg );
-	else
-	    cm.log( "AccessInterceptor: " + msg );
-    }
-
 
     /* -------------------- Initialization -------------------- */
     
@@ -169,16 +154,18 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    // Workaround for common error - ctx path included
 	    if( ! page.startsWith( cpath ) )
 		page= cpath + page;
-	    else 
-		ctx.log("FORM: WARNING, login page starts with context path " +
-			page);
+	    else
+		if( ! "/".equals(cpath))
+		    ctx.log("FORM: WARNING, login page starts with " +
+			    "context path " + page);
 	    
 
 	    if( ! errorPage.startsWith( cpath ) )
 		errorPage= cpath + errorPage;
-	    else 
-		ctx.log("FORM: WARNING, error page starts with context path " +
-			errorPage);
+	    else
+		if( ! "/".equals(cpath))
+		    ctx.log("FORM: WARNING, error page starts with " +
+			    "context path " + errorPage);
 
 	    // Adjust login and error paths - avoid computations in handlers
 	    ctx.setFormLoginPage( page );
@@ -229,9 +216,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	if( ctxSecurityC==null)
 	    ctxCt.setNote( secMapNote, new SecurityConstraints() );
 
-	log( "addContainer() " + ctx.getHost() + " " +
-	     ctx.getPath() + " " +
-	     ct.getPath() );
+// 	log( "addContainer() " + ctx.getHost() + " " +
+// 	     ctx.getPath() + " " +
+// 	     ct.getPath() );
 	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
 	    if( debug > 0 )
@@ -282,9 +269,10 @@ public class AccessInterceptor extends  BaseInterceptor  {
 		    ! "NONE".equals( transport )) {
 		    req.setNote( reqTransportNote, transport );
 		}
-	    
+		
 		// roles will be checked by a different interceptor
-		req.setNote( reqRolesNote, roles );
+		if( roles!= null  && roles.length > 0) 
+		    req.setNote( reqRolesNote, roles );
 	    }
 	}
  	return 0;

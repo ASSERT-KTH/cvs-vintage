@@ -73,6 +73,7 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     protected ContextManager cm; 
     protected String methods[]=new String[0];
     protected int debug=0;
+    protected String name=null;
     
     public BaseInterceptor() {
     }
@@ -83,6 +84,18 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
+    }
+
+    protected void log( String s ) {
+	if( name == null ) {
+	    String cname=this.getClass().getName();
+	    name=cname.substring( cname.lastIndexOf(".") +1);
+	    name=name + ": ";
+	}
+	if( cm!= null )
+	    cm.log( name + s );
+	else 
+	    System.out.println(name + s ); 
     }
     
     // -------------------- Request notifications --------------------

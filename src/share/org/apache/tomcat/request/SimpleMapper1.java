@@ -110,13 +110,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	debug=level;
     }
 
-    void log( String msg ) {
-	if( cm==null) 
-	    System.out.println("SimpleMapper: " + msg );
-	else
-	    cm.log( msg );
-    }
-
     /** Allow the mapper to cache mapping results - resulting in a
      *  faster match for frequent requests. ( treat this as experimental)
      */

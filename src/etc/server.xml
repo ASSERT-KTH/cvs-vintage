@@ -76,6 +76,12 @@
             className="org.apache.tomcat.request.SimpleMapper1" 
             debug="0" />
 
+        <!-- Non-standard invoker, for backward compat. ( /servlet/* )
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.InvokerInterceptor" 
+            debug="20" />
+
         <!-- Plug a session manager. You can plug in more advanced session
              modules.
           -->

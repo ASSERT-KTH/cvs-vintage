@@ -374,7 +374,7 @@ public class ServletWrapper extends Handler {
     void handleReload(Request req) throws TomcatException {
 	// That will be reolved after we reset the context - and many
 	// other conflicts.
-	if( isReloadable && ! "invoker".equals( getServletName())) {
+	if( isReloadable ) {// && ! "invoker".equals( getServletName())) {
 	    ServletLoader loader=context.getServletLoader();
 	    if( loader!=null) {
 		// XXX no need to check after we remove the old loader

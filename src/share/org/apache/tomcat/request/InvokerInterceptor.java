@@ -56,34 +56,107 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
-package org.apache.tomcat.servlets;
+package org.apache.tomcat.request;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
+import org.apache.tomcat.core.Constants;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.UnavailableException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- *  
+ *
+ *
+ * @author James Duncan Davidson [duncan@eng.sun.com]
+ * @author Jason Hunter [jch@eng.sun.com]
+ * @author James Todd [gonzo@eng.sun.com]
+ * @author Costin Manolache
  */
-public final class BasicLoginServlet extends TomcatInternalServlet {
+public class InvokerInterceptor extends BaseInterceptor {
 
-    public void service(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException
-    {
-	Request req=facadeM.getRealRequest( request );
+    String prefix="/servlet/";
+    int prefixLen=prefix.length();
+
+    public int requestMap(Request req) {
+	// If we have an explicit mapper - return
+	if( req.getWrapper() != null &&
+	    ! "default".equals( req.getWrapper().getName()))
+	    return 0;
+
+	// if doesn't starts with /servlet - return
+	String pathInfo = req.getPathInfo();
+	String servletPath=req.getServletPath();
+	
+	// Now we need to fix path info and servlet path
+	if( pathInfo == null ||
+	    ! pathInfo.startsWith( prefix ))
+	    return 0;
+
 	Context ctx=req.getContext();
-	String realm=ctx.getRealmName();
-	if(realm==null) realm="default";
+	// Set the wrapper, and add a new mapping - next time
+	// we'll not have to do that ( the simple mapper is
+	// supposed to be faster )
+	
+	String servletName = null;
+	String newPathInfo = null;
+	
+	if( debug>0 )
+	    log( "Original ServletPath=" +servletPath +
+		 " PathInfo=" + pathInfo);
 
-	response.setHeader( "WWW-Authenticate",
-			    "Basic realm=\"" + realm + "\"");
+	int secondSlash=pathInfo.indexOf("/", prefixLen );
+	if ( secondSlash > -1) {
+	    servletName = pathInfo.substring(prefixLen, secondSlash );
+	    newPathInfo = pathInfo.substring( secondSlash );
+	} else {
+	    servletName = pathInfo.substring( prefixLen );
+	}
+	
+	String newServletPath = prefix + servletName;
+
+	if( debug > 0)
+	    log( "After pathfix SN=" + servletName +
+		 " SP=" + newServletPath +
+		 " PI=" + newPathInfo);
+	
+	ServletWrapper wrapper = ctx.getServletByName(servletName);
+ 	req.setServletPath(newServletPath);
+	req.setPathInfo(newPathInfo);
+	
+	if (wrapper != null) {
+	    req.setWrapper( wrapper );
+	    return 0;
+	}
+	    
+	// Dynamic add for the wrapper
+	
+	// even if the server doesn't supports dynamic mappings,
+	// we'll avoid the interceptor for include() and
+	// it's a much cleaner way to construct the servlet and
+	// make sure all interceptors are up to date.
+	try {
+	    ctx.addServletMapping( newServletPath + "/*" ,
+				   servletName );
+	    wrapper = ctx.getServletByName( servletName);
+	    wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
+	    if( debug > 0)
+		log( "Added mapping " + wrapper +
+		     " path=" + newServletPath + "/*" );
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	    return 404;
+	}
+
+	req.setWrapper( wrapper );
+	return 0;
     }
+    
 
 }
