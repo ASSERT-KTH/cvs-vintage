@@ -45,7 +45,7 @@ import java.rmi.RemoteException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.73 $
+* @version $Revision: 1.74 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -203,6 +203,7 @@ public class EntityInstanceInterceptor
          AllowedOperationsAssociation.pushInMethodFlag(IN_BUSINESS_METHOD);
 
       Throwable exceptionThrown = null;
+      boolean discardContext = false;
       try
       {
          Object obj = getNext().invoke(mi);
@@ -211,16 +212,19 @@ public class EntityInstanceInterceptor
       catch (RemoteException e)
       {
          exceptionThrown = e;
+         discardContext = true;
          throw e;
       }
       catch (RuntimeException e)
       {
          exceptionThrown = e;
+         discardContext = true;
          throw e;
       }
       catch (Error e)
       {
          exceptionThrown = e;
+         discardContext = true;
          throw e;
       }
       catch (Exception e)
@@ -231,6 +235,7 @@ public class EntityInstanceInterceptor
       catch (Throwable e)
       {
          exceptionThrown = e;
+         discardContext = true;
          throw new NestedRuntimeException(e);
       }
       finally
@@ -252,7 +257,8 @@ public class EntityInstanceInterceptor
                  // if tx, the ctx has been registered in an InstanceSynchronization.
                  // that will remove the context, so we shouldn't.
                  // if no synchronization then we need to do it by hand
-                 !ctx.hasTxSynchronization())
+                 // But not for application exceptions
+                 !ctx.hasTxSynchronization() && discardContext)
          {
             // Discard instance
             // EJB 1.1 spec 12.3.1
