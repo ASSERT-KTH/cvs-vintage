@@ -58,12 +58,12 @@ import org.tigris.scarab.om.AttributeValue;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.6 2001/08/15 06:17:13 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.7 2002/01/23 10:02:07 dlr Exp $
  */
 public interface SearchIndex
 {
     public static final String INDEX_PATH = "searchindex.path";
-    public static final String CLASSNAME = "searchindex.class";
+    public static final String CLASS_NAME = "searchindex.class";
     public static final String VALUE_ID = "valid";
     public static final String ISSUE_ID = "issid";
     public static final String ATTRIBUTE_ID = "attid";
