@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WebServiceClientDeployer.java,v 1.1 2004/05/05 16:38:37 tdiesler Exp $
+// $Id: WebServiceClientDeployer.java,v 1.2 2004/05/29 19:22:12 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -25,7 +25,7 @@ import java.util.Iterator;
 public interface WebServiceClientDeployer
 {
    /** The object name of the service that provides the implementation */
-   public static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.webservice:service=ServiceClientDeployer");
+   public static final ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ws4ee:service=ServiceClientDeployer");
 
    /**
     * This binds a jaxrpc Service into the callers ENC for every service-ref element
