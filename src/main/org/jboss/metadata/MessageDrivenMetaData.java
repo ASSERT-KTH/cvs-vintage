@@ -30,7 +30,7 @@ import java.util.HashMap;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -179,10 +179,7 @@ public class MessageDrivenMetaData
    }
     
    public String getDefaultConfigurationName() {
-      return
-         jdk13Enabled() ?
-         ConfigurationMetaData.MESSAGE_DRIVEN_13 :
-         ConfigurationMetaData.MESSAGE_DRIVEN_12;
+      return  ConfigurationMetaData.MESSAGE_DRIVEN_13;
    }
 	
    public void importEjbJarXml(Element element) throws DeploymentException

@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class SessionMetaData extends BeanMetaData 
 {
@@ -45,10 +45,12 @@ public class SessionMetaData extends BeanMetaData
    public String getDefaultConfigurationName()
    {
       if (isStateful()) {
-         return jdk13Enabled() ? ConfigurationMetaData.STATEFUL_13 : ConfigurationMetaData.STATEFUL_12;              
+         if (this.isClustered())
+            return ConfigurationMetaData.CLUSTERED_STATEFUL_13;
+         else
+            return ConfigurationMetaData.STATEFUL_13;
       } else {
-         return jdk13Enabled() ? ConfigurationMetaData.STATELESS_13 : ConfigurationMetaData.STATELESS_12;
-              
+         return ConfigurationMetaData.STATELESS_13;
       }
    }
 	

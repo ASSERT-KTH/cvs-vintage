@@ -19,7 +19,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -104,21 +104,13 @@ public class EntityMetaData extends BeanMetaData {
 
    public String getDefaultConfigurationName() {
       if (isCMP()) {
-         if(jdk13Enabled()) {
-            if(isCMP2x()) {
-               return ConfigurationMetaData.CMP_2x_13;
-            } else {
-               return ConfigurationMetaData.CMP_1x_13;
-            }
-         } else { 
-            return ConfigurationMetaData.CMP_12;
+         if(isCMP2x()) {
+            return ConfigurationMetaData.CMP_2x_13;
+         } else {
+            return ConfigurationMetaData.CMP_1x_13;
          }
       } else {
-         if(jdk13Enabled()) {
-            return ConfigurationMetaData.BMP_13;
-         } else {
-            return ConfigurationMetaData.BMP_12;
-         }
+         return ConfigurationMetaData.BMP_13;
       }
    }
 
