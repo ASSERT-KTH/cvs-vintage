@@ -52,17 +52,15 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
 
 // Scarab Stuff
-import org.tigris.scarab.security.ScarabSecurityPull;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.pages.ScarabPage;
 
 /**
-    This class is responsible for building the Context up
+    This class is responsible for building the TemplateContext up
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.1 2001/08/14 22:21:07 elicia Exp $
+    @version $Id: Default.java,v 1.2 2001/08/23 22:07:54 elicia Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -79,26 +77,21 @@ public class Default extends TemplateSecureScreen
      */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
-        TemplateContext context = getTemplateContext(data);
-        ScarabSecurityPull security = (ScarabSecurityPull)context
-            .get(ScarabConstants.SECURITY_TOOL);
-        ScarabRequestTool scarab = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-
-        if ( !(scarab.getUser().hasLoggedIn()
-               && security.hasPermission(ScarabSecurityPull.ISSUE__ENTER, 
-                                         scarab.getUser().getCurrentModule())))
+        if (!data.getUser().hasLoggedIn())
         {
             // Note: we need to replace '/' with ',' so that 
             //       the hidden input field will have the right
             //       value for ParameterParser to parse.
-            context.put( ScarabConstants.NEXT_TEMPLATE, 
-               ScarabPage.getScreenTemplate(data).replace('/',',') );
-            String id = data.getParameters().getString("id");
-            data.getParameters().add("id", "id"); 
+            getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+                ScarabPage.getScreenTemplate(data).replace('/',',') );
             setTarget(data, "Login.vm");
             return false;
         }
         return true;
     }
+
 }
+
+
+
+
