@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="org.columba.example.CSVAddressbookImportFilter" name="CSV Addressbook Import Filter" description="Very simple example" version="1.0" >
- <extension name="org.columba.addressbook.import">
-  <importer name="CSVImportFilterExample" class="CSVAddressbookImporter"/>
- </extension>
- <runtime type="java"/>
+<plugin name="CSV Addressbook Import Filter" description="Very simple example" id="org.columba.example.CSVAddressbookImportFilter" version="1.0" enabled="true">
+  <extension name="org.columba.addressbook.import">
+    <importer name="CSVImportFilterExample" class="CSVAddressbookImporter"></importer>
+  </extension>
+  <runtime type="java"></runtime>
 </plugin>

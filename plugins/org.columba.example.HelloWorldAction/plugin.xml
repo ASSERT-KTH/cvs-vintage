@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.example.HelloWorldAction" name="My Hello World Plugin" description="Simple Example" category="Examples" version="1.0" >
+<plugin id="org.columba.example.HelloWorldAction" name="My Hello World Plugin" description="Simple Example" category="Examples" version="1.0"  enabled="true">
  <extension name="org.columba.core.action">
   <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
  </extension>
- <extension name="org.columba.mail.menu">
+ <extension name="org.columba.mail.core">
   <menu name="menu_utilities" extensionpoint="bottom">
-   <menu name="trest">
+   <menu name="Hello World SubMenu">
    
   	<menuitem action="org.columba.example.HelloWorldAction$HelloWorld"/>
   	

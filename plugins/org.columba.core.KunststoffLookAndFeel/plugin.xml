@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="org.columba.core.KunststoffLookAndFeel" name="Kunststoff Look And Feel" description="Kunststoff Look And Feel" category="Look and Feel" version="1.0" >
- <extension name="org.columba.core.theme">
-  <theme name="Kunststoff" class="KunststoffLookAndFeelPlugin"/>
- </extension>
- <runtime type="java" jar="KunststoffLookAndFeel.jar"/>
+<plugin name="Kunststoff Look And Feel" description="Kunststoff Look And Feel" id="org.columba.core.KunststoffLookAndFeel" version="1.0" category="Look and Feel" enabled="true">
+  <extension name="org.columba.core.theme">
+    <theme name="Kunststoff" class="KunststoffLookAndFeelPlugin"></theme>
+  </extension>
+  <runtime jar="KunststoffLookAndFeel.jar" type="java"></runtime>
 </plugin>

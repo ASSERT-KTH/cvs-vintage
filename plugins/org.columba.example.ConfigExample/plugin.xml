@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.example.ConfigExample" name="Config Example" description="Simple Demonstration of the example entrypoint" category="Examples" version="1.0" >
+<plugin id="org.columba.example.ConfigExample" name="Config Example" description="Simple Demonstration of the example entrypoint" category="Examples" version="1.0"  enabled="true">
  <extension name="org.columba.core.config">
   <config name="ConfigExample" class="ConfigExample"/>
  </extension>

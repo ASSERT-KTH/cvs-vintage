@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" category="Spam" version="1.0" >
+<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" category="Spam" version="1.0"  enabled="true">
 
 <!-- POP3 preprocessing filter -->
 
@@ -24,7 +24,7 @@
  
 <!-- menu entries -->
  <extension name="org.columba.mail.menu">
-  <menu name="menu_utilities" extensionpoint="top">
+  <menu name="menu_utilities" extensionpoint="mail_bottom">
     <menu name="SpamAssassin">
      <menu name="Train Bayesian Filter">
   	  <menuitem action="org.columba.mail.SpamAssassin$LearnSpam"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.mail.ToOrCcFilter" name="To or Cc Filter" description="search pattern matches contents of To or Cc headerfield" category="Filter" version="1.0" >
+<plugin id="org.columba.mail.ToOrCcFilter" name="To or Cc Filter" description="search pattern matches contents of To or Cc headerfield" category="Filter" version="1.0"  enabled="true">
  <extension name="org.columba.mail.filter">
   <filter name="To or Cc" main_class="org.columba.mail.filter.plugins.ToOrCcFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
  </extension>

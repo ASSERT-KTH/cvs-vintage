@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.mail.BounceAction" name="Bounce Message Action" description="This action sends the message back as if the you wouldn't exist" category="Spam" version="1.0" >
+<plugin id="org.columba.mail.BounceAction" name="Bounce Message Action" description="This action sends the message back as if the you wouldn't exist" category="Spam" version="1.0" enabled="true" >
  <extension name="org.columba.core.action">
   <action name="BounceAction" class="BounceAction" />
  </extension>
