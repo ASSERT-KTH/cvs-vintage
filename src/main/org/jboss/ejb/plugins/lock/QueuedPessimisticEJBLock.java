@@ -10,6 +10,7 @@ package org.jboss.ejb.plugins.lock;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import javax.transaction.Transaction;
 import javax.transaction.Status;
@@ -46,7 +47,7 @@ import org.jboss.util.deadlock.DeadlockDetector;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -474,7 +475,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       buffer.append(", tx=").append(getTransaction());
       buffer.append(", synched=").append(synched);
       buffer.append(", timeout=").append(txTimeout);
-      buffer.append(", queue=").append(txWaitQueue);
+      buffer.append(", queue=").append(new ArrayList(txWaitQueue));
       return buffer.toString();
    }
 }
