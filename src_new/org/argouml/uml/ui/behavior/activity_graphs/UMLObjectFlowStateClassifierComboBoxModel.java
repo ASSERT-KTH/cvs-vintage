@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.5 2004/12/21 18:05:52 bobtarling Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.6 2004/12/27 21:51:35 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlModelEventPump;
@@ -64,8 +65,9 @@ public class UMLObjectFlowStateClassifierComboBoxModel
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        setElements(CoreHelper.getHelper()
-                .getAllClassifiers());
+        Object model = 
+            ProjectManager.getManager().getCurrentProject().getModel();
+        setElements(CoreHelper.getHelper().getAllClassifiers(model));
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.134 2004/12/27 19:56:39 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.135 2004/12/27 21:51:52 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -457,7 +457,8 @@ public class ParserDisplay extends Parser {
 
             if (nspe == null || !(ModelFacade.isANamespace(nspe)))
                 throw new ParseException("Unable to resolve namespace", 0);
-            if (!CoreHelper.getHelper().getAllPossibleNamespaces(me).contains(
+            Object model = ProjectManager.getManager().getCurrentProject().getRoot();
+            if (!CoreHelper.getHelper().getAllPossibleNamespaces(me, model).contains(
                     nspe))
                 throw new ParseException("Invalid namespace for element", 0);
 
