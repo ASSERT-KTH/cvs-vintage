@@ -178,33 +178,30 @@
   </mbean>
 
   <!-- The PersistenceManager is used to store messages to disk. -->
-  <mbean code="org.jbossmq.pm.file.PersistenceManager" name="JBossMQ:service=PersistenceManager">
+  <mbean code="org.jbossmq.pm.rollinglogged.PersistenceManager" name="JBossMQ:service=PersistenceManager">
     <attribute name="DataDirectory">../../db/jbossmq/</attribute>
   </mbean>
 
   <!-- InvocationLayers are the different transport methods that can be used to access the server -->
-  <!-- The most stable transports are enabled by default -->
   <mbean code="org.jbossmq.il.jvm.JVMServerILService" name="JBossMQ:service=InvocationLayer,type=JVM">
     <attribute name="ConnectionFactoryJNDIRef">java:/ConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">java:/XAConnectionFactory</attribute>
   </mbean>
+
   <mbean code="org.jbossmq.il.rmi.RMIServerILService" name="JBossMQ:service=InvocationLayer,type=RMI"> 
+    <attribute name="ConnectionFactoryJNDIRef">RMIConnectionFactory</attribute>
+    <attribute name="XAConnectionFactoryJNDIRef">RMIXAConnectionFactory</attribute>
+  </mbean>
+
+  <mbean code="org.jbossmq.il.oil.OILServerILService" name="JBossMQ:service=InvocationLayer,type=OIL">
     <attribute name="ConnectionFactoryJNDIRef">ConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">XAConnectionFactory</attribute>
   </mbean>
 
-  <!-- Uncomment the following section to enable the OIL and UIL Invocation Layers. -->
-  <!-- They provided better performance and features, but may not be as stable. -->
-  <!--
-  <mbean code="org.jbossmq.il.oil.OILServerILService" name="JBossMQ:service=InvocationLayer,type=OIL">
-    <attribute name="ConnectionFactoryJNDIRef">OILConnectionFactory</attribute>
-    <attribute name="XAConnectionFactoryJNDIRef">OILXAConnectionFactory</attribute>
-  </mbean>
   <mbean code="org.jbossmq.il.uil.UILServerILService" name="JBossMQ:service=InvocationLayer,type=UIL">
     <attribute name="ConnectionFactoryJNDIRef">UILConnectionFactory</attribute>
     <attribute name="XAConnectionFactoryJNDIRef">UILXAConnectionFactory</attribute>
   </mbean>
-  -->
 
   <!-- The following three line create 3 topics named: testTopic, example, and bob -->
   <mbean code="org.jbossmq.server.TopicManager" name="JBossMQ:service=Topic,name=testTopic"/>
@@ -222,7 +219,6 @@
   <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=E"/>
   <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=F"/>
   <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=ex"/>
-
 
   <!-- ==================================================================== -->
   <!-- For Message Dirven Beans                                             -->
