@@ -1765,10 +1765,7 @@ e.printStackTrace();
         if (searchSuccess) 
         {        
             Integer oldOptionId = search.getStateChangeFromOptionId();
-            // FIXME: no need to create a new ZERO here each time...
-            // there is a couple other cases where this should just be
-            // ScarabConstants.ZERO so just adding a fix me for now.
-            if (oldOptionId != null && !oldOptionId.equals(new Integer(0))
+            if (oldOptionId != null && oldOptionId.intValue() != 0
                  && oldOptionId.equals(search.getStateChangeToOptionId())) 
             {
                 searchSuccess = false;
