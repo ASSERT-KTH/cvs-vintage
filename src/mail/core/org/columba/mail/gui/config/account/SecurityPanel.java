@@ -15,28 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 public class SecurityPanel extends DefaultPanel implements ActionListener {
 
@@ -61,7 +56,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		initComponents();
 
 		updateComponents(true);
-		
+
 		layoutComponents();
 
 		//enableCheckBox.setEnabled(false);
@@ -76,7 +71,8 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 			enableCheckBox.setSelected(item.getBoolean("enabled"));
 
 			alwaysSignCheckBox.setSelected(item.getBoolean("always_sign"));
-			alwaysEncryptCheckBox.setSelected(item.getBoolean("always_encrypt"));
+			alwaysEncryptCheckBox.setSelected(
+				item.getBoolean("always_encrypt"));
 
 			enablePGP(enableCheckBox.isSelected());
 
@@ -91,23 +87,64 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
 		}
 	}
-	
-	protected void layoutComponents()
-	{
+
+	protected void layoutComponents() {
+		//		Create a FormLayout instance. 
+		FormLayout layout =
+			new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
+
+		// create a form builder
+		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+
+		// create EmptyBorder between components and dialog-frame 
+		builder.setDefaultDialogBorder();
+
+		// skip the first column
+		builder.setLeadingColumnOffset(1);
+
+		// Add components to the panel:
+
+		builder.appendSeparator(
+			MailResourceLoader.getString("dialog", "account", "pgp_options"));
+		builder.nextLine();
+
+		builder.append(enableCheckBox, 3);
+		builder.nextLine();
+
+		builder.append(idLabel, 1);
+		builder.append(idTextField);
+		builder.nextLine();
+
+		// TODO: reactivate if feature is supported
+		/*
+		builder.append(alwaysSignCheckBox, 3);
+		builder.nextLine();
 		
+		builder.append(alwaysEncryptCheckBox, 3);
+		builder.nextLine();
+		*/
+
+		/*
+		setLayout(new BorderLayout());
+		add(builder.getPanel(), BorderLayout.CENTER);
+		*/
+
+		/*	
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-
+		
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
+		
 		JPanel mainMiddle = new JPanel();
 		mainMiddle.setLayout(new BorderLayout());
-
+		
 		JPanel middle = new JPanel();
 		middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "pgp_options"))); //$NON-NLS-1$
 		middle.setLayout(new BorderLayout());
-
+		
 		JPanel enablePanel = new JPanel();
 		enablePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 		enablePanel.setLayout(new BoxLayout(enablePanel, BoxLayout.X_AXIS));
@@ -127,7 +164,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		JPanel innerPanel = new JPanel();
 		innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		innerPanel.setLayout(new BorderLayout());
-
+		
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new GridLayout(0, 1, 50, 5));
 		leftPanel.add(idLabel);
@@ -140,16 +177,16 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		rightPanel.add(typeComboBox);
 		
 		rightPanel.add(pathButton);
-
+		
 		innerPanel.add(leftPanel, BorderLayout.CENTER);
 		innerPanel.add(rightPanel, BorderLayout.EAST);
-
+		
 		middle.add(innerPanel, BorderLayout.NORTH);
 		
 		JPanel alwaysPanel = new JPanel();
 		alwaysPanel.setLayout(new BoxLayout(alwaysPanel, BoxLayout.Y_AXIS));
 		alwaysPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
+		
 		JPanel alwaysSignPanel = new JPanel();
 		alwaysSignPanel.setBorder(
 			BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -185,36 +222,30 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		c.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(alwaysEncryptPanel, c);
 		alwaysPanel.add(alwaysEncryptPanel);
-
+		
 		middle.add(alwaysPanel, BorderLayout.CENTER);
-
+		
 		mainMiddle.add(middle, BorderLayout.NORTH);
-
+		
 		add(mainMiddle, BorderLayout.CENTER);
+		*/
 	}
-	
 
 	protected void initComponents() {
-		
+
 		enableCheckBox = new JCheckBox(MailResourceLoader.getString("dialog", "account", "enable_PGP_Support")); //$NON-NLS-1$
 		enableCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		enableCheckBox.setActionCommand("ENABLE");
 		enableCheckBox.addActionListener(this);
-		
-
-		
 
 		idLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "User_ID")); //$NON-NLS-1$
-		
+
 		typeLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "PGP_Version")); //$NON-NLS-1$
-		
+
 		pathLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "Path_to_Binary")); //$NON-NLS-1$
-		
 
-		
+		idTextField = new JTextField();
 
-		idTextField = new JTextField(30);
-		
 		typeComboBox = new JComboBox();
 		//typeComboBox.setMargin( new Insets( 0,0,0,0 ) );
 		typeComboBox.insertItemAt("GnuPG", 0);
@@ -224,19 +255,15 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		typeComboBox.setSelectedIndex(0);
 		typeComboBox.setEnabled(false);
 
-		
 		pathButton = new JButton();
 		//pathButton.setMargin( new Insets( 0,0,0,0 ) );
 		pathButton.setActionCommand("PATH");
 		pathButton.addActionListener(this);
-		
 
-		
 		alwaysSignCheckBox = new JCheckBox(MailResourceLoader.getString("dialog", "account", "Always_sign_when_sending_messages")); //$NON-NLS-1$
 		alwaysSignCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		alwaysSignCheckBox.setEnabled(false);
 
-		
 		alwaysEncryptCheckBox = new JCheckBox(MailResourceLoader.getString("dialog", "account", "Always_encrypt_when_sending_messages")); //$NON-NLS-1$
 		alwaysEncryptCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		alwaysEncryptCheckBox.setEnabled(false);
@@ -313,60 +340,4 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		return result;
 	}
 
-	protected void makeChanges(boolean newAccount) {
-		/*
-		String panelName = accountItem.getName();
-		//FIXME
-		//frame.getSelected().setName( panelName );
-		
-		if ( accountItem.isPopAccount() == true )
-		{
-		      //PopItem item = accountItem.getPopItem();
-		      //item.setFolderName( accountItem.getName() );
-		
-		    if ( newAccount == true )
-		    {
-		        MainInterface.popServerCollection.add( accountItem );
-		        System.out.println("add popserver");
-		    }
-		
-		
-		    MainInterface.mainFrame.getMenu().updatePopServerMenu();
-		
-		
-		
-		}
-		else
-		{
-		    ImapItem item = accountItem.getImapItem();
-		
-		    if ( newAccount == true )
-		    {
-		        System.out.println("create Imap Folder");
-		
-		
-		        Folder parentFolder = MainInterface.treeViewer.addImapRootFolder( accountItem.getName(),
-		                                                                                item,
-		                                                                                accountItem.getUid() );
-		
-		
-		
-		    }
-		    else
-		    {
-		        int uid = accountItem.getUid();
-		
-		        Folder folder = MainInterface.treeViewer.getImapFolder( uid );
-		        folder.setName( accountItem.getName() );
-		
-		    }
-		
-		
-		}
-		
-		
-		
-		*/
-
-	}
 }

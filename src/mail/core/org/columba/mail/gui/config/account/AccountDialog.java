@@ -28,11 +28,11 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -52,7 +52,9 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	private IncomingServerPanel incomingServerPanel;
 	private OutgoingServerPanel outgoingServerPanel;
 	private SecurityPanel securityPanel;
-	private SpecialFoldersPanel specialFoldersPanel;
+
+	//private SpecialFoldersPanel specialFoldersPanel;
+
 	private ReceiveOptionsPanel receiveOptionsPanel;
 
 	//private PanelChooser panelChooser;
@@ -62,7 +64,12 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	public AccountDialog(AccountItem item) {
 		dialog = DialogStore.getDialog();
 		dialog.setTitle(
-			MailResourceLoader.getString("dialog", "account", "preferences_for") + " " + item.getName());
+			MailResourceLoader.getString(
+				"dialog",
+				"account",
+				"preferences_for")
+				+ " "
+				+ item.getName());
 		this.accountItem = item;
 		createPanels();
 		initComponents();
@@ -81,13 +88,15 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
 
-		incomingServerPanel = new IncomingServerPanel(dialog, accountItem,
-                                receiveOptionsPanel);
+		incomingServerPanel =
+			new IncomingServerPanel(dialog, accountItem, receiveOptionsPanel);
 
 		outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
+		/*
 		specialFoldersPanel = new SpecialFoldersPanel(accountItem,
 				accountItem.getSpecialFoldersItem());
+		*/
 
 		securityPanel = new SecurityPanel(accountItem.getPGPItem());
 	}
@@ -99,7 +108,8 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-		CTabbedPane tp = new CTabbedPane();
+		JTabbedPane tp = new JTabbedPane();
+		tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		/*
@@ -107,38 +117,30 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		identityPanel = new IdentityPanel( accountItem, identityItem);
 		*/
 
-		tp.add(MailResourceLoader.getString(
-                                        "dialog",
-                                        "account",
-                                        "identity"),
+		tp.add(
+			MailResourceLoader.getString("dialog", "account", "identity"),
 			identityPanel);
 		//$NON-NLS-1$
 
-		String incomingServerPanelTitle = MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"incomingserver");
-                if (accountItem.isPopAccount()) {
-                        incomingServerPanelTitle += " (POP3)";
-                } else {
-                        incomingServerPanelTitle += " (IMAP4)";
-                }
-                tp.add(incomingServerPanelTitle, incomingServerPanel);
+		String incomingServerPanelTitle =
+			MailResourceLoader.getString("dialog", "account", "incomingserver");
+		if (accountItem.isPopAccount()) {
+			incomingServerPanelTitle += " (POP3)";
+		} else {
+			incomingServerPanelTitle += " (IMAP4)";
+		}
+		tp.add(incomingServerPanelTitle, incomingServerPanel);
 
-		tp.add(MailResourceLoader.getString(
-                                        "dialog",
-                                        "account",
-                                        "receiveoptions"),
-                        receiveOptionsPanel);
+		tp.add(
+			MailResourceLoader.getString("dialog", "account", "receiveoptions"),
+			receiveOptionsPanel);
 
 		SmtpItem smtpItem = accountItem.getSmtpItem();
 		/*
 		outgoingServerPanel = new OutgoingServerPanel( smtpItem);
 		*/
-		tp.add(MailResourceLoader.getString(
-                                        "dialog",
-                                        "account",
-                                        "outgoingserver"),
+		tp.add(
+			MailResourceLoader.getString("dialog", "account", "outgoingserver"),
 			outgoingServerPanel);
 		//$NON-NLS-1$
 
@@ -148,20 +150,20 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 				accountItem,
 				accountItem.getSpecialFoldersItem());
 		*/
+		/*
 		tp.add(MailResourceLoader.getString(
-                                        "dialog",
-                                        "account",
-                                        "specialfolders"),
+		                                "dialog",
+		                                "account",
+		                                "specialfolders"),
 			specialFoldersPanel);
+		*/
 		//$NON-NLS-1$
 
 		/*
 		securityPanel = new SecurityPanel( accountItem.getPGPItem());
 		*/
-		tp.add(MailResourceLoader.getString(
-                                        "dialog",
-                                        "account",
-                                        "security"),
+		tp.add(
+			MailResourceLoader.getString("dialog", "account", "security"),
 			securityPanel);
 		//$NON-NLS-1$
 
@@ -169,16 +171,16 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
-                dialog.getRootPane().registerKeyboardAction(
-                        this,
-                        "CANCEL",
-                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                        JComponent.WHEN_IN_FOCUSED_WINDOW);
-                dialog.getRootPane().registerKeyboardAction(
-                        this,
-                        "HELP",
-                        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-                        JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CANCEL",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"HELP",
+			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	/*
@@ -214,22 +216,24 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		JButton cancelButton =
+			new JButton(MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		JButton okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		JButton okButton =
+			new JButton(MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));		
+		JButton helpButton =
+			new JButton(MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
-
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
@@ -255,10 +259,11 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			receiveOptionsPanel.updateComponents(false);
 			outgoingServerPanel.updateComponents(false);
 			securityPanel.updateComponents(false);
+			/*
 			specialFoldersPanel.updateComponents(false);
+			*/
 
 			if (accountItem.isPopAccount()) {
-				
 
 				int uid = accountItem.getUid();
 				POP3ServerController c =
@@ -273,7 +278,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 				IMAPRootFolder folder =
 					(IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
 				folder.restartTimer();
-				
+
 				//folder.setName(accountItem.getName());
 
 				//folder.restartTimer();
@@ -293,7 +298,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			} catch (MalformedURLException mue) {
 			}
 			*/
-			
+
 		}
 
 	}
@@ -319,11 +324,13 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 				setSelection(outgoingServerPanel);
 				break;
 			case 3 :
-				setSelection(specialFoldersPanel);
-				break;
-			case 4 :
 				setSelection(securityPanel);
 				break;
+				/*
+				case 4 :
+					setSelection(securityPanel);
+					break;
+				*/
 		}
 	}
 }

@@ -21,17 +21,12 @@ package org.columba.mail.gui.config.account;
  * Created on 2. November 2000, 00:12
  */
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -94,32 +89,58 @@ public class ImapAttributPanel extends JPanel {
 				automaticallyApplyFilterCheckBox.isSelected());
 				*/
 			// TODO: delete this if the automatically_apply_filter action is reactivated
-			item.set(
-				"automatically_apply_filter",
-				false);
+			item.set("automatically_apply_filter", false);
 			// end Todo
 		}
 
 	}
 
+	public void createPanel(DefaultFormBuilder builder) {
+		// all options are de-actived right now
+		
+		// re-activate this
+		/*
+		builder.append(automaticallyApplyFilterCheckBox, 3);
+		builder.nextLine();
+				
+		builder.append(cleanupCheckBox, 3);
+		builder.nextLine();
+		*/
+		
+	}
+
+	protected void initComponents() {
+		
+
+		cleanupCheckBox = new JCheckBox();
+		cleanupCheckBox.setEnabled(false);
+		cleanupCheckBox.setText(
+			MailResourceLoader.getString(
+				"dialog",
+				"account",
+				"Expunge_Inbox_on_Exit"));
+
+		// TODO: reactivate it
+		/*
+		automaticallyApplyFilterCheckBox =
+			new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"apply_filter"));
+		automaticallyApplyFilterCheckBox.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
+				"apply_filter_mnemonic"));
+		*/
+
+	}
+
+	/*
 	private void initComponents() {
 
-		/*
-		setLayout(new BorderLayout());
-		setBorder(
-			javax.swing.BorderFactory.createTitledBorder(
-				javax.swing.BorderFactory.createEtchedBorder(),
-				MailResourceLoader.getString("dialog","account", "imap")));
-		//$NON-NLS-1$
 		
-		JPanel innerPanel = new JPanel();
-		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		innerPanel.setLayout(layout);
-		innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
-		add(innerPanel, BorderLayout.NORTH);
-		*/
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		setLayout(layout);
@@ -151,40 +172,7 @@ public class ImapAttributPanel extends JPanel {
 		layout.setConstraints(intervalCheckingPanel, c);
 		add(intervalCheckingPanel);
 
-		/*
-		jPanel1 = new JPanel();
-		jPanel1.setLayout(new BoxLayout(jPanel1, BoxLayout.X_AXIS));
-		jPanel1.add(Box.createRigidArea(new java.awt.Dimension(30, 0)));
-		intervalCheckingLabel = new JLabel();
-		intervalCheckingLabel.setEnabled(false);
-		intervalCheckingLabel.setText(
-			GlobalResourceLoader.getString(
-				"dialog/account",
-				"imapattributpanel",
-				"Check_for_new_messages_every"));
-		//$NON-NLS-1$
-		jPanel1.add(intervalCheckingLabel);
-		jPanel1.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-		intervalCheckingTextField = new JTextField(5);
-		intervalCheckingTextField.setEnabled(false);
-		intervalCheckingTextField.setText("18"); //$NON-NLS-1$
-		intervalCheckingTextField.setMaximumSize(new java.awt.Dimension(50, 25));
-		jPanel1.add(intervalCheckingTextField);
-		jPanel1.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-		intervalCheckingLabel2 = new JLabel();
-		intervalCheckingLabel2.setEnabled(false);
-		intervalCheckingLabel2.setText(
-			GlobalResourceLoader.getString("dialog","account", "minutes"));
-		//$NON-NLS-1$
-		jPanel1.add(intervalCheckingLabel2);
-		jPanel1.add(Box.createHorizontalGlue());
-		c.gridx = 0;
-		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(jPanel1, c);
-		add(jPanel1);
-		*/
+		
 
 		JPanel cleanupPanel = new JPanel();
 		//cleanupPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
@@ -206,26 +194,8 @@ public class ImapAttributPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(cleanupPanel, c);
 		add(cleanupPanel);
-		/* TODO: ractivate it
-		automaticallyApplyFilterCheckBox =
-			new JCheckBox(
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"apply_filter"));
-		automaticallyApplyFilterCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"apply_filter_mnemonic"));
-
-		c.gridx = 0;
-		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(automaticallyApplyFilterCheckBox, c);
-		add(automaticallyApplyFilterCheckBox);
-		*/
+		
 	}
+	*/
 
 }

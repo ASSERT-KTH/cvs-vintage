@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.config.account;
+package org.columba.mail.gui.config.accountlist;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -24,8 +24,6 @@ import javax.swing.table.TableColumn;
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.gui.config.account.util.NameRenderer;
-import org.columba.mail.gui.config.account.util.StringAccountRenderer;
 
 class AccountListTable extends JTable
 {

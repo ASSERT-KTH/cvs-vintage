@@ -21,7 +21,6 @@ package org.columba.mail.gui.config.account;
  * Created on 1. November 2000, 23:39
  */
 
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -30,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,12 +37,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
+import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -118,7 +118,7 @@ public class OutgoingServerPanel
 			storePasswordCheckBox.setSelected(item.getBoolean("save_password"));
 
 			secureCheckBox.setSelected(item.getBoolean("enable_ssl", true));
-			
+
 			if (!item.get("login_method").equals("NONE")) {
 				needAuthCheckBox.setSelected(true);
 
@@ -166,7 +166,7 @@ public class OutgoingServerPanel
 			item.set("port", portTextField.getText());
 
 			item.set("host", hostTextField.getText());
-			
+
 			item.set("enable_ssl", secureCheckBox.isEnabled());
 
 			if (needAuthCheckBox.isSelected()) {
@@ -189,22 +189,108 @@ public class OutgoingServerPanel
 	}
 
 	protected void layoutComponents() {
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		//		Create a FormLayout instance. 
+		FormLayout layout =
+			new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
 
+		JPanel topPanel = new JPanel();
+		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+
+		// create EmptyBorder between components and dialog-frame 
+		builder.setDefaultDialogBorder();
+
+		// skip the first column
+		builder.setLeadingColumnOffset(1);
+
+		// Add components to the panel:
+		
+		builder.append(defaultAccountCheckBox, 5);
+		builder.nextLine();
+		
+
+		builder.appendSeparator(
+			MailResourceLoader.getString("dialog", "account", "configuration"));
+		builder.nextLine();
+		
+		builder.append(hostLabel, 2);
+		builder.append(hostTextField);
+		builder.nextLine();
+
+		builder.append(portLabel, 2);
+		builder.append(portTextField);
+		builder.nextLine();
+
+		builder.appendSeparator(
+			MailResourceLoader.getString("dialog", "account", "security"));
+		builder.nextLine();
+
+		builder.append(needAuthCheckBox, 4);
+		builder.nextLine();
+
+		builder.setLeadingColumnOffset(2);
+		
+		JPanel panel = new JPanel();
+		FormLayout l =
+			new FormLayout("max(80dlu;default), 3dlu, fill:max(100dlu;default):grow",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
+
+		// create a form builder
+		DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+		b.append(authenticationLabel, authenticationComboBox);
+		b.nextLine();
+		b.append(loginLabel, loginTextField);
+		builder.append(panel, 3);
+		builder.nextLine();
+
+		
+		/*
+		JPanel panel2 = new JPanel();
+		l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
+
+		// create a form builder
+		b = new DefaultFormBuilder(panel2, l);
+		b.append(loginLabel, loginTextField);
+
+		builder.append(panel2, 3);
+		builder.nextLine();
+		*/
+		//builder.setLeadingColumnOffset(1);
+
+		builder.append(storePasswordCheckBox, 3);
+		builder.nextLine();
+		
+		builder.setLeadingColumnOffset(1);
+
+		builder.append(secureCheckBox, 4);
+		builder.nextLine();
+
+		/*
+		setLayout(new BorderLayout());
+		add(builder.getPanel(), BorderLayout.CENTER);
+		*/
+
+		/*
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		
 		GridBagLayout mainLayout = new GridBagLayout();
 		GridBagConstraints mainConstraints = new GridBagConstraints();
-
+		
 		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
 		mainConstraints.fill = GridBagConstraints.HORIZONTAL;
 		mainConstraints.weightx = 1.0;
-
+		
 		setLayout(mainLayout);
-
+		
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
 		add(defaultAccountCheckBox);
-
+		
 		JPanel configPanel = new JPanel();
 		Border b1 = BorderFactory.createEtchedBorder();
 		Border b2 =
@@ -220,76 +306,76 @@ public class OutgoingServerPanel
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		configPanel.setLayout(layout);
-
+		
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 0, 0, 0);
 		mainLayout.setConstraints(configPanel, mainConstraints);
 		add(configPanel);
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weightx = 0.1;
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		layout.setConstraints(hostLabel, c);
 		configPanel.add(hostLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.9;
 		layout.setConstraints(hostTextField, c);
 		configPanel.add(hostTextField);
-
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.weightx = 0.1;
 		layout.setConstraints(portLabel, c);
 		configPanel.add(portLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.9;
 		layout.setConstraints(portTextField, c);
 		configPanel.add(portTextField);
-
+		
 		JPanel securityPanel = new JPanel();
 		b1 = BorderFactory.createEtchedBorder();
 		b2 =
 			BorderFactory.createTitledBorder(
 				b1,
 				MailResourceLoader.getString("dialog", "account", "security"));
-
+		
 		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
 		securityPanel.setBorder(border);
-
+		
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainLayout.setConstraints(securityPanel, mainConstraints);
 		add(securityPanel);
-
+		
 		layout = new GridBagLayout();
 		c = new GridBagConstraints();
 		securityPanel.setLayout(layout);
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weightx = 1.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(needAuthCheckBox, c);
 		securityPanel.add(needAuthCheckBox);
-
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(layout);
 		c.insets = new Insets(0, 20, 0, 0);
 		layout.setConstraints(panel, c);
 		securityPanel.add(panel);
-
+		
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(layout);
-
+		
 		c.insets = new Insets(0, 0, 0, 0);
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.WEST;
-
+		
 		layout.setConstraints(panel2, c);
 		panel.add(panel2);
-
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.WEST;
@@ -297,38 +383,41 @@ public class OutgoingServerPanel
 		c.insets = new Insets(0, 0, 0, 0);
 		layout.setConstraints(authenticationLabel, c);
 		panel2.add(authenticationLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.0;
 		c.insets = new Insets(0, 5, 0, 0);
 		layout.setConstraints(authenticationComboBox, c);
 		panel2.add(authenticationComboBox);
-
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.insets = new Insets(0, 0, 0, 0);
 		layout.setConstraints(loginLabel, c);
 		panel.add(loginLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(0, 5, 0, 0);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		layout.setConstraints(loginTextField, c);
 		panel.add(loginTextField);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(storePasswordCheckBox, c);
 		securityPanel.add(storePasswordCheckBox);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(secureCheckBox, c);
 		securityPanel.add(secureCheckBox);
-
+		
 		mainConstraints.gridheight = GridBagConstraints.REMAINDER;
 		mainConstraints.weighty = 1.0;
 		mainConstraints.fill = GridBagConstraints.VERTICAL;
 		Component vglue = Box.createVerticalGlue();
 		mainLayout.setConstraints(vglue, mainConstraints);
 		add(vglue);
+		
+		*/
+
 	}
 
 	protected void showDefaultAccountWarning() {
@@ -350,13 +439,6 @@ public class OutgoingServerPanel
 		mainConstraints = new GridBagConstraints();
 		mainConstraints.weighty = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		/*
-		mainConstraints.fill = GridBagConstraints.BOTH;
-		mainConstraints.insets = new Insets(0, 0, 0, 0);
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		mainConstraints.weightx = 1.0;
-		mainConstraints.weighty = 1.0;
-		*/
 
 		JLabel label =
 			new JLabel(
@@ -433,7 +515,8 @@ public class OutgoingServerPanel
 		authenticationComboBox = new JComboBox();
 		authenticationComboBox.addItem("PLAIN");
 		authenticationComboBox.addItem("LOGIN");
-		if( accountItem.isPopAccount() ) authenticationComboBox.addItem("POP before SMTP");
+		if (accountItem.isPopAccount())
+			authenticationComboBox.addItem("POP before SMTP");
 		authenticationComboBox.addActionListener(this);
 		authenticationLabel.setLabelFor(authenticationComboBox);
 
@@ -459,17 +542,19 @@ public class OutgoingServerPanel
 			storePasswordCheckBox.setEnabled(true);
 
 		} else if (action.equals("DEFAULT_ACCOUNT")) {
+			
 			removeAll();
-
+			
 			if (defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
-
+			
 			} else {
 				layoutComponents();
-
+			
 			}
-
+			
 			revalidate();
+			
 
 		} else {
 

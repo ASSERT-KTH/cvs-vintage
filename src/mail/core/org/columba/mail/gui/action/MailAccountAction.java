@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.config.account.ConfigFrame;
+import org.columba.mail.gui.config.accountlist.ConfigFrame;
 import org.columba.mail.util.MailResourceLoader;
 
 public class MailAccountAction extends FrameAction {

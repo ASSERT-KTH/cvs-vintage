@@ -15,15 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -32,12 +27,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
+import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 public class IdentityPanel extends DefaultPanel implements ActionListener {
 
@@ -72,6 +69,8 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 		this.identityItem = identity;
 
 		initComponents();
+
+		layoutComponents();
 
 		updateComponents(true);
 
@@ -108,7 +107,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 		} else {
 			if (nameTextField.getText() != null)
 				identityItem.set("name", nameTextField.getText());
-				
+
 			identityItem.set("address", addressTextField.getText());
 			identityItem.set("organisation", organisationTextField.getText());
 			identityItem.set("reply_address", replyaddressTextField.getText());
@@ -118,7 +117,8 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 			identityItem.setSignature(attachsignatureTextArea.getText());
 			*/
 
-			identityItem.set("attach_signature", 
+			identityItem.set(
+				"attach_signature",
 				attachsignatureCheckBox.isSelected());
 
 			accountItem.setName(accountnameTextField.getText());
@@ -132,35 +132,6 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 	}
 
 	protected void initComponents() {
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-		GridBagLayout mainLayout = new GridBagLayout();
-		GridBagConstraints mainConstraints = new GridBagConstraints();
-
-		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
-		mainConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainConstraints.weightx = 1.0;
-
-		setLayout(mainLayout);
-
-		JPanel accountPanel = new JPanel();
-		Border b1 = BorderFactory.createEtchedBorder();
-		Border b2 =
-			BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"account_information"));
-
-		Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		Border border = BorderFactory.createCompoundBorder(b2, emptyBorder);
-		accountPanel.setBorder(border);
-
-		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		accountPanel.setLayout(layout);
-
 		accountnameLabel =
 			new JLabel(
 				MailResourceLoader.getString(
@@ -174,7 +145,6 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 				"identity_accountname"));
 		accountnameTextField = new JTextField();
 		accountnameLabel.setLabelFor(accountnameTextField);
-
 		defaultAccountCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
@@ -186,47 +156,6 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 				"dialog",
 				"account",
 				"defaultaccount"));
-		//defaultAccountCheckBox.setEnabled(false);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.weightx = 0.1;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		layout.setConstraints(accountnameLabel, c);
-		accountPanel.add(accountnameLabel);
-
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 0.9;
-		layout.setConstraints(accountnameTextField, c);
-		accountPanel.add(accountnameTextField);
-
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(defaultAccountCheckBox, c);
-		accountPanel.add(defaultAccountCheckBox);
-
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-
-		mainLayout.setConstraints(accountPanel, mainConstraints);
-		add(accountPanel);
-
-		JPanel neededPanel = new JPanel();
-		b1 = BorderFactory.createEtchedBorder();
-		b2 =
-			BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"needed_information"));
-
-		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
-		neededPanel.setBorder(border);
-
-		layout = new GridBagLayout();
-		c = new GridBagConstraints();
-		neededPanel.setLayout(layout);
-
 		nameLabel =
 			new JLabel(
 				MailResourceLoader.getString("dialog", "account", "yourname"));
@@ -241,53 +170,6 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 			MailResourceLoader.getMnemonic("dialog", "account", "address"));
 		addressTextField = new JTextField();
 		addressLabel.setLabelFor(addressTextField);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		c.weightx = 0.1;
-
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		layout.setConstraints(nameLabel, c);
-		neededPanel.add(nameLabel);
-
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 0.9;
-		layout.setConstraints(nameTextField, c);
-		neededPanel.add(nameTextField);
-
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		c.weightx = 0.1;
-		layout.setConstraints(addressLabel, c);
-		neededPanel.add(addressLabel);
-
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 0.9;
-		layout.setConstraints(addressTextField, c);
-		neededPanel.add(addressTextField);
-
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-
-		mainLayout.setConstraints(neededPanel, mainConstraints);
-		add(neededPanel);
-
-		JPanel optionalPanel = new JPanel();
-		b1 = BorderFactory.createEtchedBorder();
-		b2 =
-			BorderFactory.createTitledBorder(
-				b1,
-				MailResourceLoader.getString(
-					"dialog",
-					"account",
-					"optional_information"));
-
-		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
-
-		optionalPanel.setBorder(border);
-
-		layout = new GridBagLayout();
-		c = new GridBagConstraints();
-		optionalPanel.setLayout(layout);
-
 		replyaddressLabel =
 			new JLabel(
 				MailResourceLoader.getString(
@@ -330,50 +212,249 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 		selectSignatureButton = new JButton("~/.signature");
 		selectSignatureButton.setActionCommand("CHOOSE");
 		selectSignatureButton.addActionListener(this);
+	}
 
+	protected void layoutComponents() {
+
+		// Create a FormLayout instance. 
+		FormLayout layout =
+			new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
+
+		// create a form builder
+		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+
+		// create EmptyBorder between components and dialog-frame 
+		builder.setDefaultDialogBorder();
+
+		// skip the first column
+		builder.setLeadingColumnOffset(1);
+
+		// Add components to the panel:
+
+		builder.appendSeparator(
+			MailResourceLoader.getString(
+				"dialog",
+				"account",
+				"account_information"));
+		builder.nextLine();
+
+		builder.append(accountnameLabel, 1);
+		builder.append(accountnameTextField);
+		builder.nextLine();
+
+		builder.append(defaultAccountCheckBox, 3);
+		builder.nextLine();
+
+		builder.appendSeparator(
+			MailResourceLoader.getString(
+				"dialog",
+				"account",
+				"needed_information"));
+		builder.nextLine();
+
+		builder.append(nameLabel, 1);
+		builder.append(nameTextField);
+		builder.nextLine();
+
+		builder.append(organisationLabel, 1);
+		builder.append(organisationTextField);
+		builder.nextLine();
+
+		builder.appendSeparator(
+			MailResourceLoader.getString(
+				"dialog",
+				"account",
+				"optional_information"));
+		builder.nextLine();
+
+		builder.append(replyaddressLabel, 1);
+		builder.append(replyaddressTextField);
+		builder.nextLine();
+
+		JPanel panel = new JPanel();
+		FormLayout l =
+			new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
+
+		// create a form builder
+		DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+		b.append(attachsignatureCheckBox, selectSignatureButton);
+		//b.append(selectSignatureButton);
+
+		builder.append(panel, 3);
+		builder.nextLine();
+
+		/*
+		JPanel innerPanel = builder.getPanel();
+		FormDebugUtils.dumpAll(innerPanel);
+		setLayout(new BorderLayout());
+		add(innerPanel, BorderLayout.CENTER);
+		*/
+		/*
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		
+		GridBagLayout mainLayout = new GridBagLayout();
+		GridBagConstraints mainConstraints = new GridBagConstraints();
+		
+		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
+		mainConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainConstraints.weightx = 1.0;
+		
+		setLayout(mainLayout);
+		
+		JPanel accountPanel = new JPanel();
+		Border b1 = BorderFactory.createEtchedBorder();
+		Border b2 =
+			BorderFactory.createTitledBorder(
+				b1,
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"account_information"));
+		
+		Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		Border border = BorderFactory.createCompoundBorder(b2, emptyBorder);
+		accountPanel.setBorder(border);
+		
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		accountPanel.setLayout(layout);
+		
+		//defaultAccountCheckBox.setEnabled(false);
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weightx = 0.1;
-
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		layout.setConstraints(accountnameLabel, c);
+		accountPanel.add(accountnameLabel);
+		
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weightx = 0.9;
+		layout.setConstraints(accountnameTextField, c);
+		accountPanel.add(accountnameTextField);
+		
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		layout.setConstraints(defaultAccountCheckBox, c);
+		accountPanel.add(defaultAccountCheckBox);
+		
+		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		
+		mainLayout.setConstraints(accountPanel, mainConstraints);
+		add(accountPanel);
+		
+		JPanel neededPanel = new JPanel();
+		b1 = BorderFactory.createEtchedBorder();
+		b2 =
+			BorderFactory.createTitledBorder(
+				b1,
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"needed_information"));
+		
+		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
+		neededPanel.setBorder(border);
+		
+		layout = new GridBagLayout();
+		c = new GridBagConstraints();
+		neededPanel.setLayout(layout);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.weightx = 0.1;
+		
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		layout.setConstraints(nameLabel, c);
+		neededPanel.add(nameLabel);
+		
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weightx = 0.9;
+		layout.setConstraints(nameTextField, c);
+		neededPanel.add(nameTextField);
+		
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		c.weightx = 0.1;
+		layout.setConstraints(addressLabel, c);
+		neededPanel.add(addressLabel);
+		
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weightx = 0.9;
+		layout.setConstraints(addressTextField, c);
+		neededPanel.add(addressTextField);
+		
+		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		
+		mainLayout.setConstraints(neededPanel, mainConstraints);
+		add(neededPanel);
+		
+		JPanel optionalPanel = new JPanel();
+		b1 = BorderFactory.createEtchedBorder();
+		b2 =
+			BorderFactory.createTitledBorder(
+				b1,
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"optional_information"));
+		
+		emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		border = BorderFactory.createCompoundBorder(b2, emptyBorder);
+		
+		optionalPanel.setBorder(border);
+		
+		layout = new GridBagLayout();
+		c = new GridBagConstraints();
+		optionalPanel.setLayout(layout);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.weightx = 0.1;
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		layout.setConstraints(replyaddressLabel, c);
 		optionalPanel.add(replyaddressLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.9;
 		layout.setConstraints(replyaddressTextField, c);
 		optionalPanel.add(replyaddressTextField);
-
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.weightx = 0.1;
 		layout.setConstraints(organisationLabel, c);
 		optionalPanel.add(organisationLabel);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.9;
 		layout.setConstraints(organisationTextField, c);
 		optionalPanel.add(organisationTextField);
-
+		
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.weightx = 0.1;
 		layout.setConstraints(attachsignatureCheckBox, c);
 		optionalPanel.add(attachsignatureCheckBox);
-
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.9;
 		layout.setConstraints(selectSignatureButton, c);
 		optionalPanel.add(selectSignatureButton);
-
+		
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainLayout.setConstraints(optionalPanel, mainConstraints);
 		add(optionalPanel);
-
+		
 		mainConstraints.gridheight = GridBagConstraints.REMAINDER;
 		mainConstraints.weighty = 1.0;
 		mainConstraints.fill = GridBagConstraints.VERTICAL;
 		Component vglue = Box.createVerticalGlue();
 		mainLayout.setConstraints(vglue, mainConstraints);
 		add(vglue);
+		*/
 
 	}
 
@@ -411,7 +492,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 		if (action.equals("CHOOSE")) //$NON-NLS-1$
 			{
 			JFileChooser fc = new JFileChooser();
-			int returnVal = fc.showOpenDialog(this);
+			int returnVal = fc.showOpenDialog(null);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();

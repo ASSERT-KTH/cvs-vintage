@@ -12,7 +12,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package org.columba.mail.gui.config.account.util;
+package org.columba.mail.gui.config.accountlist;
 
 import java.awt.Component;
 

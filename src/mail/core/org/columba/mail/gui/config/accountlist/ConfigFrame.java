@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.config.account;
+package org.columba.mail.gui.config.accountlist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -54,6 +54,7 @@ import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.util.MailResourceLoader;
 
