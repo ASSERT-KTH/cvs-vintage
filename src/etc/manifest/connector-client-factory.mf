@@ -1,2 +1,8 @@
 Main-Class: org.jboss.jmx.connector.TestClient
 Class-Path: ./ ./jmx-rmi-connector-client.jar ./jmx-ejb-connector-client.jar ./jmxri.jar ../lib/jmxri.jar ./jnp-client.jar ../lib/jnp-client.jar ./log4j.jar
+Specification-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@
+Specification-Version: @version.major@.@version.minor@.@version.revision@@version.tag@
+Specification-Vendor: JBoss Group, LLC
+Implementation-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@ CVSTag=@version.name@
+Implementation-Version: @version.major@.@version.minor@.@version.revision@@version.tag@ Date:@build.id@
+Implementation-Vendor: JBoss Group, LLC
