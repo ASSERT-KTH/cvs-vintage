@@ -407,7 +407,8 @@ public class XmlMapper
 			     obj=attributes.getValue("action");
 			     if( obj!=null) {
 				 try {
-				     Class c=Class.forName( obj );
+				     ClassLoader cl=getClassLoader();
+				     Class c=cl.loadClass( obj );
 				     Object o=c.newInstance();
 				     mapper.addRule( match, (XmlAction)o);
 				 } catch( Exception ex ) {
@@ -675,6 +676,7 @@ class ObjectCreate extends XmlAction {
     public void start( SaxContext ctx) throws Exception {
 	String tag=ctx.getCurrentElement();
 	String classN=className;
+	ClassLoader cl=ctx.getClassLoader();
 
 	if( attrib!=null) {
 	    AttributeList attributes = ctx.getCurrentAttributes();
@@ -685,7 +687,7 @@ class ObjectCreate extends XmlAction {
 	if( pref!=null && classN.indexOf( "." ) <0 ) {
 	    for( int i=0; i<pref.length; i++ ) {
 		try {
-		    c=Class.forName( pref[i] + classN );
+		    c=cl.loadClass( pref[i] + classN );
 		    if( c!=null ) break;
 		} catch( Exception ex ) {
 		    if( ctx.getDebug() > 0 )
@@ -695,7 +697,7 @@ class ObjectCreate extends XmlAction {
 	    }
 	}
 	if( c==null ) {
-	    c=Class.forName( classN );
+	    c=cl.loadClass( classN );
 	}
 	Object o=c.newInstance();
 	ctx.pushObject(o);
