@@ -1,0 +1,115 @@
+Scarab Quick Start Guide
+========================
+
+Welcome to Scarab! This document will help you get Scarab up and running
+as quickly as possible, with the minimum of fuss.
+
+Before we get started, I am assuming that you already have Ant 1.5.x
+installed and configured on your system. Ant 1.6.x is currently not
+supported because people have been reporting problems with it.
+
+I also assume that you have a database server up and running, preferably
+one supported by Scarab ;) We currently fully support both MySQL and
+PostgreSQL, but there is also partial support for MS SQL Server, Oracle
+and Hypersonic, although the latter is likely to become the default
+database bundled with Scarab in the not too distant future.
+
+And so, on to business...
+
+
+Step 1: Unpack the Scarab distribution
+----------------------------------------
+
+The Scarab release can be downloaded as either a .zip or a .tar.gz file.
+Unpack either one of these into a directory that you have write access
+to. Of course, if you are reading this document, you have probably already
+completed this step.
+
+
+Step 2: Migrating an old version of Scarab
+------------------------------------------
+
+For those of you that have an existing version of Scarab between b16 and
+b18-1 inclusive, copy your 'build.properties' file into your
+'scarab-1.0-b19/build' directory and run the following ant target from
+that directory:
+
+$ ant migrate-b18-b19
+
+If you don't have an existing Scarab installation, or you don't want to
+keep your old settings, then you can skip this step.
+
+
+Step 3: Build Scarab
+--------------------
+
+Before you build Scarab, you will almost certainly want to configure it.
+So, if you don't already have one, now would be a good time to create a
+'build.properties' file in your 'scarab-1.0-b19/build' directory. This is
+just a standard java properties file containing property values relevant
+to the Scarab build.
+
+The file 'scarab-1.0-b19/default.properties' describes the properties that
+you can set and also contains default values, but at a bare minimum I
+suggest you provide values for the following:
+
+  scarab.database.type     - Your database provider. This can be one of:
+                             mysql, postgresql, mssql, hypersonic, oracle
+                             or db2.
+
+  scarab.database.username - The username and password that Scarab should
+  scarab.database.password   use to connect to the database.
+
+  scarab.database.name     - The name of the Scarab database. This doesn't
+                             have to exist yet. By default this is "scarab".
+
+  scarab.database.host     - This is the name of the host running the
+                             database. By default this is set to "localhost".
+
+OK, once your 'build.properties' file is ready, just run ant from
+'scarab-1.0-b19/build':
+
+$ ant
+
+
+Step 4: Create the database
+---------------------------
+
+Now you can create and populate the Scarab database. For non-PostgreSQL
+users, just run:
+
+$ ant create-db
+
+or
+
+$ ant -Dskip.seed.data create-db
+
+if you do *not* want the sample Scarab data. If you are just testing
+Scarab out, then we recommend that you use the first option and load the
+sample data into the database.
+
+The ant build will not successfully create the database in PostgreSQL,
+so users of this database provider need to follow a different route.
+Full instructions can be found in the 'PostgreSQL.txt' file in the same
+directory as this one.
+
+
+Step 5: Start Tomcat
+--------------------
+
+On Windows, just double-click on the 'scarab-1.0-b19/tomcat/bin/startup.bat'
+file. On Unix/Linux, just run the 'scarab-1.0-b19/tomcat/bin/startup.sh'
+script.
+
+Point your browser at http://localhost:8080/scarab/issues/ and you should
+be presented with the Scarab login page. If you do, congratulations! You
+now have Scarab installed and running on your system.
+
+If any of the above steps fail, then please read the full README.txt file.
+If you are still having problems then please subscribe to the Scarab users
+mailing list at:
+
+  users-subscribe@scarab.tigris.org
+   
+Once you are subscribed, send a message to users@scarab.tigris.org
+detailing your problem.

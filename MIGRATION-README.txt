@@ -6,6 +6,60 @@ performing any of the operations outlined by this document,
 		    **** BACKUP YOUR DATABASE ****
 		    ******************************
 
+------------------------------------------------------------------------
+Upgrading from b18 & b18-1 to b19
+------------------------------------------------------------------------
+
+Normally, this file is reserved for data migration. However, the build
+has changed fairly significantly since b18, so the first thing you
+should do when upgrading is update your build properties. To make life
+as painless as possible, we have created an ant build target that will
+copy and convert all your existing build properties so that they take
+effect in the new system. All you have to do is run the following before
+doing a normal Scarab build:
+
+$ ant migrate-b18-b19
+
+where the '$' character just represents the command prompt. Once you
+have done this, you can build Scarab as normal with all your old
+property settings intact.
+
+For those of you interested in what takes place during the conversion,
+here is a brief summary:
+
+. build/default.properties contains the properties that still affect
+  the build.
+
+. scarab.tomcat.http.port
+  scarab.tomcat.shutdown.port
+  scarab.tomcat.proxy.name
+  scarab.tomcat.proxy.port
+  scarab.context
+  scarab.webapp.reloadable
+  scarab.webapp.checkInterval
+  
+  These are now all attributes within the tomcat/conf/server.xml file.
+
+. scarab.context
+  scarab.welcome.file
+  
+  These are now attributes within the src/webapp/WEB-INF/web.xml file.
+
+. 'scarab.file.max.size' is now a constraint on the "Attachments"
+  group in src/conf/conf/intake.xml.
+
+
+All other properties will be copied to the new
+src/conf/conf/CustomSettings.properties file, apart from the following:
+
+  intake.optional.groups
+  scarab.database.loadorder
+  scarab.html.redirect
+  scarab.jcs.cache.properties
+  scarab.war.file.name
+
+These are no longer supported in any form.
+
 
 ------------------------------------------------------------------------
 Upgrading from b15 to b16

@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.71 2004/03/14 12:25:52 pledbrook Exp $
+$Id: README.txt,v 1.72 2004/04/13 21:13:44 pledbrook Exp $
 
 Welcome to Scarab!
 
@@ -222,14 +222,13 @@ scarab
   |                     and creating/loading the sql scripts.
   +- extensions
   |    +- usermods  <-- place your modifications to the standard
-  |    |                distribution here. These modificatins will be
+  |    |                distribution here. These modifications will be
   |    |                incorporated into the build. This simplifies
   |    |                the process of replacing *.vm files,
   |    |                among other things.
   |    +- scripts   <-- Helper shell scripts
   |    +- dtd       <-- DTD's for validating XML files
   |    +- bugzilla  <-- Scripts for converting from Bugzilla to Scarab
-  |    +- migration <-- Ant task for migrating from b15 to b16
   +- lib
   +- www/repository <-- The .jar repository for jars used by Scarab.
   +- src            <-- The source files.
@@ -247,6 +246,7 @@ src
   |    +- classes   <-- Various configuration files copied directly 
   |                     into the classpath.
   +- java           <-- The Java source code for Scarab.
+  +- migration      <-- Java source for migration ant tasks
   +- sql            <-- SQL files for defining the database.
   +--webapp         <-- All the web resources required for Scarab like 
   |                     images, css files, javascript files, html files,
@@ -258,63 +258,88 @@ src
 | B U I L D  P R O P E R T I E S                                        |
 '-----------------------------------------------------------------------'
 
-The Scarab build process can be configured by setting build properties.
-You can find descriptions of the available properties and their default
+The Scarab build process can be configured by adding properties to the
+file:
+
+  build/build.properties
+
+This file does not exist by default, so you will first have to create
+it. You can find descriptions of the available properties and their default
 values in the file:
 
   build/default.properties
 
-and also in the various database-specific property files:
+Please note that these properties *only* affect the ant build. Changing
+them and then restarting Tomcat will have no effect at all - see the
+following section on runtime properties for more information.
 
-  build/default.mysql.properties
-  build/default.postgresql.properties
-  build/default.hypersonic.properties
-  build/default.mssql.properties
-  build/default.oracle.properties
-  build/default.db2.properties
+For the more experienced user, the build/default.<db>.properties files
+contain other properties that you can override, but we recommend you
+leave them alone unless it is necessary to change their values.
 
-If you would like to override the defaults, you can create one or more
-of the following property files and add your own property settings:
+For users that have several development projects on their system, or
+even multiple Scarab distributions, our ant build also reads properties
+from the following files:
 
-    ~/scarab.build.properties
-    ~/build.properties
-    scarab/build/build.properties
+  ~/scarab.build.properties
+  ~/build.properties
 
-If you have the same property defined in more than one of these files,
-which one takes priority? In this case, ~/scarab.build.properties takes
-precedence over ~/build.properties, which in turn takes precedence over
-scarab/build/build.properties.
-
-NOTE: The ~ character represents your user account home directory.
+where '~' is your home directory. Any values set in these files override
+the ones in build/build.properties. The former is designed to hold
+properties that should be shared between different Scarab builds, while
+the latter is for common settings that are available in more than one
+project.
 
 
 ,-----------------------------------------------------------------------.
 | R U N T I M E   P R O P E R T I E S                                   |
 '-----------------------------------------------------------------------'
 
-Scarab can also be configured at runtime, through a different set of
-property files. Descriptions and default values are provided by:
+Most people will want to configure Scarab's settings after they have
+built it. Fortunately, Scarab supports runtime properties that it "reads"
+each time the server is started. So for example, if you want to change
+the address of the mail server to use, all you would have to do is modify
+the appropriate runtime property and restart Tomcat (or whichever
+application server you are using).
+
+You will find all the Scarab-specific runtime configuration files in the
+src/conf/conf directory. The main files of interest are:
 
   src/conf/conf/Scarab.properties
   src/conf/conf/TurbineResources.properties
 
-If you want to override any of the properties, then you can just provide
-your own values in the file:
+These contain defaults for almost all the supported runtime properties.
+The first file holds properties that are specific to Scarab itself,
+while the second one holds generic properties supported by the Turbine
+framework. If you want to provide your own values for any of the runtime
+properties, then just add them to the file:
 
   src/conf/conf/CustomSettings.properties
 
-Please note that changes to this file will only have an effect at build
-time, since the build copies the file to the Scarab webapp. Once Scarab
-is deployed, you can still make changes by modifying this file:
+If it doesn't already exist, then just create it.
+
+Now, a word of warning: although you can set values for runtime
+properties in the above file, changes in it will not have any effect
+until you re-deploy Scarab. This is because the build deploys the
+runtime configuration files into the Scarab webapp. If you want
+a change to take effect when you restart the server then you will
+need to modify:
 
   <scarab webapp>/WEB-INF/conf/CustomSettings.properties
 
-where the webapp will normally be in target/scarab.
+where the webapp is wherever Scarab has been deployed. Normally this
+is 'tomcat/webapps/scarab'.
 
-Alternatively, you can define environment properties in your servlet's 
-JNDI tree. You can do this either via the Tomcat Admin application or 
-by editing the appropriate files. To add a property that won't be 
-overriden by each new .WAR file you install, edit
+Please note that whenever you use the ant build to re-deploy Scarab,
+the CustomSettings.properties file and the other configuration files
+will be overwritten by the files in 'src/conf/conf'. Hopefully you
+aren't too confused at this stage.
+
+In addition to the CustomSettings.properties file, you can also define
+environment properties in your servlet's JNDI tree. You can do this
+either via the Tomcat Admin application or by editing the appropriate
+files. To add a property that won't be overriden by each new .WAR file
+you install, edit
 
         /tomcat/webapps/scarab.xml 
 
