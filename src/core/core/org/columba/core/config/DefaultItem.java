@@ -93,21 +93,21 @@ public class DefaultItem {
 	public boolean getBoolean(String key) {
 		String value = get(key);
 
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public boolean getBoolean(String pathToElement, String key) {
 		String value = get(pathToElement, key);
 
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public void set(String key, boolean value) {
-		set(key, Boolean.toString(value));
+		set(key, value ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
 	}
 
 	public void set(String pathToElement, String key, boolean value) {
-		set(pathToElement, key, Boolean.toString(value));
+		set(pathToElement, key, value ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
 	}
 
 	/*
