@@ -19,7 +19,7 @@ import org.jboss.naming.Util;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class EnvEntryMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -62,6 +62,20 @@ public class EnvEntryMetaData extends MetaData {
         else if( type == Integer.class )
         {
             Util.bind(ctx, entry.getName(), new Integer(entry.getValue()));
+        }
+        else if( type == Character.class )
+        {
+            Object value = null;
+            if (entry.getValue() == null) {
+                value = new Character((char) 0);
+            } else {
+                if (entry.getValue().length() == 1) {
+                    value = new Character(entry.getValue().charAt(0));
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            }
+            Util.bind(ctx, entry.getName(), value);
         }
         else if( type == Long.class )
         {
