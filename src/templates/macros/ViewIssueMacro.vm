@@ -396,7 +396,9 @@ $l10n.NoAttachments
 
 #if ($canEdit)
 <h4>$l10n.AddAttachment</h4>
-
+<div class="colbar">
+* attachment fields are only required if the $l10n.Path is set
+</div>
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
     <tr>
@@ -409,14 +411,14 @@ $l10n.NoAttachments
       </td>
     </tr>
     <tr>
-       <th>$l10n.Description</th>
+       <th>* $l10n.Description</th>
        <td>
         #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
         #fieldErrorMsg($intakeAttachment.Name "")
        </td>
     </tr>
     <tr>
-      <th>$l10n.Type</th>
+      <th>* $l10n.Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
         #if ($intakeAttachment.MimeTypeA)

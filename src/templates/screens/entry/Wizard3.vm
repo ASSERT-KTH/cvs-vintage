@@ -108,14 +108,14 @@
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 #set ($reportingIssue = $scarabR.ReportingIssue)
 #set ($attachments = $reportingIssue.Attachments)
-<h3>Attachments</h3>
+<h3>$l10n.Attachments</h3>
 #if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>&#160;</th>
-     <th>Attachment name</th>
-     <th>Attachment description</th>
-     <th>Attachment type</th>
+     <th>$l10n.Name</th>
+     <th>$l10n.Description</th>
+     <th>$l10n.Type</th>
    </tr>
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
@@ -136,31 +136,31 @@
 </div>
 #end
 
-<h4>Add Attachment</h4>
+<h4>$l10n.AddAttachment</h4>
+<div class="colbar">
+* attachment fields are only required if the $l10n.Path is set
+</div>
+
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
     <tr>
-      <th>Attachment path</th>
+      <th>$l10n.Path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
        #fieldErrorMsg($intakeAttachment.File "")
-       <p><small>Click Browse and select a file. If you do not see a Browse
-       button, your browser does not support file uploads. Windows
-       users, set Files of Type: to be All Files (*.*) to get a
-       complete file listing. The File field cannot be used to
-       rename files.</small></p>
+       <p><small>$l10n.SelectFile</small></p>
       </td>
     </tr>
     <tr>
-      <th>Attachment description</th>
+      <th>* $l10n.Description</th>
       <td>
        #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
        #fieldErrorMsg($intakeAttachment.Name "")
       </td>
     </tr>    
     <tr>
-      <th>Attachment type</th>
+      <th>* $l10n.Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
         #if ($intakeAttachment.MimeTypeA)
