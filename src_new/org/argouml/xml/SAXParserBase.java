@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.23 2004/09/20 20:44:17 bobtarling Exp $
+// $Id: SAXParserBase.java,v 1.24 2004/10/11 15:29:29 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public abstract class SAXParserBase extends DefaultHandler {
     ////////////////////////////////////////////////////////////////
     // constants
 
-    private static final String    RETURNSTRING  = new String("\n      ");
+    private static final String    RETURNSTRING  = "\n      ";
 
     ////////////////////////////////////////////////////////////////
     // constructors
