@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.32 2000/09/29 07:01:32 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/09/29 07:01:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.33 2000/10/06 05:19:15 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/10/06 05:19:15 $
  *
  * ====================================================================
  *
@@ -155,7 +155,7 @@ public class HttpRequestAdapter extends Request {
 	processRequestLine(response  );
 
 	// for 0.9, we don't have headers!
-	if (protocol!=null) { // all HTTP versions with protocol also have headers ( 0.9 has no HTTP/0.9 !)
+	if (! protoMB.isNull()) { // all HTTP versions with protocol also have headers ( 0.9 has no HTTP/0.9 !)
 	    readHeaders( headers, sin  );
 	}
 
@@ -383,22 +383,22 @@ public class HttpRequestAdapter extends Request {
 	}
 
 	methodMB.setBytes( buf, startMethod, endMethod - startMethod );
-	method=null;
+// 	method=null;
 	if( Ascii.toLower( buf[startMethod]) == 'g' ) {
 	    if( methodMB.equalsIgnoreCase( "get" ))
-		method="GET";
+		methodMB.setString( "GET" );
 	}
 	if( Ascii.toLower( buf[startMethod]) == 'p' ) {
 	    if( methodMB.equalsIgnoreCase( "post" ))
-		method="POST";
+		methodMB.setString( "POST" );
 	    if( methodMB.equalsIgnoreCase( "put" ))
-		method="PUT";
+		methodMB.setString("PUT");
 	}
 
-	if( method==null )
-	    method= new String( buf, startMethod, endMethod - startMethod );
+// 	if( method==null )
+// 	    method= new String( buf, startMethod, endMethod - startMethod );
 
-	protocol=null;
+// 	protocol=null;
 	if( endReq < 0 ) {
 	    endReq=count;
 	} else {
@@ -406,12 +406,12 @@ public class HttpRequestAdapter extends Request {
 		if( endProto < 0 ) endProto = count;
 		protoMB.setBytes( buf, startProto, endProto-startProto);
 		if( protoMB.equalsIgnoreCase( "http/1.0" ))
-		    protocol="HTTP/1.0";
+		    protoMB.setString( "HTTP/1.0" );
 		if( protoMB.equalsIgnoreCase( "http/1.1" ))
-		    protocol="HTTP/1.1";
+		    protoMB.setString( "HTTP/1.1" );
 		
-		if( protocol==null) 
-		    protocol=new String( buf, startProto, endProto-startProto );
+// 		if( protocol==null) 
+// 		    protocol=new String( buf, startProto, endProto-startProto );
 	    }
 	}
 
@@ -425,8 +425,8 @@ public class HttpRequestAdapter extends Request {
 	}
 
 	// temp. fix until the rest of the code is changed
-	requestURI=uriMB.toString();
-	queryString=queryMB.toString();
+	//	requestURI=uriMB.toString();
+	//	queryString=queryMB.toString();
 
 
 	//	loghelper.log("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );

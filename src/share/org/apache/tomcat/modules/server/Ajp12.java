@@ -132,7 +132,7 @@ class Ajp12 {
 		    //	req.setContext( contextM.getContext( contextPath ));
 		    
 		    //Servlet - not used
-		    String servletName = readString(ajpin, null);
+		    dummy=readString(ajpin, null);
 		    
 		    //Server hostname
 		    req.setServerName( readString(ajpin, null) );

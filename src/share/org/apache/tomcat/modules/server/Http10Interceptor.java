@@ -207,10 +207,10 @@ class HttpRequest extends Request {
     public void readNextRequest(Response response) throws IOException {
 	int status=http.processRequestLine( methodMB, uriMB,queryMB, protoMB );
 	// XXX remove this after we swich to MB
-	method=methodMB.toString();
-	requestURI=uriMB.toString();
-	queryString=queryMB.toString();
-	protocol=protoMB.toString();
+	// 	method=methodMB.toString();
+	// 	requestURI=uriMB.toString();
+	// 	queryString=queryMB.toString();
+	// 	protocol=protoMB.toString();
 	
 	if( status > 200 ) {
 	    response.setStatus( status );

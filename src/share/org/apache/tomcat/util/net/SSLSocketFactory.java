@@ -85,6 +85,7 @@ import javax.net.ssl.HandshakeCompletedEvent;
  *
  * @author Harish Prabandham
  * @author Costin Manolache
+ * @author Stefan Freyr Stefansson
  */
 public class SSLSocketFactory
     extends org.apache.tomcat.util.net.ServerSocketFactory
@@ -188,13 +189,17 @@ public class SSLSocketFactory
 		com.sun.net.ssl.KeyManagerFactory.getInstance(algorithm);
 	    kmf.init( kstore, keyPass.toCharArray());
 
-	    // XXX I don't know if this is needed
-//  	    com.sun.net.ssl.TrustManagerFactory tmf = 
-//  		com.sun.net.ssl.TrustManagerFactory.getInstance("SunX509");
-// 		tmf.init(kstore);
+	    // If client authentication is needed, set up TrustManager
+	    com.sun.net.ssl.TrustManager[] tm = null;
+	    if( clientAuth) {
+		com.sun.net.ssl.TrustManagerFactory tmf =
+                    com.sun.net.ssl.TrustManagerFactory.getInstance("SunX509");
+		tmf.init(kstore);
+		tm = tmf.getTrustManagers();
+	    }
 
 	    // init context with the key managers
-	    context.init(kmf.getKeyManagers(), null,
+	    context.init(kmf.getKeyManagers(), tm, 
 			 new java.security.SecureRandom());
 
 	    // create proxy

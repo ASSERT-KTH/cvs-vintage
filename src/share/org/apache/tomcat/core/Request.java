@@ -130,7 +130,6 @@ public class Request {
     // Processed information ( redundant ! )
     protected Hashtable parameters = new Hashtable();
 
-
     protected int contentLength = -1;
     protected String contentType = null;
     protected String charEncoding = null;
@@ -149,23 +148,20 @@ public class Request {
     protected Response response;
     protected ContextManager contextM;
     protected Context context;
+    protected Object requestFacade;
 
     protected boolean didReadFormData;
     protected boolean didParameters;
     // end "Request" variables
 
-    // @deprecated
-    protected Object requestFacade;
-
     // Session
-    // set by interceptors - the session id
     protected String reqSessionId;
     protected String sessionIdSource;
     protected String sessionId;
-        
     // cache- avoid calling SessionManager for each getSession()
     protected ServerSession serverSession;
 
+    // Handler
     protected Handler handler = null;
     Container container;
 
@@ -176,22 +172,12 @@ public class Request {
     Request parent;
     Request child;
 
-    // @deprecated
-    protected String method;
-    protected String requestURI;
-    protected String queryString;
-    protected String protocol;
-    
-    protected String servletName;
-    protected String mappedPath = null;
     protected String contextPath;
-    protected String lookupPath; // everything after contextPath before ?
     protected String servletPath;
     protected String pathInfo;
     protected String pathTranslated;
-    // Need to distinguish between null pathTranslated and
-    // lazy-computed pathTranlsated
     protected boolean pathTranslatedIsSet=false;
+
     protected Vector cookies = new Vector();
     protected boolean didCookies;
 
@@ -265,35 +251,35 @@ public class Request {
     }
 
     public String getMethod() {
-        return method;
+        return methodMB.toString();
     }
 
     public void setMethod( String method ) {
-	this.method=method;
+	methodMB.setString(method);
     }
 
     public String getRequestURI() {
-	return requestURI;
+	return uriMB.toString();
     }
 
     public void setRequestURI( String r ) {
- 	this.requestURI=r;
+ 	uriMB.setString(r);
     }
 
     public String getQueryString() {
-        return queryString;
+        return queryMB.toString();
     }
 
     public void setQueryString(String queryString) {
-	this.queryString = queryString;
+	queryMB.setString(queryString);
     }
 
     public String getProtocol() {
-        return protocol;
+        return protoMB.toString();
     }
 
     public void setProtocol( String protocol ) {
-	this.protocol=protocol;
+	protoMB.setString(protocol);
     }
 
 
@@ -677,17 +663,6 @@ public class Request {
 	this.container=container;
     }
 
-//     /** The file - result of mapping the request ( using aliases and other
-//      *  mapping rules. Usefull only for static resources.
-//      */
-//     public String getMappedPath() {
-// 	return mappedPath;
-//     }
-
-//     public void setMappedPath( String m ) {
-// 	mappedPath=m;
-//     }
-
     public void setParameters( Hashtable h ) {
 	if(h!=null)
 	    this.parameters=h;
@@ -900,10 +875,6 @@ public class Request {
         container=null;
         handler=null;
         jvmRoute = null;
-        method = "GET";
-        requestURI="/";
-        queryString=null;
-        protocol="HTTP/1.0";
         headers.clear(); // XXX use recycle pattern
         serverName=null;
         serverPort=8080;
@@ -913,16 +884,16 @@ public class Request {
         sessionIdSource = null;
 	sessionId=null;
 
-        // XXX a request need to override those if it cares
-        // about security
-        remoteAddr="127.0.0.1";
-        remoteHost="localhost";
-        localHost="localhost";
+	// counters and notes
         cntr.recycle();
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
+
+	// sub-req
 	parent=null;
 	child=null;
 	top=null;
+
+	// auth
         notAuthenticated=true;
 	userRoles=null;
 	reqRoles=null;
@@ -934,7 +905,16 @@ public class Request {
 	queryMB.recycle();
 	methodMB.recycle();
 	protoMB.recycle();
+
+	// XXX Do we need such defaults ?
         schemeMB.setString("http");
+	methodMB.setString("GET");
+        uriMB.setString("/");
+        queryMB.setString("");
+        protoMB.setString("HTTP/1.0");
+        remoteAddr="127.0.0.1";
+        remoteHost="localhost";
+        localHost="localhost";
 
     }
 }

@@ -114,6 +114,30 @@ public final class OutputBuffer extends Writer {
 	System.out.println("OutputBuffer: " + s );
     }
 
+    /** Sends the buffer data to the client output, checking the
+	state of Response and calling the right interceptors.
+    */
+    private void realWrite(Request req, Response res, byte buf[], int off, int cnt )
+	throws IOException
+    {
+	// If this is the first write ( or flush )
+	if (!res.isBufferCommitted()) {
+	    res.endHeaders();
+	}
+	// If we really have something to write
+	if( cnt>0 ) {
+	    // call the beforeCommit callback
+	    BaseInterceptor reqI[]= cm.getInterceptors(req,
+						       Container.H_beforeCommit);
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].beforeCommit( req, res );
+	    }
+
+	    // real write to the adapter
+	    res.doWrite( buf, off, cnt );
+	}
+    }
+    
     public void recycle() {
 	if( debug > 0 ) log("recycle()");
 	state=INITIAL_STATE;
@@ -173,12 +197,12 @@ public final class OutputBuffer extends Writer {
 	    System.arraycopy(b, off+avail, buf, count, len - avail);
 	    count+= len - avail;
 	    bytesWritten += len - avail;
-	}
-
-	// len > buf.length + avail
-	else {
-	  flushBytes();
-	  cm.doWrite( req, resp, b, off, len );
+	
+	} else {	// len > buf.length + avail
+	    // long write - flush the buffer and write the rest
+	    // directly from source
+	    flushBytes();
+	    realWrite( req, resp, b, off, len );
 	}
 
 	// if called from within flush(), then immediately flush
@@ -339,7 +363,7 @@ public final class OutputBuffer extends Writer {
         else if (state==BYTE_STATE)
             flushBytes();
         else if (state==INITIAL_STATE)
-            cm.doWrite( req, resp, null, 0, 0 );       // nothing written yet
+            realWrite( req, resp, null, 0, 0 );       // nothing written yet
         doFlush = false;
     }
 
@@ -384,7 +408,7 @@ public final class OutputBuffer extends Writer {
     public void flushBytes() throws IOException {
 	if( debug > 0 ) log("flushBytes() " + count);
 	if( count > 0) {
-	    cm.doWrite( req, resp, buf, 0, count );
+	    realWrite( req, resp, buf, 0, count );
 	    count=0;
 	}
     }

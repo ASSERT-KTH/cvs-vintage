@@ -136,6 +136,10 @@ public final class MessageBytes implements Cloneable, Serializable {
 	}
     }
 
+    public boolean isNull() {
+	return bytes==null && strValue==null;
+    }
+    
     public void reset() {
 	recycle();
     }
@@ -165,6 +169,7 @@ public final class MessageBytes implements Cloneable, Serializable {
      * @param len the length of the bytes
      */
     public void setBytes(byte[] b, int off, int len) {
+	recycle(); // a new value is set, cached values must reset
 	bytes = b;
 	bytesOff = off;
 	bytesLen = len;
@@ -173,10 +178,15 @@ public final class MessageBytes implements Cloneable, Serializable {
     }
 
     public void setEncoding( String enc ) {
+	if( hasByteValue ) {
+	    hasCharValue=false;
+	    hasStrValue=false;
+	}
 	this.enc=enc;
     }
     
     public void setChars( char[] c, int off, int len ) {
+	recycle();
 	chars=c;
 	charsOff=off;
 	charsLen=len;
@@ -185,12 +195,14 @@ public final class MessageBytes implements Cloneable, Serializable {
     }
 
     public void setString( String s ) {
+	recycle();
 	strValue=s;
 	hasStrValue=true;
 	type=T_STR;
     }
 
     public void setTime(long t) {
+	recycle();
 	if( dateValue==null)
 	    dateValue=new Date(t);
 	else
@@ -200,6 +212,7 @@ public final class MessageBytes implements Cloneable, Serializable {
     }
 
     public void setInt(int i) {
+	recycle();
 	intValue = i;
 	type = T_INT;
 	hasIntValue=true;
@@ -218,8 +231,11 @@ public final class MessageBytes implements Cloneable, Serializable {
 	    try {
 		if( enc==null )
 		    strValue=toStringUTF8();
-		else
+		else {
 		    strValue=new String(bytes, bytesOff, bytesLen, enc);
+		    // this will display when we implement I18N
+		    System.out.println("Converting from bytes to string using " + enc + ":" + strValue  );
+		}
 		return strValue;
 	    } catch (java.io.UnsupportedEncodingException e) {
 		return null;  // can't happen

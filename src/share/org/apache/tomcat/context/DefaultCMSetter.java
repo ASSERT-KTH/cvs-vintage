@@ -162,7 +162,10 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	    }
 	    ctx.setAbsolutePath( absPath );
 	}
-	log( ctx.getPath() + " " + docBase + " " + absPath + " " +cm.getHome());
+	if( debug > 0 ) {
+	    String h=ctx.getHost();
+	    log( ((h==null) ? "":h) + ":" + ctx.getPath() + " " + docBase + " " + absPath + " " +cm.getHome());
+	}
 	
 	// this would belong to a logger interceptor ?
 	Log loghelper=ctx.getLog();

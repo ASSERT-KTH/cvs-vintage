@@ -241,8 +241,10 @@ public final class ContextManager implements LogAware{
      */
     private String installDir;
 
+    // "/" on the default host 
     private Context rootContext;
     
+    // Server properties ( interceptors, etc ) - it's one level above "/"
     private Container defaultContainer;
 
     // the application loader. ContextManager is loaded with
@@ -1119,30 +1121,4 @@ public final class ContextManager implements LogAware{
 	loghelper.log(msg, t, level);
     }
 
-    // -------------------- Hook support --------------------
-
-    /** Implement the write logic, calling the interceptors
-     *  and making sure the headers are sent before. This used to
-     *	be part of BufferedServletOutputStream, but it's better
-     *	to have it here for all output streams.
-     *  XXX XXX 
-     */
-    public final void doWrite(Request req, Response res, byte buf[], int off, int cnt )
-	throws IOException
-    {
-	if (!res.isBufferCommitted()) {
-	    res.endHeaders();
-	}
-	if( cnt>0 ) {
-	    // call the beforeCommit callback
-	    BaseInterceptor reqI[]= getInterceptors(req,
-						    Container.H_beforeCommit);
-
-	    for( int i=0; i< reqI.length; i++ ) {
-		reqI[i].beforeCommit( req, res );
-	    }
-
-	    res.doWrite( buf, off, cnt );
-	}
-    }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.12 2000/09/25 07:20:58 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/09/25 07:20:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.13 2000/10/06 05:19:12 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/10/06 05:19:12 $
  *
  * ====================================================================
  *
@@ -137,9 +137,9 @@ public class Ajp13ConnectorRequest extends Request
          * Read the method and translate it to a String
          */
         bsc        = msg.getByte();
-        method     = methodTransArray[(int)bsc - 1];
-        protocol   = msg.getString();
-        requestURI = msg.getString();
+        methodMB.setString ( methodTransArray[(int)bsc - 1] );
+        protoMB.setString(  msg.getString() );
+        uriMB.setString( msg.getString());
         remoteAddr = msg.getString();
         remoteHost = msg.getString();
         serverName = msg.getString();
@@ -189,7 +189,7 @@ public class Ajp13ConnectorRequest extends Request
                 break;
 
                 case SC_A_QUERY_STRING :
-                    queryString = msg.getString();
+                    queryMB.setString( msg.getString());
                 break;
 
                 case SC_A_JVM_ROUTE    :

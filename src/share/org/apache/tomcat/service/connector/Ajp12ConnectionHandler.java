@@ -231,7 +231,7 @@ class AJP12RequestAdapter extends Request {
 		    break;
 		    
 		case 1: //beginning of request
-		    method = readString(ajpin, null);              //Method
+		    methodMB.setString( readString(ajpin, null));              //Method
 		    
 		    contextPath = readString(ajpin, null);               //Zone
 		    // GS, the following commented line causes the Apache + Jserv + Tomcat
@@ -245,8 +245,7 @@ class AJP12RequestAdapter extends Request {
 		    // 			context=contextM.getContext( contextPath );
 		    // 		    if( doLog ) d("AJP: context=" + context );
 		    
-		    servletName = readString(ajpin, null);         //Servlet
-		    if( doLog ) d("AJP: servlet=" + servletName );
+		    dummy = readString(ajpin, null);         //Servlet
 		    
 		    serverName = readString(ajpin, null);            //Server hostname
 		    if( doLog ) d("AJP: serverName=" + serverName );
@@ -260,8 +259,8 @@ class AJP12RequestAdapter extends Request {
 		    pathTranslated = readString(ajpin, null);               //Apache parsed path-translated
 		    if( doLog ) d("AJP: PT=" + pathTranslated );
 		    
-		    queryString = readString(ajpin, null);         //query string
-		    if( doLog ) d("AJP: QS=" + queryString );
+		    queryMB.setString( readString(ajpin, null));         //query string
+		    if( doLog ) d("AJP: QS=" + queryMB.toString() );
 		    
 		    remoteAddr = readString(ajpin, "");            //remote address
 		    if( doLog ) d("AJP: RA=" + remoteAddr );
@@ -277,17 +276,16 @@ class AJP12RequestAdapter extends Request {
 		    
 		    dummy = readString(ajpin, null);                 //remote port
 		    
-		    method = readString(ajpin, null);                //request method
-		    if( doLog ) d("AJP: Meth=" + method );
+		    methodMB.setString( readString(ajpin, null));                //request method
+		    if( doLog ) d("AJP: Meth=" + methodMB.toString() );
 		    
-		    requestURI = readString(ajpin, "");             //request uri
-		    if( doLog ) d("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+		    uriMB.setString( readString(ajpin, ""));             //request uri
+		    if( doLog ) d("AJP: URI: " + uriMB.toString() + " CP:" + contextPath );
 
 		    // XXX don't set lookup path - problems with URL rewriting.
 		    // need to be fixed.
 		    //		if(contextPath!=null && contextPath.length() >0 )
 		    //		    lookupPath=requestURI.substring( contextPath.length() + 1 );
-		    if( doLog ) d("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 		    
 		    dummy = readString(ajpin, null);                   //script filename
 		    //		System.out.println("AJP: Script filen=" + dummy);
@@ -428,17 +426,18 @@ class AJP12RequestAdapter extends Request {
         }
 	
 	// REQUEST_URI includes query string
+	String requestURI=uriMB.toString();
 	int indexQ=requestURI.indexOf("?");
 	int rLen=requestURI.length();
 	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
-	    if(doLog) d("Orig QS " + queryString );
-	    queryString = requestURI.substring(indexQ + 1, requestURI.length());
-	    if(doLog) d("New QS " + queryString );
-	    requestURI = requestURI.substring(0, indexQ);
+	    if(doLog) d("Orig QS " + queryMB.toString() );
+	    queryMB.setString( requestURI.substring(indexQ + 1, requestURI.length()));
+	    if(doLog) d("New QS " + queryMB.toString() );
+	    uriMB.setString( requestURI.substring(0, indexQ));
 	} 
 	
-	if( doLog ) d("Request: " + requestURI );
-	if( doLog ) d("Query: " + queryString );
+	if( doLog ) d("Request: " + uriMB.toString() );
+	if( doLog ) d("Query: " + queryMB.toString() );
 	// System.out.println("ENV: " + env_vars );
 	// 	System.out.println("HEADERS: " + headers_in );
 	// 	System.out.println("PARAMETERS: " + parameters );

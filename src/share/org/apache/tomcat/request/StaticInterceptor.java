@@ -129,7 +129,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
 					  pathInfo);
 
-	if( debug > -1 ) log( "RequestMap " + req + " " + absPath + " " + ctx.getAbsolutePath() );
+	if( debug > 0 ) log( "RequestMap " + req + " " + absPath + " " + ctx.getAbsolutePath() );
 	if( absPath == null ) return 0;
 	String requestURI=req.getRequestURI();
 

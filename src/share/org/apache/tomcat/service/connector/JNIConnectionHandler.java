@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.18 2000/09/25 07:21:00 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/09/25 07:21:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.19 2000/10/06 05:19:13 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/10/06 05:19:13 $
  *
  * ====================================================================
  *
@@ -255,9 +255,9 @@ class JNIRequestAdapter extends Request {
          * Read the environment
          */
         if(h.readEnvironment(s, l, env) > 0) {
-    		method      = env[0];
-    		requestURI  = env[1];
-    		queryString = env[2];
+    		methodMB.setString( env[0] );
+    		uriMB.setString( env[1] );
+    		queryMB.setString( env[2] );
     		remoteAddr  = env[3];
     		remoteHost  = env[4];
     		serverName  = env[5];
@@ -265,7 +265,7 @@ class JNIRequestAdapter extends Request {
             authType    = env[7];
             remoteUser  = env[8];
             schemeMB.setString(env[9]);
-            protocol    = env[10];
+            protoMB.setString( env[10] );
             // response.setServerHeader(env[11]);
             
             if(schemeMB.equalsIgnoreCase("https")) {
@@ -306,11 +306,6 @@ class JNIRequestAdapter extends Request {
             }
         }
 
-	    // REQUEST_URI may include a query string
-	    int idQ= requestURI.indexOf("?");
-	    if ( idQ > -1) {
-    	    requestURI = requestURI.substring(0, idQ);
-        }
 
     }
 }
