@@ -1,4 +1,4 @@
-// $Id: Pluggable.java,v 1.7 2003/08/28 20:46:11 thierrylach Exp $
+// $Id: Pluggable.java,v 1.8 2003/09/16 23:58:01 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,10 +50,13 @@ package org.argouml.application.api;
  */
 public interface Pluggable extends ArgoModule {
 
+    /** Constant required in plugin manifest. */
     public static final String PLUGIN_TITLE = "ArgoUML Dynamic Load Module";
 
+    /** Constant required in plugin manifest. */
     public static final String PLUGIN_VENDOR = "University of California";
 
+    /** Constant required in plugin manifest. */
     public static final String PLUGIN_PREFIX = 
 	"org.argouml.application.api.Pluggable";
 

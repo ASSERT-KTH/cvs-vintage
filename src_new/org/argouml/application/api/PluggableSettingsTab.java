@@ -1,4 +1,4 @@
-// $Id: PluggableSettingsTab.java,v 1.4 2003/09/16 20:07:59 thierrylach Exp $
+// $Id: PluggableSettingsTab.java,v 1.5 2003/09/16 23:58:01 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ package org.argouml.application.api;
  */
 public interface PluggableSettingsTab extends Pluggable {
     /** Returns the settings tab panel for the plugin.
-     *This is found under the edit button
+     * This is found under the edit button.
+     * @return the setting tab panel.
      */
     public SettingsTabPanel getSettingsTabPanel();
 

@@ -1,4 +1,4 @@
-// $Id: PluggableMenu.java,v 1.7 2003/06/30 19:23:17 linus Exp $
+// $Id: PluggableMenu.java,v 1.8 2003/09/16 23:58:01 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,13 @@ public interface PluggableMenu extends Pluggable {
      */
     public JMenuItem getMenuItem(Object[] context);
 
+    /**
+     * Helper to create a context recognized by
+     * {@link Pluggable#inContext(Object[])}
+     * @param parentMenuItem menu item
+     * @param menuType menu name
+     * @return the proper context array.
+     */
     public Object[] buildContext(JMenuItem parentMenuItem, String menuType);
 
 } /* End interface PluggableMenu */

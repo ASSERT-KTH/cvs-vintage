@@ -1,4 +1,4 @@
-// $Id: PluggableDiagram.java,v 1.3 2003/09/16 20:07:59 thierrylach Exp $
+// $Id: PluggableDiagram.java,v 1.4 2003/09/16 23:58:01 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,9 @@ import javax.swing.*;
  */
 public interface PluggableDiagram extends Pluggable {
     /** Returns the settings tab panel for the plugin.
+     * @return the menu item.
      */
     public JMenuItem getDiagramMenuItem();
 
-} /* End interface PluggableSettingsTab */
+} /* End interface PluggableDiagram */
 
