@@ -16,11 +16,12 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.9 $" />  
+     <property name="revision" value="$Revision: 1.10 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
      <property name="debug"     value="0" />
+     <!-- expected http protocol -->
      <property name="http.protocol" value="HTTP/1.0" />
 
      <property name="gdir" value="../Golden" />
@@ -46,6 +47,7 @@
 		   debug="${debug}" 
 		   protocol="${http.protocol}"
 		   outputType="${outputType}" />
+    <echo message="Running test-tomcat ${port} ${host} ${http.protocol}"/>
   </target>
   <!-- ==================== File tests ==================== -->
   <target name="new-style" depends="init">
@@ -75,22 +77,30 @@
   </target>
 
   <target name="file-tomcat" depends="init,file">
-    <gtest  description="Welcome File Test1"
+    
+    <!-- return code is 301 for Apache, 302 for tomcat -->
+    <gtest  description="Welcome File Test1 - directory access"
            request="GET /test/welcome HTTP/1.0"
            expectHeaders="Location:/welcome/" 
-           returnCode="${http.protocol} 302" />
+           returnCode="${http.protocol} 30" /> 
 
+    <!-- Difference in behavior between Apache and tomcat 
+         XXX IMHO the tomcat behavior is OK, but it would be a good idea
+         to match Apache and return 302
     <gtest  description="Welcome File Test2"
            request="GET /test/binaries HTTP/1.0"
            returnCode="${http.protocol} 200" />
-
+    -->
+    
+    <!-- Yet another difference between Apache and tomcat. Not a
+       bug, but we should fix it anyway      -->
     <gtest  description="Welcome File Test3"
            request="GET /test/welcome/ HTTP/1.0"
            returnCode="${http.protocol} 302" />
 <!--           goldenFile="${gdir}/movedwelcome.txt" />-->
    </target>
-
-  <target name="file-apache" depends="init,file">
+  
+   <target name="file-apache" depends="init,file">
     <gtest  description="Welcome File Test1"
            request="GET /test/welcome HTTP/1.0"
            expectHeaders="Location:/welcome/" 
