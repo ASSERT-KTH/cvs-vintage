@@ -106,7 +106,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.105 2002/04/24 01:01:25 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.106 2002/04/24 01:34:55 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -541,6 +541,16 @@ public class ScarabModule
     {
         return Turbine.getConfiguration()
             .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
+    }
+
+    /**
+     * returns an array of Roles that can be approved without need for
+     * moderation.
+     */
+    public String[] getAutoApprovedRoles()
+    {
+        return Turbine.getConfiguration()
+            .getStringArray(ScarabConstants.AUTO_APPROVED_ROLES);
     }
 }
 

@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.35 2002/04/16 15:56:29 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.36 2002/04/24 01:34:55 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -189,5 +189,9 @@ public interface ScarabConstants
      * An attribute type
      */
     public static final String DROPDOWN_LIST = "Dropdown list";
-    
+
+    /**
+     * Scarab.properties key for roles to be automatically approved.
+     */
+    String AUTO_APPROVED_ROLES = "scarab.automatic.role.approval";
 }    

@@ -63,6 +63,7 @@ import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -93,14 +94,38 @@ public class HandleRoleRequests extends RequireLoginFirstAction
         while (gi.hasNext()) 
         {
             Module module = ((Module)gi.next());
+            String[] autoRoles = 
+                ((ScarabModule)module).getAutoApprovedRoles();
             String role = data.getParameters().getString(module.getName());
             if (role != null && role.length() > 0) 
             {
-                PendingGroupUserRole pend = new PendingGroupUserRole();
-                pend.setGroupId(module.getModuleId());
-                pend.setUserId(user.getUserId());
-                pend.setRoleName(role);
-                pend.save();
+                boolean autoApprove = false;
+                if (autoRoles != null) 
+                {
+                    for (int i=0; i<autoRoles.length; i++) 
+                    {
+                        if (role.equals(autoRoles[i])) 
+                        {
+                            autoApprove = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (autoApprove) 
+                {
+                    TurbineSecurity.grant( user, 
+                        (org.apache.fulcrum.security.entity.Group)module, 
+                        TurbineSecurity.getRole(role) );                    
+                }
+                else 
+                {
+                    PendingGroupUserRole pend = new PendingGroupUserRole();
+                    pend.setGroupId(module.getModuleId());
+                    pend.setUserId(user.getUserId());
+                    pend.setRoleName(role);
+                    pend.save();
+                }                
             }
         }
         setTarget(data, nextTemplate);
