@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.62 2003/06/21 07:10:36 mkl Exp $
+// $Id: ModelFacade.java,v 1.63 2003/06/21 12:54:21 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2285,6 +2285,7 @@ public class ModelFacade {
     public static void setAction(Object message, Object action) {
         if (message instanceof MMessage && action instanceof MAction) {
             ((MMessage)message).setAction((MAction)action);
+            return;
         }
         throw new IllegalArgumentException("Unrecognized object " + message  + " or " + action);        
     }
@@ -2297,6 +2298,7 @@ public class ModelFacade {
     public static void setAsynchronous(Object handle, boolean value) {
         if (handle instanceof MAction) {
             ((MAction)handle).setAsynchronous(value);
+            return;
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
