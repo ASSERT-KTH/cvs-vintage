@@ -38,7 +38,7 @@ import java.util.Set;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.83 $
+ @version $Revision: 1.84 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -209,8 +209,8 @@ public abstract class AbstractWebContainer
             // Reset the localUrl to end in a '/'
             di.localUrl = warFile.toURL();
             // Reset the localCl to point to the file
-            URL[] localCP = {di.localUrl};
-            di.localCl = new URLClassLoader(localCP);
+            URL[] localCl = new URL[]{di.localUrl};
+            di.localCl = new URLClassLoader(localCl);
          }
 
          WebMetaData metaData = new WebMetaData();
@@ -222,24 +222,30 @@ public abstract class AbstractWebContainer
          InputStream in = di.localCl.getResourceAsStream("WEB-INF/jboss-web.xml");
          if( in != null )
          {
-            Element jbossWeb = xfl.getDocument(in, "WEB-INF/jboss-web.xml").getDocumentElement();
-            in.close();
-            // Check for a war level class loading config
-            Element classLoading = MetaData.getOptionalChild(jbossWeb, "class-loading");
-            if( classLoading != null )
+            try
             {
-               String flagString = classLoading.getAttribute("java2ClassLoadingCompliance");
-               if( flagString.length() == 0 )
-                  flagString = "true";
-               boolean flag = Boolean.valueOf(flagString).booleanValue();
-               metaData.setJava2ClassLoadingCompliance(flag);
-               // Check for a loader-repository for scoping
-               Element loader = MetaData.getOptionalChild(classLoading, "loader-repository");
-               if( loader != null )
+               Element jbossWeb = xfl.getDocument(in, "WEB-INF/jboss-web.xml").getDocumentElement();
+               // Check for a war level class loading config
+               Element classLoading = MetaData.getOptionalChild(jbossWeb, "class-loading");
+               if( classLoading != null )
                {
-                  LoaderRepositoryFactory.LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
-                  di.setRepositoryInfo(config);
+                  String flagString = classLoading.getAttribute("java2ClassLoadingCompliance");
+                  if( flagString.length() == 0 )
+                     flagString = "true";
+                  boolean flag = Boolean.valueOf(flagString).booleanValue();
+                  metaData.setJava2ClassLoadingCompliance(flag);
+                  // Check for a loader-repository for scoping
+                  Element loader = MetaData.getOptionalChild(classLoading, "loader-repository");
+                  if( loader != null )
+                  {
+                     LoaderRepositoryFactory.LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
+                     di.setRepositoryInfo(config);
+                  }
                }
+            }
+            finally
+            {
+               in.close();
             }
          }
 
@@ -266,6 +272,9 @@ public abstract class AbstractWebContainer
       {
          AbstractWebDeployer deployer = getDeployer(di);
          di.context.put(DEPLOYER, deployer);
+
+         // Generate an event for creation
+         super.create(di);
       }
       catch(Exception e)
       {
