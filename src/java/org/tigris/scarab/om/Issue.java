@@ -856,4 +856,78 @@ public class Issue
         voteValue.addVote();
         voteValue.save();
     }
+
+
+
+    /**
+     * Brings the current list of users assigned to this issue in
+     * line with the list given by newAssignees.  Users currently
+     * assigned will be deleted, if not in the new list.  This method
+     * will cause this issue to be saved.
+     *
+     * @param newAssignees a <code>List</code> value
+     * @param attachmentText a <code>String</code> value
+     * @param assigner a <code>ScarabUser</code> value
+     * @exception Exception if an error occurs
+     */
+    public void assignUsers(
+        List newAssignees, String attachmentText, ScarabUser assigner)
+        throws Exception
+    {                
+        Attachment attachment = new Attachment();
+        attachment.setDataAsString(attachmentText);
+        attachment.setName("Assignee Note");
+        attachment.setTextFields(assigner, this, 
+                                 Attachment.MODIFICATION__PK);
+        attachment.save();
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(assigner, attachment);
+
+        // take care of users who were removed or already assigned
+        List assignees = getAssigneeAttributeValues();
+        Iterator iter = assignees.iterator();
+        while ( iter.hasNext() ) 
+        {
+            AttributeValue oldAV = (AttributeValue)iter.next();
+            oldAV.startTransaction(transaction);
+            boolean deleted = true;
+            if ( newAssignees != null ) 
+            {
+                for ( int i=newAssignees.size()-1; i>=0; i-- ) 
+                {
+                    if ( oldAV.getValue().equals( 
+                        ((ScarabUser)newAssignees.get(i)).getUserName() ))
+                    {
+                        // a current user was left in the list of assignees
+                        // so remove from list of new assignees and mark as
+                        // not to be deleted.
+                        newAssignees.remove(i);
+                        deleted = false;
+                        break;
+                    }
+                }
+            }
+            oldAV.setDeleted(deleted);
+        }
+
+        // add new values
+        if ( newAssignees != null ) 
+        {        
+            for ( int i=0; i<newAssignees.size(); i++ ) 
+            {
+                ScarabUser user = (ScarabUser)newAssignees.get(i);
+                AttributeValue av = AttributeValue
+                    .getNewInstance(AttributePeer.ASSIGNED_TO__PK, this);
+                av.startTransaction(transaction);
+                av.setUserId(user.getUserId());
+                av.setValue(user.getUserName());
+                assignees.add(av);
+            }
+        }
+        setModifiedBy(assigner.getUserId());
+        save();
+    }
+
 }

@@ -116,6 +116,10 @@
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
+        <field name="Ids" key="ids" type="NumberKey" 
+               mapToProperty="" multiValued="true">
+           <rule name="mask" value="[0-9]+">badIdsMessage</rule>
+        </field>
         <field name="ModuleId" key="modid" type="NumberKey">
             <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>

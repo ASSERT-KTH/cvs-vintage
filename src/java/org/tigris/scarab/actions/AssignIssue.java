@@ -68,7 +68,7 @@ import org.apache.turbine.services.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
@@ -91,7 +91,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.10 2001/08/23 21:21:15 elicia Exp $
+    @version $Id: AssignIssue.java,v 1.11 2001/08/25 03:45:41 jmcnally Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -234,6 +234,7 @@ public class AssignIssue extends TemplateAction
         }
     }
 
+
     public void doSubmit( RunData data, TemplateContext context ) 
         throws Exception
     {
@@ -242,9 +243,6 @@ public class AssignIssue extends TemplateAction
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-        ScarabUser modifyingUser = (ScarabUser)data.getUser();
-        Issue issue = scarabR.getIssue();
-
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
@@ -252,79 +250,40 @@ public class AssignIssue extends TemplateAction
 
         if ( intake.isAllValid() ) 
         {
-
-            // save the attachment
+            // set the comment
             group.setProperties(attachment);
-            if ( attachment.getData() != null 
-                 && attachment.getData().length > 0 ) 
+            String comment = attachment.getDataAsString();
+            
+            ScarabUser modifyingUser = (ScarabUser)data.getUser();
+            
+            // new assignee list (may contain previously assigned users)
+            String[] newUsernames = 
+                data.getParameters().getStrings(ASSIGNEES);
+            List users = UserManager.getUsers(newUsernames);
+
+            List issues = scarabR.getIssues();
+            if ( issues == null ) 
             {
-                attachment.setName("Assignee Note");
-                attachment.setTextFields(modifyingUser, issue, 
-                                 Attachment.MODIFICATION__PK);
-                attachment.save();
-
-                // Save transaction record
-                Transaction transaction = new Transaction();
-                transaction.create(modifyingUser, attachment);
-
-                // save assignee list
-                List assignees = issue.getAssigneeAttributeValues();
-                String[] newUsernames = 
-                    data.getParameters().getStrings(ASSIGNEES);
-                int newUserLength = 0;
-                if ( newUsernames != null ) 
-                {
-                    newUserLength = newUsernames.length;
-                }
-
-                // take care of users who were removed
-                Iterator iter = assignees.iterator();
-                while ( iter.hasNext() ) 
-                {
-                    AttributeValue oldAV = (AttributeValue)iter.next();
-                    oldAV.startTransaction(transaction);
-                    boolean deleted = true;
-                    for ( int i=0; i<newUserLength; i++ ) 
-                    {
-                        if (oldAV.getValue().equals(newUsernames[i])) 
-                        {
-                            newUsernames[i] = null;
-                            deleted = false;
-                            break;
-                        }
-                    }
-                    oldAV.setDeleted(deleted);
-
-                }
-                // add new values
-                for ( int i=0; i<newUserLength; i++ ) 
-                {
-                    if ( newUsernames[i] != null ) 
-                    {
-                        Criteria crit = new Criteria()
-                            .add(ScarabUserImplPeer.USERNAME, newUsernames[i]);
-                        List users = ScarabUserImplPeer.doSelect(crit);
-                        ScarabUser user = (ScarabUser)users.get(0);
-                        AttributeValue av = AttributeValue.getNewInstance(
-                            AttributePeer.ASSIGNED_TO__PK, issue);
-                        av.startTransaction(transaction);
-                        av.setUserId(user.getUserId());
-                        av.setValue(user.getUserName());
-                        assignees.add(av);
-                    }
-                }
-                issue.setModifiedBy(modifyingUser.getUserId());
-                issue.save();
-
-                // set up email to users here !FIXME!
-
-                data.setMessage("Your changes to the assignee list of issue #" 
-                                + issue.getUniqueId() + " have been saved.");
-
-                String nextTemplate = Turbine.getConfiguration()
-                    .getString("template.homepage", "Links.vm");
-                setTarget(data, nextTemplate);
+                scarabR.getIssue()
+                    .assignUsers(users, comment, modifyingUser);            
             }
+            else 
+            {
+                for ( int i=0; i<issues.size(); i++ ) 
+                {
+                    ((Issue)issues.get(i))
+                        .assignUsers(users, comment, modifyingUser);
+                }
+            }
+            
+            // set up email to users here !FIXME!
+
+            data.setMessage("Your changes to the assignee list" +
+                            " have been saved.");
+            
+            String nextTemplate = Turbine.getConfiguration()
+                    .getString("template.homepage", "Links.vm");
+            setTarget(data, nextTemplate);
         }
         else 
         {                
@@ -335,7 +294,9 @@ public class AssignIssue extends TemplateAction
             context.put("actionLink", 
                         getActionLink(data, eligibleUsers, assignees) );
         }
+
     }
+
 
     /**
         This manages clicking the Cancel button
@@ -354,8 +315,6 @@ public class AssignIssue extends TemplateAction
         doCancel(data, context);
     }
 }
-
-
 
 
 
