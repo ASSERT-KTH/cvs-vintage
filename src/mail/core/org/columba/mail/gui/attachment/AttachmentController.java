@@ -41,17 +41,15 @@ import org.columba.mail.message.MimePartTree;
 public class AttachmentController {
 
 	public JScrollPane scrollPane;
-	private boolean ready = true;
-	private SwingWorker worker;
 
 	private IconPanel attachmentPanel;
 
 	//private int actIndex;
-	private Object actUid;
+	//private Object actUid;
 
 	//private TempFolder subMessageFolder;
 
-	private boolean inline;
+	//private boolean inline;
 
 	private AttachmentMenu menu;
 	//private AttachmentActionListener actionListener;
