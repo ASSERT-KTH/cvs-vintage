@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>Revisions:</b>
  *
@@ -549,22 +549,13 @@ public class InvalidationManager
 
             new MBeanOperationInfo("invalidateAll",
                                    "invalidate all keys using default (a)synchronous behaviour",
-                                   new MBeanParameterInfo[] {
-                                      new MBeanParameterInfo(
-                                         "groupName", String.class.getName(), "invalidation group name"
-                                      )
-                                   },
+                                   new MBeanParameterInfo[] {},
                                    void.class.getName(),
                                    MBeanOperationInfo.ACTION),
 
             new MBeanOperationInfo("invalidateAll",
                                    "invalidate all keys with specified (a)synchronous behaviour",
-                                   new MBeanParameterInfo[] {
-                                      new MBeanParameterInfo(
-                                         "groupName", String.class.getName(), "invalidation group name"
-                                      ),
-                                      asynchParam
-                                   },
+                                   new MBeanParameterInfo[] {asynchParam},
                                    void.class.getName(),
                                    MBeanOperationInfo.ACTION)
          };
@@ -582,22 +573,20 @@ public class InvalidationManager
       
       public java.lang.Object invoke (java.lang.String actionName, java.lang.Object[] params, java.lang.String[] signature) throws javax.management.MBeanException, javax.management.ReflectionException
       {
-         if (!"invalidate".equals (actionName))
-            throw new IllegalArgumentException ("Unknown operation: " + actionName);
-         else
+         if ("invalidate".equals (actionName))
          {
             if (params.length == 1)
             {
-               if (params[0] instanceof Serializable[])                  
+               if (params[0] instanceof Serializable[])
                   this.invalidate ((Serializable[])params[0]);
                else if (params[0] instanceof Serializable)
                   this.invalidate ((Serializable)params[0]);
                else
-                  throw new IllegalArgumentException ("First argument must be Serializable (or array of)");                  
+                  throw new IllegalArgumentException ("First argument must be Serializable (or array of)");
             }
             else if (params.length == 2)
             {
-               if (params[0] instanceof Serializable[])                  
+               if (params[0] instanceof Serializable[])
                   this.invalidate ((Serializable[])params[0], ((Boolean)params[1]).booleanValue ());
                else if (params[0] instanceof Serializable)
                   this.invalidate ((Serializable)params[0], ((Boolean)params[1]).booleanValue ());
@@ -608,6 +597,25 @@ public class InvalidationManager
             {
                throw new IllegalArgumentException ("Unknown operation with these parameters: " + actionName);
             }
+         }
+         else if("invalidateAll".equals(actionName))
+         {
+            if(params == null || params.length == 0)
+            {
+               this.invalidateAll();
+            }
+            else if (params.length == 1)
+            {
+               this.invalidateAll (((Boolean)params[1]).booleanValue ());
+            }
+            else
+            {
+               throw new IllegalArgumentException ("invalidateAll can take zero or one parameter but got " + params.length);
+            }
+         }
+         else
+         {
+            throw new IllegalArgumentException ("Unknown operation: " + actionName);
          }
          return null;
       }      
