@@ -38,6 +38,7 @@
     <property name="src.html.dir" value="${src.dir}/html"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
+    <property name="src.sql.dir.scarab" value="${src.dir}/sql"/>
     <property name="src.lib.dir" value="${basedir}/../lib"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
@@ -277,7 +278,7 @@
         </uptodate>
     </target>
 
-    <target name="sql" depends="schema-check,torque-init" 
+    <target name="sql" depends="prepare-build.dir,schema-check,torque-init" 
             unless="schema.uptodate">
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"/>
@@ -288,7 +289,7 @@
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
 
-        <move file="${src.java.dir.scarab}/${project}-schema.sql"
+        <move file="${src.sql.dir.scarab}/${project}-schema.sql"
             tofile="${src.sql.dir}/mysql-${project}.sql"/>
     </target>
 
