@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.59 2002/01/22 10:34:03 spestov Exp $
+ * @version $Id: Buffer.java,v 1.60 2002/01/28 11:40:33 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2725,8 +2725,6 @@ public class Buffer implements EBComponent
 		Marker markerN = new Marker(this,shortcut,pos);
 		boolean added = false;
 
-		int line = getLineOfOffset(pos);
-
 		// don't sort markers while buffer is being loaded
 		if(!getFlag(LOADING))
 		{
@@ -3268,8 +3266,11 @@ public class Buffer implements EBComponent
 		// Create marker positions
 		for(int i = 0; i < markers.size(); i++)
 		{
-			((Marker)markers.elementAt(i))
-				.createPosition();
+			Marker marker = (Marker)markers.elementAt(i);
+			int pos = marker.getPosition();
+			if(pos > getLength())
+				marker.setPosition(getLength());
+			marker.createPosition();
 		}
 	} //}}}
 
