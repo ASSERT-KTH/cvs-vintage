@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  *
  * <p><b>Revisions:</b>
  *
@@ -469,17 +469,17 @@ public abstract class Container implements DynamicMBean
    // Begin DynamicMBean interface implementation
    public Object getAttribute(String attribute)
       throws AttributeNotFoundException,
-      MBeanException,
-      ReflectionException
+             MBeanException,
+             ReflectionException
    {
       return null;
    }
    
    public void setAttribute(Attribute attribute)
       throws AttributeNotFoundException,
-      InvalidAttributeValueException,
-      MBeanException,
-      ReflectionException
+             InvalidAttributeValueException,
+             MBeanException,
+             ReflectionException
    {
    }
 
@@ -493,7 +493,8 @@ public abstract class Container implements DynamicMBean
       return null;
    }
 
-   /** Handle a operation invocation.
+   /**
+    * Handle a operation invocation.
     */
    public Object invoke(String actionName, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
@@ -530,7 +531,7 @@ public abstract class Container implements DynamicMBean
          else if( actionName.equals("getHome") )
          {
             String className = this.getBeanMetaData().getHome();
-            if( clasName != null )
+            if( className != null )
             {
                Class clazz = this.classLoader.loadClass(className);
                value = clazz;
@@ -558,7 +559,7 @@ public abstract class Container implements DynamicMBean
             throw new MBeanException(new IllegalArgumentException("Unknown action: "+actionName));
          }
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          log.error("invoke returned an exception", e);
          throw new MBeanException(e, "invoke returned an exception");
@@ -571,17 +572,18 @@ public abstract class Container implements DynamicMBean
       return value;
    }
 
-   /** Build the container MBean information on attributes, contstructors, operations,
-    and notifications. Currently there are no attributes, no constructors, no
-    notifications, and the following ops:
-    <ul>
-    <li>'home' -> invokeHome(MethodInvocation);</li>
-    <li>'remote' -> invoke(MethodInvocation);</li>
-    <li>'localHome' -> not implemented;</li>
-    <li>'local' -> not implemented;</li>
-    <li>'getHome' -> return EBJHome interface;</li>
-    <li>'getRemote' -> return EJBObject interface</li>
-    </ul>
+   /**
+    * Build the container MBean information on attributes, contstructors,
+    * operations, and notifications. Currently there are no attributes, no
+    * constructors, no notifications, and the following ops:
+    * <ul>
+    * <li>'home' -> invokeHome(MethodInvocation);</li>
+    * <li>'remote' -> invoke(MethodInvocation);</li>
+    * <li>'localHome' -> not implemented;</li>
+    * <li>'local' -> not implemented;</li>
+    * <li>'getHome' -> return EBJHome interface;</li>
+    * <li>'getRemote' -> return EJBObject interface</li>
+    * </ul>
     */
    public MBeanInfo getMBeanInfo()
    {
