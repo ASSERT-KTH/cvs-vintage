@@ -18,10 +18,8 @@
 package org.columba.mail.folder.command;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
@@ -29,7 +27,8 @@ import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.addressbook.facade.IDialogFacade;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
 
@@ -41,14 +40,14 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  */
 public class AddSenderToAddressbookCommand extends FolderCommand {
-    org.columba.addressbook.folder.AbstractFolder selectedFolder;
+    org.columba.addressbook.folder.IFolder selectedFolder;
 
     /**
  * Constructor for AddSenderToAddressbookCommand.
  *
  * @param references
  */
-    public AddSenderToAddressbookCommand(DefaultCommandReference reference) {
+    public AddSenderToAddressbookCommand(ICommandReference reference) {
         super(reference);
     }
 
@@ -59,7 +58,7 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
  * @param references
  */
     public AddSenderToAddressbookCommand(FrameMediator frame,
-        DefaultCommandReference reference) {
+    		ICommandReference reference) {
         super(frame, reference);
     }
 
@@ -75,13 +74,20 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
         Object[] uids = r.getUids();
 
         // get source folder
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+        IMailbox folder = (IMailbox) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
+        IDialogFacade dialogFacade = null;
+		try {
+			dialogFacade = ServiceConnector.getDialogFacade();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
         // ask the user which addressbook he wants to save this address to
-        ISelectFolderDialog dialog = AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
+        ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
 
         selectedFolder = dialog.getSelectedFolder();
 

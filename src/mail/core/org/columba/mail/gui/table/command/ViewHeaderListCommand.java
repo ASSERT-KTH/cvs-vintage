@@ -16,7 +16,7 @@
 package org.columba.mail.gui.table.command;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -24,19 +24,19 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  *  
  */
 public class ViewHeaderListCommand extends Command {
-	private HeaderList headerList;
+	private IHeaderList headerList;
 
 	private AbstractMessageFolder folder;
 
 	public ViewHeaderListCommand(FrameMediator frame,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		super(frame, reference);
 
 		priority = Command.REALTIME_PRIORITY;

@@ -18,12 +18,13 @@ package org.columba.mail.gui.message.filter;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.message.IColumbaMessage;
 
 /**
  * Should be used by every filter, which alters the message contents. This
@@ -44,11 +45,11 @@ public abstract class AbstractFilter implements Filter {
     }
     /**
      * @return 
-     * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder, java.lang.Object)
+     * @see org.columba.mail.gui.message.filter.Filter#filter(IMailbox, java.lang.Object)
      */
-    public FolderCommandReference filter(AbstractMessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
+    public IFolderCommandReference filter(IMailbox folder, Object uid, IColumbaMessage message) throws Exception {
 //      map selection to this temporary message
-        TempFolder tempFolder = TreeModel.getInstance().getTempFolder();
+        TempFolder tempFolder = FolderTreeModel.getInstance().getTempFolder();
 
         // add message to temporary folder
         uid = tempFolder.addMessage(message);

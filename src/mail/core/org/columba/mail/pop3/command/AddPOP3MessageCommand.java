@@ -29,8 +29,9 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
 import org.columba.ristretto.io.SourceInputStream;
@@ -63,7 +64,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
 		inboxFolder = (AbstractMessageFolder) r.getFolder();
 
-		ColumbaMessage message = (ColumbaMessage) r.getMessage();
+		IColumbaMessage message = (IColumbaMessage) r.getMessage();
 
 		// add message to folder
 		SourceInputStream messageStream = new SourceInputStream(message
@@ -133,7 +134,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 			} else {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
-				AbstractFolder destFolder = TreeModel.getInstance()
+				AbstractFolder destFolder = FolderTreeModel.getInstance()
 						.getFolder(item.getSpamItem().getIncomingCustomFolder());
 
 				// create reference

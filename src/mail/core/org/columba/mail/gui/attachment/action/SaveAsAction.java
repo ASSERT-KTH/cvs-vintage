@@ -21,7 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.attachment.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionChangedEvent;
@@ -32,7 +32,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * @author frdietz
  */
-public class SaveAsAction extends AbstractColumbaAction implements SelectionListener {
+public class SaveAsAction extends AbstractColumbaAction implements ISelectionListener {
 
     /**
      * Creates a SaveAs Action.

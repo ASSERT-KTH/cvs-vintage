@@ -16,8 +16,9 @@
 package org.columba.mail.folderoptions;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
@@ -39,37 +40,30 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
  */
-    public void saveOptionsToXml(AbstractMessageFolder folder) {
+    public void saveOptionsToXml(IMailbox folder) {
         XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+        IDefaultItem item = new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
         item.set("enabled",
             tableController.getTableModelThreadedView().isEnabled());
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(IMailbox)
  */
-    public void loadOptionsFromXml(AbstractMessageFolder folder) {
+    public void loadOptionsFromXml(IMailbox folder) {
         XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+        IDefaultItem item = new DefaultItem(parent);
 
         boolean enableThreadedView = item.getBoolean("enabled", false);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
-        // enable threaded-view in threaded-table-model
-        tableController.getTableModelThreadedView().setEnabled(enableThreadedView);
-
-        // enable threaded-view mode in table model
-        tableController.getHeaderTableModel().enableThreadedView(enableThreadedView);
-
-        // enable custom renderer of view
-        tableController.getView().enableThreadedView(enableThreadedView);
+        tableController.enableThreadedView(enableThreadedView, false);
     }
 
     /**

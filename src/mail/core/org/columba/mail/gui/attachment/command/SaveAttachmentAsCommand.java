@@ -20,7 +20,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.util.cFileChooser;
 import org.columba.core.util.cFileFilter;
 import org.columba.ristretto.message.MimeHeader;
@@ -38,7 +38,7 @@ public class SaveAttachmentAsCommand extends SaveAttachmentCommand {
      *
      * @param references command references
      */
-    public SaveAttachmentAsCommand(DefaultCommandReference reference) {
+    public SaveAttachmentAsCommand(ICommandReference reference) {
         super(reference);
     }
 

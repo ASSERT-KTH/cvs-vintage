@@ -23,12 +23,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -55,7 +55,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
  * @author fdietz
  */
 public class TableSelectionHandler extends SelectionHandler implements
-		ListSelectionListener, SelectionListener {
+		ListSelectionListener, ISelectionListener {
 	private final static MessageNode[] messageNodeArray = { null };
 
 	private TableController tableController;
@@ -64,7 +64,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	private LinkedList messages;
 
-	private AbstractFolder folder;
+	private IFolder folder;
 
 	// if this is set to true, we use the local selection, instead
 	// of using the table selection
@@ -93,7 +93,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 	 * 
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
-	public DefaultCommandReference getSelection() {
+	public ICommandReference getSelection() {
 		if (useLocalSelection == true) {
 			return local;
 		}
@@ -106,9 +106,9 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	/**
 	 * 
-	 * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+	 * @see org.columba.core.gui.util.SelectionHandler#setSelection(ICommandReference)
 	 */
-	public void setSelection(DefaultCommandReference selection) {
+	public void setSelection(ICommandReference selection) {
 		FolderCommandReference ref = (FolderCommandReference) selection;
 
 		folder = ref.getFolder();
@@ -172,7 +172,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	/**
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

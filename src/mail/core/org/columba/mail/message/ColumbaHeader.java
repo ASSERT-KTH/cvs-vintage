@@ -46,7 +46,7 @@ import org.columba.ristretto.parser.HeaderParser;
  *
  * @author tstich, fdietz
  */
-public class ColumbaHeader {
+public class ColumbaHeader implements IColumbaHeader {
     
     private static final Logger LOG = Logger.getLogger("org.columba.mail.message");
     
@@ -138,9 +138,9 @@ public class ColumbaHeader {
         return clone;
     }
 
-    public void copyColumbaKeys(ColumbaHeader header) {
-        header.flags = (Flags) flags.clone();
-        header.attributes = (Attributes) attributes.clone();
+    public void copyColumbaKeys(IColumbaHeader header) {
+        header.setFlags( (Flags) flags.clone());
+        header.setAttributes( (Attributes) attributes.clone());
     }
 
     /* (non-Javadoc)

@@ -51,9 +51,11 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaMessage;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.Source;
@@ -328,7 +330,7 @@ public class LuceneQueryEngine implements QueryEngine {
     }
 
     /**
-     * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
+     * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(IFolderEvent)
      */
     public void messageAdded(Object uid) throws Exception {
         Document messageDoc = getDocument(uid);
@@ -393,7 +395,7 @@ public class LuceneQueryEngine implements QueryEngine {
     }
 
     /**
-     * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
+     * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(IFolderEvent)
      */
     public void messageRemoved(Object uid) throws Exception {
         deleted.add(uid);
@@ -507,7 +509,7 @@ public class LuceneQueryEngine implements QueryEngine {
     public void sync() throws Exception {
         //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
         IDataStorage ds = ((LocalFolder) folder).getDataStorageInstance();
-        HeaderList hl = ((LocalFolder) folder).getHeaderList();
+        IHeaderList hl = ((LocalFolder) folder).getHeaderList();
 
         if (getObservable() != null) {
             getObservable().setMessage(MailResourceLoader.getString(
@@ -532,7 +534,7 @@ public class LuceneQueryEngine implements QueryEngine {
 
                 Source source = ds.getMessageSource(uid);
 
-                ColumbaMessage message = new ColumbaMessage((ColumbaHeader) hl.get(
+                IColumbaMessage message = new ColumbaMessage((ColumbaHeader) hl.get(
                             uid),
                         MessageParser.parse(new CharSequenceSource(source)));
 

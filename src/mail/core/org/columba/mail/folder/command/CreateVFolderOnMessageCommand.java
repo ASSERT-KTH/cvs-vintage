@@ -17,7 +17,7 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -26,11 +26,11 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.ristretto.message.Header;
 
 
@@ -75,7 +75,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      *            Which type of filter to create. Used defined constants
      */
     public CreateVFolderOnMessageCommand(FrameMediator frameController,
-        DefaultCommandReference reference, String vfolderType) {
+    		ICommandReference reference, String vfolderType) {
         super(frameController, reference);
         this.vfolderType = vfolderType;
     }
@@ -87,7 +87,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
-    	TreeModel.getInstance().nodeStructureChanged(parentFolder);
+    	FolderTreeModel.getInstance().nodeStructureChanged(parentFolder);
 
         if (vfolder != null) {
             //vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());

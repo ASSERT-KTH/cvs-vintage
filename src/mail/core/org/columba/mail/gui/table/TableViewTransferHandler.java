@@ -24,7 +24,7 @@ import javax.swing.TransferHandler;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -72,7 +72,7 @@ public class TableViewTransferHandler extends TransferHandler {
                 (source instanceof TableView)) {
             // Remove the moved messages.
             MessageReferencesTransfer messageTransfer = (MessageReferencesTransfer) data;
-            FolderCommandReference messageRefs = messageTransfer.getFolderReferences();
+            IFolderCommandReference messageRefs = messageTransfer.getFolderReferences();
 
             messageRefs.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 

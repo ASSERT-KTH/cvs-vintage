@@ -25,11 +25,11 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
@@ -46,7 +46,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class ForwardAction extends AbstractColumbaAction
-    implements SelectionListener, Observer {
+    implements ISelectionListener, Observer {
     private XmlElement forward;
     private String forwardStyle;
 
@@ -96,7 +96,7 @@ public class ForwardAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         if (forwardStyle.equals("attachment")) {
         	CommandProcessor.getInstance().addOp(new ForwardCommand(r));
@@ -106,7 +106,7 @@ public class ForwardAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
          */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

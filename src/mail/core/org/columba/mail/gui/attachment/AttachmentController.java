@@ -40,7 +40,7 @@ import org.frapuccino.swing.DynamicFileFactory;
  * @version 1.0
  * @author Timo Stich
  */
-public class AttachmentController {
+public class AttachmentController implements IAttachmentController {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.attachment");
 

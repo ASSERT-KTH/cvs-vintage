@@ -23,10 +23,10 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
@@ -45,7 +45,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class DeleteMessageAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     public DeleteMessageAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
@@ -84,7 +84,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
         AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
@@ -103,7 +103,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
             // -> move messages to trash
             AbstractMessageFolder destFolder = trash;
 
-            FolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+            IFolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
             result.setDestinationFolder(destFolder);
 
             MoveMessageCommand c = new MoveMessageCommand(result);
@@ -120,7 +120,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
          */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

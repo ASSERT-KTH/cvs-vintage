@@ -17,6 +17,7 @@
 package org.columba.mail.folder.mh;
 
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.LocalFolder;
@@ -51,7 +52,7 @@ public class CachedMHFolder extends LocalFolder {
     public CachedMHFolder(String name, String type, String path) {
         super(name, type, path);
 
-        FolderItem item = getConfiguration();
+        IFolderItem item = getConfiguration();
         item.set("property", "accessrights", "user");
         item.set("property", "subfolder", "true");
     }

@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -27,9 +29,10 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.AbstractFolder;
@@ -40,181 +43,191 @@ import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+public class SortMessagesMenu extends IMenu implements ActionListener,
+		Observer, ISelectionListener {
+	private ButtonGroup columnGroup;
 
-public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
-    SelectionListener {
-    private ButtonGroup columnGroup;
-    private ButtonGroup orderGroup;
-    private JRadioButtonMenuItem ascendingMenuItem;
-    private JRadioButtonMenuItem descendingMenuItem;
-    private Observable observable;
-    private AbstractMessageFolder selectedFolder;
+	private ButtonGroup orderGroup;
 
-    public SortMessagesMenu(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe", "menu_view_sort"));
+	private JRadioButtonMenuItem ascendingMenuItem;
 
-        setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
+	private JRadioButtonMenuItem descendingMenuItem;
 
-        ((MailFrameMediator) controller).registerTreeSelectionListener(this);
+	private Observable observable;
 
-        // register as Observer
-        TableViewOwner table = (TableViewOwner) getFrameMediator();
-        observable = table.getTableController().getTableModelSorter()
-                          .getSortingStateObservable();
-        observable.addObserver(this);
+	private AbstractMessageFolder selectedFolder;
 
-        //createSubMenu();
-    }
+	public SortMessagesMenu(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"menu_view_sort"));
 
-    protected void createSubMenu() {
-        removeAll();
+		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
 
-        TableViewOwner table = (TableViewOwner) getFrameMediator();
+		((MailFrameMediator) controller).registerTreeSelectionListener(this);
 
-        XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
-                              .getConfigNode(selectedFolder, "ColumnOptions");
+		// register as Observer
+		TableViewOwner table = (TableViewOwner) getFrameMediator();
+		observable = table.getTableController().getSortingStateObservable();
+		observable.addObserver(this);
 
-        Vector v = new Vector();
+		//createSubMenu();
+	}
 
-        // *20040510, karlpeder* columns may be null (first time we visit a folder!?)
-        if (columns != null) {
-	        for (int i = 0; i < columns.count(); i++) {
-	            XmlElement column = columns.getElement(i);
-	
-	            String name = column.getAttribute("name");
-	            v.add(name);
-	        }
-        }
+	protected void createSubMenu() {
+		removeAll();
 
-        Object[] items = new String[v.size()];
-        items = v.toArray();
+		TableViewOwner table = (TableViewOwner) getFrameMediator();
 
-        columnGroup = new ButtonGroup();
+		XmlElement columns = ((MailFrameMediator) getFrameMediator())
+				.getFolderOptionsController().getConfigNode(selectedFolder,
+						"ColumnOptions");
 
-        JRadioButtonMenuItem headerMenuItem;
+		Vector v = new Vector();
 
-        for (int i = 0; i < items.length; i++) {
-            String item = (String) items[i];
+		// *20040510, karlpeder* columns may be null (first time we visit a
+		// folder!?)
+		if (columns != null) {
+			for (int i = 0; i < columns.count(); i++) {
+				XmlElement column = columns.getElement(i);
 
-            // all headerfields are lowercase in property file
-            String i18n = MailResourceLoader.getString("header",
-                    item.toLowerCase());
+				String name = column.getAttribute("name");
+				v.add(name);
+			}
+		}
 
-            headerMenuItem = new JRadioButtonMenuItem(i18n);
-            headerMenuItem.setActionCommand(item);
-            headerMenuItem.addActionListener(this);
-            columnGroup.add(headerMenuItem);
-            add(headerMenuItem);
-        }
+		Object[] items = new String[v.size()];
+		items = v.toArray();
 
-        addSeparator();
+		columnGroup = new ButtonGroup();
 
-        orderGroup = new ButtonGroup();
-        ascendingMenuItem = new JRadioButtonMenuItem(MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_asc"));
-        ascendingMenuItem.setActionCommand("Ascending");
-        ascendingMenuItem.addActionListener(this);
-        orderGroup.add(ascendingMenuItem);
-        add(ascendingMenuItem);
-        descendingMenuItem = new JRadioButtonMenuItem(MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_desc"));
-        descendingMenuItem.setActionCommand("Descending");
-        descendingMenuItem.addActionListener(this);
-        orderGroup.add(descendingMenuItem);
-        add(descendingMenuItem);
+		JRadioButtonMenuItem headerMenuItem;
 
-        //update(observable, null);
-    }
+		for (int i = 0; i < items.length; i++) {
+			String item = (String) items[i];
 
-    /*
- * (non-Javadoc)
- *
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+			// all headerfields are lowercase in property file
+			String i18n = MailResourceLoader.getString("header", item
+					.toLowerCase());
 
-        TableViewOwner table = (TableViewOwner) getFrameMediator();
+			headerMenuItem = new JRadioButtonMenuItem(i18n);
+			headerMenuItem.setActionCommand(item);
+			headerMenuItem.addActionListener(this);
+			columnGroup.add(headerMenuItem);
+			add(headerMenuItem);
+		}
 
-        if (action.equals("Ascending")) {
-            table.getTableController().getTableModelSorter().setSortingOrder(true);
-            table.getTableController().getUpdateManager().update();
-        } else if (action.equals("Descending")) {
-            table.getTableController().getTableModelSorter().setSortingOrder(false);
-            table.getTableController().getUpdateManager().update();
-        } else {
-            table.getTableController().getTableModelSorter().setSortingColumn(action);
-            table.getTableController().getUpdateManager().update();
-        }
+		addSeparator();
 
-        table.getTableController().getTableModelSorter()
-             .getSortingStateObservable().notifyObservers();
+		orderGroup = new ButtonGroup();
+		ascendingMenuItem = new JRadioButtonMenuItem(MailResourceLoader
+				.getString("menu", "mainframe", "menu_view_sort_asc"));
+		ascendingMenuItem.setActionCommand("Ascending");
+		ascendingMenuItem.addActionListener(this);
+		orderGroup.add(ascendingMenuItem);
+		add(ascendingMenuItem);
+		descendingMenuItem = new JRadioButtonMenuItem(MailResourceLoader
+				.getString("menu", "mainframe", "menu_view_sort_desc"));
+		descendingMenuItem.setActionCommand("Descending");
+		descendingMenuItem.addActionListener(this);
+		orderGroup.add(descendingMenuItem);
+		add(descendingMenuItem);
 
-        //update(observable, null);
-    }
+		//update(observable, null);
+	}
 
-    /*
- * (non-Javadoc)
- *
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
- */
-    public void update(Observable observable, Object object) {
-        String column = ((SortingStateObservable) observable).getColumn();
-        boolean ascending = ((SortingStateObservable) observable).isOrder();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-        updateState(column, ascending);
-    }
+		TableViewOwner table = (TableViewOwner) getFrameMediator();
 
-    private void updateState(String column, boolean ascending) {
-        if (columnGroup == null) {
-            return;
-        }
+		if (action.equals("Ascending")) {
+			table.getTableController().setSortingOrder(true);
 
-        Enumeration enumeration = columnGroup.getElements();
+		} else if (action.equals("Descending")) {
+			table.getTableController().setSortingOrder(false);
 
-        while (enumeration.hasMoreElements()) {
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem) enumeration.nextElement();
+		} else {
+			table.getTableController().setSortingColumn(action);
 
-            if (item.getActionCommand().equals(column)) {
-                item.setSelected(true);
+		}
 
-                break;
-            }
-        }
+		table.getTableController().getSortingStateObservable()
+				.notifyObservers();
 
-        if (ascending) {
-            ascendingMenuItem.setSelected(true);
-        } else {
-            descendingMenuItem.setSelected(true);
-        }
-    }
+		//update(observable, null);
+	}
 
-    /**
-    * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-    */
-    public void selectionChanged(SelectionChangedEvent e) {
-        AbstractFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable observable, Object object) {
+		String column = ((SortingStateObservable) observable).getColumn();
+		boolean ascending = ((SortingStateObservable) observable).isOrder();
 
-        if (selection.length == 1) {
-            if (!(selection[0] instanceof AbstractMessageFolder)) {
-                return;
-            }
+		updateState(column, ascending);
+	}
 
-            selectedFolder = (AbstractMessageFolder) selection[0];
+	private void updateState(String column, boolean ascending) {
+		if (columnGroup == null) {
+			return;
+		}
 
-            createSubMenu();
+		Enumeration enumeration = columnGroup.getElements();
 
-            XmlElement xmlElement = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
-                                     .getConfigNode(selectedFolder,
-                    "SortingOptions");
+		while (enumeration.hasMoreElements()) {
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) enumeration
+					.nextElement();
 
-            if (xmlElement != null) {
-            	// *20040510, karlpeder* columns may be null (first time we visit a folder!?)
-            	DefaultItem item = new DefaultItem(xmlElement);
-	
-	            //String column = xmlElement.getAttribute("column");
-	            //String s = threadedview.getAttribute("order");
-	            boolean order = item.getBoolean("order");
-            }
-        }
-    }
+			if (item.getActionCommand().equals(column)) {
+				item.setSelected(true);
+
+				break;
+			}
+		}
+
+		if (ascending) {
+			ascendingMenuItem.setSelected(true);
+		} else {
+			descendingMenuItem.setSelected(true);
+		}
+	}
+
+	/**
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		AbstractFolder[] selection = ((TreeSelectionChangedEvent) e)
+				.getSelected();
+
+		if (selection.length == 1) {
+			if (!(selection[0] instanceof AbstractMessageFolder)) {
+				return;
+			}
+
+			selectedFolder = (AbstractMessageFolder) selection[0];
+
+			createSubMenu();
+
+			XmlElement xmlElement = ((MailFrameMediator) getFrameMediator())
+					.getFolderOptionsController().getConfigNode(selectedFolder,
+							"SortingOptions");
+
+			if (xmlElement != null) {
+				// *20040510, karlpeder* columns may be null (first time we
+				// visit a folder!?)
+				IDefaultItem item = new DefaultItem(xmlElement);
+
+				//String column = xmlElement.getAttribute("column");
+				//String s = threadedview.getAttribute("order");
+				boolean order = item.getBoolean("order");
+			}
+		}
+	}
 }

@@ -16,42 +16,10 @@
 
 package org.columba.mail.folder.event;
 
-import java.util.EventListener;
 
 /**
  * Clients can attach implementations of this interface to a folder
  * in order to get notified on folder changes.
  */
-public interface FolderListener extends EventListener {
-    
-    /**
-     * Called when a message has been added to a folder.
-     */
-    public void messageAdded(FolderEvent e);
-    
-    /**
-     * Called when a message has been removed from a folder.
-     */
-    public void messageRemoved(FolderEvent e);
-    
-    /**
-     * Called when a message flag changed.
-     * @param e
-     */
-    public void messageFlagChanged(FolderEvent e);
-    
-    /**
-     * Called when a folder has been renamed.
-     */
-    public void folderPropertyChanged(FolderEvent e);
-    
-    /**
-     * Called when a subfolder has been added to a folder.
-     */
-    public void folderAdded(FolderEvent e);
-    
-    /**
-     * Called when a folder has been removed from its parent folder.
-     */
-    public void folderRemoved(FolderEvent e);
+public interface FolderListener extends IFolderListener {
 }

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.ITableController;
 
 
 /**
@@ -30,7 +30,7 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class DeleteAction extends AbstractColumbaAction {
-    TableController tableController;
+	ITableController tableController;
     FrameMediator frameController;
 
     public DeleteAction(FrameMediator frameController) {

@@ -21,7 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
@@ -36,7 +36,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class OpenAction extends AbstractColumbaAction implements
-		SelectionListener {
+		ISelectionListener {
 	public OpenAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"attachmentopen"));

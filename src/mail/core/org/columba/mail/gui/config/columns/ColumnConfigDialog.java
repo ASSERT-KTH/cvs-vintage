@@ -47,9 +47,10 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
+import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.checkablelist.CheckableItemImpl;
@@ -302,10 +303,10 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
             setVisible(false);
 
             ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) 
-                mediator.getFolderOptionsController().getPlugin("ColumnOptions");
+                ((FolderOptionsController)mediator.getFolderOptionsController()).getPlugin("ColumnOptions");
 
             // make sure this configuration is also visually working immediately
-            FolderCommandReference r = mediator.getTreeSelection();
+            IFolderCommandReference r = mediator.getTreeSelection();
             plugin.loadOptionsFromXml((AbstractMessageFolder) r.getFolder());
         } else if (action.equals("CANCEL")) {
             setVisible(false);

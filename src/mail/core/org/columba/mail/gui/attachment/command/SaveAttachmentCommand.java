@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
@@ -45,7 +45,7 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
      *
      * @param reference the reference for the command.
      */
-    public SaveAttachmentCommand(DefaultCommandReference reference) {
+    public SaveAttachmentCommand(ICommandReference reference) {
         super(reference);
     }
 

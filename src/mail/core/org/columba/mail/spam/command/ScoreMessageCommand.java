@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
@@ -64,7 +64,7 @@ public class ScoreMessageCommand extends FolderCommand {
 	/**
 	 * @param references
 	 */
-	public ScoreMessageCommand(DefaultCommandReference reference) {
+	public ScoreMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -72,7 +72,7 @@ public class ScoreMessageCommand extends FolderCommand {
 	 * @param frame
 	 * @param references
 	 */
-	public ScoreMessageCommand(FrameMediator frame, DefaultCommandReference ref) {
+	public ScoreMessageCommand(FrameMediator frame, ICommandReference ref) {
 		super(frame, ref);
 	}
 

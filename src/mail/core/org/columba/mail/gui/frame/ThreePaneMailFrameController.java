@@ -30,24 +30,27 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.UIFSplitPane;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.MenuPluginHandler;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.gui.tree.ITreeController;
 import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -59,7 +62,7 @@ import org.columba.mail.util.MailResourceLoader;
  *  
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-		implements TreeViewOwner, TableViewOwner, ContentPane, SelectionListener {
+		implements TreeViewOwner, TableViewOwner, ContentPane, ISelectionListener {
 
 	public TreeController treeController;
 
@@ -87,7 +90,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		TableUpdater.add(this);
 
-		treeController = new TreeController(this, TreeModel.getInstance());
+		treeController = new TreeController(this, FolderTreeModel.getInstance());
 		tableController = new TableController(this);
 		folderInfoPanel = new FolderInfoPanel();
 
@@ -186,14 +189,14 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	/**
 	 * @see org.columba.mail.gui.frame.TreeViewOwner#getTreeController()
 	 */
-	public TreeController getTreeController() {
+	public ITreeController getTreeController() {
 		return treeController;
 	}
 
 	/**
 	 * @see org.columba.mail.gui.frame.TableViewOwner#getTableController()
 	 */
-	public TableController getTableController() {
+	public ITableController getTableController() {
 		return tableController;
 	}
 
@@ -314,10 +317,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 					.getDividerLocation());
 		viewItem.set("splitpanes", "header_enabled", rightSplitPane != null);
 
-		FolderCommandReference r = getTreeSelection();
+		IFolderCommandReference r = getTreeSelection();
 
 		if (r != null) {
-			AbstractFolder folder = r.getFolder();
+			IFolder folder = r.getFolder();
 
 			// folder-based configuration
 			
@@ -349,7 +352,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	/**
-	 * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;

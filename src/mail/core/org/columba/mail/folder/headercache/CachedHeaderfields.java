@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.IColumbaHeader;
 
 
 /**
@@ -162,9 +163,9 @@ public class CachedHeaderfields {
  * @param h
  * @return
  */
-    public static ColumbaHeader stripHeaders(ColumbaHeader h) {
+    public static IColumbaHeader stripHeaders(IColumbaHeader h) {
         //return h;
-        ColumbaHeader strippedHeader = new ColumbaHeader();
+    	IColumbaHeader strippedHeader = new ColumbaHeader();
 
         //		copy all internally used headerfields
         for (int i = 0; i < DEFAULT_HEADERFIELDS.length; i++) {

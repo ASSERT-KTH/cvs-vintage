@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;

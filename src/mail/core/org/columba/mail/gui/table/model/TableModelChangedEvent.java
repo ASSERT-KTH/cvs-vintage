@@ -15,8 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.message.IHeaderList;
 
 
 /**
@@ -32,11 +32,11 @@ public class TableModelChangedEvent {
     public final static int SET = 1;
     public final static int REMOVE = 2;
     public final static int MARK = 3;
-    protected AbstractFolder srcFolder;
+    protected IFolder srcFolder;
     protected Object[] uids;
     protected int markVariant;
     protected int eventType;
-    protected HeaderList headerList;
+    protected IHeaderList headerList;
 
     /**
  * Constructor for TableChangedEvent.
@@ -45,26 +45,26 @@ public class TableModelChangedEvent {
         this.eventType = eventType;
     }
 
-    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder) {
+    public TableModelChangedEvent(int eventType, IFolder srcFolder) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
     }
 
-    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
+    public TableModelChangedEvent(int eventType, IFolder srcFolder,
         Object[] uids) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
         this.uids = uids;
     }
 
-    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
-        HeaderList headerList) {
+    public TableModelChangedEvent(int eventType, IFolder srcFolder,
+        IHeaderList headerList) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
         this.headerList = headerList;
     }
 
-    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
+    public TableModelChangedEvent(int eventType, IFolder srcFolder,
         Object[] uids, int markVariant) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
@@ -84,7 +84,7 @@ public class TableModelChangedEvent {
  * Returns the srcFolder.
  * @return FolderTreeNode
  */
-    public AbstractFolder getSrcFolder() {
+    public IFolder getSrcFolder() {
         return srcFolder;
     }
 
@@ -108,7 +108,7 @@ public class TableModelChangedEvent {
  * Returns the headerList.
  * @return HeaderInterface[]
  */
-    public HeaderList getHeaderList() {
+    public IHeaderList getHeaderList() {
         return headerList;
     }
 }

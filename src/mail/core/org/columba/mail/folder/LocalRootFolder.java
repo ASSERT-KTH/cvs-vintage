@@ -58,7 +58,7 @@ public class LocalRootFolder extends AbstractFolder implements RootFolder {
     }
 
     /** {@inheritDoc} */
-    public boolean supportsAddFolder(AbstractFolder newFolder) {
+    public boolean supportsAddFolder(IFolder newFolder) {
         return true;
     }
 }

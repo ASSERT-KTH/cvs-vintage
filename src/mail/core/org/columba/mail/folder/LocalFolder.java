@@ -32,6 +32,8 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IColumbaMessage;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.SourceInputStream;
 import org.columba.ristretto.message.Attributes;
@@ -184,7 +186,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 */
 	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
 		// get message with UID
-		ColumbaMessage message = getMessage(uid);
+		IColumbaMessage message = getMessage(uid);
 
 		// get mimepart of message
 		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
@@ -197,7 +199,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 		// get message with UID
-		ColumbaMessage message = getMessage(uid);
+		IColumbaMessage message = getMessage(uid);
 
 		// get tree-like structure of mimeparts
 		MimeTree mptree = message.getMimePartTree();
@@ -214,7 +216,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 			throws Exception {
 		// get message with UID
-		ColumbaMessage message = getMessage(uid);
+		IColumbaMessage message = getMessage(uid);
 
 		// Get the mimepart
 		LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
@@ -227,7 +229,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 			throws Exception {
 		// get message with UID
-		ColumbaMessage message = getMessage(uid);
+		IColumbaMessage message = getMessage(uid);
 
 		// Get the mimepart
 		LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
@@ -328,7 +330,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	}
 
 	/** {@inheritDoc} */
-	public boolean supportsAddFolder(AbstractFolder newFolder) {
+	public boolean supportsAddFolder(IFolder newFolder) {
 		return ((newFolder instanceof LocalFolder) || (newFolder instanceof VirtualFolder));
 	}
 
@@ -409,13 +411,13 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 * @see org.columba.mail.folder.IMailbox#getMessageHeader(java.lang.Object)
 	 * @TODO dont use deprecated method
 	 */
-	protected ColumbaHeader getMessageHeader(Object uid) throws Exception {
+	protected IColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {
 			// message is already cached
 			// try to compare the headerfield count of
 			// the actually parsed message with the cached
 			// headerfield count
-			ColumbaMessage message = getMessage(uid);
+			IColumbaMessage message = getMessage(uid);
 
 			// number of headerfields
 			int size = message.getHeader().count();
@@ -531,7 +533,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 		} else {
 			// We need to parse
 			// get message with UID
-			ColumbaMessage message = getMessage(uid);
+			IColumbaMessage message = getMessage(uid);
 
 			Header header = message.getHeader().getHeader();
 
@@ -570,7 +572,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
 
-		ColumbaMessage message = getMessage(uid);
+		IColumbaMessage message = getMessage(uid);
 
 		Header header = message.getHeader().getHeader();
 

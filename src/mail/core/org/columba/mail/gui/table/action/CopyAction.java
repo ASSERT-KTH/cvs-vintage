@@ -46,6 +46,6 @@ public class CopyAction extends AbstractColumbaAction {
         // copy action
     	ClipboardManager.getInstance().setOperation(ClipboardManager.COPY_ACTION);
 
-    	ClipboardManager.getInstance().setMessageSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
+    	ClipboardManager.getInstance().setSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
     }
 }

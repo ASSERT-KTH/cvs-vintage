@@ -33,6 +33,9 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IColumbaMessage;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.io.SourceInputStream;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Attributes;
@@ -54,7 +57,7 @@ public class TempFolder extends AbstractMessageFolder {
     protected HeaderList headerList;
     protected Hashtable messageList;
     protected int nextUid = 0;
-    protected ColumbaMessage aktMessage;
+    protected IColumbaMessage aktMessage;
 
     /**
      * Constructor for TempFolder.
@@ -103,7 +106,7 @@ public class TempFolder extends AbstractMessageFolder {
     /**
      * @see org.columba.modules.mail.folder.Folder#getHeaderList(WorkerStatusController)
      */
-    public HeaderList getHeaderList() throws Exception {
+    public IHeaderList getHeaderList() throws Exception {
         return headerList;
     }
 
@@ -123,20 +126,33 @@ public class TempFolder extends AbstractMessageFolder {
         
     }
 
+   
+
     /**
      * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
      *      IMAPFolder)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {
-        return ((ColumbaMessage) messageList.get(uid)).getMimePartTree();
+        return ((IColumbaMessage) messageList.get(uid)).getMimePartTree();
+    }
+
+    /**
+     * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
+     *      WorkerStatusController)
+     * @TODO dont use deprecated method
+     */
+    public IColumbaHeader getMessageHeader(Object uid) throws Exception {
+        ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
+
+        return header;
     }
 
     /**
      * @see org.columba.modules.mail.folder.Folder#getMessage(Object,
      *      WorkerStatusController)
      */
-    public ColumbaMessage getMessage(Object uid) throws Exception {
-        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
+    public IColumbaMessage getMessage(Object uid) throws Exception {
+        IColumbaMessage message = (IColumbaMessage) messageList.get(uid);
 
         return message;
     }
@@ -252,7 +268,7 @@ public class TempFolder extends AbstractMessageFolder {
      */
     public Header getHeaderFields(Object uid, String[] keys)
         throws Exception {
-        ColumbaHeader header = ((ColumbaMessage) messageList.get(uid)).getHeader();
+        IColumbaHeader header = ((IColumbaMessage) messageList.get(uid)).getHeader();
 
         Header subHeader = new Header();
         String value;
@@ -275,7 +291,7 @@ public class TempFolder extends AbstractMessageFolder {
      */
     public InputStream getMessageSourceStream(Object uid)
         throws Exception {
-        return new SourceInputStream(((ColumbaMessage) messageList.get(uid)).getSource());
+        return new SourceInputStream(((IColumbaMessage) messageList.get(uid)).getSource());
     }
 
     /*
@@ -286,7 +302,7 @@ public class TempFolder extends AbstractMessageFolder {
      */
     public InputStream getMimePartBodyStream(Object uid, Integer[] address)
         throws Exception {
-        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
+        IColumbaMessage message = (IColumbaMessage) messageList.get(uid);
 
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                                                         .getFromAddress(address);
@@ -302,7 +318,7 @@ public class TempFolder extends AbstractMessageFolder {
      */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
         throws Exception {
-        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
+        IColumbaMessage message = (IColumbaMessage) messageList.get(uid);
 
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                                                         .getFromAddress(address);
@@ -329,7 +345,7 @@ public class TempFolder extends AbstractMessageFolder {
      * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
      *      WorkerStatusController)
      */
-    public Object addMessage(ColumbaMessage message) throws Exception {
+    public Object addMessage(IColumbaMessage message) throws Exception {
         Object newUid = generateNextUid();
 
         ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
@@ -362,7 +378,7 @@ public class TempFolder extends AbstractMessageFolder {
 	 * @see org.columba.mail.folder.IMailbox#getAllHeaderFields(java.lang.Object)
 	 */
 	public Header getAllHeaderFields(Object uid) throws Exception {
-		ColumbaHeader header = ((ColumbaMessage) messageList.get(uid)).getHeader();
+		IColumbaHeader header = ((IColumbaMessage) messageList.get(uid)).getHeader();
 		
 		return header.getHeader();
 	}

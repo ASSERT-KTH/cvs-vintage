@@ -27,7 +27,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -70,7 +70,7 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 		}
 
 		// get outbox folder
-		OutboxFolder folder = (OutboxFolder) TreeModel.getInstance()
+		OutboxFolder folder = (OutboxFolder) FolderTreeModel.getInstance()
 				.getFolder(103);
 
 		// create referenc

@@ -18,6 +18,7 @@ package org.columba.mail.gui.config.folder;
 import javax.swing.Icon;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.frapuccino.checkablelist.CheckableItem;
 
@@ -42,7 +43,7 @@ public class OptionsItem implements CheckableItem {
  * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
  */
     public boolean isSelected() {
-        DefaultItem item = new DefaultItem(element);
+        IDefaultItem item = new DefaultItem(element);
 
         return item.getBoolean("overwrite", false);
     }

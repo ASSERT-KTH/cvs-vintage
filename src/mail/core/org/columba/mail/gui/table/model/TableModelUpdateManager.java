@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 
 /**
@@ -54,7 +54,7 @@ public class TableModelUpdateManager {
         decorator.update();
     }
 
-    public void set(HeaderList headerList) {
+    public void set(IHeaderList headerList) {
         decorator.set(headerList);
     }
 }

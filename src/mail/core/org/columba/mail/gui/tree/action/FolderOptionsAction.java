@@ -20,11 +20,12 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -38,7 +39,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class FolderOptionsAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     /**
  * @param frameMediator
  * @param name
@@ -65,7 +66,7 @@ public class FolderOptionsAction extends AbstractColumbaAction
         FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
         // only use the first selected folder		
-        AbstractFolder folder = r.getFolder();
+        IFolder folder = r.getFolder();
 
         // cast to Folder
         new FolderOptionsDialog((AbstractMessageFolder) folder,true,

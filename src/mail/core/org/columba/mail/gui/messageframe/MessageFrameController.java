@@ -26,15 +26,15 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.gui.table.ITableController;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -57,9 +57,9 @@ public class MessageFrameController extends AbstractMailFrameController
 	
 	private static final int MAX_SUBJECT_LENGTH = 50;
 	
-	FolderCommandReference treeReference;
+	IFolderCommandReference treeReference;
 
-	FolderCommandReference tableReference;
+	IFolderCommandReference tableReference;
 
 	FixedTableSelectionHandler tableSelectionHandler;
 
@@ -99,7 +99,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTableSelection()
 	 */
-	public FolderCommandReference getTableSelection() {
+	public IFolderCommandReference getTableSelection() {
 		return tableReference;
 	}
 
@@ -107,28 +107,28 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTreeSelection()
 	 */
-	public FolderCommandReference getTreeSelection() {
+	public IFolderCommandReference getTreeSelection() {
 		return treeReference;
 	}
 
 	/**
 	 * @param references
 	 */
-	public void setTreeSelection(FolderCommandReference references) {
+	public void setTreeSelection(IFolderCommandReference references) {
 		treeReference = references;
 	}
 
 	/**
 	 * @param references
 	 */
-	public void setTableSelection(FolderCommandReference references) {
+	public void setTableSelection(IFolderCommandReference references) {
 		tableReference = references;
 		
 		try {
 			
 			// Get the subject from the cached Header
 			AbstractMessageFolder folder = (AbstractMessageFolder) references.getFolder();
-			ColumbaHeader header = folder.getHeaderList().get(references.getUids()[0]);
+			IColumbaHeader header = folder.getHeaderList().get(references.getUids()[0]);
 			String subject = (String)header.get("columba.subject");
 			
 			/*
@@ -152,7 +152,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	/**
 	 * @see org.columba.mail.gui.frame.TableViewOwner#getTableController()
 	 */
-	public TableController getTableController() {
+	public ITableController getTableController() {
 		if (parentController == null)
 			return null;
 

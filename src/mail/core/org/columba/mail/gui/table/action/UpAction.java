@@ -24,105 +24,108 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.IMessageNode;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.model.MessageNode;
-
 
 /**
  * @author waffel
- *
- * The upAction is the action when you pressing the up key (not on NUM-PAD).
- * If you do so, the previouseMessage up your key is selected and shown in the
+ * 
+ * The upAction is the action when you pressing the up key (not on NUM-PAD). If
+ * you do so, the previouseMessage up your key is selected and shown in the
  * message-view. If no more message up your key, then nothing changed.
  */
 public class UpAction extends AbstractColumbaAction {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.table.action");
 
-    TableController tableController;
-    FrameMediator frameController;
+	ITableController tableController;
 
-    public UpAction(FrameMediator frameController) {
-        super(frameController, "UpAction");
-        this.tableController = ((TableViewOwner) frameController).getTableController();
-        this.frameController = frameController;
-    }
+	FrameMediator frameController;
 
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        LOG.info("action up performed");
+	public UpAction(FrameMediator frameController) {
+		super(frameController, "UpAction");
+		this.tableController = ((TableViewOwner) frameController)
+				.getTableController();
+		this.frameController = frameController;
+	}
 
-        // getting last selection
-        FolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
-        FolderCommandReference ref = r;
-        LOG.info("folderCommandRef: " + ref);
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		LOG.info("action up performed");
 
-        // getting current uid
-        Object[] uids = ref.getUids();
-        LOG.info("curr uids: " + uids);
+		// getting last selection
+		IFolderCommandReference r = ((MailFrameMediator) frameController)
+				.getTableSelection();
+		IFolderCommandReference ref = r;
+		LOG.info("folderCommandRef: " + ref);
 
-        // at any time i get here uids of length 0. If this is so we should return and do nothing
-        if (uids.length == 0) {
-            return;
-        }
+		// getting current uid
+		Object[] uids = ref.getUids();
+		LOG.info("curr uids: " + uids);
 
-        // getting current node (under the selection)
-        DefaultMutableTreeNode currNode = this.tableController.getView()
-                                                              .getMessagNode(uids[0]);
-        LOG.info("currNode: " + currNode);
+		// at any time i get here uids of length 0. If this is so we should
+		// return and do nothing
+		if (uids.length == 0) {
+			return;
+		}
 
-        // getting prev node
-        DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
-        LOG.info("prevNode: " + prevNode);
+		// getting current node (under the selection)
+		DefaultMutableTreeNode currNode = (DefaultMutableTreeNode) tableController.getMessageNode(uids[0]);
+		LOG.info("currNode: " + currNode);
 
-        Object[] prevUids = new Object[1];
-        prevUids[0] = ((MessageNode) prevNode).getUid();
-        LOG.info("prevUids: " + prevUids);
-        ref.setUids(prevUids);
+		// getting prev node
+		DefaultMutableTreeNode prevNode = currNode.getPreviousNode();
+		LOG.info("prevNode: " + prevNode);
 
-        // check if the node is not null
-        MessageNode[] nodes = new MessageNode[prevUids.length];
+		Object[] prevUids = new Object[1];
+		prevUids[0] = ((MessageNode) prevNode).getUid();
+		LOG.info("prevUids: " + prevUids);
+		ref.setUids(prevUids);
 
-        for (int i = 0; i < prevUids.length; i++) {
-            nodes[i] = this.tableController.getHeaderTableModel()
-                                           .getMessageNode(prevUids[i]);
-        }
+		// check if the node is not null
+		IMessageNode[] nodes = new MessageNode[prevUids.length];
 
-        boolean node_ok = true;
+		for (int i = 0; i < prevUids.length; i++) {
+			nodes[i] = tableController.getMessageNode(prevUids[i]);
+		}
 
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i] == null) {
-                node_ok = false;
+		boolean node_ok = true;
 
-                break;
-            }
-        }
+		for (int i = 0; i < nodes.length; i++) {
+			if (nodes[i] == null) {
+				node_ok = false;
 
-        // if the node is not null
-        if (node_ok) {
-            // select it
-            this.tableController.setSelected(prevUids);
+				break;
+			}
+		}
 
-            // saving the last selection for the current folder
-            ((AbstractMessageFolder) ref.getFolder()).setLastSelection(prevUids[0]);
+		// if the node is not null
+		if (node_ok) {
+			// select it
+			tableController.setSelected(prevUids);
 
-            int row = this.tableController.getView().getSelectedRow();
-            this.tableController.getView().scrollRectToVisible(this.tableController.getView()
-                                                                                   .getCellRect(row,
-                    0, false));
+			// saving the last selection for the current folder
+			((AbstractMessageFolder) ref.getFolder())
+					.setLastSelection(prevUids[0]);
 
-            FolderCommandReference refNew = new FolderCommandReference(ref.getFolder(), prevUids);
+			tableController.makeSelectedRowVisible();
+			
+			FolderCommandReference refNew = new FolderCommandReference(ref
+					.getFolder(), prevUids);
 
-            // view the message under the new node
-            CommandProcessor.getInstance().addOp(new ViewMessageCommand(
-                    this.frameController, refNew));
-        }
-    }
+			// view the message under the new node
+			CommandProcessor.getInstance().addOp(
+					new ViewMessageCommand(this.frameController, refNew));
+		}
+	}
 }

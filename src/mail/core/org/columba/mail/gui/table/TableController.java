@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.util.Observable;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -33,8 +34,9 @@ import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -54,8 +56,8 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
 import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.treetable.Tree;
 
@@ -70,7 +72,7 @@ import org.frapuccino.treetable.Tree;
  * @author fdietz
  */
 public class TableController implements FocusOwner, ListSelectionListener,
-		TableModelChangedListener {
+		TableModelChangedListener, ITableController {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -144,7 +146,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	/**
 	 * previously selected folder
 	 */
-	private AbstractMessageFolder previouslySelectedFolder;
+	private IMailbox previouslySelectedFolder;
 
 	/**
 	 * tooltip mouse handler
@@ -320,7 +322,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		previouslySelectedRows = view.getSelectedRows();
 
 		// folder in which the update occurs
-		AbstractFolder folder = event.getSrcFolder();
+		IFolder folder = event.getSrcFolder();
 
 		if (folder == null) {
 			return;
@@ -331,7 +333,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		// get current selection
 		FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator) frameController)
 				.getTableSelection();
-		AbstractFolder srcFolder = r.getFolder();
+		IFolder srcFolder = r.getFolder();
 
 		// its always possible that no folder is currenlty selected
 		if (srcFolder != null) {
@@ -367,7 +369,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 					TreePath path = getView().getTree().getPathForRow(i);
 					MessageNode node = (MessageNode) path
 							.getLastPathComponent();
-					ColumbaHeader h = node.getHeader();
+					IColumbaHeader h = node.getHeader();
 					boolean unseen = !h.getFlags().getSeen();
 					if (unseen) {
 						getView().getTree().expandPath(path);
@@ -452,7 +454,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder,
 	 *      org.columba.mail.message.HeaderList)
 	 */
-	public void showHeaderList(AbstractMessageFolder folder, HeaderList headerList)
+	public void showHeaderList(IMailbox folder, IHeaderList headerList)
 			throws Exception {
 
 		// save previously selected folder options
@@ -601,11 +603,11 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
 	 */
 	public boolean isPasteActionEnabled() {
-		if (ClipboardManager.getInstance().getMessageSelection() == null) {
+		if (ClipboardManager.getInstance().getSelection() == null) {
 			return false;
 		}
 
-		if (ClipboardManager.getInstance().getMessageSelection() != null) {
+		if (ClipboardManager.getInstance().getSelection() != null) {
 			return true;
 		}
 
@@ -715,10 +717,102 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(org.columba.mail.folder.AbstractFolder)
+	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(IFolder)
 	 */
-	public boolean isInterestedIn(AbstractFolder folder) {
+	public boolean isInterestedIn(IFolder folder) {
 
 		return folder == previouslySelectedFolder;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getSelectedNodes()
+	 */
+	public IMessageNode[] getSelectedNodes() {
+		return getView().getSelectedNodes();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#selectFirstRow()
+	 */
+	public Object selectFirstRow() {
+		return getView().selectFirstRow();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#selectLastRow()
+	 */
+	public Object selectLastRow() {
+		return getView().selectLastRow();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#selectRow(int)
+	 */
+	public void selectRow(int row) {
+		getView().selectRow(row);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getMessagNode(java.lang.Object)
+	 */
+	public IMessageNode getMessageNode(Object uid) {
+		return getView().getMessagNode(uid);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#enableThreadedView(boolean)
+	 */
+	public void enableThreadedView(boolean enableThreadedMode, boolean updateModel) {
+		getTableModelThreadedView().setEnabled(enableThreadedMode);
+		getHeaderTableModel().enableThreadedView(enableThreadedMode);
+		getView().enableThreadedView(enableThreadedMode);
+		
+		if ( updateModel)
+			getUpdateManager().update();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#clearSelection()
+	 */
+	public void clearSelection() {
+		getView().getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#makeSelectedRow
+	 */
+	public void makeSelectedRowVisible() {
+		getView().scrollRectToVisible(
+				getView().getCellRect(getView().getSelectedRow(), 0, false));
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#getSortingStateObservable()
+	 */
+	public Observable getSortingStateObservable() {
+		return getTableModelSorter().getSortingStateObservable();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#setSortingOrder(boolean)
+	 */
+	public void setSortingOrder(boolean order) {
+		getTableModelSorter().setSortingOrder(true);
+		getUpdateManager().update();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#setSortingColumn(java.lang.String)
+	 */
+	public void setSortingColumn(String column) {
+		getTableModelSorter().setSortingColumn(column);
+		getUpdateManager().update();
+	}
+
+	/**
+	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IFolderCommandReference)
+	 */
+	public void restartMarkAsReadTimer(IFolderCommandReference reference) {
+		getMarkAsReadTimer().restart(reference);
 	}
 }

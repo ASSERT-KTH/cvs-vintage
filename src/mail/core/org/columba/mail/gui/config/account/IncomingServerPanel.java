@@ -48,6 +48,7 @@ import javax.swing.SwingUtilities;
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.config.Config;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -116,7 +117,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 	private ImapAttributPanel imapPanel;
 
-	private DefaultItem serverItem = null;
+	private IDefaultItem serverItem = null;
 
 	private AccountItem accountItem;
 
@@ -585,14 +586,14 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 	}
 
-	private DefaultItem getCurrentDialogSettings()
+	private IDefaultItem getCurrentDialogSettings()
 	{
-	  DefaultItem server = null;
+	  IDefaultItem server = null;
 	  
 		if (accountItem.isPopAccount()) {
-			server = (DefaultItem)accountItem.getPopItem().clone();
+			server = (IDefaultItem)accountItem.getPopItem().clone();
 		} else {
-			server = (DefaultItem)accountItem.getImapItem().clone();
+			server = (IDefaultItem)accountItem.getImapItem().clone();
 		}
 
 		server.set("user", loginTextField.getText());
@@ -610,7 +611,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 	private void fetchAuthMechanisms() {
 		{
 			List list = new LinkedList();
-			DefaultItem serverItem = getCurrentDialogSettings();
+			IDefaultItem serverItem = getCurrentDialogSettings();
 			
 			if (isPopAccount()) {
 			  //user may have changed hostname. use dialog settings instead of

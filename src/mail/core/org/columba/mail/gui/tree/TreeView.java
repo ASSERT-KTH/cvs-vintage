@@ -34,7 +34,7 @@ import javax.swing.TransferHandler;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.tree.comparator.FolderComparator;
 import org.frapuccino.swing.SortedJTree;
@@ -92,7 +92,7 @@ public class TreeView extends SortedJTree {
      */
     public final void expand(AbstractFolder parent) {
         // get configuration from tree.xml file
-        FolderItem item = parent.getConfiguration();
+        IFolderItem item = parent.getConfiguration();
 
         XmlElement property = item.getElement("property");
 

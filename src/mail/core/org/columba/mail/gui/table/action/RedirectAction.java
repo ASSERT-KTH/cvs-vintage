@@ -23,9 +23,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.composer.command.RedirectCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -40,7 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class RedirectAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     public RedirectAction(FrameMediator frameMediator) {
         
 		//mod: 20040629 SWITT
@@ -76,12 +76,12 @@ public class RedirectAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         CommandProcessor.getInstance().addOp(new RedirectCommand(r));
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+     * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         TableSelectionChangedEvent tableEvent = (TableSelectionChangedEvent) e;

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -32,7 +32,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
@@ -62,7 +62,7 @@ public class ToggleMarkCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ToggleMarkCommand(DefaultCommandReference reference) {
+	public ToggleMarkCommand(ICommandReference reference) {
 		super(reference);
 
 		commandList = new ArrayList();
@@ -235,7 +235,7 @@ public class ToggleMarkCommand extends FolderCommand {
 			if (item.getSpamItem().isMoveTrashSelected() == false) {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
-				AbstractFolder destFolder = TreeModel.getInstance()
+				AbstractFolder destFolder = FolderTreeModel.getInstance()
 						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
 				// create reference

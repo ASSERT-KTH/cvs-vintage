@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.frapuccino.treetable.AbstractTreeTableModel;
 import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 
@@ -35,8 +36,8 @@ import org.frapuccino.treetable.CustomTreeTableCellRenderer;
  * <class>BasicHeaderTableModel </class> extends AbstractTableModel and adds a
  * <class>DefaultTreeModel </class>.
  * <p>
- * The TableModel uses the TreeModel data. You can say, that it just wraps the
- * TreeModel in the TableModel.
+ * The TableModel uses the FolderTreeModel data. You can say, that it just wraps the
+ * FolderTreeModel in the TableModel.
  * <p>
  * This is necessary to support a threaded view of messages, useful when
  * following discussions of mailing-lists or newsgroups.
@@ -54,7 +55,7 @@ public class BasicHeaderTableModel extends AbstractTreeTableModel {
      */
     private List columns;
 
-    protected HeaderList headerList;
+    protected IHeaderList headerList;
 
     /**
      * 
@@ -99,7 +100,7 @@ public class BasicHeaderTableModel extends AbstractTreeTableModel {
     public MessageNode getRootNode() {
         return root;
     }
-    public HeaderList getHeaderList() {
+    public IHeaderList getHeaderList() {
         return headerList;
     }
 

@@ -21,7 +21,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 
 /**
@@ -85,7 +85,7 @@ public class TreeTableModelDecorator implements TableModel,
         return realModel.getMap();
     }
 
-    public HeaderList getHeaderList() {
+    public IHeaderList getHeaderList() {
         return realModel.getHeaderList();
     }
 
@@ -127,7 +127,7 @@ public class TreeTableModelDecorator implements TableModel,
     /* (non-Javadoc)
  * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
  */
-    public void set(HeaderList headerList) {
+    public void set(IHeaderList headerList) {
         getRealModel().set(headerList);
     }
 

@@ -24,7 +24,7 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
@@ -65,7 +65,7 @@ public class ForwardInlineCommand extends ForwardCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ForwardInlineCommand(DefaultCommandReference reference) {
+	public ForwardInlineCommand(ICommandReference reference) {
 		super(reference);
 	}
 

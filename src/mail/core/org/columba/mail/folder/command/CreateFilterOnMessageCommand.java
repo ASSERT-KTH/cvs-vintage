@@ -17,7 +17,7 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -69,7 +69,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * @param references
      * @param filterType  Which type of filter to create. Used defined constants
      */
-    public CreateFilterOnMessageCommand(FrameMediator mediator, DefaultCommandReference reference,
+    public CreateFilterOnMessageCommand(FrameMediator mediator, ICommandReference reference,
         String filterType) {
         super(mediator, reference);
         this.filterType = filterType;

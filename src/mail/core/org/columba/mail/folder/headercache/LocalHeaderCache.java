@@ -33,6 +33,7 @@ import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Flags;
@@ -302,7 +303,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		Date today = Calendar.getInstance().getTime();
 
 		// parse all message files to recreate the header cache
-		ColumbaHeader header = null;
+		IColumbaHeader header = null;
 		MailboxInfo messageFolderInfo = folder.getMessageFolderInfo();
 		messageFolderInfo.setExists(0);
 		messageFolderInfo.setRecent(0);

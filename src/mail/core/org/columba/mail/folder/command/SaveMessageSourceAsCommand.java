@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -53,7 +53,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public SaveMessageSourceAsCommand(DefaultCommandReference reference) {
+    public SaveMessageSourceAsCommand(ICommandReference reference) {
         super(reference);
     }
 

@@ -28,6 +28,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
@@ -205,7 +206,7 @@ public class MailMain implements IComponentPlugin {
 	private void checkDefaultClient() {
 		// Check if Columba is the default mail client
 		SystemDefaultMailClientHandler defaultClientHandler = new SystemDefaultMailClientHandler();
-		DefaultItem item = new DefaultItem(MailConfig.getInstance().get(
+		IDefaultItem item = new DefaultItem(MailConfig.getInstance().get(
 				"options"));
 
 		boolean checkDefault = item.getBoolean("options/defaultclient",

@@ -32,8 +32,8 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderListener;
+import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -74,23 +74,23 @@ public class DefaultSearchEngine {
         filterCache = new Hashtable();
         nonDefaultEngine = new DummyQueryEngine();
         folder.addFolderListener(new FolderListener() {
-            public void messageAdded(FolderEvent e) {
+            public void messageAdded(IFolderEvent e) {
                 try {
                     getNonDefaultEngine().messageAdded(e.getChanges());
                 } catch (Exception ex) {}
             }
             
-            public void messageRemoved(FolderEvent e) {
+            public void messageRemoved(IFolderEvent e) {
                 try {
                     getNonDefaultEngine().messageRemoved(e.getChanges());
                 } catch (Exception ex) {}
             }
             
-            public void folderPropertyChanged(FolderEvent e) {}
-            public void folderAdded(FolderEvent e) {}
-            public void folderRemoved(FolderEvent e) {}
+            public void folderPropertyChanged(IFolderEvent e) {}
+            public void folderAdded(IFolderEvent e) {}
+            public void folderRemoved(IFolderEvent e) {}
 
-			public void messageFlagChanged(FolderEvent e) {
+			public void messageFlagChanged(IFolderEvent e) {
 				// not needed
 				
 			}

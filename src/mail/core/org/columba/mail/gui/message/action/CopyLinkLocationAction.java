@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.util.Observable;
@@ -27,54 +28,54 @@ import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Copy url to clipboard.
- *
+ * 
  * @author fdietz
  */
-public class CopyLinkLocationAction extends AbstractColumbaAction
-    implements Observer {
-    ColumbaURL url = null;
+public class CopyLinkLocationAction extends AbstractColumbaAction implements
+		Observer {
+	ColumbaURL url = null;
 
-    /**
- *
- */
-    public CopyLinkLocationAction(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe", "viewer_copylink"));
+	/**
+	 *  
+	 */
+	public CopyLinkLocationAction(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"viewer_copylink"));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        // listen for URL changes
-        ((MessageViewOwner) controller).getMessageController().getUrlObservable()
-                                                                    .addObserver(this);
-    }
+		// listen for URL changes
+		((MessageViewOwner) controller).getMessageController().addURLObserver(
+				this);
+	}
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        // copy selected URL to clipboard as string
-        ((MessageViewOwner) frameMediator).getMessageController().getView()
-                                                                       .getToolkit()
-                                                                       .getSystemClipboard()
-                                                                       .setContents(new StringSelection(
-                url.getRealURL().toString()), null);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		// copy selected URL to clipboard as string
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+						new StringSelection(url.getRealURL().toString()), null);
+	}
 
-    /* (non-Javadoc)
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
- */
-    public void update(Observable arg0, Object arg1) {
-        URLObservable o = (URLObservable) arg0;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		URLObservable o = (URLObservable) arg0;
 
-        url = o.getUrl();
+		url = o.getUrl();
 
-        if (url == null) {
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
-    }
+		if (url == null) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+		}
+	}
 }

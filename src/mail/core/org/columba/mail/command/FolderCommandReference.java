@@ -19,8 +19,8 @@ import java.io.File;
 import java.lang.reflect.Array;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.message.IColumbaMessage;
 
 
 /**
@@ -35,12 +35,12 @@ import org.columba.mail.message.ColumbaMessage;
  * @author fdietz
  */
 public class FolderCommandReference extends DefaultCommandReference implements IFolderCommandReference {
-    private AbstractFolder folder;
-    private AbstractFolder destinationFolder;
+    private IFolder folder;
+    private IFolder destinationFolder;
     
     private Object[] uids;
     private Integer[] address;
-    private ColumbaMessage message;
+    private IColumbaMessage message;
     private int markVariant;
     private String folderName;
     private int colorValue;
@@ -50,16 +50,16 @@ public class FolderCommandReference extends DefaultCommandReference implements I
      * Constructor for FolderCommandReference.
      * @param folder
      */
-    public FolderCommandReference(AbstractFolder folder) {
+    public FolderCommandReference(IFolder folder) {
         this.folder = folder;
     }
     
-    public FolderCommandReference(AbstractFolder folder, AbstractFolder destinationFolder) {
+    public FolderCommandReference(IFolder folder, IFolder destinationFolder) {
         this.folder = folder;
         this.destinationFolder = destinationFolder;
     }
 
-    public FolderCommandReference(AbstractFolder folder, ColumbaMessage message) {
+    public FolderCommandReference(IFolder folder, IColumbaMessage message) {
         this.folder = folder;
         this.message = message;
     }
@@ -69,7 +69,7 @@ public class FolderCommandReference extends DefaultCommandReference implements I
      * @param folder
      * @param uids
      */
-    public FolderCommandReference(AbstractFolder folder, Object[] uids) {
+    public FolderCommandReference(IFolder folder, Object[] uids) {
         this.folder = folder;
         this.uids = uids;
     }
@@ -79,7 +79,7 @@ public class FolderCommandReference extends DefaultCommandReference implements I
      * @param folder
      * @param uids
      */
-    public FolderCommandReference(AbstractFolder sourceFolder, AbstractFolder destinationFolder, Object[] uids) {
+    public FolderCommandReference(IFolder sourceFolder, IFolder destinationFolder, Object[] uids) {
         this.folder = sourceFolder;
 		this.destinationFolder = destinationFolder;
         this.uids = uids;
@@ -91,18 +91,18 @@ public class FolderCommandReference extends DefaultCommandReference implements I
      * @param uids
      * @param address
      */
-    public FolderCommandReference(AbstractFolder folder, Object[] uids,
+    public FolderCommandReference(IFolder folder, Object[] uids,
         Integer[] address) {
         this.folder = folder;
         this.uids = uids;
         this.address = address;
     }
 
-    public AbstractFolder getFolder() {
+    public IFolder getFolder() {
         return folder;
     }
 
-    public void setFolder(AbstractFolder folder) {
+    public void setFolder(IFolder folder) {
         this.folder = folder;
     }
 
@@ -118,11 +118,11 @@ public class FolderCommandReference extends DefaultCommandReference implements I
         this.uids = uids;
     }
 
-    public ColumbaMessage getMessage() {
+    public IColumbaMessage getMessage() {
         return message;
     }
 
-    public void setMessage(ColumbaMessage message) {
+    public void setMessage(IColumbaMessage message) {
         this.message = message;
     }
 
@@ -213,13 +213,13 @@ public class FolderCommandReference extends DefaultCommandReference implements I
 	/**
 	 * @return Returns the destinationFolder.
 	 */
-	public AbstractFolder getDestinationFolder() {
+	public IFolder getDestinationFolder() {
 		return destinationFolder;
 	}
 	/**
 	 * @param destinationFolder The destinationFolder to set.
 	 */
-	public void setDestinationFolder(AbstractFolder destinationFolder) {
+	public void setDestinationFolder(IFolder destinationFolder) {
 		this.destinationFolder = destinationFolder;
 	}
 }

@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.ristretto.message.Flags;
 
 /**
@@ -100,7 +101,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			return this;
 		}
 
-		ColumbaHeader header = messageNode.getHeader();
+		IColumbaHeader header = messageNode.getHeader();
 
 		if (header == null) {
 			return this;

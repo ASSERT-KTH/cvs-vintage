@@ -21,56 +21,59 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.URLController;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
-
 
 /**
  * Compose message using selected address.
- *
+ * 
  * @author fdietz
  */
-public class ComposeMessageAction extends AbstractColumbaAction
-    implements Observer {
-    ColumbaURL url = null;
+public class ComposeMessageAction extends AbstractColumbaAction implements
+		Observer {
+	ColumbaURL url = null;
 
-    /**
- *
- */
-    public ComposeMessageAction(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe", "viewer_compose"));
+	/**
+	 *  
+	 */
+	public ComposeMessageAction(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"viewer_compose"));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        //		listen for URL changes
-        ((MessageViewOwner) controller).getMessageController().getUrlObservable()
-                                                                    .addObserver(this);
-    }
+		//    	listen for URL changes
+		((MessageViewOwner) controller).getMessageController().addURLObserver(
+				this);
+	}
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        URLController c = new URLController();
-        c.compose(url.getEmailAddress());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		URLController c = new URLController();
+		c.compose(url.getEmailAddress());
+	}
 
-    /* (non-Javadoc)
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
- */
-    public void update(Observable arg0, Object arg1) {
-        URLObservable o = (URLObservable) arg0;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		URLObservable o = (URLObservable) arg0;
 
-        // only enable this action, if this is a mailto: URL
-        url = o.getUrl();
-        if (url == null)
-          setEnabled(false);
-        else
-        	setEnabled(url.isMailTo());
-        
-    }
+		// only enable this action, if this is a mailto: URL
+		url = o.getUrl();
+		if (url == null)
+			setEnabled(false);
+		else
+			setEnabled(url.isMailTo());
+
+	}
 }

@@ -23,7 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SubscribeFolderAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     private IMAPRootFolder rootFolder;
 
     public SubscribeFolderAction(FrameMediator frameMediator) {
@@ -75,7 +75,7 @@ public class SubscribeFolderAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+ * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
  */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

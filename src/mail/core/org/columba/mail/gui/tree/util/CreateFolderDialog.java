@@ -39,6 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -48,7 +49,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.swing.SortedJTree;
 import org.frapuccino.swing.SortedTreeModelDecorator;
@@ -149,22 +150,21 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		typeBox = new JComboBox(new String[]{"Standard Mailbox"});
 
 		//  get global sorting state
-		SortedJTree t = ((TreeViewOwner) mediator).getTreeController()
-				.getView();
-		if (t.getModel() instanceof SortedTreeModelDecorator) {
+		TreeModel t = ((TreeViewOwner) mediator).getTreeController().getModel();
+				
+		if (t instanceof SortedTreeModelDecorator) {
 			// sorting is enabled
-			SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t
-					.getModel();
+			SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t;
 			Comparator c = treemodel.getSortingComparator();
 
-			tree = new SortedJTree(TreeModel.getInstance());
+			tree = new SortedJTree(FolderTreeModel.getInstance());
 			// apply sorting state
 			SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
 					.getModel();
 			m.setSortingComparator(c);
 		} else {
 			// sorting is disabled
-			tree = new SortedJTree(TreeModel.getInstance());
+			tree = new SortedJTree(FolderTreeModel.getInstance());
 		}
 
 		tree.setCellRenderer(new FolderTreeCellRenderer());

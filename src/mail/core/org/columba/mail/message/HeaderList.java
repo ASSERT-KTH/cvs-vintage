@@ -37,7 +37,7 @@ import org.columba.mail.folder.headercache.CachedHeaderfields;
  *
  * @author fdietz
  */
-public class HeaderList {
+public class HeaderList implements IHeaderList {
     protected Map map;
 
     public HeaderList() {
@@ -48,7 +48,7 @@ public class HeaderList {
         map = new Hashtable(initialCapacity);
     }
 
-    public void add(ColumbaHeader header, Object uid) {
+    public void add(IColumbaHeader header, Object uid) {
         map.put(uid, header);
     }
 
@@ -64,7 +64,7 @@ public class HeaderList {
         return map.containsValue(value);
     }
 
-    public ColumbaHeader get(Object uid) {
+    public IColumbaHeader get(Object uid) {
         return (ColumbaHeader) map.get(uid);
     }
 

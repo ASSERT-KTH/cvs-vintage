@@ -54,10 +54,11 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
@@ -302,7 +303,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			int uid = destFolder.getConfiguration().getInteger("property",
 					"source_uid");
 
-			AbstractMessageFolder f = (AbstractMessageFolder) TreeModel.getInstance()
+			AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel.getInstance()
 					.getFolder(uid);
 
 			// If f==null because of deleted AbstractMessageFolder fallback to Inbox
@@ -310,7 +311,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				uid = 101;
 				destFolder.getConfiguration()
 						.set("property", "source_uid", uid);
-				f = (AbstractMessageFolder) TreeModel.getInstance().getFolder(uid);
+				f = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(uid);
 			}
 
 			selectButton.setText(f.getTreePath());
@@ -337,7 +338,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			String path = selectButton.getText();
 			TreeNodeList list = new TreeNodeList(path);
-			AbstractMessageFolder folder = (AbstractMessageFolder) TreeModel.getInstance()
+			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 					.getFolder(list);
 			int uid = folder.getUid();
 			destFolder.getConfiguration().set("property", "source_uid", uid);
@@ -362,7 +363,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			SelectFolderDialog dialog = new SelectFolderDialog(frameController);
 
 			if (dialog.success()) {
-				AbstractMessageFolder folder = dialog.getSelectedFolder();
+				IFolder folder = dialog.getSelectedFolder();
 				String path = folder.getTreePath();
 
 				selectButton.setText(path);

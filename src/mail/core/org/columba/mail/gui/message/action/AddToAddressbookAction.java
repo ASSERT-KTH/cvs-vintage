@@ -20,7 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -34,76 +34,87 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
-
 /**
  * Add address to addressbook.
- *
+ * 
  * @author fdietz
  */
-public class AddToAddressbookAction extends AbstractColumbaAction
-    implements Observer {
-		ColumbaURL url = null;
-		
-    /**
- *
- */
-    public AddToAddressbookAction(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
-                "viewer_addressbook"));
+public class AddToAddressbookAction extends AbstractColumbaAction implements
+		Observer {
+	ColumbaURL url = null;
 
-        setEnabled(false);
+	/**
+	 *  
+	 */
+	public AddToAddressbookAction(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("menu", "mainframe",
+				"viewer_addressbook"));
 
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
+		setEnabled(false);
 
-        //		listen for URL changes
-        ((MessageViewOwner) controller).getMessageController().getUrlObservable()
-                                                                    .addObserver(this);
-    }
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        ISelectFolderDialog dialog = AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
+		//	listen for URL changes
+		((MessageViewOwner) controller).getMessageController()
+				.addURLObserver(this);
+	}
 
-        org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
-
-        if (selectedFolder == null) {
-            return;
-        }
-
-        IContactFacade contactFacade=null;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		IDialogFacade dialogFacade = null;
 		try {
-			contactFacade = ServiceConnector.getContactFacade();			
+			dialogFacade = ServiceConnector.getDialogFacade();
 		} catch (ServiceNotFoundException e) {
 			e.printStackTrace();
 			return;
 		}
-        
-        try {
+        // ask the user which addressbook he wants to save this address to
+        ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
+
+		org.columba.addressbook.folder.IFolder selectedFolder = dialog
+				.getSelectedFolder();
+
+		if (selectedFolder == null) {
+			return;
+		}
+
+		IContactFacade contactFacade = null;
+		try {
+			contactFacade = ServiceConnector.getContactFacade();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		try {
 			// create Address from URL
 			Address address = Address.parse(url.getSender());
 			// add contact to addressbook
-			contactFacade.addContact(selectedFolder.getUid(), address.toString());
+			contactFacade.addContact(selectedFolder.getUid(), address
+					.toString());
 		} catch (ParserException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
-    /* (non-Javadoc)
- * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
- */
-    public void update(Observable arg0, Object arg1)
-    {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
 
-      url = ((URLObservable) arg0).getUrl();
+		url = ((URLObservable) arg0).getUrl();
 
-      // only enable this action, if this is a mailto: URL
-      if (url==null)
-        setEnabled(false);
-      else
-      	setEnabled(url.isMailTo());
-      
-    }
+		// only enable this action, if this is a mailto: URL
+		if (url == null)
+			setEnabled(false);
+		else
+			setEnabled(url.isMailTo());
+
+	}
 }

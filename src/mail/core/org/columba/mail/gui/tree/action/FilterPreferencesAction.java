@@ -21,9 +21,9 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
@@ -40,7 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class FilterPreferencesAction extends AbstractColumbaAction implements
-        SelectionListener {
+        ISelectionListener {
 
     public FilterPreferencesAction(FrameMediator frameMediator) {
         super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
@@ -67,7 +67,7 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
 
         if (folder == null) { return; }
 
-        FolderItem item = folder.getConfiguration();
+        IFolderItem item = folder.getConfiguration();
 
         if (item == null) { return; }
 
@@ -84,7 +84,7 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

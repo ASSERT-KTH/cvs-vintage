@@ -6,9 +6,10 @@
  */
 package org.columba.mail.gui.messageframe;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
@@ -19,12 +20,12 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class FixedTableSelectionHandler extends SelectionHandler {
-	FolderCommandReference tableReference;
+	IFolderCommandReference tableReference;
 
 	/**
 	 * @param id
 	 */
-	public FixedTableSelectionHandler(FolderCommandReference tableReference) {
+	public FixedTableSelectionHandler(IFolderCommandReference tableReference) {
 		super("mail.table");
 		this.tableReference = tableReference;
 	}
@@ -34,7 +35,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
 	 * 
 	 * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
 	 */
-	public DefaultCommandReference getSelection() {
+	public ICommandReference getSelection() {
 		return tableReference;
 	}
 
@@ -43,7 +44,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
 	 * 
 	 * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
 	 */
-	public void setSelection(DefaultCommandReference selection) {
+	public void setSelection(ICommandReference selection) {
 		this.tableReference = (FolderCommandReference) selection;
 
 		fireSelectionChanged(new TableSelectionChangedEvent(

@@ -55,7 +55,7 @@ import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.pop3.AuthenticationManager;
 import org.columba.mail.pop3.AuthenticationSecurityComparator;
 import org.columba.mail.util.MailResourceLoader;
@@ -1085,7 +1085,7 @@ public class IMAPServer implements IMAPListener {
 	 *            mailbox name
 	 * @throws Exception
 	 */
-	public void fetchHeaderList(HeaderList headerList, List list, IMAPFolder folder)
+	public void fetchHeaderList(IHeaderList headerList, List list, IMAPFolder folder)
 			throws Exception {
 		try {
 			// make sure this mailbox is selected

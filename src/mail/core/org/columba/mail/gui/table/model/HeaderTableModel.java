@@ -20,7 +20,8 @@ package org.columba.mail.gui.table.model;
 import java.util.Enumeration;
 
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IHeaderList;
 
 public class HeaderTableModel extends BasicHeaderTableModel implements
         TreeTableModelInterface {
@@ -99,7 +100,7 @@ public class HeaderTableModel extends BasicHeaderTableModel implements
             Object uid = e.nextElement();
 
             // get header
-            ColumbaHeader header = headerList.get(uid);
+            IColumbaHeader header = headerList.get(uid);
 
             // create MessageNode
             MessageNode child = new MessageNode(header, uid);
@@ -125,7 +126,7 @@ public class HeaderTableModel extends BasicHeaderTableModel implements
      * 
      * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
      */
-    public void set(HeaderList headerList) {
+    public void set(IHeaderList headerList) {
         this.headerList = headerList;
 
         update();

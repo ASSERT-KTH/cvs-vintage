@@ -17,7 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -40,7 +40,7 @@ public class ApplyFilterCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ApplyFilterCommand(DefaultCommandReference reference) {
+	public ApplyFilterCommand(ICommandReference reference) {
 		super(reference);
 	}
 

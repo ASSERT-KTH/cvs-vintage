@@ -30,6 +30,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IFolder;
 
 /**
  * @author fdietz
@@ -37,7 +38,7 @@ import org.columba.mail.folder.FolderFactory;
  */
 public class CreateAndSelectSubFolderCommand extends FolderCommand {
 
-    private AbstractFolder parentFolder;
+    private IFolder parentFolder;
 
     private boolean success;
 
@@ -45,7 +46,7 @@ public class CreateAndSelectSubFolderCommand extends FolderCommand {
 
     private JTree tree;
     
-    private AbstractFolder childFolder;
+    private IFolder childFolder;
 
     public CreateAndSelectSubFolderCommand(JTree tree,
             DefaultCommandReference reference) {

@@ -24,10 +24,10 @@ import java.util.logging.Logger;
 import javax.swing.Timer;
 
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
@@ -45,7 +45,7 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * @author fdietz, waffel
  * @version 1.0
  */
-public class MarkAsReadTimer implements ActionListener, SelectionListener,
+public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     Observer {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
@@ -60,7 +60,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     private int maxValue;
 
     // reference to the message that should be marked
-    private FolderCommandReference message;
+    private IFolderCommandReference message;
 
     // the tableController is not used
     private TableController tableController;
@@ -120,7 +120,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     * This method is for example used by the ViewMessageCommand to restart the timer if a
     * message is shown
     */
-    public synchronized void restart(FolderCommandReference reference) {
+    public synchronized void restart(IFolderCommandReference reference) {
         LOG.info("MarkAsRead-timer started");
 
         message = reference;
@@ -139,7 +139,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
         LOG.info("action perfomed");
         timer.stop();
 
-        FolderCommandReference r =message;
+        IFolderCommandReference r =message;
 
         if (r == null) {
             return;
@@ -155,7 +155,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         // if a selection is changed we stopping the MarkAsReadTimer

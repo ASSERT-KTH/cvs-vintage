@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 
 /**
@@ -49,7 +50,7 @@ public class TableUpdater {
         throws Exception {
         for (Iterator it = list.iterator(); it.hasNext();) {
             TableViewOwner frame = (TableViewOwner) it.next();
-            ((TableViewOwner) frame).getTableController().tableChanged(ev);
+            ((TableController)((TableViewOwner) frame).getTableController()).tableChanged(ev);
 //            AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
 //            ((ThreePaneMailFrameController) frame).tableController.tableChanged(ev);
         }

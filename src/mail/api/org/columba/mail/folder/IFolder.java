@@ -17,25 +17,27 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.event.FolderListener;
+import org.columba.mail.config.IFolderItem;
+import org.columba.mail.folder.event.IFolderListener;
 
 /**
  * @author fdietz
  *
  */
-public interface IFolder {
+public interface IFolder extends MutableTreeNode{
 	/**
 	 * Adds a listener.
 	 */
-	void addFolderListener(FolderListener l);
+	void addFolderListener(IFolderListener l);
 
 	/**
 	 * Removes a previously registered listener.
 	 */
-	void removeFolderListener(FolderListener l);
+	void removeFolderListener(IFolderListener l);
 
 	/**
 	 * Method getSelectionTreePath.
@@ -52,12 +54,12 @@ public interface IFolder {
 	/**
 	 * Returns the folder's configuration.
 	 */
-	FolderItem getConfiguration();
+	IFolderItem getConfiguration();
 
 	/**
 	 * Sets the folder's configuration.
 	 */
-	void setConfiguration(FolderItem node);
+	void setConfiguration(IFolderItem node);
 
 	/**
 	 * Returns the folder's name.
@@ -81,7 +83,7 @@ public interface IFolder {
 	 * ************************** treenode management
 	 * ******************************
 	 */
-	void insert(AbstractFolder newFolder, int newIndex);
+	void insert(IFolder newFolder, int newIndex);
 
 	/**
 	 * Removes this folder from its parent. This method will notify registered
@@ -93,7 +95,7 @@ public interface IFolder {
 	 * Adds a child folder to this folder. This method will notify registered
 	 * FolderListeners.
 	 */
-	void addSubfolder(AbstractFolder child) throws Exception;
+	void addSubfolder(IFolder child) throws Exception;
 
 	/**
 	 * 
@@ -101,7 +103,7 @@ public interface IFolder {
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	void moveTo(AbstractFolder child);
+	void moveTo(IFolder child);
 
 	/** ******************* capabilities ************************************* */
 	boolean supportsAddMessage();
@@ -114,7 +116,7 @@ public interface IFolder {
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	boolean supportsAddFolder(AbstractFolder newFolder);
+	boolean supportsAddFolder(IFolder newFolder);
 
 	/**
 	 * Returns true if this folder type can be moved around in the folder tree.
@@ -131,5 +133,13 @@ public interface IFolder {
 	 * 
 	 * @return root parent folder of this folder
 	 */
-	AbstractFolder getRootFolder();
+	IFolder getRootFolder();
+	
+	void fireFolderPropertyChanged();
+	void fireFolderAdded(IFolder folder);
+	void fireFolderRemoved();
+	
+	TreeNode[] getPath();
+	
+	String getTreePath();
 }

@@ -24,6 +24,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.IColumbaMessage;
 import org.columba.ristretto.io.SourceInputStream;
 
 /**
@@ -61,7 +62,7 @@ public class AddMessageCommand extends Command {
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
         // get message from reference
-        ColumbaMessage message = (ColumbaMessage) r.getMessage();
+        IColumbaMessage message = (IColumbaMessage) r.getMessage();
 
         // add message to folder
         SourceInputStream messageStream = new SourceInputStream(message.getSource());

@@ -29,6 +29,7 @@ import javax.swing.table.TableCellRenderer;
 import org.columba.core.plugin.Plugin;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.ristretto.message.Flags;
 
 
@@ -102,7 +103,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
         //TreePath path = tree.getPathForRow(row);
         MessageNode messageNode = (MessageNode) value;
 
-        ColumbaHeader header = messageNode.getHeader();
+        IColumbaHeader header = messageNode.getHeader();
 
         if (header == null) {
             System.out.println("header is null");

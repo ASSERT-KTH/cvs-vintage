@@ -21,9 +21,9 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -38,7 +38,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
-		implements SelectionListener {
+		implements ISelectionListener {
 	public OpenMessageWithMessageFrameAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_message_opennew"));
@@ -64,7 +64,7 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
 		(ThreePaneMailFrameController) getFrameMediator());
 		new DefaultContainer(c);
 		
-		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+		IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
 		c.setTreeSelection(r);

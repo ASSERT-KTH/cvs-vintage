@@ -24,20 +24,20 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.logging.Logger;
 
-import javax.swing.tree.TreeNode;
-
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderListener;
+import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.folder.search.DefaultSearchEngine;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -166,7 +166,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message addition.
 	 */
-	protected void fireMessageAdded(Object uid) {
+	public void fireMessageAdded(Object uid) {
 		getMessageFolderInfo().incExists();
 		try {
 			Flags flags = getFlags(uid);
@@ -191,7 +191,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).messageAdded(e);
+				((IFolderListener) listeners[i + 1]).messageAdded(e);
 			}
 		}
 	}
@@ -200,7 +200,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message removal.
 	 */
-	protected void fireMessageRemoved(Object uid, Flags flags) {
+	public void fireMessageRemoved(Object uid, Flags flags) {
 		getMessageFolderInfo().decExists();
 		if (!flags.getSeen()) {
 			getMessageFolderInfo().decUnseen();
@@ -226,7 +226,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).messageRemoved(e);
+				((IFolderListener) listeners[i + 1]).messageRemoved(e);
 			}
 		}
 	}
@@ -235,7 +235,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message removal.
 	 */
-	protected void fireMessageFlagChanged(Object uid) {
+	public void fireMessageFlagChanged(Object uid) {
 
 		// @author fdietz
 		// -> Moved code for updating mailfolderinfo to markMessage()
@@ -254,7 +254,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).messageFlagChanged(e);
+				((IFolderListener) listeners[i + 1]).messageFlagChanged(e);
 			}
 		}
 	}
@@ -315,44 +315,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		return filterList;
 	}
 
-	/**
-	 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
-	 */
-	protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
-		TreeNode[] retNodes;
-
-		if (aNode == null) {
-			if (depth == 0) {
-				return null;
-			} else {
-				retNodes = new TreeNode[depth];
-			}
-		} else {
-			depth++;
-			retNodes = getPathToRoot(aNode.getParent(), depth);
-			retNodes[retNodes.length - depth] = aNode;
-		}
-
-		return retNodes;
-	}
-
-	/**
-	 * Return tree path as string
-	 * 
-	 * @return String tree path
-	 */
-	public String getTreePath() {
-		TreeNode[] treeNode = getPathToRoot(this, 0);
-
-		StringBuffer path = new StringBuffer();
-
-		for (int i = 1; i < treeNode.length; i++) {
-			AbstractFolder folder = (AbstractFolder) treeNode[i];
-			path.append("/" + folder.getName());
-		}
-
-		return path.toString();
-	}
+	
 
 	/** ********************************** treenode implementation ********** */
 	/**
@@ -369,7 +332,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	protected void saveMessageFolderInfo() {
 		MailboxInfo info = getMessageFolderInfo();
 
-		FolderItem item = getConfiguration();
+		IFolderItem item = getConfiguration();
 
 		XmlElement property = item.getElement("property");
 
@@ -758,7 +721,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	/**
 	 * @see org.columba.mail.folder.IMailbox#getHeaderList()
 	 */
-	public HeaderList getHeaderList() throws Exception {
+	public IHeaderList getHeaderList() throws Exception {
 		return getHeaderListStorage().getHeaderList();
 	}
 

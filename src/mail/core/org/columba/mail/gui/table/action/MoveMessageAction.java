@@ -23,11 +23,11 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class MoveMessageAction extends AbstractColumbaAction implements
-		SelectionListener {
+		ISelectionListener {
 	public MoveMessageAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_message_move"));
@@ -80,9 +80,9 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
 		if (dialog.success()) {
-			AbstractMessageFolder destFolder = dialog.getSelectedFolder();
+			IFolder destFolder = dialog.getSelectedFolder();
 
-			FolderCommandReference result = ((MailFrameMediator) getFrameMediator())
+			IFolderCommandReference result = ((MailFrameMediator) getFrameMediator())
 					.getTableSelection();
 			result.setDestinationFolder(destFolder);
 
@@ -95,7 +95,7 @@ public class MoveMessageAction extends AbstractColumbaAction implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

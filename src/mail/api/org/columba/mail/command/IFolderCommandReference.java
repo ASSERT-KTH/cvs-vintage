@@ -19,17 +19,18 @@ package org.columba.mail.command;
 
 import java.io.File;
 
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.core.command.ICommandReference;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.message.IColumbaMessage;
 
 /**
  * @author fdietz
  *
  */
-public interface IFolderCommandReference {
-	AbstractFolder getFolder();
+public interface IFolderCommandReference  extends ICommandReference{
+	IFolder getFolder();
 
-	void setFolder(AbstractFolder folder);
+	void setFolder(IFolder folder);
 
 	Object[] getUids();
 
@@ -37,9 +38,9 @@ public interface IFolderCommandReference {
 
 	void setUids(Object[] uids);
 
-	ColumbaMessage getMessage();
+	IColumbaMessage getMessage();
 
-	void setMessage(ColumbaMessage message);
+	void setMessage(IColumbaMessage message);
 
 	void reduceToFirstUid();
 
@@ -90,10 +91,10 @@ public interface IFolderCommandReference {
 	/**
 	 * @return Returns the destinationFolder.
 	 */
-	AbstractFolder getDestinationFolder();
+	IFolder getDestinationFolder();
 
 	/**
 	 * @param destinationFolder The destinationFolder to set.
 	 */
-	void setDestinationFolder(AbstractFolder destinationFolder);
+	void setDestinationFolder(IFolder destinationFolder);
 }

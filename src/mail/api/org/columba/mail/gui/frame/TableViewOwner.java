@@ -6,7 +6,7 @@
  */
 package org.columba.mail.gui.frame;
 
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.ITableController;
 
 
 /**
@@ -28,5 +28,5 @@ import org.columba.mail.gui.table.TableController;
  * @author fdietz
  */
 public interface TableViewOwner {
-    public abstract TableController getTableController();
+    public abstract ITableController getTableController();
 }

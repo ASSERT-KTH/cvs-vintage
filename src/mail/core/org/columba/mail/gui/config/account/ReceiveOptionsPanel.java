@@ -37,6 +37,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
@@ -365,7 +366,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 	}
 
 	public void updateComponents(boolean b) {
-		DefaultItem receiveItem;
+		IDefaultItem receiveItem;
 
 		if (item.isPopAccount()) {
 			receiveItem = item.getPopItem();

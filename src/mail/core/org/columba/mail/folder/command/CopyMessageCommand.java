@@ -22,12 +22,13 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Attributes;
@@ -49,7 +50,7 @@ public class CopyMessageCommand extends FolderCommand {
 
 	protected AbstractMessageFolder destFolder;
 
-	protected FolderCommandReference r;
+	protected IFolderCommandReference r;
 	
 	/**
 	 * Constructor for CopyMessageCommand.
@@ -57,7 +58,7 @@ public class CopyMessageCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public CopyMessageCommand(DefaultCommandReference reference) {
+	public CopyMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 

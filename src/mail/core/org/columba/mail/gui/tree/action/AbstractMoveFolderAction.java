@@ -20,11 +20,12 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -36,7 +37,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
  * @author redsolo
  */
 public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
-    implements SelectionListener, Observer {
+    implements ISelectionListener, Observer {
 
     private AbstractFolder lastSelectedFolder;
 
@@ -85,7 +86,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
     private void enableAction() {
         XmlElement sortElement = MailConfig.getInstance().get("options").getElement("/options/gui/tree/sorting");
 
-        DefaultItem item = new DefaultItem(sortElement);
+        IDefaultItem item = new DefaultItem(sortElement);
         boolean sorted = item.getBoolean("sorted");
         if (sorted) {
             setEnabled(false);
@@ -101,7 +102,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
         if (lastSelectedFolder == null) {
             setEnabled(false);
         } else {
-            FolderItem item = lastSelectedFolder.getConfiguration();
+            IFolderItem item = lastSelectedFolder.getConfiguration();
 
             if (item.get("property", "accessrights").equals("user")) {
                 int index = lastSelectedFolder.getParent().getIndex(lastSelectedFolder);
@@ -114,7 +115,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
     }
 
     /**
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

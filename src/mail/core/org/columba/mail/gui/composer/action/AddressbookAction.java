@@ -17,10 +17,14 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JFrame;
+
+import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.ISelectAddressDialog;
-import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -58,9 +62,18 @@ public class AddressbookAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController composerController = ((ComposerController) getFrameMediator());
 
-		ISelectAddressDialog dialog = new SelectAddressDialog(composerController
-				.getView().getFrame(), composerController.getHeaderController()
-				.getHeaderItemLists());
+		IDialogFacade dialogFacade = null;
+		try {
+			dialogFacade = ServiceConnector.getDialogFacade();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		JFrame frame = null;
+		ISelectAddressDialog dialog = dialogFacade.getSelectAddressDialog(
+				frame, composerController.getHeaderController()
+						.getHeaderItemLists());
 
 		if (dialog.isSuccess()) {
 

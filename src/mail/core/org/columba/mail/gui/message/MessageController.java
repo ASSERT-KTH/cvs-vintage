@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -45,8 +46,11 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.gui.util.URLController;
+import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.attachment.IAttachmentController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
@@ -56,15 +60,15 @@ import org.columba.mail.gui.message.viewer.HeaderView;
 import org.columba.mail.gui.message.viewer.MessageBodytextViewer;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
 import org.columba.mail.gui.message.viewer.SpamStatusController;
-import org.columba.mail.gui.util.URLController;
+import org.columba.ristretto.message.MimeTree;
 
 /**
  * this class shows the messagebody
  */
 public class MessageController implements HyperlinkListener, MouseListener,
-        CharsetListener, FocusOwner, CaretListener {
+        CharsetListener, FocusOwner, CaretListener, IMessageController {
 
-    private AbstractMessageFolder folder;
+    private IMailbox folder;
 
     private Object uid;
 
@@ -151,11 +155,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
         return uid;
     }
 
-    public AbstractMessageFolder getFolder() {
+    public IMailbox getFolder() {
         return folder;
     }
 
-    public void setFolder(AbstractMessageFolder f) {
+    public void setFolder(IMailbox f) {
         this.folder = f;
     }
 
@@ -559,7 +563,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @param uid			selected message UID
      * @throws Exception
      */
-    public void showMessage(AbstractMessageFolder folder, Object uid) throws Exception {
+    public void showMessage(IMailbox folder, Object uid) throws Exception {
 
         getBodytextViewer().view(folder, uid,
                 (MailFrameMediator) frameController);
@@ -608,7 +612,29 @@ public class MessageController implements HyperlinkListener, MouseListener,
     /**
      * @return Returns the attachmentController.
      */
-    public AttachmentController getAttachmentController() {
+    public IAttachmentController getAttachmentController() {
         return attachmentController;
     }
+
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#filterMessage(org.columba.mail.folder.IMailbox, java.lang.Object)
+	 */
+	public IFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception{
+		return getPgpFilter().filter(folder, uid);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#setMimepartTree(org.columba.ristretto.message.MimeTree)
+	 */
+	public void setMimePartTree(MimeTree mimeTree) {
+		getAttachmentController().setMimePartTree(mimeTree);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#addURLObserver(java.util.Observer)
+	 */
+	public void addURLObserver(Observer observer) {
+		getUrlObservable().addObserver(observer);
+	}
+	
 }

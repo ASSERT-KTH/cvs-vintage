@@ -17,7 +17,7 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -43,7 +43,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public MoveMessageCommand(DefaultCommandReference reference) {
+	public MoveMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 

@@ -20,16 +20,17 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.IMessageNode;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -44,7 +45,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class NextUnreadMessageAction extends AbstractColumbaAction implements
-		SelectionListener {
+		ISelectionListener {
 	/**
 	 * @param frameMediator
 	 * @param name
@@ -83,21 +84,21 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+		IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
-		TableController table = ((TableViewOwner) getFrameMediator())
+		ITableController table = ((TableViewOwner) getFrameMediator())
 				.getTableController();
 		if ( table == null ) return;
 
 		if (r == null)
 			return;
 
-		MessageNode[] nodes = table.getView().getSelectedNodes();
+		IMessageNode[] nodes = table.getSelectedNodes();
 		if (nodes.length == 0)
 			return;
 
-		MessageNode node = nodes[0];
+		MessageNode node = (MessageNode) nodes[0];
 		MessageNode nextNode = node;
 		boolean seen = true;
 		while (seen) {
@@ -105,7 +106,7 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 			if (nextNode == null)
 				return;
 
-			ColumbaHeader h = nextNode.getHeader();
+			IColumbaHeader h = nextNode.getHeader();
 			seen = h.getFlags().getSeen();
 		}
 
@@ -120,7 +121,7 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 
 	/**
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

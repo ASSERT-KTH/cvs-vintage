@@ -28,11 +28,12 @@ import javax.swing.JDialog;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -40,9 +41,10 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -104,7 +106,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 	public VirtualFolder(String name, String type, String path) {
 		super(name, type, path);
 
-		FolderItem item = getConfiguration();
+		IFolderItem item = getConfiguration();
 		item.set("property", "accessrights", "user");
 		item.set("property", "subfolder", "true");
 		item.set("property", "include_subfolders", "true");
@@ -155,7 +157,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		return headerList.containsKey(uid);
 	}
 
-	public HeaderList getHeaderList() throws Exception {
+	public IHeaderList getHeaderList() throws Exception {
 		headerList.clear();
 		getMessageFolderInfo().reset();
 
@@ -165,7 +167,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 	}
 
 	public void addSearchToHistory() throws Exception {
-		VirtualFolder searchFolder = (VirtualFolder) TreeModel.getInstance()
+		VirtualFolder searchFolder = (VirtualFolder) FolderTreeModel.getInstance()
 				.getFolder(106);
 
 		// only create new subfolders if we used the default "Search Folder"
@@ -203,7 +205,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		boolean includes = getConfiguration().getBoolean("property",
 				"include_subfolders");
 
-		FolderItem newFolderItem = newFolder.getConfiguration();
+		IFolderItem newFolderItem = newFolder.getConfiguration();
 		newFolderItem.set("property", "source_uid", uid);
 		newFolderItem.set("property", "include_subfolders", includes);
 
@@ -257,15 +259,15 @@ public class VirtualFolder extends AbstractMessageFolder {
 		newFolder.setName(buf.toString());
 
 		// update tree-view
-		TreeModel.getInstance().nodeStructureChanged(searchFolder);
+		FolderTreeModel.getInstance().nodeStructureChanged(searchFolder);
 
 		// update tree-node (for renaming the new folder)
-		TreeModel.getInstance().nodeChanged(newFolder);
+		FolderTreeModel.getInstance().nodeChanged(newFolder);
 	}
 
 	protected void applySearch() throws Exception {
 		int uid = getConfiguration().getInteger("property", "source_uid");
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) TreeModel.getInstance()
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 				.getFolder(uid);
 
 		XmlElement filter = getConfiguration().getRoot().getElement("filter");
@@ -292,7 +294,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 
 		applySearch(srcFolder, f);
 
-		VirtualFolder folder = (VirtualFolder) TreeModel.getInstance()
+		VirtualFolder folder = (VirtualFolder) FolderTreeModel.getInstance()
 				.getFolder(106);
 	}
 
@@ -421,6 +423,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		headerList.remove(uid);
 	}
 
+
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
 	 *      IMAPFolder)
@@ -433,6 +436,8 @@ public class VirtualFolder extends AbstractMessageFolder {
 
 		return sourceFolder.getMimePartTree(sourceUid);
 	}
+
+
 
 	/**
 	 * Get virtual header.
@@ -742,7 +747,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 	 *            a folder to check if it is a Virtual folder.
 	 * @return true if the folder is a VirtualFolder; false otherwise.
 	 */
-	public boolean supportsAddFolder(AbstractFolder newFolder) {
+	public boolean supportsAddFolder(IFolder newFolder) {
 		return (newFolder instanceof VirtualFolder);
 	}
 

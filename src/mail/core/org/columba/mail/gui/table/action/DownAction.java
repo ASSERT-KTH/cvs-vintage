@@ -24,11 +24,13 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.IMessageNode;
+import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.model.MessageNode;
 
 
@@ -44,7 +46,7 @@ public class DownAction extends AbstractColumbaAction {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
 
-    TableController tableController;
+    ITableController tableController;
     FrameMediator frameController;
 
     public DownAction(FrameMediator frameController) {
@@ -60,15 +62,15 @@ public class DownAction extends AbstractColumbaAction {
         LOG.info("action down performed");
 
         // getting last selection
-        FolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
+        IFolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
        
         // getting current uid
         Object[] uids = r.getUids();
         LOG.info("curr uids: " + uids);
 
         // getting current node (under the selection)
-        DefaultMutableTreeNode currNode = tableController.getView()
-                                                         .getMessagNode(uids[0]);
+        DefaultMutableTreeNode currNode = (DefaultMutableTreeNode) tableController
+                                                         .getMessageNode(uids[0]);
         LOG.info("currNode: " + currNode);
 
         // getting next node
@@ -90,10 +92,10 @@ public class DownAction extends AbstractColumbaAction {
         r.setUids(nextUids);
 
         // check if the node is not null
-        MessageNode[] nodes = new MessageNode[nextUids.length];
+        IMessageNode[] nodes = new MessageNode[nextUids.length];
 
         for (int i = 0; i < nextUids.length; i++) {
-            nodes[i] = tableController.getHeaderTableModel().getMessageNode(nextUids[i]);
+            nodes[i] = tableController.getMessageNode(nextUids[i]);
         }
 
         boolean node_ok = true;
@@ -114,11 +116,8 @@ public class DownAction extends AbstractColumbaAction {
             // saving the last selection for the current folder
             ((AbstractMessageFolder) r.getFolder()).setLastSelection(nextUids[0]);
 
-            int row = tableController.getView().getSelectedRow();
-            tableController.getView().scrollRectToVisible(tableController.getView()
-                                                                         .getCellRect(row,
-                    0, false));
-
+            tableController.makeSelectedRowVisible();
+            
             FolderCommandReference refNew = new FolderCommandReference(r.getFolder(), nextUids);
 
             // view the message under the new node

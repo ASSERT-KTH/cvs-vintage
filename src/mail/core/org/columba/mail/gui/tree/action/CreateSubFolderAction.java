@@ -24,7 +24,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class CreateSubFolderAction extends AbstractColumbaAction
 		implements
-			SelectionListener {
+			ISelectionListener {
 	public CreateSubFolderAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_folder_newfolder"));
@@ -90,7 +90,7 @@ public class CreateSubFolderAction extends AbstractColumbaAction
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

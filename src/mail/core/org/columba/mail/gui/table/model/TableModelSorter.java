@@ -24,7 +24,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.table.TableView;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 /**
  * 
@@ -130,7 +130,7 @@ public class TableModelSorter extends BasicTableModelSorter {
      * 
      * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
      */
-    public void set(HeaderList headerList) {
+    public void set(IHeaderList headerList) {
         super.set(headerList);
 
         if ((headerList != null) && (headerList.count() != 0)) {

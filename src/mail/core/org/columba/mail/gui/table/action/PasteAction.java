@@ -27,7 +27,7 @@ import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.ITableController;
 
 /**
  * @author frd
@@ -36,7 +36,7 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PasteAction extends AbstractColumbaAction {
-	TableController tableController;
+	ITableController tableController;
 
 	FrameMediator frameController;
 
@@ -53,8 +53,8 @@ public class PasteAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		FolderCommandReference ref = ClipboardManager.getInstance()
-				.getMessageSelection();
+		FolderCommandReference ref = (FolderCommandReference) ClipboardManager.getInstance()
+				.getSelection();
 
 		if (ref == null) {
 			return;
@@ -73,7 +73,7 @@ public class PasteAction extends AbstractColumbaAction {
 		}
 
 		if (ClipboardManager.getInstance().isCutAction()) {
-			ClipboardManager.getInstance().clearMessageSelection();
+			ClipboardManager.getInstance().clearSelection();
 		}
 
 		CommandProcessor.getInstance().addOp(c);

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -54,7 +54,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
  * @param references
  */
     public ViewMessageSourceCommand(FrameMediator frameMediator,
-        DefaultCommandReference reference) {
+    		ICommandReference reference) {
         super(frameMediator, reference);
     }
 

@@ -22,8 +22,9 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -96,12 +97,12 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(IMailbox)
  */
-    public void saveOptionsToXml(AbstractMessageFolder folder) {
+    public void saveOptionsToXml(IMailbox folder) {
         XmlElement columns = getConfigNode(folder);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
         TableView view = tableController.getView();
 
         // for each column
@@ -128,9 +129,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(IMailbox)
  */
-    public void loadOptionsFromXml(AbstractMessageFolder folder) {
+    public void loadOptionsFromXml(IMailbox folder) {
         XmlElement columns = getConfigNode(folder);
 
         /*
@@ -145,7 +146,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         }
         */
         
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
         TableView view = tableController.getView();
 
         // remove all columns from table model
@@ -157,7 +158,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         // add columns
         for (int i = 0; i < columns.count(); i++) {
             XmlElement column = columns.getElement(i);
-            DefaultItem columnItem = new DefaultItem(column);
+            IDefaultItem columnItem = new DefaultItem(column);
 
             String name = columnItem.get("name");
             int size = columnItem.getInteger("width");

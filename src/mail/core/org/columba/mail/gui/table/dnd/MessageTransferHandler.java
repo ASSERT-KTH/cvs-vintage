@@ -27,6 +27,7 @@ import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -158,7 +159,7 @@ public class MessageTransferHandler extends TransferHandler {
 		if (c instanceof JTable) {
 			source = (JTable) c;
 
-			FolderCommandReference r = ((MailFrameMediator) tableController
+			IFolderCommandReference r = ((MailFrameMediator) tableController
 					.getFrameController()).getTableSelection();
 
 			return new FolderCommandReferenceTransferable(r);
@@ -172,9 +173,9 @@ public class MessageTransferHandler extends TransferHandler {
 	}
 
 	public class FolderCommandReferenceTransferable implements Transferable {
-		FolderCommandReference data;
+		IFolderCommandReference data;
 
-		public FolderCommandReferenceTransferable(FolderCommandReference c) {
+		public FolderCommandReferenceTransferable(IFolderCommandReference c) {
 			data = c;
 		}
 

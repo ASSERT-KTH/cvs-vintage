@@ -36,6 +36,7 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
@@ -44,9 +45,10 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.ISelectFolderDialog;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.swing.SortedJTree;
@@ -147,27 +149,26 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		// if mediator contains a JTree
 		if (mediator instanceof TreeViewOwner) {
 
-			SortedJTree t = ((TreeViewOwner) mediator).getTreeController()
-					.getView();
+			TreeModel t = ((TreeViewOwner) mediator).getTreeController()
+					.getModel();
 			// if mediator contains a sortable treemodel
-			if (t.getModel() instanceof SortedTreeModelDecorator) {
+			if (t instanceof SortedTreeModelDecorator) {
 				// sorting is enabled
-				SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t
-						.getModel();
+				SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t;
 				Comparator c = treemodel.getSortingComparator();
 
-				tree = new SortedJTree(TreeModel.getInstance());
+				tree = new SortedJTree(FolderTreeModel.getInstance());
 				// apply sorting state
 				SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
 						.getModel();
 				m.setSortingComparator(c);
 			} else {
 				// sorting is disabled
-				tree = new SortedJTree(TreeModel.getInstance());
+				tree = new SortedJTree(FolderTreeModel.getInstance());
 			}
 		} else {
 			// sorting is disabled
-			tree = new SortedJTree(TreeModel.getInstance());
+			tree = new SortedJTree(FolderTreeModel.getInstance());
 		}
 
 		tree.expandRow(0);
@@ -177,7 +178,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		tree.setRootVisible(false);
 
 		// default selection is local Inbox
-		selectedFolder = TreeModel.getInstance().getFolder(101);
+		selectedFolder = FolderTreeModel.getInstance().getFolder(101);
 		tree.setSelectionPath(new TreePath(selectedFolder.getPath()));
 
 		// add selection listener
@@ -209,7 +210,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		return bool;
 	}
 
-	public AbstractMessageFolder getSelectedFolder() {
+	public IFolder getSelectedFolder() {
 		return (AbstractMessageFolder) selectedFolder;
 	}
 
@@ -243,8 +244,8 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 					.getSelected());
 			r.setFolderName(name);
 
-			CommandProcessor.getInstance().addOp(new CreateAndSelectSubFolderCommand(
-					tree, r));
+			CommandProcessor.getInstance().addOp(
+					new CreateAndSelectSubFolderCommand(tree, r));
 		}
 	}
 

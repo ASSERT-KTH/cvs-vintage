@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 
 /**
@@ -30,7 +30,7 @@ import org.columba.mail.message.HeaderList;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public interface TreeTableModelInterface extends TableModel {
-    public void set(HeaderList list);
+    public void set(IHeaderList list);
 
     public void remove(Object[] uids);
 
@@ -40,7 +40,7 @@ public interface TreeTableModelInterface extends TableModel {
 
     public Map getMap();
 
-    public HeaderList getHeaderList();
+    public IHeaderList getHeaderList();
 
     public MessageNode getRootNode();
 

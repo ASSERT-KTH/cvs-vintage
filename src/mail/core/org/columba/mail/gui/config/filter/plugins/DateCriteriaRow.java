@@ -23,10 +23,10 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import org.columba.core.gui.util.DateChooserDialog;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.util.DateChooserDialog;
 
 
 public class DateCriteriaRow extends DefaultCriteriaRow

@@ -29,6 +29,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.parser.AddressParser;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
@@ -294,7 +295,7 @@ public class ComposerModel {
 		this.message = message;
 	}
 
-	public ColumbaMessage getMessage() {
+	public IColumbaMessage getMessage() {
 		return message;
 	}
 

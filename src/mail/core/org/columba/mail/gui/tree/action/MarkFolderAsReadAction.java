@@ -21,7 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkFolderAsReadCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -37,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
  * <p>
  * @author redsolo
  */
-public class MarkFolderAsReadAction extends AbstractColumbaAction implements SelectionListener {
+public class MarkFolderAsReadAction extends AbstractColumbaAction implements ISelectionListener {
 
     /**
      * @param frameMediator the frame mediator

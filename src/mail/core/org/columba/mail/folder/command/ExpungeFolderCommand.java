@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -41,7 +41,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param reference
 	 */
-	public ExpungeFolderCommand(DefaultCommandReference reference) {
+	public ExpungeFolderCommand(ICommandReference reference) {
 		super(reference);
 	}
 

@@ -36,8 +36,10 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RemoteFolder;
@@ -51,6 +53,9 @@ import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IColumbaMessage;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.parser.PassiveHeaderParserInputStream;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPException;
@@ -62,6 +67,7 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
+import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPFolder extends RemoteFolder {
@@ -78,7 +84,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 *  
 	 */
-	private ColumbaMessage aktMessage;
+	private IColumbaMessage aktMessage;
 
 	/**
 	 *  
@@ -93,7 +99,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 *  
 	 */
-	protected HeaderList headerList;
+	protected IHeaderList headerList;
 
 	/**
 	 *  
@@ -132,7 +138,7 @@ public class IMAPFolder extends RemoteFolder {
 	public IMAPFolder(String name, String type, String path) throws Exception {
 		super(name, type, path);
 
-		FolderItem item = getConfiguration();
+		IFolderItem item = getConfiguration();
 		item.set("property", "accessrights", "user");
 		item.set("property", "subfolder", "true");
 	}
@@ -192,7 +198,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
 	 */
-	public HeaderList getHeaderList() throws Exception {
+	public IHeaderList getHeaderList() throws Exception {
 		if (headerList == null || !getServer().isSelected(this)) {
 			synchronizeHeaderlist();
 			synchronizeFlags();
@@ -456,7 +462,7 @@ public class IMAPFolder extends RemoteFolder {
 		MailboxInfo testInfo = new MailboxInfo();
 		while( uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
-			ColumbaHeader header = headerList.get(uid);
+			IColumbaHeader header = headerList.get(uid);
 			Flags flag = header.getFlags();
 			testInfo.incExists();
 			
@@ -528,7 +534,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @param headerList
 	 * @return
 	 */
-	private List extractUids(HeaderList headerList) {
+	private List extractUids(IHeaderList headerList) {
 		LinkedList headerUids = new LinkedList();
 		Enumeration keys = headerList.keys();
 
@@ -594,6 +600,15 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
+	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object,
+	 *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
+	 * @TODO dont use deprecated method
+	 */
+	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
+		return null;
+	}
+
+	/**
 	 * Copies a set of messages from this folder to a destination folder.
 	 * <p>
 	 * The IMAP copy command also keeps the flags intact. So, there's no need to
@@ -655,6 +670,19 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
+	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 * @TODO dont use deprecated method
+	 */
+	public IColumbaHeader getMessageHeader(Object uid) throws Exception {
+		if (headerList == null) {
+			getHeaderList();
+		}
+
+		return (ColumbaHeader) headerList.get(uid);
+	}
+
+	/**
 	 * Method getMessage.
 	 * 
 	 * @param uid
@@ -662,7 +690,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @return AbstractMessage
 	 * @throws Exception
 	 */
-	public ColumbaMessage getMessage(Object uid) throws Exception {
+	public IColumbaMessage getMessage(Object uid) throws Exception {
 		return new ColumbaMessage((ColumbaHeader) headerList.get((String) uid));
 	}
 
@@ -711,7 +739,7 @@ public class IMAPFolder extends RemoteFolder {
 	public boolean tryToGetLock(Object locker) {
 		// IMAP Folders have no own lock ,but share the lock from the Root
 		// to ensure that only one operation can be processed simultanous
-		AbstractFolder root = getRootFolder();
+		IFolder root = getRootFolder();
 
 		if (root != null) {
 			return root.tryToGetLock(locker);
@@ -724,7 +752,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
 	public void releaseLock(Object locker) {
-		AbstractFolder root = getRootFolder();
+		IFolder root = getRootFolder();
 
 		if (root != null) {
 			root.releaseLock(locker);
@@ -736,7 +764,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
 	 */
-	public void addSubfolder(AbstractFolder child) throws Exception {
+	public void addSubfolder(IFolder child) throws Exception {
 		if (child instanceof IMAPFolder) {
 
 			getServer().createMailbox(child.getName(), this);
@@ -946,7 +974,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
 	 */
-	public boolean supportsAddFolder(AbstractFolder folder) {
+	public boolean supportsAddFolder(IFolder folder) {
 		return true;
 	}
 

@@ -27,9 +27,9 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.FolderCreationException;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -40,7 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class CreateSubFolderCommand extends Command {
 
-	private AbstractFolder parentFolder;
+	private IFolder parentFolder;
 
 	private Hashtable attributes;
 
@@ -62,7 +62,7 @@ public class CreateSubFolderCommand extends Command {
 		String name = ((FolderCommandReference) getReference()).getFolderName();
 
 		try {
-			AbstractFolder subFolder = FolderFactory.getInstance()
+			IFolder subFolder = FolderFactory.getInstance()
 					.createDefaultChild(parentFolder, name);
 		} catch (FolderCreationException ex) {
 			// show error message 

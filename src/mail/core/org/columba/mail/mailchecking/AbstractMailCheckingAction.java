@@ -22,6 +22,7 @@ import javax.swing.Timer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
@@ -67,7 +68,7 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
 		// recreate name of menuitem
 		createName();
 
-		DefaultItem item = null;
+		IDefaultItem item = null;
 
 		if (accountItem.isPopAccount()) {
 			XmlElement e = accountItem.getRoot().getElement("popserver");

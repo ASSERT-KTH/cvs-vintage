@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
@@ -75,7 +75,7 @@ public class ReplyCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public ReplyCommand(DefaultCommandReference reference) {
+    public ReplyCommand(ICommandReference reference) {
         super(reference);
     }
 

@@ -27,7 +27,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.smtp.command.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -74,7 +74,7 @@ public class SendAction extends AbstractColumbaAction {
             return;
         }
 
-        OutboxFolder outboxFolder = (OutboxFolder) TreeModel.getInstance().getFolder(103);
+        OutboxFolder outboxFolder = (OutboxFolder) FolderTreeModel.getInstance().getFolder(103);
 
         ComposerCommandReference r = new ComposerCommandReference(composerController, outboxFolder);
 

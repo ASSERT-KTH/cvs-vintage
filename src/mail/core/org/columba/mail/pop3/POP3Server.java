@@ -38,10 +38,11 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
@@ -120,7 +121,7 @@ public class POP3Server {
 
 		int inboxInt = Integer.parseInt(inboxStr);
 
-		AbstractMessageFolder f = (AbstractMessageFolder) TreeModel.getInstance()
+		AbstractMessageFolder f = (AbstractMessageFolder) FolderTreeModel.getInstance()
 				.getFolder(inboxInt);
 
 		return f;
@@ -196,7 +197,7 @@ public class POP3Server {
 		Enumeration uids = headerList.keys();
 		while (uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
-			ColumbaHeader header = headerList.get(uid);
+			IColumbaHeader header = headerList.get(uid);
 			if (((Date) header.get("columba.date")).before(date)) {
 				deleteMessage(uid);
 				LOG.info("removed " + uid + " from " + accountItem.getName());

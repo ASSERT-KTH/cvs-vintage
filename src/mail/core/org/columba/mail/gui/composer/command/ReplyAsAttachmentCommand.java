@@ -19,7 +19,7 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -42,7 +42,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ReplyAsAttachmentCommand(DefaultCommandReference reference) {
+	public ReplyAsAttachmentCommand(ICommandReference reference) {
 		super(reference);
 	}
 

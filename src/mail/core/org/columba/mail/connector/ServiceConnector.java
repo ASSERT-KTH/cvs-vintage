@@ -20,6 +20,7 @@ package org.columba.mail.connector;
 import org.columba.addressbook.facade.AddressbookServiceProvider;
 import org.columba.addressbook.facade.IConfigFacade;
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
@@ -49,6 +50,12 @@ public class ServiceConnector {
 			throws ServiceNotFoundException {
 		return (IConfigFacade) ServiceManager.getInstance().createService(
 				AddressbookServiceProvider.CONFIG);
+	}
+
+	public static IDialogFacade getDialogFacade()
+			throws ServiceNotFoundException {
+		return (IDialogFacade) ServiceManager.getInstance().createService(
+				AddressbookServiceProvider.DIALOG);
 	}
 
 }

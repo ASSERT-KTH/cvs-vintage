@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 
 /**
  * @author fdietz
@@ -26,5 +26,5 @@ import org.columba.mail.folder.AbstractMessageFolder;
 public interface ISelectFolderDialog {
 	boolean success();
 
-	AbstractMessageFolder getSelectedFolder();
+	IFolder getSelectedFolder();
 }

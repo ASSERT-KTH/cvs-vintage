@@ -18,10 +18,9 @@
 package org.columba.mail.folder.command;
 
 import org.columba.addressbook.facade.IContactFacade;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
@@ -40,14 +39,14 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  */
 public class AddAllSendersToAddressbookCommand extends FolderCommand {
-	org.columba.addressbook.folder.AbstractFolder selectedFolder;
+	org.columba.addressbook.folder.IFolder selectedFolder;
 
 	/**
 	 * Constructor for AddAllSendersToAddressbookCommand.
 	 * 
 	 * @param references
 	 */
-	public AddAllSendersToAddressbookCommand(DefaultCommandReference reference) {
+	public AddAllSendersToAddressbookCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -58,7 +57,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 	 * @param references
 	 */
 	public AddAllSendersToAddressbookCommand(FrameMediator frame,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		super(frame, reference);
 	}
 
@@ -78,9 +77,15 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		// register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		// open addressbook selection dialog
-		ISelectFolderDialog dialog = AddressbookTreeModel
-				.getInstance().getSelectAddressbookFolderDialog();
+		IDialogFacade dialogFacade = null;
+		try {
+			dialogFacade = ServiceConnector.getDialogFacade();
+		} catch (ServiceNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+        // ask the user which addressbook he wants to save this address to
+        ISelectFolderDialog dialog = dialogFacade.getSelectFolderDialog();
 
 		selectedFolder = dialog.getSelectedFolder();
 

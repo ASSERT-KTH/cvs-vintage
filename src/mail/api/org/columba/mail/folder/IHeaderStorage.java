@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Header;
 
 
@@ -66,7 +66,7 @@ public interface IHeaderStorage {
      * @return HeaderList list of headers
      * @throws Exception
      */
-    public HeaderList getHeaderList() throws Exception;
+    public IHeaderList getHeaderList() throws Exception;
     
     
     /**

@@ -37,7 +37,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.pop3.POP3ServerCollection;
@@ -252,7 +252,7 @@ public class AccountDialog extends JDialog implements ActionListener {
                 // update tree label
                 int uid = accountItem.getUid();
 
-                IMAPRootFolder folder = (IMAPRootFolder) TreeModel.getInstance()
+                IMAPRootFolder folder = (IMAPRootFolder) FolderTreeModel.getInstance()
                         .getImapFolder(uid);
                 folder.updateConfiguration();
             }

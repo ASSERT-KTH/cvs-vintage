@@ -22,7 +22,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -65,7 +65,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	 * 
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
-	public DefaultCommandReference getSelection() {
+	public ICommandReference getSelection() {
 		if ( selectedFolders.size() == 0) return null;
 		
 		FolderCommandReference reference = new FolderCommandReference(
@@ -111,7 +111,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 		
 	}
 
-	public void setSelection(DefaultCommandReference selection) {
+	public void setSelection(ICommandReference selection) {
 		
 		TreePath path = ((FolderCommandReference) selection).getFolder()
 				.getSelectionTreePath();

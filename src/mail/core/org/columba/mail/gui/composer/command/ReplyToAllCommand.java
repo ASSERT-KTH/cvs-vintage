@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -48,7 +48,7 @@ public class ReplyToAllCommand extends ReplyCommand {
      * @param frameMediator
      * @param references
      */
-    public ReplyToAllCommand(DefaultCommandReference reference) {
+    public ReplyToAllCommand(ICommandReference reference) {
         super(reference);
     }
 

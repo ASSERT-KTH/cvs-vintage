@@ -21,7 +21,7 @@ import java.util.Enumeration;
 import java.util.Map;
 
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 /**
  * @author fdietz
@@ -51,11 +51,13 @@ public class TableModelFilter extends BasicTableModelFilter {
 
     public void update() {
         if (isEnabled()) {
-            HeaderList headerList = getHeaderList();
+            IHeaderList headerList = getHeaderList();
             MessageNode rootNode = getRootNode();
             Map map = getMap();
 
             // remove all children from tree
+            if ( rootNode == null ) rootNode = new MessageNode(null, null);
+            
             rootNode.removeAllChildren();
 
             // clear messagenode cache

@@ -28,10 +28,10 @@ import javax.swing.event.DocumentListener;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusManager;
+import org.columba.core.gui.util.UndoDocument;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.util.UndoDocument;
 
 
 /**

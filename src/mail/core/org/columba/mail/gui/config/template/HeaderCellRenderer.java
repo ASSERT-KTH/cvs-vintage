@@ -12,7 +12,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 
 
 /**
@@ -22,12 +22,12 @@ import org.columba.mail.message.HeaderList;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class HeaderCellRenderer extends DefaultListCellRenderer {
-    HeaderList list;
+	IHeaderList list;
 
     /**
  *
  */
-    public HeaderCellRenderer(HeaderList list) {
+    public HeaderCellRenderer(IHeaderList list) {
         super();
         this.list = list;
     }

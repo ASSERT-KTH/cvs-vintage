@@ -50,9 +50,9 @@ import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
@@ -441,7 +441,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			locationLabel2.setText(folder.getDirectoryFile().getPath());
 
-			FolderItem item = folder.getConfiguration();
+			IFolderItem item = folder.getConfiguration();
 			XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
 			CheckableItemListTableModel model = new CheckableItemListTableModel();
@@ -482,7 +482,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				}
 			}
 
-			FolderItem item = folder.getConfiguration();
+			IFolderItem item = folder.getConfiguration();
 			XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
 			// remove all old elements
@@ -570,7 +570,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
 		} else if (action.equals("RESET")) { //$NON-NLS-1$
 
-			FolderItem item = folder.getConfiguration();
+			IFolderItem item = folder.getConfiguration();
 			XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
 			// remove all options

@@ -21,10 +21,10 @@ import java.util.logging.Logger;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageSourceAsCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -37,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author Karl Peder Olesen (karlpeder), 20030615
  */
 public class SaveMessageSourceAsAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
@@ -66,7 +66,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         LOG.info("Save Message Source As... called");
 
@@ -78,7 +78,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
     /**
      * Handles enabling / disabling of menu/action depending
      * on selection
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

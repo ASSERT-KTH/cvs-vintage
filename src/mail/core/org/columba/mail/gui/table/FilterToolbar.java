@@ -39,7 +39,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -196,7 +196,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 					.getTableModelFilteredView();
 
 			if (action.equals("ADVANCED")) {
-				AbstractMessageFolder searchFolder = (AbstractMessageFolder) TreeModel.getInstance()
+				AbstractMessageFolder searchFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 						.getFolder(106);
 
 				AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFrameMediator) tableController

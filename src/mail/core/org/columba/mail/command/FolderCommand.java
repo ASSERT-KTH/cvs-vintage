@@ -16,7 +16,7 @@
 package org.columba.mail.command;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.gui.frame.FrameMediator;
 
 /**
@@ -27,16 +27,16 @@ import org.columba.core.gui.frame.FrameMediator;
 public abstract class FolderCommand extends Command {
 	
 
-	public FolderCommand(DefaultCommandReference reference) {
+	public FolderCommand(ICommandReference reference) {
 		super(reference);
 	}
 
 	
-	public FolderCommand(FrameMediator frame, DefaultCommandReference reference) {
+	public FolderCommand(FrameMediator frame, ICommandReference reference) {
 		super(frame, reference);
 	}
 	
-	public FolderCommandReference getFolderCommandReference() {
+	public IFolderCommandReference getFolderCommandReference() {
 		return (FolderCommandReference) getReference();
 	}
 

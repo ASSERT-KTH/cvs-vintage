@@ -23,10 +23,10 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -34,7 +34,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 
 public class ViewMessageSourceAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     public ViewMessageSourceAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe", "menu_view_source"));
@@ -59,7 +59,7 @@ public class ViewMessageSourceAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         ViewMessageSourceCommand c = new ViewMessageSourceCommand(getFrameMediator(),
                 r);
@@ -68,7 +68,7 @@ public class ViewMessageSourceAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TableSelectionChangedEvent) e).getUids().length > 0) {

@@ -20,18 +20,20 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderInconsistentException;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.FolderInconsistentException;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
@@ -47,7 +49,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 	private Flags flags;
 
-	private AbstractMessageFolder srcFolder;
+	private IMailbox srcFolder;
 
 	private Object uid;
 
@@ -56,8 +58,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 * 
 	 * @param references
 	 */
-	public ViewMessageCommand(FrameMediator frame,
-			DefaultCommandReference reference) {
+	public ViewMessageCommand(FrameMediator frame, ICommandReference reference) {
 		super(frame, reference);
 
 		priority = Command.REALTIME_PRIORITY;
@@ -69,7 +70,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 
-		MessageController messageController = ((MessageViewOwner) frameMediator)
+		IMessageController messageController = ((MessageViewOwner) frameMediator)
 				.getMessageController();
 
 		// display changes
@@ -83,7 +84,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// restart timer which marks the message as read
 			// after a user configurable time interval
 			((TableViewOwner) frameMediator).getTableController()
-					.getMarkAsReadTimer().restart(
+					.restartMarkAsReadTimer(
 							(FolderCommandReference) getReference());
 		}
 
@@ -97,7 +98,7 @@ public class ViewMessageCommand extends FolderCommand {
 		FolderCommandReference r = (FolderCommandReference) getReference();
 
 		// get selected folder
-		srcFolder = (AbstractMessageFolder) r.getFolder();
+		srcFolder = (IMailbox) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
@@ -122,19 +123,19 @@ public class ViewMessageCommand extends FolderCommand {
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
 					null, options, options[0]);
 
-			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
-					getFrameMediator(), r));
+			CommandProcessor.getInstance().addOp(
+					new ViewHeaderListCommand(getFrameMediator(), r));
 
 			return;
 		}
 
 		// get messagecontroller of frame
-		MessageController messageController = ((MessageViewOwner) frameMediator)
+		IMessageController messageController = ((MessageViewOwner) frameMediator)
 				.getMessageController();
 
 		// if necessary decrypt/verify message
-		FolderCommandReference newRefs = messageController.getPgpFilter()
-				.filter(srcFolder, uid);
+		IFolderCommandReference newRefs = messageController.filterMessage(
+				srcFolder, uid);
 
 		// pass work along to MessageController
 		if (newRefs != null) {
@@ -146,7 +147,6 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// TODO (@author fdietz) make this thread-safe
 		// update attachment model
-		messageController.getAttachmentController().setMimePartTree(
-				mimePartTree);
+		messageController.setMimePartTree(mimePartTree);
 	}
 }

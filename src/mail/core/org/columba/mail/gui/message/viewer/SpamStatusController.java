@@ -23,8 +23,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
@@ -58,7 +58,7 @@ public class SpamStatusController implements Viewer, ActionListener {
 	 * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public void view(AbstractMessageFolder folder, Object uid,
+	public void view(IMailbox folder, Object uid,
 			MailFrameMediator mediator) throws Exception {
 		Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
 
@@ -86,7 +86,7 @@ public class SpamStatusController implements Viewer, ActionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		// get selected message
-		FolderCommandReference r = mediator.getTableSelection();
+		IFolderCommandReference r = mediator.getTableSelection();
 
 		// learn message as non spam
 		CommandProcessor.getInstance().addOp(new LearnMessageAsHamCommand(r));

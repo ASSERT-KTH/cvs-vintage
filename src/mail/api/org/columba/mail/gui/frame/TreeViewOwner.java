@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.tree.ITreeController;
 
 
 /**
@@ -23,6 +23,6 @@ import org.columba.mail.gui.message.MessageController;
  *
  * @author fdietz
  */
-public interface MessageViewOwner {
-    public MessageController getMessageController();
+public interface TreeViewOwner {
+    public ITreeController getTreeController();
 }

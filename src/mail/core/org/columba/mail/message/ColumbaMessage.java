@@ -30,9 +30,9 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz, tstich
  */
-public class ColumbaMessage {
+public class ColumbaMessage implements IColumbaMessage {
 
-    protected ColumbaHeader columbaHeader;
+    protected IColumbaHeader columbaHeader;
 
     protected Message message;
 
@@ -42,7 +42,7 @@ public class ColumbaMessage {
         this(new ColumbaHeader());
     }
 
-    public ColumbaMessage(ColumbaHeader header) {
+    public ColumbaMessage(IColumbaHeader header) {
         columbaHeader = header;
         message = new Message();
 
@@ -61,7 +61,7 @@ public class ColumbaMessage {
 
     }
 
-    public ColumbaMessage(ColumbaHeader h, Message m) {
+    public ColumbaMessage(IColumbaHeader h, Message m) {
         columbaHeader = h;
 
         columbaHeader.setHeader(m.getHeader());
@@ -109,7 +109,7 @@ public class ColumbaMessage {
      * 
      * @see org.columba.ristretto.message.Message#getHeader()
      */
-    public ColumbaHeader getHeader() {
+    public IColumbaHeader getHeader() {
         return columbaHeader;
     }
 
@@ -118,7 +118,7 @@ public class ColumbaMessage {
      * 
      * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
      */
-    public void setHeader(ColumbaHeader h) {
+    public void setHeader(IColumbaHeader h) {
         columbaHeader = h;
     }
 

@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
@@ -66,7 +66,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public OpenMessageWithComposerCommand(DefaultCommandReference reference) {
+	public OpenMessageWithComposerCommand(ICommandReference reference) {
 		super(reference);
 	}
 

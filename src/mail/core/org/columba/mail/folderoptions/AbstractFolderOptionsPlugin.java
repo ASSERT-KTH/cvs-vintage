@@ -18,7 +18,7 @@ package org.columba.mail.folderoptions;
 import org.columba.core.plugin.Plugin;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
 
@@ -89,14 +89,14 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
 *
 * @param folder     selected folder
 */
-    public abstract void saveOptionsToXml(AbstractMessageFolder folder);
+    public abstract void saveOptionsToXml(IMailbox folder);
 
     /**
  * Load options of this plugin.
  *
  * @param folder       selected folder
  */
-    public abstract void loadOptionsFromXml(AbstractMessageFolder folder);
+    public abstract void loadOptionsFromXml(IMailbox folder);
 
     /**
  * Get frame mediator
@@ -125,7 +125,7 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
  * @param folder        currently selected folder
  * @return              xml node
  */
-    public XmlElement getConfigNode(AbstractMessageFolder folder) {
+    public XmlElement getConfigNode(IMailbox folder) {
         // global option
         if (folder == null) {
             return FolderItem.getGlobalOptions().getElement(getName());

@@ -23,7 +23,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
-import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 
@@ -66,7 +66,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
         } else if ( uids.length == 0){
         	// no message selected
         	
-        	MessageController c = ((MessageViewOwner)getFrameMediator()).getMessageController();
+        	IMessageController c = ((MessageViewOwner)getFrameMediator()).getMessageController();
         	c.clear();
         }
     }

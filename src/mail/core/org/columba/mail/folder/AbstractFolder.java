@@ -20,14 +20,17 @@ import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folder.event.FolderListener;
+import org.columba.mail.folder.event.IFolderListener;
 
 /**
  * Represents a treenode and is the abstract class every folder extends.
@@ -38,6 +41,7 @@ import org.columba.mail.folder.event.FolderListener;
  */
 public abstract class AbstractFolder extends DefaultMutableTreeNode implements IFolder {
 
+	
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.folder");
@@ -46,13 +50,13 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	private static int nextUid = 0;
 
 	// folderitem wraps xml configuration from tree.xml
-	protected FolderItem node;
+	protected IFolderItem node;
 
 	// locking mechanism
 	protected Lock myLock = new Lock();
 
 	// Root folder cache
-	private AbstractFolder rootFolder;
+	private IFolder rootFolder;
 
 	protected EventListenerList listenerList = new EventListenerList();
 
@@ -93,22 +97,22 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	/**
 	 * Adds a listener.
 	 */
-	public void addFolderListener(FolderListener l) {
-		listenerList.add(FolderListener.class, l);
+	public void addFolderListener(IFolderListener l) {
+		listenerList.add(IFolderListener.class, l);
 	}
 
 	/**
 	 * Removes a previously registered listener.
 	 */
-	public void removeFolderListener(FolderListener l) {
-		listenerList.remove(FolderListener.class, l);
+	public void removeFolderListener(IFolderListener l) {
+		listenerList.remove(IFolderListener.class, l);
 	}
 
 	/**
 	 * Propagates an event to all registered listeners notifying them that this
 	 * folder has been renamed.
 	 */
-	protected void fireFolderPropertyChanged() {
+	public void fireFolderPropertyChanged() {
 		FolderEvent e = new FolderEvent(this);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -117,7 +121,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).folderPropertyChanged(e);
+				((IFolderListener) listeners[i + 1]).folderPropertyChanged(e);
 			}
 		}
 	}
@@ -126,7 +130,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Propagates an event to all registered listeners notifying them that a
 	 * subfolder has been added to this folder.
 	 */
-	protected void fireFolderAdded(AbstractFolder folder) {
+	public void fireFolderAdded(IFolder folder) {
 		FolderEvent e = new FolderEvent(this, folder);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -135,7 +139,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).folderAdded(e);
+				((IFolderListener) listeners[i + 1]).folderAdded(e);
 			}
 		}
 	}
@@ -145,7 +149,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * folder has been removed from its parent folder. This method removes all
 	 * registered listeners.
 	 */
-	protected void fireFolderRemoved() {
+	public void fireFolderRemoved() {
 		FolderEvent e = new FolderEvent(this, this);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -154,7 +158,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == FolderListener.class) {
-				((FolderListener) listeners[i + 1]).folderRemoved(e);
+				((IFolderListener) listeners[i + 1]).folderRemoved(e);
 				listenerList.remove(FolderListener.class,
 						(FolderListener) listeners[i + 1]);
 			}
@@ -171,6 +175,45 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	}
 
 	/**
+	 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
+	 */
+	protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
+		TreeNode[] retNodes;
+
+		if (aNode == null) {
+			if (depth == 0) {
+				return null;
+			} else {
+				retNodes = new TreeNode[depth];
+			}
+		} else {
+			depth++;
+			retNodes = getPathToRoot(aNode.getParent(), depth);
+			retNodes[retNodes.length - depth] = aNode;
+		}
+
+		return retNodes;
+	}
+
+	/**
+	 * Return tree path as string
+	 * 
+	 * @return String tree path
+	 */
+	public String getTreePath() {
+		TreeNode[] treeNode = getPathToRoot(this, 0);
+
+		StringBuffer path = new StringBuffer();
+
+		for (int i = 1; i < treeNode.length; i++) {
+			AbstractFolder folder = (AbstractFolder) treeNode[i];
+			path.append("/" + folder.getName());
+		}
+
+		return path.toString();
+	}
+	
+	/**
 	 * Returns the folder's UID.
 	 */
 	public int getUid() {
@@ -180,14 +223,14 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	/**
 	 * Returns the folder's configuration.
 	 */
-	public FolderItem getConfiguration() {
+	public IFolderItem getConfiguration() {
 		return node;
 	}
 
 	/**
 	 * Sets the folder's configuration.
 	 */
-	public void setConfiguration(FolderItem node) {
+	public void setConfiguration(IFolderItem node) {
 		this.node = node;
 
 		try {
@@ -205,7 +248,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	public String getName() {
 		String name = null;
 
-		FolderItem item = getConfiguration();
+		IFolderItem item = getConfiguration();
 		name = item.get("property", "name");
 
 		return name;
@@ -219,7 +262,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Sets the folder's name. This method notifies registered FolderListeners.
 	 */
 	public void setName(String newName) throws Exception {
-		FolderItem item = getConfiguration();
+		IFolderItem item = getConfiguration();
 		item.set("property", "name", newName);
 		fireFolderPropertyChanged();
 	}
@@ -246,8 +289,8 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * ************************** treenode management
 	 * ******************************
 	 */
-	public void insert(AbstractFolder newFolder, int newIndex) {
-		AbstractFolder oldParent = (AbstractFolder) newFolder.getParent();
+	public void insert(IFolder newFolder, int newIndex) {
+		IFolder oldParent = (IFolder) newFolder.getParent();
 		int oldIndex = oldParent.getIndex(newFolder);
 		oldParent.remove(oldIndex);
 
@@ -302,7 +345,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Adds a child folder to this folder. This method will notify registered
 	 * FolderListeners.
 	 */
-	public void addSubfolder(AbstractFolder child) throws Exception {
+	public void addSubfolder(IFolder child) throws Exception {
 		getConfiguration().getRoot().addElement(
 				child.getConfiguration().getRoot());
 		fireFolderAdded(child);
@@ -352,7 +395,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	public void moveTo(AbstractFolder newParent) {
+	public void moveTo(IFolder newParent) {
 		// do the same for the XmlElement node
 		getConfiguration().getRoot().removeFromParent();	
 		
@@ -382,7 +425,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	public boolean supportsAddFolder(AbstractFolder newFolder) {
+	public boolean supportsAddFolder(IFolder newFolder) {
 		return false;
 	}
 
@@ -403,10 +446,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * @return root parent folder of this folder
 	 */
-	public AbstractFolder getRootFolder() {
+	public IFolder getRootFolder() {
 		// If rootFolder is not cached traverse the tree
 		if (rootFolder == null) {
-			AbstractFolder parent = (AbstractFolder) getParent();
+			IFolder parent = (IFolder) getParent();
 
 			// There is no parent
 			if (parent == null) {

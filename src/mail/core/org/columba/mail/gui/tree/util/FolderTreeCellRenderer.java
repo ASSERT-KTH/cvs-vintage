@@ -25,10 +25,11 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.ristretto.message.MailboxInfo;
@@ -120,7 +121,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 			MailboxInfo info = folder.getMessageFolderInfo();
 
 			// get folder item configuration
-			FolderItem item = folder.getConfiguration();
+			IFolderItem item = folder.getConfiguration();
 
 			if (item == null)
 				return this;
@@ -142,7 +143,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	 * @param item			folderitem containing xml-configuration
 	 * @return				label
 	 */
-	private String createLabelText(MailboxInfo info, FolderItem item) {
+	private String createLabelText(MailboxInfo info, IFolderItem item) {
 
 		// name of folder
 		String name = item.get("property", "name");
@@ -207,7 +208,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	/**
 	 * Returns an icon suitable for the given folder.
 	 */
-	public static Icon getFolderIcon(AbstractFolder node, boolean expanded) {
+	public static Icon getFolderIcon(IFolder node, boolean expanded) {
 		if (node instanceof LocalRootFolder) {
 			return localRootFolderIcon;
 		} else if (node instanceof IMAPRootFolder) {

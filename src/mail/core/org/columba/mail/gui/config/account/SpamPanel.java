@@ -35,7 +35,8 @@ import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.folder.IFolder;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
@@ -187,7 +188,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             incomingCheckBox.setSelected(spam.isMoveIncomingJunkMessagesEnabled());
             
             AbstractMessageFolder folder = (AbstractMessageFolder)
-TreeModel.getInstance().getFolder(spam.getIncomingCustomFolder());
+FolderTreeModel.getInstance().getFolder(spam.getIncomingCustomFolder());
             String treePath = folder.getTreePath();
             incomingChooseFolderButton.setText(treePath);
             
@@ -197,7 +198,7 @@ TreeModel.getInstance().getFolder(spam.getIncomingCustomFolder());
             
             markCheckBox.setSelected(spam.isMoveMessageWhenMarkingEnabled());
             
-            folder = (AbstractMessageFolder) TreeModel.getInstance().getFolder(
+            folder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(
                 spam.getMoveCustomFolder());
             treePath = folder.getTreePath();
             markChooseFolderButton.setText(treePath);
@@ -219,24 +220,24 @@ TreeModel.getInstance().getFolder(spam.getIncomingCustomFolder());
             TreeNodeList list = new TreeNodeList(
                 incomingChooseFolderButton.getText());
             AbstractMessageFolder folder = (AbstractMessageFolder)
-TreeModel.getInstance().getFolder(list);
+FolderTreeModel.getInstance().getFolder(list);
             
             if (folder == null) {
                 // user didn't select any folder
                 // -> make Inbox the default folder
-                folder = (AbstractMessageFolder) TreeModel.getInstance().getFolder(101);
+                folder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(101);
             }
             
             int uid = folder.getUid();
             spam.setIncomingCustomFolder(uid);
             
             list = new TreeNodeList(markChooseFolderButton.getText());
-            folder = (AbstractMessageFolder) TreeModel.getInstance().getFolder(list);
+            folder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(list);
             
             if (folder == null) {
                 // user didn't select any folder
                 // -> make Inbox the default folder
-                folder = (AbstractMessageFolder) TreeModel.getInstance().getFolder(101);
+                folder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(101);
             }
             
             uid = folder.getUid();
@@ -257,7 +258,7 @@ TreeModel.getInstance().getFolder(list);
         } else if (action.equals("MARK_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-                AbstractMessageFolder folder = dialog.getSelectedFolder();
+                IFolder folder = dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 markChooseFolderButton.setText(treePath);
@@ -265,7 +266,7 @@ TreeModel.getInstance().getFolder(list);
         } else if (action.equals("INCOMING_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-                AbstractMessageFolder folder = dialog.getSelectedFolder();
+               IFolder folder = dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 incomingChooseFolderButton.setText(treePath);

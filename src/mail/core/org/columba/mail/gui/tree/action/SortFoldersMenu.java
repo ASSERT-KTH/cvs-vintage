@@ -23,11 +23,13 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CRadioButtonMenuItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.TreeViewOwner;
+import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.comparator.FolderComparator;
 import org.columba.mail.gui.tree.comparator.UnreadFolderComparator;
 import org.columba.mail.util.MailResourceLoader;
@@ -94,7 +96,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
 
         FolderComparator comparator = null;
         if (element != null) {
-            DefaultItem item = new DefaultItem(element);
+            IDefaultItem item = new DefaultItem(element);
             boolean ascending = item.getBoolean("ascending", true);
             activeComparator = 
                 item.getRoot().getAttribute("comparator", "").toUpperCase();
@@ -124,8 +126,8 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
 
         if (comparator != null) {
             TreeViewOwner mediator = (TreeViewOwner) getFrameMediator();
-            mediator.getTreeController().getView().setFolderComparator(comparator);
-            mediator.getTreeController().getView().setSortingEnabled(true);
+            ((TreeController)mediator.getTreeController()).getView().setFolderComparator(comparator);
+            ((TreeController)mediator.getTreeController()).getView().setSortingEnabled(true);
         }
     }
 
@@ -143,7 +145,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
             element = treeElement.addSubElement("sorting");
         }
 
-        DefaultItem item = new DefaultItem(element);
+        IDefaultItem item = new DefaultItem(element);
         item.set("ascending", ascendingMenuItem.isSelected());
         item.set("comparator", activeComparator.toLowerCase());
         item.set("sorted", !activeComparator.equals(UNSORTED_ACTION));
@@ -181,22 +183,22 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
             activeComparator = UNSORTED_ACTION;
             ascendingMenuItem.setEnabled(false);
             descendingMenuItem.setEnabled(false);
-            mediator.getTreeController().getView().setSortingEnabled(false);
+            ((TreeController)mediator.getTreeController()).getView().setSortingEnabled(false);
         } else {
 
             ascendingMenuItem.setEnabled(true);
             descendingMenuItem.setEnabled(true);
-            mediator.getTreeController().getView().setSortingEnabled(true);
+            ((TreeController)mediator.getTreeController()).getView().setSortingEnabled(true);
             if (action.equals(ASC_ACTION)) {
-                mediator.getTreeController().getView().sortAscending(true);
+            	((TreeController)mediator.getTreeController()).getView().sortAscending(true);
             } else if (action.equals(DESC_ACTION)) {
-                mediator.getTreeController().getView().sortAscending(false);
+            	((TreeController)mediator.getTreeController()).getView().sortAscending(false);
             } else {
                 activeComparator = action;
                 if (action.equals(UNREAD_ACTION)) {
-                    mediator.getTreeController().getView().setFolderComparator(new UnreadFolderComparator(ascendingMenuItem.isSelected()));
+                	((TreeController)mediator.getTreeController()).getView().setFolderComparator(new UnreadFolderComparator(ascendingMenuItem.isSelected()));
                 } else if (action.equals(ALPHABETIC_ACTION)) {
-                    mediator.getTreeController().getView().setFolderComparator(new FolderComparator(ascendingMenuItem.isSelected()));
+                	((TreeController)mediator.getTreeController()).getView().setFolderComparator(new FolderComparator(ascendingMenuItem.isSelected()));
                 }
             }
         }

@@ -22,7 +22,9 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.plugin.FolderOptionsPluginHandler;
@@ -38,7 +40,7 @@ import org.columba.mail.plugin.FolderOptionsPluginHandler;
  *
  * @author fdietz
  */
-public class FolderOptionsController {
+public class FolderOptionsController implements IFolderOptionsController {
     /**
      * Plugins executed before updating the table model
      * <p>
@@ -125,7 +127,7 @@ public class FolderOptionsController {
      *
      * @param folder        selected folder
      */
-    public void load(AbstractMessageFolder folder, int state) {
+    public void load(IMailbox folder, int state) {
         // get list of plugins
         String[] ids = handler.getPluginIdList(state);
 
@@ -140,7 +142,7 @@ public class FolderOptionsController {
      *
      * @param folder        selected folder
      */
-    public void save(AbstractMessageFolder folder) {
+    public void save(IMailbox folder) {
         // get list of plugins
         String[] ids = handler.getPluginIdList();
 
@@ -178,7 +180,7 @@ public class FolderOptionsController {
      * @param name          name of plugin (example: ColumnOptions)
      * @return              parent configuration node
      */
-    public XmlElement getConfigNode(AbstractMessageFolder folder, String name) {
+    public XmlElement getConfigNode(IMailbox folder, String name) {
         XmlElement parent = null;
         boolean global = false;
 
@@ -226,8 +228,8 @@ public class FolderOptionsController {
      *
      * @param folder                selected folder
      */
-    public void createDefaultSettings(AbstractMessageFolder folder) {
-        FolderItem item = folder.getConfiguration();
+    public void createDefaultSettings(IMailbox folder) {
+    	IFolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
 
         // use global settings
@@ -247,7 +249,7 @@ public class FolderOptionsController {
      * @return                                true, if any option is overridden. False, otherwise.
      */
     private boolean isOverwritingDefaults(AbstractMessageFolder folder) {
-        FolderItem item = folder.getConfiguration();
+    	IFolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
         boolean result = false;
 

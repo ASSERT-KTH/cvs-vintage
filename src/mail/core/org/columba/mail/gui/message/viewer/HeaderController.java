@@ -26,9 +26,10 @@ import java.util.StringTokenizer;
 import javax.swing.JComponent;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.parser.text.HtmlParser;
@@ -60,15 +61,15 @@ public class HeaderController implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.Folder,
+	 * @see org.columba.mail.gui.message.viewer.Viewer#view(IMailbox,
 	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
 	 */
-	public void view(AbstractMessageFolder folder, Object uid,
+	public void view(IMailbox folder, Object uid,
 			MailFrameMediator mediator) throws Exception {
 		// add headerfields which are about to show up
 		XmlElement headerviewerElement = MailConfig.getInstance().get("options")
 				.getElement("/options/headerviewer");
-		DefaultItem item = new DefaultItem(headerviewerElement);
+		IDefaultItem item = new DefaultItem(headerviewerElement);
 		int style = item.getInteger("style", 0);
 
 		map = new LinkedHashMap();

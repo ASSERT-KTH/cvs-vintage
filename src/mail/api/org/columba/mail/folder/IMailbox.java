@@ -19,8 +19,9 @@ package org.columba.mail.folder;
 
 import java.io.InputStream;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -67,7 +68,7 @@ public interface IMailbox extends IFolder{
      * @return HeaderList list of headers
      * @throws Exception
      */
-    public HeaderList getHeaderList() throws Exception;
+    public IHeaderList getHeaderList() throws Exception;
 
     /**
      * Mark messages as read/flagged/expunged/etc.
@@ -274,4 +275,9 @@ public interface IMailbox extends IFolder{
      *
      */
     public boolean isReadOnly();
+    
+    StatusObservable getObservable();
+    
+    Object getLastSelection();
+    void setLastSelection(Object lastSel);
 }

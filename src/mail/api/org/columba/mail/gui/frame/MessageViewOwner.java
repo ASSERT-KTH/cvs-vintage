@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.message.IMessageController;
 
 
 /**
@@ -23,6 +23,6 @@ import org.columba.mail.gui.attachment.AttachmentController;
  *
  * @author fdietz
  */
-public interface AttachmentViewOwner {
-    public AttachmentController getAttachmentController();
+public interface MessageViewOwner {
+    public IMessageController getMessageController();
 }

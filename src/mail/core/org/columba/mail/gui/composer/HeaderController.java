@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.core.gui.util.NotifyDialog;
@@ -156,8 +154,15 @@ public class HeaderController {
 	}
 
 	private IHeaderItemList getHeaderItemList(int recipient) {
-		IHeaderItemList list = new HeaderItemList();
-
+		
+		IHeaderItemList list=null;
+		try {
+			IContactFacade c = ServiceConnector.getContactFacade();
+			list = c.createHeaderItemList();
+		} catch (ServiceNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
 		String header = null;
 		String str = null;
 		switch (recipient) {
@@ -192,9 +197,19 @@ public class HeaderController {
 			IHeaderItem item = null;
 			if ( addressCollector != null) item = addressCollector.getHeaderItem(s);
 			if (item == null) {
-				item = new ContactItem();
-				item.setDisplayName(s);
-				item.setHeader(header);
+				
+				try {
+					IContactFacade c = ServiceConnector.getContactFacade();
+					item = c.createContactItem();
+					item.setDisplayName(s);
+					item.setHeader(header);
+				} catch (ServiceNotFoundException e) {
+					
+					e.printStackTrace();
+				}
+				
+				
+				
 			} else {
 				item.setHeader(header);
 			}

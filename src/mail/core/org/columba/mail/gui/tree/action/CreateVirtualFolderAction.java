@@ -25,7 +25,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
@@ -33,7 +33,7 @@ import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
@@ -45,7 +45,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class CreateVirtualFolderAction extends AbstractColumbaAction implements
-		SelectionListener {
+		ISelectionListener {
 
 	public CreateVirtualFolderAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
@@ -92,7 +92,7 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 						.getInstance().createChild(r.getFolder(), name,
 								"VirtualFolder");
 
-				TreeModel.getInstance().nodeStructureChanged(r.getFolder());
+				FolderTreeModel.getInstance().nodeStructureChanged(r.getFolder());
 
 				// set parent folder uid
 				vfolder.getConfiguration().set("property", "source_uid",
@@ -113,7 +113,7 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

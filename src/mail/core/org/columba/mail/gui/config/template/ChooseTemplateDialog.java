@@ -41,7 +41,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -55,10 +55,10 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
     boolean result;
     JList list;
     Object uid;
-    HeaderList headerList;
+    IHeaderList headerList;
     JButton okButton;
 
-    public ChooseTemplateDialog(JFrame parent, HeaderList list) {
+    public ChooseTemplateDialog(JFrame parent, IHeaderList list) {
         super(parent, true);
 
         this.headerList = list;

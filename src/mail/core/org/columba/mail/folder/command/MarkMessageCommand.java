@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -72,7 +72,7 @@ public class MarkMessageCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public MarkMessageCommand(DefaultCommandReference reference) {
+	public MarkMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 

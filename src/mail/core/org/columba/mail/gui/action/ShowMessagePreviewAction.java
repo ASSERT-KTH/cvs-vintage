@@ -23,6 +23,7 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
@@ -81,7 +82,7 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 	 */
 	public void update(Observable arg0, Object arg1) {
 
-		DefaultItem item = new DefaultItem(element);
+		IDefaultItem item = new DefaultItem(element);
 		boolean enabled = item.getBoolean("header_enabled", true);
 		
 		setState(enabled);

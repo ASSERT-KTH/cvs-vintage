@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.IColumbaHeader;
 
 /**
  * Threaded model using Message-Id:, In-Reply-To: and References: headers to
@@ -103,7 +104,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
     
     protected boolean add(MessageNode node, MessageNode rootNode) {
-        ColumbaHeader header = node.getHeader();
+        IColumbaHeader header = node.getHeader();
         String references = (String) header.get("References");
         String inReply = (String) header.get("In-Reply-To");
 
@@ -162,7 +163,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
     
     private String getMessageID(MessageNode node) {
-    	ColumbaHeader header = node.getHeader();
+    	IColumbaHeader header = node.getHeader();
 
         String id = (String) header.get("Message-ID");
 
@@ -281,8 +282,8 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
             MessageNode node1 = (MessageNode) o1;
             MessageNode node2 = (MessageNode) o2;
 
-            ColumbaHeader header1 = node1.getHeader();
-            ColumbaHeader header2 = node2.getHeader();
+            IColumbaHeader header1 = node1.getHeader();
+            IColumbaHeader header2 = node2.getHeader();
 
             if ((header1 == null) || (header2 == null)) { return 0; }
 

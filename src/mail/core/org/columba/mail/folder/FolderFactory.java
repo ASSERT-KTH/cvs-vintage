@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.plugin.FolderPluginHandler;
 
@@ -76,11 +76,11 @@ public class FolderFactory {
      * @param parent
      * @return a list that contains Strings of foldertypes
      */
-    public List getPossibleChilds(AbstractFolder parent) {
+    public List getPossibleChilds(IFolder parent) {
         List list = new LinkedList();
 
         // which parents are possible ?
-        FolderItem item = parent.getConfiguration();
+        IFolderItem item = parent.getConfiguration();
         String parentType = item.get("type");
 
         // the group of the given parent
@@ -114,7 +114,7 @@ public class FolderFactory {
      * @return the childfolder
      * @throws Exception
      */
-    public AbstractFolder createDefaultChild(AbstractFolder parent, String name)
+    public IFolder createDefaultChild(IFolder parent, String name)
         throws FolderCreationException {
         List possibleChilds = getPossibleChilds(parent);
 
@@ -134,11 +134,11 @@ public class FolderFactory {
      * @return the childfolder
      * @throws Exception
      */
-    public AbstractFolder createChild(AbstractFolder parent, String name,
+    public IFolder createChild(IFolder parent, String name,
         String childType) throws FolderCreationException {
-        AbstractFolder child;
+    	IFolder child;
 		try {
-			child = (AbstractFolder) handler.getPlugin(childType,
+			child = (IFolder) handler.getPlugin(childType,
 			        new Object[] { name, childType, path });
 
 			// Add child to parent

@@ -19,72 +19,75 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.columba.mail.gui.table.IMessageNode;
 import org.columba.mail.message.ColumbaHeader;
-
+import org.columba.mail.message.IColumbaHeader;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * Title: Description: Copyright: Copyright (c) 2001 Company:
+ * 
+ * @author @version 1.0
  */
-public class MessageNode extends DefaultMutableTreeNode {
-    protected Object uid;
-    protected boolean hasRecentChildren;
+public class MessageNode extends DefaultMutableTreeNode implements IMessageNode {
+	protected Object uid;
 
-    public MessageNode(Object header, Object uid) {
-        super(header);
+	
+	protected boolean hasRecentChildren;
 
-        this.uid = uid;
-    }
+	public MessageNode(Object header, Object uid) {
+		super(header);
 
-    public List getVector() {
-        return children;
-    }
+		this.uid = uid;
+	}
 
-    public void setUid(Object uid) {
-        this.uid = uid;
-    }
+	public List getVector() {
+		return children;
+	}
 
-    public Object getUid() {
-        return uid;
-    }
+	public void setUid(Object uid) {
+		this.uid = uid;
+	}
 
-    public ColumbaHeader getHeader() {
-        return (ColumbaHeader) getUserObject();
-    }
+	public Object getUid() {
+		return uid;
+	}
 
-    public static Object[] toUidArray(Object[] nodes) {
-        if (nodes[0] instanceof MessageNode) {
-            Object[] newUidList = new Object[nodes.length];
+	public IColumbaHeader getHeader() {
+		return (ColumbaHeader) getUserObject();
+	}
 
-            for (int i = 0; i < nodes.length; i++) {
-                newUidList[i] = ((MessageNode) nodes[i]).getUid();
+	public static Object[] toUidArray(Object[] nodes) {
+		if (nodes[0] instanceof MessageNode) {
+			Object[] newUidList = new Object[nodes.length];
 
-                //System.out.println("node=" + newUidList[i]);
-            }
+			for (int i = 0; i < nodes.length; i++) {
+				newUidList[i] = ((MessageNode) nodes[i]).getUid();
 
-            return newUidList;
-        } else {
-            return nodes;
-        }
-    }
+				//System.out.println("node=" + newUidList[i]);
+			}
 
-    /**
- * Returns the hasRecentChildren.
- * @return boolean
- */
-    public boolean isHasRecentChildren() {
-        return hasRecentChildren;
-    }
+			return newUidList;
+		} else {
+			return nodes;
+		}
+	}
 
-    /**
- * Sets the hasRecentChildren.
- * @param hasRecentChildren The hasRecentChildren to set
- */
-    public void setHasRecentChildren(boolean hasRecentChildren) {
-        this.hasRecentChildren = hasRecentChildren;
-    }
+	/**
+	 * Returns the hasRecentChildren.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isHasRecentChildren() {
+		return hasRecentChildren;
+	}
+
+	/**
+	 * Sets the hasRecentChildren.
+	 * 
+	 * @param hasRecentChildren
+	 *            The hasRecentChildren to set
+	 */
+	public void setHasRecentChildren(boolean hasRecentChildren) {
+		this.hasRecentChildren = hasRecentChildren;
+	}
 }

@@ -26,9 +26,9 @@ import javax.swing.JMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.command.ColorMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 
 public class ColorMessageMenu extends IMenu implements ActionListener,
-		SelectionListener {
+		ISelectionListener {
 	// TODO (@author fdietz): add central place, which keeps a list of all possible
 	//       colors, and provides a custom color configuration possibility
 	public static String[] items = {
@@ -89,7 +89,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 		String action = e.getActionCommand();
 
 		// get current message list selection
-		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+		IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
 		if (action.equals("NONE")) {

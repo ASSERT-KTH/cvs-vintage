@@ -29,6 +29,7 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -47,14 +48,14 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
-public class TreeModel extends DefaultTreeModel {
+public class FolderTreeModel extends DefaultTreeModel {
     protected FolderXmlConfig folderXmlConfig;
     protected TempFolder tempFolder;
     private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-    private static TreeModel instance = new TreeModel(MailConfig.getInstance().getFolderConfig());
+    private static FolderTreeModel instance = new FolderTreeModel(MailConfig.getInstance().getFolderConfig());
     
-    public TreeModel(FolderXmlConfig folderConfig) {
+    public FolderTreeModel(FolderXmlConfig folderConfig) {
         super(new Root(folderConfig.getRoot().getElement("tree")));
         this.folderXmlConfig = folderConfig;
 
@@ -93,7 +94,7 @@ public class TreeModel extends DefaultTreeModel {
         });
     }
     
-    public static TreeModel getInstance() {
+    public static FolderTreeModel getInstance() {
     	return instance;
     }
 
@@ -212,7 +213,7 @@ public class TreeModel extends DefaultTreeModel {
         for (Enumeration e = root.breadthFirstEnumeration();
                 e.hasMoreElements();) {
             AbstractFolder node = (AbstractFolder) e.nextElement();
-            FolderItem item = node.getConfiguration();
+            IFolderItem item = node.getConfiguration();
 
             if (item == null) {
                 continue;

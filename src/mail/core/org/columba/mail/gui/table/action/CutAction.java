@@ -23,7 +23,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.ITableController;
 
 
 /**
@@ -33,7 +33,7 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CutAction extends AbstractColumbaAction {
-    TableController tableController;
+    ITableController tableController;
     FrameMediator frameController;
 
     public CutAction(FrameMediator frameController) {
@@ -50,6 +50,6 @@ public class CutAction extends AbstractColumbaAction {
         // cut action
     	ClipboardManager.getInstance().setOperation(ClipboardManager.CUT_ACTION);
 
-    	ClipboardManager.getInstance().setMessageSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
+    	ClipboardManager.getInstance().setSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
     }
 }

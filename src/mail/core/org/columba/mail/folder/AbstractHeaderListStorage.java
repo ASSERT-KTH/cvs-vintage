@@ -26,6 +26,8 @@ import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IColumbaHeader;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -86,7 +88,7 @@ public abstract class AbstractHeaderListStorage implements IHeaderListStorage {
 	/**
 	 * @see org.columba.mail.folder.IHeaderStorage#getHeaderList()
 	 */
-	public HeaderList getHeaderList() throws Exception {
+	public IHeaderList getHeaderList() throws Exception {
 
 		return getCachedHeaderList();
 	}
@@ -148,7 +150,7 @@ public abstract class AbstractHeaderListStorage implements IHeaderListStorage {
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
-		ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
+		IColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
 
 		// free memory
 		h = null;
@@ -181,7 +183,7 @@ public abstract class AbstractHeaderListStorage implements IHeaderListStorage {
 	 */
 	public void setFlags(Object uid, Flags flags) throws Exception {
 		if (getHeaderList().containsKey(uid)) {
-			ColumbaHeader h = getHeaderList().get(uid);
+			IColumbaHeader h = getHeaderList().get(uid);
 			h.setFlags(flags);
 		}
 	}

@@ -19,7 +19,7 @@ package org.columba.mail.folder.command;
 
 import java.awt.Color;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -45,7 +45,7 @@ public class ColorMessageCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ColorMessageCommand(DefaultCommandReference reference) {
+	public ColorMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 

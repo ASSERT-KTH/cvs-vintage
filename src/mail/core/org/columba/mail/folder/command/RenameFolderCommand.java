@@ -21,8 +21,8 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 
 /**
  * Rename selected folder.
@@ -30,7 +30,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
  * @author fdietz
  */
 public class RenameFolderCommand extends Command {
-	private AbstractFolder selectedFolder;
+	private IFolder selectedFolder;
 
 	/**
 	 * Constructor for RenameFolderCommand.

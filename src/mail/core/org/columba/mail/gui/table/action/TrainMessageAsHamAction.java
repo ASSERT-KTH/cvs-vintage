@@ -20,9 +20,9 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
@@ -34,7 +34,7 @@ import org.columba.mail.spam.command.LearnMessageAsHamCommand;
  * @author fdietz
  */
 public class TrainMessageAsHamAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     /**
  * @param frameMediator
  * @param name
@@ -51,14 +51,14 @@ public class TrainMessageAsHamAction extends AbstractColumbaAction
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         CommandProcessor.getInstance().addOp(new LearnMessageAsHamCommand(r));
     }
 
     /**
         * Ensures that the action is only enabled when at least
         * one message is selected in the GUI.
-        * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+        * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
         */
     public void selectionChanged(SelectionChangedEvent e) {
         setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);

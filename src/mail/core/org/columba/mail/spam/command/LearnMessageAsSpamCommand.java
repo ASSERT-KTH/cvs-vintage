@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.Main;
@@ -43,7 +43,7 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
 	/**
 	 * @param references
 	 */
-	public LearnMessageAsSpamCommand(DefaultCommandReference reference) {
+	public LearnMessageAsSpamCommand(ICommandReference reference) {
 		super(reference);
 	}
 

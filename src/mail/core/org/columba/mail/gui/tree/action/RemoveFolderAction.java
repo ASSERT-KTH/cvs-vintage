@@ -23,12 +23,13 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -41,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Generation>Code and Comments
  */
 public class RemoveFolderAction extends AbstractColumbaAction implements
-		SelectionListener {
+		ISelectionListener {
 	public RemoveFolderAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"menu_folder_removefolder"));
@@ -68,7 +69,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference r = (FolderCommandReference) frameMediator
 				.getSelectionManager().getSelection("mail.tree");
-		AbstractFolder folder = r.getFolder();
+		IFolder folder = r.getFolder();
 
 		if (!folder.isLeaf()) {
 			// warn user
@@ -94,7 +95,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
@@ -102,7 +103,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 					.getSelected()[0];
 
 			if ((folder != null) && folder instanceof AbstractMessageFolder) {
-				FolderItem item = folder.getConfiguration();
+				IFolderItem item = folder.getConfiguration();
 
 				if (item.get("property", "accessrights").equals("user")) {
 					setEnabled(true);

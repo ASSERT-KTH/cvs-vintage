@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
@@ -30,8 +30,8 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.message.HeaderList;
+import org.columba.mail.gui.tree.FolderTreeModel;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -45,7 +45,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 	/**
 	 * @param references
 	 */
-	public ReplyWithTemplateCommand(DefaultCommandReference reference) {
+	public ReplyWithTemplateCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -106,11 +106,11 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 	private String getTemplateBody() throws Exception,
 			CommandCancelledException, IOException {
 		// template folder has uid=107
-		AbstractMessageFolder templateFolder = (AbstractMessageFolder) TreeModel.getInstance()
+		AbstractMessageFolder templateFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 				.getFolder(107);
 
 		// retrieve headerlist of tempate folder
-		HeaderList list = templateFolder.getHeaderList();
+		IHeaderList list = templateFolder.getHeaderList();
 
 		// choose template
 		ChooseTemplateDialog d = new ChooseTemplateDialog(getFrameMediator()

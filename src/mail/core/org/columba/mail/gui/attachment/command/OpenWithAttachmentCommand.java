@@ -18,7 +18,7 @@ package org.columba.mail.gui.attachment.command;
 import java.io.File;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.ristretto.message.MimeHeader;
@@ -35,7 +35,7 @@ public class OpenWithAttachmentCommand extends SaveAttachmentCommand {
      * Creates an Open with attachment command.
      * @param references command parameters.
      */
-    public OpenWithAttachmentCommand(DefaultCommandReference reference) {
+    public OpenWithAttachmentCommand(ICommandReference reference) {
         super(reference);
 
         priority = Command.REALTIME_PRIORITY;

@@ -18,7 +18,7 @@ package org.columba.mail.gui.attachment.command;
 import java.io.File;
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.util.Semaphore;
@@ -42,7 +42,7 @@ public class SaveAttachmentTemporaryCommand extends SaveAttachmentCommand {
     /**
      * @param reference Command reference.
      */
-    public SaveAttachmentTemporaryCommand(DefaultCommandReference reference) {
+    public SaveAttachmentTemporaryCommand(ICommandReference reference) {
         super(reference);
         commandSemaphore = new Semaphore(true);
     }

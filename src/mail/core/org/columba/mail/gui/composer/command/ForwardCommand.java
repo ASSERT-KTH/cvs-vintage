@@ -20,7 +20,7 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.FolderCommand;
@@ -52,7 +52,7 @@ public class ForwardCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public ForwardCommand(DefaultCommandReference reference) {
+	public ForwardCommand(ICommandReference reference) {
 		super(reference);
 	}
 

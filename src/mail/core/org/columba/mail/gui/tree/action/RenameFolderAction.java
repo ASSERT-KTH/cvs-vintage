@@ -23,9 +23,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author Frederik
  */
 public class RenameFolderAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     public RenameFolderAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
@@ -72,7 +72,7 @@ public class RenameFolderAction extends AbstractColumbaAction
             AbstractFolder folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
 
             if ((folder != null) && folder instanceof AbstractMessageFolder) {
-                FolderItem item = folder.getConfiguration();
+            	IFolderItem item = folder.getConfiguration();
 
                 if (item.get("property", "accessrights").equals("user")) {
                     setEnabled(true);

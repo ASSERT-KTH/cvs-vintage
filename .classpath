@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
-	<classpathentry kind="src" path="src/mail/api"/>
-	<classpathentry kind="src" path="src/addressbook/api"/>
-	<classpathentry kind="src" path="src/addressbook/test"/>
-	<classpathentry kind="src" path="src/columba/test"/>
-	<classpathentry kind="src" path="src/mail/core"/>
-	<classpathentry kind="src" path="src/mail/test"/>
 	<classpathentry kind="src" path="src/addressbook/core"/>
+	<classpathentry kind="src" path="src/mail/core"/>
+	<classpathentry kind="src" path="src/addressbook/api"/>
+	<classpathentry kind="src" path="src/mail/api"/>
 	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="src" path="src/columba/test"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/jwizz-0.1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

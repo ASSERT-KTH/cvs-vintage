@@ -16,8 +16,9 @@
 package org.columba.mail.folderoptions;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.config.IDefaultItem;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
@@ -40,11 +41,11 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(IMailbox)
  */
-    public void loadOptionsFromXml(AbstractMessageFolder folder) {
+    public void loadOptionsFromXml(IMailbox folder) {
         XmlElement sorting = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(sorting);
+        IDefaultItem item = new DefaultItem(sorting);
 
         String column = item.get("column");
 
@@ -54,7 +55,7 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         boolean order = item.getBoolean("order", true);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
         tableController.getTableModelSorter().setSortingColumn(column);
         tableController.getTableModelSorter().setSortingOrder(order);
@@ -66,11 +67,11 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
  * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml()
  */
-    public void saveOptionsToXml(AbstractMessageFolder folder) {
+    public void saveOptionsToXml(IMailbox folder) {
         XmlElement sorting = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(sorting);
+        IDefaultItem item = new DefaultItem(sorting);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController =((TableController)((TableViewOwner) getMediator()).getTableController());
 
         String column = tableController.getTableModelSorter().getSortingColumn();
         boolean order = tableController.getTableModelSorter().getSortingOrder();

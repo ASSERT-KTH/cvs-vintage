@@ -59,7 +59,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.util.MailResourceLoader;
@@ -309,12 +309,12 @@ implements ActionListener, ListSelectionListener {
             	POP3ServerCollection.getInstance().removePopServer(item.getUid());
             } else {
                 AbstractFolder folder = (AbstractFolder) 
-TreeModel.getInstance().getImapFolder(item.getUid());
+FolderTreeModel.getInstance().getImapFolder(item.getUid());
                 try {
                     AbstractFolder parentFolder = (AbstractFolder)
                         folder.getParent();
                     folder.removeFolder();
-                    TreeModel.getInstance().nodeStructureChanged(parentFolder);
+                    FolderTreeModel.getInstance().nodeStructureChanged(parentFolder);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

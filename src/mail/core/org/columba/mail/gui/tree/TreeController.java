@@ -23,15 +23,16 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
@@ -41,7 +42,7 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 public class TreeController implements TreeWillExpandListener,
-		TreeSelectionListener {
+		TreeSelectionListener, ITreeController {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -49,7 +50,7 @@ public class TreeController implements TreeWillExpandListener,
 
 	private FolderTreeMouseListener mouseListener;
 
-	private AbstractFolder selectedFolder;
+	private IFolder selectedFolder;
 
 	private TreeView view;
 
@@ -65,7 +66,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * @param model
 	 *            the tree model to display.
 	 */
-	public TreeController(FrameMediator controller, TreeModel model) {
+	public TreeController(FrameMediator controller, FolderTreeModel model) {
 		frameController = controller;
 
 		view = new TreeView(model);
@@ -109,7 +110,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * @param folder
 	 *            the new selected folder.
 	 */
-	public void setSelected(AbstractMessageFolder folder) {
+	public void setSelected(IFolder folder) {
 		view.clearSelection();
 
 		TreePath path = folder.getSelectionTreePath();
@@ -148,7 +149,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * 
 	 * @return the selected folder.
 	 */
-	public AbstractFolder getSelected() {
+	public IFolder getSelected() {
 		return selectedFolder;
 	}
 
@@ -212,7 +213,7 @@ public class TreeController implements TreeWillExpandListener,
 	 *            the tree path in the tree view.
 	 */
 	private void saveExpandedState(AbstractFolder folder, TreePath path) {
-		FolderItem item = folder.getConfiguration();
+		IFolderItem item = folder.getConfiguration();
 
 		XmlElement property = item.getElement("property");
 
@@ -243,5 +244,12 @@ public class TreeController implements TreeWillExpandListener,
 
 		new ViewHeaderListAction(getFrameController()).actionPerformed(null);
 
+	}
+
+	/**
+	 * @see org.columba.mail.gui.tree.ITreeController#getModel()
+	 */
+	public TreeModel getModel() {
+		return getView().getModel();
 	}
 }

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.attachment.IAttachmentController;
 
 
 /**
@@ -23,6 +23,6 @@ import org.columba.mail.gui.tree.TreeController;
  *
  * @author fdietz
  */
-public interface TreeViewOwner {
-    public TreeController getTreeController();
+public interface AttachmentViewOwner {
+    public IAttachmentController getAttachmentController();
 }

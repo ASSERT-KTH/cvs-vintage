@@ -27,7 +27,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
-import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 
@@ -67,7 +67,7 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
         String str = folderItem.get("drafts");
         int destUid = Integer.parseInt(str);
-        AbstractMessageFolder destFolder = (AbstractMessageFolder) TreeModel.getInstance().getFolder(destUid);
+        AbstractMessageFolder destFolder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(destUid);
    
         // mark as read, mark as draft
         Flags flags = new Flags();

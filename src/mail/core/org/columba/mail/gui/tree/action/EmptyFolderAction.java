@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -32,7 +32,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class EmptyFolderAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     public EmptyFolderAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
@@ -61,7 +61,7 @@ public class EmptyFolderAction extends AbstractColumbaAction
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     * @see org.columba.core.gui.util.ISelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {

@@ -29,22 +29,22 @@ import javax.swing.JPanel;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IFolder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
 
-public class FolderInfoPanel extends ContainerInfoPanel implements SelectionListener {
+public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionListener {
     private JLabel leftLabel;
     private JLabel readLabel;
     private JLabel unreadLabel;
     private JLabel recentLabel;
     private JPanel rightPanel;
     private MailboxInfo info;
-    private FolderItem item;
+    private IFolderItem item;
 
     public void initComponents() {
         super.initComponents();
@@ -130,7 +130,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements SelectionList
         initComponents();
     }
 
-    public void setFolder(AbstractFolder newFolder) {
+    public void setFolder(IFolder newFolder) {
         item = newFolder.getConfiguration();
 
         if (item == null) {

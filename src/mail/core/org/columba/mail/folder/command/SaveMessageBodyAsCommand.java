@@ -31,7 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -92,7 +92,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @param charset
      *            Charset to use for decoding messages before save
      */
-    public SaveMessageBodyAsCommand(DefaultCommandReference reference,
+    public SaveMessageBodyAsCommand(ICommandReference reference,
         Charset charset) {
         super(reference);
         this.charset = charset;

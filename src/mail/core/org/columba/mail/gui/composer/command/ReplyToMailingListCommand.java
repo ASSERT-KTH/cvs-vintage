@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -45,7 +45,7 @@ public class ReplyToMailingListCommand extends ReplyCommand {
      * @param frameMediator
      * @param references
      */
-    public ReplyToMailingListCommand(DefaultCommandReference reference) {
+    public ReplyToMailingListCommand(ICommandReference reference) {
         super(reference);
     }
 
