@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.10 2001/05/27 23:11:07 costin Exp $
+/* $Id: ApacheConfig.java,v 1.11 2001/06/21 13:04:19 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -112,7 +112,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.10 $ $Date: 2001/05/27 23:11:07 $
+	@version $Revision: 1.11 $ $Date: 2001/06/21 13:04:19 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -148,6 +148,8 @@ public class ApacheConfig  extends BaseInterceptor {
     public static final int AJP12 = 0;
     public static final int AJP13 = 1;
     public static final String AJPV12 = "ajpv12";
+    public static final String JTC_AJP13_INTERCEPTOR =
+            "org.apache.ajp.tomcat33.Ajp13Interceptor";
 
 
     private File configHome = null;
@@ -158,6 +160,7 @@ public class ApacheConfig  extends BaseInterceptor {
     private File modJk = null;
     private File jkLog = null;
 
+    private int jkProtocol = -1;
 
     
     public ApacheConfig() {
@@ -204,6 +207,7 @@ public class ApacheConfig  extends BaseInterceptor {
         if(name.equals("modjserv")) setModJserv(value);
         if(name.equals("modjk")) setModJk(value);
         if(name.equals("jklog")) setJkLog(value);
+        if(name.equals("jkprotocol")) setJkProtocol(value);
     }
     
     /**
@@ -432,7 +436,7 @@ public class ApacheConfig  extends BaseInterceptor {
     public void setModJserv(File path){
         modJserv=path;
     }
-    
+
     /**
         returns the path to the apache module mod_jserv.  
         If the path set with setModJserv() was relative, this method 
@@ -544,8 +548,31 @@ public class ApacheConfig  extends BaseInterceptor {
        return logF;
     }
     
+    /**
+        set the Ajp protocal
+        @param <b>protocal</b> String protocol, "ajp12" or "ajp13"
+     */
+    public void setJkProtocol(String protocol){
+        jkProtocol = -1;
+        for( int i=0; i < JkMount.length; i++ ) {
+            if( JkMount[i].equalsIgnoreCase(protocol) ) {
+                jkProtocol = i;
+                break;
+            }
+        }
+    }
 
-    
+    /**
+        get the Ajp protocol
+        @return a String for the Ajp protocol
+     */
+    public String getJkProtocol(){
+        if( jkProtocol < 0 || jkProtocol >= JkMount.length )
+            return JkMount[0];
+        else
+            return JkMount[jkProtocol];
+    }
+
     /**
         executes the ApacheConfig interceptor. This method generates apache
         configuration files for use with mod_jserv or mod_jk.  If not
@@ -565,7 +592,8 @@ public class ApacheConfig  extends BaseInterceptor {
     	    
     	    //String apacheHome = findApache();
     	    int jkConnector = AJP12;
-
+          if( jkProtocol >= 0 && jkProtocol < JkMount.length)
+              jkConnector = jkProtocol;
 
     	    PrintWriter pw=new PrintWriter(new FileWriter(getJservConfig()));
     	    log("Generating apache mod_jserv config = "+getJservConfig() );
@@ -620,17 +648,21 @@ public class ApacheConfig  extends BaseInterceptor {
     	    // Find Ajp1? connectors
     	    int portInt=8007;
     	    BaseInterceptor ci[]=cm.getContainer().getInterceptors();
+          // try to get jakarta-tomcat-connectors Ajp13 Interceptor class
+          Class jtcAjp13 = null;
+          try {
+              jtcAjp13 = Class.forName(JTC_AJP13_INTERCEPTOR);
+          } catch ( ClassNotFoundException e ) { }
     	    for( int i=0; i<ci.length; i++ ) {
     		    Object con=ci[i];
-    /*		    if( con instanceof  Ajp12ConnectionHandler ) {
-    		    PoolTcpConnector tcpCon=(PoolTcpConnector) con;
-    		    portInt=tcpCon.getPort();
-    		    }*/
     		    if( con instanceof  Ajp12Interceptor ) {
     		        Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
     		        portInt=tcpCon.getPort();
     		    }
-    		    if( con instanceof  Ajp13Interceptor ) {
+                // if jkProtocol not specified and Ajp13 Interceptor found, use Ajp13
+                if( jkProtocol < 0 &&
+                        ( con instanceof  Ajp13Interceptor ||
+                            ( jtcAjp13 != null && jtcAjp13.isInstance(con) ) ) ) {
           		    jkConnector = AJP13;
     		    }
     	    }
@@ -777,7 +809,7 @@ public class ApacheConfig  extends BaseInterceptor {
 				   path+" context");
 		    mod_jk.println("#");
 		    mod_jk.println("JkMount " + path +
-				   "/*j_security_check" +
+				   "/*j_security_check " +
 				   JkMount[jkConnector]);
 
 
