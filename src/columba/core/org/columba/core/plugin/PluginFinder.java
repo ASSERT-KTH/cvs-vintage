@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -46,18 +47,23 @@ public class PluginFinder {
 		File programFolder = new File("plugins");
 		if (programFolder.exists()) {
 			programList = programFolder.listFiles();
-
-		} else
-			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
-
+		} else {
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+                        }
+                }
 		File configFolder = new File(ConfigPath.configDirectory, "plugins");
-		ColumbaLogger.log.debug("config-folder path="+configFolder.getPath());
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("config-folder path="+configFolder.getPath());
+                }
 		
 		if (configFolder.exists()) {
 			configList = configFolder.listFiles();
-		} else
-			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
-
+		} else {
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+                        }
+                }
 		if ((programList != null) && (configList != null)) {
 
 			File[] result = new File[programList.length + configList.length];
