@@ -174,7 +174,7 @@ public class TagBeginGenerator
                                                               }
                                                               ));
         }
-
+        
         tagData = new TagData(attribs);
         if (!ti.isValid(tagData))
             throw new CompileException(start,
@@ -191,17 +191,19 @@ public class TagBeginGenerator
 	    for(int i = 0; i < attributes.length; i++) {
                 String attrValue = (String) attrs.get(attributes[i].getName());
                 if (attrValue != null) {
+		    String attrName = attributes[i].getName();
+		    Method m = tc.getSetterMethod(attrName);
+                    Class c[] = m.getParameterTypes();
+                    // assert(c.length > 0)
 
-		    if (attributes[i].canBeRequestTime()) {
+                    if (attributes[i].canBeRequestTime()) {
 			if (JspUtil.isExpression(attrValue))
 			    attrValue = JspUtil.getExpr(attrValue);
 			else
-			    attrValue = writer.quoteString(attrValue);
+                            attrValue = convertString(c[0], attrValue, writer, attrName);
 		    } else
-			attrValue = writer.quoteString(attrValue);
+			attrValue = convertString(c[0], attrValue, writer, attrName);
 
-		    String attrName = attributes[i].getName();
-		    Method m = tc.getSetterMethod(attrName);
 
 		    if (m == null)
 			throw new CompileException
@@ -214,6 +216,65 @@ public class TagBeginGenerator
             }
     }
 
+    public String convertString(Class c, String s, ServletWriter writer, String attrName)
+        throws JasperException 
+    {
+        if (c == String.class) {
+            return writer.quoteString(s);
+        } else if (c == boolean.class) {
+            return Boolean.valueOf(s).toString();
+        } else if (c == Boolean.class) {
+            return "new Boolean(" + Boolean.valueOf(s).toString() + ")";
+        } else if (c == byte.class) {
+            return "((byte)" + Byte.valueOf(s).toString() + ")";
+        } else if (c == Byte.class) {
+            return "new Byte((byte)" + Byte.valueOf(s).toString() + ")";
+        } else if (c == char.class) {
+            // non-normative, because a normative method would fail to compile
+            if (s.length() > 1) {
+                char ch = s.charAt(0);
+                // this trick avoids escaping issues
+                return "((char) " + (int) ch + ")";
+            } else {
+                throw new NumberFormatException(Constants.getString(
+                            "jsp.error.bad_string_char",
+                            new Object[0]));
+            }
+        } else if (c == Character.class) {
+            // non-normative, because a normative method would fail to compile
+            if (s.length() > 1) {
+                char ch = s.charAt(0);
+                // this trick avoids escaping issues
+                return "new Character((char) " + (int) ch + ")";
+            } else {
+                throw new NumberFormatException(Constants.getString(
+                            "jsp.error.bad_string_Character",
+                            new Object[0]));
+            }
+        } else if (c == double.class) {
+            return Double.valueOf(s).toString();
+        } else if (c == Double.class) {
+            return "new Double(" + Double.valueOf(s).toString() + ")";
+        } else if (c == float.class) {
+            return Float.valueOf(s).toString() + "f";
+        } else if (c == Float.class) {
+            return "new Float(" + Float.valueOf(s).toString() + "f)";
+        } else if (c == int.class) {
+            return Integer.valueOf(s).toString();
+        } else if (c == Integer.class) {
+            return "new Integer(" + Integer.valueOf(s).toString() + ")";
+        } else if (c == long.class) {
+            return Long.valueOf(s).toString() + "l";
+        } else if (c == Long.class) {
+            return "new Long(" + Long.valueOf(s).toString() + "l)";
+        } else {
+             throw new CompileException
+                    (start, Constants.getString
+                     ("jsp.error.unable.to_convert_string",
+                      new Object[] { c.getName(), attrName }));
+        }
+    }   
+    
     public void generateServiceMethodStatements(ServletWriter writer)
         throws JasperException
     {
