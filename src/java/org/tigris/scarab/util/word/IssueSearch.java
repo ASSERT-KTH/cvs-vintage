@@ -1195,7 +1195,7 @@ public class IssueSearch
         List sortedIssueIds = new ArrayList();
         for (int i=0; i<sortedIssues.size(); i++)
         {
-            sortedIssueIds.add(((Issue)sortedIssues.get(i)).getIssueId());
+            sortedIssueIds.add(((Issue)sortedIssues.get(i)).getUniqueId());
         }
         return sortedIssueIds;
     }
