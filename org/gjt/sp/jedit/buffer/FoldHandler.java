@@ -1,6 +1,7 @@
 /*
  * FoldHandler.java - Fold handler interface
- * :tabSize=8:indentSize=8:folding=explicit:collapseFolds=1:
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
  *
  * Copyright (C) 2001 Slava Pestov
  *
@@ -27,11 +28,12 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * Interface for obtaining the fold level of a specified label.
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.1 2001/10/08 10:31:13 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.2 2001/10/10 10:07:04 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface FoldHandler
 {
+	//{{{ getFoldLevel() method
 	/**
 	 * Returns the fold level of the specified line.
 	 * @param buffer The buffer in question
@@ -42,4 +44,5 @@ public interface FoldHandler
 	 * @since jEdit 4.0pre1
 	 */
 	int getFoldLevel(Buffer buffer, int lineIndex, Segment seg);
+	//}}}
 }

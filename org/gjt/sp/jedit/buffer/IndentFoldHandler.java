@@ -1,6 +1,7 @@
 /*
  * IndentFoldHandler.java - Indent-based fold handler
- * :tabSize=8:indentSize=8:folding=explicit:collapseFolds=1:
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
  *
  * Copyright (C) 2001 Slava Pestov
  *
@@ -27,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * A fold handler that folds lines based on their indent level.
  * @author Slava Pestov
- * @version $Id: IndentFoldHandler.java,v 1.1 2001/10/08 10:31:13 spestov Exp $
+ * @version $Id: IndentFoldHandler.java,v 1.2 2001/10/10 10:07:04 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class IndentFoldHandler implements FoldHandler

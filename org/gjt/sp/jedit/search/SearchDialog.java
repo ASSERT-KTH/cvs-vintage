@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.5 2001/10/10 10:07:05 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog
 {
@@ -557,7 +557,7 @@ public class SearchDialog extends EnhancedDialog
 
 		if(searchSelection.isSelected())
 			fileset = new CurrentBufferSet();
-		if(searchCurrentBuffer.isSelected())
+		else if(searchCurrentBuffer.isSelected())
 		{
 			fileset = new CurrentBufferSet();
 

@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.13 2001/10/07 10:42:45 spestov Exp $
+ * @version $Id: jEdit.java,v 1.14 2001/10/10 10:07:04 spestov Exp $
  */
 public class jEdit
 {
@@ -1188,8 +1188,12 @@ public class jEdit
 			Buffer buffer = buffersFirst;
 			while(buffer != null)
 			{
-				out.write(buffer.getPath());
-				out.write(lineSep);
+				if(!buffer.isUntitled())
+				{
+					out.write(buffer.getPath());
+					out.write(lineSep);
+				}
+
 				buffer = buffer.next;
 			}
 
