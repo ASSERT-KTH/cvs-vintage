@@ -74,7 +74,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.12 2001/12/05 22:29:37 jmcnally Exp $
+ * @version $Id: ModifyModule.java,v 1.13 2002/01/11 00:42:47 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -161,20 +161,4 @@ public class ModifyModule extends RequireLoginFirstAction
     }
 
 
-    /**
-     * This manages clicking the Cancel button
-     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        setTarget(data, data.getParameters().getString(
-                ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
-    }
-
-    /**
-     * calls doCancel()
-     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
 }

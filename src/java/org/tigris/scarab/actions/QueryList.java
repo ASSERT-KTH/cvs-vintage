@@ -75,7 +75,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.7 2001/12/26 20:29:57 elicia Exp $
+    @version $Id: QueryList.java,v 1.8 2002/01/11 00:42:47 elicia Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -201,21 +201,4 @@ public class QueryList extends RequireLoginFirstAction
          }
      }
 
-    /**
-        This manages clicking the Cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Start.vm");
-        setTarget(data, template);
-    }
-    
-    /**
-        calls doCancel()
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
 }

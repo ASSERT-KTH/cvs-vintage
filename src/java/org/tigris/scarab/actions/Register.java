@@ -65,7 +65,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.14 2001/10/02 23:51:40 jon Exp $
+ * @version $Id: Register.java,v 1.15 2002/01/11 00:42:47 elicia Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -145,20 +145,4 @@ public class Register extends ScarabTemplateAction
         }
     }
 
-    /**
-        This manages clicking the Cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        setTarget(data, data.getParameters().getString(
-                ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
-    }
-
-    /**
-        calls doCancel()
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
 }

@@ -84,7 +84,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.48 2002/01/10 20:11:51 elicia Exp $
+    @version $Id: Search.java,v 1.49 2002/01/11 00:42:47 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -337,23 +337,5 @@ public class Search extends RequireLoginFirstAction
         }
     }
     
-    /**
-        This manages clicking the Cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        setTarget(data, Turbine
-                    .getConfiguration()
-                    .getString("template.homepage","Index.vm"));
-    }
-
-    /**
-        calls doCancel()
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
-
 
 }

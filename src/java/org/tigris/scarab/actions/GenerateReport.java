@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.10 2001/10/28 19:57:27 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.11 2002/01/11 00:42:47 elicia Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -402,26 +402,6 @@ public class GenerateReport
         Report report = populateReport("reports,Report_1.vm", data, context);
         setTarget(data, "reports,Report_1.vm");
         data.setMessage("Use your browser to print the report.");
-    }
-
-    /**
-     *  This manages clicking the Cancel button
-     */
-    public void doCancel( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Start.vm");
-        setTarget(data, template);
-    }
-
-    /**
-     * calls doCancel()
-     */
-    public void doPerform( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        doCancel(data, context);
     }
 
     private Report populateReport( String template, 

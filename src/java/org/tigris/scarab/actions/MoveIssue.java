@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.17 2001/11/30 23:07:29 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.18 2002/01/11 00:42:47 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -304,21 +304,4 @@ public class MoveIssue extends RequireLoginFirstAction
             .getString(ScarabConstants.CANCEL_TEMPLATE, "MoveIssue.vm"));
     }
     
-    /**
-     * This manages clicking the Cancel button
-     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Index.vm");
-        setTarget(data, template);
-    }
-    
-    /**
-     * calls doCancel()
-     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
 } 

@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.26 2002/01/10 22:58:18 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.27 2002/01/11 00:42:47 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -105,7 +105,7 @@ public class AssignIssue extends RequireLoginFirstAction
                                 "required to submit your request. Please " +
                                 "scroll down to see error messages."; 
 
-    public void doSave(RunData data, TemplateContext context) 
+    public void doSavevalues(RunData data, TemplateContext context) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();

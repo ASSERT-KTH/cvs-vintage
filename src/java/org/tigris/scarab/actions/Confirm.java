@@ -76,7 +76,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Confirm.java,v 1.25 2001/10/25 23:54:45 jmcnally Exp $
+ * @version $Id: Confirm.java,v 1.26 2002/01/11 00:42:47 elicia Exp $
  */
 public class Confirm extends ScarabTemplateAction
 {
@@ -195,22 +195,4 @@ public class Confirm extends ScarabTemplateAction
         }
     }
 
-    /**
-        This manages clicking the Cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTarget(data, data.getParameters().getString(
-                ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
-    }
-
-    /**
-        calls doCancel()
-    */
-    public void doPerform( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        doCancel(data, context);
-    }
 }

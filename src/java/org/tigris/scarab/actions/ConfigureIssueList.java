@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.17 2001/12/10 01:01:09 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.18 2002/01/11 00:42:47 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -167,20 +167,5 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         setTarget(data, "ConfigureIssueList.vm");            
     }
         
-        
-    /**
-        This manages clicking the cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
-    {
-        data.setMessage("Changes were not saved!");
-    }
 
-    /**
-        does nothing.
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
-    {
-        doCancel(data, context);
-    }
 }

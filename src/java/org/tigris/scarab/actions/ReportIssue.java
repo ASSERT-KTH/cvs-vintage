@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.83 2002/01/10 23:22:48 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.84 2002/01/11 00:42:47 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -599,26 +599,6 @@ public class ReportIssue extends RequireLoginFirstAction
         intake.removeAll();
         String template = getCurrentTemplate(data, null);
         setTarget(data, template);
-    }
-    
-    /**
-     This manages clicking the Cancel button
-     */
-    public void doCancel(RunData data, TemplateContext context) throws Exception
-    {
-        data.setMessage("The artifact entry process was canceled.");
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Index.vm");
-        setTarget(data, template);
-        cleanup(data, context);
-    }
-    
-    /**
-     calls doCancel()
-     */
-    public void doPerform(RunData data, TemplateContext context) throws Exception
-    {
-        doCancel(data, context);
     }
     
     private void cleanup(RunData data, TemplateContext context)
