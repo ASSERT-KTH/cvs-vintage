@@ -16,7 +16,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -41,9 +41,9 @@ public class SessionMetaData extends BeanMetaData {
 		
 	public String getDefaultConfigurationName() {
 		if (isStateful()) {
-			return ConfigurationMetaData.DEFAULT_STATEFUL;
+			return jdk13Enabled() ? ConfigurationMetaData.STATEFUL_13 : ConfigurationMetaData.STATEFUL_12;
 		} else {
-			return ConfigurationMetaData.DEFAULT_STATELESS;
+			return jdk13Enabled() ? ConfigurationMetaData.STATELESS_13 : ConfigurationMetaData.STATELESS_12;
 		}
 	}
 	

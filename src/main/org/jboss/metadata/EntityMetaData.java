@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -47,9 +47,9 @@ public class EntityMetaData extends BeanMetaData {
 	
 	public String getDefaultConfigurationName() {
 		if (isCMP()) {
-			return ConfigurationMetaData.DEFAULT_CMP;
+			return jdk13Enabled() ? ConfigurationMetaData.CMP_13 : ConfigurationMetaData.CMP_12;
 		} else {
-			return ConfigurationMetaData.DEFAULT_BMP;
+			return jdk13Enabled() ? ConfigurationMetaData.BMP_13 : ConfigurationMetaData.BMP_12;
 		}
 	}
 	
