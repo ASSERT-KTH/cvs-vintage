@@ -99,7 +99,7 @@ insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID)
 
 
 /*
- * Sample Issue
+ * Sample Issues
  */
 
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (1, 2, 'PACD', 1);
@@ -109,7 +109,7 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (
 /* summary */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 11, 'Docs are out of date.');
 /* assigned to visitor id 1 */
-#insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (1, 2, 1, 'jon');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (1, 2, 1, 'jon');
 /* status is New */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 3, 2, 'New');
 /* resolution is verified */
@@ -119,12 +119,42 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALU
 /* os is OpenVMS */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 6, 48, 'OpenVMS');
 /* priority is p3 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 7, 56, 'P3');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 7, 56, 'Low');
 /* severity is major */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 9, 66, 'major');
+
+/* sample data for activities and attachments for this issue */
 insert into  SCARAB_ACTIVITY values (1, 4, 1, 1, 8,9);
-insert into SCARAB_TRANSACTION values (1, 100, "2001-05-21");
-insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (1, 1, 2, "this is my comment", ".txt", "2001-06-01", "2001-05-05");
+insert into SCARAB_TRANSACTION values (1, 2, "2001-05-21");
+insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (1, 1, 2, "updated the docs", ".txt", "2001-06-01", "2001-05-05");
 
 
+
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (2, 2, 'PACS', 1);
+/* description */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 1, 'Items do not display correctly.');
+/* summary */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 11, 'Dates display in long form instead of short form.');
+/* assigned to visitor id 1 */
+#insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (2, 2, 1, 'jon');
+/* status is New */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 3, 2, 'New');
+/* resolution is verified */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 4, 6, 'verified');
+/* platform is SGI */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 5, 20, 'PC');
+/* os is OpenVMS */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 6, 75, 'Windows');
+/* priority is p3 */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 7, 58, 'High');
+/* severity is major */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 9, 65, 'normal');
+
+/* sample data for activities and attachments for this issue */
+insert into  SCARAB_ACTIVITY values (2, 9, 2, 2, 65,67);
+insert into SCARAB_TRANSACTION values (2, 3, "2001-05-21");
+insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (2, 2, 2, "changed the priority", ".txt", "2001-06-01", "2001-05-05");
+
+/* make this issue a child issue of issue 1 */
+insert into SCARAB_DEPEND values (1, 2, 3, "No");
 
