@@ -79,7 +79,7 @@ import org.apache.turbine.Turbine;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.28 2001/10/24 23:03:41 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.29 2001/10/25 00:55:09 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -283,7 +283,7 @@ public class ScarabUserImpl
 
             
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, Attribute, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
      */
     public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
                                                        Attribute attribute,
