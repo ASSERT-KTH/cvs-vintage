@@ -109,6 +109,8 @@
 
   <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
+
+  <property name="log4j.jar" location="${install.dir}/log4j/log4j.jar" />
   
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
@@ -141,6 +143,8 @@
                file="${jaxp.home}/crimson.jar" />
     <available property="xerces-present"
                file="${jaxp.home}/xerces.jar" />
+    <available property="log4j-present"
+	       file="${log4j.jar}" />
     <condition property="xerces2-present">
       <and>
         <available file="${xerces2.home}/xercesImpl.jar" />
@@ -255,8 +259,12 @@
     <echo message="tomcat-util.jar is up to date"/>
   </target>
 
+  <target name="msg.log4j" if="log4j.present">
+    <echo message="Detected Log4j" />
+  </target>
+
   <target name="init"
-          depends="detect,uptodate,msg.ant15,msg.jdk12,msg.jsse,msg.jmx,msg.jmxtools,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
+          depends="detect,uptodate,msg.ant15,msg.jdk12,msg.jsse,msg.jmx,msg.jmxtools,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util,msg.log4j" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -865,18 +873,21 @@
     <ant antfile="proposals/JmxSupport/build.xml" />
     <ant antfile="proposals/PasswordPrompter/build.xml"/>
     <ant antfile="proposals/StreamHandler/build.xml" />
+    <ant antfile="proposals/Log4jHelper/build.xml" />
   </target>
 
   <target name="sample.add-ons.dist">
     <ant antfile="proposals/JmxSupport/build.xml" target="jmx.support.war"/>
     <ant antfile="proposals/PasswordPrompter/build.xml" target="password.prompter.war"/>
     <ant antfile="proposals/StreamHandler/build.xml" target="stream.handler.war" />
+    <ant antfile="proposals/Log4jHelper/build.xml" target="log4j.support.war" />
   </target>
 
   <target name="sample.add-ons.clean">
     <ant antfile="proposals/JmxSupport/build.xml" target="clean"/>
     <ant antfile="proposals/PasswordPrompter/build.xml" target="clean"/>
     <ant antfile="proposals/StreamHandler/build.xml" target="clean" />
+    <ant antfile="proposals/Log4jHelper/build.xml" target="clean" />
   </target>
 
   <!-- ==================== Embeded tomcat ======== -->
