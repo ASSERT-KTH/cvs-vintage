@@ -2,7 +2,7 @@ $page.setTitle("Issue template")
 
 #set ($module = $scarabR.CurrentModule)
 #set ($templateId = $data.Parameters.getString("templateId"))
-#set ($template = $scarabR.getIssueTemplate($templateId))
+#set ($templ= $scarabR.getIssueTemplate())
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($template))
@@ -83,7 +83,7 @@ $page.setTitle("Issue template")
 
 <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
-#set ($attrValues = $template.ModuleAttributeValuesMap)
+#set ($attrValues = $templ.ModuleAttributeValuesMap)
 #set ($group = $intake.AttributeValue.mapTo($attrValue))
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))

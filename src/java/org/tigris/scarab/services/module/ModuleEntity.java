@@ -65,7 +65,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.37 2001/11/01 02:12:38 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.38 2001/11/08 02:15:08 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -190,16 +190,18 @@ public interface ModuleEntity
     public Vector getRModuleIssueTypes()
         throws Exception;
         
-    public List getRModuleOptions(Attribute attribute)
+    public List getRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception;
 
-    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
+    public List getRModuleOptions(Attribute attribute, IssueType issueType,
+                                  boolean activeOnly)
         throws Exception;
 
-    public List getLeafRModuleOptions(Attribute attribute)
+    public List getLeafRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception;
 
-    public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
+    public List getLeafRModuleOptions(Attribute attribute, IssueType issueType,
+                                      boolean activeOnly)
         throws Exception;
 
     public ScarabUser[] getEligibleUsers(Attribute attribute)
@@ -308,7 +310,7 @@ public interface ModuleEntity
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getOptionTree(Attribute attribute)
+    public List getOptionTree(Attribute attribute, IssueType issueType)
         throws Exception;
 
     /**
@@ -320,7 +322,8 @@ public interface ModuleEntity
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getOptionTree(Attribute attribute, boolean activeOnly)
+    public List getOptionTree(Attribute attribute, IssueType issueType,
+                              boolean activeOnly)
         throws Exception;
 
     public String toString();

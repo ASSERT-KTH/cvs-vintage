@@ -7,7 +7,7 @@
   #if ($size.length() == 0)
    <option value="">Choose...</option>
   #end
-  #foreach ($option in $module.getLeafRModuleOptions($attr))
+  #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
     #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
     <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
@@ -23,7 +23,6 @@
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
-
   #if ($attrInput.get($optionFieldName).Value)
     #set( $currentValue = $attrInput.get($optionFieldName).Value)
   #elseif ( $templAttrInput.get($optionFieldName).Value)
@@ -34,7 +33,7 @@
   #if ($size.length() == 0)
   <option value="">Choose...</option>
   #end
-  #foreach ($option in $module.getLeafRModuleOptions($attr))
+  #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
     #if ( $currentValue && $option.OptionId == $currentValue)
       <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>

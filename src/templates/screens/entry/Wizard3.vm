@@ -7,8 +7,10 @@ $page.setTitle("Enter issue")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 #set ($templateId = $data.Parameters.getString("templateId"))
-#set ($template = $scarabR.getIssueTemplate($templateId))
-#set ($templAttrValues = $template.ModuleAttributeValuesMap)
+#if ($templateId)
+  #set ($templ = $scarabR.getIssueTemplate($templateId))
+  #set ($templAttrValues = $templ.ModuleAttributeValuesMap)
+#end
 
 <div class="app" id="div2-1-0">
 

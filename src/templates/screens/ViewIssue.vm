@@ -37,7 +37,7 @@ You are viewing an issue in a different Module than is currently selected.
  #if ($fullHistory)
    <input type="hidden" name="fullHistory" value="$fullHistory" />
  #end
- <input type="hidden" name="id" value="$currentIssue.IssueId" />
+ <input type="hidden" name="id" value="$currentIssue.UniqueId" />
 
  #viewIssue($currentIssue $currentModule)
 
