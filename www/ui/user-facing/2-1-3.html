@@ -56,18 +56,16 @@
 
 
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#" class="selfref">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
  <div id="admintools" class="toolgroup">
 
@@ -122,11 +120,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -134,6 +127,21 @@ title="Note: link may open in new window">Get help?</a></div>
     	&#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 		</form>
 	</td>
+	<td id="issueid">
+		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
+		<input type="hidden" name="nextTemplate" value="Index.vm" />
+  		<select name="go" tabindex="3" onChange="this.form.submit();">
+    	<option value="AdvancedQuery.vm">Select issue type...</option>
+    	<option value="AdvancedQuery.vm">Defect</option>
+    	<option value="Search.vm">Patch</option>
+    	<option value="Search.vm">Enhancement</option>
+    	<option value="Search.vm">Task</option>
+ 	 	</select>
+  		<input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+		</form>
+  	</td>
+
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -154,7 +162,7 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="bodycol">
 
 <div id="apphead">
-<h2>Issue ID: 6CP<em>Associate user(s) with issue</em></h2>
+<h2>Issue ID: 6CP: <em>Associate user(s) with issue</em></h2>
 </div>
 		
 <!-- Scarab - App -->
@@ -174,6 +182,14 @@ title="Note: link may open in new window">Get help?</a></div>
 		</p>
 		
 		<h3>Personnel associated with issue ID:6CP</h3>
+
+<div class="colbar">
+About using this interface:
+<ul>
+<li>Your changes are not saved to the issue until you select "Done"</li>
+<li>Comment is not saved to issue until you select "Done"</li>
+</ul>
+</div>
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
@@ -199,16 +215,12 @@ title="Note: link may open in new window">Get help?</a></div>
 	     
    </table>  
 
-<div class="functnbar3">
- <input type="submit" value="Save changes" />&nbsp;<input type="submit" value="Remove selected from assignee list" />
-</div>
-
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
     
  <tr>
-   <th>Reason for change</th>
-   <td>Please enter a reason for the changes made above before selecting "Done"   
+   <th>Comment</th>
+   <td>This text will be added to this issue as a comment   
          <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
    <input type="hidden" name="atchattCommentKeyn" value="comment" />
    </td>
@@ -217,6 +229,9 @@ title="Note: link may open in new window">Get help?</a></div>
  </table>
 </div>
 
+<div class="functnbar3">
+ <input type="submit" value="Save changes" />&nbsp;<input type="submit" value="Remove selected from assignee list" />
+</div>
 
 <div class="functnbar2">
  <input type="submit" value="Done" />
