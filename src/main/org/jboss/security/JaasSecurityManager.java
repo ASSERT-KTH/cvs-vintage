@@ -8,6 +8,7 @@
 package org.jboss.security;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -53,7 +54,8 @@ import org.jboss.system.RealmMapping;
  * @see EJBSecurityManager
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  */
-public class JaasSecurityManager implements EJBSecurityManager, RealmMapping {
+public class JaasSecurityManager
+        implements EJBSecurityManager, RealmMapping, Serializable {
     
     /**
      * Security manager name.
@@ -77,12 +79,6 @@ public class JaasSecurityManager implements EJBSecurityManager, RealmMapping {
      * Maps original principal to Set of roles for the bean.
      */
     private final HashMap _roles = new HashMap();
-
-    static {
-        // by default all login modules are loaded via the system classloader
-        // here is a non-100%-pure-Java workaround
-        Configuration.setConfiguration(new ConfigFile());
-    }
 
     /**
      * @param smName The name of the security manager
