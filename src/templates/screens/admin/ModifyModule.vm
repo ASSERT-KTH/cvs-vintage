@@ -134,8 +134,8 @@
    <th>* $l10n.Scheme</th>
    <td>
     <select name="$moduleGroup.Scheme.Key">
-      <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected #end>http</option>
-      <option value="https" #if ($editModule && $editModule.Scheme.equals("https"))selected #end>https</option>
+      <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected="selected" #end>http</option>
+      <option value="https" #if ($editModule && $editModule.Scheme.equals("https"))selected="selected" #end>https</option>
     </select>
     #fieldErrorMsg($moduleGroup.Scheme "")
    </td>
@@ -171,7 +171,7 @@
 
 #if ($editModule || $createNew != "true")
   <tr>
-    <th>$l10n.Deleted</td>
+    <th>$l10n.Deleted</th>
     <td>
         #booleanCheckbox($moduleGroup.Deleted)
     </td>
