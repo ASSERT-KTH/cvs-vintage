@@ -10,6 +10,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 
@@ -18,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -45,6 +46,7 @@ public abstract class EJB
                                           };
    
    public static ObjectName create( MBeanServer pServer, String pEjbModule, BeanMetaData pBeanMeta ) {
+      Logger lLog = Logger.getLogger( EJB.class );
       try {
          int lType =
             pBeanMeta.isSession() ?
@@ -65,18 +67,19 @@ public abstract class EJB
          ).getObjectName();
       }
       catch( Exception e ) {
-//         e.printStackTrace();
+         lLog.error( "Could not create JSR-77 EJB: " + pBeanMeta.getJndiName(), e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pEJBName ) {
+      Logger lLog = Logger.getLogger( EJB.class );
       try {
          // Now remove the EJB
          pServer.unregisterMBean( new ObjectName( pEJBName ) );
       }
       catch( Exception e ) {
-//         e.printStackTrace();
+         lLog.error( "Could not destory JSR-77 EJB: " + pEJBName, e );
       }
    }
    

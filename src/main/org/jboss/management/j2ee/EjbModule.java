@@ -22,12 +22,14 @@ import javax.management.j2ee.JVM;
 
 import java.security.InvalidParameterException;
 
+import org.jboss.logging.Logger;
+
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.EjbModule EjbModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -51,6 +53,7 @@ public class EjbModule
    // Static --------------------------------------------------------
    
    public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL ) {
+      Logger lLog = Logger.getLogger( EjbModule.class );
       String lDD = null;
       ObjectName lApplication = null;
       try {
@@ -60,7 +63,7 @@ public class EjbModule
          ).iterator().next();
          String lServerName = lServer.getKeyPropertyList().get( "type" ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
-         System.out.println( "EjbModule.create(), server name: " + lServerName );
+         lLog.debug( "EjbModule.create(), server name: " + lServerName );
          lApplication = (ObjectName) pServer.queryNames(
              new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEApplication" +
                 ",name=" + pApplicationName + "," + lServerName + ",*"
@@ -71,11 +74,13 @@ public class EjbModule
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.EJB );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
+         return null;
       }
       try {
          // Now create the J2EEApplication
-         System.out.println( "Create EJB-Module, name: " + pName +
+         lLog.debug(
+            "Create EJB-Module, name: " + pName +
             ", application: " + lApplication +
             ", dd: " + lDD
          );
@@ -95,28 +100,19 @@ public class EjbModule
          ).getObjectName();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pModuleName ) {
+      Logger lLog = Logger.getLogger( EjbModule.class );
       try {
-/*
-         // Find the Object to be destroyed
-         ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=EJBModule,name=" + pName + ",*"
-         );
-         ObjectName lEjbModule = (ObjectName) pServer.queryNames(
-            lSearch,
-            null
-         ).iterator().next();
-*/
          // Now remove the EjbModule
          pServer.unregisterMBean( new ObjectName( pModuleName ) );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
       }
    }
    

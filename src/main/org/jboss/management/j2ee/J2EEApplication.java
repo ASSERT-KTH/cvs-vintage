@@ -17,12 +17,14 @@ import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.jboss.logging.Logger;
+
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -46,6 +48,7 @@ public class J2EEApplication
    // Static --------------------------------------------------------
    
    public static ObjectName create( MBeanServer pServer, String pName, String pDescriptor ) {
+      Logger lLog = Logger.getLogger( J2EEApplication.class );
       String lDD = null;
       ObjectName lServer = null;
       try {
@@ -55,7 +58,8 @@ public class J2EEApplication
          ).iterator().next();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
+         return null;
       }
       try {
          // Now create the J2EEApplication
@@ -75,12 +79,13 @@ public class J2EEApplication
          ).getObjectName();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
+      Logger lLog = Logger.getLogger( J2EEApplication.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
@@ -94,7 +99,7 @@ public class J2EEApplication
          pServer.unregisterMBean( lApplication );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         lLog.error( "Could not destroy JSR-77 J2EEApplication: " + pName, e );
       }
    }
    

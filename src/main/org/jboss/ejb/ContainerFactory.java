@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.101 $
+* @version $Revision: 1.102 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -399,7 +399,6 @@ public class ContainerFactory
          getServer(),
          pParentId,
          lName,
-//         pAppId,
          url
       );
       if( lModule != null ) {
