@@ -14,6 +14,8 @@
     deprecated scarab:* 
     -->
     
+    <maven:property name="root.dir" defaultValue="${basedir}"/>
+    
     <goal name="scarab:database">
         <i:ask question="Please enter the adminstrator username to use:" 
             answer="askAdminstratorUsername" default="administrator"/>
@@ -72,11 +74,11 @@
         <echo message= 
             "Connecting to ${torque.database.type} at ${torque.database.createUrl}"/>
         <sql driver="${torque.database.driver}" 
-            url="${torque.database.createUrl}" userid="${torque.database.user}" 
+            url="${torque.database.buildUrl}" userid="${torque.database.user}" 
             password="${torque.database.password}">
             <classpath refid="maven.dependency.classpath"/>
             <transaction 
-                src="${torque.sql.dir}/standard-${torque.database.type}-init.sql"/>
+                src="${torque.sql.dir}/${torque.database.type}/standard-${torque.database.type}-init.sql"/>
             <transaction src="${torque.sql.dir}/turbine-schema.sql"/>
             <transaction src="${torque.sql.dir}/scarab-schema-filtered.sql"/>
             <transaction src="${torque.sql.dir}/id-table-schema.sql"/>
@@ -91,9 +93,17 @@
     
     <goal name="scarab:load-sample-data">
 
+        <echo>
+            driver="${torque.database.driver}"
+            url="${torque.database.buildUrl}"
+            userid="${torque.database.user}"
+            password="${torque.database.password}">
+            transaction src="${torque.sql.dir}/scarab-sample-data.sql
+        </echo>/>
+
         <sql
             driver="${torque.database.driver}"
-            url="${torque.database.createUrl}"
+            url="${torque.database.buildUrl}"
             userid="${torque.database.user}"
             password="${torque.database.password}">
             <classpath refid="maven.dependency.classpath"/>

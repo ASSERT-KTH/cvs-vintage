@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Vector;
 
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -103,7 +104,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.122 2004/10/11 23:11:55 jorgeuriarte Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.123 2004/11/08 12:59:40 dabbous Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -318,26 +319,33 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List result = null;
-        Object obj = getMethodResult()
-            .get(this, GET_DEDUPE_GROUPS_WITH_ATTRIBUTES, issueType);
-        if (obj == null)
+        if(issueType == null)
         {
-            List attributeGroups = issueType.getAttributeGroups(this, true);
-            result = new ArrayList(attributeGroups.size());
-            for (Iterator itr = attributeGroups.iterator(); itr.hasNext() ;)
-            {
-                AttributeGroup ag = (AttributeGroup) itr.next();
-                if (ag.getDedupe() && !ag.getAttributes().isEmpty())
-                {
-                    result.add(ag);
-                }
-            }
-            getMethodResult().put(result, this, GET_DEDUPE_GROUPS_WITH_ATTRIBUTES, 
-                                  issueType);
+            result = new Vector(0);
         }
         else
         {
-            result = (List)obj;
+            Object obj = getMethodResult().get(this,
+                    GET_DEDUPE_GROUPS_WITH_ATTRIBUTES, issueType);
+            if (obj == null)
+            {
+                List attributeGroups = issueType.getAttributeGroups(this, true);
+                result = new ArrayList(attributeGroups.size());
+                for (Iterator itr = attributeGroups.iterator(); itr.hasNext();)
+                {
+                    AttributeGroup ag = (AttributeGroup) itr.next();
+                    if (ag.getDedupe() && !ag.getAttributes().isEmpty())
+                    {
+                        result.add(ag);
+                    }
+                }
+                getMethodResult().put(result, this,
+                        GET_DEDUPE_GROUPS_WITH_ATTRIBUTES, issueType);
+            }
+            else
+            {
+                result = (List) obj;
+            }
         }
         return result;
     }

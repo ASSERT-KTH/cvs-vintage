@@ -21,12 +21,15 @@
 <!--      If you use this build script, be prepared for errors             -->
 <!-- ===================================================================== -->
 
-<project name="Scarab" default="create-db" basedir=".">
+<project name="Scarab" default="create-db">
 
     <!-- Allow the user to have multiple configuration files and
          specify them using -Dconfiguration.file=filename 
        By default we load build.properties.     
     -->
+
+    <property name="root.dir" value=".."/>
+    <property name="antbase.dir" value="."/>
     
     <property name="webapp.conf.dir"         value="${webapp.dir}/WEB-INF/conf"/>
     <property name="webapp.lib.dir"          value="${webapp.dir}/WEB-INF/lib"/>
@@ -127,7 +130,7 @@
             <srcfiles dir="${database.src.schema.dir}" includes="${project}-schema.xml"/>
             <srcfiles dir="${user.home}" includes="scarab.build.properties"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
-            <srcfiles dir="${basedir}" includes="${configuration.file}"/>
+            <srcfiles dir="${antbase.dir}" includes="${configuration.file}"/>
         </uptodate>
     </target>
 

@@ -1,4 +1,4 @@
-<project name="Torque" default="main" basedir=".">
+<project name="Torque" default="main">
   <!--
     Note - You should not have to edit this file.
 
@@ -17,11 +17,13 @@
     still work propertly. Then we can go on and do the rest of the mappings via
     old.properties.
    -->
+  <property name="root.dir" value=".."/>
+  <property name="antbase.dir" value="."/>
   <property name="build.properties" value="build.properties"/>
   <property name="torque.contextProperties" value="${build.properties}"/>
   <property file="${torque.contextProperties}"/>
-  <property name="repository.dir" value="${basedir}/../www/repository"/>
-  <property name="lib.dir" value="${basedir}/../lib"/>
+  <property name="repository.dir" value="${root.dir}/www/repository"/>
+  <property name="lib.dir" value="${root.dir}/lib"/>
 
   <property name="databaseSchema" value="default"/>
   <property name="databaseUser" value="${scarab.database.user}"/>
@@ -497,7 +499,7 @@
 | db type    : '${torque.database}'
 | password   : '${torque.database.password}'
 | lib    dir : ${lib.dir}      
-| target dir : ${basedir}/../src/java
+| target dir : ${root.dir}/src/java
 +------------------------------------------
     </echo>
     
@@ -511,7 +513,7 @@
     <torque-data-model
       contextProperties="${torque.contextProperties}"
       controlTemplate="${torque.template.om}"
-      outputDirectory="${basedir}/../src/java"
+      outputDirectory="${root.dir}/src/java"
       outputFile="report.${torque.project}.om.generation"
       targetDatabase="${torque.database}"
       targetPackage="${torque.targetPackage}"
@@ -527,7 +529,7 @@
     <torque-data-model
       contextProperties="${torque.contextProperties}"
       controlTemplate="${torque.template.om}"
-      outputDirectory="${basedir}/../src/java"
+      outputDirectory="${root.dir}/src/java"
       outputFile="report.${torque.project}.om.generation"
       targetDatabase="${torque.database}"
       targetPackage="${torque.targetPackage}"

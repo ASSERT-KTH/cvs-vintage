@@ -16,7 +16,7 @@
 <!--                   scarab/src/java/org/tigris/scarab/om/...            -->
 <!-- ===================================================================== -->
 
-<project name="Scarab" default="deploy" basedir=".">
+<project name="Scarab" default="deploy">
 
     <!-- Allow the user to have multiple configuration files and
          specify them using -Dconfiguration.file=filename 
@@ -29,17 +29,20 @@
          Allow a build.properties in the project root in the
          same place it would be used by Maven. 
      -->
+    <property name="root.dir" value=".."/>
+    <property name="antbase.dir" value="."/>
+    
     <property file="${user.home}/scarab.build.properties" />
     <property file="${user.home}/${configuration.file}" />
-    <property file="${basedir}/${configuration.file}" />
-    <property file="${basedir}/../${configuration.file}"/>
-    <property file="${basedir}/default.properties" />
-    <property file="${basedir}/default.${scarab.database.type}.properties" />
+    <property file="${antbase.dir}/${configuration.file}" />
+    <property file="${root.dir}/${configuration.file}"/>
+    <property file="${antbase.dir}/default.properties" />
+    <property file="${antbase.dir}/default.${scarab.database.type}.properties" />
 
     <property name="ant.home" value=".."/>
 
     <property name="final.name" value="${project}-${version}"/>
-    <property name="final.dir" value="${basedir}/../${final.name}/"/>
+    <property name="final.dir" value="${root.dir}/${final.name}/"/>
 
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
@@ -65,7 +68,7 @@
     <property name="migration.dest.dir" value="${build.dir}/migration/classes"/>
     <property name="tomcat.dir" value="../tomcat"/>
     <property name="runtime.config.dir" value="${build.project}/WEB-INF/conf"/>
-    <property name="repository.dir"     value="${basedir}/../www/repository"/>
+    <property name="repository.dir"     value="${root.dir}/www/repository"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -76,7 +79,7 @@
         <fileset dir="${ant.home}/lib">
             <include name="**/ant*.jar"/>
         </fileset>
-        <fileset dir="${basedir}/../www/repository">
+        <fileset dir="${root.dir}/www/repository">
             <include name="*/jars/*.jar"/>
         </fileset>
     </path>
@@ -217,7 +220,7 @@
         </copy>
 
         <copy todir="${build.project.webinf}/conf" filtering="no">
-             <fileset dir="${basedir}">
+             <fileset dir="${antbase.dir}">
                  <include name="build-database.xml"/>
                  <include name="build-torque.xml"/>
              </fileset>
