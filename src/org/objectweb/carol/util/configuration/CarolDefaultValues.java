@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.12 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.13 2005/02/04 17:03:23 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -161,7 +161,6 @@ public class CarolDefaultValues {
     static {
         mapping.setProperty("rmi", "jrmp");
         mapping.setProperty("iiop", "iiop");
-        mapping.setProperty("corbaloc", "openorb");
         mapping.setProperty("jrmi", "jeremie");
         mapping.setProperty("cmi", "cmi");
         mapping.setProperty("lmi", "lmi");
