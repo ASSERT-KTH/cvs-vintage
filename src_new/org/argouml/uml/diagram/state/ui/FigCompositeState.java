@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.27 2005/02/01 20:42:17 mvw Exp $
+// $Id: FigCompositeState.java,v 1.28 2005/04/02 08:00:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,7 +204,9 @@ public class FigCompositeState extends FigState {
         the bottom region has a minimum height*/
         if (getOwner() != null) {
             if (Model.getFacade().isConcurrent(getOwner())
-                    && !regionsVector.isEmpty()) {
+                    && !regionsVector.isEmpty()
+                    && regionsVector.lastElement() 
+                        instanceof FigConcurrentRegion) {
                 FigConcurrentRegion f = 
                     ((FigConcurrentRegion) regionsVector.lastElement());
                 Rectangle regionBounds = f.getBounds();
@@ -234,7 +236,9 @@ public class FigCompositeState extends FigState {
         the regions are resized*/
         if (getOwner() != null) {
             if (Model.getFacade().isConcurrent(getOwner())
-                    && !regionsVector.isEmpty()) {
+                    && !regionsVector.isEmpty()
+                    && regionsVector.lastElement() 
+                        instanceof FigConcurrentRegion) {
                 FigConcurrentRegion f = 
                     ((FigConcurrentRegion) regionsVector.lastElement());
                 for (int i = 0; i < regionsVector.size() - 1; i++) {
