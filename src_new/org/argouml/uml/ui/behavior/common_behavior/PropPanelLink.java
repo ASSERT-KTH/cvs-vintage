@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.19 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.20 2003/05/10 13:23:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.19 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.20 2003/05/10 13:23:19 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -52,7 +52,7 @@ public class PropPanelLink extends PropPanelModelElement {
   ////////////////////////////////////////////////////////////////
   // contructors
     public PropPanelLink() {
-        super("Link Properties",_linkIcon, ConfigLoader.getTabPropsOrientation());
+        super("Link Properties", _linkIcon, ConfigLoader.getTabPropsOrientation());
 
         Class mclass = MLink.class;
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
@@ -81,9 +81,6 @@ public class PropPanelLink extends PropPanelModelElement {
         UmlFactory.getFactory().delete(target);
 	if(newTarget != null) TargetManager.getInstance().setTarget(newTarget);
     }
-
-
-
 } /* end class PropPanelLink */
 
 

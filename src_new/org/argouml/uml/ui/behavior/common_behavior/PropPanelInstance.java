@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.15 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelInstance.java,v 1.16 2003/05/10 13:23:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.15 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelInstance.java,v 1.16 2003/05/10 13:23:19 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -37,11 +37,14 @@ import java.util.Iterator;
 import javax.swing.JTree;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
+import org.argouml.swingext.LabelledLayout;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;
 import org.argouml.uml.ui.UMLComboBox;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
+import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -51,47 +54,36 @@ public class PropPanelInstance extends PropPanelModelElement {
 
 
     public PropPanelInstance() {
-	super("Instance Properties",_instanceIcon,2);
- 
-	Class mclass = MInstance.class;
-   
-	addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-	addField(getNameTextField(),1,0,0);
-      
-	addCaption("Classifier:",2,0,0);
-   	UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this,"isAcceptibleClassifier","classifier","getClassifier","setClassifier",false,MClassifier.class,true);
-	UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
-   	addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"),clsComboBox),2,0,0);
+        super("Instance Properties",_instanceIcon, ConfigLoader.getTabPropsOrientation());
 
+        Class mclass = MInstance.class;
 
-	addCaption(Argo.localize("UMLMenu", "label.stereotype"),3,0,0);
-	addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()),3,0,0);
+        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 
-	addCaption(Argo.localize("UMLMenu", "label.namespace"),4,0,0);
-	addLinkField(getNamespaceComboBox(),4,0,0);
+        UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this,"isAcceptibleClassifier","classifier","getClassifier","setClassifier",false,MClassifier.class,true);
+        UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
+        addField("Classifier:", new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"),clsComboBox));
 
+        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
+        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);	
-   
-    
     //
     //   temporary
     //
-    
-	addCaption("Related Elements",0,1,1);
-	JTree tempTree = new JTree(new Object[] { "Slots", "Links", "Stimuli [Recieved, Sent, In Arg List]" });
-	addField(tempTree,0,1,1);
-    
 
-    
-  }
+        JTree tempTree = new JTree(new Object[] { "Slots", "Links", "Stimuli [Recieved, Sent, In Arg List]" });
+        addField("Related Elements", tempTree);
+    //
+
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);	
+    }
 
     
     public boolean isAcceptibleClassifier(MModelElement classifier) {
         return classifier instanceof MClassifier;
     }
 
-     public MClassifier getClassifier() {
+    public MClassifier getClassifier() {
         MClassifier classifier = null;
         Object target = getTarget();
         if(target instanceof MInstance) {
@@ -130,12 +122,8 @@ public class PropPanelInstance extends PropPanelModelElement {
 	    }
 	    // add classifier
 	    inst.addClassifier( element);
-
         }
     }
-
-   
-
 } /* end class PropPanelInstance */
 
 

@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.34 2003/05/10 02:48:32 bobtarling Exp $
+// $Id: PropPanelUseCase.java,v 1.35 2003/05/10 13:23:19 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -64,16 +64,12 @@ import org.argouml.util.ConfigLoader;
 
 public class PropPanelUseCase extends PropPanelClassifier {
 
-
     /**
      * <p>Constructor. Builds up the various fields required.</p>
      */
-
     public PropPanelUseCase() {
-
         // Invoke the Classifier constructor, but passing in our name and
         // representation and requesting 3 columns
-
         super("UseCase", ConfigLoader.getTabPropsOrientation());
         
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
