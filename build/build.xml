@@ -108,9 +108,12 @@
         <copy todir="${build.project}/images" filtering="no">
             <fileset dir="${src.images.dir}" defaultexcludes="no"/>
         </copy>
+<!-- No longer needed, but will be needed in the WAR creation step
+     in the future, so I am leaving it here for now. -JSS
         <copy todir="${build.project}/templates" filtering="no">
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
         </copy>
+-->
         <copy todir="${build.project}/resources" filtering="no">
             <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
         </copy>
@@ -121,12 +124,14 @@
         </copy>
 
         <!-- things to go into the web-inf directory -->
-        <copy todir="${build.project.webinf}/conf" filtering="no">
+        <filter token="ABSOLUTE_PATH" value="absolute:${src.dir}"/>
+        <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
                 <include name="*.xml"/>
             </fileset>
         </copy>
+
         <copy todir="${build.project.webinf}/lib" filtering="no">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
