@@ -8,16 +8,20 @@
 package org.jboss.invocation.jrmp.server;
 
 import java.lang.reflect.Method;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
 import java.io.IOException;
+
 import java.rmi.server.RemoteServer;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RemoteStub;
 import java.rmi.ServerException;
 import java.rmi.MarshalledObject;
-import java.rmi.server.RemoteStub;
+
 import java.util.Date;
 
 import javax.naming.Name;
@@ -49,15 +53,20 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
+
 import org.jboss.logging.Logger;
+
 import org.jboss.system.Registry;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
  * from RMI/JRMP into the JMX base.
  *
+ * @jmx:mbean extends="org.jboss.system.ServiceMBean"
+ *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -68,13 +77,17 @@ import org.jboss.system.Registry;
  * </ol>
  */
 public class JRMPInvoker
-    extends RemoteServer
-    implements Invoker, JRMPInvokerMBean,  MBeanRegistration
+   extends RemoteServer
+   implements Invoker, JRMPInvokerMBean, MBeanRegistration
 {
-   protected static final int ANONYMOUS_PORT = 0;
+   /** Identifer to instruct the usage of an anonymous port. */
+   public static final int ANONYMOUS_PORT = 0;
    
-   /** Class logger. */
-   protected Logger log = Logger.getLogger(JRMPInvoker.class);
+   /** Instance logger. */
+   protected Logger log;
+
+   /** Service MBean support delegate. */
+   protected ServiceMBeanSupport support;
    
    /** The port the container will be exported on */
    protected int rmiPort = ANONYMOUS_PORT;
@@ -94,26 +107,41 @@ public class JRMPInvoker
    /** The address to bind the rmi port on */
    protected String serverAddress;
    
-   // The MBean Server
-   protected MBeanServer server;
-   protected ObjectName serviceName;
-   
-   protected int state;
-   protected int id = 0;
-   
    protected RemoteStub invokerStub;
-   
-   // Static --------------------------------------------------------
    
    private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   
-   // MBean parameters
 
+   public JRMPInvoker()
+   {
+      final JRMPInvoker delegate = this;
+      
+      // adapt the support delegate to invoke our state methods
+      support = new ServiceMBeanSupport(getClass()) {
+            protected void createService() throws Exception {
+               delegate.createService();
+            }
+   
+            protected void startService() throws Exception {
+               delegate.startService();
+            }
+   
+            protected void stopService() throws Exception {
+               delegate.stopService();
+            }
+   
+            protected void destroyService() throws Exception {
+               delegate.destroyService();
+            }
+         };
+
+      // Setup logging from delegate
+      log = support.getLog();
+   }
+
+   /**
+    * @return The localhost name or null.
+    */
    public String getServerHostName() 
    { 
       try {
@@ -123,113 +151,106 @@ public class JRMPInvoker
 	 return null;
       }
    }
-   
+
+   /**
+    * @jmx:managed-attribute
+    */
    public void setRMIObjectPort(final int rmiPort) {
       this.rmiPort = rmiPort;
    }
 
-   public int getRMIObjectPort()  { 
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getRMIObjectPort() { 
       return rmiPort;
    }
    
+   /**
+    * @jmx:managed-attribute
+    */
    public void setRMIClientSocketFactory(final String name) {
       clientSocketFactoryName = name;
    }
 
+   /**
+    * @jmx:managed-attribute
+    */
    public String getRMIClientSocketFactory() { 
       return clientSocketFactoryName;
    }
    
+   /**
+    * @jmx:managed-attribute
+    */
    public void setRMIServerSocketFactory(final String name) {
       serverSocketFactoryName = name;
    }
 
+   /**
+    * @jmx:managed-attribute
+    */
    public String getRMIServerSocketFactory() { 
       return serverSocketFactoryName;
    }
    
+   /**
+    * @jmx:managed-attribute
+    */
    public void setServerAddress(final String address) { 
       serverAddress = address;
    }
 
+   /**
+    * @jmx:managed-attribute
+    */
    public String getServerAddress() { 
       return serverAddress;
    }
-   
-   public String getName() {
-      return "JRMPInvoker";
+
+   public RemoteStub getStub() {
+      return this.invokerStub;
    }
    
-   // Service implementation -------------------------------
-   
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   public JRMPInvoker()
+   protected void createService() throws Exception
    {
-      log = Logger.getLogger(getClass());
-   }
-   
-   // Public --------------------------------------------------------
-   
-   
-   public MBeanServer getServer() { return server; }
-   
-   public int getState() { return state; }
-   
-   public String getStateString() { return states[state]; }
-   
-   public RemoteStub getStub () { return this.invokerStub; }
-   
-   public void create()
-      throws Exception
-   {
-      log.info("creating");
       loadCustomSocketFactories();
 
       if (log.isDebugEnabled())
       {
          log.debug("Container Invoker RMI Port='" + 
-		   (rmiPort == ANONYMOUS_PORT ? "Anonymous" : 
-		    Integer.toString(rmiPort))+"'");
+                   (rmiPort == ANONYMOUS_PORT ? "Anonymous" : 
+                    Integer.toString(rmiPort))+"'");
 
          log.debug("Container Invoker Client SocketFactory='" +
-		   (clientSocketFactory == null ? "Default" : 
-		    clientSocketFactory.toString())+"'");
+                   (clientSocketFactory == null ? "Default" : 
+                    clientSocketFactory.toString())+"'");
 
          log.debug("Container Invoker Server SocketFactory='" +
-		   (serverSocketFactory == null ? "Default" : 
-		    serverSocketFactory.toString())+"'");
+                   (serverSocketFactory == null ? "Default" : 
+                    serverSocketFactory.toString())+"'");
 
          log.debug("Container Invoker Server SocketAddr='" + 
-		   (serverAddress == null ? "Default" : 
-		    serverAddress)+"'");
+                   (serverAddress == null ? "Default" : 
+                    serverAddress)+"'");
       }
-
-      log.info("created");
    }
-
-   public void start()
-      throws Exception
+   
+   protected void startService() throws Exception
    {
-      if (getState() != STOPPED && getState() != FAILED)
-         return;
-
-      state = STARTING;
-      log.info("Starting");
-
-      Context ctx = new InitialContext();
-
+      InitialContext ctx = new InitialContext();
+         
       // Get the transaction propagation context factory
-      // and the transaction propagation context importer
       tpcFactory = (TransactionPropagationContextFactory)
-	 ctx.lookup("java:/TransactionPropagationContextExporter");
+         ctx.lookup("java:/TransactionPropagationContextExporter");
+      
+      // and the transaction propagation context importer
       tpcImporter = (TransactionPropagationContextImporter)
-	 ctx.lookup("java:/TransactionPropagationContextImporter");
+         ctx.lookup("java:/TransactionPropagationContextImporter");
 
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
+
       // FIXME marcf: This should not be here
       TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
@@ -237,109 +258,45 @@ public class JRMPInvoker
       Invoker delegateInvoker = createDelegateInvoker();
 
       // Export references to the bean
-      Registry.bind(serviceName, delegateInvoker);
+      Registry.bind(support.getServiceName(), delegateInvoker);
 
-      try
-      {
-         // Export CI
-         exportCI();
+      // Export CI
+      exportCI();
 
-         InitialContext context = new InitialContext();
+      // Bind the invoker in the JNDI invoker naming space
+      rebind(
+         // The context
+         ctx,
+         // It should look like so "invokers/<name>/jrmp" 
+         "invokers/" + InetAddress.getLocalHost().getHostName() + "/jrmp", 
+         // The bare invoker            
+         delegateInvoker);
 
-         // Bind the invoker in the JNDI invoker naming space
-         rebind(
-            // The context
-            context,
-            // It should look like so "invokers/<name>/jrmp" 
-            "invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp", 
-            // The bare invoker            
-            delegateInvoker);
+      log.debug("Bound JRMP invoker for JMX node");
 
-         if (log.isDebugEnabled())
-            log.debug("Bound JRMP invoker for JMX node");
-
-      }
-      catch (Exception e)
-      {
-         state = FAILED;
-         log.error("Failed", e);
-         throw new ServerException("Could not bind JRMP invoker", e);
-      }
-
-      state = STARTED;
-      log.info("Started");
+      ctx.close();
    }
    
-   public void stop()
+   protected void stopService() throws Exception
    {
-      if (getState() != STARTED)
-         return;
+      InitialContext ctx = new InitialContext();
       
-      state = STOPPING;
-      log.info("Stopping");
-      
-      try
-      {
-         InitialContext ctx = new InitialContext();
+      try {
          ctx.unbind("invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp");
          
          unexportCI();
       }
-      catch (Throwable e)
-      {
-         state = FAILED;
-         log.error("Failed", e);
-         return;
+      finally {
+         ctx.close();
       }
-      state = STOPPED;
-      log.info("Stopped");
    }
    
-   public void destroy()
+   protected void destroyService() throws Exception
    {
       // Export references to the bean
-      Registry.unbind(serviceName);
+      Registry.unbind(support.getServiceName());
    }
-   
-   // MBeanRegistration implementation --------------------------------------
-   
-   public ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
-   {
-      return serviceName;
-   }
-   
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws Exception
-   {
-      this.server = server;
-      
-      serviceName = name;
-      
-      log.info("JRMP Invoker MBean online");
-      
-      return serviceName;
-   }
-   
-   public void postRegister(Boolean registrationDone)
-   {
-      if (!registrationDone.booleanValue())
-      {
-         log.info( "Registration of JRMP Invoker MBean failed" );
-      }
-   }
-   
-   public void preDeregister()
-      throws Exception
-   {
-   }
-   
-   public void postDeregister()
-   {
-   }
-   
-   // ContainerRemote implementation --------------------------------
-   
+
    /**
     * Invoke a Remote interface method.
     */
@@ -361,38 +318,25 @@ public class JRMPInvoker
          ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
          
          // The cl on the thread should be set in another interceptor
-         Object obj = server.invoke(mbean,
-                                    "",
-                                    new Object[] {invocation},
-                                    Invocation.INVOKE_SIGNATURE);
+         Object obj = support.getServer().invoke(mbean,
+                                                 "",
+                                                 new Object[] {invocation},
+                                                 Invocation.INVOKE_SIGNATURE);
          
          return new MarshalledObject(obj);
       }
       catch (Exception e)
       {
-         if (e instanceof MBeanException)
-            e = ((MBeanException)e).getTargetException();
+         org.jboss.util.jmx.JMXExceptionDecoder.rethrow(e);
 
-         if (e instanceof RuntimeMBeanException)
-            e = ((RuntimeMBeanException)e).getTargetException();
-
-         if (e instanceof RuntimeOperationsException)
-            e = ((RuntimeOperationsException)e).getTargetException();
-
-         // Only log errors if trace is enabled
-         if( log.isTraceEnabled() )
-            log.trace("operation failed", e);
-         throw e;
+         // the compiler does not know an exception is thrown by the above
+         throw new org.jboss.util.UnreachableStatementException();
       }
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }      
    }
-
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
 
    protected Invoker createDelegateInvoker()
    {
@@ -410,7 +354,6 @@ public class JRMPInvoker
       UnicastRemoteObject.unexportObject(this, true);
    }
    
-   
    protected void rebind(Context ctx, String name, Object val)
       throws NamingException
    {
@@ -424,7 +367,8 @@ public class JRMPInvoker
          try
          {
             ctx = (Context)ctx.lookup(ctxName);
-         } catch (NameNotFoundException e)
+         }
+         catch (NameNotFoundException e)
          {
             ctx = ctx.createSubcontext(ctxName);
          }
@@ -434,8 +378,6 @@ public class JRMPInvoker
       ctx.rebind(n.get(0), val);
    }
    
-   // Private -------------------------------------------------------
-
    private void loadCustomSocketFactories()
    {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -448,11 +390,12 @@ public class JRMPInvoker
             clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
          }
       }
-      catch(Exception e)
+      catch (Exception e)
       {
-         log.error(e);
+         log.error("Failed to load client socket factory", e);
          clientSocketFactory = null;
       }
+      
       try
       {
          if( serverSocketFactoryName != null )
@@ -464,19 +407,17 @@ public class JRMPInvoker
                // See if the server socket supports setBindAddress(String)
                try
                {
-                  Class[] parameterTypes =
-                  {String.class};
+                  Class[] parameterTypes = {String.class};
                   Method m = ssfClass.getMethod("setBindAddress", parameterTypes);
-                  Object[] args =
-                  {serverAddress};
+                  Object[] args = {serverAddress};
                   m.invoke(serverSocketFactory, args);
                }
-               catch(NoSuchMethodException e)
+               catch (NoSuchMethodException e)
                {
                   log.warn("Socket factory does not support setBindAddress(String)");
                   // Go with default address
                }
-               catch(Exception e)
+               catch (Exception e)
                {
                   log.warn("Failed to setBindAddress="+serverAddress+" on socket factory", e);
                   // Go with default address
@@ -492,13 +433,13 @@ public class JRMPInvoker
             {
                defaultFactory.setBindAddress(serverAddress);
             }
-            catch(UnknownHostException e)
+            catch (UnknownHostException e)
             {
                log.error("Failed to setBindAddress="+serverAddress+" on socket factory", e);
             }
          }
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          log.error("operation failed", e);
          serverSocketFactory = null;
@@ -508,12 +449,75 @@ public class JRMPInvoker
    /**
     * Import a transaction propagation context into the local VM, and
     * return the corresponding <code>Transaction</code>.
+    *
+    * @return A transaction or null if no tpc.
     */
    protected Transaction importTPC(Object tpc)
    {
       if (tpc != null)
          return tpcImporter.importTransactionPropagationContext(tpc);
       return null;
+   }
+
+   //
+   // Delegate the ServiceMBean details to our support delegate
+   //
+
+   public String getName() {
+      return support.getName();
+   }
+   
+   public MBeanServer getServer() {
+      return support.getServer();
+   }
+   
+   public int getState() {
+      return support.getState();
+   }
+   
+   public String getStateString() {
+      return support.getStateString();
+   }
+   
+   public void create() throws Exception
+   {
+      support.create();
+   }
+
+   public void start()throws Exception
+   {
+      support.start();
+   }
+   
+   public void stop()
+   {
+      support.stop();
+   }
+   
+   public void destroy()
+   {
+      support.destroy();
+   }
+   
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+      throws Exception
+   {
+      return support.preRegister(server, name);
+   }
+   
+   public void postRegister(Boolean registrationDone)
+   {
+      support.postRegister(registrationDone);
+   }
+   
+   public void preDeregister() throws Exception
+   {
+      support.preDeregister();
+   }
+   
+   public void postDeregister()
+   {
+      support.postDeregister();
    }
 }
 
