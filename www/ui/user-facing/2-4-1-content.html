@@ -199,25 +199,15 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
 <input type="hidden" name="action" value="ConfigureReport"/>
 <input type="hidden" name="axis" value="1"/>
 
-<div class="axial">
-  <table width="100%" cellpadding="3" cellspacing="2" border="1">			
-    <tr>
-      <th width="120">Position</th>
-      <td><select name="#"><option>X axis-Column headings / Y axis-row headings</option>
-          <option value="1" >X axis-row headings / Y axis-column headings</option>
-          </select>
-        &nbsp;<input type="submit" name="#" value="Refresh">
-      </td>
-    </tr>
-  </table>
-</div>
+<div class="colbar"><a href="#">Swap rows / columns</a></div>
+
 
 
 
 <div class="functnbar"><input type="submit" value="View updated report output"  name="eventSubmit_doGenerateReport" /></div>
 
 
-<h3>X-axis content</h3>
+<h3>X-axis content: Row headings</h3>
 
 <div class="axial">
   <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -310,7 +300,7 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
   	<input type="submit" name="#" value="Add/Remove X-axis group">
   </div>
 					
-<h3>Y-axis content</h3>
+<h3>Y-axis content: Column headings</h3>
 
 <div class="axial">
   <table width="100%" cellpadding="3" cellspacing="2" border="1">			
