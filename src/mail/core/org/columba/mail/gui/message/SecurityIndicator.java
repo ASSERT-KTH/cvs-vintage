@@ -52,35 +52,50 @@ public class SecurityIndicator extends JPanel
 		{
 		    display.setIcon( ImageLoader.getImageIcon(
                                         		    "pgp-signature-ok.png" ) );
-		    display.setToolTipText("Message was encrypted successfully");
+		    display.setToolTipText(MailResourceLoader.getString(
+                                    "menu",
+                                    "mainframe",
+                                    "security_encrypt_success"));
 		    break;
 		}
 		case  DECRYPTION_FAILURE:
 		{
 		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-bad.png" ) );
-		    display.setToolTipText("Message encryption failed");
+		    display.setToolTipText(MailResourceLoader.getString(
+                                    "menu",
+                                    "mainframe",
+                                    "security_encrypt_fail"));
 		    break;
 		}
 		case  VERIFICATION_SUCCESS:
 		{
 		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-ok.png" ) );
-		    display.setToolTipText("Message was verified successfully");
+		    display.setToolTipText(MailResourceLoader.getString(
+                                    "menu",
+                                    "mainframe",
+                                    "security_verify_success"));
 		    break;
 		}
 		case  VERIFICATION_FAILURE:
 		{
 		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-bad.png" ) );
-		    display.setToolTipText("Message verification failed");
+		    display.setToolTipText(MailResourceLoader.getString(
+                                    "menu",
+                                    "mainframe",
+                                    "security_verify_fail"));
 		    break;
 		}
 		case  NOKEY:
 		{
 		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-nokey.png" ) );
-		    display.setToolTipText("You don't have the right key\n\nto verify this message");
+		    display.setToolTipText(MailResourceLoader.getString(
+                                    "menu",
+                                    "mainframe",
+                                    "security_verify_nokey"));
 		    break;
 		}
 		case  NOOP:
