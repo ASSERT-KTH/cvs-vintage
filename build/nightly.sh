@@ -185,10 +185,17 @@ cd ${DIR}; cd ${SCARAB}/build
 ant javadocs
 echo "Building Scarab Javadoc Finish..."
 
-echo "Recreating the database (using new method)..."
+echo "Recreating the database..."
 cd ${DIR}; cd ${SCARAB}/src/sql
-./create-db.sh mysql
+./create-db.sh
 
+echo "Running the test suite..."
+cd ${DIR}; cd ${SCARAB}/build
+ant -f run-tests.xml
+
+echo "Recreating the database (to clear out the test data)..."
+cd ${DIR}; cd ${SCARAB}/src/sql
+./create-db.sh
 
 StartTomcat
 
