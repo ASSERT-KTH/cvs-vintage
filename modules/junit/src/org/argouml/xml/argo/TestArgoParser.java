@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.15 2004/12/26 15:33:57 linus Exp $
+// $Id: TestArgoParser.java,v 1.16 2004/12/30 08:38:06 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.xml.argo;
 
-import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import junit.framework.Test;
@@ -71,9 +71,15 @@ public class TestArgoParser extends TestCase {
      * @throws OpenException if something goes wrong.
      */
     private void loadProject(String filename) throws OpenException {
-        File file = new File(filename);
+        URL url;
+        try {
+            url = new URL(filename);
+        } catch (MalformedURLException e) {
+            fail("Cannot convert filename " + filename + " to URL.");
+            return;
+        }
         ZargoFilePersister persister = new ZargoFilePersister();
-        persister.doLoad(file);
+        persister.doLoad(url);
         assertTrue("Load Status for " + filename + ".",
                LastLoadInfo.getInstance().getLastLoadStatus());
     }
