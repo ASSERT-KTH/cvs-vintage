@@ -1,163 +1,86 @@
-<table border="0" bgcolor="#FFFFFF" cellpadding="0" cellspacing="0" width="100%">
+$page.setTitle("Module Administration")
+$page.setBgColor($ui.bgcolor)
+
+<form method="post" action="$link.setPage("admin,ModifyProject.vm").setAction("admin.ModifyModule")">
+
+    <table bgcolor="$ui.bgcolor" cellpadding="$ui.tableCellPadding">
+
+    #set ( $intakeModule = $intake.Module.mapTo($scarabR.Module) )
+
     <tr>
-        <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-        <td bgcolor="#525D76" colspan=3 height=5><img src="/scarab/images/spacer.gif" height=5 border="0"></td>
-        <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-    </tr>
-    <tr>
-        <td bgcolor="#000000" width=1 colspan=5><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-    </tr>
-    <tr>
-        <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-        <td valign=top>
-            <table border="0" bgcolor="#FFFFFF" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td bgcolor="#BBBBBB" height="18" class="NavHeader" align="middle" nowrap>&nbsp;&nbsp;<a href="$link.setPage("admin,AdminHome.vm")">Admin Home</a>&nbsp;&nbsp;</td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#000000" height="1" nowrap><img src="/scarab/images/spacer.gif" border="0"></td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#FFFFFF" height="18" class="NavHeader" align="middle" nowrap>&nbsp;&nbsp;<a href="$link.setPage("admin,ModifyProject.vm")" class="StressedText">Project</a>&nbsp;&nbsp;</td>
-                    <td bgcolor="#FFFFFF" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#000000" height="1" nowrap><img src="/scarab/images/spacer.gif" border="0"></td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#BBBBBB" height="18" class="NavHeader" align="middle" nowrap>&nbsp;&nbsp;<a href="$link.setPage("admin,ModifyComponent.vm")">Component</a>&nbsp;&nbsp;</td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#000000" height="1" nowrap><img src="/scarab/images/spacer.gif" border="0"></td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#BBBBBB" height="18" class="NavHeader" align="middle" nowrap>&nbsp;&nbsp;<a href="/"">Role</a>&nbsp;&nbsp;</td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#000000" height="1" nowrap><img src="/scarab/images/spacer.gif" border="0"></td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#BBBBBB" height="18" class="NavHeader" align="middle" nowrap>&nbsp;&nbsp;<a href="/">Permission</a>&nbsp;&nbsp;</td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-                <tr>
-                    <td bgcolor="#000000" height="1" nowrap><img src="/scarab/images/spacer.gif" border="0"></td>
-                    <td bgcolor="#000000" width=1><img src="/scarab/images/spacer.gif" width=1 border="0"></td>
-                </tr>
-            </table>
+        <td nowrap>Module Name:</td>
+        <td>
+            #textField($intakeModule.Name "40")
         </td>
-        <td width="10" bgcolor="#FFFFFF">&nbsp;</td>
-        <td align="left" valign="top">
-        
-<!-- Start body content -->
-<br>
-<form method="post" action="$link.setPage("admin,ModifyProject.vm").setAction("SetSelectedProject")">
-    My Projects: FIXME: $!ModuleManager.getProjectsBox($data, 1)
-    <INPUT TYPE="submit" name="eventSubmit_doSelect" VALUE="Refresh">
-</form>
-
-#if ($data.getMessage())
-    <p>
-    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-            <TR>
-                <TD class="MessageText">$data.getMessage()</TD>
-            </TR>
-    </TABLE>
-#end
-
-<FORM METHOD="post" ACTION="$link.setPage("admin,ModifyProject.vm")">
-    <INPUT TYPE="hidden" NAME="action" VALUE="admin.ModifyProject">
-    <INPUT TYPE="hidden" NAME="project_id" VALUE="$project.Id">
-    <INPUT TYPE="hidden" NAME="ownerId" VALUE="$ownerId">
-    <INPUT TYPE="hidden" NAME="qaContactId" VALUE="$qaContactId">
-    <table border="0" cellpadding="2" cellspacing="0" width="100%">
-        <tr>
-            <td class="Header" bgcolor="#999999">&nbsp;MODIFY PROJECT:</td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <table border="0" cellpadding="2" cellspacing="0">
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Name:</td>
-                        <td width="100%"><input type "text" size="40" name="project_name" value="$project.Name"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Description:</td>
-                        <td><input type "text" size="40" name="project_description" value="$project.Description"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project URL:</td>
-                        <td><input type "text" size="40" name="project_url" value="$project.Url"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Owner:</td>
-                        <td><input type "text" size="40" name="project_owner" value="$owner"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project QA Contact:</td>
-                        <td><input type "text" size="40" name="project_qacontact" value="$qaContact"></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><input type="submit" name="eventSubmit_doCancel" value="Cancel"> <input type="submit" name="eventSubmit_doModify" value="Modify"></td>
-                    </tr>
-                </table>
-<hr noshade height=0>
-            </td>
-        </tr>
-    </table>
-</form>
-
-<FORM METHOD="post" ACTION="$link.setPage("admin,ModifyProject.vm")">
-    <INPUT TYPE="hidden" NAME="action" VALUE="admin.AddProject">
-    <INPUT TYPE="hidden" NAME="project_id" VALUE="0">
-    <table border="0" cellpadding="2" cellspacing="0" width="100%">
-        <tr>
-            <td class="Header" bgcolor="#999999">&nbsp;NEW PROJECT:</td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <table border="0" cellpadding="2" cellspacing="0">
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Name:</td>
-                        <td width="100%"><input type "text" size="40" name="project_name" value="$newproject.Name"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Description:</td>
-                        <td><input type "text" size="40" name="project_description" value="$newproject.Description"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project URL:</td>
-                        <td><input type "text" size="40" name="project_url" value="$newproject.Url"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project Owner:</td>
-                        <td><input type "text" size="40" name="project_owner" value="$newprojectowner"></td>
-                    </tr>
-                    <tr>
-                        <td class="InputHeader" nowrap>Project QA Contact:</td>
-                        <td><input type "text" size="40" name="project_qacontact" value="$newprojectqaContact"></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><input type="submit" name="eventSubmit_doCancel" value="Cancel"> <input type="submit" name="eventSubmit_doAdd" value="Add"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</form>
-
-<!-- End body content -->
-
-        </td>
-        <td width="1" bgcolor="#000000"><img src="/scarab/images/spacer.gif" width="1" border="0"></td>
     </tr>
-</table>
+
+    <tr>
+        <td nowrap>Project Description:</td>
+        <td>
+            #textField($intakeModule.Description "40")
+        </td>
+    </tr>
+
+    <tr>
+        <td nowrap>Project Code:</td>
+        <td>
+            #textField($intakeModule.Code "40")
+        </td>
+    </tr>
+                    
+    <tr>
+        <td nowrap>Project URL:</td>
+        <td>
+            #textField($intakeModule.Url "40")
+        </td>
+    </tr>
+
+#* !FIXME! not implemented yet
+    <tr>
+        <td nowrap>Project Owner:</td>
+        <td>
+            #textField($intakeModule.Owner "40")
+        </td>
+    </tr>
+
+    <tr>
+        <td nowrap>Project QA Contact:</td>
+        <td>
+            #textField($intakeModule.QAContact "40")
+        </td>
+    </tr>
+*#
+
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <input type="submit" name="eventSubmit_doCancel" value="Cancel">
+            <input type="submit" name="eventSubmit_doAdd" value="Add">
+        </td>
+   </tr>
+
+
+
+      <tr>
+        <td align="$ui.buttonAlignment" bgcolor="$ui.buttonColor">
+          #*
+            Check for a mode, the update and delete buttons
+            shouldn't appear when inserting a new user.
+          *#
+
+          <font face="$ui.sansSerifFonts">
+
+          #if ($flux.Mode && $flux.Mode == "modify")
+            <input type="submit" name="eventSubmit_doUpdate" value="Update Group"/>
+          #elseif ($flux.Mode && $flux.Mode == "delete")
+            <input type="submit" name="eventSubmit_doDelete" value="Confirm Deletion"/>
+          #else
+            <input type="submit" name="eventSubmit_doInsert" value="Add Group"/>
+          #end
+          
+          </font>
+       <td>
+     </tr>
+  </table>
+
+</form>
