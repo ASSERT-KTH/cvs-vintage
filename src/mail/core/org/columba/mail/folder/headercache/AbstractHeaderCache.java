@@ -254,7 +254,7 @@ public abstract class AbstractHeaderCache {
 
 				case BOOLEAN :
 					{
-						h.set(columnNames[j], new Boolean(p.readBoolean()));
+						h.set(columnNames[j], Boolean.valueOf(p.readBoolean()));
 						break;
 					}
 

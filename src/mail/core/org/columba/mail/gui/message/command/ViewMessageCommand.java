@@ -363,10 +363,8 @@ public class ViewMessageCommand extends FolderCommand {
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 					"/options/html");
-			boolean viewhtml =
-				new Boolean(html.getAttribute("prefer")).booleanValue();
 			// Which Bodypart shall be shown? (html/plain)
-			if (viewhtml)
+			if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
 				bodyPart =
 					(StreamableMimePart) mimePartTree.getFirstTextPart("html");
 			else
@@ -376,7 +374,7 @@ public class ViewMessageCommand extends FolderCommand {
 				bodyPart = new LocalMimePart(new MimeHeader());
 				((LocalMimePart) bodyPart).setBody(
 					new CharSequenceSource("<No Message-Text>"));
-			} else if (encryptedMessage == true) {
+			} else if (encryptedMessage) {
 				// meaning, bodyPart already contains the correct
 				// message bodytext
 
@@ -389,5 +387,4 @@ public class ViewMessageCommand extends FolderCommand {
 			}
 		}
 	}
-
 }

@@ -286,10 +286,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 			else
 				condList.setSelectedIndex(1);
 
-			boolean isInclude =
-				(new Boolean(destFolder
+			boolean isInclude = Boolean.valueOf(destFolder
 					.getFolderItem()
-					.get("property", "include_subfolders")))
+					.get("property", "include_subfolders"))
 					.booleanValue();
 
 			includeSubfolderButton.setSelected(isInclude);

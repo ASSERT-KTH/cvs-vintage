@@ -526,7 +526,7 @@ public class MessageComposer {
 
 		String composedBody;
 
-		header.set("columba.attachment", new Boolean(true));
+		header.set("columba.attachment", Boolean.TRUE);
 
 		root.getHeader().getHeader().merge(header.getHeader());
 

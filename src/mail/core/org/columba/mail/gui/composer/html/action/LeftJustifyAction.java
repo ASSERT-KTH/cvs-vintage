@@ -83,8 +83,7 @@ public class LeftJustifyAction extends CheckBoxAction
 		htmlElement.addObserver(this);
 		
 		// set initial enabled state
-		setEnabled((new Boolean(enableHtml)).booleanValue());
-		 
+		setEnabled(Boolean.valueOf(enableHtml).booleanValue());
 	}
 
 	/**
@@ -111,11 +110,9 @@ public class LeftJustifyAction extends CheckBoxAction
 
 			if (e.getName().equals("html")) {
 				String enableHtml = e.getAttribute("enable", "false");
-				boolean html = (new Boolean(enableHtml)).booleanValue();
 				
 				// This action should only be enabled in html mode
-				setEnabled(html);
-				
+				setEnabled(Boolean.valueOf(enableHtml).booleanValue());
 			}
 		}
 	}

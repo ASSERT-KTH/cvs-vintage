@@ -106,9 +106,8 @@ public class EnableHtmlAction
 
 		if (e.getName().equals("html")) {
 			String enableHtml = e.getAttribute("enable", "false");
-			boolean html = (new Boolean(enableHtml)).booleanValue();
-			getCheckBoxMenuItem().setSelected(html);
-
+			getCheckBoxMenuItem().setSelected(
+                                Boolean.valueOf(enableHtml).booleanValue());
 		}
 	}
 
@@ -116,7 +115,6 @@ public class EnableHtmlAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		boolean selection = getCheckBoxMenuItem().isSelected();
 
 		XmlElement optionsElement =
@@ -128,9 +126,7 @@ public class EnableHtmlAction
 			htmlElement = optionsElement.addSubElement("html");
 
 		// change configuration based on menuitem selection	 
-		htmlElement.addAttribute("enable", new Boolean(selection).toString());
+		htmlElement.addAttribute("enable", Boolean.toString(selection));
 		htmlElement.notifyObservers(); // notify everyone listening to this option
-		
 	}
-
 }

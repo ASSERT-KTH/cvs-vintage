@@ -289,12 +289,11 @@ public class VirtualFolder extends Folder {
 				}
 			}
 		}
-		boolean isInclude =
-			(new Boolean(getFolderItem()
-				.get("property", "include_subfolders")))
+		boolean isInclude = Boolean.valueOf(
+                        getFolderItem().get("property", "include_subfolders"))
 				.booleanValue();
 
-		if (isInclude == true) {
+		if (isInclude) {
 			for (Enumeration e = parent.children(); e.hasMoreElements();) {
 				folder = (Folder) e.nextElement();
 				if (folder instanceof VirtualFolder)

@@ -87,12 +87,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 	 */
 	public boolean isSingleton(String name) {
 		ColumbaLogger.log.debug("isSingleton="+name);
-
-		Boolean b = new Boolean(getAttribute(name, "singleton"));
-		boolean isSingleton = false;
-		if (b != null)
-			isSingleton = b.booleanValue();
-		return isSingleton;
+		return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
 	}
 
 	public BasicAction getAction(

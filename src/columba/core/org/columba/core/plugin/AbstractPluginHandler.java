@@ -294,10 +294,10 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			String enabled = element.getAttribute("enabled");
 			if (enabled == null)
 				enabled = "true";
-			boolean e = new Boolean(enabled).booleanValue();
+			boolean e = Boolean.valueOf(enabled).booleanValue();
 			
 
-			if (e == true)
+			if (e)
 				list.add(s);
 			//list[i] = s;
 		}

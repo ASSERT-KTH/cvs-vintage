@@ -67,7 +67,7 @@ public class ToolBar extends JToolBar {
 	}
 
 	public boolean getVisible() {
-		return new Boolean(rootElement.getAttribute("visible")).booleanValue();
+		return Boolean.valueOf(rootElement.getAttribute("visible")).booleanValue();
 	}
 
 	private void createButtons() {

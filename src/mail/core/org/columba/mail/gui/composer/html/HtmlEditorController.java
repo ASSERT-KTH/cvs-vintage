@@ -382,7 +382,7 @@ public class HtmlEditorController
 			// load contents into document
 			if (ignoreCharset) {
 				view.getHtmlDoc().putProperty(
-						"IgnoreCharsetDirective", new Boolean(true));
+						"IgnoreCharsetDirective", Boolean.TRUE);
 			}
 			Reader r = new StringReader(text);
 			EditorKit kit = view.getEditorKit();

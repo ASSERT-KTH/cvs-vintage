@@ -105,7 +105,7 @@ public class FontProperties extends Observable implements Observer {
 			textFontElement = fonts.addSubElement(id);
 
 		boolean overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
 
 		Font font = null;
 		String name = null;
@@ -135,7 +135,7 @@ public class FontProperties extends Observable implements Observer {
 	public static void setFont() {
 		// should we really overwrite the Look and Feel font settings
 		boolean overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
 		if (!overwrite)
 			return;
 

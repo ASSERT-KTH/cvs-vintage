@@ -235,7 +235,7 @@ public class TableView extends TreeTable {
 					}
 				}
 
-				if (lockSize == true) {
+				if (lockSize) {
 
 					registerRenderer(
 						name,

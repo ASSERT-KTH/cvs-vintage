@@ -101,13 +101,12 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		XmlElement html =
 			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 				"/options/html");
-		boolean viewhtml =
-			new Boolean(html.getAttribute("prefer")).booleanValue();
 
 		// Which Bodypart shall be shown? (html/plain)
 		MimePart bodyPart = null;
 
-		if (viewhtml)
+		boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+                if (viewhtml)
 			bodyPart = mimePartTree.getFirstTextPart("html");
 		else
 			bodyPart = mimePartTree.getFirstTextPart("plain");

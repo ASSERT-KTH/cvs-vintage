@@ -111,11 +111,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			XmlElement markasread = options.getElement("markasread");
 
 			String delay = markasread.getAttribute("delay", "2");
-			String enable = markasread.getAttribute("enabled", "true");
-			if (enable.equals("true"))
-				markCheckBox.setSelected(true);
-			else
-				markCheckBox.setSelected(false);
+			boolean enable = Boolean.valueOf(
+                                markasread.getAttribute("enabled", "true")).booleanValue();
+			markCheckBox.setSelected(enable);
 
 			markSpinner.setValue(new Integer(delay));
 
@@ -124,11 +122,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				smilies = messageviewer.addSubElement("smilies");
 			}
 
-			String enableSmilies = smilies.getAttribute("enabled", "true");
-			if (enableSmilies.equals("true"))
-				enableSmiliesCheckBox.setSelected(true);
-			else
-				enableSmiliesCheckBox.setSelected(false);
+			boolean enableSmilies = Boolean.valueOf(
+                                smilies.getAttribute("enabled", "true")).booleanValue();
+			enableSmiliesCheckBox.setSelected(enableSmilies);
 
 			/*
 			XmlElement quote = messageviewer.getElement("quote");
@@ -150,12 +146,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			
 			XmlElement html = options.getElement("html");
 
-			boolean preferhtml =
-				new Boolean(html.getAttribute("prefer")).booleanValue();
-			if (preferhtml == true)
-				preferHtmlCheckBox.setSelected(true);
-			else
-				preferHtmlCheckBox.setSelected(false);
+			boolean preferhtml = Boolean.valueOf(
+                                html.getAttribute("prefer")).booleanValue();
+                        preferHtmlCheckBox.setSelected(preferhtml);
 
 			XmlElement composerOptions =
 				MailConfig.getComposerOptionsConfig().getRoot().getElement(
@@ -165,24 +158,18 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				subject = composerOptions.addSubElement("subject");
 			}
 
-			String askSubject = subject.getAttribute("ask_if_empty", "true");
-			if (askSubject.equals("true"))
-				emptySubjectCheckBox.setSelected(true);
-			else
-				emptySubjectCheckBox.setSelected(false);
+			boolean askSubject = Boolean.valueOf(
+                                subject.getAttribute("ask_if_empty", "true")).booleanValue();
+			emptySubjectCheckBox.setSelected(askSubject);
 
 			XmlElement composerHtml = composerOptions.getElement("html");
 			if (composerHtml == null) {
 				composerHtml = composerOptions.addSubElement("html");
 			}
 			
-			String sendHtml = composerHtml.getAttribute(
-					"send_as_multipart", "true");
-			if (sendHtml.equals("true")) {
-				sendHtmlMultipartCheckBox.setSelected(true);
-			} else {
-				sendHtmlMultipartCheckBox.setSelected(false);
-			}
+			boolean sendHtml = Boolean.valueOf(composerHtml.getAttribute(
+					"send_as_multipart", "true")).booleanValue();
+			sendHtmlMultipartCheckBox.setSelected(sendHtml);
 
 			XmlElement forward = composerOptions.getElement("forward");
 			if (forward == null) {

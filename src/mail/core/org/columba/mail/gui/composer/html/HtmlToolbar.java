@@ -126,7 +126,7 @@ public class HtmlToolbar
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
 		String s = htmlElement.getAttribute("enable", "false");
-		boolean enableHtml = (new Boolean(s)).booleanValue();
+		boolean enableHtml = Boolean.valueOf(s).booleanValue();
 		paragraphComboBox.setEnabled(enableHtml);
 
 		// TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
@@ -236,18 +236,15 @@ public class HtmlToolbar
 			XmlElement e = (XmlElement) arg0;
 
 			if (e.getName().equals("html")) {
-				String enableHtml = e.getAttribute("enable", "false");
-				boolean html = (new Boolean(enableHtml)).booleanValue();
 	
 				// paragraphComboBox should only be enabled in html mode			
-				paragraphComboBox.setEnabled(html);
+				paragraphComboBox.setEnabled(Boolean.valueOf(
+                                        e.getAttribute("enable", "false")).booleanValue());
 
 				// TODO: Add handling for font size combo box
 				
 			}
 		}
-					
-				
 	}
 	
 	/**

@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 
 public class BooleanCompressorTest extends TestCase {
 
-	private Boolean[] test = { new Boolean(true), new Boolean(false), new Boolean(false),
-		new Boolean(true), new Boolean(true)};
+	private Boolean[] test = { Boolean.TRUE, Boolean.FALSE, Boolean.FALSE,
+		Boolean.TRUE, Boolean.TRUE};
 
 	/**
 	 * Constructor for BooleanCompressorTest.
@@ -41,7 +41,5 @@ public class BooleanCompressorTest extends TestCase {
 			result[i] = BooleanCompressor.decompress(testInt, i);
 			assertTrue( result[i].equals(test[i]));
 		}
-
 	}
-
 }

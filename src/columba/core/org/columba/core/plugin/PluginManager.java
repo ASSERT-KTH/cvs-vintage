@@ -348,12 +348,11 @@ public class PluginManager {
 			elements.put(id, e);
 
 			// set enabled attribute
-			e.addAttribute("enabled", new Boolean(b).toString());
+			e.addAttribute("enabled", Boolean.toString(b));
 
 			io.save();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}
-
 }

@@ -256,7 +256,7 @@ public class POP3Store {
 
 		m.setStringSource(rawString);
 		m.setAttribute("columba.host", popItem.get("host"));
-		m.setAttribute("columba.fetchstate", new Boolean(true));
+		m.setAttribute("columba.fetchstate", Boolean.TRUE);
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
 

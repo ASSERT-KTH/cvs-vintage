@@ -201,7 +201,7 @@ public class PrintMessageCommand extends FolderCommand {
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 					"/options/html");
 			boolean viewhtml =
-				new Boolean(html.getAttribute("prefer")).booleanValue();
+				Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
 
 			// Which Bodypart shall be shown? (html/plain)
 			MimePart bodyPart = null;

@@ -66,10 +66,10 @@ public class ColumbaHeader implements HeaderInterface {
 
 		BasicHeader basicHeader = new BasicHeader( header );
 
-		attributes.put("columba.fetchstate", new Boolean(false));
-		attributes.put("columba.priority", new Integer( basicHeader.getPriority()));
+		attributes.put("columba.fetchstate", Boolean.FALSE);
+		attributes.put("columba.priority", new Integer(basicHeader.getPriority()));
 		Address from = basicHeader.getFrom();
-		if ( from != null)
+		if (from != null)
 			attributes.put("columba.from", from);
 		else 
 		attributes.put("columba.from", new Address(""));
@@ -89,7 +89,7 @@ public class ColumbaHeader implements HeaderInterface {
 		} else {
 			attributes.put("columba.subject", "");			
 		}
-		attributes.put("columba.attachment", new Boolean(false));
+		attributes.put("columba.attachment", Boolean.FALSE);
 		attributes.put("columba.size", new Integer(0));
 	}
 
@@ -127,29 +127,24 @@ public class ColumbaHeader implements HeaderInterface {
 	 * @see org.columba.mail.message.HeaderInterface#get(java.lang.String)
 	 */
 	public Object get(String s) {
-		if( s.startsWith("columba.flags.")) {
+		if (s.startsWith("columba.flags.")) {
 			String flag = s.substring("columba.flags.".length());
-			if( flag.equals("seen")) {
-				return new Boolean( flags.get(Flags.SEEN) ); 
-			}
-			if( flag.equals("recent")) {
-				return new Boolean( flags.get(Flags.RECENT) ); 
-			}
-			if( flag.equals("answered")) {
-				return new Boolean( flags.get(Flags.ANSWERED) ); 
-			}
-			if( flag.equals("draft")) {
-				return new Boolean( flags.get(Flags.DRAFT) ); 
-			}
-			if( flag.equals("flagged")) {
-				return new Boolean( flags.get(Flags.FLAGGED) ); 
-			}
-			if( flag.equals("expunged")) {
-				return new Boolean( flags.get(Flags.EXPUNGED) ); 
+			if (flag.equals("seen")) {
+				return Boolean.valueOf(flags.get(Flags.SEEN));
+			} else if (flag.equals("recent")) {
+				return Boolean.valueOf(flags.get(Flags.RECENT));
+			} else if (flag.equals("answered")) {
+				return Boolean.valueOf(flags.get(Flags.ANSWERED));
+			} else if (flag.equals("draft")) {
+				return Boolean.valueOf(flags.get(Flags.DRAFT));
+			} else if (flag.equals("flagged")) {
+				return Boolean.valueOf(flags.get(Flags.FLAGGED));
+			} else if (flag.equals("expunged")) {
+				return Boolean.valueOf(flags.get(Flags.EXPUNGED));
 			}
 		}
 		
-		if( s.startsWith("columba.")) {
+		if (s.startsWith("columba.")) {
 			return attributes.get(s);
 		}
 		

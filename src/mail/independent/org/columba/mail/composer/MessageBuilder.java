@@ -480,7 +480,7 @@ public class MessageBuilder {
 			if (htmlElement == null)
 				htmlElement = optionsElement.addSubElement("html");
 			String enableHtml = htmlElement.getAttribute("enable", "false");
-			model.setHtml((new Boolean(enableHtml)).booleanValue());
+			model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 		} else {
 			/* 
 			 * original message is sent "inline" - model is setup according

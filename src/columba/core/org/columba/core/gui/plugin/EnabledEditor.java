@@ -72,7 +72,7 @@ public class EnabledEditor
 	// It must return the new value to be stored in the cell.
 	public Object getCellEditorValue() {
 		
-		Boolean b = new Boolean(((JCheckBox) component).isSelected());
+		Boolean b = Boolean.valueOf(((JCheckBox) component).isSelected());
 		
 		// enable/disable tree node
 		currentNode.setEnabled(b.booleanValue());

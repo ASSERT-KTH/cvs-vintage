@@ -107,7 +107,7 @@ public class PluginTree extends TreeTable {
 		String enabled = pluginElement.getAttribute("enabled");
 		if (enabled == null)
 			enabled = "true";
-		childNode.setEnabled(new Boolean(enabled).booleanValue());
+		childNode.setEnabled(Boolean.valueOf(enabled).booleanValue());
 
 		System.out.println("adding plugin to table: "+enabled);
 		

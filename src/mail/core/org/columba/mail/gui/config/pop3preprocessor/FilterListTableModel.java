@@ -71,9 +71,7 @@ class FilterListTableModel extends AbstractTableModel
         else
         {
             // enabled/disabled
-            boolean enabled = new Boolean(filter.getAttribute("enabled")).booleanValue();
-            
-            return new Boolean(enabled);
+            return Boolean.valueOf(filter.getAttribute("enabled"));
         }
     }
 

@@ -420,7 +420,7 @@ public class ComposerController
 				htmlElement = optionsElement.addSubElement("html");
 			// change configuration based on new model	 
 			htmlElement.addAttribute("enable",
-					new Boolean(composerModel.isHtml()).toString());
+					Boolean.toString(composerModel.isHtml()));
 			// notify observers - this includes this object - but here it will
 			// do nothing, since the model is already setup correctly
 			htmlElement.notifyObservers();
@@ -530,7 +530,7 @@ public class ComposerController
 		if (e.getName().equals("html")) {
 			// switch btw. html and text if necessary
 			String enableHtml = e.getAttribute("enable", "false");
-			boolean html = (new Boolean(enableHtml)).booleanValue();
+			boolean html = Boolean.valueOf(enableHtml).booleanValue();
 			boolean wasHtml = composerModel.isHtml();
 			
 			if (html != wasHtml) {

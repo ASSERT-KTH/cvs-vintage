@@ -96,11 +96,10 @@ public class URLController implements ActionListener {
 		if (htmlElement == null)
 			htmlElement = optionsElement.addSubElement("html");
 		String enableHtml = htmlElement.getAttribute("enable", "false");
-		model.setHtml((new Boolean(enableHtml)).booleanValue());
+		model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 		
 		ComposerController controller = new ComposerController();
 		controller.setComposerModel(model);
-		
 	}
 
 	public void contact(String address) {

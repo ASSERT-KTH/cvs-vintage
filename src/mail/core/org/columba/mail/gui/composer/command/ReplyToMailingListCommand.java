@@ -86,12 +86,10 @@ public class ReplyToMailingListCommand extends FolderCommand {
 		XmlElement html =
 			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
 				"/options/html");
-		boolean viewhtml =
-			new Boolean(html.getAttribute("prefer")).booleanValue();
 		// Which Bodypart shall be shown? (html/plain)
 		MimePart bodyPart = null;
 
-		if (viewhtml)
+		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
 			bodyPart = mimePartTree.getFirstTextPart("html");
 		else
 			bodyPart = mimePartTree.getFirstTextPart("plain");

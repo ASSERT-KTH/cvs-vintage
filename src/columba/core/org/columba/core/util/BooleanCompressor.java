@@ -30,6 +30,10 @@ public class BooleanCompressor {
 	}
 	
 	public static Boolean decompress(int input, int index) {
-		return new Boolean( ((input >> index ) & 1) == 1 );
+                if (((input >> index ) & 1) == 1) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
 	}
 }

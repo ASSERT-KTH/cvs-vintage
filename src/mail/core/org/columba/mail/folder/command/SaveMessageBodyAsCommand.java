@@ -323,15 +323,13 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		XmlElement html =
 			MailConfig.getMainFrameOptionsConfig().
 				getRoot().getElement("/options/html");
-		boolean preferhtml =
-			new Boolean(html.getAttribute("prefer")).booleanValue();
 
 		// Get body of message depending on user preferences
 		MimeTree mimePartTree = 
 				srcFolder.getMimePartTree(uid);
 
 		MimePart bodyPart = null;
-		if (preferhtml)
+		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
 			bodyPart = mimePartTree.getFirstTextPart("html");
 		else
 			bodyPart = mimePartTree.getFirstTextPart("plain");

@@ -93,7 +93,7 @@ public class TextEditorController
 			fonts = guiElement.addSubElement("fonts");
 
 		overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
 
 		// register for configuration changes
 		fonts.addObserver(this);
@@ -353,7 +353,7 @@ public class TextEditorController
 		// fonts
 
 		overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
 
 		if (overwrite == false) {
 

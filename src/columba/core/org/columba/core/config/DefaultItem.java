@@ -127,25 +127,24 @@ public class DefaultItem {
 		
 		if ( value == null )
 		{
-			value = new Boolean(defaultValue).toString();
+			value = Boolean.toString(defaultValue);
 			set(key,value);
 			
 		}
 		
-
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public boolean getBoolean(String key) {
 		String value = get(key);
 
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public boolean getBoolean(String pathToElement, String key) {
 		String value = get(pathToElement, key);
 
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public boolean getBoolean(
@@ -156,12 +155,12 @@ public class DefaultItem {
 		String value = get(pathToElement, key);
 
 		if (value == null) {
-			value = new Boolean(defaultValue).toString();
+			value = Boolean.valueOf(defaultValue).toString();
 			set(pathToElement, key, value);
 			
 		}
 
-		return new Boolean(value).booleanValue();
+		return Boolean.valueOf(value).booleanValue();
 	}
 
 	public void set(String key, boolean value) {
