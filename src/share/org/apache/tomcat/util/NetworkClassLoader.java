@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.2 1999/11/26 16:01:47 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/26 16:01:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.3 1999/11/27 21:45:35 harishp Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/27 21:45:35 $
  *
  * ====================================================================
  *
@@ -237,7 +237,7 @@ public class NetworkClassLoader extends ClassLoader {
     /**
      * java.lang.ClassLoader's defineClass method is final, so the
      * its subclasses cannot override this method. But, this class
-     * instead calls this method in the loadClass() instead.
+     * calls this method in the loadClass() instead.
      * @param The name of the class without ".class" extension.
      * @param The class data bytes.
      * @return The class object.
