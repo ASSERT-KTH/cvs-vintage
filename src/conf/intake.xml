@@ -464,6 +464,9 @@
     <field name="TypeId" key="dti" type="NumberKey" >
         <rule name="mask" value="[1-9]+">intake_BadIdMessage</rule>
     </field>
+    <field name="Description" key="d" type="String">
+        <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
+    </field>
     <field name="Deleted" key="del" type="boolean" />
 </group>
 
