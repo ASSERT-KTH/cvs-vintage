@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.95 2003/04/16 03:37:19 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.96 2003/04/29 23:38:50 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1460,12 +1460,15 @@ public class IssueSearch
         else 
         {
             IssueType issueType = getIssueType();
-            descendants = getModule()
-                .getRModuleOption(aval.getAttributeOption(), issueType)
-                .getDescendants(issueType);
+            RModuleOption rmo = getModule()
+                .getRModuleOption(aval.getAttributeOption(), issueType);
+            if (rmo != null) 
+            {
+                descendants = rmo.getDescendants(issueType);
+            }
         }
         
-        if (descendants.size() == 0) 
+        if (descendants == null || descendants.isEmpty()) 
         {
             options.add(aval.getOptionId());
         }
