@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.26 2004/12/08 18:27:37 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.27 2004/12/21 21:10:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.26 2004/12/08 18:27:37 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.27 2004/12/21 21:10:54 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -51,19 +51,32 @@ import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 
-/** This class defines a renderer object for UML Class Diagrams. In a
- *  Class Diagram the following UML objects are displayed with the
- *  following Figs: <p>
+/** 
+ * This class defines a renderer object for UML Class Diagrams. In a
+ * Class Diagram the following UML objects are displayed with the
+ * following Figs: <p>
+ * 
  * <pre>
- *  UML Object      ---  Fig
+ *  UML Object       ---  Fig
  *  ---------------------------------------
- *  Class         ---  FigClass
- *  Interface       ---  FigClass (TODO: What?)
- *  Generalization  ---  FigGeneralization
- *  Realization     ---  FigDependency (TODO: What?)
- *  Association     ---  FigAssociation
- *  Dependency      ---  FigDependency
- *  </pre>
+ *  Class            ---  FigClass
+ *  Interface        ---  FigInterface
+ *  Instance         ---  FigInstance
+ *  Model            ---  FigModel
+ *  Subsystem        ---  FigSubsystem
+ *  Package          ---  FigPackage
+ *  Comment          ---  FigComment
+ *  (CommentEdge)    ---  FigEdgeNote
+ *  Generalization   ---  FigGeneralization
+ *  Realization      ---  FigRealization
+ *  Permission       ---  FigPermission
+ *  Usage            ---  FigUsage
+ *  Dependency       ---  FigDependency
+ *  Association      ---  FigAssociation
+ *  AssociationClass ---  FigAssociationClass
+ *  Dependency       ---  FigDependency
+ *  Link             ---  FigLink
+ * </pre>
  */
 public class ClassDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer {
