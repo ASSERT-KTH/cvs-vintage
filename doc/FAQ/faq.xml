@@ -6,7 +6,7 @@
 <!-- jEdit FAQ                                            -->
 <!-- Copyright (C) 2001-2002 John Gellene                 -->
 
-<!-- $Id: faq.xml,v 1.1 2002/01/16 19:55:52 jgellene Exp $
+<!-- $Id: faq.xml,v 1.2 2002/01/17 16:57:28 jgellene Exp $
 -->
 
 <!-- Changes required for posting on jEdit Community:     -->
@@ -30,6 +30,7 @@
 <!ENTITY faq-items-part1 SYSTEM "faq-items1.xml">
 <!ENTITY faq-items-part2 SYSTEM "faq-items2.xml">
 <!ENTITY faq-items-part3 SYSTEM "faq-items3.xml">
+<!ENTITY faq-items-part4 SYSTEM "faq-items4.xml">
 <!ENTITY faq-appendix SYSTEM "faq-appendix.xml">
 
 ]>
@@ -105,6 +106,7 @@
 &faq-items-part1;
 &faq-items-part2;
 &faq-items-part3;
+&faq-items-part4;
 &faq-appendix;
 
 </article>
