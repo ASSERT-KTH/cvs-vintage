@@ -73,6 +73,7 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -81,7 +82,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.14 2001/05/11 00:45:42 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.15 2001/06/24 18:40:07 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -208,11 +209,28 @@ public class ReportIssue extends VelocityAction
             if ( issue.containsMinimumAttributeValues() ) 
             {
                 issue.save();
+                user.setReportingIssue(null);
 
+                // save the attachment
+                Attachment attachment = new Attachment();
+                group = intake.get("Attachment", 
+                                   attachment.getQueryKey(), false);
+                if ( group != null ) 
+                {
+                    group.setProperties(attachment);
+                    if ( attachment.getData().length > 0 ) 
+                    {
+                        attachment.setIssue(issue);
+                        attachment.setTypeId(new NumberKey(1));
+                        attachment.save();
+                    }
+                }
+
+                // set the template to the user selected value
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
-                               "entry,Wizard3.vm");
-                setTemplate(data, template);            
+                               "entry,Wizard4.vm");
+                setTemplate(data, template);                
             }
             else 
             {
