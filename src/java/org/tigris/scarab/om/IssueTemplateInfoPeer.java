@@ -35,8 +35,6 @@ public class IssueTemplateInfoPeer
         Object obj = ScarabCache.get("IssueTemplateInfoPeer",GET_ALL_TEMPLATES,                                     user, issueType); 
         if ( obj == null ) 
         {        
-System.out.println("hello");
-System.out.println(me.getModuleId());
             Criteria crit = new Criteria()
                 .add(IssuePeer.MODULE_ID, me.getModuleId())
                 .add(IssuePeer.DELETED, 0)
@@ -47,8 +45,6 @@ System.out.println(me.getModuleId());
                 .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
                 .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
                          IssuePeer.ISSUE_ID);
-System.out.println("hello2");
-System.out.println(crit);
             crit.setDistinct();
 
             Criteria.Criterion cPriv1 = crit.getNewCriterion(
