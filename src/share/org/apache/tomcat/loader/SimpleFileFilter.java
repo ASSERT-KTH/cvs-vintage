@@ -64,7 +64,7 @@ import java.io.*;
  * interface.
  *
  * @author <a href="mailto:mjenning@islandnet.com">Mike Jennings</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SimpleFileFilter implements FilenameFilter {
      private String[] extensions;
@@ -99,18 +99,18 @@ public class SimpleFileFilter implements FilenameFilter {
       * would expand out to all of the files with a .jar
       * extension in the /usr/home/mjennings directory 
       */
-      public static File[] fileOrFiles(File f) {
+      public static String[] fileOrFiles(File f) {
           if (f==null) return null;
-          File parent=f.getParentFile();
+          File parent=new File(f.getParent());
           String fname=f.getName();
-          File[] files;
+          String[] files;
           if (fname.charAt(0)=='*') {
               String filter=fname.substring(1,fname.length());
-              files=parent.listFiles(new SimpleFileFilter(filter));
+              files=parent.list(new SimpleFileFilter(filter));
               return files;
           } else {
-              files=new File[1];
-              files[0]=f;
+              files=new String[1];
+              files[0]=fname;
               return files;
           }
       }

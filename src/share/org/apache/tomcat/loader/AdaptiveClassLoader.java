@@ -116,7 +116,7 @@ import java.util.zip.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 2000/02/08 18:53:29 $
+ * @version $Revision: 1.2 $ $Date: 2000/02/08 20:37:14 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -203,7 +203,7 @@ public class AdaptiveClassLoader extends ClassLoader {
         while(e.hasMoreElements()) {
             Object o = e.nextElement();
             File file;
-            File[] files;
+            String[] files;
             int i;
 
             // Check to see if element is a File instance.
@@ -219,7 +219,7 @@ public class AdaptiveClassLoader extends ClassLoader {
             {
                 for (i=0;i<files.length;i++)
                 {
-                    file=files[i];
+                    file=new File(files[i]);
                     // Check to see if we have proper access.
                     if (!file.exists()) {
                         throw new IllegalArgumentException("Repository "
