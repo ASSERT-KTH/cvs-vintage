@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: Autosave.java,v 1.9 2003/03/29 20:29:31 spestov Exp $
+ * @version $Id: Autosave.java,v 1.10 2003/04/15 23:25:48 spestov Exp $
  */
 class Autosave implements ActionListener
 {
@@ -87,6 +87,9 @@ class Autosave implements ActionListener
 		Buffer[] bufferArray = jEdit.getBuffers();
 		for(int i = 0; i < bufferArray.length; i++)
 			bufferArray[i].autosave();
+
+		// flush log
+		Log.flushStream();
 	} //}}}
 
 	//{{{ Private members

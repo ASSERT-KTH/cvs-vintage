@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.72 2003/04/14 05:21:57 spestov Exp $
+ * @version $Id: View.java,v 1.73 2003/04/15 23:25:48 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1565,6 +1565,7 @@ public class View extends JFrame implements EBComponent
 
 		public ViewConfig(boolean plainView)
 		{
+			this.plainView = plainView;
 			String prefix = (plainView ? "plain-view" : "view");
 			x = jEdit.getIntegerProperty(prefix + ".x",0);
 			y = jEdit.getIntegerProperty(prefix + ".y",0);

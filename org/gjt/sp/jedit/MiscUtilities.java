@@ -66,7 +66,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.42 2003/04/14 05:21:57 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.43 2003/04/15 23:25:48 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -196,7 +196,9 @@ public class MiscUtilities
 
 		for(;;)
 		{
-			if(path.equals(".."))
+			if(path.equals("."))
+				return parent;
+			else if(path.equals(".."))
 				return getParentOfPath(parent);
 			else if(path.startsWith(dd) || path.startsWith("../"))
 			{
@@ -204,7 +206,7 @@ public class MiscUtilities
 				path = path.substring(3);
 			}
 			else if(path.startsWith(d))
-				path = path.substring(1);
+				path = path.substring(2);
 			else
 				break;
 		}

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.56 2003/04/11 17:41:03 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.57 2003/04/15 23:25:49 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -198,8 +198,8 @@ public class OffsetManager
 					}
 					anchor = anchor.next;
 				}
+				lineInfo[line] = (info | mask);
 			}
-			lineInfo[line] = (info | mask);
 		}
 		else
 		{
@@ -222,8 +222,8 @@ public class OffsetManager
 					}
 					anchor = anchor.next;
 				}
+				lineInfo[line] = (info & ~mask);
 			}
-			lineInfo[line] = (info & ~mask);
 		}
 	} //}}}
 

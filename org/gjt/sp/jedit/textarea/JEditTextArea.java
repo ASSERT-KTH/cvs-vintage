@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.236 2003/04/14 05:21:58 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.237 2003/04/15 23:25:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -597,7 +597,7 @@ public class JEditTextArea extends JComponent
 			extraEndVirt = 0;
 
 		int _electricScroll = (doElectricScroll
-			&& visibleLines > electricScroll * 2
+			&& visibleLines - 1 > electricScroll * 2
 			? electricScroll : 0); //}}}
 
 		if(visibleLines == 0)
@@ -5009,8 +5009,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			if(Debug.SCROLL_DEBUG)
 				Log.log(Log.DEBUG,this,"Vertical ok");
-			// don't display stuff past the end of the buffer if
-			// we can help it
 			int lineCount = displayManager.getScrollLineCount();
 			int firstLine = getFirstLine();
 			int visible = visibleLines - (lastLinePartial ? 1 : 0);

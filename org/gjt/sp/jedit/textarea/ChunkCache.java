@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.79 2003/04/14 02:25:42 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.80 2003/04/15 23:25:50 spestov Exp $
  */
 class ChunkCache
 {
@@ -515,8 +515,7 @@ class ChunkCache
 		// find a valid line closest to the last screen line
 		int firstScreenLine = 0;
 
-		for(int i = Math.min(firstInvalidLine - 1,lastScreenLine);
-			i >= 0; i--)
+		for(int i = firstInvalidLine - 1; i >= 0; i--)
 		{
 			if(lineInfo[i].lastSubregion)
 			{
