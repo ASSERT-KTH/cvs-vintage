@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.116 2005/01/20 04:45:27 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.117 2005/01/20 22:02:15 spestov Exp $
  */
 public class DisplayManager
 {
@@ -386,7 +386,9 @@ public class DisplayManager
 				}
 			}
 
-			if(firstVisible != end + 1)
+			if(firstVisible == end + 1)
+				returnValue = -1;
+			else
 				showLineRange(firstVisible,end);
 
 			if(!isLineVisible(line))
@@ -749,7 +751,7 @@ public class DisplayManager
 
 		if(copy != null)
 		{
-			folds = new RangeMap(folds);
+			folds = new RangeMap(copy.folds);
 			initialized = true;
 		}
 	} //}}}
