@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.10 2001/08/15 19:53:19 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.11 2001/08/27 13:54:39 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="style.css">
@@ -404,38 +404,77 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       </tr>
       <tr>
         <td WIDTH="15%" align="center">conf</td>
-        <td WIDTH="85%"> Configuration files including <a href="#server_xml">server.xml</a> (Tomcat's main configuration file) and
-          <a href="#web_xml">
-          web.xml</a> (default values for the various web applications deployed in 
-          Tomcat.).
+        <td WIDTH="85%"> <a hrev="#configuring_server">Configuration files</a>,
+          including  modules.xml, server.xml, and a number of apps-<i>&lt;name&gt;</i>.xml</a>.
         </td>
       </tr>
-      <tr>
-        <td WIDTH="15%" align="center">doc</td>
-        <td WIDTH="85%">Miscellaneous documents regarding Tomcat.</td>
-      </tr>
-      <tr>
-        <td WIDTH="15%" align="center">lib</td>
-        <td WIDTH="85%"> Various jar files that are used by Tomcat. 
-             Any file in this directory is appended to Tomcat's classpath.
-        </td>
-      </tr>
-      <tr>
-        <td WIDTH="15%" align="center"><a name="logs_dir_defn">logs</a></td>
-        <td WIDTH="85%"> This is where Tomcat places its log files by default.</td>
-      </tr>
-      <tr>
-    <td WIDTH="15%" align="center">src</td>
-    <td WIDTH="85%"> The servlet API source files. Don't get excited,
-      though; these are only the empty interfaces and abstract
-      classes that should be implemented by any servlet
-      container.</td>
-      </tr>
-      <tr>
-        <td WIDTH="15%" align="center">webapps</td>
-        <td WIDTH="85%"> Sample web applications. Any .war files placed
-          here will be automatically expanded.  See <a href="#deploying_war">Deploying WAR files</a>.</td>
-      </tr>
+    <tr>
+      <td width="15%" align="center">conf/auto</td>
+      <td width="85%">Directory where auto-generated configuration files are
+        written.</td>
+	  </tr>
+	  <tr>
+      <td width="15%" align="center">conf/jk</td>
+      <td width="85%">Directory containing mod_jk specific configuration files.</td>
+	  </tr>
+	  <tr>
+      <td width="15%" align="center">conf/jserv</td>
+      <td width="85%">Directory containing mod_jserv specific configuration files.</td>
+	  </tr>
+	  <tr>
+      <td width="15%" align="center">conf/users</td>
+      <td width="85%">Directory containing user name/password configuration files.
+        These are used by the SimpleRealm module for authentication.</td>
+	  </tr>
+    <tr>
+      <td WIDTH="15%" align="center">doc</td>
+      <td WIDTH="85%">Miscellaneous documents regarding Tomcat.</td>
+    </tr>
+    <tr>
+      <td WIDTH="15%" align="center">lib</td>
+      <td WIDTH="85%">Jar files that are used for starting and stopping Tomcat.</td>
+    </tr>
+	  <tr>
+      <td width="15%" align="center">lib/container</td>
+      <td width="85%">Jar files that make up the Tomcat server classes.  Any
+        Jar file in this directory is automatically included in Tomcat's
+        <b>Server Classloader</b>.  See 
+        <a href="#configuring_classes">Configuring Classes</a>.</td>
+	  </tr>
+	  <tr>
+      <td width="15%" align="center">lib/common</td>
+      <td width="85%">Jar files that contain classes shared between the Tomcat
+        server and all web applications. Any Jar file in this directory is
+        automatically included in Tomcat's <b>Common Classloader</b>.  See 
+        <a href="#configuring_classes">Configuring Classes</a>.</td>
+	  </tr>
+      <td width="15%" align="center">lib/apps</td>
+      <td width="85%">Jar files that contain classes shared between all web
+        applications. Any Jar file in this directory is automatically included
+        in Tomcat's <b>Apps Classloader</b>.  See 
+        <a href="#configuring_classes">Configuring Classes</a>.</td>
+    <tr>
+      <td WIDTH="15%" align="center"><a name="logs_dir_defn">logs</a></td>
+      <td WIDTH="85%"> This is where Tomcat places its log files by default.</td>
+    </tr>
+	  <tr>
+	    <td width="15%" align="center">modules</td>
+		  <td width="85%">Directory where &quot;plugin&quot; jars are placed.</td>
+	  </tr>
+	  <tr>
+	    <td width="15%" align="center">native</td>
+		  <td width="85%">Base directory for native souce code.</td>
+	  </tr>
+    <tr>
+      <td WIDTH="15%" align="center">src</td>
+      <td WIDTH="85%">Currently empty.  Tomcat's source code isn't currently
+       part of the binary distribution.</td>
+    </tr>
+    <tr>
+      <td WIDTH="15%" align="center">webapps</td>
+      <td WIDTH="85%"> Sample web applications. Any .war files placed
+        here will be automatically expanded.  See <a href="#deploying_war">Deploying WAR files</a>.</td>
+    </tr>
 </table>
 
     <p>Additionally you can, or Tomcat will, create the following
@@ -675,16 +714,16 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 
 <h3><a name="configuring_classes">Configuring Classes</a></h3>
 
-<p>Configuring classes refers to configuring what classes are available and in
-what manner when Tomcat is running.  You may wish to add additional classes and
-jars.  Also, a web application may need some modification based on what Tomcat
-makes available by default.</p>
+<p>Configuring classes refers to configuring what classes are available and the
+scope of their availability when Tomcat 3.3 is running.  You may wish to add
+additional classes and jars.  Also, a web application may need some modification
+based on what Tomcat 3.3 makes available by default.</p>
 
 <p>The available classes is determined by the classloader hierarchy that
-Tomcat creates when it starts up.  The classloader hierarchy built by Tomcat 3.3
-looks like this:</p>
+Tomcat 3.3 creates when it starts up.  The classloader hierarchy built by
+Tomcat 3.3 looks like this:</p>
 
-<table class="cltable">
+<table align="center" class="cltable">
   <tr class="clt_data"><td>
     <table>
       <tr class="clt_loader"><td>Server Classloader</td></tr>
@@ -743,19 +782,24 @@ looks like this:</p>
 
 <p>In this classloader hierarchy, classloaders can access classes in
 classloaders beneath them. They can not access classes in classloaders to the
-side or above. With this in mind, a brief inspection should reveal that in
+side or above! With this in mind, a brief inspection should reveal that in
 Tomcat 3.3, web applications do not have access to an XML parser by default.
 The <code>jaxp.jar</code> and <code>crimson.jar</code> are tucked away in the
 <b>Server Classloader</b> where they are accessible only within that classloader.</p>
 
-<p>Also note that if you has a jar containing classes which depended on
-<code>servlet.jar</code>, putting in on the CLASSPATH wouldn't work.
-<code>servlet.jar</code> isn't accessible the <b>Application Classloader</b>.
+<p>Also note that if you have a jar containing classes which depend on
+<code>servlet.jar</code>, putting it on the CLASSPATH wouldn't work.
+<code>servlet.jar</code> isn't accessible to the <b>Application Classloader</b>.
 This is why in Tomcat 3.3, your CLASSPATH envronment variable is ignored.</p>
 
-<p>The standard way to add classes to Tomcat 3.3 is to place the classes in a
-jar if they aren't already.  Then place the jar in the directory that
-corresponds to the appropriate classloader.</p>
+<p>For classes to are used solely by a web application, they should be placed
+in the web application's <code>WEB-INF/classes</code> or in a jar in the
+<code>WEB-INF/lib</code> as defined by the Servlet 2.2 specifications.  If you
+want to give the classes wider scope, place the classes in a jar if they aren't
+already.  Then place the jar in the directory that corresponds to the
+classloader with the scope you desired.  In the <b>Apps Classloader</b>, the
+classes are shared among all the web applications.  In the <b>Common Classloader</b>,
+the classes are shared among all the web applications and the web server classes.</p>
 
 <p>A second method is available for adding classes to the <b>Common Classloader</b>
 and <b>Apps Classloader</b>.  Entries found in an <code>org.apache.tomcat.common.classpath</code>
@@ -1313,24 +1357,14 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
             <td bgcolor="#c0c0c0">
 <pre>
         &lt;!-- (1) HTTP Connector for stand-alone operation --&gt;
-        &lt;Connector className=&quot;org.apache.tomcat.service.SimpleTcpConnector&quot;&gt;
-            &lt;Parameter
-                name=&quot;handler&quot;
-                value=&quot;org.apache.tomcat.service.http.HttpConnectionHandler&quot;/&gt;
-            &lt;Parameter
-                name=&quot;port&quot;
-                value=&quot;8080&quot;/&gt;
-        &lt;/Connector&gt;
+        &lt;Http10Connector port=&quot;8080&quot;
+                         address=&quot;127.0.0.1&quot;
+        /&gt;
 
         &lt;!-- (2) AJPV12 Connector for out-of-process operation --&gt;
-        &lt;Connector className=&quot;org.apache.tomcat.service.SimpleTcpConnector&quot;&gt;
-            &lt;Parameter
-                name=&quot;handler&quot;
-                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
-            &lt;Parameter
-                name=&quot;port&quot;
-                value=&quot;8007&quot;/&gt;
-        &lt;/Connector&gt;
+        &lt;Ajp12Connector port=&quot;8007&quot;
+                        address=&quot;127.0.0.1&quot;
+        /&gt;
 </pre>
             </td>
           </tr>
@@ -1416,15 +1450,11 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
           <tr>
             <td bgcolor="#c0c0c0">
 
-<pre>&lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
-        &lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
-            &lt;Parameter
-                name=&quot;handler&quot;
-                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
-            &lt;Parameter
-                name=&quot;port&quot;
-                value=&quot;8007&quot;/&gt;
-        &lt;/Connector&gt;
+<pre>
+        &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
+        &lt;Ajp12Connector port=&quot;8007&quot;
+                        address=&quot;127.0.0.1&quot;
+        /&gt;
 </pre>
             </td>
           </tr>
@@ -1454,23 +1484,13 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
             <td bgcolor="#c0c0c0">
 <pre>
         &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
-        &lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
-            &lt;Parameter
-                name=&quot;handler&quot;
-                value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
-            &lt;Parameter
-                name=&quot;port&quot;
-                value=&quot;8007&quot;/&gt;
-            &lt;Parameter
-                name=&quot;max_threads&quot;
-                value=&quot;30&quot;/&gt;
-            &lt;Parameter
-                name=&quot;max_spare_threads&quot;
-                value=&quot;20&quot;/&gt;
-            &lt;Parameter
-                name=&quot;min_spare_threads&quot;
-                value=&quot;5&quot; /&gt;
-        &lt;/Connector&gt;
+        &lt;Ajp12Connector tomcatAuthentication=&quot;false&quot;
+                        port=&quot;8007&quot;
+                        address=&quot;127.0.0.1&quot;
+                        maxThreads=&quot;30&quot;
+                        maxSpareThreads=&quot;20&quot;
+                        minSpareThreads=&quot;5&quot;
+        /&gt;
 </pre>
             </td>
           </tr>
@@ -1479,14 +1499,14 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
 <p>As can be seen the pool has 3 configuration parameters:</p>
 
 <ul>
-            <li> max_threads - defines the upper bound to the for the 
+            <li> maxThreads - defines the upper bound to the for the 
 			     concurrency, the pool will not create more then this number 
 				 of threads. </li>
-            <li> max_spare_threads - defines the maximum number of threads
+            <li> maxSpareThreads - defines the maximum number of threads
                  that the pool will keep idle. If the number of idle threads
                  passes the value of max_spare_threads the pool will kill
                  these threads. </li>
-            <li> min_spare_threads - the pool will try to make sure that at
+            <li> minSpareThreads - the pool will try to make sure that at
                  any time there is at least this number of idle threads
                  waiting for new requests to arrive. min_spare_threads must
                  be bigger then 0.</li>
