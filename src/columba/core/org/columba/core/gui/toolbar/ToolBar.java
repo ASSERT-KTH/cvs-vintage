@@ -25,7 +25,8 @@ import javax.swing.JToolBar;
 
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
-import org.columba.core.gui.frame.*;
+import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.gui.util.ToolbarButton;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -85,6 +86,9 @@ public class ToolBar extends JToolBar {
 			}
 		}
 		add(Box.createHorizontalGlue());
+		
+		ImageSequenceTimer image = frameController.getStatusBar().getImageSequenceTimer();
+		add( image );
 	}
 
 	public void addButton(BasicAction action) {

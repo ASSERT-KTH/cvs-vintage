@@ -21,7 +21,7 @@
  <action name="Find" class="org.columba.core.gui.action.FindAction"/> 
  <action name="FindAgain" class="org.columba.core.gui.action.FindAgainAction"/> 
  <action name="ViewToolbar" class="org.columba.core.gui.action.ViewToolbarAction"/> 
- <action name="Cancel" class="org.columba.core.gui.statusbar.CancelAction"/> 
+ <action name="Cancel" class="org.columba.core.gui.action.CancelAction"/> 
  
  <!-- help menu -->
  <action name="ShowHomepage" class="org.columba.core.gui.action.ShowHomepageAction"/>

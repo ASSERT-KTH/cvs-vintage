@@ -28,8 +28,11 @@ import javax.swing.JOptionPane;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.config.ThemeItem;
+import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ToolbarButton;
+import org.columba.core.main.MainInterface;
 
 /**
  * Title:
@@ -39,7 +42,9 @@ import org.columba.core.gui.util.ToolbarButton;
  * @author
  * @version 1.0
  */
-public class ImageSequenceTimer extends ToolbarButton implements ActionListener {
+public class ImageSequenceTimer
+	extends ToolbarButton
+	implements ActionListener, WorkerListChangeListener {
 	private javax.swing.Timer timer;
 	private ImageIcon[] images;
 	private ImageIcon restImage;
@@ -63,18 +68,18 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener 
 		setRolloverEnabled(true);
 		setBorder(null);
 		setContentAreaFilled(false);
-		
 
 		setRequestFocusEnabled(false);
 		init();
 
+		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
+			this);
+
 	}
-	
-	
+
 	public boolean isFocusTraversable() {
 		return isRequestFocusEnabled();
 	}
-
 
 	protected void initDefault() {
 		frameCount = 60;
@@ -214,6 +219,14 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener 
 
 	}
 
-	
+	/* (non-Javadoc)
+		 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
+		 */
+	public void workerListChanged(WorkerListChangedEvent e) {
+		if (e.getNewValue() != 0)
+			start();
+		else
+			stop();
+	}
 
 }
