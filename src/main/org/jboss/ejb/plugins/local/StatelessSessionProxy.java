@@ -2,13 +2,17 @@ package org.jboss.ejb.plugins.local;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.rmi.RemoteException;
 import javax.naming.InitialContext;
+import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBException;
 
 
 /** The EJBLocal proxy for a stateless session
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.5 $
+ @version $Revision: 1.6 $
  */
 class StatelessSessionProxy extends LocalProxy
    implements InvocationHandler
@@ -49,22 +53,17 @@ class StatelessSessionProxy extends LocalProxy
       }
       else if (m.equals(GET_PRIMARY_KEY))
       {
-         // MF FIXME
-         // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
-         // However we need to expose the field *somehow* so we can check for "isIdentical"
-         // For now we use a non-spec compliant implementation and just return the key as is
-         // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
-         
-         // This should be the following call
-         //throw new RemoteException("Session Beans do not expose their keys, RTFS");
-         
-         // This is how it can be solved with a PKHolder (extends RemoteException)
-         // throw new PKHolder("RTFS", name);
-         
-         // This is non-spec compliant but will do for now
-         // We can consider the name of the container to be the primary key, since all stateless beans
-         // are equal within a home
-         retValue = jndiName;
+         // The object identifier of a session object is, in general, opaque to the client.
+         // The result of getPrimaryKey() on a session EJBObject reference results in java.rmi.RemoteException.
+         // The result of getPrimaryKey() on a session EJBLocalObject reference results in javax.ejb.EJBException.
+         if (proxy instanceof EJBObject)
+         {
+            throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
+         }
+         if (proxy instanceof EJBLocalObject)
+         {
+            throw new EJBException("Call to getPrimaryKey not allowed on session bean");
+         }
       }
       else if (m.equals(GET_EJB_HOME))
       {
@@ -75,7 +74,7 @@ class StatelessSessionProxy extends LocalProxy
       {
          // All stateless beans are identical within a home,
          // if the names are equal we are equal
-         retValue = isIdentical(args[0], jndiName);
+         retValue = isIdentical(args[0], jndiName + ":Stateless");
       }
       // If not taken care of, go on and call the container
       else
