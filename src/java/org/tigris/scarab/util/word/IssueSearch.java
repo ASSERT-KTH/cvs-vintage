@@ -2082,6 +2082,7 @@ public class IssueSearch
             else 
             {
                 // the current Record is a new issue
+                prevPk = pk;
                 qr = new QueryResult(this);
                 qr.setIssueId(pk);
                 qr.setModuleId(rec.getValue(2).asIntegerObj());
