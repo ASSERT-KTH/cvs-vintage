@@ -66,6 +66,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.util.Email;
@@ -82,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.40 2003/05/29 19:46:04 thierrylach Exp $
+ * @version $Id: Approval.java,v 1.41 2003/05/31 00:37:33 elicia Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -117,6 +118,7 @@ public class Approval extends RequireLoginFirstAction
         String comment = null;
         ScarabUser toUser = null;
         String userId;
+        boolean success = true;
 
         for (int i =0; i<keys.length; i++)
         {
@@ -135,39 +137,54 @@ public class Approval extends RequireLoginFirstAction
                artifact = QUERY;
                artifactName = query.getName();
 
-               if (action.equals(REJECT))
+               if (query.getApproved())
                {
-                   try
+                   success = false;
+                   if (query.getScopeId() == Scope.MODULE__PK)
                    {
-                       query.approve(user, false);
+                       scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
                    }
-                   catch (ScarabException e)
+                   else
                    {
-                       scarabR.setAlertMessage(e.getMessage());
+                       scarabR.setAlertMessage(l10n.format("ItemAlreadyRejected", artifactName));
                    }
-                   actionWord = REJECTED;
-               } 
-               else if (action.equals(APPROVE))
-               {
-                   try
-                   {
-                       query.approve(user, true);
-                   }
-                   catch(ScarabException e)
-                   {
-                       scarabR.setAlertMessage(e.getMessage());
-                   }
-                   actionWord = APPROVED;
                }
-               else if (action.equals(COMMENT))
+               else
                {
-                   actionWord = COMMENTED; 
+                   if (action.equals(REJECT))
+                   {
+                       try
+                       {
+                           query.approve(user, false);
+                       }
+                       catch (ScarabException e)
+                       {
+                           scarabR.setAlertMessage(e.getMessage());
+                       }
+                       actionWord = REJECTED;
+                   } 
+                   else if (action.equals(APPROVE))
+                   {
+                       try
+                       {
+                           query.approve(user, true);
+                       }
+                       catch(ScarabException e)
+                       {
+                           scarabR.setAlertMessage(e.getMessage());
+                       }
+                       actionWord = APPROVED;
+                       }
+                       else if (action.equals(COMMENT))
+                       {
+                           actionWord = COMMENTED; 
+                       }
+                   }
                }
-            }
-            else if (key.startsWith("template_id_"))
-            {
-               String templateId = key.substring(12);
-               IssueTemplateInfo info = IssueTemplateInfoPeer
+               else if (key.startsWith("template_id_"))
+               {
+                   String templateId = key.substring(12);
+                   IssueTemplateInfo info = IssueTemplateInfoPeer
                                      .retrieveByPK(new NumberKey(templateId));
 
                action = params.getString("template_action_" + templateId);
@@ -178,55 +195,70 @@ public class Approval extends RequireLoginFirstAction
                artifact = ISSUE_ENTRY_TEMPLATE;
                artifactName = info.getName();
 
-               if (action.equals(REJECT))
+               if (info.getApproved())
                {
-                   try
+                   success = false;
+                   if (info.getScopeId() == Scope.MODULE__PK)
                    {
-                       info.approve(user, false);
+                       scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
                    }
-                   catch(ScarabException e)
+                   else
                    {
-                       scarabR.setAlertMessage(e.getMessage());
+                       scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
                    }
-                   actionWord = REJECTED;
-               } 
-               else if (action.equals(APPROVE))
-               {
-                   try
-                   {
-                       info.approve(user, true);
-                   }
-                   catch(ScarabException e)
-                   {
-                       scarabR.setAlertMessage(e.getMessage());
-                   }
-                   actionWord = APPROVED;
                }
-               else if (action.equals(COMMENT))
+               else
                {
-                   actionWord = COMMENTED;
-               }
-            }
-            if (!action.equals("none"))
-            {
-                // send email
-                EmailContext ectx = new EmailContext();
-                ectx.setUser(user);
-                // add specific data to context for email template
-                ectx.put("artifactIndex", artifact);
-                ectx.put("artifactName", artifactName);
-                ectx.put("actionIndex", actionWord);
-                ectx.put("comment", comment);
-                ectx.put("globalComment", globalComment);
+                   if (action.equals(REJECT))
+                   {
+                       try
+                       {
+                           info.approve(user, false);
+                       }
+                       catch(ScarabException e)
+                       {
+                           scarabR.setAlertMessage(e.getMessage());
+                       }
+                       actionWord = REJECTED;
+                   } 
+                   else if (action.equals(APPROVE))
+                   {
+                       try
+                       {
+                           info.approve(user, true);
+                       }
+                       catch(ScarabException e)
+                       {
+                           scarabR.setAlertMessage(e.getMessage());
+                       }
+                       actionWord = APPROVED;
+                   }
+                   else if (action.equals(COMMENT))
+                   {
+                       actionWord = COMMENTED;
+                   }
+                }
+                if (!action.equals("none") && success)
+                {
+                    // send email
+                    EmailContext ectx = new EmailContext();
+                    ectx.setUser(user);
+                    // add specific data to context for email template
+                    ectx.put("artifactIndex", artifact);
+                    ectx.put("artifactName", artifactName);
+                    ectx.put("actionIndex", actionWord);
+                    ectx.put("comment", comment);
+                    ectx.put("globalComment", globalComment);
 
-                String template = Turbine.getConfiguration().
-                    getString("scarab.email.approval.template",
-                              "Approval.vm");
-                if (!Email.sendEmail(ectx, module, user, 
+                    String template = Turbine.getConfiguration().
+                        getString("scarab.email.approval.template",
+                                  "Approval.vm");
+                    if (!Email.sendEmail(ectx, module, user, 
                                      module.getSystemEmail(), 
                                      toUser, template))
-                {
-                    scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                    {
+                        scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                    }
                 }
             }
         }
