@@ -13,7 +13,7 @@
 <!-- users and security.                                                  -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>       -->
-<!-- @version $Id: turbine-schema.xml,v 1.1 2002/02/18 22:33:42 jon Exp $     -->
+<!-- @version $Id: turbine-schema.xml,v 1.2 2002/02/26 19:38:48 jon Exp $     -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
@@ -87,11 +87,11 @@
     <foreign-key foreignTable="TURBINE_USER">
       <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-
+<!--
     <foreign-key foreignTable="TURBINE_GROUP">
       <reference local="GROUP_ID" foreign="GROUP_ID"/>
     </foreign-key>
-
+-->
     <foreign-key foreignTable="TURBINE_ROLE">
       <reference local="ROLE_ID" foreign="ROLE_ID"/>
     </foreign-key>
