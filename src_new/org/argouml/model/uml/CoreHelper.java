@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.1 2004/11/01 19:55:06 mvw Exp $
+// $Id: CoreHelper.java,v 1.2 2004/12/11 16:26:23 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -636,10 +636,11 @@ public class CoreHelper {
     /**
      * Return all interfaces the given class realizes.<p>
      *
-     * @param classifier is the class
+     * @param cls the classifier
      * @return Collection
      */
-    public Collection getRealizedInterfaces(MClassifier classifier) {
+    public Collection getRealizedInterfaces(Object cls) {
+        MClassifier classifier = (MClassifier) cls;
         if (classifier == null)
             return new ArrayList();
         Iterator it = classifier.getClientDependencies().iterator();

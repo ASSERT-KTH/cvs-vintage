@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.16 2004/11/01 19:56:06 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.17 2004/12/11 16:26:23 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
-import ru.novosoft.uml.foundation.core.MClass;
 import tudresden.ocl.parser.node.AConstraintBody;
 
 /**
@@ -1199,7 +1198,7 @@ public class GeneratorCSharp extends Generator2
 	//s += cls.getName();
 	
 	Collection realizations =
-	    UmlHelper.getHelper().getCore().getRealizedInterfaces((MClass) cls);
+	    UmlHelper.getHelper().getCore().getRealizedInterfaces(cls);
 	if (realizations == null) {
 	    return "";
 	}
