@@ -43,7 +43,7 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -204,13 +204,13 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
             /* Cache the context in the NonSerializableFactory to avoid creating
                 more than one context for in VM lookups
             */
-            NonSerializableFactory.rebind(atom, ctx);
+            NonSerializableFactory.rebind(jndiName, ctx);
         }
         else
         {
             /* Bind a reference to the extern context using
              NonSerializableFactory as the ObjectFactory */
-            NonSerializableFactory.rebind(parentCtx, atom, ctx);
+            NonSerializableFactory.rebind(rootCtx, jndiName, ctx);
         }
     }
 
