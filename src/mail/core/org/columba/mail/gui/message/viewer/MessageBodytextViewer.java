@@ -203,17 +203,18 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
             String charsetName = bodyPart.getHeader().getContentParameter(
                     "charset");
 
-            try {
-                charset = Charset.forName(charsetName);
-            } catch (UnsupportedCharsetException e) {
-                charsetName = null;
-            }
-
             if (charsetName == null) {
                 // There is no charset info -> the default system charset is
                 // used
                 charsetName = System.getProperty("file.encoding");
                 charset = Charset.forName(charsetName);
+            } else {
+                try {
+                    charset = Charset.forName(charsetName);
+                } catch (UnsupportedCharsetException e) {
+                    charsetName = System.getProperty("file.encoding");
+                    charset = Charset.forName(charsetName);
+                }
             }
 
             //((CharsetOwnerInterface) mediator).setCharset(charset);
