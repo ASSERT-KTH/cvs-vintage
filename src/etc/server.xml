@@ -169,7 +169,7 @@
                secure - use SSL ( https )
                keystore, keypass - certs for SSL
                port -->
-        <Http10Interceptor port="8080" 
+        <Http10Connector   port="8080" 
 			   secure="false"
 			   maxThreads="100"
 			   maxSpareThreads="50"
@@ -192,21 +192,17 @@
             to change the default ( user.home/.keystore with changeit )
          -->
         <!--
-        <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.Http10Interceptor"
-         port="8443" 
-         secure="true" />
+        <Http10Connector  port="8443" secure="true" />
         -->
 
         <!--
-             JNI connector, make sure that you update the native_lib
-             Parameter to point to your jni_connect.dll.
+             JNI connector. It assumes the library is located in 
+             TOMCAT_HOME/bin/i386/jni_connect.[dll, so]. or in LD_LIBRARY_PATH.
+             For different paths set "nativeLibrary" parameter.
+
+             The JniConnector will be self-enable only if JNI mode is detected.
          -->
-        <!-- 
-        <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.JNIConnectionHandler"
-         nativeLibrary="D:\tomcat\bin\i386\jni_connect.dll" />
-         -->
+        <JniConnector /> 
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
              Parameter "address" defines network interface this Interceptor
@@ -214,10 +210,7 @@
              
              address="127.0.0.1"
           -->
-        <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.Ajp12Interceptor"
-         tomcatAuthentication="false" 
-         port="8007" />
+        <Ajp12Connector	tomcatAuthentication="false" port="8007" />
 
         <!-- Apache AJP13 support (mod_jk)
              Parameter "address" defines network interface this Interceptor
@@ -225,9 +218,7 @@
 
              address="127.0.0.1"
           -->
-        <RequestInterceptor 
-           className="org.apache.tomcat.modules.server.Ajp13Interceptor"
-           port="8009" />
+        <Ajp13Connector port="8009" />
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
