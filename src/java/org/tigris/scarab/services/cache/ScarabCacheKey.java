@@ -48,40 +48,89 @@ package org.tigris.scarab.services.cache;
 
 import org.apache.commons.util.ObjectUtils;
 import org.apache.log4j.Category;
+import org.apache.fulcrum.pool.RecyclableSupport;
 
-    public class ScarabCacheKey
+public class ScarabCacheKey
+    extends RecyclableSupport
+{
+    private static final Category log = 
+        Category.getInstance("org.apache.torque");
+
+    int n;
+    private Object obj1;
+    private Object obj2;
+    private Object obj3;
+    private Object obj4;
+    private Object obj5;
+    private Object obj6;
+    private Object obj7;
+
+    public ScarabCacheKey()
     {
-        private static final Category log = 
-            Category.getInstance("org.apache.torque");
+    }
+    
+    public ScarabCacheKey(int numArgs, Object o1, Object o2, Object o3, 
+                          Object o4, Object o5, Object o6, Object o7)
+    {
+        init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+    }
+    
+    /**
+     * Describe <code>init</code> method here.
+     *
+     * @param numArgs, 0-5
+     * @param o1 the Object on which the method is invoked.  if the method is
+     * is static, a String representing the class name is used.
+     * @param o2 the method name
+     * @param o3 first method arg, may be null
+     * @param o4 2nd method arg, may be null
+     * @param o5 3rd method arg, may be null
+     * @param o6 4th method arg, may be null
+     * @param o7 5th method arg, may be null
+     */
+    public void init(int numArgs, Object o1, Object o2, Object o3, Object o4, 
+                     Object o5, Object o6, Object o7)
+    {
+        n = numArgs;
+        obj1 = o1;
+        obj2 = o2;
+        obj3 = o3;
+        obj4 = o4;
+        obj5 = o5;
+        obj6 = o6;
+        obj7 = o7;
+    }
 
-        private Object obj1;
-        private Object obj2;
-        private Object obj3;
-        private Object obj4;
-        private Object obj5;
-
-        public ScarabCacheKey(Object o1, Object o2, 
-                              Object o3, Object o4, Object o5)
+    public boolean equals(Object obj)
+    {
+        boolean equal = false;
+        if ( obj instanceof ScarabCacheKey ) 
         {
-            obj1 = o1;
-            obj2 = o2;
-            obj3 = o3;
-            obj4 = o4;
-            obj5 = o5;
-        }
-
-        public boolean equals(Object obj)
-        {
-            boolean equal = false;
-            if ( obj instanceof ScarabCacheKey ) 
+            ScarabCacheKey sck = (ScarabCacheKey)obj;
+            equal = ObjectUtils.equals(sck.obj1, obj1);
+            equal &= ObjectUtils.equals(sck.obj2, obj2);
+            if (n > 0) 
             {
-                ScarabCacheKey sck = (ScarabCacheKey)obj;
-                equal = ObjectUtils.equals(sck.obj1, obj1);
-                equal &= ObjectUtils.equals(sck.obj2, obj2);
                 equal &= ObjectUtils.equals(sck.obj3, obj3);
-                equal &= ObjectUtils.equals(sck.obj4, obj4);
-                equal &= ObjectUtils.equals(sck.obj5, obj5);
+                if (n > 1) 
+                {
+                    equal &= ObjectUtils.equals(sck.obj4, obj4);
+                    if (n > 2) 
+                    {
+                        equal &= ObjectUtils.equals(sck.obj5, obj5);
+                        if (n > 3) 
+                        {
+                            equal &= ObjectUtils.equals(sck.obj6, obj6);
+                            if (n > 4) 
+                            {
+                                equal &= ObjectUtils.equals(sck.obj7, obj7);
+                            }
+                        }
+                    }
+                }
             }
+            
+        }
             if (equal) 
             {
                 log.debug("Saved db hit on " + obj1 + "::" + obj2 + ". YAY!");
@@ -92,27 +141,47 @@ import org.apache.log4j.Category;
 
         public int hashCode()
         {
-            int h = 0;
-            if (obj1 != null) 
-            {
-                h += obj1.hashCode();
-            }
-            if (obj2 != null) 
-            {
-                h += obj2.hashCode();
-            }
-            if (obj3 != null) 
+            int h = obj1.hashCode();
+            h += obj2.hashCode();
+            if (n > 0 && obj3 != null) 
             {
                 h += obj3.hashCode();
             }
-            if (obj4 != null) 
+            if (n > 1 && obj4 != null) 
             {
                 h += obj4.hashCode();
             }
-            if (obj5 != null) 
+            if (n > 2 && obj5 != null) 
             {
                 h += obj5.hashCode();
             }            
+            if (n > 3 && obj6 != null) 
+            {
+                h += obj6.hashCode();
+            }            
+            if (n > 4 && obj7 != null) 
+            {
+                h += obj7.hashCode();
+            }            
             return h;
         }
+
+    // ****************** Recyclable implementation ************************
+
+    /**
+     * Disposes the object after use. The method is called when the
+     * object is returned to its pool.  The dispose method must call
+     * its super.
+     */
+    public void dispose()
+    {
+        super.dispose();
+        obj1 = null;
+        obj2 = null;
+        obj3 = null;
+        obj4 = null;
+        obj5 = null;
+        obj6 = null;
+        obj7 = null;
     }
+}

@@ -90,7 +90,7 @@ public class ResetCacheValve
         }
         
 
-        ScarabCache.removeMap();
+        ScarabCache.clear();
         // Pass control to the next Valve in the Pipeline
         context.invokeNext( data );
     }

@@ -49,10 +49,14 @@ package org.tigris.scarab.services.cache;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.WeakHashMap;
+import java.util.Iterator;
+import org.apache.log4j.Category;
 import org.apache.stratum.configuration.Configuration;
 import org.apache.fulcrum.Service;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.pool.TurbinePool;
 import org.apache.torque.om.ObjectKey;
 import org.tigris.scarab.om.ScarabUser;
 
@@ -61,7 +65,7 @@ import org.tigris.scarab.om.ScarabUser;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.1 2002/02/17 18:20:21 jmcnally Exp $
+ * @version $Id: ScarabCache.java,v 1.2 2002/02/19 05:01:11 jmcnally Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -70,17 +74,32 @@ public class ScarabCache
     /** The name of the service */
     public static final String SERVICE_NAME = "ScarabCache";
 
-    private Configuration props;
+    private static final Category log = 
+        Category.getInstance("org.tigris.scarab");
+
+    //private Configuration props;
     private Map maps;
+    private Class keyClass;
 
     public ScarabCache()
     {
     }
 
     public void init()
+        throws InitializationException
     {
-        props = getConfiguration();
+        //props = getConfiguration();
         maps = new WeakHashMap();
+        try
+        {
+            keyClass = Class
+                .forName("org.tigris.scarab.services.cache.ScarabCacheKey");
+        }
+        catch (Exception x)
+        {
+            throw new InitializationException(
+                "Failed to initialize ScarabCache",x);
+        }
         setInit(true);
     }
 
@@ -97,21 +116,53 @@ public class ScarabCache
         return map;
     }
 
-    protected void removeMapImpl()
+    protected void clearImpl()
     {
-        maps.remove(Thread.currentThread());
+        Map map = (Map)maps.get(Thread.currentThread());
+        if (map != null) 
+        {
+            Iterator i = map.keySet().iterator();
+            while (i.hasNext()) 
+            {
+                TurbinePool.putInstance(i.next());
+            }
+            map.clear();
+        }
     }
 
-    protected Object getImpl(Object o1, Object o2, Object o3, Object o4, Object o5)
+    protected Object getImpl(int numArgs, Object o1, Object o2, Object o3,  
+                             Object o4, Object o5, Object o6, Object o7)
     {
-        ScarabCacheKey key = new ScarabCacheKey(o1, o2, o3, o4, o5);
-        return getMapImpl().get(key);
+        Object result = null;
+        try
+        {
+            ScarabCacheKey key = 
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+            result = getMapImpl().get(key);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return result;
     }
 
-    protected void putImpl(Object value, Object o1, Object o2, Object o3, Object o4, Object o5)
+    protected void putImpl(Object value, int numArgs, Object o1, Object o2,  
+                           Object o3, Object o4, Object o5, Object o6, 
+                           Object o7)
     {
-        ScarabCacheKey key = new ScarabCacheKey(o1, o2, o3, o4, o5);
-        getMapImpl().put(key, value);
+        try
+        {
+            ScarabCacheKey key =  
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+            getMapImpl().put(key, value);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
     }
 
 
@@ -124,56 +175,85 @@ public class ScarabCache
         return getService().getMapImpl();
     }
 
-    public static void removeMap()
+    public static void clear()
     {
-        getService().removeMapImpl();
+        getService().clearImpl();
     }
 
 
-    public static Object get(Object o1, Object o2, Object o3, Object o4, Object o5)
+    public static Object get(Object o1, Object o2, Object o3, Object o4, 
+                             Object o5, Object o6, Object o7)
     {
-        return getService().getImpl(o1, o2, o3, o4, o5);
+        return getService().getImpl(5, o1, o2, o3, o4, o5, o6, o7);
+    }
+
+    public static Object get(Object o1, Object o2, Object o3, Object o4, 
+                             Object o5, Object o6)
+    {
+        return getService().getImpl(4, o1, o2, o3, o4, o5, o6, null);
+    }
+
+    public static Object get(Object o1, Object o2, Object o3, Object o4, 
+                             Object o5)
+    {
+        return getService().getImpl(3, o1, o2, o3, o4, o5, null, null);
     }
 
     public static Object get(Object o1, Object o2, Object o3, Object o4)
     {
-        return getService().getImpl(o1, o2, o3, o4, null);
+        return getService().getImpl(2, o1, o2, o3, o4, null, null, null);
     }
 
     public static Object get(Object o1, Object o2, Object o3)
     {
-        return getService().getImpl(o1, o2, o3, null, null);
+        return getService().getImpl(1, o1, o2, o3, null, null, null, null);
     }
 
     public static Object get(Object o1, Object o2)
     {
-        return getService().getImpl(o1, o2, null, null, null);
+        return getService().getImpl(0, o1, o2, null, null, null, null, null);
     }
 
-    public static void put(Object value, Object o1, Object o2, Object o3, Object o4, Object o5)
+    public static void put(Object value, Object o1, Object o2, Object o3, 
+                           Object o4, Object o5, Object o6, Object o7)
     {
-        getService().putImpl(value, o1, o2, o3, o4, o5);
+        getService().putImpl(value, 5, o1, o2, o3, o4, o5, o6, o7);
     }
 
-    public static void put(Object value, Object o1, Object o2, Object o3, Object o4)
+    public static void put(Object value, Object o1, Object o2, Object o3, 
+                           Object o4, Object o5, Object o6)
     {
-        getService().putImpl(value, o1, o2, o3, o4, null);
+        getService().putImpl(value, 4, o1, o2, o3, o4, o5, o6, null);
+    }
+
+    public static void put(Object value, Object o1, Object o2, Object o3, 
+                           Object o4, Object o5)
+    {
+        getService().putImpl(value, 3, o1, o2, o3, o4, o5, null, null);
+    }
+
+    public static void put(Object value, Object o1, Object o2, Object o3, 
+                           Object o4)
+    {
+        getService().putImpl(value, 2, o1, o2, o3, o4, null, null, null);
     }
 
     public static void put(Object value, Object o1, Object o2, Object o3)
     {
-        getService().putImpl(value, o1, o2, o3, null, null);
+        getService().putImpl(value, 1, o1, o2, o3, null, null, null, null);
     }
 
     public static void put(Object value, Object o1, Object o2)
     {
-        getService().putImpl(value, o1, o2, null, null, null);
+        getService().putImpl(value, 0, o1, o2, null, null, null, null, null);
     }
 
+    /*
     public static Configuration getProps()
     {
         return getService().getConfiguration();
     }
+    */
 
     /**
      * Gets the <code>LocalizationService</code> implementation.
