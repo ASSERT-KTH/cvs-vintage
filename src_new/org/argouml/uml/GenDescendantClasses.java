@@ -1,4 +1,4 @@
-// $Id: GenDescendantClasses.java,v 1.7 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: GenDescendantClasses.java,v 1.8 2004/08/29 07:47:29 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,19 @@ import org.tigris.gef.util.ChildGenerator;
  */
 
 public class GenDescendantClasses implements ChildGenerator {
-    public static GenDescendantClasses SINGLETON = new GenDescendantClasses();
+    private static final GenDescendantClasses SINGLETON = 
+        new GenDescendantClasses();
 
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static GenDescendantClasses getSINGLETON() {
+        return SINGLETON;
+    }
+    
+    /**
+     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
+     */
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
 	if (!(ModelFacade.isAGeneralizableElement(o))) return res.elements();
@@ -50,7 +61,12 @@ public class GenDescendantClasses implements ChildGenerator {
     }
 
 
-    public void accumulateDescendants(Object/*MGeneralizableElement*/ cls, Vector accum) {
+    /**
+     * @param cls the starting class (in fact GeneralizableElement)
+     * @param accum the accumulated list of descendents
+     */
+    public void accumulateDescendants(Object/*MGeneralizableElement*/ cls, 
+            Vector accum) {
 	Vector gens = new Vector(ModelFacade.getSpecializations(cls));
 	if (gens == null) return;
 	int size = gens.size();
