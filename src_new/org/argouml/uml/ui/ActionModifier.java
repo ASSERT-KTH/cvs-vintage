@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.5 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionModifier.java,v 1.6 2003/09/14 13:03:28 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.5 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionModifier.java,v 1.6 2003/09/14 13:03:28 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -232,18 +232,19 @@ public class ActionModifier extends UMLAction {
      * @param     trueValue      The enumerated value representing true
      * @param     falseValue     The enumerated value representing false
      */
-    public ActionModifier(String name, String propertyName,
+    public ActionModifier(String name,
+                          String propertyName,
 			  String getMethod,
 			  String setMethod,
-			  MPackage mpackage,
-			  Class enumClass,
+			  Object/*MPackage*/ mpackage,
+			  Object/*Class*/ enumClass,
 			  Object trueValue,
-			  Object falseValue)
-    {
+			  Object falseValue) {
 	super(name, NO_ICON);
 	this.object = mpackage;
 	_property =
-	    new UMLEnumerationBooleanProperty(propertyName, mpackageClass,
+	    new UMLEnumerationBooleanProperty(propertyName,
+                                              mpackageClass,
 					      getMethod,
 					      setMethod,
 					      enumClass,
@@ -272,7 +273,7 @@ public class ActionModifier extends UMLAction {
      */ 
 
     public ActionModifier(String name, String propertyName, String getMethod,
-                          String setMethod, MUseCase museCase) { 
+                          String setMethod, Object/*MUseCase*/ museCase) { 
         super(name, NO_ICON);
         this.object = museCase;
         _property   = new UMLReflectionBooleanProperty(propertyName,

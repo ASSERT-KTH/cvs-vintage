@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.10 2003/06/29 23:52:22 linus Exp $
+// $Id: FigExtend.java,v 1.11 2003/09/14 13:03:28 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.10 2003/06/29 23:52:22 linus Exp $
+// $Id: FigExtend.java,v 1.11 2003/09/14 13:03:28 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -37,6 +37,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import org.argouml.application.api.Notation;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
@@ -45,10 +46,6 @@ import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.use_cases.MExtend;
-import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
-
-
 /**
  * <p>A fig for use with extend relationships on use case diagrams.</p>
  *
@@ -229,7 +226,7 @@ public class FigExtend extends FigEdgeModelElement {
 
         // Give up if we have no owner
 
-        MExtend extend = (MExtend) getOwner();
+        Object extend = /*(MExtend)*/ getOwner();
 
         if (extend == null) {
             return;
@@ -245,7 +242,7 @@ public class FigExtend extends FigEdgeModelElement {
         // condition set. We call the main generate method, which will realise
         // this is a MExpression (subclass) and invoke the correct method.
 
-        MBooleanExpression condition = extend.getCondition();
+        Object/*MBooleanExpression*/ condition = ModelFacade.getCondition(extend);
 
         if (condition == null) {
             _condition.setText("");
@@ -270,4 +267,3 @@ public class FigExtend extends FigEdgeModelElement {
     
 
 } /* end class FigExtend */
-

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.77 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.78 2003/09/14 13:03:28 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.77 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.78 2003/09/14 13:03:28 bobtarling Exp $
 
 
 
@@ -69,10 +69,7 @@ import ru.novosoft.uml.behavior.common_behavior.MObject;
 import ru.novosoft.uml.behavior.state_machines.MCallEvent;
 import ru.novosoft.uml.behavior.state_machines.MEvent;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.behavior.state_machines.MState;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
@@ -510,26 +507,27 @@ public class ParserDisplay extends Parser {
      * @param text  The operation on which the editing happened
      * @param text  The string to parse
      */
-    public void parseOperationFig(MClassifier cls, MOperation op, String text)
+    public void parseOperationFig(Object/*MClassifier*/ cls, Object/*MOperation*/ op, String text)
 	throws ParseException {
-	if (cls == null || op == null)
+	if (cls == null || op == null) {
 	    return;
+        }
 	ParseException pex = null;
 	int start = 0;
 	int end = indexOfNextCheckedSemicolon(text, start);
 	if (end == -1) {
 	    //no text? remove op!
-	    cls.removeFeature(op);
+	    ModelFacade.removeFeature(cls, op);
 	    return;
 	}
 	String s = text.substring(start, end).trim();
 	if (s == null || s.length() == 0) {
 	    //no non-whitechars in text? remove op!
-	    cls.removeFeature(op);
+	    ModelFacade.removeFeature(cls, op);
 	    return;
 	}
 	parseOperation(s, op);
-	int i = cls.getFeatures().indexOf(op);
+	int i = new ArrayList(ModelFacade.getFeatures(cls)).indexOf(op);
 	// check for more operations (';' separated):
 	start = end + 1;
 	end = indexOfNextCheckedSemicolon(text, start);
@@ -545,9 +543,9 @@ public class ParserDisplay extends Parser {
 			//newOp.setOwnerScope(op.getOwnerScope()); //
 			//not needed in case of operation
 			if (i != -1) {
-			    cls.addFeature(++i, newOp);
+			    ModelFacade.addFeature(cls, ++i, newOp);
 			} else {
-			    cls.addFeature(newOp);
+			    ModelFacade.addFeature(cls, newOp);
 			}
 		    }
 		    catch (ParseException ex) {
@@ -573,26 +571,27 @@ public class ParserDisplay extends Parser {
      * @param text  The attribute on which the editing happened
      * @param text  The string to parse
      */
-    public void parseAttributeFig(MClassifier cls, MAttribute at, String text)
+    public void parseAttributeFig(Object/*MClassifier*/ cls, Object/*MAttribute*/ at, String text)
 	throws ParseException {
-	if (cls == null || at == null)
+	if (cls == null || at == null) {
 	    return;
+        }
 	ParseException pex = null;
 	int start = 0;
 	int end = indexOfNextCheckedSemicolon(text, start);
 	if (end == -1) {
 	    //no text? remove attr!
-	    cls.removeFeature(at);
+	    ModelFacade.removeFeature(cls, at);
 	    return;
 	}
 	String s = text.substring(start, end).trim();
 	if (s == null || s.length() == 0) {
 	    //no non-whitechars in text? remove attr!
-	    cls.removeFeature(at);
+	    ModelFacade.removeFeature(cls, at);
 	    return;
 	}
 	parseAttribute(s, at);
-	int i = cls.getFeatures().indexOf(at);
+	int i = new ArrayList(ModelFacade.getFeatures(cls)).indexOf(at);
 	// check for more attributes (';' separated):
 	start = end + 1;
 	end = indexOfNextCheckedSemicolon(text, start);
@@ -605,11 +604,11 @@ public class ParserDisplay extends Parser {
 		if (newAt != null) {
 		    try {
 			parseAttribute(s, newAt);
-			newAt.setOwnerScope(at.getOwnerScope());
+			ModelFacade.setOwnerScope(newAt, ModelFacade.getOwnerScope(at));
 			if (i != -1) {
-			    cls.addFeature(++i, newAt);
+			    ModelFacade.addFeature(cls, ++i, newAt);
 			} else {
-			    cls.addFeature(newAt);
+			    ModelFacade.addFeature(cls, newAt);
 			}
 		    }
 		    catch (ParseException ex) {

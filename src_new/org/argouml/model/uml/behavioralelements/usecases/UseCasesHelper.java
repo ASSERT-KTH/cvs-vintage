@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.15 2003/09/05 22:35:20 bobtarling Exp $
+// $Id: UseCasesHelper.java,v 1.16 2003/09/14 13:03:27 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,9 +82,9 @@ public class UseCasesHelper {
      * @return         A collection of the extension points.
      */
 
-    public Collection getExtensionPoints(MUseCase useCase) {
+    public Collection getExtensionPoints(Object/*MUseCase*/ useCase) {
 
-        return useCase.getExtensionPoints();
+        return ((MUseCase)useCase).getExtensionPoints();
     }
     
     /**

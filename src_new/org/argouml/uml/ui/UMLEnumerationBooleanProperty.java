@@ -1,5 +1,5 @@
 
-// $Id: UMLEnumerationBooleanProperty.java,v 1.9 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLEnumerationBooleanProperty.java,v 1.10 2003/09/14 13:03:28 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
     static final private Object[] _noArg = {};
     private Object[] _trueArg = new Object[1];
     private Object[] _falseArg = new Object[1];
-    private Class _enumClass;
+    private Object/*Class*/ _enumClass;
     
     /** Log4j logging category.
      */
@@ -63,14 +63,19 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
     private AbstractWellformednessRule[] _wellformednessRules = null;
     
     /** Creates new BooleanChangeListener */
-    public UMLEnumerationBooleanProperty(String propertyName, Class elementClass,
-                                         String getMethod, String setMethod, Class enumClass,
-                                         Object trueValue, Object falseValue) {
+    public UMLEnumerationBooleanProperty(String propertyName,
+                                         Class elementClass,
+                                         String getMethod,
+                                         String setMethod, 
+                                         Object/*Class*/ enumClass,
+                                         Object trueValue, 
+                                         Object falseValue) {
         this(propertyName, elementClass, getMethod, setMethod, enumClass, trueValue, falseValue, null);
     }
     
     public UMLEnumerationBooleanProperty(String propertyName, Class elementClass,
-                                         String getMethod, String setMethod, Class enumClass,
+                                         String getMethod, String setMethod, 
+                                         Object/*Class*/ enumClass,
                                          Object trueValue, Object falseValue, AbstractWellformednessRule[] wellformednessRules) {
 	super(propertyName);
 	_enumClass = enumClass;
@@ -85,7 +90,7 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
 	    logger.fatal(getMethod + " not found in UMLEnumerationBooleanProperty(): " + e.toString());
 	}
 	Class[] boolClass = {
-	    enumClass 
+	    (Class)enumClass 
 	};
 	try {
 	    _setMethod = elementClass.getMethod(setMethod, boolClass);
