@@ -35,7 +35,7 @@ import org.apache.log4j.Category;
 /**
  * Helper class for tree models that provides tree event handling.
  *
- * <p>$Id: TreeModelSupport.java,v 1.1 2003/04/16 19:39:40 alexb Exp $
+ * <p>$Id: TreeModelSupport.java,v 1.2 2003/04/28 08:18:50 kataka Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003

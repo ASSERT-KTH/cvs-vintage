@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.26 2003/02/08 19:44:13 d00mst Exp $
+// $Id: FigEdgeModelElement.java,v 1.27 2003/04/28 08:18:51 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -540,7 +540,16 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     public void notationProviderAdded(ArgoNotationEvent event) { }
     public void notationProviderRemoved(ArgoNotationEvent event) { }
 
+	/**
+	 * Rerenders the fig if needed. This functionality was originally the functionality
+	 * of modelChanged but modelChanged takes the event now into account.
+	 */
     public void renderingChanged() {
+    	// updateAnnotationPositions();
+    	updateClassifiers();
+    	updateNameText();
+    	updateStereotypeText();   
+    	damage();	
     }
 
     /**
