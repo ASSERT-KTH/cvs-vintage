@@ -40,7 +40,7 @@
 
   -->
 
-<!NOTATION JSPTAGLIB.1_2 PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN">
+<!NOTATION JSPTAGLIB.1_1 PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN">
 
 <!--
 
@@ -53,15 +53,15 @@
 			a JSP authoring tool to create names with a mnemonic
 			value; for example, the it may be used as the prefered
 			prefix value in taglib directives
-	urn		a urn uniquely identifying this taglib
+	uri		a uri uniquely identifying this taglib
 	info		a simple string describing the "use" of this taglib,
 			should be user discernable
 	
   -->
 
-<!ELEMENT taglib (tlibversion, jspversion?, shortname, urn, info?, tag+) >
+<!ELEMENT taglib (tlibversion, jspversion?, shortname, uri?, info?, tag+) >
 	<!ATTLIST taglib id	    ID    #IMPLIED
-	 xmlns CDATA #FIXED    "http://java.sun.com/j2ee/dtds/jsptaglibrary_1_2.dtd"
+	 xmlns CDATA #FIXED    "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd"
 	>
 
 <!--
@@ -96,11 +96,11 @@
 
 <!--
 
-	Defines a public URN that uniquely identifies this version of the taglibrary
+	Defines a public URI that uniquely identifies this version of the taglibrary
 	Leave it empty if it does not apply.
   -->
 
-<!ELEMENT urn	 (#PCDATA) >
+<!ELEMENT uri	 (#PCDATA) >
 
 <!--
 
@@ -179,11 +179,10 @@
 	- if the attribute is required or optional (optional)
 	- if the attributes value may be dynamically calculated at runtime
 	  by a scriptlet expression (optional)
-	- the type of the attributes value (optional)
 
   -->
 
-<!ELEMENT attribute (name, required? , rtexprvalue?, type?) >
+<!ELEMENT attribute (name, required? , rtexprvalue?) >
 	<!ATTLIST attribute     id     ID       #IMPLIED>
 
 <!--
@@ -220,25 +219,3 @@
 
 <!ELEMENT rtexprvalue (#PCDATA) >
 
-<!--
-
-	Defines the Java type of the attributes value. For static values 
-	(those determined at translation time) the type is always 
-	java.lang.String.
-
-	If the rtexprvalue element is true, that is the value of
-	the nesting attribute may be calculated from an expression scriptlet
-	during reuqest processing then the type defines the return type expected
-	expected from any scriptlet expression specified as the value of this
-	attribute.
-
-	#PCDATA ::= fully qualified Java class name of result type
-
-	e.g:
-
-	<type>
-	java.lang.Object
-	</type>
-  -->
-
-<!ELEMENT type	(#PCDATA) >
