@@ -94,4 +94,15 @@ public class ForwardCommand extends FolderCommand {
         model.addMimePart(new InputStreamMimePart(mimeHeader, messageSourceStream));
         messageSourceStream.close();
     }
+    
+     /**
+     * Get composer model.
+     * <p>
+     * Needed for testcases.
+     * 
+     * @return Returns the model.
+     */
+    public ComposerModel getModel() {
+        return model;
+    }
 }

@@ -33,7 +33,9 @@ import org.columba.mail.folder.MailboxTestFactory;
  */
 public class AllTests {
 
-    private static String[] list = { "ReplyCommandTest"};
+    private static String[] list = { "ReplyCommandTest",
+            "ReplyToAllCommandTest", "ReplyToMailingListCommandTest",
+            "ForwardCommandTest", "ForwardInlineCommandTest"};
 
     /**
      * Add all testcases to the passed testsuite, using a the folder type as
@@ -47,8 +49,9 @@ public class AllTests {
     private static void setup(TestSuite suite, MailboxTestFactory factory) {
         try {
             for (int j = 0; j < list.length; j++) {
-                Class clazz = Class.forName("org.columba.mail.gui.composer.command."
-                        + list[j]);
+                Class clazz = Class
+                        .forName("org.columba.mail.gui.composer.command."
+                                + list[j]);
 
                 Method[] methods = clazz.getDeclaredMethods();
                 for (int i = 0; i < methods.length; i++) {
