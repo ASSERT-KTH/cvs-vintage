@@ -465,7 +465,10 @@ class SecurityConstraints {
 }
 
 class BasicAuthHandler extends Handler {
-    int sbNote=0;
+    // it goes back with the 401 response, not visible to the user
+    static final String errorMessage=
+	"<html><head><title>Not Authorized</title></head>"+
+	"<body>Not Authorized</body></html>";
     
     BasicAuthHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
@@ -485,24 +488,8 @@ class BasicAuthHandler extends Handler {
 	// and notify the user they are not authorized if BasicAuth fails
         res.setContentType("text/html");        // ISO-8859-1 default  
 
-	if( sbNote==0 ) {
-	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
-						     "BasicAuthHandler.buff");
-	}
-
-	// we can recycle it because
-	// we don't call toString();
-	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
-	if( buf==null ) {
-	    buf = new StringBuffer();
-	    req.setNote( sbNote, buf );
-	}
- 
-        buf.append("<html><head><title>Not Authorized</title></head>");
-        buf.append("<body>Not Authorized</body></html>");
-
-        res.setContentLength(buf.length());
-	res.getBuffer().write( buf );
+        res.setContentLength(errorMessage.length());
+	res.getBuffer().write( errorMessage );
     }
 }
 
