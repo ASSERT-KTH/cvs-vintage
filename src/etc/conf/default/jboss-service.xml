@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.129 2005/02/24 19:58:11 telrod Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.130 2005/03/14 04:34:54 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -543,16 +543,21 @@
       <attribute name="URLComparator">org.jboss.deployment.scanner.PrefixDeploymentSorter</attribute>
       -->
 
-      <!-- The Filter specifies a java.io.FileFilter for scanned
-           directories.  Any file not accepted by this filter will not be
-           deployed.  The org.jboss.deployment.scanner.DeploymentFilter
-           rejects the following patterns:
-               "#*", "%*", ",*", ".*", "_$*", "*#", "*$", "*%", "*.BAK",
-               "*.old", "*.orig", "*.rej", "*.bak", "*,v", "*~", ".make.state",
-               ".nse_depinfo", "CVS", "CVS.admin", "RCS", "RCSLOG", "SCCS",
-               "TAGS", "core", "tags"
+      <!-- The FilterInstance specifies a URLLister.URLFilter for scanned
+           directories. This DeploymentFilter is initialized with the given
+           prefixes, suffixes and matches that define which URLs should be
+           ignored.
       -->
-      <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
+      <attribute name="FilterInstance"
+         attributeClass="org.jboss.deployment.scanner.DeploymentFilter"
+         serialDataType="javaBean">
+         <!-- Files starting with theses strings are ignored -->
+         <property name="prefixes">#,%,\,,.,_$</property>
+         <!-- Files ending with theses strings are ignored -->
+         <property name="suffixes">#,$,%,.BAK,.old,.orig,.rej,.bak,.sh,\,v,~</property>
+         <!-- Files matching with theses strings are ignored -->
+         <property name="matches">.make.state,.nse_depinfo,CVS,CVS.admin,RCS,RCSLOG,SCCS,TAGS,core,tags</property>
+      </attribute>
 
       <attribute name="ScanPeriod">5000</attribute>
 
