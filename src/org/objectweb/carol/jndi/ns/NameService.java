@@ -54,9 +54,15 @@ public interface NameService {
      */
     public boolean isStarted();
 
-    /**
-     * set port method, set the port for the name service
-     * @param int port number
-     */
-    public void setPort(int p);
+	/**
+	 * set port method, set the port for the name service
+	 * @param int port number
+	 */
+	public void setPort(int p);   
+	
+	/**
+	* get port method, get the port for the name service
+	* @return int port number
+	*/
+   public int getPort();
 }

@@ -63,6 +63,7 @@ public class TraceCarol {
     * which should be available from the classpath.
     */
     public static void configure() {
+    	if (carolLogger==null) {
         Properties props = new Properties();
         try {
             props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("trace.properties"));
@@ -84,6 +85,7 @@ public class TraceCarol {
         } catch (Exception e) {
             System.err.println("Logs are disabled:" + e);
         }
+    	}
     }
 
 
@@ -134,28 +136,48 @@ public class TraceCarol {
         }
     }
 
-    /**
-     * Test if Carol debug messages are logged.
-     * 
-     * @return boolean  <code>true</code> if Carol debug messages are logged,
-     * <code>false</code> otherwise
-     */
-    static public boolean isDebugCarol() {
-        return (carolLogger != null) && carolLogger.isLoggable(BasicLevel.DEBUG);
-    }
-
-    /**
-     * Log a Carol debug message.
-     * 
-     * @param <code>msg</code> CAROL debug message
-     */
-    public static void debugCarol(String msg) {
-        if (carolLogger != null) {
-            carolLogger.log(BasicLevel.DEBUG, msg);
-        }
-    }
-
-
+	/**
+	 * Test if Carol debug messages are logged.
+	 * 
+	 * @return boolean  <code>true</code> if Carol debug messages are logged,
+	 * <code>false</code> otherwise
+	 */
+	static public boolean isDebugCarol() {
+		return (carolLogger != null) && carolLogger.isLoggable(BasicLevel.DEBUG);
+	}
+		
+	/**
+	 * Log a Carol debug message.
+	 * 
+	 * @param <code>msg</code> CAROL debug message
+	 */
+	public static void debugCarol(String msg) {
+		if (carolLogger != null) {
+			carolLogger.log(BasicLevel.DEBUG, msg);
+		}
+	}
+    
+	/**
+	 * Test if Carol info messages are logged.
+	 * 
+	 * @return boolean  <code>true</code> if Carol debug messages are logged,
+	 * <code>false</code> otherwise
+	 */
+	static public boolean isInfoCarol() {
+		return (carolLogger != null) && carolLogger.isLoggable(BasicLevel.INFO);
+	}
+	
+	/**
+	 * Log a Carol Info message.
+	 * 
+	 * @param <code>msg</code> CAROL debug message
+	 */
+	public static void infoCarol(String msg) {
+		if (carolLogger != null) {
+			carolLogger.log(BasicLevel.INFO, msg);
+		}
+	}
+	
    /**
      * Test if Jndi debug messages are logged.
      * 

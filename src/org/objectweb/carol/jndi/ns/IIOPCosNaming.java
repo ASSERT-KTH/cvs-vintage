@@ -164,5 +164,13 @@ public class IIOPCosNaming implements NameService {
 	if (p!= 0) {
 	    port = p;
 	}
-    }
+    }	
+    
+    /* (non-Javadoc)
+	* @see org.objectweb.carol.jndi.ns.NameService#getPort()
+	*/
+   public int getPort()
+   {
+	   return port;
+   }
 }

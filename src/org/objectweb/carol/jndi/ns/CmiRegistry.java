@@ -157,4 +157,12 @@ public class CmiRegistry implements NameService {
             this.port = p;
         }
     }
+
+	/* (non-Javadoc)
+	 * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+	 */
+	public int getPort()
+	{
+		return port;
+	}
 }

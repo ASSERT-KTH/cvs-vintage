@@ -79,4 +79,12 @@ public class LmiRegistry implements NameService {
      */
     public void setPort(int p) {
     }
+    
+	/* (non-Javadoc)
+	 * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+	 */
+	public int getPort()
+	{
+		return 0;
+	}
 }

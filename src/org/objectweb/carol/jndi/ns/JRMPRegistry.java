@@ -132,4 +132,11 @@ public class JRMPRegistry implements NameService {
 	    port = p;
 	}
     }
+	/* (non-Javadoc)
+	 * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+	 */
+	public int getPort()
+	{
+		return port;
+	}
 }

@@ -125,11 +125,14 @@ public class NameServiceManager {
 	    NameService currentNS = (NameService)nsTable.get(k);
 	    
 	    try {
-		currentNS.start();
+			currentNS.start();
+			if (TraceCarol.isInfoCarol()) {
+			TraceCarol.infoCarol("Name service for "+k+" is started on port "+currentNS.getPort());
+			}
 	    } catch (NameServiceException nse) {
 		// do nothing, just trace		    
 		if (TraceCarol.isDebugJndiCarol()) {
-		    TraceCarol.debugJndiCarol("NameServiceManager.startNonStartedNS() can not start name service: "+k);
+			TraceCarol.debugJndiCarol("NameServiceManager.startNonStartedNS() can not start name service: "+k);
 		}
 	    }
 	}

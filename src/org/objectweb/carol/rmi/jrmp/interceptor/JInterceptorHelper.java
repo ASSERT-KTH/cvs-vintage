@@ -74,7 +74,7 @@ public abstract class JInterceptorHelper {
 	}
 
 	/**
-	 * @return
+	 * @return space UID
 	 */
 	public static UID getSpaceID() {
 		return spaceID;

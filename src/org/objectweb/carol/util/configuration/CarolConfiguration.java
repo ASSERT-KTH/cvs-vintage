@@ -40,6 +40,7 @@ import java.util.TreeMap;
 
 import org.objectweb.carol.jndi.ns.NameServiceException;
 import org.objectweb.carol.jndi.ns.NameServiceManager;
+import org.objectweb.util.monolog.api.LoggerFactory;
 
 /*
  * Interface <code>CarolConfiguration</code> for Carol environment
@@ -123,16 +124,27 @@ public class CarolConfiguration {
      */
     public static final String JNDI_FILE_NAME = "jndi.properties";
 
-    /**
-     * init the Carol configuration,
-     * A server can call this static method
-     * for instantiate the carol communication layer
-     */
-    public static void init() throws RMIConfigurationException {
-        // init Trace 
-        TraceCarol.configure();
-        new CarolConfiguration();
-    }
+	/**
+	  * init the Carol configuration,
+	  * A server can call this static method
+	  * for instantiate the carol communication layer
+	  */
+	 public static void init() throws RMIConfigurationException {
+		 // init Trace 
+		 TraceCarol.configure();
+		 new CarolConfiguration();
+	 }
+	 
+	/**
+	  * init the Carol configuration,
+	  * A server can call this static method
+	  * for instantiate the carol communication layer
+	  */
+	 public static void init(LoggerFactory lf) throws RMIConfigurationException {
+		 // init Trace 
+		 TraceCarol.configure(lf);
+		 new CarolConfiguration();
+	 }
 
     /**
      * Constructor 
