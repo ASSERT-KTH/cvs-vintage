@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -234,7 +234,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 					{
 						boolean implemented = false;
 						
-						if (!implemented) throw new Error("Stateful Container not implemented yet");
+						//if (!implemented) throw new Error("Stateful Container not implemented yet");
 						
 						// Create container
 						con = new StatefulSessionContainer();
@@ -268,8 +268,8 @@ implements ContainerFactoryMBean, MBeanRegistration
 						// Set persistence manager
 						((StatefulSessionContainer)con).setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 						
-						// Set instance pools
-						con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+						// Set instance pools (this is bogus anyway) should be set through default stuff 
+						con.setInstancePool((InstancePool)cl.loadClass("org.jboss.ejb.plugins.StatefulSessionInstancePool").newInstance());
 						
 						
 						// Create interceptors
