@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+
+  <mbean code="org.jboss.jmx.connector.rmi.RMIConnectorService" 
+	 name="JMX:name=Connector,type=RMI"/>
+</server>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+
+  <mbean code="org.jboss.jmx.connector.ejb.EJBConnector" name="JMX:name=Connector,type=EJB">
+    <constructor>
+      <arg value="1" type="int"/>
+      <arg value="null" type="java.lang.String[]"/>
+    </constructor>
+  </mbean>
+</server>
