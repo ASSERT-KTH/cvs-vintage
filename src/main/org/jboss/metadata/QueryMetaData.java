@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  * Contains information about ejb-ql queries.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class QueryMetaData extends MetaData {
 	public final static String REMOTE = "Remote";
@@ -101,11 +101,11 @@ public class QueryMetaData extends MetaData {
 		// result type mapping
 		resultTypeMapping = 
             getOptionalChildContent(element, "result-type-mapping");
-		if(resultTypeMapping == null) {
+		if(resultTypeMapping == null || LOCAL.equals(resultTypeMapping)) {
 			resultTypeMapping = LOCAL;
-		}
-		if(!REMOTE.equals(resultTypeMapping) &&
-				!LOCAL.equals(resultTypeMapping)) {
+		} else if(REMOTE.equals(resultTypeMapping)) {
+         resultTypeMapping = REMOTE;
+      } else {
 			throw new DeploymentException("result-type-mapping must be '" +
                REMOTE + "' or '" + LOCAL + "', if specified");
 		}
