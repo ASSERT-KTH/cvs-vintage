@@ -52,7 +52,6 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.util.ScarabException;
 
 /** 
  * This class manages GlobalParameter objects.  Global is used a bit
@@ -61,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * module does not provide alternatives.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameterManager.java,v 1.6 2003/11/25 15:49:55 mpoeschl Exp $
+ * @version $Id: GlobalParameterManager.java,v 1.7 2004/02/03 11:31:47 dep4b Exp $
  */
 public class GlobalParameterManager
     extends BaseGlobalParameterManager
@@ -122,7 +121,7 @@ public class GlobalParameterManager
     }
 
     private static GlobalParameter getInstance(String name)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         // try to get a global without a module
         GlobalParameter p = getInstance(name, null);
@@ -136,7 +135,7 @@ public class GlobalParameterManager
     }
 
     private static GlobalParameter getInstance(String name, Module module)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         GlobalParameter result = null;
         Criteria crit = new Criteria();
@@ -158,7 +157,7 @@ public class GlobalParameterManager
     }
 
     public static String getString(String name)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         // we do not call getString(name, null) here because we do
         // not want to cache results for every module if the parameter
@@ -187,7 +186,7 @@ public class GlobalParameterManager
     }
 
     public static String getString(String name, Module module)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         String result = null;
         if (module == null) 
@@ -250,7 +249,7 @@ public class GlobalParameterManager
     }
 
     public static boolean getBoolean(String name)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         // we do not call getBoolean(name, null) here because we do
         // not want to cache results for every module if the parameter
@@ -272,7 +271,7 @@ public class GlobalParameterManager
     }
 
     public static boolean getBoolean(String name, Module module)
-        throws TorqueException, ScarabException
+        throws TorqueException
     {
         boolean b = false;
         if (module == null) 

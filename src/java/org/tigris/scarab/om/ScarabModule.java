@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.148 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: ScarabModule.java,v 1.149 2004/02/03 11:31:47 dep4b Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -547,7 +547,7 @@ public class ScarabModule
     public void setParent(Module v)
         throws Exception
     {
-        super.setModuleRelatedByParentId((ScarabModule)v);
+        super.setModuleRelatedByParentId(v);
         // setting the name to be null so that 
         // it gets rebuilt with the new information
         setName(null);
@@ -560,7 +560,7 @@ public class ScarabModule
     public Module getParent()
         throws Exception
     {
-        return (Module) super.getModuleRelatedByParentId();
+        return super.getModuleRelatedByParentId();
     }
 
     /**

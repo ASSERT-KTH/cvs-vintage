@@ -97,7 +97,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.30 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ImportIssues.java,v 1.31 2004/02/03 11:31:47 dep4b Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues
@@ -715,7 +715,6 @@ public class ImportIssues
 
     /** Receive notification of a warning. */
     public void warning(SAXParseException e)
-        throws SAXParseException
     {
         // Warnings are non-fatal.  At some point we should report
         // these back to the end user.

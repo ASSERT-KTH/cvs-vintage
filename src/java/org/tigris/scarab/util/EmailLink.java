@@ -57,7 +57,7 @@ import org.tigris.scarab.om.Module;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.10 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: EmailLink.java,v 1.11 2004/02/03 11:31:47 dep4b Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -254,7 +254,7 @@ public class EmailLink
         for (int i = 0; i < pairs.size(); i++)
         {
             Object[] pair = (Object[])pairs.get(i);
-            if ( name.equals( (String)pair[0] ) )
+            if ( name.equals( pair[0] ) )
             {
                 pairs.remove(i);
             }

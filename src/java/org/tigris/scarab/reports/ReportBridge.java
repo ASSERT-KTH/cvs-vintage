@@ -140,8 +140,7 @@ public  class ReportBridge
     {
         return torqueReport.getName();
     }
-    public void setName(String name)
-        throws TorqueException
+    public void setName(String name)        
     {
         torqueReport.setName(name);
         reportDefn.setName(name);
@@ -150,8 +149,7 @@ public  class ReportBridge
     {
         return torqueReport.getDescription();
     }
-    public void setDescription(String name)
-        throws TorqueException
+    public void setDescription(String name)       
     {
         torqueReport.setDescription(name);
         reportDefn.setDescription(name);
@@ -172,7 +170,6 @@ public  class ReportBridge
         return torqueReport.getDeleted();
     }
     public void setDeleted(boolean b)
-        throws TorqueException
     {
         torqueReport.setDeleted(b);
     }
@@ -201,7 +198,6 @@ public  class ReportBridge
         return torqueReport.getReportId();
     }
     public void setReportId(Integer id)
-        throws TorqueException
     {
         torqueReport.setReportId(id);
     }

@@ -114,7 +114,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.59 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ScarabIssues.java,v 1.60 2004/02/03 11:31:47 dep4b Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -1029,8 +1029,6 @@ public class ScarabIssues implements java.io.Serializable
                 // Get the Attribute associated with the Activity
                 Attribute attributeOM = Attribute.getInstance(activity.getAttribute());
 
-                Activity activityOM = null;
-
                 // deal with the activity attachment (if there is one)
                 XmlAttachment activityAttachment = activity.getAttachment();
                 Attachment activityAttachmentOM = null;
@@ -1096,8 +1094,7 @@ public class ScarabIssues implements java.io.Serializable
                     else
                     {
                         // create the activity record.
-                        activityOM = ActivityManager
-                            .createTextActivity(issueOM, nullAttribute, activitySetOM, 
+                        ActivityManager.createTextActivity(issueOM, nullAttribute, activitySetOM, 
                                     activity.getDescription(), activityAttachmentOM, 
                                     activity.getOldValue(), activity.getNewValue());
         
@@ -1107,7 +1104,7 @@ public class ScarabIssues implements java.io.Serializable
                 }
 
                 // create the activityOM
-                activityOM = createActivity(activity, module, 
+                createActivity(activity, module, 
                                             issueOM, attributeOM, activitySetOM);
 
                 // check to see if this is a new activity or an update activity

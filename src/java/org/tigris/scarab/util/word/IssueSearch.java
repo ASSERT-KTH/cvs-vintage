@@ -113,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.121 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.122 2004/02/03 11:31:48 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -2158,15 +2158,11 @@ public class IssueSearch
             //List columnSqlList = new ArrayList(valueListSize/maxJoin + 1);
             StringBuffer partialSql = getSelectStart();
             tableAliases = new HashSet(MAX_JOIN);
-            boolean sortColumnAdded = false;
             for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
                 Integer attrPK = rmua.getAttributeId();
-                if (attrPK.equals(sortAttrId)) 
-                {
-                    sortColumnAdded = true;
-                }
+          
                 
                 String id = attrPK.toString();
                 String alias = AV + id;
@@ -2206,7 +2202,6 @@ public class IssueSearch
                     partialSql = getSelectStart();
                     outerJoin = new StringBuffer(512);
                     tableAliases.clear();
-                    sortColumnAdded = false;
                     count = 0;
                 }
             }
@@ -2588,7 +2583,7 @@ public class IssueSearch
         }            
 
         private boolean doPrepareNextQueryResult()
-            throws TorqueException, SQLException
+            throws SQLException
         {
             boolean anyMoreResults = true;
             

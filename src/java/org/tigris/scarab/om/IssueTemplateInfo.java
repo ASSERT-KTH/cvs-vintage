@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.24 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.25 2004/02/03 11:31:47 dep4b Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
@@ -103,7 +103,7 @@ public  class IssueTemplateInfo
         // If it's a module scoped template, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
         boolean success = true;
-        Issue issue = (Issue) IssueManager.getInstance(getIssueId());
+        Issue issue = IssueManager.getInstance(getIssueId());
 
         // If it's a module template, user must have Item | Approve 
         //   permission, or its Approved field gets set to false

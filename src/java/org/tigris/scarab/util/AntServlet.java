@@ -111,8 +111,7 @@ public class AntServlet
      * @exception ServletException if an error occurs
      */
     public final void doGet (HttpServletRequest req, HttpServletResponse res)
-        throws IOException,
-               ServletException
+        throws IOException               
     {
         res.setContentType("text/html");
 
@@ -171,6 +170,7 @@ public class AntServlet
                 out.println("</pre>");
                 out.flush();
                 returnValue = pro.waitFor();
+                
             }
             catch (Exception ignored)
             {
@@ -184,6 +184,7 @@ public class AntServlet
             }
     
             out.println("<hr size=\"1\" noshade=\"true\">");
+            out.println("Return value from Ant:" + returnValue);
             out.println("</body>");
             out.println("</html>");
             out.flush();

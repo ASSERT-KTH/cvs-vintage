@@ -51,9 +51,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.entity.User;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.test.BaseTestCase;
@@ -62,7 +59,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.21 2004/02/03 11:04:01 dep4b Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.22 2004/02/03 11:31:47 dep4b Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {

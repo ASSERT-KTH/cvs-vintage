@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.11 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ScarabUtil.java,v 1.12 2004/02/03 11:31:47 dep4b Exp $
  */
 public class ScarabUtil
 {
@@ -235,8 +235,8 @@ public class ScarabUtil
             {
                 byte toEscape = bytes[i];
                 out.append('%');
-                int low = (int) (toEscape & 0x0f);
-                int high = (int) ((toEscape & 0xf0) >> 4);
+                int low = (toEscape & 0x0f);
+                int high = ((toEscape & 0xf0) >> 4);
                 out.append(HEXADECIMAL[high]);
                 out.append(HEXADECIMAL[low]);
             }
