@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.38 2002/05/23 16:35:46 jon Exp $
+$Id: README.txt,v 1.39 2002/06/03 17:15:16 jon Exp $
 
 Welcome to Scarab!
 
@@ -39,6 +39,22 @@ well as ANT_HOME/bin in your PATH.
 The database is assumed to be installed and running with appropriately
 configured access control setup (see below for more detail). You must
 have the database binaries in your PATH (ie: $MYSQL_HOME/bin). 
+
+    With sh/zsh/bash:
+        export ANT_HOME=/path/to/ant-install
+        export MYSQL_HOME=/path/to/mysql-install
+        export JAVA_HOME=/path/to/jdk-install
+        export PATH=${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+
+    With csh/tcsh:
+        setenv ANT_HOME /path/to/ant-install
+        setenv MYSQL_HOME /path/to/mysql-install
+        export JAVA_HOME /path/to/jdk-install
+        setenv PATH ${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+
+    Note: To make these settings 'sticky', put them into the appropriate
+          .rc file for your shell. For example, if you use tcsh, put the
+          lines above into your ~/.tcshrc
 
 With the Scarab communities help, we will be supporting a wide range of
 databases in the released version of Scarab, however, the CollabNet 
