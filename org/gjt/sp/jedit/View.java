@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.15 2002/02/23 05:26:12 spestov Exp $
+ * @version $Id: View.java,v 1.16 2002/03/17 04:11:46 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -890,6 +890,8 @@ public class View extends JFrame implements EBComponent
 			handleBufferUpdate((BufferUpdate)msg);
 		else if(msg instanceof EditPaneUpdate)
 			handleEditPaneUpdate((EditPaneUpdate)msg);
+		else if(msg instanceof MultiSelectStatusChanged)
+			status.updateMiscStatus();
 	} //}}}
 
 	//{{{ Package-private members

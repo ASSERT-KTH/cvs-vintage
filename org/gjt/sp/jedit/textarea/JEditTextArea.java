@@ -41,6 +41,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.gui.*;
+import org.gjt.sp.jedit.msg.MultiSelectStatusChanged;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
@@ -50,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.111 2002/03/17 03:05:24 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.112 2002/03/17 04:11:46 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3597,8 +3598,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	public final void setMultipleSelectionEnabled(boolean multi)
 	{
 		JEditTextArea.multi = multi;
-		if(view.getStatus() != null)
-			view.getStatus().updateMiscStatus();
+		EditBus.send(new MultiSelectStatusChanged(null));
 	}
 	//}}}
 
