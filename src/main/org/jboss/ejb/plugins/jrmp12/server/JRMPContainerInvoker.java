@@ -27,6 +27,9 @@ import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
+import org.jboss.ejb.plugins.jrmp12.interfaces.ListEntityProxy;
+import org.jboss.util.FinderResults;
+
 import org.jboss.logging.Logger;
 
 
@@ -36,7 +39,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -135,11 +138,23 @@ public final class JRMPContainerInvoker
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
-      while(idEnum.hasNext())
-      {
-         list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                  new EntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized())));
+
+      if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed()) {
+         long listId = ((FinderResults) ids).getListId();
+
+         for (int i = 0; idEnum.hasNext(); i++)
+         {
+            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                     new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+                     new ListEntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized(), list, listId, i)));
+         }
+      } else {
+         while(idEnum.hasNext())
+         {
+            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                     new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+                     new EntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized())));
+         }
       }
       return list;
    }

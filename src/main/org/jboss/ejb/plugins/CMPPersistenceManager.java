@@ -53,7 +53,7 @@ import org.jboss.management.j2ee.TimeStatistic;
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*   @version $Revision: 1.31 $
+*   @version $Revision: 1.32 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -282,15 +282,11 @@ public class CMPPersistenceManager
 
    /** find multiple entities */
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-      throws Exception 
+      throws Exception
    {
-      // The store will find the id and return a collection of PrimaryKeys
-      FinderResults ids = store.findEntities(finderMethod, args, ctx);
-       
-       // Note: for now we just return the keys - RabbitHole should return the
-       //   finderResults so that the invoker layer can extend this back 
-       //   giving the client an OO 'cursor'
-      return ids.getAllKeys();
+       // return the finderResults so that the invoker layer can extend this back
+       // giving the client an OO 'cursor'
+      return store.findEntities(finderMethod, args, ctx);
    }
 
    /*

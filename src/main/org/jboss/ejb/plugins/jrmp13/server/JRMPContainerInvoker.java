@@ -22,10 +22,14 @@ import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 
+import org.jboss.ejb.plugins.jrmp.interfaces.ReadAheadBuffer;
 import org.jboss.ejb.plugins.jrmp13.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
+import org.jboss.ejb.plugins.jrmp13.interfaces.ListEntityProxy;
+import org.jboss.util.FinderResults;
+
 import org.jboss.logging.Logger;
 
 /**
@@ -34,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -132,11 +136,23 @@ public final class JRMPContainerInvoker
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
-      while(idEnum.hasNext())
-      {
-         list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                  new EntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized())));
+
+      if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed()) {
+         long listId = ((FinderResults) ids).getListId();
+
+         for (int i = 0; idEnum.hasNext(); i++)
+         {
+            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                     new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
+                     new ListEntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized(), list, listId, i)));
+         }
+      } else {
+         while(idEnum.hasNext())
+         {
+            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                     new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+                     new EntityProxy(ci.getJndiName(), ci, idEnum.next(), ci.isOptimized())));
+         }
       }
       return list;
    }
@@ -149,7 +165,7 @@ public final class JRMPContainerInvoker
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 
  /*

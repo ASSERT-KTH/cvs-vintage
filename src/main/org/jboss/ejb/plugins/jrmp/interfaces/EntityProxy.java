@@ -26,7 +26,7 @@ import org.jboss.ejb.CacheKey;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class EntityProxy
     extends BeanProxy
@@ -93,7 +93,7 @@ public class EntityProxy
      *
      * @throws Throwable    Any exception or error thrown while processing.
      */
-    public final Object invoke(final Object proxy,
+    public Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
         throws Throwable

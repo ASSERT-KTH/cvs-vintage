@@ -5,30 +5,47 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * A collection of keys carrying additional information about the query from 
- * which they came. this is used to optimize (or maybe un-deoptimize) 
+ * A collection of keys carrying additional information about the query from
+ * which they came. this is used to optimize (or maybe un-deoptimize)
  * multi-finders in the CMPPersistenceManager.
- * 
+ *
  * @author <a href="mailto:danch@nvisia.com">danch</a>
  */
 public class FinderResults implements Collection {
 
+   private static long nextListId = 0;
+
    private Collection keys;
-   /** hold arbitrary data from the query. This is an object rather than a 
+   /** hold arbitrary data from the query. This is an object rather than a
     *  string so that we can better support non-relational/non-jdbc storages */
    private Object queryData;
-   
+
    private Object finder;
-   
+
    private Object[] queryArgs;
-   
-   /** Constructor taking the collection of keys to hold and the query data. 
+
+   private boolean isReadAheadOnLoadUsed;
+
+   /**
+    * List id is used only in the case of read ahead on load.
+    */
+   private long listId;
+
+   /** Constructor taking the collection of keys to hold and the query data.
     */
    public FinderResults(Collection keys, Object queryData, Object finder, Object[] args) {
       this.keys = keys;
       this.queryData = queryData;
       this.finder = finder;
       this.queryArgs = args;
+   }
+   public FinderResults(Collection keys, Object queryData, Object finder, Object[] args, boolean isReadAheadOnLoadUsed) {
+      this(keys, queryData, finder, args);
+      this.isReadAheadOnLoadUsed = isReadAheadOnLoadUsed;
+      if (isReadAheadOnLoadUsed) {
+         listId = nextListId;
+         nextListId++;
+      }     
    }
    public Collection getAllKeys() {
       return keys;
@@ -45,7 +62,13 @@ public class FinderResults implements Collection {
    public Object[] getQueryArgs() {
       return queryArgs;
    }
-   
+   public boolean isReadAheadOnLoadUsed() {
+      return isReadAheadOnLoadUsed;
+   }
+   public long getListId() {
+      return listId;
+   }
+
    public int size() {
       return keys.size();
    }
