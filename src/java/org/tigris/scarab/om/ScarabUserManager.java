@@ -39,6 +39,30 @@ public class ScarabUserManager
     public static ScarabUser getInstance(String username, String domainName) 
         throws Exception
     {
+        return getManager().getInstanceImpl(username, domainName);
+    }
+
+    /**
+     * Gets a list of ScarabUsers based on usernames.  Domain is currently
+     * unused.
+     *
+     * @param usernames a <code>String[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public static List getUsers(String[] usernames, String domainName) 
+        throws Exception
+    {
+        return getManager().getUsers(usernames, domainName);
+    }
+
+    /**
+     * Return an instance of User based on username.  Domain is currently
+     * unused.
+     */
+    protected ScarabUser getInstanceImpl(String username, String domainName) 
+        throws Exception
+    {
         ScarabUser user = null;
         if ( username != null ) 
         {
@@ -65,7 +89,7 @@ public class ScarabUserManager
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public static List getUsers(String[] usernames, String domainName) 
+    protected List getUsersImpl(String[] usernames, String domainName) 
         throws Exception
     {
         List users = null;
@@ -77,7 +101,6 @@ public class ScarabUserManager
         }
         return users;
     }
-
 }
 
 
