@@ -13,7 +13,7 @@
     <div>$item.Module.Name $item.IssueType.Name</div>
   #end
 #else
-  <div>$scarabR.CurrentModule.Name $scarabR.CurrentIssueType.Name</div>
+  <div>$scarabR.CurrentModule.Name $scarabR.CurrentRModuleIssueType.DisplayName</div>
 #end
 </div>
 <div class="functnbar3">
