@@ -29,8 +29,8 @@
         <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default query</option> 
     #end
 
-#set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
-#set ($globalQueries = $module.getGlobalQueries($issuetype))
+#set ($privateQueries = $scarabR.PrivateQueries)
+#set ($globalQueries = $scarabR.GlobalQueries)
 
 #if ($privateQueries && $privateQueries.size() > 0)
     <option value="QueryList.vm">Saved queries (personal)...</option>
