@@ -208,7 +208,8 @@ public final class IntrospectionUtils {
 			File f1=new File ( f, "..");
 			install = f1.getCanonicalPath();
 			if( installSysProp != null )
-			    System.getProperties().put( installSysProp, install );
+			    System.getProperties().put( installSysProp,
+							install );
 			if( homeSysProp != null )
 			    System.getProperties().put( homeSysProp, install );
 			return install;
@@ -219,6 +220,36 @@ public final class IntrospectionUtils {
 	    }
 	}
 	return null;
+    }
+
+    /** Debug method, display the classpath
+     */
+    public static void displayClassPath( String msg, URL[] cp ) {
+	System.out.println(msg);
+	for( int i=0; i<cp.length; i++ ) {
+	    System.out.println( cp[i].getFile() );
+	}
+    }
+
+    public static String PATH_SEPARATOR = System.getProperty("path.separator");
+    /**
+     * Adds classpath entries from a vector of URL's to the
+     * "tc_path_add" System property.  This System property lists
+     * the classpath entries common to web applications. This System
+     * property is currently used by Jasper when its JSP servlet
+     * compiles the Java file for a JSP.
+    */
+    public static String classPathAdd(URL urls[], String cp )
+    {
+	if( urls==null ) return cp;
+
+	for( int i=0; i<urls.length; i++ ) {
+            if( cp != null)
+                cp += PATH_SEPARATOR + urls[i].getFile();
+            else
+                cp = urls[i].getFile();
+        }
+        return cp;
     }
 
     /** Find a method with the right name
@@ -324,6 +355,29 @@ public final class IntrospectionUtils {
 	}
     }
 
+    /** 
+     */
+    public static void setProperty( Object o, String name ) {
+	String setter= "set" +capitalize(name);
+	try {
+	    Method methods[]=findMethods( o.getClass() );
+	    Method setPropertyMethod=null;
+	    // find setFoo() method
+	    for( int i=0; i< methods.length; i++ ) {
+		Class paramT[]=methods[i].getParameterTypes();
+		if( setter.equals( methods[i].getName() ) &&
+		    paramT.length == 0 ) {
+		    methods[i].invoke( o, new Object[] {} );
+		    return;
+		}
+	    }
+	} catch( Exception ex1 ) {
+	    if( dbg > 0 )
+		d("Exception for " + o.getClass() + " " + name);
+	    if( dbg > 1 ) ex1.printStackTrace();
+	} 
+    }
+    
     /** Replace ${NAME} with the property value
      */
     public static String replaceProperties(String value,
@@ -499,27 +553,56 @@ public final class IntrospectionUtils {
         return urls;
     }
 
+    /** Construct a URL classpath from files in a directory,
+     *  a cpath property, and tools.jar.
+     */
+    public static URL[] getClassPath( String dir, String cpath,
+				      String cpathProp, boolean addTools )
+	throws IOException, MalformedURLException
+    {
+	Vector jarsV = new Vector();
+	if( dir!=null )
+	    addToClassPath( jarsV, dir );
+	
+	if( cpath != null )
+	    addJarsFromClassPath(jarsV,cpath);
+	
+	if( cpathProp!=null ) {
+	    String cpath1=System.getProperty( cpathProp );
+	    addJarsFromClassPath(jarsV,cpath1);
+	}
+
+	if(addTools)
+	    addToolsJar( jarsV );
+	
+	return getClassPath(jarsV);
+    }
+    
     // -------------------- Mapping command line params to setters
 
     public static boolean processArgs(Object proxy, String args[] ) 
 	throws Exception
     {
 	String args0[]=null;
-	if( null != findMethod( proxy.getClass(), "getOptions1", new Class[] {} )) {
+	if( null != findMethod( proxy.getClass(),
+				"getOptions1", new Class[] {} )) {
 	    args0=(String[])callMethod0( proxy, "getOptions1");
 	}
 	if( args0==null ) {
+	    //args0=findVoidSetters(proxy.getClass());
 	    args0=findBooleanSetters(proxy.getClass());
 	}
 	Hashtable h=null;
-	if( null != findMethod( proxy.getClass(), "getOptionAliases", new Class[] {} )) {
+	if( null != findMethod( proxy.getClass(),
+				"getOptionAliases", new Class[] {} )) {
 	    h=(Hashtable)callMethod0( proxy, "getOptionAliases");
 	}
 	return processArgs( proxy, args, args0, null, h );
     }
 
     public static boolean processArgs(Object proxy, String args[],
-				      String args0[], String args1[], Hashtable aliases )
+				      String args0[], String args1[],
+				      Hashtable aliases )
 	throws Exception
     {
 	for( int i=0; i< args.length; i++ ) {
@@ -533,12 +616,12 @@ public final class IntrospectionUtils {
 		boolean set=false;
 		for( int j=0; j< args0.length ; j++ ) {
 		    if( args0[j].equalsIgnoreCase( arg )) {
-			IntrospectionUtils.setProperty( proxy, args0[j], "true");
+			setProperty( proxy, args0[j], "true");
 			set=true;
 			break;
 		    }
 		}
-		if( set ) break;
+		if( set ) continue;
 	    }
 	    if( args1!=null ) {
 		for( int j=0; j< args1.length ; j++ ) {
@@ -546,18 +629,16 @@ public final class IntrospectionUtils {
 			i++;
 			if( i >= args.length )
 			    return false;
-			IntrospectionUtils.setProperty( proxy,
-							arg, args[i]);
+			setProperty( proxy, arg, args[i]);
 			break;
 		    }
 		}
 	    } else {
-		// if args1 is not specified, assume all other options have param
+		// if args1 is not specified,assume all other options have param
 		i++;
 		if( i >= args.length )
 		    return false;
-		IntrospectionUtils.setProperty( proxy,
-						arg, args[i]);
+		setProperty( proxy,arg, args[i]);
 	    }
 
 	}
@@ -565,16 +646,34 @@ public final class IntrospectionUtils {
     }
 
     // -------------------- other utils  --------------------
+    public static String[] findVoidSetters( Class c ) {
+	Method m[]=findMethods( c );
+	if( m==null ) return null;
+	Vector v=new Vector();
+	for( int i=0; i<m.length; i++ ) {
+	    if( m[i].getName().startsWith("set") &&
+		m[i].getParameterTypes().length == 0 ) {
+		String arg=m[i].getName().substring( 3 );
+		v.addElement( unCapitalize( arg ));
+	    }
+	}
+	String s[]=new String[v.size()];
+	for( int i=0; i<s.length; i++ ) {
+	    s[i]=(String)v.elementAt( i );
+	}
+	return s;
+    }
+
     public static String[] findBooleanSetters( Class c ) {
 	Method m[]=findMethods( c );
 	if( m==null ) return null;
 	Vector v=new Vector();
 	for( int i=0; i<m.length; i++ ) {
 	    if( m[i].getName().startsWith("set") &&
-		m[i].getParameterTypes().length == 1 &&
-		"boolean".equals( m[i].getParameterTypes()[0].getName()) ) {
-		String arg=m[i].getName().substring( 3 );
-		v.addElement( unCapitalize( arg ));
+	    	m[i].getParameterTypes().length == 1 &&
+	    	"boolean".equals( m[i].getParameterTypes()[0].getName()) ) {
+	    	String arg=m[i].getName().substring( 3 );
+	    	v.addElement( unCapitalize( arg ));
 	    }
 	}
 	String s[]=new String[v.size()];
@@ -651,6 +750,15 @@ public final class IntrospectionUtils {
 	return false;
     }
 
+    public static void callMain( Class c, String args[] )
+	throws Exception
+    {
+	Class p[]=new Class[1];
+	p[0]=args.getClass();
+	Method m=c.getMethod( "main", p);
+	m.invoke( c, new Object[] {args} );
+    }
+    
     public static Object callMethod1( Object target,
 				    String methodN,
 				    Object param1,
@@ -685,7 +793,8 @@ public final class IntrospectionUtils {
 	    d("Assert: Illegal params " + target );
 	    return null;
 	}
-	if( dbg > 0 ) d("callMethod0 " + target.getClass().getName() + "." + methodN);
+	if( dbg > 0 )
+	    d("callMethod0 " + target.getClass().getName() + "." + methodN);
 	
 	Class params[]=new Class[0];
 	Method m=findMethod( target.getClass(), methodN, params);
@@ -697,14 +806,12 @@ public final class IntrospectionUtils {
     
     static Object[] emptyArray=new Object[] {};
     
-    public static Object callMethodN( Object target,
-				    String methodN,
-				    Object params[],
-				    Class typeParams[] )
+    public static Object callMethodN( Object target,  String methodN,
+				    Object params[],  Class typeParams[] )
 	throws Exception
     {
 	Method m=null;
-	m=IntrospectionUtils.findMethod( target.getClass(), methodN, typeParams );
+	m=findMethod( target.getClass(), methodN, typeParams );
         if( m== null ) {
 	    d("Can't find method " + methodN + " in " +
 	      target + " CLASS " + target.getClass());
