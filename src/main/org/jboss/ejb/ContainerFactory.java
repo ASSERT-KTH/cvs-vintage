@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.*;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -159,9 +159,17 @@ public class ContainerFactory
                   
                   con.setClassLoader(new BeanClassLoader(cl));
                   con.setMetaData(bean);
-				  
+				   
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                  
+				  // Make sure we have a default configuration
+				  if (conf == null) {
+					  
+					 log.log("Using default configuration");
+					 
+					 conf =  jar.getContainerConfigurations().getContainerConfiguration("Default Stateless SessionBean");
+				  }
+				  
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
                   
@@ -190,6 +198,21 @@ public class ContainerFactory
                   
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                   
+				  // Make sure we have a default configuration
+				  if (conf == null) {
+					  
+					 log.log("Using default configuration");
+					 if (((jBossEntity) bean).getPersistenceType().equalsIgnoreCase("bean")) {
+						 
+						 // BMP case
+						 conf =  jar.getContainerConfigurations().getContainerConfiguration("BMP EntityBean");
+				     }
+					 else { 
+					 
+					     // CMP case
+						 conf =  jar.getContainerConfigurations().getContainerConfiguration("CMP EntityBean");
+				     }
+				  }
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
