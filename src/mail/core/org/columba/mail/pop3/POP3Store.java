@@ -416,7 +416,7 @@ public class POP3Store {
         int loginMethod = getLoginMethod();
 
         while (!login) {
-            if ((password = popItem.get("password", "").toCharArray()).length == 0) {
+            if ((password = popItem.getRoot().getAttribute("password", "").toCharArray()).length == 0) {
                 dialog = new PasswordDialog();
 
                 dialog.showDialog(popItem.get("user"), popItem.get("host"),
