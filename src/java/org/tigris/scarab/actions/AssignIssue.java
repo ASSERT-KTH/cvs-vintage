@@ -46,6 +46,7 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import javax.mail.SendFailedException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -97,13 +98,17 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.31 2002/01/22 00:53:23 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.32 2002/01/22 21:22:17 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
     private static final String ERROR_MESSAGE = "More information was " +
                                 "required to submit your request. Please " +
                                 "scroll down to see error messages."; 
+
+    private static final String EMAIL_ERROR = "Your changes were saved, " +
+                                "but could not send notification email due " + 
+                                "to a sendmail error.";
 
     public void doSavevalues(RunData data, TemplateContext context) 
         throws Exception
@@ -210,7 +215,11 @@ public class AssignIssue extends RequireLoginFirstAction
                              group.setProperties(attVal);
                              attVal.save();
                              data.getParameters().add("isChanged", "true");
-                             emailAssignIssueToUser(issue, assignee, emailAction, context); 
+                             if (!emailAssignIssueToUser(issue, assignee, 
+                                                    emailAction, context))
+                             {
+                                 data.setMessage(EMAIL_ERROR);
+                             }
                         }
                     }
                 }
@@ -299,7 +308,11 @@ public class AssignIssue extends RequireLoginFirstAction
                             attVal.setValue(user.getUserName());
                             attVal.save();
                             data.getParameters().add("isChanged", "true");
-                            emailAssignIssueToUser(issue, user, action, context);
+                            if (!emailAssignIssueToUser(issue, user, 
+                                                         action, context))
+                             {
+                                 data.setMessage(EMAIL_ERROR);
+                             }
                         }
                     }
                 }
@@ -316,14 +329,14 @@ public class AssignIssue extends RequireLoginFirstAction
      * @param comment <code>String</code>
      * @param context <code>TemplateContext</code>
      */
-    private void emailAssignIssueToUser(Issue issue, ScarabUser su,
+    private boolean emailAssignIssueToUser(Issue issue, ScarabUser su,
                                         String action, TemplateContext context)
         throws Exception
     {
-
+        boolean success = true;
         if (issue == null || su == null)
         {
-            return;
+            return false;
         }
 
         context.put("issue", issue);
@@ -345,6 +358,16 @@ public class AssignIssue extends RequireLoginFirstAction
             Turbine.getConfiguration()
                    .getString("scarab.email.assignissue.template",
                                "email/AssignIssue.vm"));
-        te.send();
+
+        try
+        {
+            te.send();
+        }
+        catch (SendFailedException e)
+        {
+           success = false;
+        }
+        return success;
+      
     }
 }
