@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -57,13 +58,16 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.QueryPeer;
+import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.MITListItemPeer;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
 /** 
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.32 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: RModuleIssueType.java,v 1.33 2003/09/17 23:44:52 elicia Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -165,8 +169,56 @@ public  class RModuleIssueType
             // delete workflows
             WorkflowFactory.getInstance().resetAllWorkflowsForIssueType(module, 
                                                                         issueType);
-
+            // delete templates
             Criteria c = new Criteria()
+                .add(IssuePeer.TYPE_ID, templateType.getIssueTypeId());
+            List result = IssuePeer.doSelect(c);
+            List issueIdList = new ArrayList(result.size());
+            for (int i=0; i < result.size(); i++) 
+            {
+                Issue issue = (Issue)result.get(i);
+                issueIdList.add(issue.getIssueId());
+            }
+            IssuePeer.doDelete(c);
+            if (!issueIdList.isEmpty())
+            {
+                c = new Criteria()
+                    .addIn(IssueTemplateInfoPeer.ISSUE_ID, issueIdList);
+                IssueTemplateInfoPeer.doDelete(c);
+            }
+            
+            // mit list items
+            c = new Criteria()
+                .add(MITListItemPeer.MODULE_ID, module.getModuleId())
+                .add(MITListItemPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+            List listItems = MITListItemPeer.doSelect(c);
+            List listIds = new ArrayList(listItems.size());
+
+            for (int i=0; i < listItems.size(); i++) 
+            {
+                MITList list = ((MITListItem)listItems.get(i)).getMITList();
+                Long listId = list.getListId();
+                if (list.isSingleModuleIssueType() && !listIds.contains(listId))
+                {
+                    listIds.add(listId);
+                }
+            }
+            MITListItemPeer.doDelete(c);
+
+            if (!listIds.isEmpty())
+            {
+                // delete single module-issuetype mit lists
+                c = new Criteria()
+                    .addIn(MITListPeer.LIST_ID, listIds);
+                MITListPeer.doDelete(c);
+
+                // delete queries
+                c = new Criteria()
+                    .addIn(QueryPeer.LIST_ID, listIds);
+                QueryPeer.doDelete(c);
+            }
+
+            c = new Criteria()
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, getIssueTypeId());
             RModuleIssueTypePeer.doDelete(c);
