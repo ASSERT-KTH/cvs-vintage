@@ -43,26 +43,10 @@ currently associated.
     <th>Description</th>
 </tr>
 
-#set ($template = $data.Parameters.getString("template", ""))
-
-## Muck with the IA flow of things...if we came from any of these templates, then
-## we want to always go to SelectArtifactType.vm
-
-#if ($template.equals("Login.vm") || $template.equals("SelectModule.vm") || $template.equals("Index.vm") || $template.equals("admin,ModifyModule.vm"))
-#set ($tmpNext = "SelectArtifactType.vm")
-#else
-#set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
-#if ($nextTemplate && $nextTemplate.length() > 0)
-#set ($tmpNext = $nextTemplate)
-#else
-#set ($tmpNext = "SelectArtifactType.vm")
-#end
-#end
-
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
-$modulelink.setPage($tmpNext, "$module.ModuleId").setLabel($module.Name)
+$modulelink.setPage("$module.ModuleId").setLabel($module.Name)
 </td>
 <td>
 $module.Description
