@@ -81,7 +81,6 @@ public abstract class AttributeValue
     private Attribute aAttribute;
 
     private Transaction transaction;
-    private Attachment attachment;
     private NumberKey oldOptionId;
     private String oldValue;
     private boolean oldOptionIdIsSet;
@@ -107,8 +106,7 @@ public abstract class AttributeValue
      * @exception ScarabException if a new transaction is set before
      * the value is saved.
      */
-    public void startTransaction(Transaction transaction, 
-                                 Attachment attachment)
+    public void startTransaction(Transaction transaction)
         throws ScarabException
     {
         if ( transaction == null ) 
@@ -116,17 +114,10 @@ public abstract class AttributeValue
             String mesg = "Cannot start a transaction using null Transaction"; 
             throw new ScarabException(mesg);
         }
-        if (attachment != null && attachment.getAttachmentId() == null) 
-        {
-            String mesg = 
-                "Attachment must be saved before starting transaction";
-            throw new ScarabException(mesg);
-        }
         
         if ( this.transaction == null ) 
         {
             this.transaction = transaction;
-            this.attachment = attachment;
         }
         else 
         {
@@ -142,7 +133,6 @@ public abstract class AttributeValue
     private void endTransaction()
     {
         this.transaction = null;
-        this.attachment = null;
         oldOptionId = null;
         oldValue = null;
         oldOptionIdIsSet = false;
@@ -445,16 +435,11 @@ public abstract class AttributeValue
 
     public void save(DBConnection dbcon)
         throws Exception
-    {        
+    {
+        
         if ( isModified() ) 
         {
             checkTransaction("Cannot save a value outside a Transaction");
-            // Save activity record
-            Activity activity = new Activity();
-            String desc = getActivityDescription();
-            activity.create(getIssue(), getAttribute(), desc, this.transaction,
-                            this.attachment, oldOptionId, getOptionId(),
-                            oldValue , getValue());
             endTransaction();
         }
         super.save(dbcon);
@@ -463,7 +448,7 @@ public abstract class AttributeValue
     // Not sure it is a good idea to save description in activity record
     // the description can be generated from the other data and it brings
     // up i18n issues.
-    private String getActivityDescription()
+    public String getActivityDescription()
         throws Exception
     {
         String id = getIssue().getFederatedId();
