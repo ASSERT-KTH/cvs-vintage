@@ -1,4 +1,4 @@
-// $Id: UMLMutableLinkedList.java,v 1.13 2004/07/17 13:10:30 kataka Exp $
+// $Id: UMLMutableLinkedList.java,v 1.14 2004/07/26 22:35:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 // $header$
 package org.argouml.uml.ui;
 
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -311,11 +312,13 @@ public class UMLMutableLinkedList extends UMLLinkedList implements MouseListener
     /**
      * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
      */
-    public void mouseEntered(MouseEvent e) {   
+    public void mouseEntered(MouseEvent e) {  
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
     /**
      * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
      */
     public void mouseExited(MouseEvent e) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 }
