@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
+// $Id: AbstractUMLModelElementListModel2Test.java,v 1.3 2002/12/31 08:53:33 kataka Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.uml.UmlFactory;
