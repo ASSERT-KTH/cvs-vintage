@@ -241,8 +241,9 @@
                 dir="${torque.dir.scarab}" target="project-sql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
-<!--        <copy file="${torque.dir.scarab}/output/${project}-schema.sql" 
-              overwrite="true" todir="${src.sql.dir}" quiet="true"/> -->
+
+        <move file="${src.java.dir.scarab}/${project}-schema.sql" 
+            tofile="${src.sql.dir}/mysql-${project}.sql"/>
     </target>
 
     <!-- ================================================================== -->
