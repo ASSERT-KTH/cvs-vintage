@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ClassPathExtension
    extends ServiceMBeanSupport
@@ -151,8 +151,6 @@ public class ClassPathExtension
       
       // Set java.class.path
       System.setProperty("java.class.path", classPath);
-      Logger.debug("Classpath is now:"+classPath);
-      
    }
    // Protected -----------------------------------------------------
 }
