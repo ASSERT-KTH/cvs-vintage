@@ -26,7 +26,7 @@ import org.jboss.management.mejb.MEJB;
  * {@link javax.management.j2ee.ListenerRegistration ListenerRegistration}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -194,10 +194,12 @@ public class ListenerRegistration
          CreateException,
          RemoteException
    {
+/*
       System.out.println( "ListenerRegistration.getMEJB(), home is: " + mHome );
       System.out.println( "ListenerRegistration.getMEJB(), home methods are: " +
          java.util.Arrays.asList( mHome.getClass().getDeclaredMethods() )
       );
+*/
       try {
          Object lTemp = mHome.create();
          MEJB lReturn = (MEJB) lTemp;
