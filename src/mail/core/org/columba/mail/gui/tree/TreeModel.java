@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.tree;
 
 import java.util.Enumeration;
@@ -58,7 +59,6 @@ public class TreeModel extends DefaultTreeModel {
 		createDirectories(
 			((FolderTreeNode) getRoot()).getNode(),
 			(FolderTreeNode) getRoot());
-
 	}
 
 	public void createDirectories(
@@ -79,7 +79,6 @@ public class TreeModel extends DefaultTreeModel {
 					if (folder != null)
 						createDirectories(child, folder);
 				}
-
 			}
 		}
 	}
@@ -152,7 +151,6 @@ public class TreeModel extends DefaultTreeModel {
 
 		FolderTreeNode folder = null;
 		try {
-
 			folder = (FolderTreeNode) handler.getPlugin(type, args);
 			
 			parentFolder.add(folder);
@@ -160,7 +158,6 @@ public class TreeModel extends DefaultTreeModel {
 			ex.printStackTrace();
 		}
 		return folder;
-
 	}
 
 	public FolderTreeNode getFolder(int uid) {
@@ -177,10 +174,8 @@ public class TreeModel extends DefaultTreeModel {
 
 				return node;
 			}
-
 		}
 		return null;
-
 	}
 
 	public FolderTreeNode getTrashFolder() {
@@ -217,25 +212,17 @@ public class TreeModel extends DefaultTreeModel {
 
 		}
 		return null;
-
 	}
 
 	public FolderTreeNode getFolder(TreeNodeList list) {
 		FolderTreeNode parentFolder = (FolderTreeNode) getRoot();
 
-		if (list == null)
+		if (list == null || list.count() == 0)
 			return parentFolder;
-
-		if (list.count() == 0) {
-			System.out.println("list count == null ");
-
-			return parentFolder;
-		}
 
 		FolderTreeNode child = parentFolder;
 		for (int i = 0; i < list.count(); i++) {
 			String str = list.get(i);
-			System.out.println("str: " + str);
 			child = findFolder(child, str);
 		}
 
@@ -263,5 +250,4 @@ public class TreeModel extends DefaultTreeModel {
 	public TempFolder getTempFolder() {
 		return tempFolder;
 	}
-
 }
