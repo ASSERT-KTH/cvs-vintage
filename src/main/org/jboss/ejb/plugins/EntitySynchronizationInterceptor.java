@@ -6,17 +6,22 @@
  */
 package org.jboss.ejb.plugins;
 
-import org.jboss.ejb.*;
-import org.jboss.invocation.Invocation;
-import org.jboss.metadata.ConfigurationMetaData;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.ejb.EJBException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
+import org.jboss.ejb.BeanLock;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityCache;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.invocation.Invocation;
+import org.jboss.metadata.ConfigurationMetaData;
 
 /**
  * The role of this interceptor is to synchronize the state of the cache with
@@ -34,7 +39,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.77 $
+ * @version $Revision: 1.78 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -153,7 +158,7 @@ public class EntitySynchronizationInterceptor
          //mark it dirty in global tx entity map if it is not read only
          if (!ctxContainer.isReadOnly())
          {
-            ctxContainer.getGlobalTxEntityMap().associate(tx, ctx);
+            EntityContainer.getGlobalTxEntityMap().associate(tx, ctx);
          }
       }
       catch (RollbackException e)
@@ -360,12 +365,15 @@ public class EntitySynchronizationInterceptor
                         // the entity has been removed from cache.
                         // release will schedule a passivation and this removed ctx
                         // could be put back into the cache!
-                        if (ctx.getId() != null) container.getInstanceCache().release(ctx);
+                        // This is necessary because we have no lock, we
+                        // don't want to return an instance to the pool that is
+                        // being used
+                        if (ctx.getId() != null) 
+                           container.getInstanceCache().release(ctx);
                      }
                      catch (Exception e)
                      {
-                        if (log.isDebugEnabled())
-                           log.debug("Exception releasing context", e);
+                        log.debug("Exception releasing context", e);
                      }
                      break;
                }
@@ -459,16 +467,20 @@ public class EntitySynchronizationInterceptor
                      case ConfigurationMetaData.C_COMMIT_OPTION:
                         try
                         {
-                           // Do not call release if getId() is null.  This means that
-                           // the entity has been removed from cache.
-                           // release will schedule a passivation and this removed ctx
-                           // could be put back into the cache!
-                           if (ctx.getId() != null) container.getInstanceCache().release(ctx);
+                           // We weren't removed, passivate
+                           // Here we own the lock, so we don't try to passivate
+                           // we just passivate
+                           if (ctx.getId() != null)
+                           {
+                              container.getInstanceCache().remove(ctx.getId());
+                              container.getPersistenceManager().passivateEntity(ctx);
+                           } 
+                           // If we get this far, we return to the pool
+                           container.getInstancePool().free(ctx);
                         }
                         catch (Exception e)
                         {
-                           if (log.isDebugEnabled())
-                              log.debug("Exception releasing context", e);
+                           log.debug("Exception releasing context", e);
                         }
                         break;
                   }
