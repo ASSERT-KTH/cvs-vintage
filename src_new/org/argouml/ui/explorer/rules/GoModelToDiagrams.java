@@ -1,4 +1,4 @@
-// $Id: GoModelToDiagrams.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
+// $Id: GoModelToDiagrams.java,v 1.4 2003/12/23 23:48:29 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.kernel.ProjectManager;
 public class GoModelToDiagrams extends AbstractPerspectiveRule{
 
     public String getRuleName() {
-	return Translator.localize ("Tree", "misc.model-diagram");
+	return Translator.localize ("Tree", "model -> diagrams");//"misc.model-diagram");
     }
 
     public Collection getChildren(Object parent) {

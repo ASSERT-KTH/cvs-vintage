@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.4 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ExplorerPerspective.java,v 1.5 2003/12/23 23:48:28 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,11 @@ public class ExplorerPerspective {
     public void addRule(PerspectiveRule rule){
         
         rules.add(rule);
+    }
+    
+    public void removeRule(PerspectiveRule rule){
+        
+        rules.remove(rule);
     }
     
     public Object[] getRulesArray(){
