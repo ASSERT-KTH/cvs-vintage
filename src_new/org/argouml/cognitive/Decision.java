@@ -1,4 +1,4 @@
-// $Id: Decision.java,v 1.6 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: Decision.java,v 1.7 2003/12/19 13:42:16 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ public class Decision {
     /** this ia another test
      */    
     public static final Decision UNSPEC = 
-	new Decision("decision.uncategorized", 1);
+	new Decision("misc.decision.uncategorized", 1);
   
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -45,7 +45,7 @@ public class Decision {
     ////////////////////////////////////////////////////////////////
     // constructor
     public Decision(String n, int p) {
-	setName(Translator.localize("Cognitive", n));
+	setName(Translator.localize(n));
 	setPriority(p);
     }
 

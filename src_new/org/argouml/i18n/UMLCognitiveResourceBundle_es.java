@@ -1,4 +1,5 @@
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: UMLCognitiveResourceBundle_es.java,v 1.3 2003/12/19 13:42:16 jhraigniac Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
