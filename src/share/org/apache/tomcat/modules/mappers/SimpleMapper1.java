@@ -144,7 +144,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	throws TomcatException
     {
 	if(debug>0) log( "Removed from maps ");
-	map.removeAllMappings( ctx.getHost(), ctx.getPath());
+	map.removeAllMappings( ctx.getHost(), ctx);
 	// extension mappings are local to ctx, no need to do something
 	// about that
     }
@@ -435,6 +435,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
  * @author costin@costin.dnt.ro
  */
 class PrefixMapper  {
+    private static int debug=1;
     // host -> PrefixMapper for virtual hosts
     // hosts are stored in lower case ( the "common" case )
     SimpleHashtable vhostMaps=new SimpleHashtable();
@@ -473,7 +474,7 @@ class PrefixMapper  {
 
     /** Remove all mappings matching path
      */
-    public void removeAllMappings( String host, String path ) {
+    public void removeAllMappings( String host, Context ctx ) {
 	PrefixMapper vmap=this;
 	if( host!=null ) {
 	    host=host.toLowerCase();
@@ -484,15 +485,23 @@ class PrefixMapper  {
 	Enumeration en=vmap.prefixMappedServlets.keys();
 	while( en.hasMoreElements() ) {
 	    String s=(String)en.nextElement();
-	    if( s.startsWith( path ))
+	    Container ct=(Container)vmap.prefixMappedServlets.get( s );
+	    if( ct.getContext() == ctx ) {
+		if(debug > 0 )
+		    ctx.log( "Remove mapping " + s ); 
 		vmap.prefixMappedServlets.remove( s );
+	    }
 	}
 	
 	en=vmap.exactMappedServlets.keys();
 	while( en.hasMoreElements() ) {
 	    String s=(String)en.nextElement();
-	    if( s.startsWith( path ))
+	    Container ct=(Container)vmap.exactMappedServlets.get( s );
+	    if( ct.getContext() == ctx ) {
+		if(debug > 0 )
+		    ctx.log( "Remove mapping " + s ); 
 		vmap.exactMappedServlets.remove( s );
+	    }
 	}
 	// reset the cache
 	mapCache=new SimpleHashtable();
