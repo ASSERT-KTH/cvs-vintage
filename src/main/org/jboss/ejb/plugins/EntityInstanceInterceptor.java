@@ -19,6 +19,8 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
+import org.jboss.security.SecurityAssociation;
+
 /**
 * The instance interceptors role is to acquire a context representing
 * the target object from the cache.
@@ -40,7 +42,7 @@ import org.jboss.ejb.CacheKey;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.47 $
+* @version $Revision: 1.48 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -112,37 +114,40 @@ public class EntityInstanceInterceptor
    {
       return container;
    }
-	
+
    // Interceptor implementation --------------------------------------
-	
+
    public Object invokeHome(Invocation mi)
       throws Exception
    {
       // Get context
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
-		
+
 		// Pass it to the method invocation
       mi.setEnterpriseContext(ctx);
-		
+
       // Give it the transaction
       ctx.setTransaction(mi.getTransaction());
-		
+
+      // Set the current security information
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+
          // Invoke through interceptors
       Object rtn = getNext().invokeHome(mi);
       // Is the context now with an identity? in which case we need to insert
       if (ctx.getId() != null)
       {
-         
+
          BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-         
+
          lock.sync(); // lock all access to BeanLock
-         
-         try 
+
+         try
          {
             // marcf: possible race on creation and usage
-            // insert instance in cache, 
+            // insert instance in cache,
             container.getInstanceCache().insert(ctx);
-            
+
          }
          finally
          {
@@ -153,38 +158,41 @@ public class EntityInstanceInterceptor
       //Do not send back to pools in any case, let the instance be GC'ed
       return rtn;
    }
-	
+
    public Object invoke(Invocation mi)
       throws Exception
    {
-		
+
       // The key
       CacheKey key = (CacheKey) mi.getId();
-		
+
       // The context
       EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
-		
+
       boolean trace = log.isTraceEnabled();
       if( trace ) log.trace("Begin invoke, key="+key);
-			
-      // Associate transaction, in the new design the lock already has the transaction from the 
+
+      // Associate transaction, in the new design the lock already has the transaction from the
       // previous interceptor
       ctx.setTransaction(mi.getTransaction());
-		
+
+      // Set the current security information
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
-		
+
       boolean exceptionThrown = false;
-		
+
       try
-      {	
+      {
          return getNext().invoke(mi);
       }
       catch (RemoteException e)
       {
          exceptionThrown = true;
          throw e;
-      } 
+      }
       catch (RuntimeException e)
       {
          exceptionThrown = true;
@@ -193,41 +201,41 @@ public class EntityInstanceInterceptor
       {
          exceptionThrown = true;
          throw e;
-      } 
+      }
       finally
       {
          // ctx can be null if cache.get throws an Exception, for
          // example when activating a bean.
          if (ctx != null)
-         {				
-				// If an exception has been thrown, 
-            if (exceptionThrown && 					
-                // if tx, the ctx has been registered in an InstanceSynchronization. 
+         {
+				// If an exception has been thrown,
+            if (exceptionThrown &&
+                // if tx, the ctx has been registered in an InstanceSynchronization.
                 // that will remove the context, so we shouldn't.
                 // if no synchronization then we need to do it by hand
-                !ctx.hasTxSynchronization()) 
+                !ctx.hasTxSynchronization())
             {
                // Discard instance
                // EJB 1.1 spec 12.3.1
                container.getInstanceCache().remove(key);
-					
+
                if( trace ) log.trace("Ending invoke, exceptionThrown, ctx="+ctx);
             }
             else if (ctx.getId() == null)
             {
                // The key from the Invocation still identifies the right cachekey
                container.getInstanceCache().remove(key);
-					
+
                if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);
                // no more pool return
             }
          }
-			
+
          if( trace )	log.trace("End invoke, key="+key+", ctx="+ctx);
-		
-      }	// end invoke		
+
+      }	// end invoke
    }
-	
+
 }
 
 

@@ -22,6 +22,8 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.local.LocalInvoker;
 
+import org.jboss.security.SecurityAssociation;
+
 import org.jboss.tm.TransactionPropagationContextFactory;
 
 /**
@@ -29,7 +31,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
 * 
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -71,7 +73,7 @@ implements Invoker, Externalizable
    //Local invoker reference, useful for optimization
    public static Invoker getLocal() { return localInvoker;}
    public static void setLocal(Invoker invoker) { localInvoker = invoker ;}
-   
+
    // TPC factory
    public static void setTPCFactory(TransactionPropagationContextFactory tpcf) { tpcFactory = tpcf; }
    
@@ -125,7 +127,11 @@ implements Invoker, Externalizable
    public Object invoke(Invocation invocation)
    throws Exception
    {
-      
+
+      // Pass the current security information
+      invocation.setPrincipal(SecurityAssociation.getPrincipal());
+      invocation.setCredential(SecurityAssociation.getCredential());
+
       // optimize if calling another bean in same EJB-application
       if (isLocal()) {
          

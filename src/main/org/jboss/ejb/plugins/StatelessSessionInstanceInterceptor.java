@@ -13,6 +13,8 @@ import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
 
+import org.jboss.security.SecurityAssociation;
+
 
 /**
  * This container acquires the given instance. This must be used after
@@ -20,7 +22,7 @@ import org.jboss.ejb.StatelessSessionContainer;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -58,8 +60,14 @@ public class StatelessSessionInstanceInterceptor
    public Object invoke(final Invocation mi) throws Exception
    {
       // Get context
-      mi.setEnterpriseContext(container.getInstancePool().get());
-      
+      EnterpriseContext ctx = container.getInstancePool().get();
+
+      // Set the current security information
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+
+      // Use this context
+      mi.setEnterpriseContext(ctx);
+
       // There is no need for synchronization since the instance is always fresh also there should
       // never be a tx associated with the instance.
 	 

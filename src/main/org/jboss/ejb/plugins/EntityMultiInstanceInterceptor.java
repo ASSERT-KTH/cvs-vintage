@@ -17,13 +17,15 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
+import org.jboss.security.SecurityAssociation;
+
 /**
  * The instance interceptors role is to acquire a context representing
  * the target object from the cache.
  *
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -63,21 +65,24 @@ public class EntityMultiInstanceInterceptor
    {
       // Get context
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
-		
+
 		// Pass it to the method invocation
       mi.setEnterpriseContext(ctx);
-		
+
       // Give it the transaction
       ctx.setTransaction(mi.getTransaction());
-		
+
+      // Set the current security information
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+
       // Invoke through interceptors
       return getNext().invokeHome(mi);
    }
-	
+
    public Object invoke(Invocation mi)
       throws Exception
    {
-		
+
       // The key
       CacheKey key = (CacheKey) mi.getId();
 
@@ -93,20 +98,23 @@ public class EntityMultiInstanceInterceptor
          ctx.setId(key.getId());
          container.getPersistenceManager().activateEntity(ctx);
       }
-		
+
       boolean trace = log.isTraceEnabled();
       if( trace ) log.trace("Begin invoke, key="+key);
-			
-      // Associate transaction, in the new design the lock already has the transaction from the 
+
+      // Associate transaction, in the new design the lock already has the transaction from the
       // previous interceptor
       ctx.setTransaction(mi.getTransaction());
-		
+
+      // Set the current security information
+      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
-		
+
       return getNext().invoke(mi);
    }
-	
+
 }
 
 
