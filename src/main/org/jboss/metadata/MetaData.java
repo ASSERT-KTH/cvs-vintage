@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -125,7 +125,8 @@ public abstract class MetaData implements XmlLoadable {
          String result = "";
          for (int i = 0; i < children.getLength(); i++)
          {
-            if (children.item(i).getNodeType() == Node.TEXT_NODE)
+            if (children.item(i).getNodeType() == Node.TEXT_NODE || 
+                children.item(i).getNodeType() == Node.CDATA_SECTION_NODE)
                result += children.item(i).getNodeValue();
             else
                result += children.item(i).getFirstChild();   
