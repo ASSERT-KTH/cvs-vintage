@@ -58,7 +58,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttachmentManager.java,v 1.7 2002/12/21 00:18:00 elicia Exp $
+ * @version $Id: AttachmentManager.java,v 1.8 2002/12/21 00:36:40 jon Exp $
  */
 public class AttachmentManager
     extends BaseAttachmentManager
@@ -91,14 +91,30 @@ public class AttachmentManager
         return getInstance(new NumberKey(id));
     }
 
+    public static Attachment getComment(Attachment attachment, Issue issue, 
+                                        ScarabUser user)
+         throws Exception
+    {
+        return populate(attachment, issue, Attachment.COMMENT__PK, "comment", 
+                 user, "text/plain");
+    }
+
+    public static Attachment getReason(Attachment attachment, Issue issue, 
+                                        ScarabUser user)
+         throws Exception
+    {
+        return populate(attachment, issue, Attachment.MODIFICATION__PK, "reason", 
+                 user, "text/plain");
+    }
+
     /**
      * Populate a new Attachment object.
      */
-    public static Attachment populate(Attachment attachment,
+    private static Attachment populate(Attachment attachment,
                                       Issue issue, NumberKey typeId, 
                                       String name, ScarabUser user, 
                                       String mimetype)
-         throws TorqueException, Exception
+         throws Exception
     {
         attachment.setIssue(issue);
         attachment.setTypeId(typeId);

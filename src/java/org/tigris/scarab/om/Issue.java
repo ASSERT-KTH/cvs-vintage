@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.247 2002/12/21 00:18:00 elicia Exp $
+ * @version $Id: Issue.java,v 1.248 2002/12/21 00:36:40 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -505,9 +505,11 @@ public class Issue
                                   Attachment attachment, ScarabUser user)
         throws Exception
     {
-        AttachmentManager.populate(attachment, this, Attachment.COMMENT__PK, 
-                            "comment", user, "text/plain");
-
+        String comment = attachment.getData();
+        if (comment != null)
+        {
+            throw new Exception("There must be data in the comment!");
+        }
         if (activitySet == null)
         {
             activitySet = getActivitySet(user, 
@@ -515,24 +517,25 @@ public class Issue
         }
         activitySet.save();
 
-        String summary = attachment.getData();
-        if (summary != null)
+        // create the localized string...
+        String desc = Localization.getString(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AddComment");
+        int total = 248 - desc.length();
+        if (comment.length() > total)
         {
-            String desc = Localization.getString(
-                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
-                "AddComment");
-            int total = 248 - desc.length();
-            if (summary.length() > total)
-            {
-                summary = summary.substring(0,total) + "...";
-            }
-            summary = desc + " '" + summary + "'";
+            comment = comment.substring(0,total) + "...";
         }
-        
+        comment = desc + " '" + comment + "'";
+
+        // populates the attachment with data to be a comment
+        attachment = AttachmentManager
+                        .getComment(attachment, this, user);
+
         ActivityManager
             .createTextActivity(this, activitySet,
-                                summary, attachment);
+                                comment, attachment);
         return activitySet;
     }
 
@@ -3150,9 +3153,7 @@ public class Issue
         this.save();
 
         // this needs to be done after the issue is created.
-        AttachmentManager.populate(attachment, this, 
-                                   Attachment.MODIFICATION__PK,
-                                   "reason", user, "text/plain");
+        attachment = AttachmentManager.getReason(attachment, this, user);
         activitySet.setAttachment(attachment);
         activitySet.save();
         // need to clear the cache since this is after the 
