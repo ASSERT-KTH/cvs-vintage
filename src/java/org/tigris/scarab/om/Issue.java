@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.275 2003/02/26 18:05:56 dlr Exp $
+ * @version $Id: Issue.java,v 1.276 2003/02/27 01:58:28 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2177,6 +2177,23 @@ public class Issue
         newIssue.save();
         Attribute zeroAttribute = AttributeManager
             .getInstance(new NumberKey("0"));
+
+        // Adjust dependencies if its a new issue id
+        // (i.e.. moved to new module)
+        List children = getChildren();
+        for (Iterator i = children.iterator(); i.hasNext();)
+        {
+             Depend depend = (Depend)i.next();
+             depend.setObservedId(newIssue.getIssueId());
+             depend.save();
+        }
+        List parents = getParents();
+        for (Iterator j = parents.iterator(); j.hasNext();)
+        {
+             Depend depend = (Depend)j.next();
+             depend.setObserverId(newIssue.getIssueId());
+             depend.save();
+        }
 
         // Save activitySet record
         ActivitySet activitySet = ActivitySetManager
