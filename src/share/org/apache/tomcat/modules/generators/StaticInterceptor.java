@@ -90,7 +90,7 @@ public class StaticInterceptor extends BaseInterceptor {
     }
 
     public void engineInit(ContextManager cm) throws TomcatException {
-	super.engineInit( cm );
+	//	if( debug>0 ) log("Engine init " );
 	
 	try {
 	    realFileNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
@@ -104,6 +104,7 @@ public class StaticInterceptor extends BaseInterceptor {
     public void contextInit( Context ctx)
 	throws TomcatException
     {
+	//if( debug>0 ) log("Ctx init " + ctx );
 	FileHandler fileHandler=new FileHandler();
 	DirHandler dirHandler=new DirHandler();
 	fileHandler.setModule( this );
@@ -119,6 +120,7 @@ public class StaticInterceptor extends BaseInterceptor {
     }
 
     public int requestMap(Request req) {
+	//	if( debug>0 ) log("Req map " + req);
 	if( req.getHandler() != null )
 	    return 0;
 

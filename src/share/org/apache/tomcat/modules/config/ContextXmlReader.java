@@ -152,7 +152,7 @@ public class ContextXmlReader extends BaseInterceptor {
 		    xh.setParent("setContextManager") );
 	
 	// Virtual host support - if Context is inside a <Host>
-	xh.addRule( "Host", xh.setVariable( "current_host", "name"));
+	xh.addRule( "Host", xh.setVar( "current_host", "name"));
 	xh.addRule( "Host", xh.setProperties());
 
 	xh.addRule( "Context", new XmlAction() {

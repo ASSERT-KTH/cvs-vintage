@@ -70,6 +70,7 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.IntrospectionUtils;
 import org.xml.sax.*;
 
 /**
@@ -115,6 +116,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
 	xh.addRule( "ContextManager", xh.setProperties() );
+	setPropertiesRules( cm, xh );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
 	addTagRules( cm, xh );
@@ -159,6 +161,48 @@ public class ServerXmlReader extends BaseInterceptor {
 	    cm.log( sm.getString("tomcat.fatalconfigerror"), ex );
 	    throw new TomcatException(ex);
 	}
+    }
+
+    static class CMPropertySource
+	implements IntrospectionUtils.PropertySource
+    {
+	ContextManager cm;
+	
+	CMPropertySource( ContextManager cm ) {
+	    this.cm=cm;
+	}
+	
+	public String getProperty( String key ) {
+	    if( "tomcat.home".equals( key ) ) {
+		return cm.getHome();
+	    }
+	    // XXX add other "predefined" properties
+	    return cm.getProperty( key );
+	}
+    }
+
+    public void setPropertiesRules( ContextManager cm, XmlMapper xh )
+	throws TomcatException
+    {
+	CMPropertySource propS=new CMPropertySource( cm );
+	xh.setPropertySource( propS );
+	
+	xh.addRule( "ContextManager/property", new XmlAction() {
+		public void start(SaxContext ctx ) throws Exception {
+		    AttributeList attributes = ctx.getCurrentAttributes();
+		    String name=attributes.getValue("name");
+		    String value=attributes.getValue("value");
+		    if( name==null || value==null ) return;
+		    XmlMapper xm=ctx.getMapper();
+		    
+		    ContextManager cm1=(ContextManager)ctx.currentObject();
+		    // replace ${foo} in value
+		    value=xm.replaceProperties( value );
+		    if( cm1.getDebug() > 0 )
+			cm1.log("Setting " + name + "=" + value);
+		    cm1.setProperty( name, value );
+		}
+	    });
     }
 
     public void addTagRules( ContextManager cm, XmlMapper xh )
@@ -224,6 +268,7 @@ public class ServerXmlReader extends BaseInterceptor {
     public static Vector getUserConfigFiles(File master) {
 	File dir = new File(master.getParent());
 	String[] names = dir.list();
+	//	System.out.println("getUserConfigFiles " + dir );
 
 	String masterName=master.getAbsolutePath();
 
@@ -231,6 +276,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	String ext=FileUtil.getExtension( masterName );
 	
 	Vector v = new Vector();
+	if( names==null ) return v;
 	for (int i=0; i<names.length; ++i) {
 	    if( names[i].startsWith( base )
 		&& ( ext==null || names[i].endsWith( ext )) ) {
