@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEvent.java,v 1.7 2000/11/14 20:37:17 juha Exp $
+ * $Id: VerificationEvent.java,v 1.8 2000/12/01 19:09:38 juha Exp $
  */
 
 
@@ -36,7 +36,7 @@ import org.jboss.verifier.Section;
 /**
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
@@ -52,11 +52,6 @@ public class VerificationEvent extends EventObject {
      * Contains a short, one line message for this event.
      */
     private String message  = "<undefined>";
-
-    /*
-     * Contains a more verbose description of this event.
-     */
-    private String verbose  = "";
 
     private String beanName = "<unnamed>";
     
@@ -111,10 +106,6 @@ public class VerificationEvent extends EventObject {
 
     public void setMessage(String msg) {
         this.message = msg;
-    }
-
-    public void setVerbose(String msg) {
-        this.verbose = msg;
     }
 
     public void setName(String name) {
