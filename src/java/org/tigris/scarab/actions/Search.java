@@ -89,7 +89,7 @@ import org.tigris.scarab.util.Log;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.125 2003/04/16 03:37:19 jmcnally Exp $
+ * @version $Id: Search.java,v 1.126 2003/04/17 22:35:32 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -104,22 +104,97 @@ public class Search extends RequireLoginFirstAction
         throws Exception
     {
         String queryString = getQueryString(data);
-        ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
+        ScarabUser user =(ScarabUser)data.getUser();
+        user.setMostRecentQuery(queryString);
 
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List queryResults = scarabR.getCurrentSearchResults();
         if (queryResults != null && queryResults.size() > 0)
         {
             context.put("queryResults", queryResults);
             String format = data.getParameters().getString("format");
+            String next = data.getParameters().getString("next");
             if (StringUtils.isNotEmpty(format))
             {
                 // Send to the IssueListExport screen (which actually
                 // has no corresponding Velocity template).
                 setTarget(data, "IssueListExport.vm");
             }
-            else
+            else if (StringUtils.isNotEmpty(next))
             {
+                // Redirect to View, Assign, or Move/Copy
+                List issueIds = null; 
+                if (next.indexOf("All") > -1)
+                {
+                    // all issues are selected
+                    issueIds = getAllIssueIds(data);
+                }
+                else
+                {
+                    // get issues select by user
+                    issueIds = getSelected(data);
+                }
+                if (issueIds.size() < 1)
+                {
+                    scarabR.setAlertMessage(l10n.get("SelectIssues"));
+                    return;
+                }
+
+                List modules = ModuleManager.getInstancesFromIssueList(
+                    scarabR.getIssues(issueIds));
+                if (next.indexOf("assign") > -1)
+                {
+                    if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
+                    {
+                        scarabR.resetAssociatedUsers();
+                        setTarget(data, "AssignIssue.vm");
+                    }
+                    else 
+                    {
+                        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                        return;
+                    }
+                }
+                else if (next.indexOf("view") > -1)
+                {
+                    if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, modules)) 
+                    {
+                        setTarget(data, "ViewIssueLong.vm");            
+                    }
+                    else
+                    {
+                        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                        return;
+                    }
+                } 
+                else if (next.indexOf("copy") > -1)
+                {
+                    if (user.hasPermission(ScarabSecurity.ISSUE__ENTER, modules))
+                    {
+                        data.getParameters().add("mv_0rb", "copy");
+                        setTarget(data, "MoveIssue.vm");                    
+                    }
+                    else 
+                    {
+                        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                    }
+                }
+                else if (next.indexOf("move") > -1)
+                {
+                    if (user.hasPermission(ScarabSecurity.ISSUE__MOVE, modules)) 
+                    {
+                        data.getParameters().add("mv_0rb", "move");
+                        setTarget(data, "MoveIssue.vm");                    
+                    }
+                    else 
+                    {
+                        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                    }
+                }
+            }
+            else
+            { 
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
                                "IssueList.vm");
@@ -383,97 +458,6 @@ public class Search extends RequireLoginFirstAction
     }
 
     /**
-     * Redirects to ViewIssueLong.
-     */
-    public void doViewall(RunData data, TemplateContext context)
-         throws Exception
-    {        
-        // First clear out issues_ids the user may have selected otherwise we
-        // draw the selected issues twice in the results.
-        ParameterParser pp = data.getParameters();
-        while(pp.containsKey("issue_ids"))
-        {
-            pp.remove("issue_ids");
-        }
-
-        getAllIssueIds(data);
-        setTarget(data, "ViewIssueLong.vm");            
-    }
-
-    /**
-        Gets selected id's and redirects to ViewIssueLong.
-    */
-    public void doViewselected(RunData data, TemplateContext context)
-         throws Exception
-    {        
-        List selectedIds = getSelected(data);
-        if (selectedIds.size() > 0)
-        {
-            setTarget(data, "ViewIssueLong.vm");            
-        }
-        else
-        {
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            getScarabRequestTool(context)
-                .setAlertMessage(l10n.get("SelectIssuesToView"));
-        }
-    }
-
-    /**
-        Gets selected id's and redirects to AssignIssue.
-    */
-    public void doReassignselected(RunData data, TemplateContext context)
-         throws Exception
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        List selectedIds = getSelected(data);
-        if (selectedIds.size() > 0)
-        {
-            List modules = ModuleManager.getInstancesFromIssueList(
-                scarabR.getIssues(selectedIds));
-            if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
-            {
-                scarabR.resetAssociatedUsers();
-                setTarget(data, "AssignIssue.vm");                    
-            }
-            else 
-            {
-                scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-            }
-        }
-        else
-        {
-            scarabR.setAlertMessage(l10n.get("SelectIssuesToView"));
-        }
-    }
-
-    /**
-        Redirects to AssignIssue, passing all issue ids.
-    */
-    public void doReassignall(RunData data, TemplateContext context)
-         throws Exception
-    {        
-        ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        getAllIssueIds(data);
-        List modules = ModuleManager.getInstancesFromIssueList(
-            scarabR.getIssues());
-        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
-        {
-            scarabR.resetAssociatedUsers();
-            setTarget(data, "AssignIssue.vm");                    
-        }
-        else 
-        {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-        }
-    }
-
-
-    /**
         redirects to AdvancedQuery.
     */
     public void doRefinequery(RunData data, TemplateContext context)
@@ -564,17 +548,24 @@ public class Search extends RequireLoginFirstAction
     /**
         Retrieves list of all issue id's and puts in the context.
     */
-    private void getAllIssueIds(RunData data)
+    private List getAllIssueIds(RunData data)
     {
+        List newIssueIdList = new ArrayList();
         ParameterParser pp = data.getParameters();
         String[] allIssueIds = pp.getStrings("all_issue_ids");
         if (allIssueIds != null)
         {
+            while(pp.containsKey("issue_ids"))
+            {
+                pp.remove("issue_ids");
+            }
             for (int i =0; i< allIssueIds.length; i++)
             {
                 pp.add("issue_ids", allIssueIds[i]);
+                newIssueIdList.add(allIssueIds[i]);
             }
         }
+        return newIssueIdList;
     }
 
     /**
@@ -583,11 +574,17 @@ public class Search extends RequireLoginFirstAction
     private List getSelected(RunData data)
     {
         List newIssueIdList = new ArrayList();
-        String[] selectedIds = data.getParameters().getStrings("issue_ids");
+        ParameterParser pp = data.getParameters();
+        String[] selectedIds = pp.getStrings("issue_ids");
         if (selectedIds != null) 
         {
+            while(pp.containsKey("issue_ids"))
+            {
+                pp.remove("issue_ids");
+            }
             for (int i=0; i<selectedIds.length; i++) 
             {
+                pp.add("issue_ids", selectedIds[i]);
                 newIssueIdList.add(selectedIds[i]);
             }
         }        

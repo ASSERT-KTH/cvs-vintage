@@ -1,16 +1,4 @@
-## The functions used to control the current query.
-#macro (queryFunctionBar)
-#if ($queryString)
-<div class="functnbar">
-#if ($searchType == 'advanced' && $scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
-<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
-#end
-#exportFormats('eventSubmit_doSearch')
-</div>
-#end
-#end
-
+#set ($mitlist = $user.CurrentMITList)
 
 <div class="app" id="issuelist">
 #set ($user = $data.User)
@@ -29,10 +17,21 @@
  #set ($issueListSize = $queryResults.size())
 #end
 
-#set ($mitlist = $user.CurrentMITList)
-## do not show assign buttons if the list is greater than 10
-## Or if this is a cross module or cross issue type search
-#set ($showAssignButtons = $issueListSize <= 10 && !$mitlist)
+## The functions used to control the current query.
+#macro (queryFunctionBar $var)
+#if ($queryString)
+<div class="functnbar$var">
+#if ($searchType == 'advanced' && $scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
+<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
+#end
+#exportFormats('eventSubmit_doSearch')
+#if ($issueListSize <= 10 && !$mitlist)
+    #processQueryResults('eventSubmit_doSearch')
+#end
+</div>
+#end
+#end
 #if ($issueListSize == 0)
 <h3>
 #if ($mitlist)
@@ -53,7 +52,7 @@
 
 #set ($queryString = $data.User.MostRecentQuery)
 
-#queryFunctionBar()
+#queryFunctionBar("")
 
 <h3>
 #if ($mitlist)
@@ -86,7 +85,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 </small>
 </div>
 		
-  #set ($search = $scarabR.PopulatedSearch)
+#set ($search = $scarabR.PopulatedSearch)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($sortColumn = $searchGroup.get("SortAttributeId").Value.toString())
 #set ($sortPolarity = $searchGroup.get("SortPolarity").Value)
@@ -222,26 +221,13 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
   </table>
 </div>
 
-<div class="functnbar3">
-#if ($showAssignButtons)
-   <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignselected" />&#160;
-#end
-<input type="submit" value="$l10n.ViewVerbose"  name="eventSubmit_doViewselected" />&#160;
-<small>$l10n.SelectedLC</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
-#if ($showAssignButtons)
-  <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignall" />&#160;
-#end
-<input type="submit" value="$l10n.ViewVerbose" name="eventSubmit_doViewall" />&#160;
-<small>$l10n.AllLC</small>
-</div>
-        
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
 #end
 
-#queryFunctionBar()
+#queryFunctionBar("2")
 
 </form>
 </div>

@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.45 2003/04/07 18:47:54 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.46 2003/04/17 22:35:32 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -829,4 +829,50 @@ public  class IssueType
     {
         return '{' + super.toString() + ": name=" + getName() + '}';
     }
+
+    /**
+     * Gets a list of non-user AttributeValues which match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getMatchingAttributeValuesList(Module oldModule, Module newModule, 
+                                               IssueType newIssueType)
+          throws Exception
+    {
+        List matchingAttributes = new ArrayList();
+        List srcActiveAttrs = oldModule.getActiveAttributes(this);
+        List destActiveAttrs = newModule.getActiveAttributes(newIssueType);
+        for (int i = 0; i<srcActiveAttrs.size(); i++)
+        {
+            Attribute attr = (Attribute)srcActiveAttrs.get(i);
+                
+            if (destActiveAttrs.contains(attr))
+            {
+                matchingAttributes.add(attr);
+            } 
+        }
+        return matchingAttributes;
+    }
+
+    /**
+     * Gets a list of Attributes which do not match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getOrphanAttributeValuesList(Module oldModule, Module newModule, 
+                                             IssueType newIssueType)
+          throws Exception
+    {
+        List orphanAttributes = new ArrayList();
+        List srcActiveAttrs = oldModule.getActiveAttributes(this);
+        List destActiveAttrs = newModule.getActiveAttributes(newIssueType);
+        for (int i = 0; i<srcActiveAttrs.size(); i++)
+        {
+            Attribute attr = (Attribute)srcActiveAttrs.get(i);
+            if (!destActiveAttrs.contains(attr))
+            {
+                orphanAttributes.add(attr);
+            } 
+        }
+        return orphanAttributes;
+    }
+
 }

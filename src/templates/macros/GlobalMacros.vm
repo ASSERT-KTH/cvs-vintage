@@ -441,6 +441,33 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  </p>
 #end
 
+#macro (processQueryResults $action)
+<select name="next"
+        onchange="javascript:submitFormTo(this.form, '$action');">
+<option value="" selected="selected">Process results:</option>
+#set ($module = $scarabR.CurrentModule)
+#if ($user.hasPermission($scarabG.Permission.ISSUE__VIEW, $module))
+    <option value="viewAll">$l10n.ViewAll</option>
+    <option value="viewSelected">$l10n.ViewSelected</option>
+#end
+#if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+    <option value="assignAll">$l10n.AssignAll</option>
+    <option value="assignSelected">$l10n.AssignSelected</option>
+#end
+#if ($user.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
+    <option value="copyAll">$l10n.CopyAll</option>
+    <option value="copySelected">$l10n.CopySelected</option>
+#end
+#if ($user.hasPermission($scarabG.Permission.ISSUE__MOVE, $module))
+    <option value="moveAll">$l10n.MoveAll</option>
+    <option value="moveSelected">$l10n.MoveSelected</option>
+#end
+</select>
+<noscript>
+<input type="submit" name="$action" value="$l10n.Go" />
+</noscript>
+#end
+
 #macro (exportFormats $action)
 <select name="format"
         onchange="javascript:submitFormTo(this.form, '$action');">

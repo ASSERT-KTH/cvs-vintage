@@ -70,6 +70,7 @@ import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
@@ -82,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.54 2003/04/15 16:01:44 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.55 2003/04/17 22:35:32 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -102,7 +103,23 @@ public class MoveIssue extends RequireLoginFirstAction
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Issue issue = scarabR.getIssue();
+        String[] issueIds = data.getParameters().getStrings("issue_ids");
+        List issues = new ArrayList();
+        Issue issue = null;
+        if (issueIds == null || issueIds.length == 0)
+        {
+            scarabR.setAlertMessage("Please select an issue to move");
+            return;
+        }
+        else
+        {
+            for (int i= 0; i<issueIds.length; i++)
+            {
+                issues.add((Issue)scarabR.getIssue(issueIds[i]));
+            }
+            issue = (Issue)issues.get(0);
+        }
+
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
@@ -212,7 +229,23 @@ public class MoveIssue extends RequireLoginFirstAction
         }
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue();
+        String[] issueIds = data.getParameters().getStrings("issue_ids");
+        List issues = new ArrayList();
+        Issue issue = null;
+        if (issueIds == null || issueIds.length == 0)
+        {
+            scarabR.setAlertMessage("Please select an issue to move");
+            return;
+        }
+        else
+        {
+            for (int i= 0; i<issueIds.length; i++)
+            {
+                issues.add((Issue)scarabR.getIssue(issueIds[i]));
+            }
+            issue = (Issue)issues.get(0);
+        }
+
         Module oldModule = issue.getModule();
         IssueType oldIssueType = issue.getIssueType();
         Group moveIssue = intake.get("MoveIssue",
@@ -252,59 +285,71 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
-        // Do the copy/move
         Issue newIssue = null;
-        try
+        for (int i=0; i<issues.size(); i++)
         {
-            newIssue = issue.move(newModule, newIssueType, 
-                                  selectAction, user,
-                                  reason, commentAttrs);
-        }
-        catch (Exception e)
-        {
-            scarabR.setAlertMessage(e.getMessage());
-            return;
-        }
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            issue = (Issue)issues.get(i);
+            // Do the copy/move
+            try
+            {
+                newIssue = issue.move(newModule, newIssueType, 
+                                      selectAction, user,
+                                      reason, commentAttrs);
+            }
+            catch (Exception e)
+            {
+                scarabR.setAlertMessage(e.getMessage());
+                return;
+            }
 
-        
-        // Send notification email
-        EmailContext ectx = new EmailContext();
-        ectx.setLinkTool((ScarabLink)context.get("link"));
-        ectx.setIssue(newIssue);
-        ectx.setModule(newModule);
-        // placed in the context for the email to be able to access them
-        ectx.put("reason", reason);
-        ectx.put("action", selectAction);
-        ectx.put("oldModule", oldModule);
-        ectx.put("oldIssueType", oldIssueType);
-        ectx.put("oldIssue", issue);
-        if (selectAction.equals("copy"))
-        {
-            ectx.setDefaultTextKey("CopiedIssueEmailSubject");
-        }
-        else
-        {
-            ectx.setDefaultTextKey("MovedIssueEmailSubject");
-        }
+            
+            // Send notification email
+            EmailContext ectx = new EmailContext();
+            ectx.setLinkTool((ScarabLink)context.get("link"));
+            ectx.setIssue(newIssue);
+            ectx.setModule(newModule);
+            // placed in the context for the email to be able to access them
+            ectx.put("reason", reason);
+            ectx.put("action", selectAction);
+            ectx.put("oldModule", oldModule);
+            ectx.put("oldIssueType", oldIssueType);
+            ectx.put("oldIssue", issue);
+            if (selectAction.equals("copy"))
+            {
+                ectx.setDefaultTextKey("CopiedIssueEmailSubject");
+            }
+            else
+            {
+                ectx.setDefaultTextKey("MovedIssueEmailSubject");
+            }
 
-        String[] replyToUser = newModule.getSystemEmail();
-        String template = Turbine.getConfiguration().
-           getString("scarab.email.moveissue.template",
-                     "MoveIssue.vm");
-        if (!Email.sendEmail(ectx, newModule,
-                             user, replyToUser,
-                             issue.getAllUsersToEmail(AttributePeer.EMAIL_TO),
-                             issue.getAllUsersToEmail(AttributePeer.CC_TO),
-                             template))
-        {
-             scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+            String[] replyToUser = newModule.getSystemEmail();
+            String template = Turbine.getConfiguration().
+               getString("scarab.email.moveissue.template",
+                         "MoveIssue.vm");
+            if (!Email.sendEmail(ectx, newModule,
+                                 user, replyToUser,
+                                 issue.getAllUsersToEmail(AttributePeer.EMAIL_TO),
+                                 issue.getAllUsersToEmail(AttributePeer.CC_TO),
+                                 template))
+            {
+                 scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+            }
         }
 
         // Redirect to moved or copied issue
-        data.getParameters().remove("id");
-        data.getParameters().add("id", newIssue.getUniqueId().toString());
-        setTarget(data, "ViewIssue.vm");
+        if (issues.size() == 1)
+        {
+            data.getParameters().remove("id");
+            data.getParameters().add("id", newIssue.getUniqueId().toString());
+            setTarget(data, "ViewIssue.vm");
+        }
+        else
+        {
+                setTarget(data, "IssueList.vm");
+        }
+
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
     }
 
     /**

@@ -95,7 +95,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.155 2003/04/15 16:01:44 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.156 2003/04/17 22:35:32 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -1064,6 +1064,7 @@ public class ModifyIssue extends BaseModifyIssue
          throws Exception
     {
         data.getParameters().add("mv_0rb", "move");
+        data.getParameters().add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId());
         setTarget(data, "MoveIssue.vm");            
     }
 
@@ -1074,6 +1075,7 @@ public class ModifyIssue extends BaseModifyIssue
          throws Exception
     {
         data.getParameters().add("mv_0rb", "copy");
+        data.getParameters().add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId());
         setTarget(data, "MoveIssue.vm");            
     }
 

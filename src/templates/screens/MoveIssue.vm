@@ -5,10 +5,11 @@
 #set ($issue = $scarabR.getIssue($issueId))
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($selectAction = $moveIssueGroup.Action.Value)
-#set ($issueModule= $issue.Module)
+#set ($issueModule= $scarabR.CurrentModule)
 #set ($moduleList = $user.getCopyToModules($issueModule))
+#set ($issueList = $data.Parameters.getStrings("issue_ids"))
 
-#if (!$issueId || $issueId.length() == 0 || !$issue)
+#if (!$issueList || $issueId.length() == 0)
 
   <p><strong class="alert">$l10n.CouldNotFindIssue</strong></p>
 
@@ -18,9 +19,14 @@
 #else
 
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
-<input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issue.UniqueId" />
-## need to also pass id so that if we re-display this page, the right value is kept around
-<input type="hidden" name="id" value="$issueId" />
+#if ($issueList)
+  #foreach ($issueId in $issueList)
+     #set ($currentIssue = $scarabR.getIssue($issueId))
+     #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
+     <input type="hidden" name="issue_ids" value="$issueId"/>
+     #end
+ #end
+#end
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 

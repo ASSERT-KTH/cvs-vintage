@@ -544,8 +544,6 @@
     <field name="IssueTypeId" key="itId" type="int">
         <rule name="mask" value="[0-9]+">intake_SelectIssueTypeFromList</rule>
     </field>
-    <field name="IssueId" key="issId" type="String">
-    </field>
 </group>
 
 <group name="MITList" key="mitl" mapToObject="om.MITList">
