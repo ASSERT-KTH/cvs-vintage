@@ -1,5 +1,5 @@
 #set ($user = $data.User)
-
+#set ($mitList = $user.CurrentMITList)
 <div class="app" id="xmodulelist">
 
 <div class="tabs">
@@ -20,7 +20,7 @@
 <input type="hidden" name="action" value="DefineXModuleList" />
 <input type="hidden" name="queryString" value="$!queryString" />
 
-#if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
+#if ($mitList && !$mitList.isEmpty())
 <div class="functnbar">
  <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
 </div>
@@ -37,8 +37,7 @@
   </select>&nbsp;
   <input type="submit" name="eventSubmit_doChooselist" value="Go" />
 </div>
-		
-#if (!$user.CurrentMITList || $user.CurrentMITList.isEmpty())
+#if (!$mitList || $mitList.isEmpty())
 <p class="alert">
 No issue types have been selected.  Please select from the list below.
 </p>
@@ -51,7 +50,7 @@ No issue types have been selected.  Please select from the list below.
     <th>Number of issues</th>
     <th>Description</th>
   </tr>
- #foreach ($item in $user.CurrentMITList.MITListItems)
+ #foreach ($item in $mitList.MITListItems)
   #indexedRows($velocityCount)
     <td>
     <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
@@ -65,7 +64,7 @@ No issue types have been selected.  Please select from the list below.
 </table>  
 #end
 
-#if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
+#if ($mitList && !$mitList.isEmpty())
  <div class="functnbar3">
   <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
      value="Remove from list" />&nbsp;

@@ -1,11 +1,11 @@
 #set ($user = $data.User)
-
+#set ($mitList = $user.CurrentMITList)
 <div class="app" id="editxmodulelist">
 
 <form method="post" action="$link.setPage("EditXModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
         
-#if ($user.CurrentMITList)
+#if ($mitList)
 
 <h3>$l10n.SaveXModuleList</h3>
 
@@ -15,7 +15,7 @@
     <th>$l10n.IssueType</th>
     <th>$l10n.Description</th>
   </tr>
- #foreach ($item in $user.CurrentMITList.MITListItems)
+ #foreach ($item in $mitList.MITListItems)
   #indexedRows($velocityCount)
     <td>$item.Module.RealName</td>
     <td>$item.IssueType.Name</td>
@@ -24,7 +24,7 @@
  #end
 </table>
 <h4>l10n.SaveNewList</h4>
-#set ($intakeList = $intake.MITList.mapTo($user.CurrentMITList))
+#set ($intakeList = $intake.MITList.mapTo($mitList))
 <p>
 Name: 
 <input type=text" name="$intakeList.Name.Key" value="$!intakeList.Name" />
