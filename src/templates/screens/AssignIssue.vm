@@ -58,19 +58,9 @@
 
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
-    ## if there is no temporary list, use list of already-assigned users
-    #set ($noUsers = "false")
-    #if ($tempList)
-      #if ($tempList.isEmpty())
-        #set ($noUsers = "true")
-      #end
-    #else
-      #if ($issue.UserAttributeValues.isEmpty())
-        #set ($noUsers = "true")
-      #end
-    #end
-
-    #if ($noUsers.equals("true"))
+#set ($assoUsers =  $scarabR.AssociatedUsers)
+#set ($pair = $assoUsers.get($issue.IssueId))
+    #if ($pair.size() == 0)
      <p class="alert">$l10n.NoneAssigned.</p>
      <p>$l10n.format("ClickHereToSelectUsers", $issueListSize)</p>
     #else
@@ -82,60 +72,32 @@
 		<th>$l10n.Username</th>
 		<th>$l10n.Association</th>
 		</tr>
-
-#if (!$tempList)
-  #foreach ($attVal in $issue.UserAttributeValues)
-    #set ($attrId = $attVal.Attribute.AttributeId)
-    #set ($userId = $attVal.UserId)
-    #set ($assignedUser = $scarabR.getUser($userId))
+#foreach ($item in $pair)
+  #set ($attr = $item.get(0))
+  #set ($user = $item.get(1))
+#set ($userId = $user.UserId)
+#set ($issueId = $issue.IssueId)
     <tr class="a">
-    <td><input type="checkbox" name="remove_user_$userId" value="$attrId" />
-    <td><strong>$!assignedUser.Name</strong></td>
-    <td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
-    <td><select name="temp_user_attr_$userId">
+    <td><input type="checkbox" name="remove_user_$user.UserId" value="$attr.AttributeId" />
+    <td><strong>$!user.Name</strong></td>
+    <td><a href="mailto:$user.Email">$user.UserName</a></td>
+    <td><select name="asso_user_{$userId}_issue_{$issueId}">
      #foreach ($selectUserAttr in $userAttrs)
         #set ($selected = false)
-        #if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
+        #if ($attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
             #set ($selected = true)
         #end
         <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
      #end
        </select></td>
     </tr>
-  #end
-
-#else
-      #foreach ($pair in $tempList)
-	    #foreach ($id in $pair)
-         #if ($velocityCount == 1)
-            #set ($attrId = $id)
-         #else
-            #set ($userId = $id)
-         #end
-        #end
-		 #set ($assignedUser = $scarabR.getUser($userId))
-			<tr class="a">
-			<td><input type="checkbox" name="remove_user_$userId" value="$attrId" />
-			<td><a href="mailto:$assignedUser.Email"><strong>$!assignedUser.Name</strong></a></td>
-			<td>$assignedUser.UserName</td>
-			<td><select name="finl_user_attr_$userId">
-			 #foreach ($selectUserAttr in $userAttrs)
-                #set ($selected = false)
-				#if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
-                    #set ($selected = true)
-                #end
-                #if ($assignedUser.hasPermission($selectUserAttr.Permission, $modules))
-				  <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
-                #end
-			 #end
-			   </select></td>
-			</tr>
-      #end
 #end
+
    </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doRemove" value="$l10n.RemoveSelectedAssignee" />
+ <input type="submit" name="eventSubmit_doRemove_$issue.IssueId" value="$l10n.RemoveSelected" />
+ <input type="submit" name="eventSubmit_doUpdate_$issue.IssueId" value="$l10n.UpdateSelected" />
 </div>
   #end
 
