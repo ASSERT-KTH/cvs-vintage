@@ -270,6 +270,9 @@
         <copy file="${src.conf.dir}/torque.props" 
               tofile="${torque.dir.scarab}/build.properties"
               filtering="true" overwrite="true"/>
+        <copy file="${src.sql.dir}/id-table-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
     </target>
  
 
