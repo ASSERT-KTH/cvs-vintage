@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util.treetable;
 
 import java.awt.Component;
@@ -20,7 +21,6 @@ import java.awt.Graphics;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
-
 
 /**
  * Custom TableCellRenderer using a JTree.
