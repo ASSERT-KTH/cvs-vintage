@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.25 2005/02/02 21:18:09 mvw Exp $
+// $Id: UmlFactoryImpl.java,v 1.26 2005/02/08 21:02:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,6 +169,8 @@ class UmlFactoryImpl
 	{MGeneralization.class,   MPackage.class, },
 	{MGeneralization.class,   MUseCase.class, },
 	{MGeneralization.class,   MActor.class, },
+	{MGeneralization.class,   MNode.class, },
+	{MGeneralization.class,   MComponent.class, },
 	{MDependency.class,       MPackage.class, },
 	{MDependency.class,       MClass.class, },
 	{MDependency.class,       MInterface.class, },
@@ -193,6 +195,8 @@ class UmlFactoryImpl
 	 MNodeInstance.class,     null, },
 	{MDependency.class,       MObject.class,
 	 MComponentInstance.class, null, },
+	{MDependency.class,       MComponent.class,
+	 MInterface.class,        null, },
 	{MDependency.class,       MClassifierRole.class, },
 	{MUsage.class,            MClass.class, },
 	{MUsage.class,            MInterface.class, },
@@ -215,15 +219,15 @@ class UmlFactoryImpl
 	{MAbstraction.class,      MClass.class,
 	 MInterface.class,        null, },
 	{MAbstraction.class,      MClass.class,
-	 MClass.class,            null,
-	},
-	{MAbstraction.class,      MPackage.class,
-	 MPackage.class,          null,
-	},
-	{MAssociation.class,      MClass.class, },
-	{MAssociation.class,      MClass.class,
-	 MInterface.class, },
-	{MAssociation.class,      MActor.class, },
+         MClass.class,            null, },
+        {MAbstraction.class,      MPackage.class,
+         MPackage.class,          null, },
+        {MAbstraction.class,      MComponent.class,
+         MInterface.class,          null, },
+        {MAssociation.class,      MClass.class, },
+        {MAssociation.class,      MClass.class,
+         MInterface.class, },
+        {MAssociation.class,      MActor.class, },
 	{MAssociation.class,      MUseCase.class, },
 	{MAssociation.class,      MActor.class,
 	 MUseCase.class, },

@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.47 2005/01/30 20:48:33 linus Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.48 2005/02/08 21:02:02 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,6 +75,9 @@ public class UMLDeploymentDiagram extends UMLDiagram {
     private Action actionUniAssociation;
     private Action actionUniAggregation;
     private Action actionUniComposition;
+    private Action actionMGeneralization;
+    private Action actionMAbstraction;
+
 
     ////////////////////////////////////////////////////////////////
     // contructors
@@ -147,11 +150,13 @@ public class UMLDeploymentDiagram extends UMLDiagram {
             getActionMNodeInstance(),
             getActionMComponent(),
             getActionMComponentInstance(),
-	    getActionMDependency(),
-	    getAssociationActions(),
-	    getActionMObject(),
-	    getActionMLink(),
-	};
+            getActionMGeneralization(),
+            getActionMAbstraction(),
+            getActionMDependency(),
+            getAssociationActions(),
+            getActionMObject(),
+            getActionMLink(),
+        };
         return actions;
     }
 
@@ -291,10 +296,34 @@ public class UMLDeploymentDiagram extends UMLDiagram {
     protected Action getActionMDependency() {
         if (actionMDependency == null) {
             actionMDependency = new RadioAction(new CmdSetMode(
-                        ModeCreatePolyEdge.class, "edgeClass",
-                        Model.getMetaTypes().getDependency(), "Dependency"));
+                ModeCreatePolyEdge.class, "edgeClass",
+                Model.getMetaTypes().getDependency(), "Dependency"));
         }
         return actionMDependency;
+    }
+
+    /**
+     * @return Returns the actionMGeneralization.
+     */
+    protected Action getActionMGeneralization() {
+        if (actionMGeneralization == null) {
+            actionMGeneralization = new RadioAction(new CmdSetMode(
+                ModeCreatePolyEdge.class, "edgeClass",
+                Model.getMetaTypes().getGeneralization(), "Generalization"));
+        }
+        return actionMGeneralization;
+    }
+
+    /**
+     * @return Returns the actionMAbstraction.
+     */
+    protected Action getActionMAbstraction() {
+        if (actionMAbstraction == null) {
+            actionMAbstraction = new RadioAction(new CmdSetMode(
+                ModeCreatePolyEdge.class, "edgeClass",
+                Model.getMetaTypes().getAbstraction(), "Realization"));
+        }
+        return actionMAbstraction;
     }
 
     /**
