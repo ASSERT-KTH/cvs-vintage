@@ -52,7 +52,7 @@ public class Tomcat extends Log {
 	    StopTomcat task=
 		new  StopTomcat();
 	    
-	    task.setConfig( configFile );
+	    //	    task.setConfig( configFile );
 	    task.execute();     
 	}
 	catch (TomcatException te) {
@@ -67,6 +67,9 @@ public class Tomcat extends Log {
     public void start() throws Exception {
 	EmbededTomcat tcat=new EmbededTomcat();
 
+	PathSetter pS=new PathSetter();
+	tcat.addInterceptor( pS );
+	
 	ServerXmlInterceptor sxmlConf=new ServerXmlInterceptor();
 	sxmlConf.setConfig( configFile );
 	tcat.addInterceptor( sxmlConf );

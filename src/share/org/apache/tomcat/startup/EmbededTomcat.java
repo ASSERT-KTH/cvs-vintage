@@ -218,6 +218,8 @@ public class EmbededTomcat {
 	contextM.start();
     }
 
+    /** Stop contextM - will not exit the VM.
+     */
     public void stop() throws TomcatException {
 	contextM.stop();
     }
@@ -251,7 +253,7 @@ public class EmbededTomcat {
     // no AutoSetup !
 
     protected String moduleSet1[] = {
-	"org.apache.tomcat.modules.config.DefaultCMSetter", 
+	"org.apache.tomcat.modules.config.PathSetter", 
 	"org.apache.tomcat.facade.WebXmlReader",
 	"org.apache.tomcat.modules.config.PolicyInterceptor",
 	"org.apache.tomcat.modules.config.LoaderInterceptor12",
@@ -271,6 +273,7 @@ public class EmbededTomcat {
     };
     
     protected String moduleSet2[] = {
+	"org.apache.tomcat.modules.config.PathSetter",
 	"org.apache.tomcat.modules.config.ServerXmlInterceptor",
     };
     
@@ -301,5 +304,7 @@ public class EmbededTomcat {
 	    return null;
 	}
     }
+
+    
 }
 
