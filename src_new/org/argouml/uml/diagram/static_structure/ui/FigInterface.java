@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.63 2004/03/18 01:21:43 d00mst Exp $
+// $Id: FigInterface.java,v 1.64 2004/04/27 08:20:13 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,6 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MInterface;
 
 /** Class to display graphics for a UML Interface in a diagram. */
 
@@ -281,7 +280,7 @@ public class FigInterface extends FigNodeModelElement {
 		new ActionModifier("Public",
 				   "visibility", "getVisibility",
 				   "setVisibility",
-				   (MInterface) minterface,
+				   /*(MInterface)*/ minterface,
 				   (Class) ModelFacade.VISIBILITYKIND,
 				   ModelFacade.PUBLIC_VISIBILITYKIND,
 				   null));

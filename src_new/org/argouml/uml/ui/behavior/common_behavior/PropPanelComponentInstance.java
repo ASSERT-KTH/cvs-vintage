@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.24 2004/01/20 07:07:45 linus Exp $
+// $Id: PropPanelComponentInstance.java,v 1.25 2004/04/27 08:20:14 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelComponentInstance.java
 // Classes: PropPanelComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponentInstance.java,v 1.24 2004/01/20 07:07:45 linus Exp $
+// $Id: PropPanelComponentInstance.java,v 1.25 2004/04/27 08:20:14 thn Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -41,10 +41,6 @@ import org.argouml.uml.ui.UMLComboBox;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-// The NS-UML imports cannot be removed until we move to UMLComboBoxModel2
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -77,11 +73,11 @@ public class PropPanelComponentInstance extends PropPanelModelElement {
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
     }
 
-    public boolean isAcceptibleClassifier(MModelElement classifier) {
-        return org.argouml.model.ModelFacade.isAClassifier(classifier);
+    public boolean isAcceptibleClassifier(Object classifier) {
+        return ModelFacade.isAClassifier(classifier);
     }
 
-    public void setClassifier(MClassifier element) {
+    public void setClassifier(/*MClassifier*/Object element) {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {

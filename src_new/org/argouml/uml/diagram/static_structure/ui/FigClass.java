@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.93 2004/03/18 01:21:43 d00mst Exp $
+// $Id: FigClass.java,v 1.94 2004/04/27 08:20:13 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,6 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MClass;
 
 /**
  * <p>Class to display graphics for a UML Class in a diagram.</p>
@@ -353,7 +352,7 @@ public class FigClass extends FigNodeModelElement {
 		new ActionModifier("Public",
 				   "visibility", "getVisibility",
 				   "setVisibility",
-				   (MClass) mclass,
+				   /*(MClass)*/ mclass,
 				   (Class) ModelFacade.VISIBILITYKIND,
 				   ModelFacade.PUBLIC_VISIBILITYKIND,
 				   null));

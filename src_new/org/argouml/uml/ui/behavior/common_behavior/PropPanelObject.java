@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.30 2004/01/20 07:07:45 linus Exp $
+// $Id: PropPanelObject.java,v 1.31 2004/04/27 08:20:14 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.30 2004/01/20 07:07:45 linus Exp $
+// $Id: PropPanelObject.java,v 1.31 2004/04/27 08:20:14 thn Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -50,10 +50,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLStimulusListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-// The NS-UML imports cannot be removed until we move to UMLComboBoxModel2
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -106,7 +102,7 @@ public class PropPanelObject extends PropPanelModelElement {
 
 
 
-    public boolean isAcceptibleClassifier(MModelElement classifier) {
+    public boolean isAcceptibleClassifier(/*MModelElement*/Object classifier) {
         return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
@@ -128,7 +124,7 @@ public class PropPanelObject extends PropPanelModelElement {
         return classifier;
     }
 
-    public void setClassifier(MClassifier element) {
+    public void setClassifier(/*MClassifier*/Object element) {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
@@ -137,9 +133,9 @@ public class PropPanelObject extends PropPanelModelElement {
 	    if (element != null) {
 	    	classifiers.add(element);
 	    }
-        
+
             boolean changed = false;
-            if (ModelFacade.getClassifiers(inst) == null 
+            if (ModelFacade.getClassifiers(inst) == null
                     || classifiers.size() != ModelFacade.getClassifiers(inst).size()) {
                 changed = true;
             }
