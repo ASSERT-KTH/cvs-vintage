@@ -190,8 +190,12 @@ final class HttpSessionFacade implements HttpSession {
 		if (oldValue!=null) {
 		    removeAttribute(name);
 		}
-		((HttpSessionBindingListener) value).valueBound
-		    (new HttpSessionBindingEvent( this, name));
+                try{
+                    ((HttpSessionBindingListener) value).valueBound
+                        (new HttpSessionBindingEvent( this, name));
+                } catch ( Throwable th ) {
+                    log( "Exception during bound event", th );
+                }
 		realSession.setAttribute( name, value );
 	    }
 	} else {
@@ -273,8 +277,12 @@ final class HttpSessionFacade implements HttpSession {
 		object=realSession.getAttribute( name );
 		if( object != null ) {
 		    realSession.removeAttribute(name);
-		    ((HttpSessionBindingListener) object).valueUnbound
-			(new HttpSessionBindingEvent( this, name));
+                    try {
+                        ((HttpSessionBindingListener) object).valueUnbound
+                            (new HttpSessionBindingEvent( this, name));
+                    } catch ( Throwable th ) {
+                        log("Exception during unbound event", th );
+                    }
 		}
 	    }
 	} else {

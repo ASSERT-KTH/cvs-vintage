@@ -190,8 +190,12 @@ public final class Servlet22Interceptor
 		if( value instanceof  HttpSessionBindingListener) {
 		    if( debug > 0 )
 			log("valueUnbound " + sess.getId() + " " + key );
-		    ((HttpSessionBindingListener) value).valueUnbound
-			(new HttpSessionBindingEvent(httpSess , key));
+                    try {
+                        ((HttpSessionBindingListener) value).valueUnbound
+                            (new HttpSessionBindingEvent(httpSess , key));
+                    } catch ( Throwable th ) {
+                        log("Exception during unbound", th ); 
+                    }
 		    if( removed==null) removed=new Vector();
 		    removed.addElement( key );
 		}
