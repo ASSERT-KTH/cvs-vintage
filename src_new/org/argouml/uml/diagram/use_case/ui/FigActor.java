@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.22 2004/11/27 07:50:58 linus Exp $
+// $Id: FigActor.java,v 1.23 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Vector;
 
 import org.argouml.model.ModelFacade;
@@ -38,8 +39,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigCircle;
 import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRect;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * Class to display graphics for an Actor in a diagram.
@@ -258,11 +257,11 @@ public class FigActor extends FigNodeModelElement {
     /**
      * Handles changes of the model. Takes into account the event that
      * occured. If you need to update the whole fig, consider using
-     * renderingChanged.<p>
+     * renderingChanged.
      *
-     * @see FigNodeModelElement#modelChanged(MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent mee) {
+    protected void modelChanged(PropertyChangeEvent mee) {
         //      name updating
         super.modelChanged(mee);
 
@@ -271,11 +270,11 @@ public class FigActor extends FigNodeModelElement {
             return;
         }
 
-        if (mee == null || mee.getName().equals("isAbstract")) {
+        if (mee == null || mee.getPropertyName().equals("isAbstract")) {
             updateAbstract();
             damage = true;
         }
-        if (mee == null || mee.getName().equals("stereotype")) {
+        if (mee == null || mee.getPropertyName().equals("stereotype")) {
             updateStereotypeText();
             damage = true;
         }

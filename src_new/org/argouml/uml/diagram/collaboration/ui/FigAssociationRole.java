@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.21 2004/09/29 17:02:52 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.22 2004/12/09 19:09:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.collaboration.ui;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -35,8 +36,6 @@ import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
-
-import ru.novosoft.uml.MElementEvent;
 
 
 
@@ -73,14 +72,15 @@ public class FigAssociationRole extends FigAssociation {
 
     ////////////////////////////////////////////////////////////////
     // event handlers
+    
     /**
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
-     *
-     * calls the method on the "super" (FigAssociation)
+     * Calls the method on the "super" (FigAssociation)
      * and then changes the name to take care of the
      * "/ name : base association name" form.
-     */    
-    protected void modelChanged(MElementEvent e) {
+     *
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
+     */
+    protected void modelChanged(PropertyChangeEvent e) {
         super.modelChanged(e);
         //change the name
         Object ar = /*(MAssociationRole)*/ getOwner();

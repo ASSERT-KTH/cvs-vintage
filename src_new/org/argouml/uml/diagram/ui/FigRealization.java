@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.7 2004/09/10 20:05:30 mvw Exp $
+// $Id: FigRealization.java,v 1.8 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,18 +25,17 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.7 2004/09/10 20:05:30 mvw Exp $
+// $Id: FigRealization.java,v 1.8 2004/12/09 19:09:13 mvw Exp $
 
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
 
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadTriangle;
 import org.tigris.gef.presentation.Fig;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * This class represents a Fig for a Realization.
@@ -96,10 +95,10 @@ public class FigRealization extends FigEdgeModelElement {
      * method automatically updates the name FigText. Subclasses should override
      * and update other parts.
      *
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent e) {
-        // do not set _name
+    protected void modelChanged(PropertyChangeEvent e) {
+        // do not set name
         //updateStereotypeText();
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.14 2004/09/10 20:05:31 mvw Exp $
+// $Id: FigDependency.java,v 1.15 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,18 +26,18 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
 import java.util.Iterator;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.model.Model;
+import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * @author ics 125b course, spring 1998
@@ -91,7 +91,7 @@ public class FigDependency extends FigEdgeModelElement {
 
         if (org.argouml.model.ModelFacade.isADependency(own)) {
             Object newDep = own; //MDependency
-            UmlModelEventPump pump = UmlModelEventPump.getPump();
+            ModelEventPump pump = Model.getPump();
             Iterator it = ModelFacade.getSuppliers(newDep).iterator();
             while (it.hasNext()) {
                 Object o = it.next();
@@ -149,12 +149,11 @@ public class FigDependency extends FigEdgeModelElement {
 
     /** 
      * This is called aftern any part of the UML MModelElement has
-     * changed. This method automatically updates the name FigText.
-     * Subclasses should override and update other parts.
+     * changed. 
      * 
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent e) {
+    protected void modelChanged(PropertyChangeEvent e) {
         // do not set _name
         updateStereotypeText();
     }

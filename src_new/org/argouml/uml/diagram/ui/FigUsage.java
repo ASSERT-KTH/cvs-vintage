@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.10 2004/09/10 20:05:30 mvw Exp $
+// $Id: FigUsage.java,v 1.11 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,10 +28,10 @@
 
 package org.argouml.uml.diagram.ui;
 
+import java.beans.PropertyChangeEvent;
+
 import org.argouml.language.helpers.NotationHelper;
 import org.tigris.gef.base.Layer;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * This class represents a Fig for a Usage.
@@ -67,9 +67,9 @@ public class FigUsage extends FigDependency {
     }
         
     /**
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent e) {
+    protected void modelChanged(PropertyChangeEvent e) {
         super.modelChanged(e);
         String stereoTypeStr = getStereotypeFig().getText();
         

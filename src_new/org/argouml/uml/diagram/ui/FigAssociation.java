@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.72 2004/12/08 18:27:38 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.73 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,15 +29,16 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoJMenu;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
@@ -49,8 +50,6 @@ import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.ArrowHeadNone;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 
 /**
@@ -75,7 +74,7 @@ public class FigAssociation extends FigEdgeModelElement {
     /**
      * Group for the FigTexts concerning the name and stereotype of the 
      * association itself.
-     * TODO provide getter instead and maybe setter if needed
+     * TODO: provide getter instead and maybe setter if needed
      */
     protected FigTextGroup middleGroup = new FigTextGroup();
     
@@ -196,14 +195,14 @@ public class FigAssociation extends FigEdgeModelElement {
 	    Collection connections = ModelFacade.getConnections(association);
 	    for (int i = 0; i < connections.size(); i++) {
 		Object assEnd = (connections.toArray())[i];
-		UmlModelEventPump.getPump()
+		Model.getPump()
 		    .removeModelEventListener(this, assEnd);
-		UmlModelEventPump.getPump()
+		Model.getPump()
 		    .addModelEventListener(this, assEnd);
 	    }
-	    UmlModelEventPump.getPump()
+	    Model.getPump()
 		.removeModelEventListener(this, association);
-	    UmlModelEventPump.getPump()
+	    Model.getPump()
 		.addModelEventListener(this, association);
 	    Object assEnd1 = (connections.toArray())[0];
 	    FigNode destNode =
@@ -291,14 +290,14 @@ public class FigAssociation extends FigEdgeModelElement {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent e) {
+    protected void modelChanged(PropertyChangeEvent e) {
 	super.modelChanged(e);
 	Object associationEnd = getOwner(); //MAssociation
 	if (associationEnd == null || getLayer() == null) return;
         
-        if (e == null || e.getName().equals("isAbstract")) {
+        if (e == null || e.getPropertyName().equals("isAbstract")) {
             updateAbstract();
             damage();
         }

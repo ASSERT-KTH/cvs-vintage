@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.29 2004/08/04 19:22:09 mvw Exp $
+// $Id: FigComment.java,v 1.30 2004/12/09 19:09:12 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.29 2004/08/04 19:22:09 mvw Exp $
+// $Id: FigComment.java,v 1.30 2004/12/09 19:09:12 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -61,8 +61,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * Class to display a UML note in a diagram
@@ -549,9 +547,9 @@ public class FigComment
      * This is called aftern any part of the UML MModelElement has
      * changed. This method automatically updates the note FigText.
      *
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected final void modelChanged(MElementEvent mee) {
+    protected final void modelChanged(PropertyChangeEvent mee) {
         super.modelChanged(mee);
 
         String noteStr = retrieveNote();

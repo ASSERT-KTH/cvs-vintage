@@ -1,4 +1,4 @@
-// $Id: FigSubactivityState.java,v 1.4 2004/08/07 14:27:51 mvw Exp $
+// $Id: FigSubactivityState.java,v 1.5 2004/12/09 19:09:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,21 +32,19 @@ package org.argouml.uml.diagram.activity.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.Iterator;
 
 import org.argouml.application.api.Notation;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.diagram.state.ui.FigStateVertex;
-//import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.graph.GraphModel;
-import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigGroup;
+import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRRect;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 
 /** Class to display graphics for a UML SubactivityState in a diagram. 
@@ -260,18 +258,19 @@ public class FigSubactivityState extends FigStateVertex {
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent mee) {        
+    protected void modelChanged(PropertyChangeEvent mee) {        
         super.modelChanged(mee);
-        if (mee.getSource() == getOwner() && mee.getName().equals("entry")) {
+        if (mee.getSource() == getOwner() 
+                && mee.getPropertyName().equals("entry")) {
             if (mee.getNewValue() != null) {
-                UmlModelEventPump.getPump().addModelEventListener(this, 
+                Model.getPump().addModelEventListener(this, 
                                             mee.getNewValue(), "script");
             } else
-                if (mee.getRemovedValue() != null) {
-                    UmlModelEventPump.getPump().removeModelEventListener(this, 
-                                            mee.getRemovedValue(), "script");
+                if (mee.getOldValue() != null) {
+                    Model.getPump().removeModelEventListener(this, 
+                                            mee.getOldValue(), "script");
                 }
             updateNameText();
             damage();

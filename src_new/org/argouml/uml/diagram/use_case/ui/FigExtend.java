@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.15 2004/08/12 19:50:11 mvw Exp $
+// $Id: FigExtend.java,v 1.16 2004/12/09 19:09:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
 
 import org.argouml.application.api.Notation;
 import org.argouml.model.ModelFacade;
@@ -35,8 +36,6 @@ import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * A fig for use with extend relationships on use case diagrams.<p>
@@ -204,12 +203,11 @@ public class FigExtend extends FigEdgeModelElement {
      * there has actually been a change, but for now we do it every
      * time.<p>
      *
-     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent e) {
+    protected void modelChanged(PropertyChangeEvent e) {
 
         // Give up if we have no owner
-
         Object extend = /*(MExtend)*/ getOwner();
 
         if (extend == null) {
@@ -218,15 +216,13 @@ public class FigExtend extends FigEdgeModelElement {
         
         // Let the superclass sort itself out, and then tell GEF we are going
         // to start something
-
         super.modelChanged(e);
 
         // Now sort out the condition text. Use the null string if there is no
         // condition set. We call the main generate method, which will realise
         // this is a MExpression (subclass) and invoke the correct method.
-
         Object/*MBooleanExpression*/ c =
-	    ModelFacade.getCondition(extend);
+            ModelFacade.getCondition(extend);
 
         if (c == null) {
             condition.setText("");
@@ -234,15 +230,14 @@ public class FigExtend extends FigEdgeModelElement {
         else {
             condition.setText(Notation.generate(this, c));
         }
-        
 
         // Let the group recalculate its bounds and then tell GEF we've
         // finished.
-
         fg.calcBounds();
         endTrans();
     }
-
+    
+    
     /**
      * @see org.tigris.gef.presentation.Fig#paint(java.awt.Graphics)
      */

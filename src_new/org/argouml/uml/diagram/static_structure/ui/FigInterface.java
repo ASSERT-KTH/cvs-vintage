@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.79 2004/11/21 20:20:09 mvw Exp $
+// $Id: FigInterface.java,v 1.80 2004/12/09 19:09:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.text.ParseException;
 import java.util.Collection;
@@ -39,9 +40,9 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.language.helpers.NotationHelper;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -62,8 +63,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.MElementEvent;
 
 /** Class to display graphics for a UML Interface in a diagram. 
  * 
@@ -673,9 +672,9 @@ public class FigInterface extends FigNodeModelElement
     }
 
     /**
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(java.beans.PropertyChangeEvent)
      */
-    protected void modelChanged(MElementEvent mee) {
+    protected void modelChanged(PropertyChangeEvent mee) {
         if (getOwner() == null) {
             return;
         }
@@ -685,7 +684,7 @@ public class FigInterface extends FigNodeModelElement
                 || org.argouml.model.ModelFacade.isAOperation(mee.getSource())
                 || org.argouml.model.ModelFacade.isAParameter(mee.getSource())
                 || (mee.getSource() == getOwner()
-		&& mee.getName().equals("feature"))) {
+		&& mee.getPropertyName().equals("feature"))) {
             updateOperations();
             damage();
         }
@@ -852,10 +851,10 @@ public class FigInterface extends FigNodeModelElement
         	Object behavioralFeature =
         	    /*(MBehavioralFeature)*/ iter.next();
         	// update the listeners
-        	UmlModelEventPump.getPump()
-        	    .removeModelEventListener(this, behavioralFeature);
-        	UmlModelEventPump.getPump()
-        	    .addModelEventListener(this, behavioralFeature);
+        	Model.getPump().removeModelEventListener(this, 
+                    behavioralFeature);
+        	Model.getPump().addModelEventListener(this, 
+                    behavioralFeature);
         	if (figs.size() <= ocounter) {
         	    oper =
         		new FigFeature(xpos + 1,
