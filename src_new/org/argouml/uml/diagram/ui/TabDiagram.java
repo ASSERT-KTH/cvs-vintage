@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.37 2004/01/01 23:04:28 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.38 2004/01/16 19:54:39 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.37 2004/01/01 23:04:28 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.38 2004/01/16 19:54:39 jjones Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -452,30 +452,20 @@ class ArgoEditor extends Editor {
      * or not antialiasing should be turned on.
      */
     public synchronized void paint(Graphics g) {
+        if (!shouldPaint())
+            return;
+
         if (g instanceof Graphics2D) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHints(_argoRenderingHints);
             g2.scale(_scale, _scale);
         }
         getLayerManager().paint(g);
-        _selectionManager.paint(g);
-        _modeManager.paint(g);
-        
-// Use this code once new version of GEF (post-0.9.6) becomes available:        
-//        if(!shouldPaint())
-//            return;
-//
-//        if(g instanceof Graphics2D) {
-//            Graphics2D g2 = (Graphics2D) g;
-//            g2.setRenderingHints(_argoRenderingHints);
-//            g2.scale(_scale, _scale);
-//        }
-//        getLayerManager().paint(g);
-//        //getLayerManager().getActiveLayer().paint(g);
-//        if(_canSelectElements) {
-//            _selectionManager.paint(g);
-//            _modeManager.paint(g);
-//        }        
+        //getLayerManager().getActiveLayer().paint(g);
+        if (_canSelectElements) {
+            _selectionManager.paint(g);
+            _modeManager.paint(g);
+        }        
     }
     
     /**
