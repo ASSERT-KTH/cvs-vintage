@@ -13,28 +13,30 @@ import java.lang.reflect.Field;
 import java.io.InputStream;
 
 import java.net.URL;
-
-import org.jboss.util.NestedRuntimeException;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 /**
  * Manages bytecode assembly for dynamic proxy generation.
- *
+ * <p/>
  * <p>This is the only data needed at runtime.
  *
- * @version <tt>$Revision: 1.5 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class Runtime
    extends ClassLoader
 {
-   /** The field name of the runtime target proxies Runtime object. */
+   /**
+    * The field name of the runtime target proxies Runtime object.
+    */
    public final static String RUNTIME_FN = "runtime";
-   
+
    /**
     * Construct a new <tt>Runtime</tt>
     *
-    * @param parent    The parent classloader to delegate to.
+    * @param parent The parent classloader to delegate to.
     */
    public Runtime(ClassLoader parent)
    {
@@ -49,17 +51,18 @@ public class Runtime
    Method methods[];
    ProxyCompiler compiler;// temporary!
 
-   public Class[] copyTargetTypes() {
-      return (Class[])targetTypes.clone();
+   public Class[] copyTargetTypes()
+   {
+      return (Class[]) targetTypes.clone();
    }
 
    public Object invoke(InvocationHandler invocationHandler, int methodNum, Object values[])
-      throws Throwable 
+      throws Throwable
    {
       return invocationHandler.invoke(null, methods[methodNum], values);
    }
 
-   void makeProxyType(ProxyCompiler compiler) 
+   void makeProxyType(ProxyCompiler compiler)
       throws Exception
    {
       this.compiler = compiler; // temporary, for use during loading
@@ -75,22 +78,31 @@ public class Runtime
       compiler = null;
    }
 
-   ClassLoader getTargetClassLoader() 
+   ClassLoader getTargetClassLoader()
    {
-      return getParent();
+      PrivilegedAction action = new PrivilegedAction()
+      {
+         public Object run()
+         {
+            return getParent();
+         }
+      };
+      return (ClassLoader) AccessController.doPrivileged(action);
    }
 
    public synchronized Class loadClass(String name, boolean resolve)
-      throws ClassNotFoundException 
+      throws ClassNotFoundException
    {
       // isn't this redundant?
-      if (name.endsWith("$Proxy") && name.equals(compiler.getProxyClassName())) {
+      if (name.endsWith("$Proxy") && name.equals(compiler.getProxyClassName()))
+      {
          return compiler.proxyType;
       }
 
       // delegate to the original class loader
       ClassLoader cl = getTargetClassLoader();
-      if (cl == null) {
+      if (cl == null)
+      {
          return super.findSystemClass(name);
       }
 
@@ -100,11 +112,12 @@ public class Runtime
    /**
     * Delegate to the original class loader.
     */
-   public InputStream getResourceAsStream(String name) 
+   public InputStream getResourceAsStream(String name)
    {
       ClassLoader cl = getTargetClassLoader();
 
-      if (cl == null) {
+      if (cl == null)
+      {
          return super.getSystemResourceAsStream(name);
       }
 
@@ -114,11 +127,12 @@ public class Runtime
    /**
     * Delegate to the original class loader.
     */
-   public URL getResource(String name) 
+   public URL getResource(String name)
    {
       ClassLoader cl = getTargetClassLoader();
 
-      if (cl == null) {
+      if (cl == null)
+      {
          return super.getSystemResource(name);
       }
 
