@@ -190,12 +190,13 @@ public class TreeView implements TreeSelectionListener {
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
-
-		Folder folder = (Folder) tree.getLastSelectedPathComponent();
-		if (folder == null)
-			return;
-
-		getFrameController().getTable().getView().setFolder(folder);
+		Object o = tree.getLastSelectedPathComponent();
+		if (o == null) return;
+                if (o instanceof Folder) {
+                        getFrameController().getTable().getView().setFolder((Folder)o);
+                } else {
+                        getFrameController().getTable().getView().setFolder(null);
+                }
 		/*
 		FolderItem item = folder.getFolderItem();
 		String type = item.getType();
@@ -225,5 +226,4 @@ public class TreeView implements TreeSelectionListener {
 	public AddressbookFrameController getFrameController() {
 		return frameController;
 	}
-
 }
