@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCStopCommand {
 
@@ -55,8 +55,12 @@ public class JDBCStopCommand {
    
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
-         log.debug("Dropping table for entity " + entity.getEntityName());
+         log.info("Dropping table for entity " + entity.getEntityName());
          dropTable(entity.getDataSource(), entity.getTableName());
+      }
+      else
+      {
+         log.info("Did NOT drop table for entity as requested" + entity.getEntityName());
       }
 
       // drop relation tables
@@ -92,7 +96,7 @@ public class JDBCStopCommand {
             return;
          }
       } catch(SQLException e) {
-         log.debug("Error getting database metadata for DROP TABLE command. " +
+         log.error("Error getting database metadata for DROP TABLE command. " +
                " DROP TABLE will not be executed. ", e);
          return;
       } finally {
@@ -130,7 +134,7 @@ public class JDBCStopCommand {
          }
 
       } catch(Exception e) {
-         log.debug("Could not drop table " + tableName);
+         log.error("Could not drop table " + tableName, e);
       } finally {
          try {
             // resume the old transaction

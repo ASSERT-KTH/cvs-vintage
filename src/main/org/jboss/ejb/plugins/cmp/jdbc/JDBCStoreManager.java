@@ -82,7 +82,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -208,9 +208,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
    public Object copy(Object source)
    {
-      // the copier is broken right now so just return the source
-      return source;
-      /*
       try
       {
          return container.getServer().invoke(
@@ -235,7 +232,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          throw new EJBException("Exception occured while copying value", e);
       }
-      */
    }
 
    /**

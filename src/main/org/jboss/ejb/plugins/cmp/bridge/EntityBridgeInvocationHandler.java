@@ -42,7 +42,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
@@ -169,9 +169,6 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
    
    private Object copy(Object source)
    {
-      // the copier is broken right now, so just reutn the object
-      return source;
-      /*
       try
       {
          return server.invoke(
@@ -196,7 +193,6 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       {
          throw new EJBException("Exception occured while copying value", e);
       }
-      */
    }
 
    private Map getAbstractAccessors() {
