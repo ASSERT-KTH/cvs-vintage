@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.17 2000/12/29 00:20:27 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/12/29 00:20:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.18 2001/02/01 06:17:41 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2001/02/01 06:17:41 $
  *
  * ====================================================================
  *
@@ -344,6 +344,27 @@ public class FileUtil {
 	    return path.substring(i);
 	else
 	    return null;
+    }
+
+    /** Name without path and extension. 
+     */
+    public static String getBase( String path ) {
+        int i = path.lastIndexOf(".");
+	int j = path.lastIndexOf("/");
+
+	if( j < 0 ) {// no /
+	    if( i<0 )
+		return path;
+	    else
+		return path.substring( 0, i );
+	} else {
+	    if( i<j ) {
+		// . in a dir, before last component, or no "."
+		return path.substring( j );
+	    } else {
+		return path.substring( j, i );
+	    }
+	}
     }
 
     public static void expand( String src, String dest)
