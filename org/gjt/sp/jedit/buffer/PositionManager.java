@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.29 2003/08/20 17:52:19 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.30 2003/08/22 16:42:57 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -159,6 +159,15 @@ public class PositionManager
 	{
 		if(Debug.POSITION_DEBUG)
 			Log.log(Log.DEBUG,this,"killing " + bh);
+
+		if(gapStartsAt == bh)
+		{
+			// just move gap to next inorder
+			gapStartsAt = bh.nextInorder();
+			if(gapStartsAt == null)
+				gapWidth = 0;
+		}
+
 		PosBottomHalf r, x = bh.parent;
 
 		// if one of the siblings is null, make &this=non null sibling
@@ -211,13 +220,12 @@ public class PositionManager
 		// neither is null
 		else
 		{
-			PosBottomHalf nextInorder = bh.right;
-			r = nextInorder;
-			while(nextInorder.left != null)
-			{
-				nextInorder = nextInorder.left;
+			PosBottomHalf nextInorder = bh.nextInorder();
+			if(bh.right == nextInorder)
+				r = bh.right;
+			else
 				r = nextInorder.right;
-			}
+
 			// removing the root?
 			if(bh.parent == null)
 			{
@@ -523,6 +531,15 @@ public class PositionManager
 				throw new InternalError();
 		} //}}}
 
+		//{{{ nextInorder() method
+		PosBottomHalf nextInorder()
+		{
+			PosBottomHalf nextInorder = right;
+			while(nextInorder.left != null)
+				nextInorder = nextInorder.left;
+			return nextInorder;
+		} //}}}
+
 		//{{{ contentInserted() method
 		/* update all nodes between start and end by length */
 		void contentInserted(int start, int end, int length)
@@ -539,6 +556,7 @@ public class PositionManager
 			}
 			else
 			{
+				System.err.println(this);
 				offset += length;
 				if(left != null)
 					left.contentInserted(start,end,length);
