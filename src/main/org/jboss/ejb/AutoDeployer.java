@@ -25,28 +25,29 @@ import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 
-import org.jboss.logging.Log;
+import org.apache.log4j.Category;
+
 import org.jboss.util.ServiceMBeanSupport;
 
-
 /**
- *   The AutoDeployer is used to automatically deploy applications or
- *   components thereof.
+ * The AutoDeployer is used to automatically deploy applications or
+ * components thereof.
  *
- *   <p> It can be used on either .jar or .xml files. The AutoDeployer
- *   can be configured to "watch" one or more files. If they are
- *   updated they will be redeployed.
+ * <p>It can be used on either .jar or .xml files. The AutoDeployer
+ *    can be configured to "watch" one or more files. If they are
+ *    updated they will be redeployed.
  *
- *   <p> If it is set to watch a directory instead of a single file,
- *   all files within that directory will be watched separately.
+ * <p>If it is set to watch a directory instead of a single file,
+ *    all files within that directory will be watched separately.
  *
- *   <p> When a file is to be deployed, the AutoDeployer will use the
- *   configured deployer to deploy it.
+ * <p>When a file is to be deployed, the AutoDeployer will use the
+ *    configured deployer to deploy it.
  *
- *   @see org.jboss.deployment.J2eeDeployer
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.18 $
+ * @see org.jboss.deployment.J2eeDeployer
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.19 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -56,6 +57,9 @@ public class AutoDeployer
 
    // Attributes ----------------------------------------------------
 
+   /** Instance logger. */
+   private Category log = Category.getInstance(this.getClass());
+   
    // Callback to the JMX agent
    MBeanServer server;
 
@@ -175,12 +179,11 @@ public class AutoDeployer
                if (url.getProtocol().startsWith("file") && ! new File(url.getFile()).exists()) {
 
                   // the file does not exist anymore. undeploy
-                  log.log("Auto undeploy of "+url);
+                  log.info("Auto undeploy of "+url);
                   try {
                      undeploy(url.toString(), deployment.deployerName);
                   } catch (Exception e) {
-                     log.error("Undeployment failed");
-                     log.exception(e);
+                     log.error("Undeployment failed", e);
                   }
                   deployedURLs.remove(url);
 
@@ -210,15 +213,14 @@ public class AutoDeployer
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
-                  log.log("Auto deploy of "+deployment.url);
+                  log.info("Auto deploy of "+deployment.url);
                   deployment.lastModified = lm;
                   try
                   {
                      deploy(deployment.url.toString(), deployment.deployerName);
                   } catch (Throwable e)
                   {
-                     log.error("Deployment failed:"+deployment.url);
-                     log.exception(e);
+                     log.error("Deployment failed:"+deployment.url, e);
 
                      // Deployment failed - won't retry until updated
                   }
@@ -226,22 +228,22 @@ public class AutoDeployer
             }
          } catch (Exception e)
          {
-            e.printStackTrace(System.err);
-
-				// Stop auto deployer
+            log.fatal("auto deployer failure; can not continue", e);
+            // Stop auto deployer
             running = false;
          }
       } while(running);
    }
 
    // ServiceMBeanSupport overrides ---------------------------------
+
    public String getName()
    {
       return "Auto deploy";
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+      throws MalformedObjectNameException
    {
       this.server = server;
       return name==null ? new ObjectName(OBJECT_NAME) : name;
@@ -263,7 +265,7 @@ public class AutoDeployer
          }
          catch (MalformedObjectNameException mfone)
          {
-            log.warning("The string '" + deployerName + "'is not a valid " +
+            log.warn("The string '" + deployerName + "'is not a valid " +
                         "object name - ignoring it.");
             continue;
          }
@@ -277,7 +279,7 @@ public class AutoDeployer
          }
          catch (ReflectionException re)
          {
-            log.log("Deployer '" + deployerNames[i] + "' doesn't provide a " +
+            log.info("Deployer '" + deployerNames[i] + "' doesn't provide a " +
                     "filter - will try to deploy all files");
             deployableFilters[i] = new FilenameFilter()
                {
@@ -307,10 +309,10 @@ public class AutoDeployer
                {
                   watchedURLs.add(new Deployment(
                      urlFile.getCanonicalFile().toURL()));
-                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
+                  log.info("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
-                  log.warning("Cannot auto-deploy "+urlFile);
+                  log.warn("Cannot auto-deploy "+urlFile);
                }
             } else
             {
@@ -319,10 +321,10 @@ public class AutoDeployer
                try
                {
                   watchedDirectories.add(urlFile.getCanonicalFile());
-                  log.log("Watching "+urlFile.getCanonicalFile());
+                  log.info("Watching "+urlFile.getCanonicalFile());
                } catch (IOException e)
                {
-                  log.warning(e.toString());
+                  log.warn("failed to add watched directory", e);
                }
             }
          } else if (urlFile.exists()) // It's a file
@@ -331,10 +333,10 @@ public class AutoDeployer
                {
                   watchedURLs.add(new Deployment(
                      urlFile.getCanonicalFile().toURL()));
-                  log.log("Auto-deploying "+urlFile.getCanonicalFile());
+                  log.info("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
-                  log.warning("Cannot auto-deploy "+urlFile);
+                  log.warn("Cannot auto-deploy "+urlFile);
                }
          } else // It's a real URL (probably http:)
          {
@@ -344,7 +346,7 @@ public class AutoDeployer
             } catch (MalformedURLException e)
             {
                // Didn't work
-               log.warning("Cannot auto-deploy "+url);
+               log.warn("Cannot auto-deploy "+url);
             }
          }
       }
