@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.17 2003/11/10 12:37:45 jhraigniac Exp $
+// $Id: Translator.java,v 1.18 2003/12/01 18:25:39 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ public class Translator {
         org.workingfrog.i18n.util.Translator.setDefaultLocale(
 							      new Locale("en", ""));
         org.workingfrog.i18n.util.Translator.setBundlesPath("org.argouml.i18n");
+        org.workingfrog.i18n.util.Translator.setLogLevel("all");
   
         Localizer.addResource("GefBase",
 			      "org.tigris.gef.base.BaseResourceBundle");
