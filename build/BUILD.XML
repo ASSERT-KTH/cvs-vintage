@@ -48,15 +48,56 @@
   <!-- Generates JavaDoc                                                   -->
   <!-- =================================================================== -->
   <target name="javadocs">
+    <available property="use.versiondoclet" classname="org.jhotdraw.tools.versiondoclet.VersionDoclet"/>
+    <antcall target="standard_javadocs"/>
+    <antcall target="versiondoclet_javadocs"/>
+  </target>
+
+  <target name="standard_javadocs" unless="use.versiondoclet">
     <mkdir dir="${javadoc.dir}"/>
     <javadoc sourcepath="${src.dir}"
       destdir="${javadoc.dir}"
       classpath="${dest.dir}"
       author="false"
       version="true"
-      packagenames="CH.*"/>
+      packagenames="CH.*">
+    </javadoc>
   </target>
 
+  <target name="versiondoclet_javadocs" if="use.versiondoclet">
+    <mkdir dir="${javadoc.dir}"/>
+    <javadoc sourcepath="${src.dir}"
+      destdir="${javadoc.dir}"
+      classpath="${dest.dir}"
+      author="false"
+      version="true"
+      packagenames="CH.*">
+      <doclet name="org.jhotdraw.tools.versiondoclet.VersionDoclet">
+        <param name="-versionfile" value="JHotdraw.mf"/>
+        <param name="-version" value=""/>
+      </doclet>
+    </javadoc>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Style check                                                         -->
+  <!-- =================================================================== -->
+<!--
+  <taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
+  <target name="stylecheck">
+      <checkstyle allowtabs="yes"
+              maxlinelen="100"
+              headerfile="headerfile.txt"
+              headerignoreline="2"
+              relaxjavadoc="yes"
+              parampattern="."
+              constpattern="."
+              staticpattern="."
+              memberpattern=".">
+          <fileset dir="${src.dir}" includes="**/*.java"/>
+      </checkstyle>
+  </target>
+-->
   <!-- =================================================================== -->
   <!-- Copies the resources into the build target directory                -->
   <!-- Resources are non-code that needs to be packed into some jar file   -->
@@ -86,11 +127,32 @@
   <target name="jar" depends="compile, copyResources">
     <jar jarfile="${dest.dir}/${build.jar}"
          basedir="${build.classes}"
-         includes="
-           CH/**
-           "
+         includes="CH/**"
+         manifest="jhotdraw.mf"
         >
 	</jar>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Run examples (and compile if necessary).                            -->
+  <!-- =================================================================== -->
+  <target name="javadraw" depends="main">
+     <java classname="CH.ifa.draw.samples.javadraw.JavaDrawApp" fork="yes" classpath="${classpath};../jhotdraw.jar">
+     </java>
+  </target>
+
+  <target name="pert" depends="main">
+     <java classname="CH.ifa.draw.samples.pert.PertApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
+     </java>
+  </target>
+
+  <target name="net" depends="main">
+     <java classname="CH.ifa.draw.samples.net.NetApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
+     </java>
+  </target>
+
+  <target name="nothing" depends="main">
+     <java classname="CH.ifa.draw.samples.nothing.NothingApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
+     </java>
+  </target>
 </project>
