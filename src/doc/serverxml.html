@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.17 2002/02/02 15:58:05 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.18 2002/02/05 02:06:19 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -800,30 +800,23 @@ files will re-deploy automatically while Tomcat 3.3 is running.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
-    <td><p>dir</p>
+    <td>dir
     </td>
-    <td><p>Directory from which to load the web applictions. Relative paths
-      are interpreted as relative to TOMCAT_HOME.</p>
-    </td>
-    <td><p>webapps</p>
-    </td>
+    <td>Directory from which to load the web applictions. Relative paths
+      are interpreted as relative to TOMCAT_HOME.</td>
+    <td>webapps</td>
   </tr>
   <tr valign="top">
-    <td><p>prefix</p>
-    </td>
-    <td><p>Prefix to add to the context path for each deployed web application.
-      The context path will consist of the prefix followed subdirectory name.</p>
-    </td>
-    <td><p>DEFAULT</p>
-    </td>
+    <td>flat</td>
+    <td>Each dir will be treated as a webapp in the same host. If <code>false</code>,
+      each dir will be treated as a host name and its subdirs as
+      web applications. You can add apps to multiple virtual hosts. </td>
+    <td>true</td>
   </tr>
   <tr valign="top">
-    <td><p>host</p>
-    </td>
-    <td><p>Virtual host into which each application will be deployed.</p>
-    </td>
-    <td><p>DEFAULT</p>
-    </td>
+    <td>host</td>
+    <td>Virtual host into which each application will be deployed.</td>
+    <td>DEFAULT</td>
   </tr>
   <tr valign="top">
     <td>ignoreDot</td>
@@ -831,10 +824,17 @@ files will re-deploy automatically while Tomcat 3.3 is running.</p>
     <td>true</td>
   </tr>
   <tr valign="top">
-    <td>flat</td>
-    <td>Each dir will be treated as a webapp in the same host. If <code>false</code>,
-      each dir will be treated as a host name and its subdirs as
-      web applications. You can add apps to multiple virtual hosts. </td>
+    <td>prefix<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Prefix to add to the context path for each deployed web application.
+      The context path will consist of the prefix followed subdirectory name.</td>
+    <td><i>empty string</i></td>
+  </tr>
+  <tr valign="top">
+    <td>reloadable</td>
+    <td>If true, reloading will be enabled by default for each context.  If
+        false, reloading will be disabled by default for each context.  This
+        setting, enabled or disabled, may be overridden in an explicit
+        context declaration.</td>
     <td>true</td>
   </tr>
 </table>
@@ -1023,6 +1023,15 @@ error response if not specified.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
+    <td>defaultRedirectStatus</td>
+    <td>Sets the default status code for use by the RedirectHandler if as
+        status code has not already been set.  It may be set to &quot;301&quot;
+        or &quot;302&quot;. This primarily affects the status code used
+         when the <a href="#StaticInterceptor">StaticInterceptor</a> module
+         redirects a 7quot;directory&quot; URL that doesn't end with a '/'</td>
+    <td>301</td>
+  </tr>
+  <tr valign="top">
     <td>showDebugInfo</td>
     <td>Enables the inclusion of extra information in the default error output,
       such as stack traces. This extra information can expose data about
@@ -1064,16 +1073,13 @@ error response if not specified.</p>
     <td>null, <i>use default Tomcat server string</i></td>
   </tr>
   <tr valign="top">
-    <td>socketCloseDelay<br><b>[Tomcat 3.3.1]</b></td>
-    <td>When set to 0, a Thread.yield() is executed just prior to closing
-      the socket for a request. When set greater than 0, the thread will
-      &quot;spin&quot; in a wait loop for the specified number of milliseconds
-      before closing the socket. If less than 0, no extra action is performed
-      before closing the socket.<br>
-      This delay can help when running tests against Tomcat on certain systems
-      where the normal sequence of thread execution between Tomcat and client
-      results in a &quot;Socket reset by peer&quot; error.</td>
-    <td>-1</td>
+    <td>delaySocketClose<br><b>[Tomcat 3.3.1]</b></td>
+    <td>When set true, a Thread.sleep(0) is executed just prior to closing
+      the socket for a request. This can help when running a test against
+      Tomcat on a very fast system. Otherwise, thread execution may complete
+      the socket close before the test thread gets a chance to read the data
+      resulting in a &quot;Connection aborted by peer&quot; error.</td>
+    <td>false</td>
   </tr>
   <tr valign="top">
     <td><b>Connection Properties</b></td>
