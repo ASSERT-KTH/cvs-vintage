@@ -27,7 +27,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.12 1998/04/23 23:52:46 jrobbins Exp $
+// $Id: FigClass.java,v 1.13 1998/05/19 21:31:37 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -61,13 +61,13 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
 
     Color handleColor = Globals.getPrefs().getHandleColor();
     _bigPort = new FigRect(8, 8, 92, 62, handleColor, Color.lightGray);
-    _clss = new FigText(10,10,90,20, Color.blue, "Times", 10);
+    _clss = new FigText(10,10,90,20, Color.black, "Dialog", 9);
     _clss.setExpandOnly(true);
     //_clss.setText((new GeneratorDisplay()).generateClassifierRef((Classifier)node));
-    _attr = new FigText(10,30,90,20, Color.blue, "Times", 10);
+    _attr = new FigText(10,30,90,20, Color.black, "Dialog", 9);
     _attr.setExpandOnly(true);
     _attr.setJustification("Left");
-    _oper = new FigText(10,50,90,20, Color.blue, "Times", 10);
+    _oper = new FigText(10,50,90,20, Color.black, "Dialog", 9);
     _oper.setExpandOnly(true);
     _oper.setJustification("Left");
     addFig(_bigPort);

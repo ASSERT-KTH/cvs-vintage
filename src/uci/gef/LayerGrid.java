@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.6 1998/04/21 02:54:39 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.7 1998/05/19 21:31:07 jrobbins Exp $
 
 package uci.gef;
 
@@ -72,7 +72,7 @@ public class LayerGrid extends Layer {
   private int _stampWidth = 128, _stampHeight = 128;
 
   /** The color of the grid lines or dots. */
-  protected Color _color = Color.gray;
+  protected Color _color = new Color(180, 180, 180); //Color.gray;
 
   /** The color of the space between the lines or dots.  */
   protected Color _bgColor = Color.lightGray;

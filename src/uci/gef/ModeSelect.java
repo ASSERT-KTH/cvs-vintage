@@ -27,7 +27,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.6 1998/04/21 02:54:44 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.7 1998/05/19 21:31:10 jrobbins Exp $
 
 package uci.gef;
 
@@ -128,6 +128,8 @@ public class ModeSelect extends Mode {
     _editor.damaged(_selectRect);
     _selectRect.setBounds(bound_x, bound_y, bound_w, bound_h);
     _editor.damaged(_selectRect);
+    _editor.scrollToShow(x, y);
+    
     me.consume();
   }
 

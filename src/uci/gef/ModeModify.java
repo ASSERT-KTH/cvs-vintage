@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.6 1998/04/21 02:54:43 jrobbins Exp $
+// $Id: ModeModify.java,v 1.7 1998/05/19 21:31:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -164,6 +164,8 @@ public class ModeModify extends Mode {
 
     sm.endTrans();
 
+    _editor.scrollToShow(snapX, snapY);
+	
     _lastX = snapX; _lastY = snapY;
     me.consume();
   }

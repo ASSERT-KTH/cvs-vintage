@@ -19,7 +19,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.4 1998/04/23 23:51:55 jrobbins Exp $
+// $Id: CrConsiderSingleton.java,v 1.5 1998/05/19 21:31:17 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 
@@ -38,7 +38,7 @@ import uci.uml.Foundation.Extension_Mechanisms.*;
 public class CrConsiderSingleton extends CrUML {
 
   public CrConsiderSingleton() {
-    setHeadline("Consider usins Singleton Pattern");
+    setHeadline("Consider using Singleton Pattern");
     sd("This class has no attributes or associations that are\n"+
        "navigable away from instances of this class.  This means that every\n"+
        "instance of this class will be equal() to every other instance,\n"+

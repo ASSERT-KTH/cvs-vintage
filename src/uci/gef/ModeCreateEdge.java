@@ -27,7 +27,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.2 1998/04/18 01:26:31 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.3 1998/05/19 21:31:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -110,6 +110,8 @@ public class ModeCreateEdge extends ModeCreate {
    *  construct a new FigEdge and add it to the Layer and send it to
    *  the back. */
   public void mouseReleased(MouseEvent me) {
+    if (_sourceFigNode == null) { done(); me.consume(); return; }
+
     int x = me.getX(), y = me.getY();
     Class arcClass;
     Editor _editor = Globals.curEditor();

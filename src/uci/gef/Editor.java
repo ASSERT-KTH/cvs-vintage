@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.7 1998/04/21 02:54:34 jrobbins Exp $
+// $Id: Editor.java,v 1.8 1998/05/19 21:31:06 jrobbins Exp $
 
 package uci.gef;
 
@@ -388,6 +388,20 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   public synchronized void print(Graphics g) {
     getLayerManager().paint(g);
     //does this work?
+  }
+
+
+  /** Scroll the JGraph so that the given point is visible.  This is
+   *  used when the user wants to drag an object a long distance. This
+   *  is commented out right now because it causes too many out of
+   *  memory errors and the size of the JGraphInternalPanel is not set
+   *  properly. */
+  public void scrollToShow(int x, int y) {  
+    //   Component c = getAwtComponent();
+    //   if (c != null && c.getParent() instanceof JViewport) {
+    //     JViewport view = (JViewport) c.getParent();
+    //     view.scrollRectToVisible(new Rectangle(x - 10, y - 10, 20, 20));
+    //   }
   }
 
 
