@@ -112,14 +112,14 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 
     public int postService(Request request, Response response) {
 	Request child=request.getChild();
-	if( child==null ) return;
+	if( child==null ) return 0;
 
 	// after include, reset the class loader
 	// fix for 1112
-	Request child=request.getChild();
 	request=child.getParent();
 	if( request != null )
 	    fixJDKContextClassLoader(request.getContext());
+	return 0;
     }
 
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
