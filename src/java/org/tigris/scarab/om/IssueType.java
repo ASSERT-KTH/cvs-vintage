@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.59 2003/08/07 21:23:40 elicia Exp $
+ * @version $Id: IssueType.java,v 1.60 2003/08/19 21:18:50 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -137,7 +137,8 @@ public  class IssueType
             List results = IssueTypePeer.doSelect(crit);
             if (results.isEmpty() || results.size()>1)
             {
-                throw new ScarabException("There has been an error.");
+                throw new ScarabException(
+                    "Could not get template type for issue type.");
             }
             else
             {
