@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.12 2002/03/10 05:12:04 spestov Exp $
+ * @author $Id: VFS.java,v 1.13 2002/03/10 05:36:13 spestov Exp $
  */
 public abstract class VFS
 {
@@ -158,6 +158,10 @@ public abstract class VFS
 		if(index == -1)
 			index = path.indexOf(':');
 
+		// don't want getFileName("roots:") to return ""
+		if(index == -1 || index == path.length() - 1)
+			return path;
+
 		return path.substring(index + 1);
 	} //}}}
 
@@ -189,6 +193,10 @@ public abstract class VFS
 
 	//{{{ constructPath() method
 	/**
+	 * This method should not be called directly! To ensure correct
+	 * behavior, you <b>must</b> call
+	 * <code>MiscUtilities.constructPath()</code> instead.<p>
+	 *
 	 * Constructs a path from the specified directory and
 	 * file name component. This must be overridden to return a
 	 * non-null value, otherwise browsing this filesystem will
@@ -196,6 +204,7 @@ public abstract class VFS
 	 * @param parent The parent directory
 	 * @param path The path
 	 * @since jEdit 2.6pre2
+	 * @see org.gjt.sp.jedit.MiscUtilities#constructPath(String,String)
 	 */
 	public String constructPath(String parent, String path)
 	{
