@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class TxInterceptor
    extends AbstractInterceptor
@@ -133,7 +134,7 @@ public class TxInterceptor
             	{
             		getContainer().getTransactionManager().rollback();
             	}
-               throw new ServerException("Exception occurred", e);
+               throw new ServerException("Exception occurred:"+e.getMessage());
             } finally
             {
                if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
