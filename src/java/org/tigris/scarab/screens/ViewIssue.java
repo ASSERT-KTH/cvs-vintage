@@ -60,7 +60,7 @@ import org.tigris.scarab.om.Issue;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewIssue.java,v 1.6 2003/06/24 21:10:53 elicia Exp $
+ * @version $Id: ViewIssue.java,v 1.7 2003/06/25 19:47:11 elicia Exp $
  */
 public class ViewIssue extends Default
 {
@@ -84,7 +84,7 @@ public class ViewIssue extends Default
             }
             else 
             {
-                String name = issue.getModule().getRModuleIssueType(issue.getIssueType ()).getDisplayName();
+                String name = issue.getModule().getRModuleIssueType(issue.getIssueType()).getDisplayName();
                 String id = l10n.get("ID");
                 String unique = issue.getUniqueId();
                 title = name + " " + id + ": " + unique;

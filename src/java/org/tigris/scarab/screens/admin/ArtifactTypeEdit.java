@@ -59,7 +59,7 @@ import org.tigris.scarab.screens.Default;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.3 2003/06/24 21:10:53 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.4 2003/06/25 19:47:11 elicia Exp $
  */
 public class ArtifactTypeEdit extends Default
 {
@@ -68,7 +68,7 @@ public class ArtifactTypeEdit extends Default
                               RunData data, TemplateContext context)
         throws Exception 
    { 
-       String name = scarabR.getCurrentModule().getRModuleIssueType(scarabR.getIssueType ()).getDisplayName();
+       String name = scarabR.getCurrentModule().getRModuleIssueType(scarabR.getIssueType()).getDisplayName();
        return l10n.format("EditIssueType", name);
     }
 }
