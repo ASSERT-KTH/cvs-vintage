@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.20 $
+*   @version $Revision: 1.21 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -126,15 +126,15 @@ extends AbstractInterceptor
           ctx = cache.get(key);
           
           // Do we have a running transaction with the context
-          if (ctx.getTransaction() != null &&
+		  Transaction tx = ctx.getTransaction();
+          if (tx != null &&
               // And are we trying to enter with another transaction
-              !ctx.getTransaction().equals(mi.getTransaction())) 
+              !tx.equals(mi.getTransaction())) 
           {
               // Let's put the thread to sleep a lock release will wake the thread
               synchronized (ctx)
               {
                  // Possible deadlock
-                 Transaction tx = ctx.getTransaction();
                  Logger.log("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
                  
                  try{ctx.wait(100);}
