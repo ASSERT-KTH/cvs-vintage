@@ -55,19 +55,19 @@ update SCARAB_ATTRIBUTE set CREATED_BY='0';
 
 /* Unconfirmed */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(1, 3, 'unconfirmed');
+        values(1, 3, 'Unconfirmed');
 /* New */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(2, 3, 'new');
+        values(2, 3, 'New');
 /* Assigned */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(3, 3, 'assigned');
+        values(3, 3, 'Assigned');
 /* Reopened */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(4, 3, 'reopened');
+        values(4, 3, 'Reopened');
 /* Resolved */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(5, 3, 'resolved');
+        values(5, 3, 'Resolved');
 
 /*
  * We need to do this mapping here because there is an integrity constraint
@@ -77,37 +77,37 @@ update SCARAB_ATTRIBUTE set REQUIRED_OPTION_ID=5 where ATTRIBUTE_ID=4;
         
 /* Verified */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(6, 3, 'verified');
+        values(6, 3, 'Verified');
 /* Closed */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(7, 3, 'closed');
+        values(7, 3, 'Closed');
 /* Fixed */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(8, 4, 'fixed');
+        values(8, 4, 'Fixed');
 /* Invalid */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(9, 4, 'invalid');
+        values(9, 4, 'Invalid');
 /* WONTFIX */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(10, 4, 'wontfix');
+        values(10, 4, 'Wontfix');
 /* LATER */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(11, 4, 'later');
+        values(11, 4, 'Later');
 /* REMIND */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(12, 4, 'remind');
+        values(12, 4, 'Remind');
 /* DUPLICATE */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(13, 4, 'duplicate');
+        values(13, 4, 'Duplicate');
 /* WORKSFORME */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(14, 4, 'worksforme');
+        values(14, 4, 'Worksforme');
 /* MOVED */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(15, 4, 'moved');
+        values(15, 4, 'Moved');
 /* All */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(16, 5, 'all');
+        values(16, 5, 'All');
 /* DEC */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(17, 5, 'DEC');
@@ -125,10 +125,10 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(21, 5, 'SGI');
 /* Sun */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(22, 5, 'sun');
+        values(22, 5, 'Sun');
 /* Other */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(23, 5, 'other');
+        values(23, 5, 'Other');
 /* Operating systems */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(24, 6, 'All');
@@ -239,25 +239,25 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 
 /* Severities */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
-        values(62, 9, 'blocker');
+        values(62, 9, 'Blocker');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(63, 9, 'critical');
+        values(63, 9, 'Critical');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(64, 9, 'major');
+        values(64, 9, 'Major');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(65, 9, 'normal');
+        values(65, 9, 'Normal');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(66, 9, 'minor');
+        values(66, 9, 'Minor');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(67, 9, 'trivial');
+        values(67, 9, 'Trivial');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(68, 9, 'enhancement');
+        values(68, 9, 'Enhancement');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(69, 9, 'cosmetic');
+        values(69, 9, 'Cosmetic');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(70, 9, 'serious');
+        values(70, 9, 'Serious');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(71, 9, 'undecided');
+        values(71, 9, 'Undecided');
 
 /* Tracking options DISABLED */
 
@@ -267,7 +267,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 
 /*
  * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(72, 10, 'never')
+ *       values(72, 10, 'Never')
  */
 
 /*
@@ -276,7 +276,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 
 /*
  * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(73, 10, 'major')
+ *       values(73, 10, 'Major')
  */
 
 /*
@@ -285,7 +285,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 
 /*
  * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(74, 10, 'any')
+ *       values(74, 10, 'Any')
  */
  
 /* Functional area */
