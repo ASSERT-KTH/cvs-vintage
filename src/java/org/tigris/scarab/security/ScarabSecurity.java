@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -56,7 +56,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.2 2001/05/31 01:18:38 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.3 2001/07/17 21:40:31 jon Exp $
 */
 public interface ScarabSecurity
 {

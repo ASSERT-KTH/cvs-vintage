@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.9 2001/07/17 01:56:43 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.10 2001/07/17 21:40:31 jon Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity

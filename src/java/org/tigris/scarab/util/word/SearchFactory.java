@@ -1,7 +1,7 @@
 package org.tigris.scarab.util.word;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -53,7 +53,7 @@ import org.apache.turbine.util.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.4 2001/07/17 01:42:51 jmcnally Exp $
+ * @version $Id: SearchFactory.java,v 1.5 2001/07/17 21:40:32 jon Exp $
  */
 public class SearchFactory
 {

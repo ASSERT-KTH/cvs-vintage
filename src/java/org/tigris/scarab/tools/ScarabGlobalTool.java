@@ -1,7 +1,7 @@
 package org.tigris.scarab.tools;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -64,7 +64,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.1 2001/03/22 09:23:19 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.2 2001/07/17 21:40:31 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {

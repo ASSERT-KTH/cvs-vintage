@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.3 2001/07/11 07:33:49 jon Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.4 2001/07/17 21:40:31 jon Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity

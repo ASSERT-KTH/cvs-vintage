@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.11 2001/07/06 19:02:07 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.12 2001/07/17 21:40:31 jon Exp $
 */
 
 public interface ScarabConstants

@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.16 2001/07/17 20:44:16 jmcnally Exp $
+    @version $Id: RegisterConfirm.java,v 1.17 2001/07/17 21:40:27 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {

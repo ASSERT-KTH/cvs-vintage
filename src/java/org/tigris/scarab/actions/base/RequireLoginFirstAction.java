@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.base;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -62,7 +62,7 @@ import org.tigris.scarab.pages.ScarabPage;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.6 2001/07/17 20:44:16 jmcnally Exp $    
+    @version $Id: RequireLoginFirstAction.java,v 1.7 2001/07/17 21:40:27 jon Exp $    
 */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {

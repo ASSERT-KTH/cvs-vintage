@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.28 2001/07/17 07:46:05 jon Exp $
+    @version $Id: ReportIssue.java,v 1.29 2001/07/17 21:40:27 jon Exp $
 */
 public class ReportIssue extends TemplateAction
 {

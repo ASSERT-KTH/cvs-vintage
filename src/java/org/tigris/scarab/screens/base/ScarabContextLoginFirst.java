@@ -1,7 +1,7 @@
 package org.tigris.scarab.screens.base;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -59,7 +59,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.6 2001/07/11 07:33:48 jon Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.7 2001/07/17 21:40:30 jon Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {

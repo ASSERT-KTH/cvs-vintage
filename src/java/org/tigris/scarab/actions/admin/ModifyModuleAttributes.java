@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.6 2001/07/13 23:18:13 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.7 2001/07/17 21:40:27 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {

@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -52,7 +52,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/04/19 06:28:51 $
+ * @version $Revision: 1.5 $ $Date: 2001/07/17 21:40:27 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {

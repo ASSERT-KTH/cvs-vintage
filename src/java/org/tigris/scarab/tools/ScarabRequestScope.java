@@ -1,7 +1,7 @@
 package org.tigris.scarab.tools;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -68,7 +68,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.8 2001/07/17 01:54:57 jmcnally Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.9 2001/07/17 21:40:31 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {

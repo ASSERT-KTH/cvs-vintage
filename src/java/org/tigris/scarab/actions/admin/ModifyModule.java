@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyModule.java,v 1.4 2001/07/11 07:33:46 jon Exp $
+    @version $Id: ModifyModule.java,v 1.5 2001/07/17 21:40:27 jon Exp $
 */
 public class ModifyModule extends RequireLoginFirstAction
 {

@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -62,7 +62,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.7 2001/07/17 20:44:17 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.8 2001/07/17 21:40:31 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable

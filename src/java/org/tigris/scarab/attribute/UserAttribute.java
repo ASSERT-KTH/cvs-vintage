@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -57,7 +57,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.7 $ $Date: 2001/07/17 01:39:26 $
+ * @version $Revision: 1.8 $ $Date: 2001/07/17 21:40:27 $
  */
 public class UserAttribute extends AttributeValue
 {

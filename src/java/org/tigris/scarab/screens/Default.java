@@ -1,7 +1,7 @@
 package org.tigris.scarab.screens;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -57,7 +57,7 @@ import org.apache.turbine.services.template.TurbineTemplate;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.10 2001/07/11 07:33:48 jon Exp $
+    @version $Id: Default.java,v 1.11 2001/07/17 21:40:30 jon Exp $
 */
 public class Default extends TemplateScreen
 {

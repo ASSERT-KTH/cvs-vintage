@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -76,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.11 2001/07/17 01:38:40 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.12 2001/07/17 21:40:27 jon Exp $
 */
 public class ModifyIssue extends TemplateAction
 {

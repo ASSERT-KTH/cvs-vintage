@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.4 2001/07/17 01:56:43 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.5 2001/07/17 21:40:31 jon Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity, InitableRecyclable, ApplicationTool

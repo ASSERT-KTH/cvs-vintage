@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -56,7 +56,7 @@ import org.tigris.scarab.om.*;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.9 $ $Date: 2001/06/29 00:49:06 $
+ * @version $Revision: 1.10 $ $Date: 2001/07/17 21:40:27 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {

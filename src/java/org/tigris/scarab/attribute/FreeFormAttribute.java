@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -54,7 +54,7 @@ import org.tigris.scarab.om.AttributeValue;
  *  etc...
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.6 $ $Date: 2001/07/11 07:33:47 $
+ * @version $Revision: 1.7 $ $Date: 2001/07/17 21:40:27 $
  */
 public abstract class FreeFormAttribute extends AttributeValue
 {

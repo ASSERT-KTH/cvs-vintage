@@ -2,7 +2,7 @@ package org.tigris.scarab.om;
 
 
 /* ================================================================
- * Copyright (c) 2000 Collab.Net.  All rights reserved.
+ * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -66,7 +66,7 @@ import org.apache.turbine.services.security.entity.Role;
  * so there isn't much here.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabModule.java,v 1.9 2001/07/17 01:40:43 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.10 2001/07/17 21:40:28 jon Exp $
  */
 public class ScarabModule extends Module
     implements Group, Comparable
