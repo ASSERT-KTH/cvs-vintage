@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.33 2002/06/04 15:18:10 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.34 2002/08/20 15:25:59 lqd Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -83,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -853,22 +853,43 @@ public abstract class AbstractVerifier
       // target must be a superset of source
       Class[] a = source.getExceptionTypes();
       Class[] b = target.getExceptionTypes();
+      Class rteClass = null;
+      Class errorClass = null;
 
-      for (int i = 0; i < a.length; ++i)
+      try
       {
-         boolean found = false;
+         rteClass = classloader.loadClass( "java.lang.RuntimeException" );
+         errorClass = classloader.loadClass( "java.lang.Error" );
+      }
+      catch( ClassNotFoundException cnfe )
+      {
+         // Ignored, if this happens we have more serious problems :)
+      }
 
-         for (int j = 0; j < b.length; ++j)
+      for( int i = 0; i < a.length; ++i )
+      {
+         if( rteClass.isAssignableFrom(a[i])
+            || errorClass.isAssignableFrom(a[i]) )
          {
-            if (b[j].isAssignableFrom (a[i]) )
+            // Skip over subclasses of java.lang.RuntimeException and
+            // java.lang.Error
+            continue;
+         }
+
+         boolean found = false;
+         for( int j = 0; j < b.length; ++j )
+         {
+            if( b[j].isAssignableFrom (a[i]) )
             {
                found = true;
                break;
             }
          }
 
-         if (!found)
+         if ( !found )
+         {
             return false;
+         }
       }
 
       return true;
