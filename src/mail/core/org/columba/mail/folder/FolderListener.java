@@ -38,4 +38,14 @@ public interface FolderListener extends EventListener {
      * Called when a folder has been renamed.
      */
     public void folderRenamed(FolderEvent e);
+    
+    /**
+     * Called when a subfolder has been added to a folder.
+     */
+    public void folderAdded(FolderEvent e);
+    
+    /**
+     * Called when a subfolder has been removed from a folder.
+     */
+    public void folderRemoved(FolderEvent e);
 }

@@ -405,22 +405,6 @@ public class VirtualFolder extends Folder {
     }
 
     /**
- * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
- *      WorkerStatusController)
- */
-    public Object addMessage(ColumbaMessage message) throws Exception {
-        return null;
-    }
-
-    /**
- * @see org.columba.modules.mail.folder.Folder#addMessage(String,
- *      WorkerStatusController)
- */
-    public Object addMessage(String source) throws Exception {
-        return null;
-    }
-
-    /**
  * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int,
  *      WorkerStatusController)
  */
@@ -443,6 +427,7 @@ public class VirtualFolder extends Folder {
         }
 
         headerList.remove(uid);
+        fireMessageRemoved(uid, header.getFlags());
     }
 
     /**

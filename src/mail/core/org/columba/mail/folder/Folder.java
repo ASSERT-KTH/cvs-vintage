@@ -249,6 +249,42 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     }
 
     /**
+     * Propagates an event to all registered listeners notifying them
+     * that a subfolder has been added to this folder.
+     */
+    protected void fireFolderAdded(Folder folder) {
+        FolderEvent e = new FolderEvent(this, folder);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderAdded(e);
+            }
+        }
+    }
+
+    /**
+     * Propagates an event to all registered listeners notifying them
+     * that a subfolder has been removed from this folder.
+     */
+    protected void fireFolderRemoved(Folder folder) {
+        FolderEvent e = new FolderEvent(this, folder);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderRemoved(e);
+            }
+        }
+    }
+
+    /**
      * Return the root folder of this folder.
      * <p>
      * This is especially useful when using IMAP. IMAP has a root folder which

@@ -85,6 +85,8 @@ public class DefaultSearchEngine {
             }
             
             public void folderRenamed(FolderEvent e) {}
+            public void folderAdded(FolderEvent e) {}
+            public void folderRemoved(FolderEvent e) {}
         });
     }
 
