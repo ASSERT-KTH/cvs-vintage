@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.79 $
+ @version $Revision: 1.80 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -199,7 +199,7 @@ public abstract class AbstractWebContainer
             if( warFile.renameTo(tmp) == false )
                throw new DeploymentException("Was unable to move war to: "+tmp);
             if( warFile.mkdir() == false )
-               throw new DeploymentException("Was unable to mkdir: "+warFile);            
+               throw new DeploymentException("Was unable to mkdir: "+warFile);
             log.debug("Unpacking war to: "+warFile);
             FileInputStream fis = new FileInputStream(tmp);
             JarUtils.unjar(fis, warFile);
@@ -248,6 +248,11 @@ public abstract class AbstractWebContainer
 
          // Generate an event for the initialization
          super.init(di);
+      }
+      catch (DeploymentException e)
+      {
+         log.error("Problem in init ", e);
+         throw e;
       }
       catch (Exception e)
       {
