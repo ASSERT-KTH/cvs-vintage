@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.88 2004/09/10 12:57:59 loubyansky Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.89 2004/11/30 20:16:16 starksm Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -231,15 +231,15 @@
               <activation-config-property-value>true</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQHandler</activation-config-property-name>
+              <activation-config-property-name>DLQHandler</activation-config-property-name>
               <activation-config-property-value>org.jboss.resource.adapter.jms.inflow.dlq.GenericDLQHandler</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQJNDIName</activation-config-property-name>
+              <activation-config-property-name>DLQJNDIName</activation-config-property-name>
               <activation-config-property-value>queue/DLQ</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQMaxResent</activation-config-property-name>
+              <activation-config-property-name>DLQMaxResent</activation-config-property-name>
               <activation-config-property-value>10</activation-config-property-value>
            </activation-config-property>
         </activation-config>
@@ -337,15 +337,15 @@
               <activation-config-property-value>true</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQHandler</activation-config-property-name>
+              <activation-config-property-name>DLQHandler</activation-config-property-name>
               <activation-config-property-value>org.jboss.resource.adapter.jms.inflow.dlq.GenericDLQHandler</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQJNDIName</activation-config-property-name>
+              <activation-config-property-name>DLQJNDIName</activation-config-property-name>
               <activation-config-property-value>queue/DLQ</activation-config-property-value>
            </activation-config-property>
            <activation-config-property>
-              <activation-config-property-name>dLQMaxResent</activation-config-property-name>
+              <activation-config-property-name>DLQMaxResent</activation-config-property-name>
               <activation-config-property-value>10</activation-config-property-value>
            </activation-config-property>
         </activation-config>
