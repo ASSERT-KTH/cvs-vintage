@@ -38,8 +38,16 @@ public class SortDecorator extends TableModelDecorator {
 	/** ****************** sorting algorithm ******************* */
 	private int[] indexes;
 
+	private int selectedColumn;
+
+	private boolean sortOrder;
+
 	public SortDecorator(ContactItemTableModel model) {
 		super(model);
+
+		selectedColumn = 0;
+		sortOrder = false;
+
 		allocate();
 	}
 
@@ -47,9 +55,11 @@ public class SortDecorator extends TableModelDecorator {
 	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
 	public void setContactItemMap(ContactItemMap list) {
+
 		super.setContactItemMap(list);
 
-		tableChanged(new TableModelEvent(getRealModel()));
+		sort(selectedColumn);
+
 	}
 
 	/**
@@ -72,12 +82,20 @@ public class SortDecorator extends TableModelDecorator {
 	}
 
 	public void sort(int column) {
+
+		selectedColumn = column;
+
 		int rowCount = getRowCount();
 
 		for (int i = 0; i < rowCount; i++) {
 			for (int j = i + 1; j < rowCount; j++) {
-				if (compare(indexes[i], indexes[j], column) < 0) {
-					swap(i, j);
+				int c = compare(indexes[i], indexes[j], column);
+				if (!sortOrder) {
+					if (c < 0)
+						swap(i, j);
+				} else {
+					if (c > 0)
+						swap(i, j);
 				}
 			}
 		}
@@ -109,5 +127,35 @@ public class SortDecorator extends TableModelDecorator {
 		for (int i = 0; i < indexes.length; ++i) {
 			indexes[i] = i;
 		}
+	}
+
+	/**
+	 * @return Returns the sortOrder.
+	 */
+	public boolean isSortOrder() {
+		return sortOrder;
+	}
+
+	/**
+	 * @param sortOrder
+	 *            The sortOrder to set.
+	 */
+	public void setSortOrder(boolean sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	/**
+	 * @return Returns the selectedColumn.
+	 */
+	public int getSelectedColumn() {
+		return selectedColumn;
+	}
+
+	/**
+	 * @param selectedColumn
+	 *            The selectedColumn to set.
+	 */
+	public void setSelectedColumn(int selectedColumn) {
+		this.selectedColumn = selectedColumn;
 	}
 }

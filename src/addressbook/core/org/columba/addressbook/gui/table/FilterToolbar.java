@@ -1,163 +1,123 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.addressbook.gui.table;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.ResourceBundle;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import org.columba.addressbook.gui.table.model.FilterDecorator;
 
-public class FilterToolbar extends JToolBar implements ActionListener {
-    public JButton searchButton;
-    private JComboBox comboBox;
-    private JTextField textField;
-    private TableController table;
-    private ResourceBundle toolbarLabels;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
-    public FilterToolbar(TableController table) {
-        super();
+public class FilterToolbar extends JPanel implements ActionListener {
+	public JButton searchButton;
 
-        this.table = table;
+	private JComboBox comboBox;
 
-        //setMargin( new Insets(0,0,0,0) );
-        addCButtons();
+	private TableController table;
 
-        setBorderPainted(false);
-        setFloatable(false);
-    }
+	private ResourceBundle toolbarLabels;
 
-    public void addCButtons() {
-        /*
-//addSeparator();
+	private JLabel label;
 
-//HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
-TableItem list = table.getHeaderTableItem();
-comboBox = new JComboBox();
-String name;
+	private JTextField textField;
 
-for (int i = 0; i < list.count(); i++)
-{
-        name = list.getName(i);
-        boolean enabled = list.getEnabled(i);
+	private JButton clearButton;
 
-        if (enabled == false)
-                continue;
+	public FilterToolbar(TableController table) {
+		super();
 
-        if (!(name.equalsIgnoreCase("type")))
-                comboBox.addItem(name);
+		this.table = table;
 
-}
+		initComponents();
+		layoutComponents();
 
-//comboBox.setMaximumSize( new java.awt.Dimension( 100, 25 ) );
-comboBox.setSelectedIndex(0);
-comboBox.addActionListener(this);
-comboBox.setActionCommand("COMBO");
-add(comboBox);
+		textField.getDocument().addDocumentListener(new MyDocumentListener());
+	}
 
-addSeparator();
+	protected void initComponents() {
+		label = new JLabel("Name or email contains:");
 
-JLabel label = new JLabel("contains");
-add(label);
+		textField = new JTextField(12);
 
-addSeparator();
+		clearButton = new JButton("Clear");
+		clearButton.setActionCommand("CLEAR");
+		clearButton.addActionListener(this);
+	}
 
-textField = new JTextField(20);
-textField.addActionListener(this);
-textField.setActionCommand("TEXTFIELD");
-textField.addFocusListener(new FocusListener()
-{
-        public void focusGained(FocusEvent e)
-        {
-        }
+	protected void layoutComponents() {
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-        public void focusLost(FocusEvent e)
-        {
-                TableModelFilteredView model = table.getTableModelFilteredView();
-                try
-                {
-                        model.setPatternString(textField.getText());
-                }
-                catch (Exception ex)
-                {
-                        ex.printStackTrace();
-                }
-        }
-});
-//textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
+		FormLayout l = new FormLayout(
+				"3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu",
+				"fill:default:grow");
+		PanelBuilder b = new PanelBuilder(this, l);
 
-add(textField);
+		CellConstraints c = new CellConstraints();
 
-addSeparator();
+		b.add(label, c.xy(2, 1));
+		b.add(textField, c.xy(4, 1));
+		b.add(clearButton, c.xy(6, 1));
 
-searchButton = new JButton("Search..");
-//searchButton.setMaximumSize( new java.awt.Dimension( 150, 25 ) );
-//attachmentButton.setSelected( false );
-searchButton.addActionListener(this);
-searchButton.setActionCommand("OK");
-add(searchButton);
+	}
 
-addSeparator();
-        */
-    }
+	public void update() {
+		table.getAddressbookModel().update();
+	}
 
-    public void update() {
-        table.getAddressbookModel().update();
-    }
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		if (action.equals("CLEAR")) {
+			textField.setText("");
+		}
+	}
 
-        /*
-try {
-    //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
-    TableModelFilteredView model = table.getFilteredView();
+	class MyDocumentListener implements DocumentListener {
 
-    if (action.equals("COMBO")) {
-        JComboBox cb = (JComboBox) e.getSource();
-        model.setPatternItem((String) cb.getSelectedItem());
-    } else if (action.equals("TEXTFIELD")) {
-        model.setPatternString(textField.getText());
+		public void insertUpdate(DocumentEvent e) {
+			update();
+		}
 
-        //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-        // tableModel.update();
-        //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-        //update();
-    } else if (action.equals("OK")) {
-        if (model == null) {
-            System.out.println("model is null");
+		public void removeUpdate(DocumentEvent e) {
+			update();
+		}
 
-            return;
-        }
+		public void changedUpdate(DocumentEvent e) {
+			//Plain text components don't fire these events
+		}
 
-        //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-        //tableModel.update();
-        model.setDataFiltering(true);
-
-        //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-        update();
-    }
-} catch (Exception ex) {
-    ex.printStackTrace();
-}
-*/
-    }
+		public void update() {
+			FilterDecorator model = table.getFilterDecorator();
+			model.setPattern(textField.getText());
+			table.getAddressbookModel().fireTableDataChanged();
+		}
+	}
 }

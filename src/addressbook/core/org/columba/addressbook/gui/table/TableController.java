@@ -33,6 +33,7 @@ import org.columba.addressbook.folder.FolderEvent;
 import org.columba.addressbook.folder.FolderListener;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
+import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.model.ContactItem;
@@ -56,6 +57,8 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 	private SortDecorator sortDecorator;
 
+	private FilterDecorator filterDecorator;
+
 	private AddressbookTreeNode selectedFolder;
 
 	/**
@@ -70,19 +73,14 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 		sortDecorator = new SortDecorator(addressbookModel);
 
-		/*
-		 * filteredView = new TableModelFilteredView(addressbookModel); sorter =
-		 * new TableModelSorter(addressbookModel);
-		 * 
-		 * addressbookModel.registerPlugin(filteredView);
-		 * addressbookModel.registerPlugin(sorter);
-		 */
-		view = new TableView(this, sortDecorator);
+		filterDecorator = new FilterDecorator(sortDecorator);
+
+		view = new TableView(this, filterDecorator);
 
 		addMouseListenerToHeaderInTable();
 
 		view.addMouseListener(new TableMouseListener(this));
-		
+
 		//view.setModel(addressbookModel);
 		// TODO: move outside TableController
 		//toolbar = new FilterToolbar(this);
@@ -108,16 +106,13 @@ public class TableController implements TreeSelectionListener, FolderListener,
 				int column = tableView.convertColumnIndexToModel(viewColumn);
 
 				if ((e.getClickCount() == 1) && (column != -1)) {
-					//controller.getSorter().sort(column);
+
+					if (sortDecorator.getSelectedColumn() == column)
+						sortDecorator
+								.setSortOrder(!sortDecorator.isSortOrder());
+
 					sortDecorator.sort(column);
 
-					/*
-					 * sortDecorator.tableChanged( new
-					 * TableModelEvent(addressbookModel));
-					 */
-
-					//addressbookModel.update();
-					//mainInterface.mainFrame.getMenu().updateSortMenu();
 				}
 			}
 		};
@@ -159,17 +154,17 @@ public class TableController implements TreeSelectionListener, FolderListener,
 				selectedFolder = node;
 				((AbstractFolder) node).addFolderListener(this);
 
-				sortDecorator
+				filterDecorator
 						.setContactItemMap(((AbstractFolder) selectedFolder)
 								.getContactItemMap());
 			} catch (Exception e1) {
-				if ( MainInterface.DEBUG)
+				if (MainInterface.DEBUG)
 					e1.printStackTrace();
-				
+
 				new ErrorDialog(e1.getMessage(), e1);
 			}
 		} else {
-			sortDecorator.setContactItemMap(null);
+			filterDecorator.setContactItemMap(null);
 		}
 	}
 
@@ -185,7 +180,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 		ContactItem item;
 
 		for (int i = 0; i < rows.length; i++) {
-			item = (ContactItem) sortDecorator.getContactItem(rows[i]);
+			item = (ContactItem) filterDecorator.getContactItem(rows[i]);
 
 			Object uid = item.getUid();
 			uids[i] = uid;
@@ -209,7 +204,6 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 		return item;
 	}
-	
 
 	/** ********************** FolderListener ***************** */
 
@@ -344,7 +338,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
 	 */
 	public void selectAll() {
-		 getView().selectAll();
+		getView().selectAll();
 	}
 
 	/**
@@ -352,5 +346,19 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	 */
 	public void undo() {
 
+	}
+
+	/**
+	 * @return Returns the sortDecorator.
+	 */
+	public SortDecorator getSortDecorator() {
+		return sortDecorator;
+	}
+
+	/**
+	 * @return Returns the filterDecorator.
+	 */
+	public FilterDecorator getFilterDecorator() {
+		return filterDecorator;
 	}
 }

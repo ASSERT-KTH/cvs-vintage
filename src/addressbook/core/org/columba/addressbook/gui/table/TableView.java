@@ -49,11 +49,11 @@ public class TableView extends JTable {
 
         // set renderers for columns
         TableColumn tc = getColumnModel().getColumn(0);
-        /*
-        tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
-        tc.setCellRenderer(new TypeRenderer());
-        tc.setMaxWidth(23);
-        */
+        
+        //tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
+        //tc.setCellRenderer(new TypeRenderer());
+        //tc.setMaxWidth(23);
+        
         
         tc = getColumnModel().getColumn(0);
         tc.setHeaderRenderer(createHeader("displayname"));
@@ -86,9 +86,9 @@ public class TableView extends JTable {
             String suffix = AddressbookResourceLoader.getString("header",
                     name.substring(index + 1, name.length()));
 
-            return new DefaultHeaderRenderer(prefix + "(" + suffix + ")");
+           return new DefaultHeaderRenderer(controller.getSortDecorator(), prefix + "(" + suffix + ")");
         }
 
-        return new DefaultHeaderRenderer(name);
+        return new DefaultHeaderRenderer(controller.getSortDecorator(), name);
     }
 }
