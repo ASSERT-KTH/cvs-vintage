@@ -3,18 +3,31 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
+  #set ($values = $attrInput.get($optionFieldName).Value)
+
 <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
    <option value="">Choose...</option>
   #end
+  #if ($module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
-    #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
-    <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
-    #else
-    <option value="$option.OptionId">$option.DisplayValue</option>
+    #if ($values)   
+       #if ($multiple.toString().equals("true"))
+         #foreach ($value in $values)
+            #if ($value.equals($option.OptionId))
+               #set ($selected="selected")
+            #end
+         #end
+       #else
+         #if ($values.equals($option.OptionId))
+           #set ($selected="selected")
+          #end
+       #end
     #end
+    <option value="$option.OptionId" $selected>$option.DisplayValue</option>
+  #end
   #end
 </select>
 #end
