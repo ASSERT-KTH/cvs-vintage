@@ -1,3 +1,9 @@
+<html>
+<!--
+  Copyright (c) 1999 The Apache Software Foundation.  All rights 
+  reserved.
+-->
+<body>
 <%@ taglib uri="http://java.apache.org/tomcat/examples-taglib" prefix="eg" %>
 
 Radio stations that rock:
@@ -15,3 +21,6 @@ Did you see me on the stderr window?
 <eg:log toBrowser="true">
 Did you see me on the browser window as well?
 </eg:log>
+
+</body>
+</html>
