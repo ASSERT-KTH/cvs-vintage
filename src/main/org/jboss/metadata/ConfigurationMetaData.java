@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  * The configuration information for an EJB container.
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class ConfigurationMetaData extends MetaData
 {
@@ -48,6 +48,7 @@ public class ConfigurationMetaData extends MetaData
    private String instancePool;
    private String instanceCache;
    private String persistenceManager;
+   private Element persistenceManagerElement;
    private String transactionManager;
    private String webClassLoader = "org.jboss.web.WebClassLoader";
    // This is to provide backward compatibility with 2.4 series jboss.xml
@@ -83,6 +84,10 @@ public class ConfigurationMetaData extends MetaData
 
    public String getInstanceCache() { return instanceCache; }
 
+   public Element getPersistenceManagerElement() 
+   { 
+      return persistenceManagerElement; 
+   }
    public String getPersistenceManager() { return persistenceManager; }
 
    public String getSecurityDomain() { return securityDomain; }
@@ -131,6 +136,7 @@ public class ConfigurationMetaData extends MetaData
       instanceCache = getElementContent(getOptionalChild(element, "instance-cache"), instanceCache);
 
       // set the persistence manager
+      persistenceManagerElement = getOptionalChild(element, "persistence-manager", persistenceManagerElement);
       persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"), persistenceManager);
 
       // set the transaction manager
