@@ -464,6 +464,20 @@ try{
    }
 
     /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public Attribute getAttribute(NumberKey pk)
+     throws Exception
+    {
+        try
+        {
+           attribute = Attribute.getInstance(pk);
+        }
+        catch(Exception e){e.printStackTrace();}
+        return attribute;
+   }
+
+    /**
      * A Query object for use within the Scarab API.
      */
     public Query getQuery()
