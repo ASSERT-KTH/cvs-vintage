@@ -1,2 +1,3 @@
-$l10n.YouCanViewIssue:
-    $link.getIssueIdLink($issue)
+$l10n.YouCanViewIssue:
+
+    $link.getIssueIdLink($issue)
