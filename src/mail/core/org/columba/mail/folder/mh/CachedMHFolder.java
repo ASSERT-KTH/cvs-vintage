@@ -69,17 +69,28 @@ public class CachedMHFolder extends MHFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
-		AbstractMessage message = getMessage(uid, worker);
-		int size = message.getHeader().count();
+		if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {
+			// message is already cached
 
-		HeaderInterface h =
-			(ColumbaHeader) cache.getHeaderList(worker).get(uid);
-		int cachedSize = h.count();
+			// try to compare the headerfield count of
+			// the actually parsed message with the cached
+			// headerfield count
+			AbstractMessage message = getMessage(uid, worker);
+			int size = message.getHeader().count();
 
-		if (size > cachedSize)
-			return (ColumbaHeader) message.getHeader();
+			HeaderInterface h =
+				(ColumbaHeader) cache.getHeaderList(worker).get(uid);
+			if (h == null)
+				return null;
 
-		return (ColumbaHeader) h;
+			int cachedSize = h.count();
+
+			if (size > cachedSize)
+				return (ColumbaHeader) message.getHeader();
+
+			return (ColumbaHeader) h;
+		} else
+			return (ColumbaHeader) cache.getHeaderList(worker).get(uid);
 	}
 
 	public AbstractMessage getMessage(
