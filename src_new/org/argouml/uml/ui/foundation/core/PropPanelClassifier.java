@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.35 2003/05/05 11:25:40 kataka Exp $
+// $Id: PropPanelClassifier.java,v 1.36 2003/05/10 02:48:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,6 +106,11 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
 
     public PropPanelClassifier(String title, Orientation orientation) {
         super(title, orientation);
+        initialize();
+    }
+
+    public PropPanelClassifier(String name, ImageIcon icon, Orientation orientation) {
+        super(name, icon, orientation);
         initialize();
     }
 

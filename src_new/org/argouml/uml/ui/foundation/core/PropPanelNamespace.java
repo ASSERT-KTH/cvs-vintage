@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.11 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelNamespace.java,v 1.12 2003/05/10 02:48:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,11 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
   ////////////////////////////////////////////////////////////////
   // contructors
     public PropPanelNamespace(String panelName, ImageIcon icon, int columns) {
-        super(panelName,icon,columns);
+        super(panelName, icon, columns);
+    }
+    
+    public PropPanelNamespace(String panelName, ImageIcon icon, Orientation orientation) {
+        super(panelName, icon, orientation);
     }
     
     public PropPanelNamespace(String title, Orientation orientation) {
@@ -55,7 +59,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
     }
 
     public PropPanelNamespace(String panelName,int columns) {
-        this(panelName,null,columns);
+        this(panelName, null, columns);
     }
 
     public void addClass() {

@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.9 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelCallAction.java,v 1.10 2003/05/10 02:48:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,50 +27,37 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
+import org.argouml.swingext.LabelledLayout;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
-
-import ru.novosoft.uml.behavior.common_behavior.MAction;
-import ru.novosoft.uml.behavior.common_behavior.MCallAction;
-import ru.novosoft.uml.foundation.data_types.MActionExpression;
+import org.argouml.util.ConfigLoader;
 
 public class PropPanelCallAction extends PropPanelModelElement {
 
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelCallAction() {
-        super("Action", _callActionIcon, 2);
+        super("Action", _callActionIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MCallAction.class;
+        Class mclass = (Class)ModelFacade.CALL_ACTION;
 
-        addCaption(Argo.localize("UMLMenu", "label.name"), 1, 0, 0);
-        addField(getNameTextField(), 1, 0, 0);
+        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 
         UMLExpressionModel expressionModel =
             new UMLExpressionModel(
                 this,
-                MAction.class,
+                (Class)ModelFacade.ACTION,
                 "script",
-                MActionExpression.class,
+                (Class)ModelFacade.ACTION_EXPRESSION,
                 "getScript",
                 "setScript");
+        addField(Argo.localize("UMLMenu", "label.expression"), new JScrollPane(new UMLExpressionBodyField(expressionModel, true)));
 
-        addCaption(Argo.localize("UMLMenu", "label.expression"), 2, 0, 0);
-        addField(
-            new JScrollPane(new UMLExpressionBodyField(expressionModel, true)),
-            2,
-            0,
-            0);
-
-        addCaption(Argo.localize("UMLMenu", "label.language"), 3, 0, 1);
-        addField(
-            new UMLExpressionLanguageField(expressionModel, true),
-            3,
-            0,
-            0);
+        addField(Argo.localize("UMLMenu", "label.language"), new UMLExpressionLanguageField(expressionModel, true));
 
         new PropPanelButton(
             this,
