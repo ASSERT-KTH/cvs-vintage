@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.54 2003/09/08 14:53:43 thierrylach Exp $
+// $Id: NavigatorPane.java,v 1.55 2003/09/08 19:34:43 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.54 2003/09/08 14:53:43 thierrylach Exp $
+ * $Id: NavigatorPane.java,v 1.55 2003/09/08 19:34:43 thierrylach Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -161,6 +161,7 @@ public class NavigatorPane
 	public static NavigatorPane getInstance() {
 		if (! instanceSet) {
 			INSTANCE = new NavigatorPane();
+			instanceSet = true;
 		}
 		return INSTANCE;
 	}
