@@ -93,7 +93,7 @@ import ru.novosoft.uml.model_management.MModel;
  *  <li>statistics gathering - not really used</li>
  * </ol>
  *
- * $Id: NavigatorPane.java,v 1.27 2003/04/12 18:50:33 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.28 2003/04/12 19:02:52 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -304,36 +304,6 @@ public class NavigatorPane
     public void itemStateChanged(ItemEvent e) {
         updateTree();
         _navPerspectivesChanged++;
-    }
-    
-    /** called when the user clicks once on an item in the tree.
-     * used only to gather stats.
-     */
-    private void mySingleClick(int row, TreePath path) {
-System.out.println("mySingleClick");
-        mouseClick(row, path);
-        _clicksInNavPane++;
-    }
-    
-    /** needs documenting */
-    private void mouseClick(int row, TreePath path) {
-        System.out.println("mouseClick");
-        Object sel = getSelectedObject();
-        if (sel == null)
-            return;
-        addToHistory(sel);
-        ProjectBrowser.TheInstance.setTarget(sel);
-        repaint();
-    }
-    
-    /** called when the user clicks twice on an item in the tree.
-     * used only to gather stats.
-     */
-    private void myDoubleClick(int row, TreePath path) {
-System.out.println("myDoubleClick");
-        mouseClick(row, path);
-        _clicksInNavPane += 2;
-        repaint();
     }
     
     // ------------- history methods --------------------
