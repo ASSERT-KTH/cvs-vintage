@@ -34,7 +34,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -141,21 +141,6 @@ public class XmlFileLoader {
       {
 			Reader in = new InputStreamReader(_in);
 
-/*         
-
-			com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
-
-			Parser parser = new com.sun.xml.parser.ValidatingParser();
-
-			// Use a local entity resolver to get rid of the DTD loading via internet
-			EntityResolver er = new LocalResolver();
-			parser.setEntityResolver(er);
-			xdb.setParser(parser);
-
-			parser.parse(new InputSource(in));
-         com.sun.xml.tree.XmlDocument doc = xdb.getDocument();
-         doc.write(System.out);
-*/
          DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
          DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
          EntityResolver er = new LocalResolver();
