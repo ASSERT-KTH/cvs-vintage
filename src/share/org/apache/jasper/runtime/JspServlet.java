@@ -401,7 +401,6 @@ public class JspServlet extends HttpServlet {
     {
 	Class jspClass = (Class) loadedJSPs.get(name);
 	boolean firstTime = jspClass == null;
-
         JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
                                                      context, name, 
                                                      isErrorPage, options,

@@ -756,7 +756,6 @@ public class Context {
 
 	Request req=contextM.createRequest( base , normP );
 	contextM.processRequest(req);
-
 	String mappedPath = req.getMappedPath();
 
 	// XXX workaround - need to fix mapper to return mapped path
@@ -765,10 +764,13 @@ public class Context {
 	if(mappedPath == null )
 	    mappedPath=req.getLookupPath();
 
+	// All paths have to be relative to the context - it's not so
+	// logical ( IMHO - costin ), but that's the spec.
+	// 
 	// Strip off URI path that brought us to this context.
-	if (0 == mappedPath.indexOf(this.getPath())) {
-	    mappedPath = mappedPath.substring(this.getPath().length());
-	}
+	//  	if (0 == mappedPath.indexOf(this.getPath())) {
+	// 	    mappedPath = mappedPath.substring(this.getPath().length());
+	// 	}
 
 	Context targetContext=req.getContext();
 	String realPath= targetContext.getDocBase() + mappedPath;
