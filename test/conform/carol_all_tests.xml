@@ -26,7 +26,7 @@
     <antcall target="single.nons.iiop"/>
     <antcall target="single.nons.jrmp1.1"/>
     <antcall target="single.nons.jrmp1.2"/>
-  </target>
+    </target>
 
   <target name="test.multiple">
     <condition property="is.jvm.1.4">
@@ -130,7 +130,7 @@
       <property name="client.properties.file.name2" value="jeremie_carol_nons.properties"/>
       <property name="server.properties.file.name1" value="jeremie_jndi.properties"/>
       <property name="server.properties.file.name2" value="jeremie_carol_nons.properties"/>
-      <property name="test.name"          value="jeremie"/>
+      <property name="test.name"          value="jeremie.nons"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/jeremie"/> 
     </ant>
   </target>
@@ -142,7 +142,7 @@
       <property name="client.properties.file.name2" value="iiop_carol_nons.properties"/>
       <property name="server.properties.file.name1" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name2" value="iiop_carol_nons.properties"/>
-      <property name="test.name"          value="suniiop"/>
+      <property name="test.name"          value="suniiop.nons"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
     </ant>
   </target> 
@@ -158,6 +158,7 @@
       <property name="server.properties.file.name2" value="jrmp_carol_nons.properties"/>
       <property name="name.server.class.name" value="sun.rmi.registry.RegistryImpl"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
+      <property name="test.name"          value="sunjrmp1.1.nons"/>
     </ant>
   </target>
 
@@ -170,6 +171,7 @@
       <property name="server.properties.file.name2" value="jrmp_carol_nons.properties"/>
       <property name="name.server.class.name" value="sun.rmi.registry.RegistryImpl"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
+      <property name="test.name"          value="sunjrmp1.2.nons"/>
     </ant>
   </target> 
 
@@ -287,7 +289,7 @@
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name1" value="multisunjeremie_carol_nons.properties"/>
       <property name="server.properties.file.name2" value="jeremie_jndi.properties"/>
-      <property name="test.name"            value="multi_suniiop_jeremie"/>
+      <property name="test.name"            value="multi_suniiop_jeremie.nons"/>
       <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/jeremie"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
@@ -303,7 +305,7 @@
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name1" value="multisun_carol_nons.properties"/>
       <property name="server.properties.file.name2" value="jrmp_jndi.properties"/>
-      <property name="test.name"            value="multi_suniiop_sunjrmp1.1"/>
+      <property name="test.name"            value="multi_suniiop_sunjrmp1.1.nons"/>
       <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
@@ -319,7 +321,7 @@
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name1" value="multisun_carol_nons.properties"/>
       <property name="server.properties.file.name2" value="jrmp_jndi.properties"/>
-      <property name="test.name"            value="multi_suniiop_sunjrmp1.2"/>
+      <property name="test.name"            value="multi_suniiop_sunjrmp1.2.nons"/>
       <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
@@ -335,7 +337,7 @@
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name1" value="multisun2_carol_nons.properties"/>
       <property name="server.properties.file.name2" value="jrmp_jndi.properties"/>
-      <property name="test.name"            value="multi_sunjrmp1.1_suniiop"/>
+      <property name="test.name"            value="multi_sunjrmp1.1_suniiop.nons"/>
       <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
@@ -351,7 +353,7 @@
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
       <property name="server.properties.file.name1" value="multisun2_carol_nons.properties"/>
       <property name="server.properties.file.name2" value="jrmp_jndi.properties"/>
-      <property name="test.name"            value="multi_sunjrmp1.2_suniiop"/>
+      <property name="test.name"            value="multi_sunjrmp1.2_suniiop.nons"/>
       <property name="test.client.pkg1" value="org/objectweb/carol/jtests/conform/basic/clients/rmijrmp"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.pkg2" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
