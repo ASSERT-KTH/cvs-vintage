@@ -47,6 +47,8 @@ package org.tigris.scarab.util.xml;
  */
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 import org.xml.sax.Attributes;
 
@@ -111,14 +113,25 @@ public class AttachmentRule extends BaseRule
         if (attachment.getFilePath() != null)
         {
             String path = attachment.getFilePath();
-            File source = new File(path);
+            String sourceFileName = path.substring(path.lastIndexOf(File.separator)+1);
             attachment.setFilePath(null);
             attachment.save();
             String newFile = attachment.getRepositoryDirectory(issue.getModule().getCode())
-                + path.substring(path.lastIndexOf(File.separator)+1)
-                + "_" + attachment.getPrimaryKey().toString();
-            File dest = new File(newFile);
-            source.renameTo(dest);
+                + File.separator + sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_"
+                + attachment.getPrimaryKey().toString()
+                + sourceFileName.substring(sourceFileName.lastIndexOf('.'));
+            
+            // copy the file into its new location
+            FileReader in = new FileReader(path);
+            FileWriter out = new FileWriter(newFile);
+            int c;
+            while ((c = in.read()) != -1)
+            {
+                out.write(c);
+            }
+            in.close();
+            out.close();
+            
             attachment.setFilePath(newFile);
         }
         attachment.save();
