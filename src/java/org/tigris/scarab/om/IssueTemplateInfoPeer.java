@@ -87,7 +87,6 @@ public class IssueTemplateInfoPeer
                 cGlob.or(cPriv);
                 crit.add(cGlob);
             }
-            crit.setDistinct();
 
             // Add sort criteria
             if (sortColumn.equals("desc"))
