@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.48 2003/02/20 10:19:32 lepekhine Exp $
+// $Id: Modeller.java,v 1.49 2003/02/21 01:13:20 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -761,7 +761,12 @@ public class Modeller
             }
         }
         if (mAssociationEnd == null && !noAssociations) {
-            Object mAssociation = CoreFactory.getFactory().buildAssociation(mClassifier, true, parseState.getClassifier(), false, name);
+            Object mAssociation = CoreFactory.getFactory()
+                                             .buildAssociation(mClassifier,
+                                                               true,
+                                                               parseState.getClassifier(),
+                                                               false,
+                                                               ModelFacade.getName(parseState.getClassifier())+" -> "+ModelFacade.getName(mClassifier));
             mAssociationEnd = ModelFacade.getAssociationEnd(mClassifier, mAssociation);
         }
         return mAssociationEnd;
