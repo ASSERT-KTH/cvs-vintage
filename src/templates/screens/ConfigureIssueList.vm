@@ -13,9 +13,12 @@
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
 <input type="hidden" name="module_id" value="$module.ModuleId" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
 <div class="functnbar">
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160;
+  <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
 </div>
 
 <h3>Attributes</h3>
@@ -65,6 +68,8 @@
 
 <div class="functnbar2">
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160; 
+  <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
 </div>
 
 $intake.declareGroups()
