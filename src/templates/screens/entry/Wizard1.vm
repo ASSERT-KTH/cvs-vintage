@@ -55,7 +55,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #end
 
 <div class="axial">
-#foreach ($group in $issueType.getAttributeGroups($module))
+#foreach ($group in $module.getAttributeGroups($issueType))
     #if ($group.Dedupe && !$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">

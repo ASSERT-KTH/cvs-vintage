@@ -11,53 +11,50 @@ $page.setTitle("Enter issue")
   #set ($templ = $scarabR.getIssueTemplate($templateId))
 #end
 
+
 <div class="app" id="div2-1-0">
 
 <h2>$page.Title</h2>
 
-## Only show templates if user has not come through the wizard.
-#if (!$data.Parameters.getString("oldscreen"))
 <form method="post" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
 
-#set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
-#set ($globalTemplateList = $module.getGlobalTemplates($issueType))
-#if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
- <h3>Apply issue entry template</h3>
- <div class="axial">
-         <table width="100%" cellpadding="3" cellspacing="2" border="1">
-      <tr>
-      <th width="120">Templates</th>
-      <td>
-      <select name="templateId">
- #foreach ($template in $privateTemplateList)
- <option value="$template.IssueId">$template.TemplateInfo.Name</option>
- #end
- #foreach ($template in $globalTemplateList)
- <option value="$template.IssueId">$template.TemplateInfo.Name</option>
- #end
-      </select> 
-      &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
+## Only show templates if user has not come through the wizard.
+#if (!$data.Parameters.getString("oldscreen"))
+    #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
+    #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
+    #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
+     <h3>Apply issue entry template</h3>
+     <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+          <tr>
+          <th width="120">Templates</th>
+          <td>
+          <select name="select_template_id">
+     #foreach ($template in $privateTemplateList)
+     <option value="$template.IssueId">$template.TemplateInfo.Name</option>
+     #end
+     #foreach ($template in $globalTemplateList)
+     <option value="$template.IssueId">$template.TemplateInfo.Name</option>
+     #end
+          </select> 
+          &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
       &#160;$link.setPage("TemplateList.vm").setLabel("template list")
-      </td>
-      </tr>
-      </table>
- </div>
+          </td>
+          </tr>
+       </table>
+     </div>
+    #end
 #end
-</form>
-#end
-
-<form method="post" enctype="multipart/form-data" action="$link.setPage("entry,Wizard3.vm")"> 
-<input type="hidden" name="action" value="ReportIssue" />
 
 <p class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset" />&#160;
-<input type="reset" value="Cancel" />
+<input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
+<input type="reset" value="Cancel" name="eventSubmit_doCancel" />
 </p>
     
 <div class="axial">
-#foreach ($group in $issueType.getAttributeGroups($module))
+#foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
@@ -243,8 +240,8 @@ $page.setTitle("Enter issue")
 
 <p class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
-<input type="reset" value="Reset" />&#160;
-<input type="reset" value="Cancel" />
+<input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
+<input type="reset" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 
 $intake.declareGroups()

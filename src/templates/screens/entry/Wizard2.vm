@@ -18,7 +18,7 @@ $page.setTitle("Identified as duplicate")
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#foreach ($group in $issueType.getDedupeAttributeGroups($module))
+#foreach ($group in $module.getDedupeAttributeGroups($issueType))
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
@@ -29,7 +29,7 @@ $page.setTitle("Identified as duplicate")
 #end
 </tr>
 <tr>
-#foreach ($group in $issueType.getDedupeAttributeGroups($module))
+#foreach ($group in $module.getDedupeAttributeGroups($issueType))
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
@@ -56,7 +56,7 @@ $page.setTitle("Identified as duplicate")
 <tr>
 <th>&#160;</th>
 <th>Issue ID</th>
-#foreach ($attrGroup in $issueType.getDedupeAttributeGroups($module))
+#foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
    #foreach ($att in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
@@ -80,7 +80,7 @@ $page.setTitle("Identified as duplicate")
   #end
   </td>
   <td><strong>$issue.UniqueId</strong></td>
-#foreach ($attrGroup in $issueType.getDedupeAttributeGroups($module))
+#foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
    #foreach ($attr in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
