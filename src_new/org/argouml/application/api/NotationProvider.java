@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.11 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.12 2003/12/10 12:21:33 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.11 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.12 2003/12/10 12:21:33 mkl Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -49,6 +49,7 @@ import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
+import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.model_management.MPackage;
@@ -73,6 +74,7 @@ public interface NotationProvider {
     public String generateState(MState m);
     public String generateStateBody(MState stt);
     public String generateTransition(MTransition m);
+    public String generateVisibility(MVisibilityKind m);
     public String generateAction(Object m);
     public String generateGuard(MGuard m);
     public String generateMessage(MMessage m);

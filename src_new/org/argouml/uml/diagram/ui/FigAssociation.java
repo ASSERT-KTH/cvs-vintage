@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.59 2003/12/07 21:31:34 mkl Exp $
+// $Id: FigAssociation.java,v 1.60 2003/12/10 12:21:33 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,7 +233,12 @@ public class FigAssociation extends FigEdgeModelElement {
 	Object multi = ModelFacade.getMultiplicity(end);
 	String name = ModelFacade.getName(end);
 	Object order = ModelFacade.getOrdering(end);
+        String visi = ""; 
         Object stereo = null;
+        if (ModelFacade.isNavigable(end) && (ModelFacade.isAClass(ModelFacade.getType(end)) || 
+            ModelFacade.isAInterface(ModelFacade.getType(end)))) {
+                visi = Notation.generate(this, ModelFacade.getVisibility(end));
+        }
         if (ModelFacade.getStereotypes(end).size() > 0) {
             stereo = ModelFacade.getStereotypes(end).iterator().next();
         }
@@ -242,10 +247,10 @@ public class FigAssociation extends FigEdgeModelElement {
 	orderingToUpdate.setText(getOrderingName(order));
 	if (stereo != null) {
 	    roleToUpdate.setText(Notation.generate(this, stereo)
-				 + " "
+				 + " " + visi
 				 + Notation.generate(this, name));
 	} else
-	    roleToUpdate.setText(Notation.generate(this, name));
+	    roleToUpdate.setText(visi + Notation.generate(this, name));
     }
 
     protected void modelChanged(MElementEvent e) {
