@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.99 2004/06/09 19:32:15 mvw Exp $
+// $Id: Project.java,v 1.100 2004/06/27 02:39:21 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1578,6 +1578,7 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     private void setTarget(Object target) {
         Object currentNamespace = null;
+	target = TargetManager.getInstance().getModelTarget();
         if (target instanceof UMLDiagram) {
             currentNamespace = ((UMLDiagram) target).getNamespace();
         } else
