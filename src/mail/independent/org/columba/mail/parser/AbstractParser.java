@@ -16,7 +16,6 @@
 
 package org.columba.mail.parser;
 
-
 abstract class AbstractParser {
 
     protected String[] divideMessage( String input )
@@ -46,16 +45,4 @@ abstract class AbstractParser {
 
             return output;
         }
-
-
-    protected String removeQuotes()
-    {
-
-        return new String();
-    }
-
-
-
 }
-
-
