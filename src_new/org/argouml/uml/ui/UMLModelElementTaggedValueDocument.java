@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTaggedValueDocument.java,v 1.3 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLModelElementTaggedValueDocument.java,v 1.4 2003/09/06 14:27:36 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
@@ -65,7 +66,6 @@ public class UMLModelElementTaggedValueDocument extends UMLPlainTextDocument {
      * @return the value of the tagged value
      */
     protected String getProperty() {
-        return ((MModelElement) getTarget()).getTaggedValue(this.getEventName());
+        return ModelFacade.getTaggedValue(getTarget(), this.getEventName()).toString();
     }
 }
-

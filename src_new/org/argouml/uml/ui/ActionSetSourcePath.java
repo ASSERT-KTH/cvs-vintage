@@ -1,7 +1,4 @@
-
-
-
-// $Id: ActionSetSourcePath.java,v 1.10 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: ActionSetSourcePath.java,v 1.11 2003/09/06 14:27:36 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +84,7 @@ public class ActionSetSourcePath extends UMLAction {
 	String path = null;
 	if (ModelFacade.isAModelElement(obj)) {
 	    name = ModelFacade.getName(obj);
-	    path = ((MModelElement) obj).getTaggedValue("src_path");
+	    path = ModelFacade.getTaggedValue(obj, "src_path").toString();
 	    if (ModelFacade.isAPackage(obj))
 		type = "Package";
 	    else if (ModelFacade.isAClass(obj))

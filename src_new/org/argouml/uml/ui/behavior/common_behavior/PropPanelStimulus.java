@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.29 2003/09/05 20:39:04 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.30 2003/09/06 14:27:36 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.29 2003/09/05 20:39:04 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.30 2003/09/06 14:27:36 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -170,7 +170,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
             if (link == null) {
                 link = stimulus.getFactory().createLink();
                 if (link != null) {
-                    ((MLink)link).addStimulus(stimulus);
+                    ModelFacade.addStimulus(link, stimulus);
                     stimulus.setCommunicationLink((MLink)link);
                 }
             }
