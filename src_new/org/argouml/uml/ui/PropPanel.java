@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.37 2002/11/23 22:04:45 kataka Exp $
+// $Id: PropPanel.java,v 1.38 2002/11/23 22:23:29 kataka Exp $
 
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
@@ -644,14 +644,9 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
         Object target = getTarget();
         if(target instanceof MBase) { 
             MBase base = (MBase) target;
-            Object projectTarget = ProjectBrowser.TheInstance.getTarget();
             ProjectBrowser.TheInstance.setTarget(base);
             ActionEvent event = new ActionEvent(this, 1, "delete");
-	        ActionRemoveFromModel.SINGLETON.actionPerformed(event);
-	       	if (!target.equals(projectTarget)) {
-        		ProjectBrowser.TheInstance.setTarget(projectTarget);
-        	}
-	   
+	    ActionRemoveFromModel.SINGLETON.actionPerformed(event);	   
         }
     }
 
