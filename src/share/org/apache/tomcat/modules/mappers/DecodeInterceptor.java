@@ -526,8 +526,14 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( debug> 5 ) log("Already decoded " + req.getNote( decodedNote ));
 	    return 0;
 	}
-	if( saveOriginal )
-	    req.unparsedURI().duplicate( pathMB );
+	if( saveOriginal ) {
+	    try {
+		req.unparsedURI().duplicate( pathMB );
+	    } catch( IOException ex ) {
+		// If it happens, do default processing
+		log( "Error copying request ",ex);
+	    }
+	}
 	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
 	    try {
 		if(debug>1 )
