@@ -66,8 +66,11 @@ import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.services.user.UserManager;
 
+import org.tigris.scarab.util.TurbineInitialization;
+
 /**
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @version $Id: XMLExport.java,v 1.2 2001/12/13 00:38:23 jon Exp $
  */
 public class XMLExport
 {
@@ -92,14 +95,16 @@ public class XMLExport
         if (path.indexOf("target") == -1)
         {
             configDir = path + "/../../../../../../../target/webapps/scarab";
-        } else {
+        }
+        else
+        {
             configDir = path + "/../../../../../../../";
         }
         
         //args = new String[] {"PACS1,TBNS1-TBNS130"};
         
         XMLExport exporter = new XMLExport();
-        TurbineInitialization.setUp(configDir, "xmlexport.properties");
+        TurbineInitialization.setUp(configDir, "/xmlexport.properties");
         
         // validate input
         if (args.length != 1)
@@ -121,17 +126,24 @@ public class XMLExport
         ScarabModule currentModule = null;
         
         results.append(getXMLScarabHeader());
-        for (int i = 0; i < fids.length; i++) {
+        for (int i = 0; i < fids.length; i++)
+        {
             Issue issue = Issue.getIssueById(fids[i]);
-            if (issue == null) {
+            if (issue == null)
+            {
                 cat.warn("Issue does not exist: " + fids[i].getPrefix() + fids[i].getCount());
-            } else {
+            }
+            else
+            {
                 ScarabModule module = (ScarabModule)issue.getModule();
-                if (currentModule == null) {
+                if (currentModule == null)
+                {
                     // just starting
                     results.append(getXMLModuleHeader(module));
                     currentModule = module;
-                } else if (currentModule.getModuleId() != module.getModuleId()) {
+                }
+                else if (currentModule.getModuleId() != module.getModuleId())
+                {
                     results.append(getXMLModuleFooter());
                     results.append(getXMLModuleHeader(module));
                     currentModule = module;
@@ -139,7 +151,8 @@ public class XMLExport
                 results.append(getXMLIssue(issue));
             }
         }
-        if (currentModule != null) {
+        if (currentModule != null)
+        {
             results.append(getXMLModuleFooter());
         }
         results.append(getXMLScarabFooter());
@@ -147,24 +160,28 @@ public class XMLExport
         return results.toString();
     }
     
-    private static String getXMLScarabHeader() {
+    private static String getXMLScarabHeader()
+    {
         return "<?xml version=\"1.0\" standalone=\"no\"?>\n" +
             "<!DOCTYPE scarab SYSTEM \"scarab.dtd\">\n" +
             "<scarab>\n";
     }
     
-    private static String getXMLScarabFooter() {
+    private static String getXMLScarabFooter()
+    {
         return "</scarab>";
     }
     
-    private static String getXMLModuleHeader(ScarabModule module) {
+    private static String getXMLModuleHeader(ScarabModule module)
+    {
         return "\t<module id=\"" + module.getModuleId() +
             "\" parent=\"" + module.getParentId() + "\">\n" +
             "\t\t<name>" + module.getRealName() + "</name>\n" +
             "\t\t<code>" + module.getCode() + "</code>\n";
     }
     
-    private static String getXMLModuleFooter() {
+    private static String getXMLModuleFooter()
+    {
         return "\t</module>\n";
     }
     
@@ -257,21 +274,25 @@ public class XMLExport
             else
             {
                 String[] issue = split(issues[i], "-");
-                if (issue.length != 2) {
+                if (issue.length != 2)
+                {
                     throw new Exception("Federated id range not valid: " + issues[i]);
                 }
                 FederatedId fidStart = new FederatedId(issue[0]);
                 FederatedId fidStop = new FederatedId(issue[1]);
-                if (!fidStart.getPrefix().equals(fidStop.getPrefix())) {
+                if (!fidStart.getPrefix().equals(fidStop.getPrefix()))
+                {
                     throw new Exception("Federated id prefix does not match: " + issues[i]);
                 }
-                if (fidStart.getCount() > fidStop.getCount()) {
+                if (fidStart.getCount() > fidStop.getCount())
+                {
                     throw new Exception("Federated id range not valid: " + issues[i]);
                 }
                 resultsSize += fidStop.getCount() - fidStart.getCount() + 1;
                 results.ensureCapacity(resultsSize);
                 addFederatedId(results, fidStart);
-                for (int j = fidStart.getCount() + 1; j < fidStop.getCount(); j++) {
+                for (int j = fidStart.getCount() + 1; j < fidStop.getCount(); j++)
+                {
                     addFederatedId(results, new FederatedId(fidStart.getPrefix() + j));
                 }
                 addFederatedId(results, fidStop);
@@ -293,35 +314,45 @@ public class XMLExport
         while (iter.hasNext())
         {
             FederatedId test = (FederatedId)iter.next();
-            if (test.getPrefix().equals(fidPrefix) && test.getCount() == fidCount) {
+            if (test.getPrefix().equals(fidPrefix) && test.getCount() == fidCount)
+            {
                 throw new Exception("Federated id already specified: " + fid.getPrefix() + fid.getCount());
             }
         }
         al.add(fid);
     }
     
-    private static String[] split(String source, String searchFor) {
+    /**
+     * FIXME: Commons-Util.jar StringUtils should have this method in it already
+     */
+    private static String[] split(String source, String searchFor)
+    {
         ArrayList split = new ArrayList();
         int idx;
         int lastIdx = 0;
         String newStr;
         
-        if ((source == null) || (searchFor == null)) {
-            if (source != null) {
+        if ((source == null) || (searchFor == null))
+        {
+            if (source != null)
+            {
                 split.add(source);
             }
             return (String[])split.toArray(new String[split.size()]);
         }
         
-        if (searchFor.equals("")) {
+        if (searchFor.equals(""))
+        {
             split.add(source);
             return (String[])split.toArray(new String[split.size()]);
         }
         
         idx = source.indexOf(searchFor);
-        while (idx != -1) {
+        while (idx != -1)
+        {
             newStr = source.substring(lastIdx, idx);
-            if (!newStr.trim().equals("")) {
+            if (!newStr.trim().equals(""))
+            {
                 split.add(newStr);
             }
             
@@ -330,7 +361,8 @@ public class XMLExport
         }
         
         newStr = source.substring(lastIdx);
-        if (!newStr.trim().equals("")) {
+        if (!newStr.trim().equals(""))
+        {
             split.add(source.substring(lastIdx));
         }
         

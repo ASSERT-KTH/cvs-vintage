@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xml;
+package org.tigris.scarab.util;
 
 /* ================================================================
  * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
@@ -54,27 +54,38 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.turbine.TurbineConfig;
 
 /**
+ * This is a class to help with initialization of Turbine in various
+ * packages such as the testing suite as well as in the XML Import/Export.
+ * It will initialize Log4J with a properties file as well.
+ *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: TurbineInitialization.java,v 1.1 2001/12/13 00:38:23 jon Exp $
  */
 public class TurbineInitialization
 {
-    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResources.properties";
-    
-    private static void initTurbine (String configDir) throws Exception
+    public static String TR_PROPS = "/WEB-INF/conf/TurbineResources.properties";
+
+    protected static void initTurbine (String configDir)
+        throws Exception
     {
         TurbineConfig tc = new TurbineConfig(configDir, TR_PROPS);
         tc.init();
     }
     
-    public static void setUp(String configDir, String configFile) throws Exception
+    public static void setUp(String configDir, String configFile)
+        throws Exception
     {
-        System.getProperties().setProperty("xmlExportRoot", configDir);
-        
+        // set this so that the proper substitution will happen in the
+        // configFile
+        System.getProperties().setProperty("configDir", configDir);
+
         if (configDir != null)
         {
             initTurbine(configDir);
             
-            InputStream is = new File(configDir + "/WEB-INF/conf/xmlexport.properties").toURL().openStream();
+            InputStream is = new File(configDir + configFile).toURL()
+                .openStream();
             Properties props = new Properties();
             try
             {
@@ -83,7 +94,8 @@ public class TurbineInitialization
             }
             catch (Exception e)
             {
-                System.err.println("Can't read the properties file (" + configDir + "/WEB-INF/conf/xmlexport.properties). ");
+                System.err.println("Can't read the properties file (" + 
+                    configDir + configFile + "). ");
             }
         }
         else

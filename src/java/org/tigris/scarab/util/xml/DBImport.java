@@ -176,7 +176,9 @@ public class DBImport
         if (path.indexOf("target") == -1)
         {
             configDir = path + "/../../../../../../../target/webapps/scarab";
-        } else {
+        }
+        else
+        {
             configDir = path + "/../../../../../../../";
         }
         
