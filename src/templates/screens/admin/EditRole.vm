@@ -1,6 +1,6 @@
 #** 
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditRole.vm,v 1.7 2002/03/13 21:34:44 jon Exp $
+@version $Id: EditRole.vm,v 1.8 2002/05/02 00:20:44 jon Exp $
 *#
 
 #set ($role = $securityAdmin.getRoleByName($data.Parameters.getString("name")))
@@ -9,42 +9,37 @@
 
 <h2>$page.Title</h2>
 
-<h3>Edit Permissions [for the $role.Name role]</h3>
+<h3>Edit permissions for the [$role.Name] role</h3>
 
 <form method="post" action="$link.setPage("admin,EditRole.vm")">
   <input type="hidden" name="action" value="admin.ManageRoles" />
   <input type="hidden" name="name" value="$role.Name" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
 
-<table cellpadding="2" cellspacing="0">
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
+    <th width="70">Enable</th>
     <th>Permission</th>
-    <th>Enable</th>
   </tr>
   #foreach ($permission in $securityAdmin.Permissions)
   #indexedRows ($velocityCount)
-    <td>
-        $permission.Name
-    </td>
-
     #if ($role.Permissions.contains($permission))
       #set ($checked = "checked")
     #else
       #set ($checked = "")
     #end
-    
     <td>
-      <center>
       <input type="checkbox" name="${role.Name}${permission.Name}" $checked />
-      </center>
     </td>
-    
+    <td>
+        $permission.Name
+    </td>
   </tr>
   #end
 </table>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doEditrole" value="Update permissions" />&#160;
+ <input type="submit" name="eventSubmit_doEditrole" value="Save" />&#160;
  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
