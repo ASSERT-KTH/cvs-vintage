@@ -1,3 +1,52 @@
+Version 0.13.0:
+
+Columba:
+
+New features:
+# HTML-editor in composer, this allows simple formatting of messages (karlpeder)
+# reply with template (fdietz)
+# improved dialogs, using jforms API (includes account-dialog, mail options,
+  general options) (fdietz/karlpeder)
+# external apps configuration dialog (fdietz)
+# plugin manager dialog (fdietz)
+# Ristretto backend is distributed as jar and completly separated from Columba (tstich/fdietz) 
+# encryption/decryption/verification/signing of messages using GnuPG (waffel/tstich/fdietz)
+# folder options dialog added (fdietz)
+# export folder to mbox file (fdietz)
+# tree remembers collapsed/expanded state of individual folders (fdietz)
+# new context-menu for message-viewer, including copy link location (fdietz)
+# most components in Columba now support cut/copy/paste/delete/select all (fdietz)
+# IMAP automatically configures special folders like drafts, templates, send and 
+  trash (tstich)
+# added nicer "create new folder" dialog (tstich)
+# added option "prefere multipart/alternative or html only) (karlpeder)
+# better handling of mnemonics (i18n tranlatores should see the updated documentation
+  in the wiki)
+# dutch translation ()
+# removed jakarta.oro library, replaced by javax.util.regexp (tstich) 
+# massive code cleanups and code documentation
+# added default settings for frames (karlpeder)
+# context-specific help using JavaHelp, integrated usermanual (fdietz)
+# add sort submenu for message list (fdietz)
+
+
+Bigger bugs:
+# creating new root folders didn't work (tstich)
+# searching on IMAP folders with non-usascii strings (fdietz)
+
+Ristretto (low-level mail-backend):
+
+This is the mail backend Columba uses. Its a low-level API in comparison to SUNs JavaMail high-level
+API. 
+
+Bugs:
+# fixed too long client command IMAP error (when working with large sets of messages) (fdietz/tstich)
+# fixed non-contigous IMAP messagesets error (fdietz)
+# fixed handling of unsolicited IMAP server responses (tstich/fdietz)
+# fixed creating/deleting/renaming of IMAP folders (tstich)
+# parsing of IMAP child folders (tstich)
+
+
 Version 0.12.1:
 
 bugfixes:
