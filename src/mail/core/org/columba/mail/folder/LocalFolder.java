@@ -481,6 +481,9 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 			getObservable().setMax(uids.length);
 
 		for (int i = 0; i < uids.length; i++) {
+			// skip this message, if it doesn't exist in source folder
+			if ( exists(uids[i]) == false ) continue;
+			
 			Object destuid =
 				destFolder.addMessage(getMessageSourceStream(uids[i]));
 			((LocalFolder) destFolder).setFlags(
