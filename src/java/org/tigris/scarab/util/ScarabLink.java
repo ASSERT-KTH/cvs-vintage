@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.33 2002/01/21 05:03:53 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.34 2002/02/05 18:36:26 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -173,6 +173,13 @@ public class ScarabLink extends TemplateLink
         if (adminMenu != null && adminMenu.length() > 0)
         {
             addPathInfo(ScarabConstants.CURRENT_ADMIN_MENU, adminMenu);
+        }
+        // if a debug is set, add it
+        String debug = data.getParameters()
+            .getString(ScarabConstants.DEBUG);
+        if (debug != null && debug.length() > 0)
+        {
+            addPathInfo(ScarabConstants.DEBUG, debug);
         }
         
         super.setPage(t);

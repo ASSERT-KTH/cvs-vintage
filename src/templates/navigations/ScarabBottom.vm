@@ -9,7 +9,9 @@
     $link.setPage("Login.vm").setLabel("Login")
 #end
 
+#if ($data.Parameters.Debug)
 <p><small>Debugging: [ {target=$data.Target} $data.Parameters ]</small></p>
+#end
 </td></tr>
 </table>
 </div>
