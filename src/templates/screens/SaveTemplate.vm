@@ -49,7 +49,13 @@ $page.setTitle("Issue Template")
        <tr>
           <th>Template Author</th>
              #set ($createdUser = $issue.CreatedBy)
-          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+          <td>
+          #if ($createduser)
+          <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+          #else
+          &#160;
+          #end
+          </td>
        </tr>
 #end
    </table>
