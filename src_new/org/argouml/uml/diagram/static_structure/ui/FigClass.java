@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.63 2003/05/31 10:38:45 kataka Exp $
+// $Id: FigClass.java,v 1.64 2003/06/08 21:48:10 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -381,7 +381,7 @@ public class FigClass extends FigNodeModelElement {
         Rectangle rect = getBounds();
         int h = checkSize ? (ROWHEIGHT * Math.max(1, _attrVec.getFigs().size() - 1) + 2) * rect.height / getMinimumSize().height : 0;
         if (_attrVec.isDisplayed()) {
-            if (!isVisible) {
+            if (!isVisible) {  // hide compartment
                 damage();
                 Enumeration enum = _attrVec.getFigs().elements();
                 while (enum.hasMoreElements())
@@ -391,7 +391,7 @@ public class FigClass extends FigNodeModelElement {
                 setBounds(rect.x, rect.y, (int)aSize.getWidth(), (int)aSize.getHeight());
             }
         } else {
-            if (isVisible) {
+            if (isVisible) { // show compartement
                 Enumeration enum = _attrVec.getFigs().elements();
                 while (enum.hasMoreElements())
                      ((Fig) (enum.nextElement())).setDisplayed(true);
@@ -406,7 +406,7 @@ public class FigClass extends FigNodeModelElement {
     public void setOperationVisible(boolean isVisible) {
         Rectangle rect = getBounds();
         int h = checkSize ? (ROWHEIGHT * Math.max(1, _operVec.getFigs().size() - 1) + 2) * rect.height / getMinimumSize().height : 0;
-        if (_operVec.isDisplayed()) {
+        if (_operVec.isDisplayed()) { // if displayed
             if (!isVisible) {
                 damage();
                 Enumeration enum = _operVec.getFigs().elements();

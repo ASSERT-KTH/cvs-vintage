@@ -23,13 +23,15 @@
 
 package org.argouml.ui;
 
+import java.beans.PropertyChangeEvent;
+
 import org.argouml.ui.targetmanager.TargetListener;
 
 /**
  * An interface for JPanels that are in the DetailsPane, and that
  * change target based on the selections made in the gui/views.
  *
- * $Id: TabTarget.java,v 1.2 2003/05/01 08:49:39 kataka Exp $
+ * $Id: TabTarget.java,v 1.3 2003/06/08 21:48:10 kataka Exp $
  *
  * @since 0.13.4
  * @author $Author: kataka $
@@ -47,12 +49,13 @@ public interface TabTarget extends TargetListener {
   public Object getTarget();
   
   /**
-   *
+   * Refreshes the tab IN TOTAL
    */
   public void refresh();
+    
   
   /**
-   *
+   * Returns true if the tab should be enabled with the given target
    */
   public boolean shouldBeEnabled(Object target);
 }
