@@ -180,13 +180,13 @@
 #end
 
 #if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")
-   <th>2:Primary filter attribute (PFA)</th>
+   <th>2: Confine report data-set</th>
 #else
     #set ($wizardLink = $link.setPage("reports,Step2.vm"))
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">2:Primary filter attribute (PFA)</a></td>
+   <td><a href="$wizardLink">2: Confine report data-set</a></td>
 #end
 
 #if ($template == "reports,Step3_1a.vm" || $template == "reports,Step3_1b.vm" || $template == "reports,Step3_2a.vm" || $template == "reports,Step3_2b.vm" )
