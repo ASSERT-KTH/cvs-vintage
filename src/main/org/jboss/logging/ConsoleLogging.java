@@ -15,17 +15,19 @@ import java.util.Comparator;
 import java.util.TreeSet;
 import javax.management.*;
 
+import org.jboss.util.ServiceMBeanSupport;
+
 /**
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ConsoleLogging
+   extends ServiceMBeanSupport
    implements ConsoleLoggingMBean, MBeanRegistration, NotificationListener
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "DefaultDomain:service=Logging,type=Console";
     
    // Attributes ----------------------------------------------------
    PrintStream out, err;
@@ -37,6 +39,9 @@ public class ConsoleLogging
    Log log = new Log("Console logging");
    
    String filter = "Information,Debug,Warning,Error";
+   
+   ObjectName name;
+   MBeanServer server;
    
    // Static --------------------------------------------------------
 
@@ -70,9 +75,21 @@ public class ConsoleLogging
          out.println(msgFmt.format(args));
    }
    
-   // MBeanRegistration implementation ------------------------------
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
+   // Service implementation ------------------------------
+   public ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException
+   {
+      this.server = server;
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
+   }
+   
+   public String getName()
+   {
+      return "Console logging";
+   }
+   
+   public void initService()
+      throws Exception
    {
       out = System.out;
       err = System.err;
@@ -88,20 +105,6 @@ public class ConsoleLogging
       LogStream errLog = new LogStream("Error");
       System.setOut(outLog);
       System.setErr(errLog);
-      
-      log.log("Logging started");
-      
-      return new ObjectName(OBJECT_NAME);
    }
-   
-   public void postRegister(java.lang.Boolean registrationDone) 
-   {
-   }
-   
-   public void preDeregister()
-      throws java.lang.Exception 
-   {}
-   
-   public void postDeregister() {}
 }
 

@@ -10,11 +10,12 @@ package org.jboss.logging;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ConsoleLoggingMBean
 {
    // Constants -----------------------------------------------------
+   public static final String OBJECT_NAME = ":service=Logging,type=Console";
     
    // Public --------------------------------------------------------
    public void setFormat(String format);
