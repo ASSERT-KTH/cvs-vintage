@@ -141,7 +141,7 @@
             <tr>
             <td><strong>Screen options:</strong></td>
             <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute group options:</strong></td>
+            <td><strong>Artifact management options:</strong></td>
             <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
             </tr>
 
@@ -153,110 +153,136 @@
             </table>
         </div>
 
-		
-		<h3>Artifact type details</h3>
-		
-		<div class="axial">
-			<table border="1" cellspacing="2" cellpadding="3">
-			<tr>
-			<th>Artifact type name:</th>
-			<td><input type="text" size="25" value="" /></td>
-			</tr>
-			
-			<tr>
-			<th>Artifact type descr:</th>
-			<td><textarea rows="4" cols="40"></textarea></td>
-			</tr>
-			
-			<tr>
-			<th>author:</th>
-			<td><div>Joe Smo</div>
-			<a href="#">joes@users.com</a></td>
-			</tr>
-			</table>
-		</div>
-		
-        
-        <h3>Artifact instance "history" and "Comments" display options</h3>
-        
-        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
-        <select class="select">
-        <option>5</option>
-        <option>10</option>
-        <option>15</option>
-        <option>20</option>
-        </select>
-        most recent artifact instance history entries (otherwise, a link will appear leading to a seperate page).
-        </p>
-        
-        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
-        <select class="select">
-        <option>5</option>
-        <option>10</option>
-        <option>15</option>
-        <option>20</option>
-        </select>
-        most recent artifact instance comments (otherwise, a link will appear to a seperate page).
-        </p>
-
                         
-        <h3>Attribute groups</h3>
+        <h3>Artifact types</h3>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap">select</th>
-        <th>attribute group name:</th>
-        <th>active/inactive:</th>
+        <th>Artifact name:</th>
+        <th>(in)active:</th>
         <th>sequence #:</th>
+        <th>parent:</th>        
         </tr>
 
         
         <tr class="a">
         <td><input type="checkbox" /></td>
-        <td><a href="#">Attribute group X</a></td>
+        <td><a href="#">Artifact V</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>1</option>
         </select>
         </td>
-        </tr>
+        <td>
+        <select class="select">
+        <option>-</option>
+        </select>
+        </td>
+        </tr>        
         
         <tr class="b">
         <td><input type="checkbox" /></td>
-        <td><a href="#">Attribute group Y</a></td>
+        <td><a href="#">Artifact W</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td>
+        <select class="select">
+        <option>1</option>
+        </select>
+        </td>
+        <td>
+        <select class="select">
+        <option>-</option>
+        </select>
+        </td>
+        </tr>
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact X</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>2</option>
         </select>
         </td>
+        <td>
+        <select class="select">
+        <option>-</option>
+        </select>
+        </td>
         </tr>
+        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact X.1</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td>
+        <select class="select">
+        <option>1</option>
+        </select>
+        </td>
+        <td>
+        <select class="select">
+        <option>2</option>
+        </select>
+        </td>
+        </tr>        
 
         
         <tr class="a">
         <td><input type="checkbox" /></td>
-        <td>Duplicate Check</td>
+        <td><a href="#">Artifact X.2</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td>
+        <select class="select">
+        <option>2</option>
+        </select>
+        </td>
+        <td>
+        <select class="select">
+        <option>2</option>
+        </select>
+        </td>
+        </tr>
+        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact Y</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>3</option>
         </select>
         </td>
-        </tr>
-        
-        <tr class="b">
+        <td>
+        <select class="select">
+        <option>-</option>
+        </select>
+        </td>
+        </tr>        
+        </td>
+        </tr>       
+
+        <tr class="a">
         <td><input type="checkbox" /></td>
-        <td><a href="#">Attribute group Z</a></td>
+        <td><a href="#">Artifact Z</a></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>4</option>
         </select>
         </td>
-        </tr>        
+        <td>
+        <select class="select">
+        <option>-</option>
+        </select>
         </td>
         </tr>
+
         </table>
 
  
