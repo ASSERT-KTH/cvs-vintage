@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
-
-import org.columba.ristretto.imap.protocol.Arguments;
-import org.columba.ristretto.imap.protocol.Atom;
-
 import java.io.UnsupportedEncodingException;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.FilterRule;
+import org.columba.ristretto.imap.protocol.Arguments;
+import org.columba.ristretto.imap.protocol.Atom;
+import org.columba.ristretto.message.RFC822Date;
 
 /**
  * Builds IMAP search request strings, from {@link FilterList}
@@ -109,6 +108,20 @@ public class SearchRequestBuilder {
         return args;
     }
 
+    private Date transformDate(String pattern) {
+        java.text.DateFormat df = java.text.DateFormat.getDateInstance();
+        Date searchPattern = null;
+
+        try {
+            searchPattern = df.parse(pattern);
+        } catch (java.text.ParseException ex) {
+            System.out.println("exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        return searchPattern;
+    }
+
     protected Arguments createDateArguments(FilterCriteria criteria)
         throws UnsupportedEncodingException {
         Arguments args = new Arguments();
@@ -121,7 +134,10 @@ public class SearchRequestBuilder {
             args.add(new Atom("SENTAFTER"));
         }
 
-        args.add(criteria.getPattern());
+        // transform text to Date representation
+        Date date = transformDate(criteria.getPattern());
+        // transform Date-object to RFC822-Date format
+        args.add(RFC822Date.toString(date));
 
         return args;
     }
@@ -204,6 +220,7 @@ public class SearchRequestBuilder {
         return args;
     }
 
+    /*
     protected Arguments createSizeArguments(FilterCriteria criteria)
         throws UnsupportedEncodingException {
         Arguments args = new Arguments();
@@ -214,10 +231,16 @@ public class SearchRequestBuilder {
             args.add(new Atom("SMALLER"));
         }
 
-        args.add(criteria.getPattern());
+        // size in KB
+        String stringSizeInKB = criteria.getPattern();
+        int sizeInKB = Integer.parseInt(stringSizeInKB);
+        // transform to octets
+        int sizeInOctets = sizeInKB * 1024;
+        args.add(Integer.toString(sizeInOctets));
 
         return args;
     }
+    */
 
     protected Arguments createSubjectArguments(FilterCriteria criteria)
         throws UnsupportedEncodingException {
@@ -263,6 +286,31 @@ public class SearchRequestBuilder {
         return args;
     }
 
+    protected Arguments createCustomHeaderfieldsArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
+
+        args.add(new Atom("HEADER"));
+
+        String headerfield = criteria.get("headerfield");
+        args.add(new Atom(headerfield));
+
+        String pattern = criteria.getPattern();
+
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
+
+        return args;
+    }
+
     public List generateSearchArguments(FilterRule rule)
         throws UnsupportedEncodingException {
         List ruleStringList = new Vector();
@@ -274,71 +322,84 @@ public class SearchRequestBuilder {
             Arguments args = null;
 
             switch (criteria.getTypeItem()) {
-            case FilterCriteria.SUBJECT: {
-                args = createSubjectArguments(criteria);
+                case FilterCriteria.SUBJECT :
+                    {
+                        args = createSubjectArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.TO: {
-                args = createToArguments(criteria);
+                case FilterCriteria.TO :
+                    {
+                        args = createToArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.FROM: {
-                args = createFromArguments(criteria);
+                case FilterCriteria.FROM :
+                    {
+                        args = createFromArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.CC: {
-                args = createCcArguments(criteria);
+                case FilterCriteria.CC :
+                    {
+                        args = createCcArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.BCC: {
-                args = createBccArguments(criteria);
+                case FilterCriteria.BCC :
+                    {
+                        args = createBccArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.TO_CC: {
-                args = createToArguments(criteria);
+                case FilterCriteria.BODY :
+                    {
+                        args = createBodyArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
 
-            case FilterCriteria.BODY: {
-                args = createBodyArguments(criteria);
+                /*
+                case FilterCriteria.SIZE :
+                    {
+                        args = createSizeArguments(criteria);
 
-                break;
-            }
+                        break;
+                    }
+                */
+                
+                case FilterCriteria.DATE :
+                    {
+                        args = createDateArguments(criteria);
 
-            case FilterCriteria.SIZE: {
-                args = createSizeArguments(criteria);
+                        break;
+                    }
 
-                break;
-            }
+                case FilterCriteria.FLAGS :
+                    {
+                        args = createFlagsArguments(criteria);
 
-            case FilterCriteria.DATE: {
-                args = createDateArguments(criteria);
+                        break;
+                    }
 
-                break;
-            }
+                case FilterCriteria.PRIORITY :
+                    {
+                        args = createPriorityArguments(criteria);
 
-            case FilterCriteria.FLAGS: {
-                args = createFlagsArguments(criteria);
+                        break;
+                    }
 
-                break;
-            }
+                case FilterCriteria.CUSTOM_HEADERFIELD :
+                    {
+                        args = createCustomHeaderfieldsArguments(criteria);
 
-            case FilterCriteria.PRIORITY: {
-                args = createPriorityArguments(criteria);
-
-                break;
-            }
+                        break;
+                    }
             }
 
             ruleStringList.add(args);
@@ -347,7 +408,8 @@ public class SearchRequestBuilder {
         return ruleStringList;
     }
 
-    public Arguments generateSearchArguments(FilterRule rule,
+    public Arguments generateSearchArguments(
+        FilterRule rule,
         List ruleStringList) {
         Arguments args = new Arguments();
 
@@ -366,8 +428,8 @@ public class SearchRequestBuilder {
             // concatenate all criteria together
             //  -> create one search-request string
             for (int i = 0; i < rule.count(); i++) {
-                if ((i != (rule.count() - 1)) &&
-                        (conditionString.equals("OR"))) {
+                if ((i != (rule.count() - 1))
+                    && (conditionString.equals("OR"))) {
                     args.add(new Atom(conditionString));
                 }
 

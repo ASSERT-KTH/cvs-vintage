@@ -21,20 +21,31 @@ import org.columba.mail.message.ColumbaMessage;
 
 import java.util.List;
 
-
 /**
  * Performes search requests on the IMAP server-side.
- *
+ * <p>
+ * Note, that some search-requests are executed using the local
+ * caching mechanism.
+ * 
+ * @see org.columba.mail.imap.SearchRequestBuilder
+ * @see org.columba.mail.folder.search.DefaultSearchEngine
+ * 
  * @author fdietz
  */
 public class IMAPQueryEngine implements QueryEngine {
     /**
      * list of supported search requests
      */
+    
+    //  This list is reduced, because most search requests can be 
+    // answered anyway, using locally cached headerfields
     private static final String[] CAPABILITY_LIST = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield",
-        "Date", "Flags", "Priority", "Size"
+        "Date", "Flags", "Priority"
     };
+    
+
+
     private IMAPFolder folder;
 
     /**

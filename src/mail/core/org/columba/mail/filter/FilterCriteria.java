@@ -38,12 +38,12 @@ public class FilterCriteria extends DefaultItem {
     public final static int TO = 2;
     public final static int CC = 3;
     public final static int BCC = 4;
-    public final static int TO_CC = 5;
     public final static int DATE = 6;
     public final static int SIZE = 7;
     public final static int BODY = 8;
     public final static int FLAGS = 9;
     public final static int PRIORITY = 10;
+    public final static int CUSTOM_HEADERFIELD = 11;
 
     // criteria: contains = 0, contains not=1, is=2, is not=3, begins with=4 , ends with=5
 
@@ -177,8 +177,6 @@ public class FilterCriteria extends DefaultItem {
             result = CC;
         } else if (h.equalsIgnoreCase("Bcc")) {
             result = BCC;
-        } else if (h.equalsIgnoreCase("To or Cc")) {
-            result = TO_CC;
         } else if (h.equalsIgnoreCase("Body")) {
             result = BODY;
         } else if (h.equalsIgnoreCase("Date")) {
@@ -189,7 +187,9 @@ public class FilterCriteria extends DefaultItem {
             result = FLAGS;
         } else if (h.equalsIgnoreCase("Priority")) {
             result = PRIORITY;
-        }
+        } else if (h.equalsIgnoreCase("Custom Headerfield")) {
+        result = CUSTOM_HEADERFIELD;
+    }
 
         return result;
     }

@@ -55,19 +55,19 @@ public class HeaderfieldFilter extends AbstractFilter {
         String criteria = getFilterCriteria().get("criteria");
 
         // get headerfield to search in (for example: Subject)
-        String headeritem = getFilterCriteria().get("headerfield");
+        String headerfield = getFilterCriteria().get("headerfield");
 
         // string to search
         String pattern = getFilterCriteria().get("pattern");
 
         // get message header
-        Header header = folder.getHeaderFields(uid, new String[] { headeritem });
+        Header header = folder.getHeaderFields(uid, new String[] { headerfield });
 
         if (header == null) {
             return false;
         }
 
-        String headerItem = (String) header.get(headeritem);
+        String headerItem = (String) header.get(headerfield);
 
         // get condition and convert it to constant as defined in
         // FilterCriteria

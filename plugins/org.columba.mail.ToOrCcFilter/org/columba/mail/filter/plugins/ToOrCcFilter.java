@@ -24,20 +24,6 @@ public class ToOrCcFilter extends HeaderfieldFilter {
     }
 
     /**
-     *
-     * We need the criteria attribute, which can be "contains" or "contains not"
-     *
-     * "pattern" is our search string
-     *
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-     */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
-    }
-
-    /**
      * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
      */
     public boolean process(Object[] args, Folder folder, Object uid)

@@ -37,7 +37,6 @@ import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
-
 /**
  * Divides search requests and passes them along to the
  * optimized {@link QueryEngine} for execution.
@@ -49,18 +48,18 @@ import javax.swing.JOptionPane;
  * @author tstich, fdietz
  */
 public class DefaultSearchEngine {
-   
+
     /**
      * Filter plugins are cached and reused, instead of re-instanciated
      * all the time
      */
     private static Hashtable filterCache;
-   
+
     /**
      * Folder on which the search is applied
      */
     private Folder folder;
-    
+
     /**
      * The default query engine used by the search-engine
      */
@@ -83,7 +82,9 @@ public class DefaultSearchEngine {
         return folder.getObservable();
     }
 
-    protected synchronized AbstractFilter getFilter(FilterCriteria filterCriteria, String type) {
+    protected synchronized AbstractFilter getFilter(
+        FilterCriteria filterCriteria,
+        String type) {
         // try to re-use already instanciated class
         if (filterCache.containsKey(type) == true) {
             return (AbstractFilter) filterCache.get(type);
@@ -94,11 +95,19 @@ public class DefaultSearchEngine {
         AbstractFilter instance = null;
 
         try {
-            AbstractFilterPluginHandler handler = (AbstractFilterPluginHandler) MainInterface.pluginManager.getHandler(
+            AbstractFilterPluginHandler handler =
+                (
+                    AbstractFilterPluginHandler) MainInterface
+                        .pluginManager
+                        .getHandler(
                     "org.columba.mail.filter");
-            instance = (AbstractFilter) handler.getActionPlugin(type, new Object[]{filterCriteria});
+            instance =
+                (AbstractFilter) handler.getActionPlugin(
+                    type,
+                    new Object[] { filterCriteria });
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(
+                null,
                 "Error while trying to load filter plugin =" + type);
             ex.printStackTrace();
         }
@@ -110,11 +119,16 @@ public class DefaultSearchEngine {
         return instance;
     }
 
-    protected boolean processRule(Object uid, FilterCriteria criteria,
-        String type) throws Exception {
+    protected boolean processRule(
+        Object uid,
+        FilterCriteria criteria,
+        String type)
+        throws Exception {
         if (type == null) {
-            JOptionPane.showMessageDialog(null,
-                "Filter type couldn't been found", "Error occured",
+            JOptionPane.showMessageDialog(
+                null,
+                "Filter type couldn't been found",
+                "Error occured",
                 JOptionPane.ERROR_MESSAGE);
 
             return false;
@@ -146,7 +160,7 @@ public class DefaultSearchEngine {
                 b = true;
                 uid = it.next();
 
-                for (int i = 0; (i < rule.count()) && b; i++) {
+                for (int i = 0;(i < rule.count()) && b; i++) {
                     FilterCriteria criteria = rule.get(i);
 
                     String type = criteria.getType();
@@ -164,7 +178,7 @@ public class DefaultSearchEngine {
                 b = false;
                 uid = it.next();
 
-                for (int i = 0; (i < rule.count()) && !b; i++) {
+                for (int i = 0;(i < rule.count()) && !b; i++) {
                     FilterCriteria criteria = rule.get(i);
 
                     String type = criteria.getType();
@@ -184,8 +198,10 @@ public class DefaultSearchEngine {
         return result;
     }
 
-    protected void divideFilterRule(FilterRule filterRule,
-        FilterRule notDefaultEngine, FilterRule defaultEngine) {
+    protected void divideFilterRule(
+        FilterRule filterRule,
+        FilterRule notDefaultEngine,
+        FilterRule defaultEngine) {
         FilterCriteria actCriteria;
 
         String[] caps = getNonDefaultEngine().getCaps();
@@ -199,8 +215,12 @@ public class DefaultSearchEngine {
             actCriteria = filterRule.get(i);
 
             if (capList.contains(actCriteria.getType())) {
+                // search request isn't covered by query engine
+                // -> fall back to default search engine
                 defaultEngine.add(actCriteria);
             } else {
+                // this search request is covered by the query engine
+
                 notDefaultEngine.add(actCriteria);
             }
         }
@@ -225,9 +245,9 @@ public class DefaultSearchEngine {
 
         if (defaultEngine.count() > 0) {
             if (uids != null) {
-                defaultEngineResult = queryEngine(defaultEngine, uids);
+                defaultEngineResult = getNonDefaultEngine().queryEngine(defaultEngine, uids);
             } else {
-                defaultEngineResult = queryEngine(defaultEngine);
+                defaultEngineResult = getNonDefaultEngine().queryEngine(defaultEngine);
             }
         }
 
@@ -237,14 +257,18 @@ public class DefaultSearchEngine {
             // MATCH_ALL
             if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
                 if (defaultEngine.count() > 0) {
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
-                            defaultEngineResult);
+                    notDefaultEngineResult =
+                        processCriteria(notDefaultEngine, defaultEngineResult);
                 } else {
                     if (uids != null) {
-                        notDefaultEngineResult = processCriteria(notDefaultEngine,
+                        notDefaultEngineResult =
+                            processCriteria(
+                                notDefaultEngine,
                                 Arrays.asList(uids));
                     } else {
-                        notDefaultEngineResult = processCriteria(notDefaultEngine,
+                        notDefaultEngineResult =
+                            processCriteria(
+                                notDefaultEngine,
                                 Arrays.asList(folder.getUids()));
                     }
                 }
@@ -255,12 +279,14 @@ public class DefaultSearchEngine {
                     List uidList = new LinkedList(Arrays.asList(uids));
                     ListTools.substract(uidList, defaultEngineResult);
 
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
-                            uidList);
+                    notDefaultEngineResult =
+                        processCriteria(notDefaultEngine, uidList);
 
                     notDefaultEngineResult.addAll(defaultEngineResult);
                 } else {
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
+                    notDefaultEngineResult =
+                        processCriteria(
+                            notDefaultEngine,
                             Arrays.asList(folder.getUids()));
                 }
             }
@@ -282,8 +308,8 @@ public class DefaultSearchEngine {
      */
     public Object[] searchMessages(Filter filter) throws Exception {
         if (getObservable() != null) {
-            getObservable().setMessage(MailResourceLoader.getString(
-                    "statusbar", "message", "search"));
+            getObservable().setMessage(
+                MailResourceLoader.getString("statusbar", "message", "search"));
         }
 
         //return searchMessages(filter, null);

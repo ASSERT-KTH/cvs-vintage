@@ -35,7 +35,7 @@ public interface QueryEngine {
      *
      * @return                capability list
      */
-    public abstract String[] getCaps();
+   String[] getCaps();
 
     /**
      * Sync engine with folder data.
@@ -45,7 +45,7 @@ public interface QueryEngine {
      *
      * @throws Exception
      */
-    public void sync() throws Exception;
+   void sync() throws Exception;
 
     /**
      * Execute a list of {@link FilterCriteria}.
@@ -54,7 +54,7 @@ public interface QueryEngine {
      * @return                                list of matching message UIDs
      * @throws Exception
      */
-    public List queryEngine(FilterRule filter) throws Exception;
+    List queryEngine(FilterRule filter) throws Exception;
 
     /**
      * Execute a list of {@link FilterCriteria}.
@@ -66,7 +66,7 @@ public interface QueryEngine {
      * @return                                list of matching message UIDs
      * @throws Exception
      */
-    public List queryEngine(FilterRule filter, Object[] uids)
+    List queryEngine(FilterRule filter, Object[] uids)
         throws Exception;
 
     /**
@@ -75,7 +75,7 @@ public interface QueryEngine {
      * @param message                message
      * @throws Exception
      */
-    public void messageAdded(ColumbaMessage message) throws Exception;
+    void messageAdded(ColumbaMessage message) throws Exception;
 
     /**
      * Notify search engine that a message was removed
@@ -83,12 +83,12 @@ public interface QueryEngine {
      * @param uid                        message UID
      * @throws Exception
      */
-    public void messageRemoved(Object uid) throws Exception;
+    void messageRemoved(Object uid) throws Exception;
 
     /**
      * Reset search engine.
      *
      * @throws Exception
      */
-    public void reset() throws Exception;
+    void reset() throws Exception;
 }
