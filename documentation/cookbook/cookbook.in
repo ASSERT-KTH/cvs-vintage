@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.20 2004/02/11 07:11:55 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.21 2004/02/14 09:07:40 mvw Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -596,8 +596,8 @@ Notice that the Facade is normally a part of the API or
 a simplified version of the API.
 </para>
       <para>
-For each subsystem X in ArgoUML that uses the subsystem Y 
-the designer of the subsystem X, 
+For each subsystem X in ArgoUML that uses the subsystem Y, 
+the designer of the subsystem X 
 must decide if he wants to use the API of Y
 when using the subsystem Y 
 (putting a set of import org.argouml.Y.internals.blabla.*; statements
@@ -616,8 +616,8 @@ doesn't make the subsystem X depending on the API of subsystem Y
 but just the Facade of subsystem Y.
 </para>
       <para>
-If the API or Facade solution is used
-shall be described in the Cookbook's description of subsystem X
+The choice between the usage of the API or the Facade 
+shall be stated in the Cookbook's description of subsystem X
 in the list of used subsystems.
 </para>
     </sect1>
