@@ -1,6 +1,5 @@
 /* Script to fill the tables with default roles and permissions */
 
-INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (1, 'turbine_root');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (2, 'Partner');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (3, 'Observer');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (4, 'Developer');
@@ -199,12 +198,11 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
 drop table xxxx_populate_RolePermission;
 
 
-/* Assign the user 'turbine@collab.net' a system-wide role 'turbine_root' */
+/* Assign the user 'turbine@collab.net' a system-wide role 'Root' */
 
 INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
 SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from 
 TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
 WHERE TURBINE_USER.LOGIN_NAME = '@ADMIN_USERNAME@' AND 
 SCARAB_MODULE.MODULE_ID = 0
-AND TURBINE_ROLE.ROLE_NAME in ('turbine_root', 'Root');
-
+AND TURBINE_ROLE.ROLE_NAME in ('Root');

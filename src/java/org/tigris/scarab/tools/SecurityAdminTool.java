@@ -98,7 +98,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.4 2002/04/16 15:56:29 jmcnally Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.5 2002/04/22 22:13:28 jon Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
@@ -270,8 +270,7 @@ public class SecurityAdminTool
         for (int i=0; i<roles.length; i++) 
         {
             Role role = roles[i];
-            if (!role.getName().equals("Root") 
-                && !role.getName().equals("turbine_root")) 
+            if (!role.getName().equals("Root")) 
             {
                 nonRootRoles.add(role);
             }
@@ -307,7 +306,4 @@ public class SecurityAdminTool
     {
         return TurbineSecurity.getACL(user);
     }    
-    
 }
-
-
