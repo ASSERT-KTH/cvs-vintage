@@ -1,0 +1,58 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: AddRole.vm,v 1.1 2001/11/29 21:25:15 dr Exp $
+*#
+
+#set ($lastAction = $data.Parameters.getString("lastAction"))
+
+$page.setTitle("Role Administration")
+
+<div id="addrole" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Add Role</h3>
+
+<form name="EditUserForm" action="admin%2cAddRole.vm" method="post">
+  <input type="hidden" name="action" value="admin.ManageRoles" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
+  <input type="hidden" name="lastAction" value="">
+
+#set ($regGroup = $intake.EditRole.Default)
+#if (($lastAction) && ($lastAction == "addedrole"))
+    #set ($roleNameData = "")
+#else
+    #set ($roleNameData = $regGroup.RoleName)
+#end
+
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>Role</th>
+ <td>
+   <input name="$regGroup.RoleName.Key" value="$roleNameData" type="text" size="25" />
+   #fieldErrorMsg($regGroup.RoleName "")
+ </td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doAddrole" value="Add Role" />
+  </td>
+ </tr>
+</table>
+</div>
+
+$intake.declareGroups()
+
+</form>
+</div>
+
+
+
