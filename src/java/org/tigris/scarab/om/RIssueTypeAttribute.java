@@ -92,6 +92,19 @@ public  class RIssueTypeAttribute
         setDefaultTextFlag(b);
     }
 
+    /**
+     * Avoids a problem with intake and not having a getter.  It always 
+     * returns false, but the method is not used in code.  Assuming some
+     * logic should be used here, see RModuleAttribute for a similar 
+     * method that is functional.
+     *
+     * @return false
+     */
+    public boolean getIsDefaultText()
+    {
+        return false;
+    }
+
     public void delete( ScarabUser user )
          throws Exception
     {                
