@@ -17,12 +17,14 @@ import java.net.URLClassLoader;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import org.jboss.logging.Logger;
+
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.J2EEDeployedObject J2EEDeployedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -52,6 +54,10 @@ public abstract class J2EEDeployedObject
    
    // Attributes ----------------------------------------------------
 
+   /** Class logger. */
+   private static final Logger log =
+      Logger.getLogger(J2EEDeployedObject.class);
+
    private String mDeploymentDescriptor;
 
    // Static --------------------------------------------------------
@@ -62,7 +68,7 @@ public abstract class J2EEDeployedObject
       StringWriter lOutput = null;
       try {
          // First get the deployement descriptor
-         System.out.println( "File: " + pJarUrl + ", descriptor: " + sDescriptors[ pType ] );
+         log.debug( "File: " + pJarUrl + ", descriptor: " + sDescriptors[ pType ] );
          ClassLoader localCl = new URLClassLoader( new URL[] { pJarUrl } );
          lInput = new InputStreamReader( localCl.getResourceAsStream( sDescriptors[ pType ] ) );
          lOutput = new StringWriter();
@@ -74,7 +80,7 @@ public abstract class J2EEDeployedObject
          lDD = lOutput.toString();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         log.error("failed to get deployment descriptor", e);
       }
       finally {
          if( lInput != null ) {
@@ -142,5 +148,5 @@ public abstract class J2EEDeployedObject
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
-   
+
 }
