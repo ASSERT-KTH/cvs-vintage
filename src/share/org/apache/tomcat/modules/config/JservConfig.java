@@ -102,7 +102,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.1 $ $Date: 2001/07/03 23:29:32 $
+	@version $Revision: 1.2 $ $Date: 2001/07/19 20:23:34 $
  */
 public class JservConfig  extends BaseInterceptor { 
     
@@ -110,7 +110,7 @@ public class JservConfig  extends BaseInterceptor {
     public static final String APACHE_CONFIG="conf/jserv/tomcat-apache.conf";
     /** default location of mod_jserv Apache plug-in. */
     public static final String MOD_JSERV;
-    public static final String AJPV12="ajp12";
+    public static final String AJPV12="ajpv12";
     
     //set up some defaults based on OS type
     static{
@@ -343,7 +343,6 @@ public class JservConfig  extends BaseInterceptor {
     	    // Find Ajp1? connectors
     	    int portInt=8007;
     	    BaseInterceptor ci[]=cm.getContainer().getInterceptors();
-	    // try to get jakarta-tomcat-connectors Ajp13 Interceptor class
     	    for( int i=0; i<ci.length; i++ ) {
 		Object con=ci[i];
 		if( con instanceof  Ajp12Interceptor ) {
