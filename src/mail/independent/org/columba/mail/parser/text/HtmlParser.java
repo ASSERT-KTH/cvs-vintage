@@ -56,57 +56,56 @@ public class HtmlParser {
 		Pattern.compile("\\<(.|\\n)*?\\>", Pattern.CASE_INSENSITIVE);
 
 	private static String emailStr = 
-		"([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})";
+		"([\\w.\\-]*\\@([\\w\\-]+\\.*)+\\.[a-zA-Z0-9]{2,})";
 	private static final Pattern emailPattern =
 		Pattern.compile(emailStr);
 	private static final Pattern emailPatternInclLink = 
 		Pattern.compile("<a( |\\n)*?href=(\\\")?(mailto:)" + emailStr +	"(.|\\n)*?</a>",
 			Pattern.CASE_INSENSITIVE);
-		
-	private static String urls = "(http|https|ftp)";
-	private static String letters = "\\w";
-	private static String gunk = "/#~:;.?+=&@!\\-%";
-	private static String punc = ".:?\\-";
-	private static String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";
-	private static String urlStr = "\\b"
-									+ "("
-									+ urls
-									+ ":["
-									+ any
-									+ "]+?)(?=["
-									+ punc
-									+ "]*[^"
-									+ any
-									+ "]|$)";
+			
+	private static String prot = "(http|https|ftp)";
+	private static String punc = ".,:;?!\\-";
+	private static String any = "\\S"; 
 
-	/**
-	 *
-	 *  
-	 * \\b  				start at word boundary
-	 * (					begin $1
-	 * urls:				url can be (http:, https:, ftp:) 
-	 * [any]+?				followed by one or more of any valid character
-	 * 						(be conservative - take only what you need)
-	 * )					end of $1
-	 * (?=					look-ahead non-consumptive assertion
-	 * [punc]*				either 0 or more punctuation
-	 * [^any]				  followed by a non-url char
-	 * |					or else
-	 * $					  then end of the string
-	 * )
-	 */	
-	private static final Pattern urlPattern =
-		Pattern.compile(urlStr);
-	/*	Pattern.compile("\\b"
-	+ "("
-	+ urls
-	+ ":["
-	+ any
-	+ "]+?)(?=["
-	+ punc
-	+ "]*[^"
-	+ any
-	+ "]|$)"); */
+	
+	private static String urlStr  = "\\b"
+				 + "("
+				 + "(\\w*(:\\S*)?@)?"
+				 + prot + "://"
+				 + "["+any+"]+"
+				 + ")"
+				 + "(?=\\s|$)";
+	/*
+	             \\b  Start at word boundary
+                 (  
+	(\\w*(:\\S*)?@)?  [user:[pass]]@ - Construct
+       prot + "://  protocol and ://
+	       ["+any+"]  match literaly anything...
+                 )
+         (?=\\s|$)  ...until we find whitespace or end of String
+	*/ 				 
+
+	private static final Pattern urlPattern =	Pattern.compile(urlStr,Pattern.CASE_INSENSITIVE);	
+
+	private static String url_repairStr   = "(.*://.*?)"
+					+ "("
+						+ "(&gt;).*|"
+						+ "(["+punc+"]*)"
+					+ "(<br>)?"
+					+ ")$";
+	/*
+     (.*://.*?)"  "something" with :// 
+                  (could be .*? but then the Pattern would match whitespace)
+	             (
+	      (&gt;).*  a html-Encoded > followed by anything
+				 			 |  or
+	(["+punc+"]*)"  any Punctuation
+	        (<br>)? 0 or 1 trailing <br>
+   	          )$  end of String
+	*/
+	private static final Pattern url_repairPattern =	Pattern.compile(url_repairStr);	
+	
+	
 	private static final Pattern urlPatternInclLink = 
 		Pattern.compile("<a( |\\n)*?href=(\\\")?" + urlStr +	"(.|\\n)*?</a>",
 			Pattern.CASE_INSENSITIVE);
@@ -694,54 +693,20 @@ public class HtmlParser {
 	 * 			(null on error)
 	 */
 	public static String substituteURL(String s) {
-		/*
-		PatternMatcher urlMatcher = new Perl5Matcher();
-		PatternCompiler urlCompiler = new Perl5Compiler();
-		Pattern urlPattern;
+	
+		String match;
+		Matcher m = urlPattern.matcher(s);
+		StringBuffer sb = new StringBuffer();
 
-		String urls = "(http|https|ftp)";
-		String letters = "\\w";
-		String gunk = "/#~:;.?+=&@!\\-%";
-		String punc = ".:?\\-";
-		String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";
-*/
-		/*
-		String pattern =
-			"\\b"
-				+ "("
-				+ urls
-				+ ":["
-				+ any
-				+ "]+?)(?=["
-				+ punc
-				+ "]*[^"
-				+ any
-				+ "]|$)";
-
-		try {
-			urlCompiler = new Perl5Compiler();
-			urlPattern =
-				urlCompiler.compile(
-					pattern,
-					Perl5Compiler.CASE_INSENSITIVE_MASK);
-
-			urlMatcher = new Perl5Matcher();
-
-			String result =
-				Util.substitute(
-					urlMatcher,
-					urlPattern,
-					new Perl5Substitution("<A HREF=$1>$1</A>"),
-					s,
-					Util.SUBSTITUTE_ALL);
-
-			return result;
-		} catch (MalformedPatternException e) {
-			ColumbaLogger.log.error("Error transforming urls to links", e);
-			return null; // error
+		while (m.find())
+		{
+			match = m.group();
+			match = url_repairPattern.matcher(match).replaceAll("<A HREF=\"$1\">$1</A>$2"); 
+			m.appendReplacement(sb, match);
 		}
-		*/
-		return urlPattern.matcher(s).replaceAll("<A HREF=$1>$1</A>");
+		m.appendTail(sb);
+		
+		return sb.toString();
 	}
 
 	/**
