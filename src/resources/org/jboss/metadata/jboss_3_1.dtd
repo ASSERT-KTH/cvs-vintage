@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.1//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_1.dtd">
 
-$Id: jboss_3_1.dtd,v 1.2 2002/08/21 02:41:58 d_jencks Exp $
-$Revision: 1.2 $
+$Id: jboss_3_1.dtd,v 1.3 2002/09/30 13:14:26 slaboure Exp $
+$Revision: 1.3 $
 
 Overview of the architecture of jboss.xml
 
@@ -37,6 +37,8 @@ Overview of the architecture of jboss.xml
       <resource-env-ref>
       <clustered />
       <cluster-config>
+      <cache-invalidation />
+      <cache-invalidation-config>
     </entity>
 
     <session>
@@ -178,7 +180,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?)>
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?, cache-invalidation? , cache-invalidation-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -379,6 +381,49 @@ Overview of the architecture of jboss.xml
   Used in: entity and session (in clustered-config element)
 -->
 <!ELEMENT bean-load-balance-policy (#PCDATA)>
+
+<!--
+  The cache-invalidation element indicates if this bean cache should listen to cache
+  invalidation events and clear its cache accordingly as well as send cache invalidation
+  messages.
+  It is provided by the deployer. If not, jboss will assume cache-invalidation = True
+  NOTE: This value will *only* be applied if the correct cache plugin and interceptor(s)
+        are defined in the container configuration.
+  Possible values: "False", "True" (default)
+  
+  Used in: entity (only commit-option A and D will invalidate their cache)
+-->
+<!ELEMENT cache-invalidation (#PCDATA)>
+
+<!--
+  The cache-invalidation-config element allows to specify cache invalidation specific settings.
+  
+  Used in: entity
+-->
+<!ELEMENT cache-invalidation-config (invalidation-group-name? , invalidation-manager-name?)>
+
+<!--
+  The invalidation-group-name element indicates the name of a group in which all 
+  invalidation messages are exchanged i.e. all beans sharing a given invalidation-group-name
+  should share the same PK semantic.
+  By default, invalidation-group-name equals to the EJB name. Thus, when using cache invalidation
+  accross a cluster, it is not necessary to specify a name as all beans will have the same name
+  accross the cluster. Nevertheless, if you deploy, on the same node, the same EJB, once with 
+  commit-option C (RW access) and once in commit-option A (RO) and want the RW EJB to invalidate
+  entries of RO EJB, each one will obviously have its own EJB name. Consequently, you can assign
+  a common invalidation-group-name to both EJBs so that they share their cache invalidation messages.
+  
+  Used in: entity (in cache-invalidation-config element)
+-->
+<!ELEMENT invalidation-group-name (#PCDATA)>
+
+<!--
+  The invalidation-manager-name references the InvalidationManager MBean to be used.
+  By Default, the default InvalidationManager is used.
+  
+  Used in: entity (in cache-invalidation-config element)
+-->
+<!ELEMENT invalidation-manager-name (#PCDATA)>
 
 <!--
   The session-state-manager-jndi-name element indicates the name of the HASessionState to be used
