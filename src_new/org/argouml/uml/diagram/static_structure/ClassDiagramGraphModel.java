@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.31 2003/05/12 22:32:54 alexb Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.32 2003/05/13 00:06:54 alexb Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -520,15 +520,15 @@ implements VetoableChangeListener  {
         }
 
         // set the ends navigability see also Class ActionNavigability
-        if ( newNode instanceof MInterface)
+        if ( newNode instanceof MInterface){
             theEnd.setNavigable(true);
-        else
-            theEnd.setNavigable(false);
-
-        if ( otherNode instanceof MInterface)
-            theOtherEnd.setNavigable(true);
-        else
             theOtherEnd.setNavigable(false);
+        }
+
+        if ( otherNode instanceof MInterface){
+            theOtherEnd.setNavigable(true);
+            theEnd.setNavigable(false);
+        }
 
         //set the new end type!
         theEnd.setType((MClassifier)newNode);
@@ -540,6 +540,7 @@ implements VetoableChangeListener  {
    */
   private void rerouteGeneralization(Object newNode, Object oldNode, Object edge, boolean isSource) {
 
+      
   }
 
   /**
