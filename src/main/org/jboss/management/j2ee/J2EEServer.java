@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -37,13 +37,13 @@ public class J2EEServer
 {
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "J2EEServer";
+   
    // Attributes ----------------------------------------------------
    
    private List mDeployedObjects = new ArrayList();
    
    private List mResources = new ArrayList();
-   
-   private List mNodes = new ArrayList();
    
    private List mJVMs = new ArrayList();
    
@@ -60,7 +60,7 @@ public class J2EEServer
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "J2EEServer", pName, pDomain );
+      super( J2EE_TYPE, pName, pDomain );
       mServerVendor = pServerVendor;
       mServerVersion = pServerVersion;
    }
@@ -137,26 +137,23 @@ public class J2EEServer
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
       if(
-         "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType ) ||
-         "EjbModule".equals( lType ) ||
-         "ResourceAdapterModule".equals( lType ) ||
-         "WebModule".equals( lType )
+         J2EEApplication.J2EE_TYPE.equals( lType ) ||
+         EjbModule.J2EE_TYPE.equals( lType ) ||
+         ResourceAdapterModule.J2EE_TYPE.equals( lType ) ||
+         WebModule.J2EE_TYPE.equals( lType )
       ) {
          mDeployedObjects.add( pChild );
-      } else if( "Node".equals( lType ) ) {
-         mNodes.add( pChild );
-      } else if( "JVM".equals( lType ) ) {
+      } else if( JVM.J2EE_TYPE.equals( lType ) ) {
          mJVMs.add( pChild );
       } else
-      if( "JNDI".equals( lType ) ||
-         "JMSResource".equals( lType ) ||
-         "URL".equals( lType ) ||
-         "JTA".equals( lType ) ||
-         "JavaMail".equals( lType ) ||
-         "JDBCResource".equals( lType ) ||
-         "RMI IIOP".equals( lType ) ||
-         "JCAResource".equals( lType )
+      if( JNDIResource.J2EE_TYPE.equals( lType ) ||
+         JMSResource.J2EE_TYPE.equals( lType ) ||
+         URLResource.J2EE_TYPE.equals( lType ) ||
+         JTAResource.J2EE_TYPE.equals( lType ) ||
+         JavaMailResource.J2EE_TYPE.equals( lType ) ||
+         JDBCResource.J2EE_TYPE.equals( lType ) ||
+         RMI_IIOPResource.J2EE_TYPE.equals( lType ) ||
+         JCAResource.J2EE_TYPE.equals( lType )
       ) {
          mResources.add( pChild );
       }
@@ -165,26 +162,23 @@ public class J2EEServer
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
       if(
-         "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType ) ||
-         "EjbModule".equals( lType ) ||
-         "ResourceAdapterModule".equals( lType ) ||
-         "WebModule".equals( lType )
+         J2EEApplication.J2EE_TYPE.equals( lType ) ||
+         EjbModule.J2EE_TYPE.equals( lType ) ||
+         ResourceAdapterModule.J2EE_TYPE.equals( lType ) ||
+         WebModule.J2EE_TYPE.equals( lType )
       ) {
          mDeployedObjects.remove( pChild );
-      } else if( "Node".equals( lType ) ) {
-         mNodes.remove( pChild );
-      } else if( "JVM".equals( lType ) ) {
+      } else if( JVM.J2EE_TYPE.equals( lType ) ) {
          mJVMs.remove( pChild );
       } else
-      if( "JNDI".equals( lType ) ||
-         "JMSResource".equals( lType ) ||
-         "URL".equals( lType ) ||
-         "JTA".equals( lType ) ||
-         "JavaMail".equals( lType ) ||
-         "JDBCResource".equals( lType ) ||
-         "RMI IIOP".equals( lType ) ||
-         "JCAResource".equals( lType )
+      if( JNDIResource.J2EE_TYPE.equals( lType ) ||
+         JMSResource.J2EE_TYPE.equals( lType ) ||
+         URLResource.J2EE_TYPE.equals( lType ) ||
+         JTAResource.J2EE_TYPE.equals( lType ) ||
+         JavaMailResource.J2EE_TYPE.equals( lType ) ||
+         JDBCResource.J2EE_TYPE.equals( lType ) ||
+         RMI_IIOPResource.J2EE_TYPE.equals( lType ) ||
+         JCAResource.J2EE_TYPE.equals( lType )
       ) {
          mResources.remove( pChild );
       }
@@ -194,7 +188,6 @@ public class J2EEServer
       return "J2EEServer { " + super.toString() + " } [ " +
          "depoyed objects: " + mDeployedObjects +
          ", resources: " + mResources +
-         ", nodes: " + mNodes +
          ", JVMs: " + mJVMs +
          ", J2EE vendor: " + mServerVendor +
          " ]";

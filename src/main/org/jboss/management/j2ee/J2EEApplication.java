@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -45,6 +45,8 @@ public class J2EEApplication
 {
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "J2EEApplication";
+   
    // Attributes ----------------------------------------------------
    
    private List mModules = new ArrayList();
@@ -57,7 +59,11 @@ public class J2EEApplication
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
+             new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+             ),
              null
          ).iterator().next();
          // First get the deployement descriptor
@@ -97,12 +103,14 @@ public class J2EEApplication
       Logger lLog = Logger.getLogger( J2EEApplication.class );
       try {
          ObjectName lApplication;
-         if( pName.indexOf( "j2eeType=J2EEApplication" ) >= 0 ) {
+         if( pName.indexOf( J2EEManagedObject.TYPE + "=" + J2EEApplication.J2EE_TYPE ) >= 0 ) {
             lApplication = new ObjectName( pName );
          } else {
             // Find the Object to be destroyed
             ObjectName lSearch = new ObjectName(
-               J2EEManagedObject.getDomainName() + ":j2eeType=J2EEApplication,name=" + pName + ",*"
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EE_TYPE + ",name=" + pName + "," +
+               "*"
             );
             lApplication = (ObjectName) pServer.queryNames(
                lSearch,
@@ -132,7 +140,7 @@ public class J2EEApplication
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "J2EEApplication", pName, pServer, pDeploymentDescriptor );
+      super( J2EE_TYPE, pName, pServer, pDeploymentDescriptor );
    }
    
    // Public --------------------------------------------------------
@@ -161,22 +169,22 @@ public class J2EEApplication
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EjbModule".equals( lType ) ) {
+      if( EjbModule.J2EE_TYPE.equals( lType ) ) {
          mModules.add( pChild );
-      } else if( "WebModule".equals( lType ) ) {
+      } else if( WebModule.J2EE_TYPE.equals( lType ) ) {
          mModules.add( pChild );
-      } else if( "ConnectorModule".equals( lType ) ) {
+      } else if( ResourceAdapterModule.J2EE_TYPE.equals( lType ) ) {
          mModules.add( pChild );
       }
    }
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EjbModule".equals( lType ) ) {
+      if( EjbModule.J2EE_TYPE.equals( lType ) ) {
          mModules.remove( pChild );
-      } else if( "WebModule".equals( lType ) ) {
+      } else if( WebModule.J2EE_TYPE.equals( lType ) ) {
          mModules.remove( pChild );
-      } else if( "ConnectorModule".equals( lType ) ) {
+      } else if( ResourceAdapterModule.J2EE_TYPE.equals( lType ) ) {
          mModules.remove( pChild );
       }
    }

@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.StatefulSessionBean StatefulSessionBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,14 +29,17 @@ public class StatefulSessionBean
    extends SessionBean
    implements StatefulSessionBeanMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "StatefulSessionBean";
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
     * @param pName Name of the StatefulSessionBean
     *
@@ -47,14 +50,23 @@ public class StatefulSessionBean
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "StatefulSessionBean", pName, pEjbModule );
+      super( J2EE_TYPE, pName, pEjbModule );
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
+   
+   // Public --------------------------------------------------------
+   
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "StatefulSessionBean { " + super.toString() + " } []";
    }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

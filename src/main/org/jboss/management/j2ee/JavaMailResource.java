@@ -19,10 +19,10 @@ import org.jboss.system.ServiceMBean;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.JavaMail JavaMail}.
+ * {@link javax.management.j2ee.JavaMailResource JavaMailResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -33,11 +33,13 @@ import org.jboss.system.ServiceMBean;
  *
  * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
  **/
-public class JavaMail
+public class JavaMailResource
    extends J2EEResource
-   implements JavaMailMBean
+   implements JavaMailResourceMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JavaMailResource";
    
    // Attributes ----------------------------------------------------
    
@@ -47,7 +49,7 @@ public class JavaMail
    private Listener mListener;
    
    // Static --------------------------------------------------------
-
+   
    private static final String[] sTypes = new String[] {
                                              "j2ee.object.created",
                                              "j2ee.object.deleted",
@@ -59,12 +61,16 @@ public class JavaMail
                                           };
 
    public static ObjectName create( MBeanServer pServer, String pName, ObjectName pService ) {
-      Logger lLog = Logger.getLogger( JavaMail.class );
+      Logger lLog = Logger.getLogger( JavaMailResource.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
@@ -74,7 +80,7 @@ public class JavaMail
       try {
          // Now create the JNDI Representant
          return pServer.createMBean(
-            "org.jboss.management.j2ee.JavaMail",
+            "org.jboss.management.j2ee.JavaMailResource",
             null,
             new Object[] {
                pName,
@@ -95,7 +101,7 @@ public class JavaMail
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JavaMail.class );
+      Logger lLog = Logger.getLogger( JavaMailResource.class );
       try {
          // Find the Object to be destroyed
          pServer.unregisterMBean( new ObjectName( pName ) );
@@ -105,21 +111,19 @@ public class JavaMail
       }
    }
    
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   // Constructors --------------------------------------------------
+   
    /**
-    * @param pName Name of the JavaMail
+    * @param pName Name of the JavaMailResource
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JavaMail( String pName, ObjectName pServer, ObjectName pService )
+   public JavaMailResource( String pName, ObjectName pServer, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JavaMail", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
       mService = pService;
    }
    
@@ -248,7 +252,7 @@ public class JavaMail
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {
-      return "JavaMail { " + super.toString() + " } [ " +
+      return "JavaMailResource { " + super.toString() + " } [ " +
          " ]";
    }
    

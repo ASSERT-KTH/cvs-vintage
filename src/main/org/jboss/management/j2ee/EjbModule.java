@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -50,8 +50,10 @@ public class EjbModule
 
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "EJBModule";
+   
    // Attributes ----------------------------------------------------
-
+   
    private List mEJBs = new ArrayList();
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
@@ -59,7 +61,7 @@ public class EjbModule
    private Listener mListener;
    //used to see if we should remove our parent when we are destroyed.
    private static final Map iCreatedParent = new HashMap();
-
+   
    // Static --------------------------------------------------------
    
    private static final String[] sTypes = new String[] {
@@ -81,7 +83,11 @@ public class EjbModule
       ObjectName lApplication = null;
       boolean fakeParent = false;
       try {
-         ObjectName serverQuery = new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" );
+         ObjectName serverQuery = new ObjectName(
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+            "*"
+         );
          Set servers = pServer.queryNames(serverQuery, null);
          if (servers.size() != 1) 
          {
@@ -90,19 +96,21 @@ public class EjbModule
          } // end of if ()
          
          ObjectName lServer = (ObjectName)servers.iterator().next();
-
-         String lServerName = lServer.getKeyPropertyList().get( "j2eeType" ) + "=" +
+         
+         String lServerName = lServer.getKeyPropertyList().get( J2EEManagedObject.TYPE ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
-
+         
          lLog.debug( "EjbModule.create(), server name: " + lServerName );
-
-         ObjectName parentAppQuery =  new ObjectName( J2EEManagedObject.getDomainName() + 
-                                                      ":j2eeType=J2EEApplication" +
-                                                      ",name=" + pApplicationName + 
-                                                      "," + lServerName + ",*");
-
+         
+         ObjectName parentAppQuery =  new ObjectName( 
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + J2EEApplication.J2EE_TYPE + "," +
+            "name=" + pApplicationName + "," +
+            lServerName + "," +
+            "*"
+         );
          Set parentApps =  pServer.queryNames(parentAppQuery, null);
-
+         
          if (parentApps.size() == 0) 
          {
             lApplication = org.jboss.management.j2ee.J2EEApplication.create(
@@ -204,7 +212,7 @@ public class EjbModule
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "EjbModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
+      super( J2EE_TYPE, pName, pApplication, pJVMs, pDeploymentDescriptor );
       mService = pService;
    }
 
@@ -237,10 +245,10 @@ public class EjbModule
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EntityBean".equals( lType ) ||
-         "StatelessSessionBean".equals( lType ) ||
-         "StatefulSessionBean".equals( lType ) ||
-         "MessageDrivenBean".equals( lType )
+      if( EntityBean.J2EE_TYPE.equals( lType ) ||
+         StatelessSessionBean.J2EE_TYPE.equals( lType ) ||
+         StatefulSessionBean.J2EE_TYPE.equals( lType ) ||
+         MessageDrivenBean.J2EE_TYPE.equals( lType )
       ) {
          mEJBs.add( pChild );
       }
@@ -248,10 +256,10 @@ public class EjbModule
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EntityBean".equals( lType ) ||
-         "StatelessSessionBean".equals( lType ) ||
-         "StatefulSessionBean".equals( lType ) ||
-         "MessageDrivenBean".equals( lType )
+      if( EntityBean.J2EE_TYPE.equals( lType ) ||
+         StatelessSessionBean.J2EE_TYPE.equals( lType ) ||
+         StatefulSessionBean.J2EE_TYPE.equals( lType ) ||
+         MessageDrivenBean.J2EE_TYPE.equals( lType )
       ) {
          mEJBs.remove( pChild );
       }

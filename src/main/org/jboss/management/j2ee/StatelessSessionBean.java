@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.StatelessSessionBean StatelessSessionBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,14 +29,17 @@ public class StatelessSessionBean
    extends SessionBean
    implements StatelessSessionBeanMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "StatelessSessionBean";
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
     * @param pName Name of the StatelessSessionBean
     *
@@ -47,14 +50,23 @@ public class StatelessSessionBean
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "StatelessSessionBean", pName, pEjbModule );
+      super( J2EE_TYPE, pName, pEjbModule );
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
+   
+   // Public --------------------------------------------------------
+   
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "StatelessSessionBean { " + super.toString() + " } []";
    }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

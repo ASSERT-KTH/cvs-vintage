@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -44,6 +44,8 @@ public class JDBCDataSource
    implements JDBCDataSourceMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JDBCDataSource";
    
    // Attributes ----------------------------------------------------
    
@@ -70,8 +72,12 @@ public class JDBCDataSource
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
@@ -84,8 +90,12 @@ public class JDBCDataSource
       try {
          // Check if the JDBC Manager exists and if not create one
          Set lNames = pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JDBCResource,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + JDBCResource.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          );
          if( lNames.isEmpty() ) {
             // Now create the JDBC Manager
@@ -131,7 +141,10 @@ public class JDBCDataSource
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCDataSource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JDBCDataSource.J2EE_TYPE + "," +
+            "name=" + pName + "," +
+            "*"
          );
          ObjectName lJNDI = (ObjectName) pServer.queryNames(
             lSearch,
@@ -159,7 +172,7 @@ public class JDBCDataSource
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JDBCDataSource", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
       mService = pService;
    }
    

@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.RMI_IIOPResource RMI_IIOPResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -35,13 +35,15 @@ import org.jboss.system.ServiceMBean;
  * <li> Added state handling (except event notification)
  * </ul>
  *
- * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEManagedObjectMBean"
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
  **/
 public class RMI_IIOPResource
    extends J2EEResource
    implements RMI_IIOPResourceMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "RMI_IIOPResource";
    
    // Attributes ----------------------------------------------------
    
@@ -67,12 +69,16 @@ public class RMI_IIOPResource
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
+         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
          return null;
       }
       try {
@@ -93,7 +99,7 @@ public class RMI_IIOPResource
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
+         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
          return null;
       }
    }
@@ -103,7 +109,10 @@ public class RMI_IIOPResource
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=RMI_IIOPResource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+            "name=" + pName + "," +
+            "*"
          );
          ObjectName lRMI_IIOPResource = (ObjectName) pServer.queryNames(
             lSearch,
@@ -113,7 +122,7 @@ public class RMI_IIOPResource
          pServer.unregisterMBean( lRMI_IIOPResource );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destroy JSR-77 RMI_IIOPResource: " + pName, e );
+         lLog.error( "Could not destroy JSR-77 RMI_IIOPResource: " + pName, e );
       }
    }
    
@@ -129,7 +138,7 @@ public class RMI_IIOPResource
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "RMI_IIOPResource", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
       Logger log = getLog();
       if (log.isDebugEnabled())
          log.debug( "Service name: " + pService );

@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.EntityBean EntityBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,14 +29,17 @@ public class EntityBean
    extends EJB
    implements EntityBeanMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "EntityBean";
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
     * @param pName Name of the EntityBean
     *
@@ -47,14 +50,23 @@ public class EntityBean
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "EntityBean", pName, pEjbModule );
+      super( J2EE_TYPE, pName, pEjbModule );
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
+   
+   // Public --------------------------------------------------------
+   
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "EntityBean { " + super.toString() + " } []";
    }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

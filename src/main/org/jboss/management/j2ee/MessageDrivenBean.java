@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.MessageDrivenBean MessageDrivenBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,14 +29,17 @@ public class MessageDrivenBean
    extends EJB
    implements MessageDrivenBeanMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "MessageDrivenBean";
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
     * @param pName Name of the MessageDrivenBean
     *
@@ -47,14 +50,23 @@ public class MessageDrivenBean
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "MessageDrivenBean", pName, pApplication );
+      super( J2EE_TYPE, pName, pApplication );
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
+   
+   // Public --------------------------------------------------------
+   
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "MessageDrivenBean[ " + getName() + " ]";
    }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

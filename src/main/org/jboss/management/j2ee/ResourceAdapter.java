@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.ResourceAdapter ResourceAdapter}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -34,11 +34,13 @@ public class ResourceAdapter
 {
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "ResourceAdapter";
+   
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
    
-   public static ObjectName create( MBeanServer pServer, String pResourceAdapterModule, String pResourceAdapterName ) {
+   public static ObjectName create( MBeanServer pServer, String p, String pResourceAdapterName ) {
       Logger lLog = Logger.getLogger( ResourceAdapter.class );
       try {
         
@@ -48,7 +50,7 @@ public class ResourceAdapter
             null,
             new Object[] {
                pResourceAdapterName,
-               new ObjectName( pResourceAdapterModule )
+               new ObjectName( p )
             },
             new String[] {
                String.class.getName(),
@@ -67,7 +69,10 @@ public class ResourceAdapter
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=ResourceAdapter,name=" + pResourceAdapterName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + ResourceAdapter.J2EE_TYPE + "," +
+            "name=" + pResourceAdapterName + "," +
+            "*"
          );
          ObjectName lResourceAdapter = (ObjectName) pServer.queryNames(
             lSearch,
@@ -93,7 +98,7 @@ public class ResourceAdapter
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "ResourceAdapter", pName, pResourceAdapterModule );
+      super( J2EE_TYPE, pName, pResourceAdapterModule );
    }
 
    // java.lang.Object overrides --------------------------------------

@@ -20,7 +20,7 @@ import java.security.InvalidParameterException;
  * {@link javax.management.j2ee.WebModule WebModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -35,16 +35,19 @@ public class WebModule
   extends J2EEModule
   implements WebModuleMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "WebModule";
+   
+   // Attributes ----------------------------------------------------
+   
    private List mServlets = new ArrayList();
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
    * Constructor taking the Name of this Object
    *
@@ -65,9 +68,7 @@ public class WebModule
       mServlets = new ArrayList( Arrays.asList( pServlets ) );
    }
 
-   // -------------------------------------------------------------------------
-   // WebModule Implementation
-   // -------------------------------------------------------------------------  
+   // Public --------------------------------------------------------
    
    /**
     * @jmx:managed-attribute
@@ -90,10 +91,20 @@ public class WebModule
       }
    }
    
+   // Object overrides ---------------------------------------------------
+   
    public String toString() {
       return "WebModule[ " + super.toString() +
          ", Servlets: " + mServlets +
          " ]";
    }
-
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

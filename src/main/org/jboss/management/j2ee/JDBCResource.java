@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCResource JDBCResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -46,6 +46,8 @@ public class JDBCResource
    implements JDBCResourceMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JDBCResource";
    
    // Attributes ----------------------------------------------------
    
@@ -73,8 +75,12 @@ public class JDBCResource
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
@@ -107,7 +113,10 @@ public class JDBCResource
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCResource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JDBCResource.J2EE_TYPE + "," +
+            "name=" + pName + "," +
+            "*"
          );
          Set lNames = pServer.queryNames(
             lSearch,
@@ -143,8 +152,7 @@ public class JDBCResource
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JDBCResource", pName, pServer );
-//AS      mService = pService;
+      super( J2EE_TYPE, pName, pServer );
    }
    
    // Public --------------------------------------------------------
@@ -346,14 +354,14 @@ public class JDBCResource
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "JDBCDataSource".equals( lType ) ) {
+      if( JDBCDataSource.J2EE_TYPE.equals( lType ) ) {
          mDatasources.add( pChild );
       }
    }
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "JDBCDataSource".equals( lType ) ) {
+      if( JDBCDataSource.J2EE_TYPE.equals( lType ) ) {
          mDatasources.remove( pChild );
       }
    }

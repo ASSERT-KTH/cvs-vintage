@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.JCAManagedConnectionFactory JCAManagedConnectionFactory}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -34,6 +34,8 @@ public class JCAManagedConnectionFactory
    implements JCAManagedConnectionFactoryMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JCAManagedConnectionFactory";
    
    // Attributes ----------------------------------------------------
    
@@ -78,7 +80,10 @@ public class JCAManagedConnectionFactory
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JCAManagedConnectionFactory,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JCAManagedConnectionFactory.J2EE_TYPE + "," +
+            "name=" + pName + "," +
+            "*"
          );
          ObjectName lJCAManagedConnectionFactory = (ObjectName) pServer.queryNames(
             lSearch,
@@ -101,7 +106,7 @@ public class JCAManagedConnectionFactory
    **/
    public JCAManagedConnectionFactory(String pName, ObjectName pServer) throws MalformedObjectNameException, InvalidParentException
    {
-      super( "JCAManagedConnectionFactory", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
    }
    
    // Public --------------------------------------------------------

@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JCAConnectionFactory JCAConnectionFactory}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -40,6 +40,8 @@ public class JCAConnectionFactory
    implements JCAConnectionFactoryMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JCAConnectionFactory";
    
    // Attributes ----------------------------------------------------
    
@@ -65,8 +67,12 @@ public class JCAConnectionFactory
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
@@ -78,8 +84,12 @@ public class JCAConnectionFactory
       try {
          // Check if the JCA Resource exists and if not create one
          Set lNames = pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JCAResource,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + JCAResource.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          );
          if( lNames.isEmpty() ) {
             // Now create the JCA resource
@@ -121,7 +131,10 @@ public class JCAConnectionFactory
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JCAConnectionFactory,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JCAConnectionFactory.J2EE_TYPE + "," +
+            "name=" + pName +
+            "*"
          );
          ObjectName lJCAConnectionFactory = (ObjectName) pServer.queryNames(
             lSearch,
@@ -146,7 +159,7 @@ public class JCAConnectionFactory
    **/
    public JCAConnectionFactory(String pName, ObjectName pServer, ObjectName pService) throws MalformedObjectNameException, InvalidParentException
    {
-      super( "JCAConnectionFactory", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
       mService = pService;
    }
    

@@ -28,7 +28,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.ResourceAdapterModule ResourceAdapterModule}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -52,13 +52,15 @@ public class ResourceAdapterModule
 
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "ResourceAdapterModule";
+   
    // Attributes ----------------------------------------------------
-
+   
    private List mResourceAdapters = new ArrayList();
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
-
+   
    // Static --------------------------------------------------------
    
    private static final String[] sTypes = new String[] {
@@ -79,17 +81,25 @@ public class ResourceAdapterModule
       ObjectName lParent = null;
       try {
          ObjectName lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
+             new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE  + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+             ),
              null
          ).iterator().next();
-         String lServerName = lServer.getKeyPropertyList().get( "j2eeType" ) + "=" +
+         String lServerName = lServer.getKeyPropertyList().get( J2EEManagedObject.TYPE ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
          lLog.debug( "ResourceAdapterModule.create(), server name: " + lServerName );
          if(pApplicationName != null)
          {
             lParent = (ObjectName) pServer.queryNames(
-                new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEApplication" +
-                   ",name=" + pApplicationName + "," + lServerName + ",*"
+               new ObjectName(
+                  J2EEManagedObject.getDomainName() + ":" +
+                  J2EEManagedObject.TYPE + "=" + J2EEApplication.J2EE_TYPE + "," +
+                  "name=" + pApplicationName + "," +
+                  lServerName + "," +
+                  "*"
                 ),
                 null
             ).iterator().next();
@@ -143,7 +153,10 @@ public class ResourceAdapterModule
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=ResourceAdapterModule,name=" + pModuleName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + ResourceAdapterModule.J2EE_TYPE + "," +
+            "name=" + pModuleName + "," +
+            "*"
          );
          ObjectName lResourceAdapterModule = (ObjectName) pServer.queryNames(
             lSearch,
@@ -172,7 +185,7 @@ public class ResourceAdapterModule
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "ResourceAdapterModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
+      super( J2EE_TYPE, pName, pApplication, pJVMs, pDeploymentDescriptor );
       mService = pService;
    }
 
@@ -205,7 +218,7 @@ public class ResourceAdapterModule
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "ResourceAdapter".equals( lType ))
+      if( ResourceAdapter.J2EE_TYPE.equals( lType ))
       {
          mResourceAdapters.add( pChild );
       }
@@ -213,7 +226,7 @@ public class ResourceAdapterModule
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "ResourceAdapter".equals( lType )) 
+      if( ResourceAdapter.J2EE_TYPE.equals( lType )) 
       {
          mResourceAdapters.remove( pChild );
       }

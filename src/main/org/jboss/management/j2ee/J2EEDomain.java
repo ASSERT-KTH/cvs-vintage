@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.J2EEDomain J2EEDomain}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -34,29 +34,28 @@ public class J2EEDomain
    extends J2EEManagedObject
    implements J2EEDomainMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------
    
-   private List mDeployedObjects = new ArrayList();
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "J2EEDomain";
+   
+   // Attributes ----------------------------------------------------
    
    private List mServers = new ArrayList();
    
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
    
    public J2EEDomain( String pDomainName )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( pDomainName, "J2EEDomain", "Manager" );
+      super( pDomainName, J2EE_TYPE, "Manager" );
    }
    
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------
+   // Public --------------------------------------------------------
    
    /**
     * @jmx:managed-attribute
@@ -75,27 +74,34 @@ public class J2EEDomain
       return null;
    }
    
-   public String toString() {
-      return "J2EEDomain { " + super.toString() + " } [ " +
-         "deployed objects: " + mDeployedObjects +
-         ", servers: " + mServers +
-         " ]";
-   }
+   // J2EEManagedObject implementation ----------------------------------------------
    
    public void addChild( ObjectName pChild ) {
-      Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "j2eeType" ) + "";
-      if(
-         "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType )
-      ) {
-         mDeployedObjects.add( pChild );
-      } else if( "J2EEServer".equals( lType ) ) {
+      String lType = J2EEManagedObject.getType( pChild );
+      if( J2EEServer.J2EE_TYPE.equals( lType ) ) {
          mServers.add( pChild );
       }
    }
    
    public void removeChild( ObjectName pChild ) {
-      //AS ToDo
+      String lType = J2EEManagedObject.getType( pChild );
+      if( J2EEServer.J2EE_TYPE.equals( lType ) ) {
+         mServers.remove( pChild );
+      }
    }
+   // Object overrides ---------------------------------------------------
+   
+   public String toString() {
+      return "J2EEDomain { " + super.toString() + " } [ " +
+         ", servers: " + mServers +
+         " ]";
+   }
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }

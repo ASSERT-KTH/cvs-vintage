@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.J2EEDomain J2EEDomain}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * @jmx:mbean description="sample for jboss xmbean.dtd"
  *            persistPolicy="Never"
@@ -50,8 +50,6 @@ public class J2EEDomainTarget
    // Members
    // -------------------------------------------------------------------------
    
-   private List mDeployedObjects = new ArrayList();
-   
    private List mServers = new ArrayList();
    
    // -------------------------------------------------------------------------
@@ -73,29 +71,6 @@ public class J2EEDomainTarget
    // -------------------------------------------------------------------------
    // Properties (Getters/Setters)
    // -------------------------------------------------------------------------
-   
-   /**
-    * @jmx:managed-attribute description="List of all deployed Objects"
-    *            access="READ"
-    *            persistPolicy="Never"
-    *            persistPeriod="30"
-    *            currencyTimeLimit="30"
-    **/
-   public ObjectName[] getDeployedObjects()
-   {
-      return (ObjectName[]) mDeployedObjects.toArray( new ObjectName[ 0 ] );
-   }
-   
-   /**
-    * @jmx:managed-operation description="Returns the requested deployed Object" impact="INFO"
-    **/
-   public ObjectName getDeployedObject( int pIndex )
-   {
-      if( pIndex >= 0 && pIndex < mDeployedObjects.size() ) {
-         return (ObjectName) mDeployedObjects.get( pIndex );
-      }
-      return null;
-   }
    
    /**
     * @jmx:managed-attribute description="List of all Servers on this Managment Domain"
@@ -120,7 +95,6 @@ public class J2EEDomainTarget
    
    public String toString() {
       return "J2EEDomainTarget { " + super.toString() + " } [ " +
-         "deployed objects: " + mDeployedObjects +
          ", servers: " + mServers +
          " ]";
    }
@@ -129,22 +103,19 @@ public class J2EEDomainTarget
     * @jmx:managed-operation description="adds a new child of this Management Domain" impact="INFO"
     **/
    public void addChild( ObjectName pChild ) {
-      Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "j2eeType" ) + "";
-      if(
-         "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType )
-      ) {
-         mDeployedObjects.add( pChild );
-      } else if( "J2EEServer".equals( lType ) ) {
+       String lType = J2EEManagedObject.getType( pChild );
+      if( J2EEServer.J2EE_TYPE.equals( lType ) ) {
          mServers.add( pChild );
       }
-   }
+  }
    
    /**
     * @jmx:managed-operation description="removes a new child of this Management Domain" impact="ACTION"
     **/
    public void removeChild( ObjectName pChild ) {
-      //AS ToDo
+      String lType = J2EEManagedObject.getType( pChild );
+      if( J2EEServer.J2EE_TYPE.equals( lType ) ) {
+         mServers.remove( pChild );
+      }
    }
 }

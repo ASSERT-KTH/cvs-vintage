@@ -20,7 +20,7 @@ import java.security.InvalidParameterException;
  * {@link javax.management.j2ee.AppClientModule AppClientModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -35,16 +35,17 @@ public class AppClientModule
   extends J2EEModule
   implements AppClientModuleMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
-   private List mServlets = new ArrayList();
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "AppClientModule";
+   
+   // Attributes ----------------------------------------------------
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
    * Constructor taking the Name of this Object
    *
@@ -58,16 +59,24 @@ public class AppClientModule
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "AppClientModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
+      super( J2EE_TYPE, pName, pApplication, pJVMs, pDeploymentDescriptor );
    }
-
-   // -------------------------------------------------------------------------
-   // AppClientModule Implementation
-   // -------------------------------------------------------------------------  
+   
+   // Public --------------------------------------------------------
+   
+   // Object overrides ---------------------------------------------------
    
    public String toString() {
-      return "AppClientModule[ " + super.toString() +
-         " ]";
+      return "AppClientModule { " + super.toString() +
+      " } []";
    }
-
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

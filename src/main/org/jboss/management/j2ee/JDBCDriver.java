@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -38,6 +38,8 @@ public class JDBCDriver
 {
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "JDBCDriver";
+   
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
@@ -47,12 +49,16 @@ public class JDBCDriver
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
          return null;
       }
       try {
@@ -81,7 +87,10 @@ public class JDBCDriver
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCDriver,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JDBCDriver.J2EE_TYPE + "," +
+            "name=" + pName +  "," +
+            "*"
          );
          ObjectName lJNDI = (ObjectName) pServer.queryNames(
             lSearch,
@@ -107,7 +116,7 @@ public class JDBCDriver
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JDBCDriver", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
    }
    
    // Public --------------------------------------------------------

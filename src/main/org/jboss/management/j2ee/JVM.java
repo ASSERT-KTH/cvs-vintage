@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.JVM JVM}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,18 +29,20 @@ public class JVM
    extends J2EEManagedObject
    implements JVMMBean
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
+   // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JVM";
+   
+   // Attributes ----------------------------------------------------
+   
    private String mJavaVendor;
    private String mJavaVersion;
    private String mNode;
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
    * @param pName Name of the JVM
    *
@@ -51,15 +53,13 @@ public class JVM
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JVM", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
       mJavaVendor = pJavaVendor;
       mJavaVersion = pJavaVersion;
       mNode = pNode;
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
+   
+   // Public --------------------------------------------------------
    
    /**
     * @jmx:managed-attribute
@@ -81,13 +81,23 @@ public class JVM
    public String getNode() {
       return mNode;
    }
-
+   
+   // java.lang.Object overrides ------------------------------------
+   
    public String toString() {
-      return "JBossJVM [ " +
+      return "JVM [ " +
          ", java vendor: " + getJavaVendor() +
          ", java version: " + getJavaVersion() +
          ", node: " + getNode() +
          " ]";
    }
-
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
+   
 }

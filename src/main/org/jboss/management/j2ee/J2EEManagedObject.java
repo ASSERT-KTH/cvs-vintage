@@ -23,7 +23,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -39,21 +39,21 @@ public abstract class J2EEManagedObject
    extends ServiceMBeanSupport
    implements J2EEManagedObjectMBean, Serializable
 {
-
+   
    // Constants -----------------------------------------------------
    
    public static final String TYPE = "j2eeType";
    public static final String NAME = "name";
    
    // Attributes ----------------------------------------------------
-
+   
    /** Class logger. */
    private static final Logger log =
       Logger.getLogger(J2EEManagedObject.class);
    
    private ObjectName mParent = null;
    private ObjectName mName = null;
-
+   
    // Static --------------------------------------------------------
    
    private static String sDomainName = null;
@@ -61,7 +61,7 @@ public abstract class J2EEManagedObject
    public static String getDomainName() {
       return sDomainName;
    }
-
+   
    /**
     * Retrieves the type out of an JSR-77 object name
     *
@@ -281,10 +281,10 @@ public abstract class J2EEManagedObject
    
    // Protected -----------------------------------------------------
    
-   public void postCreation() {
+   protected void postCreation() {
    }
    
-   public void preDestruction() {
+   protected void preDestruction() {
    }
    
    // Private -------------------------------------------------------

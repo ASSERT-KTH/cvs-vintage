@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JCAResource JCAResource}.
  *
  * @author  <a href="mailto:mclaugs@comcast.com">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -43,6 +43,8 @@ public class JCAResource
    implements JCAResourceMBean
 {
    // Constants -----------------------------------------------------
+   
+   public static final String J2EE_TYPE = "JCAResource";
    
    // Attributes ----------------------------------------------------
    
@@ -69,8 +71,12 @@ public class JCAResource
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
-             null
+            new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            ),
+            null
          ).iterator().next();
       }
       catch( Exception e ) {
@@ -103,7 +109,10 @@ public class JCAResource
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JCAResource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":" +
+            J2EEManagedObject.TYPE + "=" + JCAResource.J2EE_TYPE + "," +
+            "name=" + pName + "," +
+            "*"
          );
          Set lNames = pServer.queryNames(
             lSearch,
@@ -136,7 +145,7 @@ public class JCAResource
     **/
    public JCAResource(String pName, ObjectName pServer) throws MalformedObjectNameException, InvalidParentException
    {
-      super( "JCAResource", pName, pServer );
+      super( J2EE_TYPE, pName, pServer );
    }
    
    // Public --------------------------------------------------------
@@ -310,14 +319,14 @@ public class JCAResource
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "JCAConnectionFactory".equals( lType ) ) {
+      if( JCAConnectionFactory.J2EE_TYPE.equals( lType ) ) {
          mConnectionFactories.add( pChild );
       }
    }
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "JCAConnectionFactory".equals( lType ) ) {
+      if( JCAConnectionFactory.J2EE_TYPE.equals( lType ) ) {
          mConnectionFactories.remove( pChild );
       }
    }
@@ -329,7 +338,7 @@ public class JCAResource
          "Connection Factories: " + mConnectionFactories +
          " ]";
    }
-
+   
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
@@ -338,5 +347,4 @@ public class JCAResource
    
    // Inner classes -------------------------------------------------
    
-
 }

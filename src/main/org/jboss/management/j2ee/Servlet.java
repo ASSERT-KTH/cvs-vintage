@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.Servlet Servlet}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -36,6 +36,8 @@ public abstract class Servlet
 {
    // Constants -----------------------------------------------------
    
+   public static final String J2EE_TYPE = "Servlet";
+   
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
@@ -43,16 +45,16 @@ public abstract class Servlet
    // Constructors --------------------------------------------------
    
    /**
-    * @param pName Name of the EntityBean
+    * @param pName Name of the Servlet
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public Servlet( String pType, String pName, ObjectName pWebModule )
+   public Servlet( String pName, ObjectName pWebModule )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( pType, pName, pWebModule );
+      super( J2EE_TYPE, pName, pWebModule );
    }
 
    // java.lang.Object overrides --------------------------------------
