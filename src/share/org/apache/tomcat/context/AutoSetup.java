@@ -144,7 +144,7 @@ public class AutoSetup extends BaseInterceptor {
 		// don't assume HOME==TOMCAT_HOME
 		File f=new File( webappD, name);
 		ctx.setDocBase( f.getAbsolutePath() );
-		ctx.log("<l:autoLoadContext docBase=\"" + ctx.getDocBase() + "\" />");
+		ctx.log("Automatic context load docBase=\"" + ctx.getDocBase() + "\"");
 		cm.addContext(ctx);
 	    } else {
 		//System.out.println("Already set up: " + path + " " + cm.getContext(path));

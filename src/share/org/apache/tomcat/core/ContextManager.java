@@ -185,7 +185,7 @@ public class ContextManager {
      */
     public void init()  throws TomcatException {
 	String cp=System.getProperty( "java.class.path");
-	log( "<l:tomcat install=\"" + getTomcatHome() + "\" home=\"" + home + "\" classPath=\"" + cp + "\" />");
+	log( "Starting tomcat install=\"" + getTomcatHome() + "\" home=\"" + home + "\" classPath=\"" + cp + "\"");
 	//	long time=System.currentTimeMillis();
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -299,7 +299,7 @@ public class ContextManager {
 	    cI[i].addContext( this, ctx );
 	}
 	
-	ctx.log("<l:addContext path=\"" +  ctx.getPath() + "\"  docBase=\"" + ctx.getDocBase() + "\" />");
+	ctx.log("Adding context path=\"" +  ctx.getPath() + "\"  docBase=\"" + ctx.getDocBase() + "\"");
 
 	contexts.put( path, ctx );
     }
@@ -311,7 +311,7 @@ public class ContextManager {
      */
     public void removeContext(String name) throws TomcatException {
 	Context context = (Context)contexts.get(name);
-	log( "<l:removeContext path=\"" + context.getPath() + "\" />");
+	log( "Removing context path=\"" + context.getPath() + "\" ");
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -350,7 +350,7 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
-	if(debug>0) log("<l:addConnector javaClass=\"" + con.getClass().getName() + "\" />");
+	if(debug>0) log("Add connector javaClass=\"" + con.getClass().getName() + "\"");
 	con.setContextManager( this );
 	connectors.addElement( con );
     }
@@ -360,7 +360,7 @@ public class ContextManager {
     }
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) log("<l:requestInterceptor javaClass=\"" + ri.getClass().getName() + "\" />");
+	if(debug>0) log("Add requestInterceptor javaClass=\"" + ri.getClass().getName() + "\" ");
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
@@ -386,7 +386,7 @@ public class ContextManager {
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
-	if(debug>0) log("<l:contextInterceptor javaClass=\"" + ci.getClass().getName() + "\" />");
+	if(debug>0) log("Add contextInterceptor javaClass=\"" + ci.getClass().getName() + "\" ");
 	contextInterceptors.addElement( ci );
     }
 
@@ -808,10 +808,10 @@ public class ContextManager {
     }
     
     public final void log(String msg) {
-	if( msg.startsWith( "<l:" ))
-	    doLog( msg );
-	else
-	    doLog("<l:tc>" + msg + "</l:tc>");
+	//	if( msg.startsWith( "<l:" ))
+	doLog( msg );
+	//else
+	//doLog("<l:tc>" + msg + "</l:tc>");
     }
 
     boolean firstLog = true;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.3 2000/03/24 03:29:37 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2000/03/24 03:29:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.4 2000/04/06 21:14:46 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/04/06 21:14:46 $
  *
  * ====================================================================
  *
@@ -140,11 +140,11 @@ public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerC
 	}
 	ep.setConnectionHandler( con );
 	ep.startEndpoint();
-	cm.log("<l:startEndpoint port=\"" + port + "\" handler=\"" + con.getClass().getName() + "\" />");
+	cm.log("Starting endpoint port=\"" + port + "\" handler=\"" + con.getClass().getName() + "\" ");
     }
 
     public void stop() throws Exception {
-	cm.log("<l:stopEndpoint port=\"" + port + "\" handler=\"" + con.getClass().getName() + "\" />");
+	cm.log("Stoping endpoint port=\"" + port + "\" handler=\"" + con.getClass().getName() + "\" ");
     	ep.stopEndpoint();
     }
 

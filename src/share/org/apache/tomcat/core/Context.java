@@ -615,7 +615,7 @@ public class Context {
 	if( msg.startsWith( "<l:" ))
 	    contextM.doLog( msg, t );
 	else
-	    contextM.doLog("<l:ctx path=\"" + path  + "\" >" + msg + "</l:ctx>", t);
+	    contextM.doLog("Context log: path=\"" + path  + "\" " + msg, t);
     }
 
     boolean firstLog = true;
@@ -633,9 +633,11 @@ public class Context {
 	    }
 	}
 	if (csLog != null) {
-	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>\n");
+	    csLog.log("Context log path=\"" + path  + "\" :" + msg + "\n");
+	    //	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>\n");
 	} else {
-	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
+	    System.out.println("Context log path=\"" + path  + "\"" + msg);
+	    //	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
 	}
     }
 
