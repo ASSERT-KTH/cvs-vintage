@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.69 2004/03/10 17:20:34 pledbrook Exp $
+$Id: README.txt,v 1.70 2004/03/14 12:21:03 pledbrook Exp $
 
 Welcome to Scarab!
 
@@ -91,6 +91,11 @@ system running.
 
         http://scarab.tigris.org/project_docs.html
 
+  - There are also several other databases with partial support:
+    MS SQL Server, Oracle and DB2. At least oracle and
+    DB2 have known problems, but we do encourage people to try these
+    databases and submit fixes for them.
+
 
 ,-----------------------------------------------------------------------.
 | E N V I R O N M E N T A L   S E T T I N G S                           |
@@ -116,13 +121,13 @@ well as ANT_HOME/bin in your PATH.
 
 ANT_OPTS
 
-You must enshure, that the ant process has enough free HEAP.
-One convenient way of setting the appropriate JVM option is to
-set the environment variable ANT_OPTS as follows:
+If you come across any OutOfMemoryErrors during the build, you can
+allocate more memory to ant by setting the environment variable
+ANT_OPTS as follows:
 
         ANT_OPTS=-Xmx256m
 
-This avoids build failures due to OutOfMemoryError Exceptions.
+This allows ant to use up to 256MB for its heap.
 
 
 Database settings (for MYSQL)
@@ -139,7 +144,7 @@ databases in the released version of Scarab, however, the Scarab
 developers are currently doing development primarily on MySQL and thus
 do not guarantee that Scarab will work on other databases.
 
-example scripts
+Example scripts
 
 The following scripts can be used as templates for your own
 environmental setup. The templates have been created for 
@@ -182,7 +187,7 @@ system is setup to include these into your classpath for you. Please do
 not add any jar files to your CLASSPATH as it may cause compile errors.
 
 
-port settings of the application server
+Port settings of the application server
 
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
@@ -191,7 +196,7 @@ need to change the port number to another unused port number by editing
         /tomcat/conf/server.xml
 
 
-file permission settings
+File permission settings
 
 By default, the web applications WEB-INF directory needs to have
 permissions set so that the userid which the JVM is running under 
@@ -253,35 +258,58 @@ src
 | B U I L D  P R O P E R T I E S                                        |
 '-----------------------------------------------------------------------'
 
-The Scarab build process depends on having a few properties which are
-defined in the build/default.*.properties. These settings are fairly 
-well documented within the files. These properties must be set 
-accordingly *before* you build Scarab.
+The Scarab build process can be configured by setting build properties.
+You can find desctiptions of the available properties and their default
+values in the file:
 
-If you would like to change the settings in the default.properties there
-is no need to edit the default.properties file, you can override the
-property settings by creating one or more of the following files and
-placing your own property settings in there:
+  build/default.properties
+
+and also in the various database-specific properties files:
+
+  build/default.mysql.properties
+  build/default.postgresql.properties
+  build/default.hypersonic.properties
+  build/default.mssql.properties
+  build/default.oracle.properties
+  build/default.db2.properties
+
+If you would like to override the defaults, you can create one or more
+of the following property files and add your own property settings:
 
     ~/scarab.build.properties
     ~/build.properties
     scarab/build/build.properties
 
-The first property which is found in the order with which the files are
-loaded becomes the property setting which is used by the Ant build
-system.
+If you have the same property defined in more than one of these files,
+which one takes priority? In this case, ~/scara.build.properties takes
+precedence over ~/build.properties, which in turn takes precedence over
+scarab/build/build.properties.
 
 NOTE: The ~ character represents your user account home directory.
 
-Chances are that you are going to have to define your own database and
-mail server properties as well as a few other properties in the resulting
-Scarab WAR file.  There is no need to edit
 
-        WEB-INF/conf/TurbineResources.properties
+,-----------------------------------------------------------------------.
+| R U N T I M E   P R O P E R T I E S                                   |
+'-----------------------------------------------------------------------'
 
-within the WAR file. Instead, put any properties you need to edit in 
+Scarab can also be configured at runtime, through a different set of
+property files. Descriptions and default values are provided by:
 
-        WEB-INF/conf/CustomSettings.properties.  
+  src/conf/conf/Scarab.properties
+  src/conf/conf/TurbineResources.properties
+
+If you want to override any of the properties, then you can just provide
+your own values in the file:
+
+  src/conf/conf/CustomSettings.properties
+
+Please note that changes to this file will only have an effect at build
+time, since the build copies the file to the Scarab webapp. Once Scarab
+is deployed, you can still make changes by modifying this file:
+
+  <scarab webapp>/WEB-INF/conf/CustomSettings.properties
+
+where the webapp will normally be in target/scarab.
 
 Alternatively, you can define environment properties in your servlet's 
 JNDI tree. You can do this either via the Tomcat Admin application or 
@@ -317,7 +345,6 @@ read about Commons-Configuration:
         http://jakarta.apache.org/commons/configuration/
 
 
-
 ,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  M A I L S E R V E R                             |
 '-----------------------------------------------------------------------'
@@ -327,11 +354,15 @@ server so that email can be sent from Scarab. This is important for many
 different aspects of Scarab, such as the confirmation email sent when a
 user registers with the system. By default, the mail server is defined
 as "localhost". That means that you need to have an SMTP server running
-on the same box as Scarab. It is possible to modify this value by
-changing the property system.mail.host in CustomSettings.properties and
-uncommenting the property or using the JNDI tree as discussed above.
+on the same box as Scarab.
 
-You will need to stop and start Scarab
+It is possible to modify this value by setting the property
+'system.mail.host' in CustomSettings.properties or by using the JNDI
+tree as discussed above.
+
+You will need to stop and restart Scarab/Tomcat for the changes to take
+effect.
+
 
 ,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  U P L O A D  D I R E C T O R Y                  |
@@ -355,7 +386,6 @@ issues. Therefore, one has one of two options to solve this problem.
 It is also recommended to set the services.UploadService.repository property in
 CustomSettings.properties as well. This property is used as a temporary location
 for the uploaded data during the upload process. By default it is "WEB-INF".
-
 
 
 ,-----------------------------------------------------------------------.
@@ -421,14 +451,15 @@ NOTE: Make sure that your TOMCAT_HOME environment variable is defined
 NOTE: If you already have an existing Tomcat installation and prefer
       to run Scarab from there, first build Scarab and then copy the 
       target/webapps/scarab directory into your own Tomcat installation.
+      Alternatively, add a new <Context> entry to tomcat's server.xml
+      config file, pointing at the Scarab webapp (usually
+      <scarab install dir>/target/scarab).
 
 NOTE: If you already have an existing webserver running on port 8080,
       and you are using Scarab's version of Tomcat, you will need to
-      change the port number to another unused port number by defining
-      the scarab.tomcat.http.port and scarab.tomcat.shutdown.port
-      properties in your build.properties (please see the "Settings"
-      instructions below for how to create a build.properties file).
-      Once you have done this, you will need to rebuild the sandbox.
+      change the port number to another unused port by modifying the
+      /tomcat/conf/server.xml file and changing the 'port' attribute
+      on the <Connector> element.
       
 NOTE: There may be problems building and running Scarab with Tomcat 3.x.
       We have not done testing with this version of Tomcat.
@@ -465,11 +496,9 @@ If you need to specify a host/username/password/databasename, you will
 need to edit the build/build.properties.  See the Settings section
 above.
 
-Also make sure to define your own scarab.database.* properties in your
-local build.properties (see above for the explanation about how to use
-build.properties) based on what is in the
-scarab/build/default.properties. You will also need to update the war file
-by editing the CustomSettings.xml
+Also, make sure you define 'scarab.database.*' properties to match your
+database installation - see the section on build properties above for
+instructions on how to set them.
 
 NOTE: PostgreSQL users should follow a different procedure for creating
       the database. See PostgreSQL.txt.
@@ -484,10 +513,9 @@ NOTE: More detailed instructions for setting up the database on
 
       <http://scarab.tigris.org/project_docs.html>
 
-NOTE: The create scripts will attempt to first drop a database called
-      "scarab" and then re-create it. If you execute ant create-db
-      script, all of your previous data in that specific database will
-      be lost without warning!
+NOTE: The create scripts will attempt to first drop your scarab database
+      and then re-create it. If you execute "ant create-db", all of your
+      previous data in that database will be lost without warning!
 
 NOTE: If you get a 'Server configuration denies access to data source'
       or 'access denied' or 'Invalid authorization' or
@@ -534,7 +562,7 @@ The Tomcat bundled with Scarab is preconfigured to run scarab out of the
 /target/scarab directory.  
 
         cd tomcat/bin
-        scarab.sh     <-- Unix
+        startup.sh     <-- Unix
         startup.bat   <-- Win32
 
 Then, in your web browser, go to:
@@ -552,9 +580,11 @@ NOTE: Substitute 'localhost' for the DNS name that the server is
 NOTE: You can define your own URL by editing the WEB-INF/web.xml 
       and defining a different servlet mapping.
 
+
 ,-----------------------------------------------------------------------.
 | C U S T O M I Z I N G   S C A R A B                                   |
 '-----------------------------------------------------------------------'
+
 At times it may be useful to make minor modifications to Scarab without
 applying those changes directly to the Scarab sources (since this
 will cause CVS to report those differences, and even worse, the custom
@@ -587,8 +617,8 @@ See the MIGRATION-README.txt file.
 | Q U E S T I O N S  /  P R O B L E M S                                 |
 '-----------------------------------------------------------------------'
 
-If you have problems or questions, please join the Scarab developer mailing 
-list and post a detailed message describing your issues. :-)
+If you have problems or questions, please join the Scarab user mailing 
+list and post a detailed message describing your issue. :-)
 
-<http://scarab.tigris.org/>
-
+Homepage:      <http://scarab.tigris.org/>
+Mailing lists: <http://scarab.tigris.org/servlets/ProjectMailingListList>
