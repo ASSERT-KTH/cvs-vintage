@@ -26,8 +26,14 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.columba.core.util.GlobalResourceLoader;
+
 public class FontSelectionDialog implements ActionListener, ListSelectionListener
 {
+    public static final String CMD_OK = "OK";
+    public static final String CMD_CANCEL = "CANCEL";
+    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+    
     private JDialog dialog;
 
     JList fontList;
@@ -48,11 +54,10 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
     public FontSelectionDialog( Font f )
     {
-        dialog = DialogStore.getDialog();
+        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "title"));
 
         font = f;
 
-        dialog.setTitle( "Select a font" );
         dialog.setSize( 450, 325 );
 
         initData();
@@ -161,8 +166,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
           // 6. Line with Buttons
 
-        JButton okButton = new JButton("OK");
-        okButton.setActionCommand( "OK" );
+        JButton okButton = new JButton(GlobalResourceLoader.getString("global", "global", "ok"));
+        okButton.setActionCommand(CMD_OK);
         okButton.addActionListener( this );
 
         c.weightx = 1.0;
@@ -176,8 +181,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         dialog.getContentPane().add( okButton );
 
 
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setActionCommand( "CANCEL" );
+        JButton cancelButton = new JButton(GlobalResourceLoader.getString("global", "global", "cancel"));
+        cancelButton.setActionCommand(CMD_CANCEL);
         cancelButton.addActionListener( this );
 
         c.weightx = 1.0;
@@ -199,8 +204,7 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         }
 
         dialog.getRootPane().setDefaultButton(okButton);
-        dialog.getRootPane().registerKeyboardAction(this, "CANCEL", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-
+        dialog.getRootPane().registerKeyboardAction(this, CMD_CANCEL, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
 
@@ -217,10 +221,10 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         fontList.setSelectedIndex(0);
 
         styleList = new JList(  new Object[]{
-                                "PLAIN",
-                                "BOLD",
-                                "ITALIC",
-                                "BOLD & ITALIC"
+                                GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "plain"),
+                                GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "bold"),
+                                GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "italic"),
+                                GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "bold_italic")
                               });
         styleList.setSelectedIndex(0);
 
@@ -251,21 +255,20 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         sizeList.addListSelectionListener( this );
         fontList.addListSelectionListener( this );
 
-        fontLabel = new JLabel( "Font :" );
-        sizeLabel = new JLabel( "Size :" );
-        styleLabel = new JLabel( "Style :" );
-        previewLabel = new JLabel( "Preview :" );
+        fontLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "font"));
+        sizeLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "size"));
+        styleLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "style"));
+        previewLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "preview"));
     }
 
     public void actionPerformed( ActionEvent e )
     {
         String command = e.getActionCommand();
 
-        if( command.equals("OK") ){
+        if( CMD_OK.equals(command) ){
             status = 0;
             dialog.dispose();
-        }
-        else if( command.equals("CANCEL") ) {
+        } else if( CMD_CANCEL.equals(command) ) {
             status = 1;
             dialog.dispose();
         }
@@ -309,6 +312,4 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         preview.setFont( font );
         preview.repaint();
     }
-
-
 }
