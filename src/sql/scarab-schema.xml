@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.40 2001/09/07 01:13:41 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.41 2001/09/08 01:47:29 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -1043,7 +1043,7 @@
     -->
     <column name="QUERY_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
     <!--
-        If the type is linked to a module, include module id.
+        Module.
     -->
     <column name="MODULE_ID" required="false" type="INTEGER"></column>
     <column name="DELETED" required="false" type="BOOLEANINT" 
@@ -1066,7 +1066,7 @@
 
 <!--
     Possible types of queries.
-    Examples: global, project, personal account level
+    Examples: global, personal account level
 -->
 <table name="SCARAB_QUERY_TYPE" idMethod="none" 
     javaName="QueryType">
@@ -1078,6 +1078,71 @@
         Name.
     -->
     <column name="QUERY_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+</table>
+
+<!--
+    A saved user template for entering issues.
+-->
+<table name="SCARAB_ISSUE_TEMPLATE" idMethod="idbroker" javaName="IssueTemplate">
+
+    <column name="ISSUE_TEMPLATE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" required="true" type="INTEGER"></column>
+    <!--
+        The name the template will be saved under.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255" />
+
+    <!--
+        The description of the saved template.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
+    <!--
+        The query string.
+    -->
+    <column name="VALUE" required="true" type="LONGVARCHAR"  />
+
+    <!--
+        Type.
+    -->
+    <column name="TEMPLATE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+            default="0" size="1"></column>
+    <column name="APPROVED" required="false" type="BOOLEANINT"
+            default="0" size="1"></column>
+    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
+
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TEMPLATE_TYPE">
+        <reference local="TEMPLATE_TYPE_ID" foreign="TEMPLATE_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+</table>
+
+<!--
+    Possible types of templates.
+    Examples: global, personal account level
+-->
+<table name="SCARAB_ISSUE_TEMPLATE_TYPE" idMethod="none" 
+    javaName="IssueTemplateType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="TEMPLATE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="TEMPLATE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
 

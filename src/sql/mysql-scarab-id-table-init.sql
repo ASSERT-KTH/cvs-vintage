@@ -16,3 +16,4 @@ insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_TRANSACTION
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ISSUE_ATTRIBUTE_VOTE', 100, 10);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_WORD', 100, 10);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_QUERY', 100, 10);
+insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ISSUE_TEMPLATE', 100, 10);

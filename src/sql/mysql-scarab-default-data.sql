@@ -345,6 +345,15 @@ insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
         values(2, 'All users');
 
 /*
+ * Types of saved issue templates.
+ */
+insert into SCARAB_ISSUE_TEMPLATE_TYPE(TEMPLATE_TYPE_ID, TEMPLATE_TYPE_NAME)
+        values(1, 'Personal profile');
+insert into SCARAB_ISSUE_TEMPLATE_TYPE(TEMPLATE_TYPE_ID, TEMPLATE_TYPE_NAME)
+        values(2, 'All users');
+
+
+/*
  * Attachment types
  */
 insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
