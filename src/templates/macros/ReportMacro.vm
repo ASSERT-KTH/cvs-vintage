@@ -2,7 +2,7 @@
  #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
   <select name="$reportGroup.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if($scope.ScopeId.equals("$report.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$report.ScopeId.toString()")) selected="selected" #end>
     $scope.Name
     </option>
   #end
