@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -124,19 +124,13 @@ public class NamingService
         naming.setServerSocketFactory(factoryClassName);
     }
 
-   public ObjectName getObjectName(MBeanServer server, ObjectName name)
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      return OBJECT_NAME;
+      return name == null ? OBJECT_NAME : name;
    }
    
-   public String getName()
-   {
-      return "Naming";
-   }
-
-
-   public void startService()
+   protected void startService()
       throws Exception
    {
       boolean debug = log.isDebugEnabled();
@@ -197,7 +191,7 @@ public class NamingService
          log.info("Listening on port "+naming.getPort());
    }
 
-   public void stopService()
+   protected void stopService()
    {
       naming.stop();
       log.debug("JNP server stopped");
