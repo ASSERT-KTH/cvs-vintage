@@ -97,6 +97,7 @@
 		<menuitem action="Forward" />
 		<menuitem action="ForwardInline" />
 		<menuitem action="ForwardAsAttachment" />
+		<menuitem action="Redirect" />
 		<separator />
 		<menuitem action="CopyMessage" />
 		<menuitem action="MoveMessage" />

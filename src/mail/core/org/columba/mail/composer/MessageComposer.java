@@ -91,7 +91,15 @@ public class MessageComposer {
         AccountItem item = model.getAccountItem();
         Identity identity = item.getIdentity();
 
-        header.set("From", identity.getAddress().toString());
+		//mod: 20040629 SWITT for redirecting feature
+	   //If FROM value was set, take this as From, else take Identity
+	   if(model.getMessage().getHeader().getHeader().get("From")!= null ) {    
+		 header.set("From", model.getMessage().getHeader().getHeader().get("From"));
+		 }
+		 else {
+	   header.set("From", identity.getAddress().toString());
+		 }
+
         header.set("X-Priority", model.getPriority());
 
         /*
@@ -136,6 +144,7 @@ if (priority != null) {
         header.set("X-Mailer",
             "Columba v" + org.columba.core.main.MainInterface.version);
 
+        
         header.set("columba.from", identity.getAddress());
 
         // date

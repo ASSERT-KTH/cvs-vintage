@@ -39,6 +39,7 @@
  <action name="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
  <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
  <action name="ForwardAsAttachment" class="org.columba.mail.gui.table.action.ForwardAsAttachmentAction"/>
+ <action name="Redirect" class="org.columba.mail.gui.table.action.RedirectAction"/>
  <action name="ToggleReadFlag" class="org.columba.mail.gui.table.action.ToggleReadFlagAction"/>
  <action name="ToggleFlaggedFlag" class="org.columba.mail.gui.table.action.ToggleFlaggedFlagAction"/>
  <action name="ToggleExpungedFlag" class="org.columba.mail.gui.table.action.ToggleExpungedFlagAction"/>

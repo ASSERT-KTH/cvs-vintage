@@ -18,6 +18,7 @@
 package org.columba.mail.gui.message.viewer;
 
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.StyleSheet;
 
 /**
  * Setting HTMLDocument to be an asynchronize model.
@@ -39,6 +40,10 @@ public class AsynchronousHTMLDocument extends HTMLDocument {
 	public AsynchronousHTMLDocument() {
 		super();
 	
+	}
+	
+	public AsynchronousHTMLDocument(StyleSheet styles) {
+		super(styles);
 	}
 	
 	/**
