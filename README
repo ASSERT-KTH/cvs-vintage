@@ -62,10 +62,9 @@ you are installing all of the required distributions.
 
 * Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
   or check it out via anonymous CVS, into a subdirectory named
-  "$JAKARTA_HOME/jakarta-tomcat".  If you are using Java2 (JDK 1.2 or later),
-  make sure you have the "tools.jar" file from your JDK in your classpath.
-  You can now build an "unpacked" version of Tomcat (quicker builds because
-  no time is spent JARing up results) by executing the following commands:
+  "$JAKARTA_HOME/jakarta-tomcat".  You can now build an "unpacked" version
+  of Tomcat (quicker builds because no time is spent JARing up results)
+  by executing the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat
 	./build.sh		<-- Unix

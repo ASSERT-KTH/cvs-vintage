@@ -1,6 +1,11 @@
 @echo off
 REM convience bat file to build with
 
+if not "%JAVA_HOME%" == "" goto gotJavaHome
+echo You must set the JAVA_HOME environment variable to point at your JDK
+goto finish
+:gotJavaHome
+
 set _ANTHOME=%ANT_HOME%
 if "%ANT_HOME%" == "" set ANT_HOME=..\jakarta-ant
 
@@ -32,3 +37,5 @@ set SERVLETAPI_HOME=%_SERVLETAPIHOME%
 set _SERVLETAPIHOME=
 set ANT_HOME=%_ANTHOME%
 set _ANTHOME=
+
+:finish
