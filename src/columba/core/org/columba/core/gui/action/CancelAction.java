@@ -29,28 +29,24 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class CancelAction extends FrameAction implements WorkerListChangeListener {
+public class CancelAction
+	extends FrameAction
+	implements WorkerListChangeListener {
 
 	public CancelAction(AbstractFrameController controller) {
 		super(
 			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_file_cancel"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_file_cancel"),
-			"",
-			"CANCEL_ACTION",
-			ImageLoader.getSmallImageIcon("stock_stop-16.png"),
-			ImageLoader.getImageIcon("stock_stop.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0),
-			false);
+			GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
+
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_stop-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_stop.png"));
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
+	
+
 		setEnabled(false);
-		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
+			this);
+
 	}
 
 	/* (non-Javadoc)

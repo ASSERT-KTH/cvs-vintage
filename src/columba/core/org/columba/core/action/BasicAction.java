@@ -20,19 +20,221 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 /**
- * @author frd
+ * Every action should subclass BasicAction.
+ * 
+ * It provides much more attributes than JAbstractAction,
+ * including:
+ * - i18n tooltip
+ * - i18n long description
+ * - toolbar name (this is shorter to save visual space in the toolbar)
+ * - an additional large icon used in the toolbar
+ * <p>
+ * Note: Most constructors of this class are depreceated.
+ * 
+ * The preferred way should be to use methods instead to add
+ * additional information to the action.
+ * <p>
+ * Note: There exist two descriptions: a LONG_DESCRIPTION and
+ * a SHORT_DESCRIPTION.
+ * 
+ * We only use the LONG_DESCRIPTION as the tooltip text and the 
+ * display text of the statusbar, when hovering over the menuitem
+ * associated with this action. This also means much less work 
+ * for translator who didn't know how to handle this description
+ * anyway.
+ * 
+ * There is no SHORT_DESCRIPTION anymore!! 
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Example: @see org.columba.core.gui.action.CancelAction
+ *
+ * @author fdietz
  */
 public class BasicAction extends JAbstractAction {
 
+	/**
+	 * special label for toolbar buttons which is smaller
+	 * than the regular label
+	 * 
+	 * Example: Reply to Sender -> Reply
+	 * 
+	 */
+	public String TOOLBAR_NAME;
+
+	/**
+	 * The toolbar uses the large icon, whereas menuitems 
+	 * use the small one.
+	 * 
+	 */
+	public ImageIcon LARGE_ICON;
+
+	/**
+	 * show button text in toolbar
+	 */
 	boolean showToolbarText = true;
 
 	/**
-	 * Method BasicAction.
+	 * default constructor
+	 */
+	public BasicAction() {
+
+	}
+
+	/**
+	 * default constructor
+	 * 
+	 * @param name		i18n name
+	 */
+	public BasicAction(String name) {
+		super(name);
+		
+		// in case their's no action command specified
+		// we just pre-fill the name 
+		setActionCommand(name);
+	}
+
+	/**
+	 * Return true if toolbar text should be visible
+	 * 
+	 * @return boolean	true, if toolbar text should be enabled, false otherwise
+	 * 
+	 */
+	public boolean isShowToolBarText() {
+		return showToolbarText;
+	}
+
+	/**
+	 * Enable/Disable text in toolbar button.
+	 * 
+	 * @param b	true/false
+	 */
+	public void enableToolBarText(boolean b) {
+		showToolbarText = b;
+	}
+
+	/**
+	 * Return accelerator key.
+	 * 
+	 * @return		accelerator key of action
+	 */
+	public KeyStroke getAcceleratorKey() {
+		return (KeyStroke) getValue(Action.ACCELERATOR_KEY);
+	}
+	
+	/**
+	 * Set accelerator key.
+	 * 
+	 * @param k		new shortcut
+	 */
+	public void setAcceleratorKey( KeyStroke k)
+	{
+		putValue(Action.ACCELERATOR_KEY, k);
+	}
+
+	/**
+	 * Return long text description used in JToolTip.
+	 * 
+	 * @return		long description
+	 */
+	public String getLongDescription() {
+		return (String) getValue(Action.LONG_DESCRIPTION);
+	}
+	
+	/**
+	 * Set long description, which is used in tooltips, etc.
+	 * 
+	 * 
+	 * @param s		long description
+	 */
+	public void setLongDescription( String s)
+	{
+		putValue( Action.LONG_DESCRIPTION, s );
+	}
+
+	/**
+	 * Return large icon, used in toolbar
+	 * 
+	 * @return		large icon
+	 */
+	public ImageIcon getLargeIcon() {
+		return LARGE_ICON;
+	}
+	
+	/**
+	 * Set large image icon, used in toolbars
+	 * 
+	 * @param i		image icon
+	 */
+	public void setLargeIcon( ImageIcon i )
+	{
+		LARGE_ICON = i;
+	}
+
+	/**
+	 * Return toolbar button name, which is usually shorter
+	 * than the regular action label.
+	 * 
+	 * @return		toolbar name
+	 */
+	public String getToolBarName() {
+		return TOOLBAR_NAME;
+	}
+	
+	/**
+	 * Set toolbar name, which is usually shorter than the regular
+	 * action label.
+	 * 
+	 * @param s		new toolbar name
+	 */
+	public void setToolBarName( String s) 
+	{
+		TOOLBAR_NAME = s;
+	}
+
+	/**
+	 * Return small icon, used by menuitems.
+	 * 
+	 * @return		small icon
+	 */
+	public ImageIcon getSmallIcon() {
+		return (ImageIcon) getValue(Action.SMALL_ICON);
+	}
+	
+	/**
+	 * Set small icon, used by the menuitems
+	 * 
+	 * @param i		new small icon
+	 */
+	public void setSmallIcon( ImageIcon i)
+	{
+		putValue(Action.SMALL_ICON, i);
+	}
+	
+	/**
+	 * Set new mnemonic for this action.
+	 * 
+	 * @param mnemonic	new mnemonic
+	 */
+	public void setMnemonic( int mnemonic)
+	{
+		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
+	}
+	
+	/**
+	 * Return mnemonic. Used in the menuitem to underline a 
+	 * specific character as a shortcut.
+	 * 
+	 * @return	mnemonic
+	 */
+	public int getMnemonic()
+	{
+		return ((Integer)getValue(Action.MNEMONIC_KEY)).intValue();
+	}
+
+	/******************** deprecated constructors ********************/
+
+	/**
+	 * @deprecated 	use default constructor instead
+	 * 
 	 * @param name
 	 * @param longDescription
 	 * @param tooltip
@@ -41,28 +243,7 @@ public class BasicAction extends JAbstractAction {
 	 * @param big_icon
 	 * @param mnemonic
 	 * @param keyStroke
-	 * @param showToolbarText
 	 */
-	public BasicAction(
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		this(
-			name,
-			longDescription,
-			null,
-			actionCommand,
-			small_icon,
-			big_icon,
-			mnemonic,
-			keyStroke);
-
-	}
-
 	public BasicAction(
 		String name,
 		String longDescription,
@@ -88,26 +269,20 @@ public class BasicAction extends JAbstractAction {
 
 	}
 
-	public BasicAction(
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke,
-		boolean showToolbarText) {
-		this(
-			name,
-			longDescription,
-			actionCommand,
-			small_icon,
-			big_icon,
-			mnemonic,
-			keyStroke);
-		this.showToolbarText = showToolbarText;
-	}
-
+	/**
+	 * @deprecated use default constructor instead
+	 * 
+	 * 
+	 * @param name
+	 * @param longDescription
+	 * @param tooltip
+	 * @param actionCommand
+	 * @param small_icon
+	 * @param big_icon
+	 * @param mnemonic
+	 * @param keyStroke
+	 * @param showToolbarText
+	 */
 	public BasicAction(
 		String name,
 		String longDescription,
@@ -129,14 +304,4 @@ public class BasicAction extends JAbstractAction {
 			keyStroke);
 		this.showToolbarText = showToolbarText;
 	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isShowToolbarText() {
-		return showToolbarText;
-	}
-	
-	
-
 }

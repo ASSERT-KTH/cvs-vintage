@@ -134,14 +134,17 @@ public class FetchNewMessagesCommand extends Command {
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
 		Message message = server.getMessage(index + 1, serverUID);
-		if (message == null)
-			throw new Exception(
+		if (message == null) {
+
+			ColumbaLogger.log.error(
 				"Message with UID="
 					+ serverUID
 					+ " and index="
 					+ (index + 1)
 					+ " isn't on the server.");
-
+			return;
+		}
+		
 		message.getHeader().set(
 			"columba.size",
 			new Integer(Math.round(size / 1024)));

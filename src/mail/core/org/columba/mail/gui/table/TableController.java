@@ -43,7 +43,6 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
-import org.columba.mail.gui.table.action.HeaderTableActionListener;
 import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.dnd.HeaderTableDnd;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
@@ -76,7 +75,7 @@ public class TableController implements FocusOwner, ListSelectionListener{
 
 	private FilterToolbar filterToolbar;
 
-	private HeaderTableActionListener headerTableActionListener;
+	
 
 	private MessageNode[] messageNodes;
 
@@ -99,7 +98,7 @@ public class TableController implements FocusOwner, ListSelectionListener{
 
 	//protected SelectionManager selectionManager;
 	protected TableView view;
-	protected HeaderTableActionListener actionListener;
+	
 
 	protected TableSelectionManager tableSelectionManager;
 
@@ -146,7 +145,7 @@ public class TableController implements FocusOwner, ListSelectionListener{
 
 		tableChangedListenerList = new Vector();
 
-		actionListener = new HeaderTableActionListener(this);
+		
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
@@ -211,13 +210,7 @@ public class TableController implements FocusOwner, ListSelectionListener{
 		return headerTableItem;
 	}
 
-	/**
-	 * return the ActionListener
-	 *
-	 */
-	public HeaderTableActionListener getActionListener() {
-		return actionListener;
-	}
+	
 
 	/**
 	 * save the column state:
