@@ -26,9 +26,7 @@
     <depend project="jakarta-tomcat-util"/>
     <depend project="jakarta-tomcat-connectors"/>
     <depend project="jsse"/>
-<!-- Temporary disable compilation of the MX4J module. Until MX4J compiles again
-    <depend project="mx4j"/>
--->
+    <option project="mx4j"/>
     <work nested="build/tomcat/classes"/>
     <home nested="build/tomcat"/>
     <jar name="lib/common/tomcat_core.jar"/>
