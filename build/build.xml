@@ -225,10 +225,10 @@
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="schema-check">
-        <echo message="checking: ${src.sql.dir}/scarab-schema.sql"/>
+        <echo message="checking: ${src.sql.dir}/mysql-${project}.sql"/>
         <uptodate property="schema.uptodate"
             targetfile="${src.sql.dir}/mysql-${project}.sql">
-            <srcfiles dir="${src.dir}" includes="scarab-schema.xml"/>
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
         </uptodate>
     </target>
 
