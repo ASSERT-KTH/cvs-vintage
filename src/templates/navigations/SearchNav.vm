@@ -23,7 +23,7 @@
     <option value="AdvancedQuery.vm">&#160;Advanced</option>
     <option value="Search.vm">&#160;Custom</option>
     #if ($scarabR.CurrentIssueType && $scarabR.CurrentQuery)
-        <option value="IssueList.vm">&#160;Most Recent</option>
+        <option value="IssueList.vm">&#160;Most recent</option>
     #end
     #if ($scarabR.CurrentIssueType && $data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
         <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default query</option> 
