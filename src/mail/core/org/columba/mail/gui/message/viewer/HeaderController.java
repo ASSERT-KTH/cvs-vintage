@@ -18,7 +18,6 @@
 package org.columba.mail.gui.message.viewer;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,126 +41,134 @@ import org.columba.ristretto.message.Header;
  */
 public class HeaderController implements Viewer {
 
-    private HeaderView view;
+	private HeaderView view;
 
-    //  contains headerfields which are to be displayed
-    private Map keys;
+	//  contains headerfields which are to be displayed
+	private Map keys;
 
-    private boolean visible;
-    public HeaderController() {
+	private boolean visible;
 
-        view = new HeaderView();
-        
-        visible = false;
+	public HeaderController() {
 
-    }
+		view = new HeaderView();
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.Folder,
-     *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
-     */
-    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator)
-            throws Exception {
-        // add headerfields which are about to show up
-        XmlElement headerviewerElement = MailInterface.config.get("options")
-                .getElement("/options/headerviewer");
-        String list = headerviewerElement.getAttribute("headerfields");
+		visible = false;
 
-        StringTokenizer tok = new StringTokenizer(list, " ");
-        String[] headers = new String[tok.countTokens()];
-        
-        for( int i=0; i<headers.length; i++) {
-        	headers[i] = tok.nextToken();
-        }
-    	
-        Header header = folder.getHeaderFields(uid, headers);
+	}
 
-        keys = initHeaderFields(header);
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.Folder,
+	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
+	 */
+	public void view(MessageFolder folder, Object uid,
+			MailFrameMediator mediator) throws Exception {
+		// add headerfields which are about to show up
+		XmlElement headerviewerElement = MailInterface.config.get("options")
+				.getElement("/options/headerviewer");
+		String list = headerviewerElement.getAttribute("headerfields");
 
-        view.getHeaderTextPane().setHeader(keys);
+		StringTokenizer tok = new StringTokenizer(list, " ");
+		String[] headers = new String[tok.countTokens()];
 
-        boolean hasAttachment = ((Boolean)folder.getAttribute(uid, "columba.attachment")).booleanValue();
-        
-        view.getStatusPanel().setStatus(hasAttachment);
+		for (int i = 0; i < headers.length; i++) {
+			headers[i] = tok.nextToken();
+		}
 
-        visible = true;
-    }
+		Header header = folder.getHeaderFields(uid, headers);
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#getView()
-     */
-    public JComponent getView() {
-        return view;
-    }
+		keys = initHeaderFields(header);
+		boolean hasAttachment = ((Boolean) folder.getAttribute(uid,
+				"columba.attachment")).booleanValue();
 
-    protected Map initHeaderFields(Header header) {
-        Enumeration tok = header.getKeys();
-    	BasicHeader bHeader = new BasicHeader(header);
-        
-        keys = new HashMap();
+		view.getStatusPanel().setStatus(hasAttachment);
 
-        while (tok.hasMoreElements()) {
-            String key = (String) tok.nextElement();
-            String str = null;
+		visible = true;
 
-            //          message doesn't contain this headerfield
-            if (header.get(key) == null) {
-                continue;
-            }
+	}
 
-            // headerfield is empty
-            if (((String) header.get(key)).length() == 0) {
-                continue;
-            }
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 */
+	public JComponent getView() {
+		return view;
+	}
 
-            if (key.equals("Subject")) {
-                str = bHeader.getSubject();
+	protected Map initHeaderFields(Header header) {
+		Enumeration tok = header.getKeys();
+		BasicHeader bHeader = new BasicHeader(header);
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            } else if (key.equals("To")) {
-                str = AddressListRenderer
-                        .renderToHTMLWithLinks(bHeader.getTo()).toString();
-            } else if (key.equals("Reply-To")) {
-                str = AddressListRenderer.renderToHTMLWithLinks(
-                        bHeader.getReplyTo()).toString();
-            } else if (key.equals("Cc")) {
-                str = AddressListRenderer
-                        .renderToHTMLWithLinks(bHeader.getCc()).toString();
-            } else if (key.equals("Bcc")) {
-                str = AddressListRenderer.renderToHTMLWithLinks(
-                        bHeader.getBcc()).toString();
-            } else if (key.equals("From")) {
-                str = AddressListRenderer.renderToHTMLWithLinks(
-                        new Address[] { (Address) bHeader.getFrom()})
-                        .toString();
-            } else if (key.equals("Date")) {
-                DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
-                        DateFormat.MEDIUM);
-                str = df.format(bHeader.getDate());
+		keys = new HashMap();
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            } else {
-                str = (String) header.get(key);
+		while (tok.hasMoreElements()) {
+			String key = (String) tok.nextElement();
+			String str = null;
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            }
+			//          message doesn't contain this headerfield
+			if (header.get(key) == null) {
+				continue;
+			}
 
-            keys.put(key, str);
-        }
+			// headerfield is empty
+			if (((String) header.get(key)).length() == 0) {
+				continue;
+			}
 
-        return keys;
-    }
+			if (key.equals("Subject")) {
+				str = bHeader.getSubject();
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
-     */
-    public boolean isVisible() {
-      return visible;
-    }
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else if (key.equals("To")) {
+				str = AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getTo()).toString();
+			} else if (key.equals("Reply-To")) {
+				str = AddressListRenderer.renderToHTMLWithLinks(
+						bHeader.getReplyTo()).toString();
+			} else if (key.equals("Cc")) {
+				str = AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getCc()).toString();
+			} else if (key.equals("Bcc")) {
+				str = AddressListRenderer.renderToHTMLWithLinks(
+						bHeader.getBcc()).toString();
+			} else if (key.equals("From")) {
+				str = AddressListRenderer.renderToHTMLWithLinks(
+						new Address[] { (Address) bHeader.getFrom() })
+						.toString();
+			} else if (key.equals("Date")) {
+				DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
+						DateFormat.MEDIUM);
+				str = df.format(bHeader.getDate());
+
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else {
+				str = (String) header.get(key);
+
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			}
+
+			keys.put(key, str);
+		}
+
+		return keys;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		view.getHeaderTextPane().setHeader(keys);
+
+	}
 }

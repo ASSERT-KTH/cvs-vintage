@@ -29,71 +29,79 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
-
 /**
  * Viewer displaying spam status information.
  * 
  * @author fdietz
- *
+ *  
  */
 public class SpamStatusController implements Viewer, ActionListener {
 
-    private SpamStatusView label;
-    private boolean visible;
-    private MailFrameMediator mediator;
-    public SpamStatusController(MailFrameMediator mediator) {
-        super();
-        
-        this.mediator = mediator;
-        
-        label = new SpamStatusView();
-        label.addActionListener(this);
-        
-        visible = false;
-    }
-    /**
-     * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder, java.lang.Object)
-     */
-    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator) throws Exception {
-        Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
-        
-        visible = spam.booleanValue();
-        
-        label.setSpam(visible);
-        
-        
-       
-    }
+	private SpamStatusView label;
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#getView()
-     */
-    public JComponent getView() {
-        return label;
-    }
-    
-    
+	private boolean visible;
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
-     */
-    public boolean isVisible() {
-        // only show view if message is marked as spam
-        return visible;
-    }
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        // get selected message
-        FolderCommandReference[] r = mediator.getTableSelection();
-               
-        // learn message as non spam
-        MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));        
-        
-        // mark as not spam
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
-        MarkMessageCommand c = new MarkMessageCommand(r);
-        MainInterface.processor.addOp(c);
-    }
+	private MailFrameMediator mediator;
+
+	public SpamStatusController(MailFrameMediator mediator) {
+		super();
+
+		this.mediator = mediator;
+
+		label = new SpamStatusView();
+		label.addActionListener(this);
+
+		visible = false;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder,
+	 *      java.lang.Object)
+	 */
+	public void view(MessageFolder folder, Object uid,
+			MailFrameMediator mediator) throws Exception {
+		Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
+
+		visible = spam.booleanValue();
+
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 */
+	public JComponent getView() {
+		return label;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 */
+	public boolean isVisible() {
+		// only show view if message is marked as spam
+		return visible;
+	}
+
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		// get selected message
+		FolderCommandReference[] r = mediator.getTableSelection();
+
+		// learn message as non spam
+		MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
+
+		// mark as not spam
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+		MarkMessageCommand c = new MarkMessageCommand(r);
+		MainInterface.processor.addOp(c);
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		label.setSpam(visible);
+
+	}
 }

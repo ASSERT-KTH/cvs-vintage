@@ -36,7 +36,9 @@ public interface Viewer {
     /**
      * Use passed parameters to retrieve information from folder.
      * <p>
-     * Display data.
+     * This method should be called from Command.execute() or a 
+     * background thread.
+     * <p>
      * 
      * @param folder			selected folder
      * @param uid				selected message
@@ -45,6 +47,12 @@ public interface Viewer {
      */
     void view(MessageFolder folder, Object uid, MailFrameMediator mediator) throws Exception;
  
+    /**
+     * Update ui to reflect the changes.
+     *
+     */
+    void updateGUI() throws Exception;
+    
     /**
      * Return view of component.
      * 

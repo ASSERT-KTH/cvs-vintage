@@ -22,35 +22,43 @@ import javax.swing.JComponent;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
-
 /**
  * Viewer displaying text mimeparts/attachments inline.
  * 
  * @author fdietz
- *
+ *  
  */
 public class TextViewer implements Viewer {
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder, java.lang.Object)
-     */
-    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator)  throws Exception{
-        
-        
-    }
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
+	 *      java.lang.Object)
+	 */
+	public void view(MessageFolder folder, Object uid,
+			MailFrameMediator mediator) throws Exception {
 
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#getView()
-     */
-    public JComponent getView() {
-       
-        return null;
-    }
-    /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
-     */
-    public boolean isVisible() {
-        
-        return false;
-    }
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 */
+	public JComponent getView() {
+
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 */
+	public boolean isVisible() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+
+	}
 }

@@ -32,6 +32,7 @@ import org.columba.mail.gui.message.filter.SecurityStatusListener;
 public class SecurityInformationController implements Viewer,
         SecurityStatusListener {
 
+	
     public static final int DECRYPTION_SUCCESS = 0;
 
     public static final int DECRYPTION_FAILURE = 1;
@@ -93,4 +94,12 @@ public class SecurityInformationController implements Viewer,
     public boolean isVisible() {
         return visible;
     }
+    
+    /**
+	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		
+
+	}
 }

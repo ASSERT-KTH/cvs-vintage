@@ -513,6 +513,16 @@ public class MessageController implements HyperlinkListener, MouseListener,
         return securityInformationController;
     }
 
+    /**
+     * Show message in messages viewer.
+     * <p>
+     * Should be called in Command.execute() or in another background
+     * thread.
+     * 
+     * @param folder		selected folder
+     * @param uid			selected message UID
+     * @throws Exception
+     */
     public void showMessage(MessageFolder folder, Object uid) throws Exception {
 
         getBodytextViewer().view(folder, uid,
@@ -524,10 +534,27 @@ public class MessageController implements HyperlinkListener, MouseListener,
         getSecurityInformationViewer().view(folder, uid,
                 (MailFrameMediator) frameController);
 
-        getView().layoutComponents(headerController, spamStatusController,
+       
+
+    }
+    
+    
+    /**
+     * Revalidate message viewer components. 
+     * <p>
+     * Call this method after showMessage() to force a repaint():
+     *
+     */
+    public void updateGUI() throws Exception{
+    	
+    	getBodytextViewer().updateGUI();
+        getHeaderController().updateGUI();
+        getSpamStatusViewer().updateGUI();
+        getSecurityInformationViewer().updateGUI();
+        
+    	 getView().layoutComponents(headerController, spamStatusController,
                 bodytextViewer, securityInformationController,
                 attachmentController.getView());
-
     }
     
     public void clear() {

@@ -16,8 +16,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
-import java.io.InputStream;
-
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
@@ -29,121 +27,122 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
-import org.columba.mail.gui.message.viewer.SecurityInformationController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
-
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- *
+ *  
  */
 public class ViewMessageCommand extends FolderCommand {
-    StreamableMimePart bodyPart;
-    MimeTree mimePartTree;
-    ColumbaHeader header;
-    MessageFolder srcFolder;
-    Object uid;
-    Object[] uids;
-    String pgpMessage = "";
-    int pgpMode = SecurityInformationController.NOOP;
 
-    // true if we view an encrypted message
-    boolean encryptedMessage = false;
-    InputStream decryptedStream;
+	private MimeTree mimePartTree;
 
-    /**
-     * Constructor for ViewMessageCommand.
-     *
-     * @param references
-     */
-    public ViewMessageCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
+	private Flags flags;
 
-        //priority = Command.REALTIME_PRIORITY;
-        commandType = Command.NORMAL_OPERATION;
-    }
+	private MessageFolder srcFolder;
 
-    /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator.getSelectionManager()
-                                                                                  .getHandler("mail.attachment"));
-        
-        // this is a hack to notify the attachment selection handler which folder/uid is selected
-        // TODO: use listener pattern instead
-        h.setMessage(srcFolder, uid);
-        
-        MessageController messageController = ((MessageViewOwner) frameMediator).getMessageController();
+	private Object uid;
 
-        //new PGPMessageFilter(frameMediator).filter(srcFolder, uid);
-        messageController.showMessage(srcFolder, uid);
+	/**
+	 * Constructor for ViewMessageCommand.
+	 * 
+	 * @param references
+	 */
+	public ViewMessageCommand(FrameMediator frame,
+			DefaultCommandReference[] references) {
+		super(frame, references);
 
-        messageController.getAttachmentController().setMimePartTree(mimePartTree);
-        
-        // if the message it not yet seen
-        if (!((ColumbaHeader) header).getFlags().getSeen()) {
-            // restart timer which marks the message as read
-            // after a user configurable time interval
-            ((TableViewOwner) frameMediator)
-                    .getTableController()
-                    .getMarkAsReadTimer()
-                    .restart(
-                            (FolderCommandReference) getReferences()[0]);
-            }
-        
+		//priority = Command.REALTIME_PRIORITY;
+		commandType = Command.NORMAL_OPERATION;
+	}
 
-        //}
-    }
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController wsc) throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        srcFolder = (MessageFolder) r[0].getFolder();
+		AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator
+				.getSelectionManager().getHandler("mail.attachment"));
 
-        //		register for status events
-        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
-        uid = r[0].getUids()[0];
-        bodyPart = null;
+		// this is a hack to notify the attachment selection handler which
+		// folder/uid is selected
+		// TODO: use listener pattern instead
+		h.setMessage(srcFolder, uid);
 
-        // get attachment structure
-        try {
-            mimePartTree = srcFolder.getMimePartTree(uid);
-            
-            header = srcFolder.getMessageHeader(uid);
-        } catch (FolderInconsistentException ex) {
-            Object[] options = new String[] {
-                    MailResourceLoader.getString("", "global", "ok").replaceAll("&",
-                        ""),
-                };
-            int result = JOptionPane.showOptionDialog(null,
-                    MailResourceLoader.getString("dialog", "error",
-                        "message_deleted"), "Error",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
-                    null, options, options[0]);
+		MessageController messageController = ((MessageViewOwner) frameMediator)
+				.getMessageController();
 
-            MainInterface.processor.addOp(new ViewHeaderListCommand(
-                    getFrameMediator(), r));
+		// update attachment model
+		messageController.getAttachmentController().setMimePartTree(
+				mimePartTree);
 
-            return;
-        }
+		// display changes
+		messageController.updateGUI();
 
-        MessageController messageController = ((MessageViewOwner) frameMediator).getMessageController();
+		// if the message it not yet seen
+		if (!(flags.getSeen())) {
+			// restart timer which marks the message as read
+			// after a user configurable time interval
+			((TableViewOwner) frameMediator).getTableController()
+					.getMarkAsReadTimer().restart(
+							(FolderCommandReference) getReferences()[0]);
+		}
 
-        // if necessary decrypt/verify message
-        messageController.getPgpFilter().filter(srcFolder, uid);
-    }
+	}
+
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController wsc) throws Exception {
+		// get command reference
+		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		
+		// get selected folder
+		srcFolder = (MessageFolder) r[0].getFolder();
+
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
+		
+		// get selected message UID
+		uid = r[0].getUids()[0];
+
+		try {
+			// get attachment structure
+			mimePartTree = srcFolder.getMimePartTree(uid);
+
+			// get flags
+			flags = srcFolder.getFlags(uid);
+		} catch (FolderInconsistentException ex) {
+			Object[] options = new String[] { MailResourceLoader.getString("",
+					"global", "ok").replaceAll("&", ""), };
+			int result = JOptionPane.showOptionDialog(null, MailResourceLoader
+					.getString("dialog", "error", "message_deleted"), "Error",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+					null, options, options[0]);
+
+			MainInterface.processor.addOp(new ViewHeaderListCommand(
+					getFrameMediator(), r));
+
+			return;
+		}
+
+		// get messagecontroller of frame
+		MessageController messageController = ((MessageViewOwner) frameMediator)
+				.getMessageController();
+
+		// if necessary decrypt/verify message
+		messageController.getPgpFilter().filter(srcFolder, uid);
+
+		// pass work along to MessageController
+		messageController.showMessage(srcFolder, uid);
+	}
 }
