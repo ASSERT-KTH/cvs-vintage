@@ -87,12 +87,13 @@ import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportPeer;
+import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.15 2002/03/14 01:13:09 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.16 2002/03/21 01:51:52 elicia Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -409,6 +410,27 @@ public class GenerateReport
         setTarget(data, "reports,Step1.vm");
     }
 
+    public void doDeletestoredreport( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (user.hasPermission("Item | Delete", 
+                                getScarabRequestTool(context).getCurrentModule()))
+        {
+            String[] reportIds = data.getParameters().getStrings("report_id");
+            for (int i=0;i<reportIds.length; i++)
+            {
+               String reportId = reportIds[i];
+               if (reportId != null && reportId.length() > 0)
+               {
+                   Report report = ReportManager
+                       .getInstance(new NumberKey(reportId), false);
+                    report.setDeleted(true);
+                    report.save();
+               }
+           }
+       }
+     }
 
     public void doPrint( RunData data, TemplateContext context )
         throws Exception

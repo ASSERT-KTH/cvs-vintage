@@ -145,6 +145,31 @@ public  class Report
     /** used to store query key as part of Retrievable interface */ 
     private String queryKey;
 
+    public String getQueryKey() 
+    {
+      return super.getQueryKey();
+    }
+
+    public void save(DBConnection dbCon) throws TorqueException
+    {
+       try{
+         if (isNew())
+         {
+            super.save(dbCon);
+            setModified(true);
+            super.save(dbCon);
+         }
+         else
+         {
+            super.save(dbCon);
+         }
+        }
+        catch (Exception e)
+        {
+   org.apache.turbine.Log.error(e);
+          }
+    }
+
     public List getReportTypes()
     {
         List reportTypes = new ArrayList();
@@ -216,7 +241,7 @@ public  class Report
         this.type = v;
     }
 
-    
+
     /**
      * Get the value of generatedBy.
      * @return value of generatedBy.
@@ -1189,7 +1214,7 @@ public  class Report
         String repKey = ir.getGID();
         // intake-grp=rep&rep=&
         sb.append(INTAKE).append(EQUALS).append(repKey).append(AMP)
-            .append(repKey).append(EQUALS).append(AMP);
+            .append(repKey).append(EQUALS).append(getQueryKey()).append(AMP);
 
         if (getName() != null) 
         {
@@ -1531,18 +1556,6 @@ public  class Report
     // Retrievable implementation
     // *********************************************************
     
-    /**
-     * Get the value of queryKey.
-     * @return value of queryKey.
-     */    
-    public String getQueryKey() 
-    {
-        if ( queryKey == null ) 
-        {
-            queryKey = "";
-        }
-        return queryKey;
-    }
     
     /**
      * Set the value of queryKey.
@@ -1634,34 +1647,18 @@ public  class Report
         // Retrievable implementation
         // *********************************************************
         
-        /**
+         /**
          * Get the value of queryKey.
          * @return value of queryKey.
-         */    
-        public String getQueryKey() 
+         */
+        public String getQueryKey()
         {
-            /*
-            List groups = getOptionGroups();
-            int index = -1;
-            for ( int i=0; i<groups.size(); i++ ) 
+            if ( queryKey == null )
             {
-                if ( ((OptionGroup)groups.get(i)).getDisplayValue()
-                     .equals(displayValue)) 
-                {
-                    index = i;
-                    break;
-                }
-            }
-            
-            return String.valueOf(index);
-            */
-            if ( queryKey == null ) 
-            {
-                return "";
+               queryKey = "";
             }
             return queryKey;
-        }
-
+        }           
         
         /**
          * Set the value of queryKey.
@@ -1741,21 +1738,6 @@ public  class Report
          */    
         public String getQueryKey() 
         {
-            /*
-            List groups = getOptionGroups();
-            int index = -1;
-            for ( int i=0; i<groups.size(); i++ ) 
-            {
-                if ( ((OptionGroup)groups.get(i)).getDisplayValue()
-                     .equals(displayValue)) 
-                {
-                    index = i;
-                    break;
-                }
-            }
-            
-            return String.valueOf(index);
-            */
             if ( queryKey == null ) 
             {
                 return "";
