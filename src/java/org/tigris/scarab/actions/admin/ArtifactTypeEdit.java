@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.11 2002/02/19 21:20:37 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.12 2002/02/21 01:06:07 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -102,7 +102,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
 
         List attGroups = module.getAttributeGroups(issueType, false);
-        List attributeGroups = module.getAttributeGroups(issueType, false);
 
         boolean isValid = true;
         boolean areThereDupes = false;
@@ -118,9 +117,9 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             dupeOrder = Integer.parseInt(data.getParameters()
                                                  .getString("dupe_order"));
             // Check for duplicate sequence numbers
-            for (int i=0; i<attributeGroups.size(); i++) 
+            for (int i=0; i<attGroups.size(); i++) 
             {
-                AttributeGroup ag1 = (AttributeGroup)attributeGroups.get(i);
+                AttributeGroup ag1 = (AttributeGroup)attGroups.get(i);
                 Group agGroup1 = intake.get("AttributeGroup", 
                                  ag1.getQueryKey(), false);
                 order1 = agGroup1.get("Order");
@@ -132,7 +131,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
 
                 for (int j=i-1; j>=0; j--) 
                 {
-                    AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);
+                    AttributeGroup ag2 = (AttributeGroup)attGroups.get(j);
                     Group agGroup2 = intake.get("AttributeGroup", 
                                  ag2.getQueryKey(), false);
                     order2 = agGroup2.get("Order");
@@ -152,7 +151,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             }
   
             // Check that duplicate check is not at the beginning or end.
-            if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
+            if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
             {
                 data.setMessage("The duplicate check cannot be at the "
                                 + "beginning or the end.");
@@ -169,7 +168,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             rmit.save();
            
             // Set properties for attribute groups
-            for (int i=attributeGroups.size()-1; i>=0; i--) 
+            for (int i=attGroups.size()-1; i>=0; i--) 
             {
                 AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
                 Group agGroup = intake.get("AttributeGroup", 
