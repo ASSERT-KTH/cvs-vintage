@@ -55,10 +55,7 @@ public class POP3Server {
 
 		int uid = accountItem.getUid();
 
-		file =
-			new File(
-				Config.pop3Directory,
-				(new Integer(uid)).toString());
+		file = new File(Config.pop3Directory, (new Integer(uid)).toString());
 
 		PopItem item = accountItem.getPopItem();
 
@@ -101,11 +98,15 @@ public class POP3Server {
 		getStore().close();
 	}
 
-	public Vector getUIDList(int totalMessageCount, WorkerStatusController worker) throws Exception {
+	public Vector getUIDList(
+		int totalMessageCount,
+		WorkerStatusController worker)
+		throws Exception {
 		return getStore().fetchUIDList(totalMessageCount, worker);
 	}
 
-	public Vector getMessageSizeList(WorkerStatusController worker) throws Exception {
+	public Vector getMessageSizeList(WorkerStatusController worker)
+		throws Exception {
 		return getStore().fetchMessageSizeList(worker);
 	}
 
@@ -143,12 +144,13 @@ public class POP3Server {
 	}
 
 	public List synchronize(List newList) throws Exception {
+		
 		LinkedList headerUids = new LinkedList();
 		Enumeration keys = headerCache.getHeaderList().keys();
 		while( keys.hasMoreElements() ) {
 			headerUids.add(keys.nextElement());
 		}
- 		LinkedList newUids = new LinkedList( newList );
+			LinkedList newUids = new LinkedList( newList );
 		
 		ListTools.substract(newUids,headerUids);
 		
@@ -159,21 +161,34 @@ public class POP3Server {
 		}
 		
 		return newUids;
+		
 	}
 
-	public void deleteMessages(int[] indexes, WorkerStatusController worker) throws Exception {
+	public void deleteMessages(int[] indexes, WorkerStatusController worker)
+		throws Exception {
 		for (int i = 0; i < indexes.length; i++) {
 			store.deleteMessage(indexes[i], worker);
 		}
 	}
-	
-	public int getMessageCount(WorkerStatusController worker) throws Exception
-	{
+
+	public void deleteMessage(int index, WorkerStatusController worker)
+		throws Exception {
+		store.deleteMessage(index, worker);
+	}
+
+	public int getMessageCount(WorkerStatusController worker)
+		throws Exception {
 		return getStore().fetchMessageCount(worker);
 	}
 
-	public Message getMessage(int index, Object uid, WorkerStatusController worker) throws Exception {
+	public Message getMessage(
+		int index,
+		Object uid,
+		WorkerStatusController worker)
+		throws Exception {
 		Message message = getStore().fetchMessage(index, worker);
+		if (message == null)
+			return null;
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 		header.set("columba.pop3uid", uid);

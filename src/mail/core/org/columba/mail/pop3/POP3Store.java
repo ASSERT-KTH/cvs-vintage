@@ -139,13 +139,12 @@ public class POP3Store {
 
 	}
 
-	public void deleteMessage(int index, WorkerStatusController worker)
+	public boolean deleteMessage(int index, WorkerStatusController worker)
 		throws Exception {
 
 		isLogin(worker);
 
-		boolean b = protocol.deleteMessage(index);
-
+		 return protocol.deleteMessage(index);
 	}
 
 	/**
@@ -227,7 +226,8 @@ public class POP3Store {
 
 		String rawString =
 			protocol.fetchMessage(new Integer(index).toString(), worker);
-
+		if ( rawString.length()==0 ) return null;
+		
 		// pipe through preprocessing filter
 		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 			rawString = modifyMessage(rawString);

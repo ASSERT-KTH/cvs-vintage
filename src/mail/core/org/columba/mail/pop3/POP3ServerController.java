@@ -158,8 +158,11 @@ public class POP3ServerController implements ActionListener {
 	}
 
 	public void fetch() {
+		
+		enableActions(false);
+		
 		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(getServer());
+		r[0] = new POP3CommandReference(this);
 
 		FetchNewMessagesCommand c =
 			new FetchNewMessagesCommand( r);
@@ -168,8 +171,11 @@ public class POP3ServerController implements ActionListener {
 	}
 	
 	public void check() {
+		
+		enableActions(false);
+		
 		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(getServer());
+		r[0] = new POP3CommandReference(this);
 
 		CheckForNewMessagesCommand c =
 			new CheckForNewMessagesCommand( r);

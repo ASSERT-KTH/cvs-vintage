@@ -92,6 +92,8 @@ public class CheckForNewMessagesCommand extends Command {
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		}
+		
+		r[0].getPOP3ServerController().enableActions(true);
 	}
 
 	protected void playSound() {

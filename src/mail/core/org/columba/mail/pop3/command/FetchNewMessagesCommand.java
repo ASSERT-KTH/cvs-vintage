@@ -77,12 +77,16 @@ public class FetchNewMessagesCommand extends Command {
 		totalMessageCount = server.getMessageCount(worker);
 
 		try {
+			// fetch UID list from server
 			List newUIDList = fetchUIDList(totalMessageCount, worker);
 
+			// fetch message size list from server
 			List messageSizeList = fetchMessageSizes(worker);
 
+			// synchronize local UID list with server UID list
 			List newMessagesUIDList = synchronize(newUIDList);
 
+			// only download new messages
 			downloadNewMessages(
 				newUIDList,
 				messageSizeList,
@@ -94,6 +98,8 @@ public class FetchNewMessagesCommand extends Command {
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		}
+		
+		r[0].getPOP3ServerController().enableActions(true);
 
 	}
 
@@ -111,6 +117,14 @@ public class FetchNewMessagesCommand extends Command {
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
 		Message message = server.getMessage(index + 1, serverUID, worker);
+		if (message == null)
+			throw new Exception(
+				"Message with UID="
+					+ serverUID
+					+ " and index="
+					+ (index + 1)
+					+ " isn't on the server.");
+
 		message.getHeader().set(
 			"columba.size",
 			new Integer(Math.round(size / 1024)));
@@ -127,6 +141,7 @@ public class FetchNewMessagesCommand extends Command {
 		headerList[0] = message.getHeader();
 		headerList[0].set("columba.uid", uid);
 
+		// update table-viewer
 		TableChangedEvent ev =
 			new TableChangedEvent(
 				TableChangedEvent.ADD,
@@ -135,6 +150,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		TableUpdater.tableChanged(ev);
 
+		// apply filter on message
 		FilterList list = inboxFolder.getFilterList();
 		for (int j = 0; j < list.count(); j++) {
 			Filter filter = list.get(j);
@@ -180,9 +196,10 @@ public class FetchNewMessagesCommand extends Command {
 		List newMessagesUIDList,
 		Worker worker)
 		throws Exception {
-			if (MainInterface.DEBUG) {
-							ColumbaLogger.log.info("need to fetch " + newMessagesUIDList.size() + " messages.");
-					}
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.info(
+				"need to fetch " + newMessagesUIDList.size() + " messages.");
+		}
 		int totalSize =
 			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
 
@@ -191,23 +208,22 @@ public class FetchNewMessagesCommand extends Command {
 
 		newMessageCount = newMessagesUIDList.size();
 		for (int i = 0; i < newMessageCount; i++) {
+			// which UID should be downloaded next
 			Object serverUID = newMessagesUIDList.get(i);
 
 			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("fetch message with UID=" + serverUID);
-                        }
+				ColumbaLogger.log.info("fetch message with UID=" + serverUID);
+			}
 
 			log(
 				"Fetching " + (i + 1) + "/" + newMessageCount + " messages...",
 				worker);
 
-			//int index = ( (Integer) result.get(serverUID) ).intValue();
+			// lookup index of message 
 			int index = newUIDList.indexOf(serverUID);
-			ColumbaLogger.log.info(
-				"List index=" + index + " server index=" + (index + 1));
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("vector index=" + index + " server index=" + (index + 1));
-                        }
+			if (MainInterface.DEBUG)
+				ColumbaLogger.log.info(
+					"List index=" + index + " server index=" + (index + 1));
 
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
@@ -223,25 +239,53 @@ public class FetchNewMessagesCommand extends Command {
 				// if message-size is bigger skip download of this message
 				if (size > maxSize) {
 					if (MainInterface.DEBUG) {
-                                                ColumbaLogger.log.info("skipping download of message, too big");
-                                        }
+						ColumbaLogger.log.info(
+							"skipping download of message, too big");
+					}
 					continue;
 				}
 			}
 
+			// now download the message
 			downloadMessage(
 				index,
 				Integer.parseInt((String) messageSizeList.get(index)),
 				serverUID,
 				worker);
+
+			if (server
+				.getAccountItem()
+				.getPopItem()
+				.getBoolean("leave_messages_on_server")
+				== false) {
+				// delete message from server
+
+				/*
+				// remove UID from server list
+				boolean remove = newUIDList.remove(serverUID);
+				*/
+				
+				// server message numbers start with 1
+				// whereas List numbers start with 0
+				//  -> always increase delete number
+
+				// delete message with <index>==index from server
+				server.deleteMessage(index + 1, worker);
+
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info(
+						"deleted message with index=" + (index + 1));
+				}
+			}
 		}
 
 	}
 
 	public List synchronize(List newUIDList) throws Exception {
 		if (MainInterface.DEBUG) {
-						ColumbaLogger.log.info("synchronize local UID-list with remote UID-list");
-				}
+			ColumbaLogger.log.info(
+				"synchronize local UID-list with remote UID-list");
+		}
 		// synchronize local UID-list with server 		
 		List newMessagesUIDList = server.synchronize(newUIDList);
 
@@ -255,8 +299,9 @@ public class FetchNewMessagesCommand extends Command {
 		// fetch message-size list 		
 		List messageSizeList = server.getMessageSizeList(worker);
 		if (MainInterface.DEBUG) {
-						ColumbaLogger.log.info("fetched message-size-list capacity=" + messageSizeList.size());
-				}
+			ColumbaLogger.log.info(
+				"fetched message-size-list capacity=" + messageSizeList.size());
+		}
 		return messageSizeList;
 
 	}
@@ -271,8 +316,9 @@ public class FetchNewMessagesCommand extends Command {
 
 		List newUIDList = server.getUIDList(totalMessageCount, worker);
 		if (MainInterface.DEBUG) {
-						ColumbaLogger.log.info("fetched UID-list capacity=" + newUIDList.size());
-				}
+			ColumbaLogger.log.info(
+				"fetched UID-list capacity=" + newUIDList.size());
+		}
 
 		return newUIDList;
 	}
@@ -281,8 +327,8 @@ public class FetchNewMessagesCommand extends Command {
 		server.logout();
 
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("logout");
-                }
+			ColumbaLogger.log.info("logout");
+		}
 
 		log("Logout...", worker);
 

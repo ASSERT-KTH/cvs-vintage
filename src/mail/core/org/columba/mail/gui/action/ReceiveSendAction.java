@@ -70,7 +70,7 @@ public class ReceiveSendAction extends FrameAction {
 			if (excludeFromCheckAll) continue;
 						
 			POP3CommandReference[] r = new POP3CommandReference[1];
-			r[0] = new POP3CommandReference(controller.getServer());
+			r[0] = new POP3CommandReference(controller);
 
 			FetchNewMessagesCommand c =
 				new FetchNewMessagesCommand( r);
