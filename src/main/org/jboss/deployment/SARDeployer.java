@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.7 $ <p>
+* @version   $Revision: 1.8 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -337,10 +337,24 @@ public class SARDeployer
             catch (Exception e)
             {
                log.error("problem listing files in directory", e);
-               throw new DeploymentException(e.getMessage());
+               throw new DeploymentException("problem listing files in directory", e);
             }
          }
-         
+         // A directory that is to be added to the classpath
+         else if(codebase.startsWith("file:") && archives.equals(""))
+         {
+            try
+            {
+               URL fileURL = new URL(codebase);
+               File dir = new File(fileURL.getFile());
+               classpath.add(dir.getCanonicalFile().toURL());
+            }
+            catch(Exception e)
+            {
+               log.error("Failed to add classpath dir", e);
+               throw new DeploymentException("Failed to add classpath dir", e);
+            }
+         }
          // We have an archive whatever the codebase go ahead and load the libraries
          else if (!archives.equals(""))
          {
@@ -348,11 +362,12 @@ public class SARDeployer
             if (codebase.equals(""))
                codebase = System.getProperty("jboss.system.libraryDirectory");
                
-            if (archives.equals("*") || archives.equals("")) 
+            if (archives.equals("*")) 
             {
                // Safeguard
-               if (!codebase.startsWith("file:") && archives.equals("*")) throw new DeploymentException("No wildcard permitted in http deployment you must specify individual jars");
-                  
+               if (!codebase.startsWith("file:") && archives.equals("*"))
+                  throw new DeploymentException("No wildcard permitted in non-file URL deployment you must specify individual jars");
+
                try
                {
                   URL fileURL = new URL(codebase);
@@ -383,7 +398,7 @@ public class SARDeployer
                catch (Exception e)
                {
                   log.error("problem listing files in directory", e);
-                  throw new DeploymentException(e.getMessage());
+                  throw new DeploymentException("problem listing files in directory", e);
                }
             }
 
@@ -394,16 +409,25 @@ public class SARDeployer
                while (jars.hasMoreTokens())
                {
                   // The format is simple codebase + jar
-                  try { classpath.add(new URL(codebase +jars.nextToken().trim()));} 
-                     
-                  catch (MalformedURLException mfue) { log.error("couldn't resolve package reference: ", mfue);} // end of try-catch
+                  try
+                  {
+                     String archive = codebase + jars.nextToken().trim();
+                     URL archiveURL = new URL(archive);
+                     classpath.add(archiveURL);
+                  }    
+                  catch (MalformedURLException mfue)
+                  {
+                     log.error("couldn't resolve package reference: ", mfue);
+                  } // end of try-catch
                }
             }
          }
          //codebase is empty and archives is empty but we did have a classpath entry
          else
          {
-            throw new DeploymentException("A classpath entry was declared but no codebase and no jars specified. Please fix jboss-service.xml in your configuration");
+            String msg = "A classpath entry was declared but no non-file codebase"
+               + "and no jars specified. Please fix jboss-service.xml in your configuration";
+            throw new DeploymentException(msg);
          }
       }
       
