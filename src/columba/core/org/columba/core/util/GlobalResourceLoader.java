@@ -14,15 +14,6 @@
 //
 //All Rights Reserved.
 
-/*
-        columba: a Java open source email client
-        http://columba.sourceforge.net/
-
-        Filename: GlobalResourceLoader.java
-        Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
-        Comments: this is the core class to handle i18n in columba, loading, handling and returning localized strings.
-        It should not be used directly, use MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
-*/
 package org.columba.core.util;
 
 import org.columba.core.main.MainInterface;
@@ -48,7 +39,10 @@ import java.util.StringTokenizer;
 
 
 /*
-        Behaviour.
+        Comments: this is the core class to handle i18n in columba, loading, handling and returning localized strings.
+        It should not be used directly, use MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
+        
+        Behaviour:
         When a resource is needed, getString() or getMnemonics() are called. They look for a resource with that name (in the current locale bundles).
         If it is not found, they look for the resource in the global resource bundle (for the current locale). If this is not found, "FIXME" is returned.
 
@@ -256,31 +250,6 @@ public class GlobalResourceLoader {
             return sID;
 
             //return FIX_ME;
-        }
-    }
-
-    /**
-     * Return mnemonic.
-     *
-     * @param sPath
-     * @param sName
-     * @param sID
-     * @return
-     *
-     * @deprecated
-     */
-    public static char getMnemonic(String sPath, String sName, String sID) {
-        /*
-                Example: MailResourceLoader.getMnemonic("dialog", "filter", "chose_folder");
-                MailResourceLoader changes path to "org/columba/modules/mail/i18n/dialog", then submits the search.
-        */
-        String sResult = getString(sPath, sName, sID + "_mnemonic");
-
-        if ((sResult != null) && (sResult != FIX_ME)) { //String was found.
-
-            return sResult.charAt(0);
-        } else {
-            return 0;
         }
     }
 
