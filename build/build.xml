@@ -1235,7 +1235,7 @@ diff -u -r1.5 project.xml
         <echo>${turbine.dir}</echo>
         <cvs dest="${turbine.dir}" command="update"/>
         <echo>${commons-beanutils.dir}</echo>
-        <cvs dest="${commons-beantuils.dir}" command="update"/>
+        <cvs dest="${commons-beanutils.dir}" command="update"/>
         <echo>${commons-sandbox-util.dir}</echo>
         <cvs dest="${commons-sandbox-util.dir}" command="update"/>
         <echo>${commons-sandbox-configuration.dir}</echo>
