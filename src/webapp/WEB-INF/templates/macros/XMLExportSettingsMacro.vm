@@ -1,7 +1,13 @@
 #macro (XMLExportSettingsRender $foo)$foo#end
 #if($renderedFromScreen)#XMLExportSettings()#end
 #macro (XMLExportSettings)
-<?xml version="1.0" standalone="no"?>
+#set ($exportEncoding = $scarabG.getTurbineConfiguration().getString("scarab.dataexport.encoding"))
+#if ($exportEncoding.length > 0)
+  #set ($encoding = $exportEncoding)
+#else
+  #set ($encoding = "UTF-8")
+#end
+<?xml version="1.0" $encoding standalone="no"?>
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-settings.dtd")">
 <scarab>
 #set ($allAttributes = $scarabG.AllAttributes)

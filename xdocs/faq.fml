@@ -732,6 +732,18 @@ This section from the scarab.dtd is pertinent:
 
 </p>
       </answer>      
+</faq>
+<faq id="30">
+<question>
+How could I control the encoding of the generated XML?
+</question>
+<answer>
+<p>By default, Scarab will set the generated XML to <b>encoding="UTF-8"</b>.
+You can set other target encoding (for example, iso-8859-1) in the scarab.dataexport.encoding
+property.
+<pre>    scarab.dataexport.encoding=iso-8859-1
+</pre> 
+</p></answer>
 </faq>   
   </part>      
 </faqs>
