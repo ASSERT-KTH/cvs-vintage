@@ -1,0 +1,108 @@
+<!--  $Id: i18n.html,v 1.1 2003/01/16 12:56:45 jfelfouly Exp $ -->
+<html>
+<head>
+<title>Scarab internationalization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+<h1>Scarab internationalization (i18n)</h1>
+<h2>Goals</h2>
+<p>This document is meant to help you:</p>
+<ul>
+  <li>as a developer and/or translator if you want to develop the resources needed 
+    to allow Scarab to be used in a new language;</li>
+  <li>as an administrator if you are in charge of setting up a Scarab installation 
+    in a language other than American/English.</li>
+</ul>
+<h2>A preliminary consideration</h2>
+<p>Scarab uses directly or indirectly (Velocity) the Java programming language 
+  and platform. Java has native support for Unicode, which can display and handle 
+  all human languages in current use plus a few others, so it seems that the i18n 
+  question is a simple question of translation, right&nbsp;?</p>
+<p>The crude reality is that software currently used by Scarab or to communicate 
+  with Scarab (operating systems, database management systems, web browsers, mail 
+  clients,... ) have poor, immature or incomplete Unicode support. So, there is 
+  no unique and general solution, and to provide i18n support compatible with 
+  the tools most users use, we are compelled for now to encode/decode incoming 
+  and outgoing streams of information.</p>
+<h2>Scarab architecture explained for the purpose of i18n</h2>
+<p>To understand how to set up Scarab to be used with a language other than American/English, 
+  you need to have at least a general idea of what is going on inside the black 
+  box.</p>
+<p align="center"><img src="scarab-i18n.png" width="502" height="497"></p>
+<p>Scarab as a web application relies heavily on an open source framework called 
+  turbine. Two parts of turbine that are of interest to you as the administrator 
+  of an international version are intake (the parameter processing part) and torque 
+  (the object/relational mapping and persistence layer).</p>
+<p>Using this internal machinery, Scarab delivers web pages and email messages 
+  (output) and accepts form submissions (input).</p>
+<p>Issue and module data plus a lot of other things necessary to Scarab operation 
+  are stored in a database (MySQL, Postgresql and Oracle have been used so far).</p>
+<h2>Which language does Scarab &quot;speak&quot; ?</h2>
+<h3>User interface (screens)</h3>
+<p>Scarab screens are designed and stored as a set of <a href="http://jakarta.apache.org/velocity/index.html">Velocity</a> 
+  templates (*.vm files). These templates have been made &quot;i18n-ready&quot; 
+  by the development team using one of the standard Java mechanisms for internationalization: 
+  <em>resource bundles.</em></p>
+<p>The resource bundles are located under <strong>src/i18n</strong> and are named 
+  ScarabBundle_<em>la_CC</em>.properties, where <em>la</em> is a valid language 
+  code (as usual in Java and according to ISO-639, see <a href="http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt">here</a>) 
+  and <em>CC</em> a valid country code (as usual in Java and according to ISO-3166, 
+  see <a href="http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html">here</a>).</p>
+<p>So if you want Java to speak your language and nobody provided the necessary 
+  resources until then, you must provide a resource bundle corresponding to your 
+  language. This resource bundle must be encoded according to Unicode; but be 
+  careful that the Java APIs only handle ASCII/ISO-Latin 1, so characters that 
+  are not in the range \u0000-\u00ff must use the java notation for Unicode characters 
+  \u<em>xxxx</em>. If your language contains a lot of non-ASCII, non-Latin characters, 
+  it may not be practical for you to edit the resource bundle in this form; you 
+  may consider using an editor with your own encoding and convert the file to 
+  the &quot;canonical&quot; form at the end. On the Win32 platform, you may use 
+  the <a href="http://jakarta.apache.org/velocity/index.html">native2ascii</a> 
+  JDK tool for this final conversion.</p>
+<p>If you set up a Scarab installation for a language which cannot be written 
+  using ISO-Latin1, you should uncomment and give a proper value to the <strong>locale.default.charset</strong> 
+  key in the <strong>src/conf/Scarab.properties</strong> file (a file which most 
+  users should not edit).</p>
+<p>Scarab will attempt to deliver the UI in the user language using the browser 
+  preferences (a turbine feature). If a resource bundle is found that matches 
+  the user preferences, the UI is delivered in this language. If no resource bundle 
+  can be found that matches the user preferences, UI is delivered in American/English 
+  (en_US).</p>
+<p>What about email messages ? It isn't that obvious... In fact, their sending 
+  is triggered by an action performed by a user (such as changing an attribute) 
+  and they are sent in this user preferred language. If all users of a given Scarab 
+  instance have the same language preferences, which is probably the normal case, 
+  the email messages are sent in their (common) language and this is usually not 
+  an issue.</p>
+<p>The question of (character) encoding is more sensitive for email messages than 
+  it is for screen templates (because Unicode support in current email clients 
+  often varies between insufficient and inexistent). If you are setting up a Scarab 
+  installation for a non-Latin language, you should have a look at the I18N section 
+  of the <strong>build/default.properties</strong> file and give an appropriate 
+  value to the <strong>scarab.email.encoding</strong> key in your <strong>build.properties</strong> 
+  file</p>
+<h3>Data</h3>
+<p>It is pretty obvious that Scarab delivers the issue information in the language 
+  in which they were entered.</p>
+<p>One thing that you can change as a translator is the language of the default 
+  and sample data that may be loaded at installation time. For this, you must 
+  provide a second, much shorter, resource bundle called InitDbScarabBundle_<em>la</em>_<em>CC</em>.properties.</p>
+<h2>Which language does Scarab &quot;understand&quot; ?</h2>
+<p>So you understand now why the runbox, for instance, delivers contents to every 
+  user in his/her own language (if the appropriate resource bundle is present 
+  of course). This does not mean that a particular instance of Scarab is configured 
+  to handle data in all languages on earth. The runbox, to continue with the example, 
+  is not properly configured to handle and store Russian, Korean or Japanese data 
+  -- though it is able to deliver the UI in these languages.</p>
+<p>The problems with intake handling Chinese or Korean seem to have been solved 
+  by now; there remains the question of storing non-Latin characters in the database. 
+  If you plan to use a language which cannot be encoded with ISO-Latin1, you should 
+  have a look at the I18N section of the build/default.properties file and give 
+  an appropriate value to the <strong>scarab.database.encoding.querystring</strong> 
+  key in your build.properties file.</p>
+<hr>
+<p>Original text by Jean-Francois El Fouly</p>
+<p>Last revision: $Date: 2003/01/16 12:56:45 $</p>
+</body>
+</html>
