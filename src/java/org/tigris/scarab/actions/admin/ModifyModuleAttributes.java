@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.12 2001/10/09 03:49:11 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.13 2001/10/09 04:38:31 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -145,7 +145,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         RModuleAttribute rma = new RModuleAttribute();
         rma.setModuleId(scarabR.getCurrentModule().getModuleId());
         rma.setAttributeId(attributeId);
-        rma.setDedupe(group.getOrder() < ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
+        rma.setDedupe(group.getOrder() < 
+           ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
         rma.save();
 
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
@@ -284,6 +285,11 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                         ag.getQueryKey(), false);
                agGroup.setProperties(ag);
                ag.save();
+
+               Group moduleGroup = intake.get("Module",
+                                   module.getQueryKey(), false);
+               moduleGroup.setProperties(module);
+               module.save();
            }
 
        }
