@@ -90,7 +90,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </div>
 
 <div class="functnbar3">
-   <input type="submit" value="Save"  name="eventSubmit_doSaveattributedata" />
+   <input type="submit" value="save"  name="eventSubmit_doSaveattributedata" />
 </div>
 
 
@@ -178,17 +178,15 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </tr>
 </table>
 
-<p><strong>Please note: Once created, Attribute Options cannot be deleted
+<div class="functnbar3">
+<input type="submit" value="save"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="add new"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSaveoptions" />&#160;
+</div>
+
+<p><small>Please note: Once created, Attribute Options cannot be deleted
 from the database. They can only be marked as deleted and will always
 show up in the list above (but will not show up in the application
 itself). Therefore, please use caution when creating new Attribute
-Options because you can quickly end up with a mess.</strong></p>
-
-<div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="Add new"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="Delete selected"  name="eventSubmit_doSaveoptions" />&#160;
-</div>
+Options because you can quickly end up with a mess.</small></p>
 
 #end
 

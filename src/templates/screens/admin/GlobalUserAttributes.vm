@@ -1,0 +1,91 @@
+$page.setTitle("User Attributes")
+
+<div class="app" id="assignissue">
+<h2>$page.Title</h2>
+
+#set ($module = $scarabR.CurrentModule)
+#set ($userAttrs = $scarabG.UserAttributes)
+
+		<div class="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">Global attributes</a></td>
+			<th>User attributes</th>
+			</tr>
+			</table>
+		</div>
+
+<form action="$link.setPage("admin,GlobalUserAttributes.vm")" method="get">
+<input type="hidden" name="action" value="admin.GlobalAttributes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AdminIndex.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+
+
+		<div class="functnbar">
+<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
+		</div>
+		
+		
+		<h3>User attributes</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th><a href="#" title="sort"><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;<a href="#" title="sort">Attribute name</a></th>
+		<th><a href="#" title="sort">Description</a></th>
+		<th>Email action</th>
+		<th>Base Permission</th>
+		<th><a href="#" title="sort">Author</a></th>
+		<th><a href="#" title="sort">Creation date</a></th>
+		</tr>
+		
+#foreach ($attr in $userAttrs)
+      #set ($attgroup = $intake.Attribute.mapTo($attr))
+        #indexedRows($velocityCount)
+        <td>#booleanCheckbox ($attgroup.Deleted)</td>
+        <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attr.Name")</td>
+		<td>$attr.Description</td>
+		<td>
+   #fieldErrorMsg($attgroup.Action "")
+		<select name="$attgroup.Action.Key" size="">
+   		<option value="">Select...</option>
+   		<option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>None</option>
+   		<option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>To:</option>
+        <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>CC:</option>
+        </select>
+        </td>
+        <td>
+   #fieldErrorMsg($attgroup.Permission "")
+        <select name="$attgroup.Permission.Key">
+  #foreach ($permission in $securityAdmin.Permissions)
+         <option value="$permission.Name"
+          #if ($permission.Name.equals($attgroup.Permission.Value))
+             selected="selected"
+          #end
+          >$permission.Name</option>
+  #end
+        </select>
+        </td>
+		#set ($createdUser = $scarabR.getUser($attr.CreatedBy) )
+		<td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+		<td>$format.getDate($scarabR.DateFormat, $attr.CreatedDate)</td>
+		</tr>
+#end
+		
+		</table>
+
+<div class="functnbar3">
+<input type="submit" value="save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;
+<input type="submit" value="copy selected" />&#160;
+<input type="submit" value="delete selected"  name="eventSubmit_doSave" />&#160;
+</div>
+
+<div class="functnbar2">
+
+<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
+
+</div>       
+
+$intake.declareGroups()
+</form>

@@ -12,11 +12,22 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+<th>global attributes</th>
+<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">User attributes</a></td>
+</tr>
+</table>
+</div>
+
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 </div>       
 
-<h3>Attributes</h3>
+<h3>Global Attributes</h3>
+
+
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
