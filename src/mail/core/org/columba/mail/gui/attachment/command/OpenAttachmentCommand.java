@@ -141,7 +141,11 @@ public class OpenAttachmentCommand extends FolderCommand {
 					}
 				}
 				
-				StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
+				// *20031019, karlpeder* Closing output stream after copying
+				FileOutputStream output = new FileOutputStream(tempFile);
+				StreamUtils.streamCopy(bodyStream, output);
+				output.close();
+				
 			} catch (Exception ex) {
 				ex.printStackTrace();
 
