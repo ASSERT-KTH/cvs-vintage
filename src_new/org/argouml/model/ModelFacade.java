@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.41 2003/05/01 14:19:02 kataka Exp $
+// $Id: ModelFacade.java,v 1.42 2003/05/06 14:32:07 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,6 +352,16 @@ public class ModelFacade {
         return handle instanceof MOperation;
     }
 
+    /**
+     * Recognizer for Permission
+     *
+     * @param handle candidate
+     * @returns true if handle is an Permission
+     */
+    public static boolean isAPermission(Object handle) {
+        return handle instanceof MPermission;
+    }
+    
     /** Recognizer for Package
      *
      * @param handle candidate
