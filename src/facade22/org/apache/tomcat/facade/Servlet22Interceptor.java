@@ -116,14 +116,20 @@ public final class Servlet22Interceptor
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    Handler wrapper = ctx.getServletByName( key );
-	    if( ! (wrapper instanceof ServletHandler) )
+	    
+	    if( ! (wrapper instanceof ServletHandler) ) 
 		continue;
-	    ctx.removeServletByName( key );
+
 	    try {
 		((ServletHandler)wrapper).destroy();
 	    } catch(Exception ex ) {
 		ctx.log( "Error in destroy ", ex);
 	    }
+	    // remove the context after it is destroyed.
+	    // remove will "un-declare" the servlet
+	    // After this the servlet will be in STATE_NEW, and can
+	    // be reused.
+	    ctx.removeServletByName( key );
 	}
     }
     
