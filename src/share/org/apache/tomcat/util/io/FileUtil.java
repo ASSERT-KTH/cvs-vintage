@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.7 2002/01/22 06:09:51 billbarker Exp $
- * $Revision: 1.7 $
- * $Date: 2002/01/22 06:09:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.8 2002/09/13 05:31:08 billbarker Exp $
+ * $Revision: 1.8 $
+ * $Date: 2002/09/13 05:31:08 $
  *
  * ====================================================================
  *
@@ -67,7 +67,6 @@ package org.apache.tomcat.util.io;
 import java.io.*;
 import java.util.zip.*;
 
-import org.apache.tomcat.util.log.*;
 
 /*
  * FileUtil contains utils for dealing with Files. Some of these are 
@@ -128,7 +127,9 @@ public class FileUtil {
 
     // XXX tc_log is the default channel in tomcat, this component
     //should be able to log in a specific channel.
-    static Log loghelper = Log.getLog("tc/FileUtil", "FileUtil");
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(DependClassLoader.class);
+
     
     /** All the safety checks from getRealPath() and
 	DefaultServlet.
@@ -187,8 +188,7 @@ public class FileUtil {
 	try {
 	    canPath=new File(realPath).getCanonicalPath();
 	} catch( IOException ex ) {
-	    //log("safePath: " + realPath, ex);
-	    loghelper.log("in safePath(" + base +", "+path + "), realPath=" + realPath, ex);
+	    logger.error("in safePath(" + base +", "+path + "), realPath=" + realPath, ex);
 	    return null;
 	}
 
@@ -405,8 +405,9 @@ public class FileUtil {
 		    fos.close();
 		}
 	    } catch( FileNotFoundException ex ) {
-		//loghelper.log("FileNotFoundException: " +
-		//   ze.getName(), Logger.ERROR );
+		if(logger.isDebugEnabled())
+		    logger.debug("FileNotFoundException: " +
+				  ze.getName(), Logger.ERROR );
 		throw ex;
 	    }
 	}
