@@ -1,4 +1,4 @@
-// $Id: ActionBooleanTaggedValue.java,v 1.2 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionBooleanTaggedValue.java,v 1.3 2004/08/24 06:33:45 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,12 +61,16 @@ public class ActionBooleanTaggedValue extends UMLChangeAction {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        if (!(e.getSource() instanceof UMLCheckBox2)) return;
+        if (!(e.getSource() instanceof UMLCheckBox2)) {
+            return;
+        }
 
         UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
         Object obj = source.getTarget();
 
-        if (!org.argouml.model.ModelFacade.isAModelElement(obj)) return;
+        if (!ModelFacade.isAModelElement(obj)) {
+            return;
+        }
 
         boolean newState = source.isSelected();
 
