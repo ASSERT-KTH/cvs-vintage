@@ -5,13 +5,15 @@ $page.setTitle("Custom Search")
 
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("Search.vm")" method="get">
+<form action="$link.setPage("Search.vm")" method="post">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="custom" />
 
-<p class="functnbar"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
-		
+<p class="functnbar">
+<input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</p>
 
 #set ($search = $scarabR.Search)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
@@ -26,7 +28,7 @@ $page.setTitle("Custom Search")
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">select text attributes</th>
+   <th width="120">Select text attributes</th>
    <td>
     ## default to first attribute if none was selected previously
     #if ($searchGroup.TextScope.isSet())
@@ -57,7 +59,7 @@ $page.setTitle("Custom Search")
   </tr>
 
   <tr>
-   <th width="120">enter search string</th>
+   <th width="120">Enter search string</th>
    <td>#textAreaSmall("$searchGroup.SearchWords.Key" $searchGroup.SearchWords)
    </td>
   </tr>
@@ -89,40 +91,52 @@ $page.setTitle("Custom Search")
 
 ## FIXME: use intake
 <h3>Results display options</h3>
-		
+        
 <div class="axial">
 <table  cellpadding="3" cellspacing="2" border="1">
   <tr>
-    <th width="120">sort by</th>
-	<td><select name="sortAttrId">
-           <option value="">Choose..</option>
-           #foreach ($attKey in $attrValues.sequence())
-              #set ($attVal = $attrValues.get($attKey))
-       	      <option value="$attVal.AttributeId">$attVal</option>
-           #end
-	</select>
-        &nbsp;
-        <select name="sortPolarity">
-          <option value="asc"> ascending </option>
-          <option value="desc"> descending </option>
-        </select>
-         </td>
-	</tr>
-     <tr>
-       <th>Issues per page</th>
-<input type="hidden" name="pageNum" value="1" />
-       <td><input type="radio" name="resultsPerPage"   value="25" checked="checked" /> 25 <input type="radio" name="resultsPerPage"   value="50" /> 50 <input type="radio" name="resultsPerPage"   value="75" /> 75 <input type="radio" name="resultsPerPage" value="100" /> 100</td>
-     </tr>
-      </table>
+    <th width="120">Sort by</th>
+    <td>
+      <select name="sortAttrId">
+        <option value="">Choose..</option>
+        #foreach ($attKey in $attrValues.sequence())
+           #set ($attVal = $attrValues.get($attKey))
+           <option value="$attVal.AttributeId">$attVal</option>
+        #end
+      </select>
+        &#160;
+      <select name="sortPolarity">
+        <option value="asc"> ascending </option>
+        <option value="desc"> descending </option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+   <th>Issues per page</th>
+   <td>
+   <input type="hidden" name="pageNum" value="1" />
+   <input type="radio" name="resultsPerPage" value="25" checked="checked" /> 25 
+   <input type="radio" name="resultsPerPage" value="50" /> 50 
+   <input type="radio" name="resultsPerPage" value="75" /> 75 
+   <input type="radio" name="resultsPerPage" value="100" /> 100
+   </td>
+  </tr>
+</table>
 </div>
 
+## FIXME: this doesn't seem to work right now
+#*
 #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
-<p>$link.setPage("admin,ModuleAttributeEdit.vm").setLabel("edit custom search")</p>
+<p>$link.setPage("admin,ModuleAttributeEdit.vm").setLabel("Edit custom search")</p>
 #end
+*#
 
-<p class="functnbar2"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar2">
+<input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</p>
 
-		
- $intake.declareGroups()
+$intake.declareGroups()
+
 </form>
 </div>
