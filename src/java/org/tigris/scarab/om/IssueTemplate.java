@@ -1,12 +1,14 @@
 package org.tigris.scarab.om;
 
 import java.util.List;
+
 import org.apache.turbine.Turbine;
-import org.apache.turbine.modules.ContextAdapter; 
-import org.apache.turbine.TemplateContext;
+import org.apache.fulcrum.template.TemplateContext;
+//import org.apache.turbine.modules.ContextAdapter; 
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -39,27 +41,24 @@ public  class IssueTemplate
                                   TemplateContext context )
         throws Exception
     {
-        // If it's a global template, user must have Item | Approve 
-        // permission,  Or its Approved field gets set to false
+        ScarabSecurity security = SecurityFactory.getInstance();
+        // If it's a global query, user must have Item | Approve 
+        //   permission, Or its Approved field gets set to false
         if (getTypeId().equals(USER__PK))
         {
             setApproved(true);
         }
+        else if (security.hasPermission(ScarabSecurity.ITEM__APPROVE,
+                                               user, module))
+        {
+            setApproved(true);
+        } 
         else
         {
-            ScarabSecurity security = SecurityFactory.getInstance();
-            setApproved(security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                               user, module));
-        } 
+            setApproved(false);
+            setTypeId(USER__PK);
 
-        save();
-
-        ScarabSecurity security = SecurityFactory.getInstance();
-        if (!security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                    user, module))
-        {
-            // Send Email
-            // add data to context for email template
+            // Send Email to module owner to approve new template
             context.put("user", user);
             context.put("module", module);
 
@@ -69,10 +68,11 @@ public  class IssueTemplate
                           "email/RequireApproval.vm");
             ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
                               .retrieveByPK((NumberKey)module.getOwnerId());
-            Email.sendEmail(new ContextAdapter(context), null, toUser,
-                            subject, template);
+            Email.sendEmail(context, null, toUser, subject, template);
         }
+        save();
     }
+
 
     /**
      * Returns list of all issue template types.
@@ -83,49 +83,54 @@ public  class IssueTemplate
     }
 
     /**
-     * Checks if user has permission to approve template. 
+     * Checks permission and approves or rejects query. 
+     * If query is approved, query type set to "global", else set to "personal".
      */
-    public void setApproved( ScarabUser user, ScarabModule module,
-                            boolean approved)
+    public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabModule module = getScarabModule();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
                                    module))
         {
-            super.setApproved(approved);
-            super.save();
+            setApproved(true);
+            if (approved)
+            {
+                setTypeId(GLOBAL__PK);
+            }
+            save();
         } 
         else
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }
+        }            
     }
+
 
     /**
-     * Checks if user has permission to reject template.
+     * Checks if user has permission to delete template.
+     * Only the creating user can delete a personal template.
+     * Only project owner or admin can delete a project-wide template.
      */
-    public void setDeleted( ScarabUser user, ScarabModule module,
-                            boolean deleted)
+    public void delete( ScarabUser user )
          throws Exception
     {                
-        boolean hasPerm = false;
+        ScarabModule module = getScarabModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                   module))
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user, module)
+          || (user.getUserId().equals(getUserId()) 
+             && getTypeId().equals(USER__PK)))
         {
-            super.setDeleted(deleted);
-            super.save();
+            setDeleted(true);
+            save();
         } 
         else
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }
-            
+        }            
     }
-
-
 
 }
