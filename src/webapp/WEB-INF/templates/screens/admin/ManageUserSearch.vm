@@ -130,6 +130,7 @@ document.ManageUserSearchForm.searchCriteria.focus();
    <th width="10">$l10n.Select</th>
    <th>$l10n.LoginName</th>
    <th>$l10n.Name</th>
+   <th>$l10n.AccountStatus</th>
  </tr>
 
 #foreach ($user in $userList)
@@ -140,6 +141,7 @@ document.ManageUserSearchForm.searchCriteria.focus();
    </td>
    <td>$!user.UserName</td>
    <td><a href="mailto:$!user.Email">$!user.Name</a></td>
+   <td>$!user.Confirmed</td>
    </label>
  </tr>
 #end

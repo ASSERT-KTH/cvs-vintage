@@ -73,6 +73,15 @@
   #fieldErrorMsg($regGroup.Email "")
  </td>
 </tr>
+<tr>
+ <th>*&nbsp;$l10n.AccountStatus</th>
+ <td>
+  <select name="accountStatus">
+   <option #if ($user2.getConfirmed().equals("CONFIRMED")) selected #end>CONFIRMED</option>
+   <option #if ($user2.getConfirmed().equals("DELETED")) selected #end>DELETED</option>
+  </select>  
+ </td>
+</tr>
 </table>
 </div>
 

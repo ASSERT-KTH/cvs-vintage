@@ -1,0 +1,28 @@
+<div id="globalconfigure" class="app">
+   
+<form name="ConfigureForm" action="$link.setPage("admin,AppConfigurationSettings.vm")" 
+    method="post">
+<input type="hidden" name="action" value="admin.AppConfigurationSettings" />
+                           
+<h3>$l10n.AppConfiguration</h3>
+<p>
+$l10n.AppConfigurationBody
+</p>
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">        
+  #foreach($key in $scarabG.TurbineConfiguration.keys)
+ <tr>
+  <th>$key</th>
+  <td> 
+   <input type="hidden" name="configuration.key.$key" value="$key" />
+   <input type="text" name="configuration.value.$key" value="$scarabG.getTurbineConfiguration().getString($key)" size="80"/> 
+  </td> 
+ </tr>
+ #end
+</table>
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doSave" value="$l10n.Save" />
+</div>
+
+</form>
+</div>

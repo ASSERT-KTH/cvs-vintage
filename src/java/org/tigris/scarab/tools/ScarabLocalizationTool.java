@@ -54,13 +54,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.configuration.Configuration;
+
 import org.apache.fulcrum.localization.LocaleTokenizer;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.tools.localization.LocalizationKey;
@@ -69,19 +69,18 @@ import org.tigris.scarab.util.ReferenceInsertionFilter;
 import org.tigris.scarab.util.SkipFiltering;
 
 /**
- * Scarab-specific localiztion tool.  Uses the following property
- * format to access Turbine's properties (generally defined in
- * <code>Scarab.properties</code>):
+ * Scarab-specific localiztion tool.  Uses a specific property
+ * format to map a generic i10n key to a specific screen.
  * 
+ * For example, the $i10n.title on the screen:
+ * admin/AddPermission.vm would be in ScarabBundle_en.properties
  * <blockquote><code><pre>
- *  template.[dir/]&lt;scope&gt;.&lt;title&gt;
+ *  admin/AddPermission.vm.Title
  * </pre></code> </blockquote>
  * 
- * Defaults for scope can be specified using the
- * <code>default.somevar</code> syntax, where <code>somevar</code> is
- * the variable you want to specify a default scope for.
  * 
  * @author <a href="mailto:dlr@collab.net">Daniel Rall </a>
+ * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh </a>
  */
 public class ScarabLocalizationTool extends LocalizationTool
 {
@@ -92,15 +91,9 @@ public class ScarabLocalizationTool extends LocalizationTool
     public static Locale        DEFAULT_LOCALE = new Locale("en", "");
 
     /**
-     * The portion of a key denoting the default scope 
-     * (the default target name).
-     */
-    private static final String DEFAULT_SCOPE  = "default";
-
-    /**
      * The portion of a key denoting the title property.
      */
-    private static final String TITLE_PROP     = "title";
+    private static final String TITLE_PROP     = "Title";
 
     /**
      * We need to keep a reference to the request's <code>RunData</code> so
@@ -114,7 +107,6 @@ public class ScarabLocalizationTool extends LocalizationTool
      * Initialized by <code>init()</code>, 
      * cleared by <code>refresh()</code>.
      */
-    private Configuration       properties;
     private String              bundlePrefix;
     private String              oldBundlePrefix;
 
@@ -179,6 +171,8 @@ public class ScarabLocalizationTool extends LocalizationTool
             }
             if (value == null)
             {
+                value = createMissingResourceValue(key);
+                /*
                 //Try to find default.<key> ??? (This seems to be wrong ...[Hussayn])
                 value = super.get(DEFAULT_SCOPE + '.', key);
                 if (value == null)
@@ -186,6 +180,7 @@ public class ScarabLocalizationTool extends LocalizationTool
                     // give up
                     value = createMissingResourceValue(key);
                 }
+                */
             }
         }
         catch (Exception e)
@@ -309,7 +304,7 @@ public class ScarabLocalizationTool extends LocalizationTool
                 Locale locale = (Locale) iter.next();
                 value = formatKey(key, args, locale);
             }
-            if (value == null)
+            /*if (value == null)
             {
                 // try with the "Default"-Scope ??? This may be wrong (Hussayn)
                 String prefix = getPrefix(null);
@@ -323,7 +318,7 @@ public class ScarabLocalizationTool extends LocalizationTool
                     value = createMissingResourceValue(key);
                 }
                 setPrefix(prefix);
-            }
+            }*/
         }
         catch (Exception e)
         {
@@ -344,18 +339,8 @@ public class ScarabLocalizationTool extends LocalizationTool
      */
     public String getTitle()
     {
-        String title = findProperty(TITLE_PROP, false);
-        if (title == null)
-        {
-            // Either the property name doesn't correspond to a
-            // localization key, or the localization property pointed
-            // to by the key doesn't have a value. Try the default.
-            title = findProperty(TITLE_PROP, true);
-
-            // If no default localization this category of template
-            // property was available, we return null so the VTL
-            // renders literally and the problem can be detected.
-        }
+        String title = findProperty(TITLE_PROP);
+        
         return title;
     }
 
@@ -364,40 +349,26 @@ public class ScarabLocalizationTool extends LocalizationTool
      * 
      * @param property 
      *        The name of the property whose value to retrieve.
-     * @param useDefaultScope
-     *        Whether or not to use the default scope (defined by the
-     *        <code>DEFAULT_SCOPE</code> constant).
      * @return The localized property value.
      */
-    protected String findProperty(String property, boolean useDefaultScope)
+    protected String findProperty(String property)
     {
         String value = null;
-        if (properties != null)
+
+        String templateName = data.getTarget().replace(',', '/');
+       
+
+        String l10nKey = property;
+        String prefix = getPrefix(templateName + '.');
+        if (prefix != null)
         {
-            String templateName = (useDefaultScope || data == null) ? DEFAULT_SCOPE
-                    : data.getTarget().replace(',', '/');
-            String propName = "template." + templateName + '.' + property;
-
-            String l10nKey = properties.getString(propName, null);
-            Log.get().debug(
-                    "ScarabLocalizationTool: Property name '" + propName
-                            + "' -> localization key '"
-                            + l10nKey
-                            + '\'');
-
-            if (l10nKey != null)
-            {
-                String prefix = getPrefix(templateName + '.');
-                if (prefix != null)
-                {
-                    l10nKey = prefix + l10nKey;
-                }
-                value = get(l10nKey);
-                Log.get().debug( "ScarabLocalizationTool: Localized value is '"
-                      + value
-                      + '\'');
-            }
+            l10nKey = prefix + l10nKey;
         }
+        value = get(l10nKey);
+        Log.get().debug( "ScarabLocalizationTool: Localized value is '"
+              + value
+              + '\'');            
+        
         return value;
     }
 
@@ -465,7 +436,6 @@ public class ScarabLocalizationTool extends LocalizationTool
             locales.add(DEFAULT_LOCALE);
             locales.add(null);
         }
-        properties = Turbine.getConfiguration();
     }
 
     /**
@@ -476,7 +446,6 @@ public class ScarabLocalizationTool extends LocalizationTool
     {
         super.refresh();
         data = null;
-        properties = null;
         bundlePrefix = null;
         oldBundlePrefix = null;
         locales = null;

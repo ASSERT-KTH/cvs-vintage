@@ -62,6 +62,7 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
@@ -73,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.52 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: Login.java,v 1.53 2004/10/13 15:12:54 dep4b Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -154,26 +155,31 @@ public class Login extends ScarabTemplateAction
         }
         catch (UnknownEntityException e)
         {
-            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
+            scarabR.setAlertMessage(L10NKeySet.InvalidUsernameOrPassword);
             Log.get().info("Invalid login attempted: " + e.getMessage());
             return failAction(data, "Login.vm");            
         }
         catch (PasswordMismatchException e)
         {
-            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
+            scarabR.setAlertMessage(L10NKeySet.InvalidUsernameOrPassword);
             Log.get().debug("Password mis-match during login attempt: "
                            + e.getMessage());
             return failAction(data, "Login.vm");            
         }
         catch (TurbineSecurityException e)
         {
-            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
+            scarabR.setAlertMessage(L10NKeySet.InvalidUsernameOrPassword);
             Log.get().error("Error while attempting to log in", e);
             return failAction(data, "Login.vm");
         }
 
         try
         {
+            if (user.getConfirmed().equals("DELETED")){
+                scarabR.setAlertMessage(L10NKeySet.UserIsDeleted);
+                Log.get().error("Deleted user attempting to log in");
+                return failAction(data, "Login.vm");
+            }
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {
@@ -183,7 +189,7 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                scarabR.setAlertMessage(l10n.get("UserIsNotConfirmed"));
+                scarabR.setAlertMessage(L10NKeySet.UserIsNotConfirmed);
                 return failAction(data, "Confirm.vm");
             }
             // check if the password is expired
@@ -195,7 +201,7 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                scarabR.setAlertMessage(l10n.get("YourPasswordHasExpired"));
+                scarabR.setAlertMessage(L10NKeySet.YourPasswordHasExpired);
                 return failAction(data, "ChangePassword.vm");
             }
 

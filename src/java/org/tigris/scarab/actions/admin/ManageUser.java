@@ -66,6 +66,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -75,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.28 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: ManageUser.java,v 1.29 2004/10/13 15:12:54 dep4b Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -197,6 +198,7 @@ public class ManageUser extends RequireLoginFirstAction
                     su.setFirstName(register.get("FirstName").toString());
                     su.setLastName(register.get("LastName").toString());
                     su.setEmail(register.get("Email").toString());
+                    su.setConfirmed(data.getParameters().getString("accountStatus"));
                     TurbineSecurity.saveUser(su);
                     
                     //
@@ -219,6 +221,7 @@ public class ManageUser extends RequireLoginFirstAction
                         userInSession.setFirstName(su.getFirstName());
                         userInSession.setLastName(su.getLastName());
                         userInSession.setEmail(su.getEmail());
+                        userInSession.setConfirmed(su.getConfirmed());
                     }
                     
                     String msg = l10n.format("userChangesSaved", username);
@@ -256,13 +259,45 @@ public class ManageUser extends RequireLoginFirstAction
     public void doDeleteuser(RunData data, TemplateContext context)
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        String msg = l10n.format("userDeleteNotImplemented",
-                                 data.getParameters().getString("username"));
-        getScarabRequestTool(context).setAlertMessage(msg);
-        setTarget(data,
-                  data.getParameters().getString(ScarabConstants.NEXT_TEMPLATE,
-                                                 "admin,AdminIndex.vm"));
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
+        User user = null;
+        String username = data.getParameters().getString("username");
+        User userInSession = data.getUser(); 
+        if (userInSession.getUserName().equals(username)){
+            scarabR.setAlertMessage(L10NKeySet.userCanNotDeleteSelf);
+            return;
+        }
+        try
+        {
+            
+            user =  TurbineSecurity.getUser(username);
+            user.setConfirmed("DELETED");
+            TurbineSecurity.saveUser(user);
+           
+            
+            String msg = l10n.format("userDeleted", username);
+            scarabR.setConfirmMessage(msg);
+            data.getParameters().setString("state", "showedituser");
+            data.getParameters().setString("lastAction", "editeduser");
+            
+            setTarget(data, nextTemplate);
+            return;
+            
+           
+        }
+        catch (Exception e)
+        {
+            setTarget(data, template);
+            data.getParameters().setString("lastAction","");
+            scarabR.setAlertMessage (l10n.getMessage(e));
+            Log.get().error(e);
+            data.getParameters().setString("state","showedituser");
+            return;
+        }        
+       
     }
     
     

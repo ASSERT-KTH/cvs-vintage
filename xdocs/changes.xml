@@ -7,6 +7,19 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="add">
+        Simplify logic for using a standard i10n key in a .vm that is custom
+        per screen.  Removed an entire level of indirection and abstraction that
+        was not used in Scarab.
+      </action>
+      <action dev="epugh" type="add">
+        Delete user functionality implemented!  You can now "delete" a user, which
+        means they can't login anymore, but the record still exists.
+      </action>        
+      <action dev="epugh" type="add">
+        Application Configuration Screen that allows administrators to modify the
+        application settings for Scarab without editing .properties files.
+      </action>         
       <action dev="epugh" type="add" due-to="Peter Tillemans">
         Improvements to VelocityEmailService
       </action>          
