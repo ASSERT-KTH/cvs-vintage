@@ -26,7 +26,7 @@ import org.jboss.invocation.PayloadKey;
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler
@@ -73,7 +73,7 @@ public class ClientContainer
       
       // Contextual information for the interceptors
       invocation.setInvocationContext(context);
-      
+      invocation.setId(context.getCacheId());
       invocation.setObjectName(context.getObjectName());
       invocation.setMethod(m);
       invocation.setArguments(args);
