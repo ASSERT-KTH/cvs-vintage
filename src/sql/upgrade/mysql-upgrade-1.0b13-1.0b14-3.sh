@@ -49,14 +49,11 @@ if [ "${usage}" ] ; then
     echo
     echo "This MySQL specific script does the following:"
     echo 
-    echo "   1) Gets a list of deleted issue types"
-    echo "   2) Deletes the entries from SCARAB_R_MODULE_ISSUE_TYPES,
-                SCARAB_R_MODULE_ATTRIBUTES, and SCARAB_R_MODULE_OPTIONS
-                with ths issue type"
-    echo "   3) Gets a list of deleted attributes"
-    echo "   4) Deletes the deleted attributes from the SCARAB_R_MODULE_ATTRIBUTE table"
-    echo "   5) Gets a list of options who's attributes have been deleted"
-    echo "   6) Deletes the options from the SCARAB_R_MODULE_OPTION table"
+    echo "   1) Gets a list of template issue types (i.e., issue types
+                where the parent id is not 0)."
+    echo "   2) Deletes the entries for these issue types from the
+                SCARAB_R_MODULE_ISSUE_TYPE table, as these mappings 
+                are unnecessary."
     echo
     echo
     echo "Usage:"
