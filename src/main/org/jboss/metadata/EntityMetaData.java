@@ -19,7 +19,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -104,7 +104,7 @@ public class EntityMetaData extends BeanMetaData {
 
    public String getDefaultConfigurationName() {
       if (isCMP()) {
-         if(isCMP2x()) {
+         if(getApplicationMetaData().isEJB2x()) {
             return ConfigurationMetaData.CMP_2x_13;
          } else {
             return ConfigurationMetaData.CMP_1x_13;
@@ -156,9 +156,7 @@ public class EntityMetaData extends BeanMetaData {
          }
  
          // abstract-schema-name
-         if(isCMP2x()) {
-            abstractSchemaName = getElementContent(getUniqueChild(element, "abstract-schema-name"));
-         }
+         abstractSchemaName = getOptionalChildContent(element, "abstract-schema-name");
 
          // cmp-fields
          Iterator iterator = getChildrenByTagName(element, "cmp-field");
@@ -174,16 +172,14 @@ public class EntityMetaData extends BeanMetaData {
          }
 
          // queries
-         if(isCMP2x()) {
-            iterator = getChildrenByTagName(element, "query");
-            while (iterator.hasNext()) {
-               Element queryElement = (Element) iterator.next();
+         iterator = getChildrenByTagName(element, "query");
+         while (iterator.hasNext()) {
+            Element queryElement = (Element) iterator.next();
 
-               QueryMetaData queryMetaData = new QueryMetaData();
-               queryMetaData.importEjbJarXml(queryElement);
+            QueryMetaData queryMetaData = new QueryMetaData();
+            queryMetaData.importEjbJarXml(queryElement);
 
-               queries.add(queryMetaData);
-            }
+            queries.add(queryMetaData);
          }
       }
    }
