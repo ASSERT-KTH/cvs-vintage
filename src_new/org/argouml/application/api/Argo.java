@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.30 2003/12/02 07:00:37 jhraigniac Exp $
+// $Id: Argo.java,v 1.31 2003/12/16 23:17:12 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,6 +207,11 @@ public class Argo
     public static final ConfigurationKey KEY_USER_FULLNAME =
 	Configuration.makeKey("user", "fullname");
 
+    /** Key for user java reverse engineering classpath
+     */
+    public static final ConfigurationKey KEY_USER_IMPORT_CLASSPATH =
+	Configuration.makeKey("import", "clazzpath");
+    
     /** Standard definition of the logging category for the console.
      */
     public static final String CONSOLE_LOG = "argo.console.log";

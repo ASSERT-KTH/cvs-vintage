@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.17 2003/08/26 17:42:22 linus Exp $
+// $Id: PackageContext.java,v 1.18 2003/12/16 23:17:12 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@
 package org.argouml.uml.reveng.java;
 
 import org.argouml.uml.*;
+import org.argouml.uml.reveng.ImportClassLoader;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -64,17 +65,18 @@ class PackageContext extends Context
         Object mInterface = ModelFacade.lookupIn(mPackage, name);
 
         if (mInterface == null) {
+		Class classifier;
 	    // Try to find it via the classpath
 	    try {
-		Class classifier;
 
 		// Special case for model
 		if (ModelFacade.isAModel(mPackage)) {
 		    classifier = Class.forName(name);
 		}
 		else {
+                    String clazzName = javaName + "." + name;
 		    classifier =
-			Class.forName(javaName + "." + name);
+			Class.forName(clazzName);
 		}
 		if (classifier.isInterface()) {
 		    mInterface =
@@ -85,6 +87,26 @@ class PackageContext extends Context
 	    }
 	    catch (ClassNotFoundException e) {
 		// We didn't find any interface
+                // try USER classpath
+                try{
+                    // Special case for model
+                    if (ModelFacade.isAModel(mPackage)) {
+                        classifier = ImportClassLoader.getInstance().loadClass(name);
+                    }
+                    else {
+                        String clazzName = javaName + "." + name;
+                        classifier = ImportClassLoader.getInstance().loadClass(clazzName);
+                    }
+		if (classifier.isInterface()) {
+		    mInterface =
+			UmlFactory.getFactory().getCore().buildInterface(name, mPackage);
+		    ModelFacade.setTaggedValue(mInterface, MMUtil.GENERATED_TAG,
+					       "yes");
+		}
+                }
+                catch (Exception e1) {
+                    int i=0;
+                }
 	    }
 	}
 	if (mInterface == null && context != null) {
@@ -114,17 +136,18 @@ class PackageContext extends Context
 	Object mClassifier = ModelFacade.lookupIn(mPackage, name);
 
 	if (mClassifier == null) {
+		Class classifier;
 	    // Try to find it via the classpath
 	    try {
-		Class classifier;
 
 		// Special case for model
 		if (ModelFacade.isAModel(mPackage)) {
 		    classifier = Class.forName(name);
 		}
 		else {
+                    String clazzName = javaName + "." + name;
 		    classifier =
-			Class.forName(javaName + "." + name);
+			Class.forName(clazzName);
 		}
 		if (classifier.isInterface()) {
 		    mClassifier =
@@ -142,7 +165,35 @@ class PackageContext extends Context
 	    }
 	    catch (ClassNotFoundException e) {
 		// No class or interface found
-	    }
+                // try USER classpath
+                
+                try {
+                    // Special case for model
+                    if (ModelFacade.isAModel(mPackage)) {
+                        classifier = ImportClassLoader.getInstance().loadClass(name);
+                    }
+                    else {
+                        String clazzName = javaName + "." + name;
+                        classifier = ImportClassLoader.getInstance().loadClass(clazzName);
+                    }
+		if (classifier.isInterface()) {
+		    mClassifier =
+			UmlFactory.getFactory().getCore()
+			.buildInterface(name, mPackage);
+		}
+		else {
+		    mClassifier =
+			UmlFactory.getFactory().getCore()
+			.buildClass(name, mPackage);
+		}
+		ModelFacade.setTaggedValue(mClassifier,
+					   MMUtil.GENERATED_TAG,
+					   "yes");
+                }
+                catch (Exception e1) {
+                    int i=0;
+                }
+            }
 	}
 	if (mClassifier == null) {
 	    // Continue the search through the rest of the model

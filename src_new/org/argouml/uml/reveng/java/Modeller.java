@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.84 2003/12/14 17:16:56 alexb Exp $
+// $Id: Modeller.java,v 1.85 2003/12/16 23:17:12 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -451,6 +451,9 @@ public class Modeller
         catch (ClassifierNotFoundException e) {
             // Must add it anyway, or the class poping will mismatch.
             addClass(name, (short) 0, null, new Vector(), "");
+            cat.warn("Modeller.java: an anonymous class was created\n" +
+                     "although it could not be found in the classpath.\n" +
+                         "\t" + e);
         }
     }
 
