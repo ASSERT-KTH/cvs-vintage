@@ -97,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.128 2002/06/19 03:00:29 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.129 2002/07/08 18:11:15 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -545,8 +545,8 @@ public class ReportIssue extends RequireLoginFirstAction
                     scarabR.setConfirmMessage("Your comment has been added.");
                     // if there was only one duplicate issue and we just added
                     // a note to it, assume user is done
-                    String nextTemplate = Turbine.getConfiguration()
-                        .getString("template.homepage", "Index.vm");
+                    String nextTemplate = 
+                        ((ScarabUser)data.getUser()).getHomePage();
                     if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                     {
                         cleanup(data, context);
@@ -590,8 +590,8 @@ public class ReportIssue extends RequireLoginFirstAction
                      + " has been accepted.");
                 // if there was only one duplicate issue and the user just
                 // voted for it, assume user is done
-                String nextTemplate = Turbine.getConfiguration()
-                    .getString("template.homepage", "Index.vm");
+                String nextTemplate = 
+                    ((ScarabUser)data.getUser()).getHomePage();
                 if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                 {
                     cleanup(data, context);

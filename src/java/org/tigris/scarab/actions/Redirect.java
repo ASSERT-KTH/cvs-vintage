@@ -47,11 +47,11 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 // Scarab Stuff
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
@@ -60,14 +60,13 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * and redirect to the defined template.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Redirect.java,v 1.2 2002/01/18 22:26:03 jon Exp $
+ * @version $Id: Redirect.java,v 1.3 2002/07/08 18:11:15 jmcnally Exp $
  */
 public class Redirect extends RequireLoginFirstAction
 {
     /**
      * This will redirect to whatever NEXT_TEMPLATE is
-     * set to be. If that isn't set, it goes to template.homepage
-     * and then finally to Index.vm
+     * set to be. If that isn't set, it goes to the user's homepage
      */
     public void doRedirect(RunData data, TemplateContext context)
         throws Exception
@@ -75,8 +74,7 @@ public class Redirect extends RequireLoginFirstAction
         // set the next template
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, 
-            Turbine.getConfiguration()
-                       .getString("template.homepage", "Index.vm"));
+                       ((ScarabUser)data.getUser()).getHomePage() );
 
         setTarget(data, nextTemplate);
     }
