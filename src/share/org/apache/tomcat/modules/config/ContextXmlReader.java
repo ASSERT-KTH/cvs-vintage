@@ -101,9 +101,10 @@ public class ContextXmlReader extends BaseInterceptor {
     public void engineInit(ContextManager cm)
 	throws TomcatException
     {
+        configFile=(String)cm.getNote("configFile");
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
-	// use the same tags for context-local modules 
+	// use the same tags for context-local modules
 	ServerXmlReader.setTagRules( xh );
 	ServerXmlReader.addDefaultTags(cm, xh);
 	setContextRules( xh );
@@ -114,9 +115,8 @@ public class ContextXmlReader extends BaseInterceptor {
 	if (configFile == null)
 	    configFile=DEFAULT_CONFIG;
 
-	if( configFile.startsWith( "/" ) ) 
-	    f=new File(configFile);
-	else
+        f=new File(configFile);
+	if( !f.isAbsolute())
 	    f=new File( cm.getHome(), "/" + configFile);
 
 	if( f.exists() )

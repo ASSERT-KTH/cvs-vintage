@@ -82,6 +82,7 @@ import org.xml.sax.*;
  * @author Costin Manolache
  */
 public class ServerXmlReader extends BaseInterceptor {
+    int configFileNote;
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
@@ -90,7 +91,7 @@ public class ServerXmlReader extends BaseInterceptor {
     }
 
     // -------------------- Properties --------------------
-    String configFile=null;   
+    String configFile=null;
     static final String DEFAULT_CONFIG="conf/server.xml";
 
     public void setConfig( String s ) {
@@ -101,7 +102,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	System.getProperties().put("tomcat.home", h);
     }
 
-    // -------------------- Hooks -------------------- 
+    // -------------------- Hooks --------------------
 
     /** When this module is added, it'll automatically load
      *  a configuration file and add all global modules.
@@ -111,14 +112,13 @@ public class ServerXmlReader extends BaseInterceptor {
 	throws TomcatException
     {
 	if( this != module ) return;
-
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
 	xh.addRule( "ContextManager", xh.setProperties() );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
 	setBackward( xh );
-	
+
 	// load the config file(s)
 	File f  = null;
 	if (configFile == null)
@@ -129,14 +129,17 @@ public class ServerXmlReader extends BaseInterceptor {
 	    f=new File( cm.getHome(), File.separator + configFile);
 
 	if( f.exists() ){
+            cm.setNote( "configFile", f.getAbsolutePath());
 	    loadConfigFile(xh,f,cm);
             // load server-*.xml
-            Vector v = getUserConfigFiles(f);
+/*            Vector v = getUserConfigFiles(f);
             for (Enumeration e = v.elements();
                  e.hasMoreElements() ; ) {
                 f = (File)e.nextElement();
                 loadConfigFile(xh,f,cm);
+
             }
+*/
         }
     }
 
@@ -154,7 +157,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	}
 	cm.log(sm.getString("tomcat.loaded") + " " + f);
     }
-    
+
     public static void setTagRules( XmlMapper xh ) {
 	xh.addRule( "module",  new XmlAction() {
 		public void end(SaxContext ctx ) throws Exception {
@@ -169,20 +172,21 @@ public class ServerXmlReader extends BaseInterceptor {
 	    });
     }
 
-    // read modules.xml, if any, and load taskdefs 
+    // read modules.xml, if any, and load taskdefs
     public static  void addDefaultTags( ContextManager cm, XmlMapper xh)
 	throws TomcatException
     {
 	File f=new File( cm.getHome(), "/conf/modules.xml");
 	if( f.exists() ) {
+            cm.setNote( "configFile", f.getAbsoluteFile());
 	    loadConfigFile( xh, f, cm );
-	}
-	// load server-*.xml
-	Vector v = getUserConfigFiles(f);
-	for (Enumeration e = v.elements();
-	     e.hasMoreElements() ; ) {
-	    f = (File)e.nextElement();
-	    loadConfigFile(xh,f,cm);
+            // load module-*.xml
+            Vector v = getUserConfigFiles(f);
+            for (Enumeration e = v.elements();
+                 e.hasMoreElements() ; ) {
+                f = (File)e.nextElement();
+                loadConfigFile(xh,f,cm);
+            }
 	}
     }
 
@@ -196,7 +200,7 @@ public class ServerXmlReader extends BaseInterceptor {
 		    xh.addChild( "addInterceptor",
 				 "org.apache.tomcat.core.BaseInterceptor"));
     }
-    
+
 
     // -------------------- File utils --------------------
 
@@ -206,8 +210,8 @@ public class ServerXmlReader extends BaseInterceptor {
 	String[] names = dir.list();
 
 	String masterName=master.getAbsolutePath();
-	
-	String base=FileUtil.getBase( masterName ) + "-";
+
+	String base=FileUtil.getBase(masterName) + "-";
 	String ext=FileUtil.getExtension( masterName );
 	
 	Vector v = new Vector();
@@ -222,7 +226,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	return v;
     }
 
-    // -------------------- Backward compatibility -------------------- 
+    // -------------------- Backward compatibility --------------------
 
     // Read old configuration formats
     private void setBackward( XmlMapper xh ) {
