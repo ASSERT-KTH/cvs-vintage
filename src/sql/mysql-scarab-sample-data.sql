@@ -111,7 +111,7 @@ AND TURBINE_ROLE.ROLE_NAME = 'Developer';
  * Sample Issues
  */
 
-insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (1, 5, 'PACD', 1);
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT, CREATED_BY) values (1, 5, 'PACD', 1,5);
 
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 1, 'Documents are not as current as they should be.');
@@ -132,15 +132,9 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 /* severity is major */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (9, 1, 9, 66, 'major');
 
-/* sample data for activities and attachments for this issue */
-insert into  SCARAB_ACTIVITY values (1, 4, 1, 1, 8,9);
-insert into SCARAB_TRANSACTION values (1, 2, "2001-05-21");
-insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (1, 1, 2, "updated the docs", ".txt", "2001-06-01", "2001-05-05");
-insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_name, attachment_mime_type, modified_date, created_date) values (3, 1, 3, "http://www.collab.net", "project url", ".txt", "2001-06-01", "2001-05-05");
 
 
-
-insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (2, 2, 'PACS', 1);
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT, CREATED_BY) values (2, 2, 'PACS', 1, 5);
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (10, 2, 1, 'Items do not display correctly.');
 /* summary */
@@ -160,10 +154,6 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 /* severity is major */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (18, 2, 9, 65, 'normal');
 
-/* sample data for activities and attachments for this issue */
-insert into  SCARAB_ACTIVITY values (2, 9, 2, 2, 65,67);
-insert into SCARAB_TRANSACTION values (2, 3, "2001-05-21");
-insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (2, 2, 2, "changed the priority", ".txt", "2001-06-01", "2001-05-05");
 
 /* make this issue a child issue of issue 1 */
 insert into SCARAB_DEPEND values (1, 2, 3, "No");
