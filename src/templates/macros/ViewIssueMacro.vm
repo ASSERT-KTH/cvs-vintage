@@ -346,7 +346,7 @@
    #if ($canEdit)
    <div class="functnbar3">
       <input type="submit" value="Save" name="eventSubmit_doSubmitcomment" />
-      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT) && $comments)
         &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
       #end
    </div>
