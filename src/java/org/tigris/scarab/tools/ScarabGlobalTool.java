@@ -101,7 +101,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.61 2003/07/22 23:27:16 dlr Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.62 2003/12/20 13:38:35 pledbrook Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -600,13 +600,34 @@ public class ScarabGlobalTool
         }
         return result;
     }
-
+    
     public SkipFiltering getCommentText(String text, ScarabLink link, Module currentModule)
+    {
+        return this.textToHTML(text, link, currentModule);
+    }
+    
+    /**
+     * <p>Converts a text string to HTML by:</p>
+     * <ul>
+     *   <li>replacing reserved characters with equivalent HTML entities</li>
+     *   <li>adding hyperlinks for URLs</li>
+     *   <li>adding hyperlinks for issue references</li>
+     * </ul>
+     * @param text The text string to convert.
+     * @param link 
+     * @param currentModule The active module.
+     * @return A SkipFiltering object which contains the generated HTML. 
+     */
+    public SkipFiltering textToHTML(String text,
+                                    ScarabLink link,
+                                    Module currentModule)
     {
         SkipFiltering sf = null;
         try
         {
-            sf = new SimpleSkipFiltering(ScarabUtil.linkifyText(text, link, currentModule));
+            sf = new SimpleSkipFiltering(ScarabUtil.linkifyText(text,
+                                                                link,
+                                                                currentModule));
         }
         catch (Exception e)
         {

@@ -22,7 +22,8 @@
      </td>
      <td>$act.Description</td>
 
-     <td>$scarabR.getActivityReason($activitySet, $act)
+     #set ($reason = $scarabR.getActivityReason($activitySet, $act).toString())
+     <td>$!scarabG.textToHTML($reason, $link, $scarabR.CurrentModule)
      </td>
      <td>
      #set ($user = $scarabR.getUser($activitySet.CreatedBy))
