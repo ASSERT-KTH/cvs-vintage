@@ -19,7 +19,7 @@
 // File: PathConv.java
 // Classes: PathConv
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConv.java,v 1.3 1998/04/13 18:46:08 abonner Exp $
+// $Id: PathConv.java,v 1.4 1998/04/13 22:30:27 abonner Exp $
 
 package uci.gef;
 
@@ -56,8 +56,8 @@ public abstract class PathConv
     double a = offset / Math.sqrt(recipnumerator * recipnumerator+ recipdenominator * recipdenominator);
     Point newPoint = new Point((int) (recipdenominator * a), (int) (recipnumerator * a));
 
-    System.out.println("p1=" + p1 + " p2=" + p2 + " off=" + offset);
-    System.out.println("a=" + a + " rn=" + recipnumerator + " rd=" + recipdenominator + " nP=" + newPoint);
+    //System.out.println("p1=" + p1 + " p2=" + p2 + " off=" + offset);
+    //System.out.println("a=" + a + " rn=" + recipnumerator + " rd=" + recipdenominator + " nP=" + newPoint);
 
     return newPoint;
   }
