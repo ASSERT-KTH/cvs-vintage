@@ -47,24 +47,26 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.test.BaseScarabTestCase;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * A Testing Suite for the om.Query class.
- *
- * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupTest.java,v 1.12 2004/04/07 20:12:22 dep4b Exp $
+ * 
+ * @author <a href="mailto:elicia@collab.net">Elicia David </a>
+ * @version $Id: AttributeGroupTest.java,v 1.13 2004/11/23 08:34:39 dep4b Exp $
  */
-public class AttributeGroupTest extends BaseScarabOMTestCase
-{
+public class AttributeGroupTest extends BaseScarabTestCase {
     private AttributeGroup group = null;
+
     private Attribute severity = null;
+
     private Attribute desc = null;
 
-    public void setUp() throws Exception
-    {
+    private ScarabUser user2;
+
+    public void setUp() throws Exception {
         super.setUp();
         severity = AttributeManager.getInstance(new NumberKey("9"));
         desc = AttributeManager.getInstance(new NumberKey("1"));
@@ -74,10 +76,10 @@ public class AttributeGroupTest extends BaseScarabOMTestCase
 
     /**
      * I think we are screwing up other tests..
+     * 
      * @throws Exception
      */
-    public void testDeleteAddAttribute() throws Exception
-    {
+    public void OFFtestDeleteAddAttribute() throws Exception {
 
         Attribute test = severity.copyAttribute(getUser1());
         test.save();
@@ -85,47 +87,47 @@ public class AttributeGroupTest extends BaseScarabOMTestCase
         int numberOfAttributes = group.getAttributes().size();
         group.addAttribute(test);
         assertEquals(numberOfAttributes + 1, group.getAttributes().size());
-        try
-        {
+        try {
             group.deleteAttribute(test, getUser1(), getModule());
             fail("User 1 doesn't have permissions to delete attributes.");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             assertTrue(e instanceof ScarabException);
         }
         group.deleteAttribute(test, getUser2(), getModule());
         assertEquals(numberOfAttributes, group.getAttributes().size());
     }
 
-    public void testGetAttributes() throws Exception
-    {
+    protected ScarabUser getUser2() throws Exception {
+        if (user2 == null) {
+            user2 = ScarabUserManager.getInstance(new NumberKey(2), false);
+        }
+        return user2;
+    }
+
+    public void testGetAttributes() throws Exception {
         System.out.println("\ntestGetAttributes()");
         assertTrue(group.getAttributes().size() > 0);
     }
 
-    public void testGetRAttributeAttributeGroup() throws Exception
-    {
+    public void testGetRAttributeAttributeGroup() throws Exception {
 
-        assertEquals(
-            new Integer(9),
-            group.getRAttributeAttributeGroup(severity).getAttributeId());
+        assertEquals(new Integer(9), group.getRAttributeAttributeGroup(severity).getAttributeId());
     }
 
     /**
-     * Can't see to get to work.  I can delete the group, but that messes up other
-     * units tests!  I can't seem to create and then delete a new group.  I get this error:
-     * "Error accessing dedupe sequence for issue type '{org.tigris.scarab.om.IssueType@1f: name=Defect}'"
+     * Can't see to get to work. I can delete the group, but that messes up
+     * other units tests! I can't seem to create and then delete a new group. I
+     * get this error: "Error accessing dedupe sequence for issue type
+     * '{org.tigris.scarab.om.IssueType@1f: name=Defect}'"
+     * 
      * @throws Exception
      */
-    public void testDelete() throws Exception
-    {
+    public void testDelete() throws Exception {
         System.out.println("\ntestDelete()");
         AttributeGroup newGroup = group.copyGroup();
         newGroup.setIssueType(group.getIssueType());
         newGroup.save();
-        assertFalse(
-            newGroup.getAttributeGroupId().equals(group.getAttributeGroupId()));
+        assertFalse(newGroup.getAttributeGroupId().equals(group.getAttributeGroupId()));
 
         newGroup.delete();
         ScarabCache.clear();

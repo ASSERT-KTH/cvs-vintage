@@ -47,21 +47,23 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
 
 /**
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.8 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: ActivitySetTest.java,v 1.9 2004/11/23 08:34:39 dep4b Exp $
  */
-public class ActivitySetTest extends BaseScarabOMTestCase
+public class ActivitySetTest extends BaseScarabTestCase
 {
-     private ActivitySet trans = null;
+    private ActivitySet trans = null;
 
 
-    public void testCreate() throws Exception
-    {
+    public void testCreate() throws Exception {
+        
+        Issue issue2 =  BaseIssuePeer.retrieveByPK(new NumberKey("1"));
+        assertNotNull(issue2);
         System.out.println("\ntestCreate()");
         Issue issue = IssueManager.getInstance(new NumberKey("1"));
         Attachment attachment = AttachmentManager.getInstance();
@@ -69,27 +71,21 @@ public class ActivitySetTest extends BaseScarabOMTestCase
         attachment.setData("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
-        
-        trans = ActivitySetManager
-            .getInstance(new Integer(1), getUser1(), attachment);
+
+        trans = ActivitySetManager.getInstance(new Integer(1), getUser1(), attachment);
         trans.save();
         System.out.println("new activitySet id = " + trans.getActivitySetId());
 
         // Create some activities
-        Activity activity = ActivityManager
-            .createTextActivity(getIssue0(), null,
-            trans,"trans activity",null,
-            "oldValue", "newValue");
+        Activity activity = ActivityManager.createTextActivity(getIssue0(), null, trans, "trans activity", null,
+                "oldValue", "newValue");
         activity.save();
-        Activity activity1 = ActivityManager
-            .createTextActivity(getIssue0(), null,
-            trans,"trans activity",null,
-            "oldValue", "newValue");
+        Activity activity1 = ActivityManager.createTextActivity(getIssue0(), null, trans, "trans activity", null,
+                "oldValue", "newValue");
         activity1.save();
     }
 
-    public void testGetActivityList() throws Exception
-    {
+    public void testGetActivityList() throws Exception {
         testCreate();
         System.out.println("\ntestGetActivityList()");
         assertEquals(2, trans.getActivityList().size());

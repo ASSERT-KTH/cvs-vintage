@@ -50,15 +50,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
 
 /**
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeOptionTest.java,v 1.7 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: AttributeOptionTest.java,v 1.8 2004/11/23 08:34:39 dep4b Exp $
  */
-public class AttributeOptionTest extends BaseScarabOMTestCase
+public class AttributeOptionTest extends BaseScarabTestCase
 {
 	private AttributeOption ao;
 	
@@ -89,9 +89,9 @@ public class AttributeOptionTest extends BaseScarabOMTestCase
         assertEquals("BSDI", ((AttributeOption)ao.getChildren().get(0)).getName());
         assertEquals("AIX", ((AttributeOption)ao.getChildren().get(1)).getName());
         assertEquals("BeOS", ((AttributeOption)ao.getChildren().get(2)).getName());
-        assertEquals("HP-UX", ((AttributeOption)ao.getChildren().get(3)).getName());
+        assertEquals("HPUX", ((AttributeOption)ao.getChildren().get(3)).getName());
         assertEquals("IRIX", ((AttributeOption)ao.getChildren().get(4)).getName());
-        assertEquals("OSF/1", ((AttributeOption)ao.getChildren().get(5)).getName());
+        assertEquals("OSF1", ((AttributeOption)ao.getChildren().get(5)).getName());
         assertEquals("Solaris", ((AttributeOption)ao.getChildren().get(6)).getName());
         assertEquals("SunOS", ((AttributeOption)ao.getChildren().get(7)).getName());
     }
@@ -266,9 +266,9 @@ public class AttributeOptionTest extends BaseScarabOMTestCase
         }
         assertEquals("SunOS", ((AttributeOption)(descendants.get(0))).getName());
         assertEquals("Solaris", ((AttributeOption)(descendants.get(1))).getName());
-        assertEquals("OSF/1", ((AttributeOption)(descendants.get(2))).getName());
+        assertEquals("OSF1", ((AttributeOption)(descendants.get(2))).getName());
         assertEquals("IRIX", ((AttributeOption)(descendants.get(3))).getName());
-        assertEquals("HP-UX", ((AttributeOption)(descendants.get(4))).getName());
+        assertEquals("HPUX", ((AttributeOption)(descendants.get(4))).getName());
         assertEquals("BeOS", ((AttributeOption)(descendants.get(5))).getName());
         assertEquals("AIX", ((AttributeOption)(descendants.get(6))).getName());
         assertEquals("BSDI", ((AttributeOption)(descendants.get(7))).getName());

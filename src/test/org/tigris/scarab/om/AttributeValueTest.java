@@ -47,16 +47,15 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.15 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: AttributeValueTest.java,v 1.16 2004/11/23 08:34:39 dep4b Exp $
  */
-public class AttributeValueTest extends BaseScarabOMTestCase
+public class AttributeValueTest extends BaseScarabTestCase
 {
     private AttributeValue attVal = null;
     private AttributeValue attVal2 = null;
@@ -149,5 +148,12 @@ public class AttributeValueTest extends BaseScarabOMTestCase
     {
         System.out.println("\ntestGetAttributeOption()");
         System.out.println("get att opt = " + newAttVal.getAttributeOption());
+    }
+    
+    protected ScarabUser getUser1()
+    throws Exception
+    {
+         return ScarabUserManager.getInstance(new NumberKey(1), false);
+        
     }
 }

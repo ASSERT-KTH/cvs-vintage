@@ -48,22 +48,20 @@ package org.tigris.scarab.om;
 
 import java.io.File;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 
 /**
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.19 2004/11/23 08:34:39 dep4b Exp $
+ * @version $Id: AttachmentTest2.java,v 1.1 2004/11/23 08:34:39 dep4b Exp $
  */
-public class AttachmentTest extends BaseScarabTestCase
+public class AttachmentTest2 extends BaseScarabOMTestCase
 {
     private Attachment comment = null;
     private Attachment fileAttachment = null;
@@ -77,22 +75,6 @@ public class AttachmentTest extends BaseScarabTestCase
     	
     }
 
-
-    public void testSaveComment() throws Exception
-    {
-        // save comment
-        comment.setName("comment");
-        comment.setData("Test comment");
-        comment.setTextFields(getUser1(),issue, Attachment.COMMENT__PK);
-        comment.save();
-
-        //
-        // Make sure the comment was persisted correctly.
-        //
-        Attachment comment2 = AttachmentManager.getInstance(comment.getAttachmentId());
-        assertEquals(comment2.getName(), comment.getName());
-
-    }
 
     public void saveFile() throws Exception
     {
@@ -120,15 +102,15 @@ public class AttachmentTest extends BaseScarabTestCase
     public void testGetRepositoryDirectory() throws Exception
     {
         
-        Configuration c = new BaseConfiguration();
-        c.addProperty("scarab.attachments.repository","WEB-INF/attachements");
-        Attachment.setConfiguration(c);
+        //Configuration c = new BaseConfiguration();
+        //c.addProperty("scarab.attachments.repository","WEB-INF/attachements");
+        //Attachment.setConfiguration(c);
         String control = new String("WEB-INF" + File.separator + "attachments");
         File testPath = new File(Attachment.getRepositoryDirectory());
         assertTrue("testpath was:" + testPath.getPath(),testPath.getPath().endsWith(control));
     }
 
-    public void testGetRelativePath() throws Exception
+    public void OFFtestGetRelativePath() throws Exception
     {
         saveFile();
         File control = new File("mod" + issue.getModuleId().toString() 
@@ -140,30 +122,12 @@ public class AttachmentTest extends BaseScarabTestCase
         assertEquals(control.getPath(), testPath.getPath());
     }
 
-    public void testGetFullPath() throws Exception
+    public void OFFtestGetFullPath() throws Exception
     {
         saveFile();
         File control = new File(fileAttachment.getFullPath());
         File testPath = new File(Attachment.getRepositoryDirectory(),
                                  fileAttachment.getRelativePath());
         assertEquals(control.getPath(), testPath.getPath());
-    }
-
-    public void testSaveUrl() throws Exception
-    {
-        // save comment
-        Attachment url = AttachmentManager.getInstance();
-        url.setIssue(issue);
-        url.setTypeId(AttachmentTypePeer.URL_PK);
-        url.setMimeType("");
-        url.setName("foo");
-        url.setData("www.foo.com");
-        url.save();
-        assertEquals(url.getName(),"foo");
-        assertEquals(url.getData(),"http://www.foo.com");
-
-        url.setData("mailto:admin@foo.com");
-        url.save();
-        assertEquals(url.getData(),"mailto:admin@foo.com");
     }
 }

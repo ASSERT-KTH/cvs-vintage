@@ -47,66 +47,68 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
 
 /**
  * A Testing Suite for the om.Activity class.
- *
- * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.12 2004/04/07 20:12:22 dep4b Exp $
+ * 
+ * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney </a>
+ * @version $Id: ActivityTest.java,v 1.13 2004/11/23 08:34:39 dep4b Exp $
  */
-public class ActivityTest extends BaseScarabOMTestCase
-{
+public class ActivityTest extends BaseScarabTestCase {
 
-    public void testCreateLong() throws Exception
-    {
+    public void testCreateLong() throws Exception {
         System.out.println("\ntestCreateLong()");
         ActivitySet trans = getEditActivitySet();
-        Activity activity = ActivityManager
-            .createNumericActivity(getIssue0(), getPlatformAttribute(),
-                                   trans,"new activity long create", null, 
-                                   new Integer(5), new Integer(6));
+        Activity activity = ActivityManager.createNumericActivity(getIssue0(), getPlatformAttribute(), trans,
+                "new activity long create", null, new Integer(5), new Integer(6));
         activity.save();
         ActivitySet newtrans = activity.getActivitySet();
-        assertEquals("getActivitySet expected: " + trans.getActivitySetId() +
-        " got: " + newtrans.getActivitySetId(),
-        trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
-        Activity retActivity = ActivityManager
-            .getInstance(activity.getActivityId(), false);
+        assertEquals("getActivitySet expected: " + trans.getActivitySetId() + " got: " + newtrans.getActivitySetId(),
+                trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
+        Activity retActivity = ActivityManager.getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());
         assertEquals("NewValue", activity.getNewValue(), retActivity.getNewValue());
         assertEquals("Attribute", activity.getAttribute(), retActivity.getAttribute());
     }
 
-    public void testCreateShort() throws Exception
-    {
+    public void testCreateShort() throws Exception {
         System.out.println("\ntestCreateShort()");
         ActivitySet trans = getEditActivitySet();
 
-        Activity activity = ActivityManager
-            .createTextActivity(getIssue0(), getPlatformAttribute(),
-            trans,"new activity long create",null,
-            "oldValue", "newValue");
+        Activity activity = ActivityManager.createTextActivity(getIssue0(), getPlatformAttribute(), trans,
+                "new activity long create", null, "oldValue", "newValue");
         activity.save();
 
         ActivitySet newtrans = activity.getActivitySet();
-        assertEquals("getActivitySet expected: " + trans.getActivitySetId() +
-        " got: " + newtrans.getActivitySetId(),
-        trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
-        Activity retActivity = ActivityManager
-            .getInstance(activity.getActivityId(), false);
+        assertEquals("getActivitySet expected: " + trans.getActivitySetId() + " got: " + newtrans.getActivitySetId(),
+                trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
+        Activity retActivity = ActivityManager.getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());
         assertEquals("NewValue", activity.getNewValue(), retActivity.getNewValue());
         assertEquals("Attribute", activity.getAttribute(), retActivity.getAttribute());
     }
 
-    public void testGetAttribute() throws Exception
-    {
+    public void testGetAttribute() throws Exception {
         System.out.println("\ntestGetAttribute()");
-        Activity retActivity = ActivityManager
-            .getInstance(new NumberKey(1), false);
+        Activity retActivity = ActivityManager.getInstance(new NumberKey(1), false);
         Integer key = retActivity.getAttribute().getAttributeId();
-        assertTrue("AttId expected: 11 got: " + key, 
-                   key.intValue() == 11);
+        assertTrue("AttId expected: 11 got: " + key, key.intValue() == 11);
+    }
+
+    protected ActivitySet getEditActivitySet() throws Exception {
+        Attachment attach = new Attachment();
+        attach.setTextFields(getUser1(), getIssue0(), Attachment.MODIFICATION__PK);
+        attach.setName("commenttest");
+        attach.save();
+
+        ActivitySet trans = ActivitySetManager.getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
+        trans.save();
+        return trans;
+    }
+
+    protected Attribute getPlatformAttribute() throws Exception {
+
+        return AttributeManager.getInstance(new NumberKey(5));
     }
 }

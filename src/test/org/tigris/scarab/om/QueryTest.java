@@ -49,17 +49,19 @@ package org.tigris.scarab.om;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.TorqueException;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
+import org.tigris.scarab.test.mocks.MockFulcrumServiceManager;
 import org.tigris.scarab.util.ScarabException;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.17 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: QueryTest.java,v 1.18 2004/11/23 08:34:39 dep4b Exp $
  */
-public class QueryTest extends BaseScarabOMTestCase
+public class QueryTest extends BaseScarabTestCase
 {
     private Query query = null;
     private Query query1 = null;
@@ -141,7 +143,7 @@ public class QueryTest extends BaseScarabOMTestCase
         query1.setDescription("Description for test query 2");
         query1.setModuleId(getModule().getModuleId());
         query1.setIssueType(getDefaultIssueType());
-        query1.setScopeId(new Integer(1));
+        query1.setScopeId(Scope.PERSONAL__PK);
         query1.saveAndSendEmail(getUser1(), getModule(), null);
         //
         // Make sure the query was persisted correctly.
@@ -149,8 +151,31 @@ public class QueryTest extends BaseScarabOMTestCase
         Query retQuery = QueryManager.getInstance(query1.getQueryId(), false);
         assertEquals(query1.getName(), retQuery.getName());
         assertEquals(query1.getValue(), retQuery.getValue());
+        assertEquals(query1.getScope(), retQuery.getScope());
 
     }
+    
+    public void testSaveOnlyWithModuleScope() throws Exception
+    {
+        
+        System.out.println("\ntestSaveAndSendEmail()");
+        query1.setUserId(new Integer(1));
+        query1.setName("Test query 2");
+        query1.setValue("&searchId=2&searchisp=asc");
+        query1.setDescription("Description for test query 2");
+        query1.setModuleId(getModule().getModuleId());
+        query1.setIssueType(getDefaultIssueType());
+        query1.setScopeId(Scope.MODULE__PK);
+        query1.save();
+        //
+        // Make sure the query was persisted correctly.
+        //
+        Query retQuery = QueryManager.getInstance(query1.getQueryId(), false);
+        assertEquals(query1.getName(), retQuery.getName());
+        assertEquals(query1.getValue(), retQuery.getValue());
+        assertEquals(query1.getScope(), retQuery.getScope());
+
+    }    
 /*
     public void testGetExecuteLink() throws Exception
     {

@@ -46,36 +46,26 @@ package org.tigris.scarab;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.torque.Torque;
-import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.ActivityManager;
-
-import junit.framework.TestCase;
+import org.apache.fulcrum.testcontainer.BaseUnitTest;
+import org.apache.torque.avalon.Torque;
+import org.apache.torque.avalon.TorqueComponent;
 
 /**
- * Test that we can Start torque.  Simple test for debugging database
+ * Test that we can Start torque as an Avalon Component.  Simple test for debugging database
  * connection issues
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: StartingTorqueTest.java,v 1.3 2004/11/14 21:06:59 dep4b Exp $
+ * @version $Id: StartingTorqueTest.java,v 1.4 2004/11/23 08:35:00 dep4b Exp $
  */
-public class StartingTorqueTest extends TestCase {
+public class StartingTorqueTest extends BaseUnitTest {
 
-	public void testStartingTorque() {
-		try {
-			Configuration config =
-				new PropertiesConfiguration("src/test/TestTurbineResources.properties");
+	public StartingTorqueTest(String arg0) {
+        super(arg0);
+    }
 
-			Torque.init(config);
-			assertTrue(Torque.isInit());
-
-			Activity activity = ActivityManager.getInstance(new Long(1));
-			assertNotNull(activity);
-			assertEquals(1,activity.getActivityId().intValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public void testStartingTorque() throws Exception {
+        TorqueComponent torque = (TorqueComponent)lookup(Torque.class.getName());
+        assertNotNull(torque);
+        assertTrue(torque.isInit());
 	}
 }

@@ -47,15 +47,15 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.test.BaseScarabTestCase;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleAttributeTest.java,v 1.7 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: RModuleAttributeTest.java,v 1.8 2004/11/23 08:34:39 dep4b Exp $
  */
-public class RModuleAttributeTest extends BaseScarabOMTestCase
+public class RModuleAttributeTest extends BaseScarabTestCase
 {
     private RModuleAttribute rma = null;
     private Attribute platform = null;
@@ -70,6 +70,7 @@ public class RModuleAttributeTest extends BaseScarabOMTestCase
                                               getDefaultIssueType());
         
     }
+
 
     public void testGetDisplayValue() throws Exception
     {
