@@ -17,7 +17,7 @@ $page.setTitle("Artifact Type Select")
     <td class="firstchild">
        <div>General functions</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-      <input type="submit" value="Add new" name="eventSubmit_doGotoartifactpage" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
@@ -26,9 +26,9 @@ $page.setTitle("Artifact Type Select")
 </div>
 
     <p><strong class="alert">
-    There are no more issue types to add to this module. 
+    There are no more artifact types to add to this module. 
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-    Please click the Add new button to create a new issue type.
+    Please click the Create new button to create a new artifact type.
     #end</strong>
     </p>
 
@@ -39,21 +39,21 @@ $page.setTitle("Artifact Type Select")
     <tr>
     <td class="firstchild">
     <div>Select items to:</div>
-    <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />
+    <input type="submit" value="Add Artifact Type" name="eventSubmit_doSelectissueType" />
     </td>
     
     <td>
     <div>General functions:</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-       <input type="submit" value="Add new" name="eventSubmit_doGotoartifactpage" />
+      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
-    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
     </tr>
     </table>
 </div>
         
-<h3>Issue Types</h3>
+<h3>Artifact Types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -79,15 +79,15 @@ $page.setTitle("Artifact Type Select")
     <tr>
     <td class="firstchild">
     <div>Select items to:</div>
-    <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />
+    <input type="submit" value="Add Artifact Type" name="eventSubmit_doSelectissueType" />
     </td>
     
     <td>
     <div>General functions:</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-       <input type="submit" value="Add new" name="eventSubmit_doGotoartifactpage" />
+       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
-    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
     </tr>
     </table>
