@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compmdl.xml,v 1.4 2003/08/19 00:13:00 linus Exp $ -->
+<!-- $Id: compmdl.xml,v 1.5 2003/08/30 20:04:21 linus Exp $ -->
 
     <sect1 id="model">
       <title>Model</title>
@@ -16,7 +16,14 @@ The Model is located in <classname>org.argouml.model</classname>.
 The Model is a Layer 1 component. See <xref linkend="layer1"></xref>.
 </para>
       <para>
-This is implemented using NSUML to implement the UML model.
+This is currently implemented using NSUML internally to implement 
+the UML model.
+The plan is to replace NSUML with some JMI compliant model instead
+(probably MDR),
+and for that reason
+all interfaces to the Model component using NSUML objects are
+to be replaced by interfaces without NSUML object and
+eventually removed.
 </para>
       <para>
 ArgoUML uses several factories and helperclasses to manipulate the NSUML
