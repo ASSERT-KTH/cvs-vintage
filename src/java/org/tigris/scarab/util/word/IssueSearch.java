@@ -712,15 +712,16 @@ public class IssueSearch
         // get matching issues
         List matchingIssues = IssuePeer.doSelect(crit);
         
-
-        // includes text search
+        // text search can lead to an ordered list according to search engine's
+        // ranking mechanism, so sort the results according to this list
+        // unless another sorting criteria has been specified.
         if ( matchingIssueIds != null ) 
         {
             matchingIssues = 
                 sortByIssueIdList(matchingIssueIds, matchingIssues, 
                                   limitResults);
         }
-        // no text search
+        // no sorting
         else
         {
             int maxIssues = matchingIssues.size();
@@ -753,7 +754,7 @@ public class IssueSearch
         }
 
         for ( int i=0; i<ids.length  
-                  && sortedIssues.size() <= limitResults; i++ ) 
+                  && ( limitResults <= 0 || sortedIssues.size() <= limitResults); i++ ) 
         {
             Object issueObj = issueIdMap.get(ids[i]);
             if (issueObj != null) 
