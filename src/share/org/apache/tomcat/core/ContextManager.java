@@ -541,7 +541,9 @@ public final class ContextManager {
 
 	// The server is configured, all modules are ready
 	setState(STATE_CONFIG);
-
+	log("Tomcat configured and in stable state ");
+	
+	existingI=defaultContainer.getInterceptors();
 	// deal with contexts that were added before init()
 	// ( by user or modules during engineInit )
 
