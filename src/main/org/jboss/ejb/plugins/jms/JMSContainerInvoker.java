@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.45 $
+ * @version   $Revision: 1.46 $
  */
 public class JMSContainerInvoker
    implements EJBProxyFactory
@@ -793,7 +793,7 @@ public class JMSContainerInvoker
          }
 
          // invoke the server to create the destination
-         server.invoke(new ObjectName("jboss.mq", "service", "Server"),
+         server.invoke(new ObjectName("jboss.mq:service=DestinationManager"),
             methodName,
             new Object[] {jndiSuffix},
             new String[] {"java.lang.String"});
