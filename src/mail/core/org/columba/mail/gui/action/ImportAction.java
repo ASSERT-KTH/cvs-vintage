@@ -33,36 +33,25 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ImportAction extends FrameAction implements ActionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ImportAction(AbstractFrameController frameController) {
-		super(frameController,
-			MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "menu_utilities_importmailbox"),
-			MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "menu_utilities_importmailbox"),
-			MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "menu_utilities_importmailbox"),
-			"IMPORT",
-			ImageLoader.getImageIcon("stock_convert-16.png"),
-			null,
-			0,
-			null);
+		super(
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_utilities_importmailbox"));
 
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_utilities_importmailbox"));
+		
+		// action command
+		setActionCommand("IMPORT");
+		
+		// set small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_convert-16.png"));
+		
+		// TODO: Define mnemonic (using &)
+		
 	}
 
 	/* (non-Javadoc)

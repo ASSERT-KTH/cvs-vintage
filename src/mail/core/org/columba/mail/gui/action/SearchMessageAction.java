@@ -33,21 +33,33 @@ import org.columba.mail.util.MailResourceLoader;
 public class SearchMessageAction extends FrameAction {
 
 	public SearchMessageAction(AbstractFrameController controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_searchmessages"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_searchmessages"),
-			"SEARCH_MESSAGE",
-			ImageLoader.getSmallImageIcon("virtualfolder.png"),
-			ImageLoader.getImageIcon("virtualfolder.png"),
-			'S',
-			KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		super(		
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_edit_searchmessages"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_edit_searchmessages"));
+		
+		// action command
+		setActionCommand("SEARCH_MESSAGE");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("virtualfolder.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+
+		// TODO: Use & to define mnemonic
+		setMnemonic('S');
+		
 	}
 
 	/* (non-Javadoc)

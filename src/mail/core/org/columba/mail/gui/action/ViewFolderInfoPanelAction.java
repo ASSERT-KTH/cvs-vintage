@@ -34,6 +34,9 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 	 * @param keyStroke
 	 */
 	public ViewFolderInfoPanelAction(AbstractFrameController frameController) {
+		super(frameController, "FolderInfoPanel");
+		setActionCommand("SHOW_FOLDERINFOPANEL");
+		/*
 		super(
 			frameController,
 			"FolderInfoPanel",
@@ -43,6 +46,7 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 			null,
 			0,
 			null);
+		*/
 
 	}
 

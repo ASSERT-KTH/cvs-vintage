@@ -40,13 +40,13 @@ public class MessageActionListener implements ActionListener
 	{
 		this.messageController = messageController;
 
-		dictAction =
-			new BasicAction(
-				"Dict.org lookup selection...", "Dict lookup selection...", "Look up definition of selection with online dictionary...", "DICT",
-				null,
-				null,
-				'0',
-				null);
+		dictAction = new BasicAction(
+				"Dict.org lookup selection...");
+		
+		dictAction.setTooltipText(
+				"Look up definition of selection with online dictionary...");
+		dictAction.setActionCommand("DICT");
+
 		dictAction.addActionListener(this);
 	}
 

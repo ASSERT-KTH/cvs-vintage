@@ -28,24 +28,23 @@ public class MailAccountAction extends FrameAction {
 
 	public MailAccountAction(AbstractFrameController controller) {
 		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_accountconfig"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_accountconfig"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_accountconfig"),
-			"MAIL_ACCOUNT",
-			ImageLoader.getSmallImageIcon("configure_16_mail.png"),
-			null,
-			0,
-			null);
+				controller,
+				MailResourceLoader.getString(
+					"menu",	"mainframe", "menu_edit_accountconfig"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu",	"mainframe", "menu_edit_accountconfig"));
+		
+		// action command
+		setActionCommand("MAIL_ACCOUNT");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("configure_16_mail.png"));
+
+		// TODO: Define mnemonic (using &)		
+		
 	}
 
 	/* (non-Javadoc)

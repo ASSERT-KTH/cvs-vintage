@@ -26,27 +26,29 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenAction extends FrameAction implements SelectionListener {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public OpenAction(AbstractFrameController frameController) {
-		super(frameController, MailResourceLoader.getString("menu", "mainframe", "attachmentopen"), //$NON-NLS-1$
-		MailResourceLoader.getString("menu", "mainframe", "attachmentopen_tooltip"), //$NON-NLS-1$
-
-		"OPEN", //$NON-NLS-1$
-		ImageLoader.getSmallImageIcon("stock_open.png"), //$NON-NLS-1$
-		ImageLoader.getImageIcon("stock_open.png"), //$NON-NLS-1$
-		0, null);
+		super(
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "attachmentopen"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "attachmentopen_tooltip"));
+		
+		// action command
+		setActionCommand("OPEN");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
+		setLargeIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
 		
 		if ( frameController.getSelectionManager() != null )
-			frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
+			frameController.getSelectionManager().
+					registerSelectionListener(
+						"mail.attachment", 
+						this);
 	}
 
 	/* (non-Javadoc)

@@ -35,24 +35,35 @@ public class ReceiveSendAction extends FrameAction {
 
 	public ReceiveSendAction(AbstractFrameController controller) {
 		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_receivesend"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_receivesend_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_receivesend_tooltip"),
-			"RECEIVESEND",
-			ImageLoader.getSmallImageIcon("send-receive.png"),
-			ImageLoader.getImageIcon("send-24-receive.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
+				controller,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_receivesend"));
+					
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_receivesend_tooltip"));
+					
+		// toolbar text
+		setToolBarName(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_receivesend_toolbar"));
+		
+		// action command
+		setActionCommand("RECEIVESEND");
+
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("send-receive.png"));
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("send-24-receive.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
+		
+		// TODO: Define mnemonic (using &)
+		
 	}
 
 	/* (non-Javadoc)
