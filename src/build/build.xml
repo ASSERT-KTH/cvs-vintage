@@ -34,7 +34,7 @@
     <property name="packages" value="org.jboss,org.jboss.ejb,org.jboss.util,org.jboss.tm,org.jboss.logging,org.jboss.jdbc,org.jboss.naming,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
-    
+        
   </target>
 
   <!-- =================================================================== -->
@@ -56,7 +56,7 @@
            deprecation="off"
            optimize="off"
 	   includes="org/**"
-           excludes="**/tomcat/**,**/activation/**,**/*BeanInfo.java"
+           excludes="**/activation/**, **/*BeanInfo.java"
     />
     
     <rmic base="${build.classes.dir}" 
