@@ -26,7 +26,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.1 1999/04/20 01:53:02 jrobbins Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.2 1999/04/22 20:24:36 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -53,6 +53,11 @@ import uci.uml.Foundation.Data_Types.*;
  *  and connecting it to other model elements. */
 
 public class ModeCreateEdgeAndNode extends ModeCreate {
+  ////////////////////////////////////////////////////////////////
+  // static variables
+  public static int Drags_To_Existing = 0;
+  public static int Drags_To_New = 0;
+
   ////////////////////////////////////////////////////////////////
   // instance variables
 
@@ -182,6 +187,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 
     if (f == null) {
       //System.out.println("make new node");
+      Drags_To_New++;
       Object newNode = null;
       Class nodeClass = (Class) getArg("nodeClass");
       try { newNode = nodeClass.newInstance(); }
@@ -219,6 +225,9 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 	f = _fn;
 	f.setLocation(x - f.getWidth() / 2, y - f.getHeight() / 2);
       }
+    }
+    else {
+      Drags_To_Existing++;
     }
 
 

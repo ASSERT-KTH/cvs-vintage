@@ -27,7 +27,7 @@
 // File: SelectionUseCase.java
 // Classes: SelectionUseCase
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionUseCase.java,v 1.1 1999/04/20 21:59:02 jrobbins Exp $
+// $Id: SelectionUseCase.java,v 1.2 1999/04/22 20:24:41 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -182,6 +182,7 @@ public class SelectionUseCase extends SelectionWButtons {
 
 
   public void buttonClicked(int buttonCode) {
+    super.buttonClicked(buttonCode);
     Classifier newNode = null;
     if (buttonCode == 10 || buttonCode == 11)
       newNode = new UseCase();

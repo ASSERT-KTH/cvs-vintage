@@ -27,7 +27,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.1 1999/04/20 21:58:58 jrobbins Exp $
+// $Id: SelectionActor.java,v 1.2 1999/04/22 20:24:37 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -143,6 +143,7 @@ public class SelectionActor extends SelectionWButtons {
 
 
   public void buttonClicked(int buttonCode) {
+    super.buttonClicked(buttonCode);
     UseCase newNode = new UseCase();
     FigActor fc = (FigActor) _content;
     Actor cls = (Actor) fc.getOwner();

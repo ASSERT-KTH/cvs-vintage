@@ -27,7 +27,7 @@
 // File: CmdSelectNear.java
 // Classes: CmdSelectNear
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectNear.java,v 1.1 1999/04/20 01:56:55 jrobbins Exp $
+// $Id: CmdSelectNear.java,v 1.2 1999/04/22 20:23:53 jrobbins Exp $
 
 package uci.gef;
 
@@ -57,7 +57,7 @@ public class CmdSelectNear extends Cmd {
 
   public CmdSelectNear(int dir) { this(dir, 1); }
   public CmdSelectNear(int dir, int mag) {
-    super("SelectNear " + wordFor(dir)); //needs-more-work: direction
+    super("SelectNear " + wordFor(dir), NO_ICON); //needs-more-work: direction
     _direction = dir;
     _magnitude = mag;
   }

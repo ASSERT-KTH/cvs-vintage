@@ -27,7 +27,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.2 1999/04/20 21:58:59 jrobbins Exp $
+// $Id: SelectionClass.java,v 1.3 1999/04/22 20:24:38 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -186,6 +186,7 @@ public class SelectionClass extends SelectionWButtons {
 
 
   public void buttonClicked(int buttonCode) {
+    super.buttonClicked(buttonCode);
     MMClass newNode = new MMClass();
     FigClass fc = (FigClass) _content;
     MMClass cls = (MMClass) fc.getOwner();

@@ -27,7 +27,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.1 1999/04/20 21:59:01 jrobbins Exp $
+// $Id: SelectionState.java,v 1.2 1999/04/22 20:24:40 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -156,6 +156,7 @@ public class SelectionState extends SelectionWButtons {
 
 
   public void buttonClicked(int buttonCode) {
+    super.buttonClicked(buttonCode);
     State newNode = new State();
     FigState fc = (FigState) _content;
     State cls = (State) fc.getOwner();

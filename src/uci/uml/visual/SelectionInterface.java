@@ -27,7 +27,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.1 1999/04/20 21:59:00 jrobbins Exp $
+// $Id: SelectionInterface.java,v 1.2 1999/04/22 20:24:39 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -142,6 +142,7 @@ public class SelectionInterface extends SelectionWButtons {
 
 
   public void buttonClicked(int buttonCode) {
+    super.buttonClicked(buttonCode);
     MMClass newNode = new MMClass();
     FigInterface fc = (FigInterface) _content;
     Interface cls = (Interface) fc.getOwner();
