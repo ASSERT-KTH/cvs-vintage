@@ -351,9 +351,11 @@ public class ServletWrapper extends Handler {
     {
 	// The servlet is loaded and not null - otherwise init()
 	// throws exception
+        if( initialized )
+            return;
 	try {
 	    // if multiple threads will call the same servlet at once,
-	    // we should have only one init 
+	    // we should have only one init
 	    synchronized( this ) {
 		// we may have 2 threads entering doInit,
 		// the first one may init the servlet
