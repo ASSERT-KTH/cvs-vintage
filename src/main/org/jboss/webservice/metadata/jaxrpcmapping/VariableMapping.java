@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: VariableMapping.java,v 1.1 2004/05/14 18:34:23 tdiesler Exp $
+// $Id: VariableMapping.java,v 1.2 2004/10/08 20:30:44 tdiesler Exp $
 
 /**
  * XML mapping of the java-wsdl-mapping/java-xml-type-mapping/varaible-mapping element.
@@ -23,8 +23,10 @@ public class VariableMapping
    private String javaVariableName;
    // The optional <data-member> element
    private boolean dataMember;
-   // The required <xml-element-name> element
+   // The choice [<xml-attribute-name> | <xml-element-name> | <xml-wildcard>]
+   private String xmlAttributeName;
    private String xmlElementName;
+   private String xmlWildcard;
 
    public VariableMapping(JavaXmlTypeMapping typeMapping)
    {
@@ -56,6 +58,16 @@ public class VariableMapping
       this.javaVariableName = javaVariableName;
    }
 
+   public String getXmlAttributeName()
+   {
+      return xmlAttributeName;
+   }
+
+   public void setXmlAttributeName(String xmlAttributeName)
+   {
+      this.xmlAttributeName = xmlAttributeName;
+   }
+
    public String getXmlElementName()
    {
       return xmlElementName;
@@ -64,5 +76,15 @@ public class VariableMapping
    public void setXmlElementName(String xmlElementName)
    {
       this.xmlElementName = xmlElementName;
+   }
+
+   public String getXmlWildcard()
+   {
+      return xmlWildcard;
+   }
+
+   public void setXmlWildcard(String xmlWildcard)
+   {
+      this.xmlWildcard = xmlWildcard;
    }
 }

@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.9 2004/09/03 17:54:10 loubyansky Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.10 2004/10/08 20:30:44 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
@@ -378,9 +378,17 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       {
          variableMapping.setDataMember(true);
       }
+      else if("xml-attribute-name".equals(localName))
+      {
+         variableMapping.setXmlAttributeName(value);
+      }
       else if("xml-element-name".equals(localName))
       {
          variableMapping.setXmlElementName(value);
+      }
+      else if("xml-wildcard".equals(localName))
+      {
+         variableMapping.setXmlWildcard(value);
       }
    }
 
