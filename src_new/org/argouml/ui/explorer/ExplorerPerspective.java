@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.10 2004/10/24 10:59:50 mvw Exp $
+// $Id: ExplorerPerspective.java,v 1.11 2004/11/19 15:08:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,6 +77,13 @@ public class ExplorerPerspective {
      */
     public Object[] getRulesArray() {
         return rules.toArray();
+    }
+    
+    /**
+     * @return the List with all the rules
+     */
+    public List getList() {
+        return rules;
     }
     
     /**
