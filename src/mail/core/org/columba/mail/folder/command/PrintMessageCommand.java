@@ -73,6 +73,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -87,6 +90,7 @@ public class PrintMessageCommand extends FolderCommand {
     private cPrintObject mailFooter;
     private DateFormat mailDateFormat;
     private String[] headerKeys = { "From", "To", "Date", "Subject" };
+    private String dateHeaderKey = "Date";	// the header key for date field
     private String attHeaderKey = "attachment";
     private String charset;
 
@@ -253,17 +257,40 @@ public class PrintMessageCommand extends FolderCommand {
 
                 hValue = new cParagraph();
 
-                // *20030531, karlpeder* case ignored for string comparison
-                if (headerKeys[i].equalsIgnoreCase("date")) {
-                    value = header.get("columba.date");
-                } else {
-                    value = header.get(headerKeys[i]);
-                }
+				/* 
+				 * *20031216, karlpeder* Changed handling of dates.
+				 * Previously columba.date header was used. Now we
+				 * use the Date header instead
+				 */
+                //if (headerKeys[i].equalsIgnoreCase("date")) {
+                //    value = header.get("columba.date");
+                //} else {
+				//	value = header.get(headerKeys[i]);
+                //}
+                value = header.get(headerKeys[i]);
 
-                if (value instanceof Date) {
-                    hValue.setText(getMailDateFormat().format((Date) value));
+				if (headerKeys[i].equalsIgnoreCase(dateHeaderKey)) {
+					// special handling for dates
+					SimpleDateFormat formatter = 
+							new SimpleDateFormat("d MMM yyyy HH:mm:ss Z");
+					String dateStr = (String) value;
+					
+					// ignore leading weekday name (e.g. "Mon,"), since this
+					// seems to give problems during parsing 
+					ParsePosition pos = 
+							new ParsePosition(dateStr.indexOf(',') + 1);
+					Date d = formatter.parse((String) value, pos);
+					
+					if (d != null) {
+						hValue.setText(getMailDateFormat().format(d));
+					} else {
+						// fall back to use the Date header contents directly
+						hValue.setText((String) value);
+					}
+
                 } else {
                     hValue.setText((String) value);
+                    
                 }
 
                 hValue.setLeftMargin(new cCmUnit(3.0));
