@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.1 2002/07/24 23:05:32 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.2 2002/07/31 20:47:49 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -260,6 +260,35 @@ in your build.properties when you built Scarab.
 <p>
 Continue to repeat the steps above until all of your issue types, attributes
 and attribute options have been defined.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>How do I setup Scarab so that it will send a copy of each issue
+change to a particular email address (ie: a mailing list or the project leader)?</strong></p>
+
+<p>
+As either the module administrator or the domain administrator user, go
+to the Admin->Modules->Manage modules screen and edit the particular
+module that you are interested in tracking issue changes in. Set the
+'Archive email' address to the email address that you want. Please note, do
+not try to do this in the Global module, only modules which are children of 
+the Global module.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>When I receive notification email from scarab, the url to the
+issue starts with http://localhost:8080/. Clearly that is bad because I
+want the email to point to the server that Scarab is on. How to I make
+it say the server domain name instead?</strong></p>
+
+<p>
+In order to have one fewer thing to have to configure, Scarab uses
+whatever you type into the browser url as the url that is sent in the
+emails. So, if your server name is foo.com, then going to
+http://foo.com:8080/ instead of http://localhost:8080/ will generate the
+right url in the emails.
 </p>
 
 <hr noshade="noshade" size="1" />
