@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSessionValidator.java,v 1.4 2003/09/10 19:48:30 jmcnally Exp $
+ * @version $Id: ScarabSessionValidator.java,v 1.5 2004/04/15 19:43:17 dabbous Exp $
  */
 public class ScarabSessionValidator extends TemplateSessionValidator
 {
@@ -97,9 +97,13 @@ public class ScarabSessionValidator extends TemplateSessionValidator
         if (error != null) 
         {
             TemplateContext context = getTemplateContext(data);
+
+            ScarabLocalizationTool l10n = 
+                (ScarabLocalizationTool) context.get(ScarabConstants.LOCALIZATION_TOOL);
+
             ((ScarabRequestTool)context.get(ScarabConstants.SCARAB_REQUEST_TOOL))
-                .setAlertMessage( ((ScarabLocalizationTool)
-                context.get(ScarabConstants.LOCALIZATION_TOOL)).get(error));
+                .setAlertMessage( l10n.get(error));
+
             data.setAction("");
             setTarget(data, data.getParameters()
                 .getString(ScarabConstants.CANCEL_TEMPLATE, null));

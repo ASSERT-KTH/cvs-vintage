@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.34 2003/08/22 18:20:51 venkatesh Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.35 2004/04/15 19:43:18 dabbous Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -251,13 +251,13 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
          }
          if (success)
          { 
-            scarabR.setConfirmMessage(l10n.get(
-                "SelectedIssueTypesRemovedFromModule"));
+            String msg = l10n.get("SelectedIssueTypesRemovedFromModule");
+            scarabR.setConfirmMessage(msg);
          }
          if (!foundOne)
          {
-            scarabR.setAlertMessage(
-                l10n.get("SelectIssueTypeToDeleteFromModule"));
+             String msg = l10n.get("SelectIssueTypeToDeleteFromModule");
+             scarabR.setAlertMessage(msg);
          }
     }
 }

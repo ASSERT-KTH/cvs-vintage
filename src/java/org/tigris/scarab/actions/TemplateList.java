@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.59 2003/09/11 18:32:49 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.60 2004/04/15 19:43:17 dabbous Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -180,8 +180,7 @@ public class TemplateList extends RequireLoginFirstAction
                         {
                             data.getParameters().add
                                 ("templateId", issue.getIssueId().toString());
-                            scarabR.setConfirmMessage(l10n.get(
-                                            "NewTemplateCreated"));
+                            scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
                         }
                         else
                         {

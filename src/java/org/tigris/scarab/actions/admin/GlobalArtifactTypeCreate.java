@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.43 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.44 2004/04/15 19:43:18 dabbous Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -179,7 +179,6 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         }
         List attGroups = issueType.getAttributeGroups(null, false);
         int nbrAttGroups = attGroups.size();
-        String errorMsg = ERROR_MESSAGE;
         int dupeOrder = 2;
 
         // Manage attribute groups, only seeking sequence collisions
@@ -238,7 +237,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(errorMsg));
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
             success = false;
         }
         return success;
