@@ -699,4 +699,11 @@ public class VirtualFolder extends MessageFolder {
        
         return null;
     }
+    
+    /**
+     * @see org.columba.mail.folder.AbstractFolder#supportsMove()
+     */
+    public boolean supportsMove() {
+       return true;
+    }
 }
