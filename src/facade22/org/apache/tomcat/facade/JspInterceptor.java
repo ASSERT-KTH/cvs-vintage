@@ -515,6 +515,10 @@ class TomcatOptions implements Options {
         return keepGenerated;
     }
 
+    public String getJavaEncoding() {
+	return "UTF8";
+    }
+
     public boolean getLargeFile() {
         return largeFile;
     }
