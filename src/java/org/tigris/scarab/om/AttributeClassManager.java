@@ -3,7 +3,11 @@
 package org.tigris.scarab.om;
 
 
+import java.util.List;
+import java.util.HashMap;
 import org.apache.torque.TorqueException;
+import org.apache.torque.om.Persistent;
+
 
 /** 
  * This class manages AttributeClass objects.  
@@ -23,8 +27,26 @@ public class AttributeClassManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
+        validFields = new HashMap();
+        validFields.put(AttributeClassPeer.ATTRIBUTE_CLASS_ID, null);
     }
 
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        List listeners = (List)listenersMap
+            .get(AttributeClassPeer.ATTRIBUTE_CLASS_ID);
+        notifyListeners(listeners, oldOm, om);
+        return oldOm;
+    }
+
+
+    public AttributeClass getInstanceImpl()
+    {
+        return new AttributeClass();
+    }
 }
 
 

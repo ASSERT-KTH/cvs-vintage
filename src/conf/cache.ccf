@@ -28,8 +28,23 @@ jcs.region.org_tigris_scarab_om_Module.cacheattributes.MemoryCacheName=org.apach
 
 jcs.region.org_tigris_scarab_om_Attribute=
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=1000
+jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=400
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeOption=
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes.MaxObjects=2000
+jcs.region.org_tigris_scarab_om_AttributeOption.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeType=
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes.MaxObjects=100
+jcs.region.org_tigris_scarab_om_AttributeType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_AttributeClass=
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes.MaxObjects=100
+jcs.region.org_tigris_scarab_om_AttributeClass.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_AttributeValue=
 jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -45,3 +60,5 @@ jcs.region.org_tigris_scarab_om_RModuleIssueType=
 jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MaxObjects=1000
 jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+@JCS_CACHE_PROPERTIES@

@@ -423,7 +423,8 @@
               file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
 
         <!-- copy JCS configuration into classpath -->
-        <copy todir="${build.dest.scarab}" filtering="no">
+        <filter token="JCS_CACHE_PROPERTIES" value="${scarab.jcs.cache.properties}"/>
+        <copy todir="${build.dest.scarab}" filtering="yes">
             <fileset dir="${src.conf.dir}/">
                 <include name="cache.ccf"/>
             </fileset>
