@@ -11,6 +11,7 @@ import java.beans.*;
 import java.beans.beancontext.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,10 +28,11 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class jBossEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
+	implements BeanContextContainerProxy
 {
    // Constants -----------------------------------------------------
    public static final String JBOSS_DOCUMENT="jboss";
@@ -38,6 +40,8 @@ public class jBossEjbJar
    // Attributes ----------------------------------------------------
    ResourceManagers rm;
    ContainerConfigurations cc;
+	
+	JTabbedPane con;
 
    // Static --------------------------------------------------------
    
@@ -58,6 +62,20 @@ public class jBossEjbJar
    public ResourceManagers getResourceManagers() { return rm; }
    public ContainerConfigurations getContainerConfigurations() { return cc; }
    
+	public Container getContainer()
+	{
+		if (con == null)
+		{
+			// Create tabbed pane
+			con = new JTabbedPane();
+			con.add(cc.getComponent());
+			con.add(rm.getComponent());
+			con.add(eb.getContainer());
+			con.add(((jBossEnterpriseBeans)eb).getComponent());
+		}
+		return con;
+	}
+
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
    	throws Exception

@@ -17,7 +17,7 @@ import java.security.Permissions;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class BeanClassLoader
    extends URLClassLoader
@@ -25,8 +25,6 @@ public class BeanClassLoader
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   Object tx;
-   Object principal;
    Object jndiRoot;
    
    // Static --------------------------------------------------------
@@ -38,12 +36,6 @@ public class BeanClassLoader
    }
    
    // Public --------------------------------------------------------
-   public void setTransaction(Object tx) { this.tx = tx; }
-   public Object getTransaction() { return tx; }
-   
-   public void setPrincipal(Object p) { this.principal = p; }
-   public Object getPrincipal() { return principal; }
-
    public void setJNDIRoot(Object root) { this.jndiRoot = root; }
    public Object getJNDIRoot() { return jndiRoot; }
 }

@@ -8,10 +8,16 @@
     displayname="Configuration name"/>
     
   <property 
+    name="CallLogging" class="boolean" 
+    displayname="Log bean calls" propertyeditor="com.dreambean.awt.editors.BooleanEditor"/>
+    
+  <property 
     name="ContainerInvoker" class="java.lang.String" 
     displayname="Container invoker" propertyeditor="org.jboss.ejb.deployment.editors.ContainerInvokerTypeEditor"/>
     
   <property 
     name="InstancePool" class="java.lang.String" 
     displayname="Instance pool" propertyeditor="org.jboss.ejb.deployment.editors.StatelessSessionInstancePoolTypeEditor"/>
+	 
+  <method name="removeConfiguration" displayname="Remove"/>
 </bean>

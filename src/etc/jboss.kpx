@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Fri May 19 07:31:25 2000">
+<kawaproject timestamp="Mon May 22 15:00:15 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -32,7 +32,7 @@
 <virtualfolder>
 <name>"beaninfo"</name>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"beaninfo\ContainerConfiguration.xml"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -179,7 +179,7 @@
 </scmstatus>
 </file>
 <file>
-<dirty>"0"</dirty>
+<dirty>"1"</dirty>
 <relativepath>"beaninfo\JDBCResource.xml"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -511,6 +511,14 @@
 </file>
 <virtualfolder>
 <name>"editors"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\editors\CommitOptionEditor.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\editors\ContainerInvokerTypeEditor.java"</relativepath>
@@ -1849,6 +1857,14 @@
 </virtualfolder>
 <virtualfolder>
 <name>"resources"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\editors\commitoptions.properties"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\containerinvoker.properties"</relativepath>

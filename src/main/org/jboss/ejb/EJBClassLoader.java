@@ -17,7 +17,7 @@ import java.security.Permissions;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EJBClassLoader
    extends URLClassLoader
@@ -45,12 +45,5 @@ public class EJBClassLoader
    }
    
    // Public --------------------------------------------------------
-   protected PermissionCollection getPermissions(CodeSource source)
-   {
-      if (secure)
-         return perms;
-      else
-         return super.getPermissions(source);
-   }
 }
 

@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EntityContainerConfiguration
    extends ContainerConfiguration
@@ -35,12 +35,46 @@ public class EntityContainerConfiguration
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   String commitOption = "A";
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
+   public void setCommitOption(String co) { commitOption = co; }
+   public String getCommitOption() { return commitOption; }
+
+   // XmlExternalizable implementation ------------------------------
+   public Element exportXml(Document doc)
+   	throws Exception
+   {
+      Element containerconfiguration = super.exportXml(doc);
+      XMLManager.addElement(containerconfiguration,"commit-option",getCommitOption());
+         
+      return containerconfiguration;
+   }
+   
+   public void importXml(Element elt)
+      throws Exception
+   {
+		super.importXml(elt);
+	
+   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals("jboss"))
+   	{
+         NodeList nl = elt.getChildNodes();
+         for (int i = 0; i < nl.getLength(); i++)
+         {
+            Node n = nl.item(i);
+            String name = n.getNodeName();
+            
+            if (name.equals("commit-option"))
+            {
+               setCommitOption(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } 
+			}
+   	}
+   }
    
    // Package protected ---------------------------------------------
     

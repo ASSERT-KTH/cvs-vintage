@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -329,7 +329,8 @@ public class jBossFileManager
    {
       if (comp == null)
       {
-         comp = new BeanContextPanel(ejbJar,"jBoss XML");
+//         comp = new BeanContextPanel(ejbJar,"jBoss XML");
+				comp = ejbJar.getContainer();
       }
       return comp;
    }

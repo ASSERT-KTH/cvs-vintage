@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -38,6 +38,7 @@ public abstract class ContainerConfiguration
    // Attributes ----------------------------------------------------
    String name= "";
    String type= "";
+   boolean callLogging = false;
    
    String containerInvoker= "";
    String instancePool= "";
@@ -157,16 +158,24 @@ public abstract class ContainerConfiguration
    public void setTransactionManager(String tm) { transactionManager = tm; }
    public String getTransactionManager() { return transactionManager; }
    
+   public void setCallLogging(boolean cl) { callLogging = cl; }
+   public boolean getCallLogging() { return callLogging; }
+   
    public String toString()
    {
       return name.equals("") ? "Container configuration" : name;
    }
    
+	public void removeConfiguration()
+	{
+		getBeanContext().remove(this);
+	}
+	
    // BeanContextChildComponentProxy implementation -----------------
    public Component getComponent()
    {
       if (c == null)
-          c = new GenericCustomizer(this);
+          c = new GenericCustomizer(false, this);
       return c;
    }
    
@@ -177,6 +186,7 @@ public abstract class ContainerConfiguration
       Element containerconfiguration = doc.createElement("container-configuration");
       XMLManager.addAttribute(containerconfiguration,"configuration-class",getClass().getName());
       XMLManager.addElement(containerconfiguration,"container-name",getName());
+      XMLManager.addElement(containerconfiguration,"call-logging",new Boolean(callLogging).toString());
       XMLManager.addElement(containerconfiguration,"container-invoker",getContainerInvoker());
       XMLManager.addElement(containerconfiguration,"instance-pool",getInstancePool());
       XMLManager.addElement(containerconfiguration,"instance-cache",getInstanceCache());
@@ -236,7 +246,10 @@ public abstract class ContainerConfiguration
 	         if (name.equals("container-name"))
             {
                setName(n.hasChildNodes() ? XMLManager.getString(n) : "");
-            } else if (name.equals("container-invoker"))
+            } else if (name.equals("call-logging"))
+	         {
+	            setCallLogging(new Boolean(XMLManager.getString(n)).booleanValue());
+	         } else if (name.equals("container-invoker"))
 	         {
 	            setContainerInvoker(n.hasChildNodes() ? XMLManager.getString(n) : "");
 	         } else if (name.equals("instance-pool"))

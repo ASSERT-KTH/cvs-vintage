@@ -7,16 +7,22 @@
 package org.jboss.ejb.deployment;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.beans.*;
 import java.beans.beancontext.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.dreambean.awt.GenericCustomizer;
+import com.dreambean.awt.GenericMethodDialog;
+import com.dreambean.awt.BeanContextPanel;
+import com.dreambean.awt.BeanContextTreeView;
 import com.dreambean.awt.GenericCustomizer;
 import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
@@ -27,7 +33,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class jBossEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -36,6 +42,9 @@ public class jBossEnterpriseBeans
     
    // Attributes ----------------------------------------------------
    boolean secure = true;
+	
+	Container c;
+	Component com;
     
    // Static --------------------------------------------------------
 
@@ -44,7 +53,8 @@ public class jBossEnterpriseBeans
    // Public --------------------------------------------------------
    public void setSecure(boolean s) { secure = s; }
    public boolean isSecure() { return secure; }
-   
+
+	
    public com.dreambean.ejx.ejb.Entity addEntity()
       throws IOException, ClassNotFoundException
    {
@@ -67,6 +77,62 @@ public class jBossEnterpriseBeans
 		}
 	}
 
+   // BeanContextContainerProxy implementation ----------------------
+   public Container getContainer()
+   {
+      if (c == null)
+      {
+   		c = new BeanContextPanel(this);
+   		JSplitPane sp = (JSplitPane)c;
+   		JScrollPane scrollPane = (JScrollPane)sp.getLeftComponent();
+   		((BeanContextTreeView)scrollPane.getViewport().getView()).expandPath(((BeanContextTreeView)scrollPane.getViewport().getView()).getPathForRow(0));
+   		((BeanContextTreeView)scrollPane.getViewport().getView()).setRootVisible(false);
+   		JToolBar toolBar = new JToolBar();
+   		toolBar.add(new AbstractAction("Add JNDI name prefix")
+   		{
+   			public void actionPerformed(ActionEvent evt)
+   			{
+   				try
+   				{
+   					BeanInfo bi = Introspector.getBeanInfo(jBossEnterpriseBeans.class);
+   					
+   					MethodDescriptor[] mdList = bi.getMethodDescriptors();
+   					for (int i = 0; i < mdList.length; i++)
+   					{
+   						if (mdList[i].getName().equals("addJndiPrefix"))
+   						{
+   							new GenericMethodDialog(jBossEnterpriseBeans.this, mdList[i], (Frame)SwingUtilities.getRoot(c));
+   							break;
+   						}
+   					}
+   				} catch (Exception e)
+   				{
+   					e.printStackTrace();
+   				}
+   			}
+   		});
+   		
+   		JPanel p = new JPanel(new BorderLayout());
+   		p.add("Center", c);
+   		p.add("North", toolBar);
+   		
+   		c = p;
+   		c.setName("Enterprise beans");
+      }
+      return (Container)c;
+   }
+	
+   // BeanContextChildComponentProxy implementation -----------------
+   public Component getComponent()
+   {
+      if (com == null)
+      {
+	      com = new GenericCustomizer(false, this);
+      	com.setName("Application settings");
+      }
+      return com;
+   }
+	
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
       throws Exception
