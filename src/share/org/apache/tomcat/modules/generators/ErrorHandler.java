@@ -172,9 +172,17 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( cm, ctx, errorPath );
 
+	    String cpath=ctx.getPath();
+	    if( cpath="/")  cpath="";
+	    
 	    // Make sure Jsps will work - needed if the error page is a jsp
-	    req.setAttribute( "javax.servlet.include.request_uri",
-				  ctx.getPath()  + "/" + errorPath );
+	    if ( null!=errorPath && errorPath.startsWith("/") ) {
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  cpath  + errorPath );
+	    } else {
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  cpath  + "/" + errorPath );
+	    }
 	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
 	}
 
@@ -281,9 +289,17 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( cm, ctx, errorPath );
 
-	    // Make sure Jsps will work
-	    req.setAttribute( "javax.servlet.include.request_uri",
-				  ctx.getPath()  + "/" + errorPath );
+	    String cpath=ctx.getPath();
+	    if( cpath="/")  cpath="";
+	    
+	    // Make sure Jsps will work - needed if the error page is a jsp
+	    if ( null!=errorPath && errorPath.startsWith("/") ) {
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  cpath  + errorPath );
+	    } else {
+		req.setAttribute( "javax.servlet.include.request_uri",
+				  cpath  + "/" + errorPath );
+	    }
 	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
 	}
 
