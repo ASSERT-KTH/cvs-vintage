@@ -206,7 +206,7 @@ public abstract class AbstractMenuGenerator {
 							lastWasSeparator = false;
 						}
 					} catch (Exception e) {
-						ColumbaLogger.log.error(e);
+						ColumbaLogger.log.error(e+" - "+ next.getAttribute("checkboxaction"));
 					}
 				} else if (next.getAttribute("imenu") != null) {
 					try {
