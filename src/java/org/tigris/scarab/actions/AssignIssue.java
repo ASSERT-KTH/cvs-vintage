@@ -98,7 +98,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.32 2002/01/22 21:22:17 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.33 2002/01/22 21:38:01 jon Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -310,9 +310,9 @@ public class AssignIssue extends RequireLoginFirstAction
                             data.getParameters().add("isChanged", "true");
                             if (!emailAssignIssueToUser(issue, user, 
                                                          action, context))
-                             {
+                            {
                                  data.setMessage(EMAIL_ERROR);
-                             }
+                            }
                         }
                     }
                 }
@@ -368,6 +368,5 @@ public class AssignIssue extends RequireLoginFirstAction
            success = false;
         }
         return success;
-      
     }
 }
