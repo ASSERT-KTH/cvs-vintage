@@ -30,7 +30,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 
  
@@ -57,6 +57,7 @@ public class SQLUtil
    public static final String NOT_EQUAL = "<>";
    public static final String CREATE_TABLE = "CREATE TABLE ";
    public static final String DROP_TABLE = "DROP TABLE ";
+   public static final String CREATE_INDEX = "CREATE INDEX ";
    public static final String NULL = "NULL";
    public static final String IS = " IS ";
    public static final String IN = " IN ";

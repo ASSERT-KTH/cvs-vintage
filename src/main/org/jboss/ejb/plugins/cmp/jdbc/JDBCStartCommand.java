@@ -44,10 +44,13 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class JDBCStartCommand
 {
+   private static final String IDX_POSTFIX = "_idx";
+   private static final String COULDNT_SUSPEND = "Could not suspend current transaction before ";
+   private static final String COULDNT_REATTACH = "Could not reattach original transaction after ";	
    private final static Object CREATED_TABLES_KEY = new Object();
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
@@ -199,8 +202,7 @@ public class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException("Could not suspend current " +
-            "transaction before creating table.", e);
+         throw new DeploymentException(COULDNT_SUSPEND +"creating table.", e);
       }
 
       try
@@ -242,7 +244,7 @@ public class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException("Could not reattach original transaction after create table");
+            throw new DeploymentException(COULDNT_REATTACH +  "create table");
          }
       }
 
@@ -274,8 +276,7 @@ public class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException("Could not suspend current " +
-            "transaction before creating table.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + "creating index.", e);
       }
 
       try
@@ -316,7 +317,7 @@ public class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException("Could not reattach original transaction after create index");
+            throw new DeploymentException(COULDNT_REATTACH + "create index");
          }
       }
 
@@ -351,8 +352,7 @@ public class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException("Could not suspend current " +
-            "transaction before sending sql command.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + "sending sql command.", e);
       }
 
       String currentCmd = "";
@@ -404,8 +404,7 @@ public class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException("Could not reattach original " +
-               "transaction after create index");
+            throw new DeploymentException(COULDNT_REATTACH + "create index");
          }
       }
 
@@ -504,7 +503,7 @@ public class JDBCStartCommand
             log.debug("Creating index for field " + field.getFieldName());
             sql = new StringBuffer();
             sql.append("CREATE INDEX ");
-            sql.append(entity.getTableName() + "_idx" + idxCount);// index name
+            sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
             sql.append(SQLUtil.ON);
             sql.append(entity.getTableName() + '(');
             sql.append(SQLUtil.getColumnNamesClause(field));
@@ -512,7 +511,7 @@ public class JDBCStartCommand
             sql.append(")");
             createIndex(dataSource,
                entity.getTableName(),
-               entity.getTableName() + "_idx" + idxCount,
+               entity.getTableName() + IDX_POSTFIX + idxCount,
                sql.toString());
             idxCount++;
          }
@@ -572,7 +571,7 @@ public class JDBCStartCommand
    {
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE INDEX ");
-      sql.append(fi.getColumnName() + "_idx" + idxCount);
+      sql.append(fi.getColumnName() + IDX_POSTFIX + idxCount);
       sql.append(SQLUtil.ON);
       sql.append(tableName + '(');
       sql.append(fi.getColumnName());
@@ -716,8 +715,8 @@ public class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException("Could not suspend current " +
-            "transaction before alter table create foreign key.", e);
+         throw new DeploymentException(COULDNT_SUSPEND + 
+         	 "alter table create foreign key.", e);
       }
 
       try
@@ -758,8 +757,7 @@ public class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException("Could not reattach original " +
-               "transaction after create table");
+            throw new DeploymentException(COULDNT_REATTACH + "create table");
          }
       }
 
