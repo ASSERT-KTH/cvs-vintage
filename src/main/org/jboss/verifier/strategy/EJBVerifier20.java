@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.21 2002/05/09 10:21:21 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.22 2002/05/11 02:40:53 jwalters Exp $
  */
 
 
@@ -48,7 +48,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -74,19 +74,6 @@ public class EJBVerifier20 extends AbstractVerifier {
     
     public void checkSession(SessionMetaData session)
     {
-        boolean beanVerified   = false;
-        boolean remoteHomeVerified   = false;
-        boolean remoteVerified = false;
-        boolean localHomeVerified   = false;
-        boolean localVerified = false;
-        boolean localOrHomeExists = true;
-
-        beanVerified   = verifySessionBean(session);
-        remoteHomeVerified   = verifySessionHome(session);
-        remoteVerified = verifySessionRemote(session);
-        localHomeVerified   = verifySessionLocalHome(session);
-        localVerified = verifySessionLocal(session);
-
         /*
          * The session bean MUST implement either a remote home and remote, or 
          * local home and local interface.  It MAY implement a remote home, remote,
@@ -94,13 +81,57 @@ public class EJBVerifier20 extends AbstractVerifier {
          *
          * Spec 7.10.1
          */
-        if (!(remoteHomeVerified && remoteVerified) &&
-            !(localHomeVerified && localVerified)) {
-            localOrHomeExists = false;
-            fireSpecViolationEvent(session, new Section("7.10.1"));
-        }
 
-        if (beanVerified && localOrHomeExists) {
+		boolean localOrRemoteExists = true;
+        String homeName = session.getHome();
+		String remoteName = session.getRemote();
+		String localHomeName = session.getLocalHome();
+		String localName = session.getLocal();
+
+        try {
+            Class home = null;
+			Class remote = null;
+			Class localHome = null;
+			Class local = null;
+
+			if (homeName != null) home = classloader.loadClass(homeName);
+			if (remoteName != null) remote = classloader.loadClass(remoteName);
+			if (localHomeName != null)
+				localHome = classloader.loadClass(localHomeName);
+			if (localName != null) local = classloader.loadClass(localName);
+
+			boolean remoteVerified = false;
+  			if (home != null && hasEJBHomeInterface(home) &&
+			    remote != null && hasEJBObjectInterface(remote))
+				remoteVerified = true;
+
+			boolean localVerified = false;
+			if (localHome != null && hasEJBLocalHomeInterface(localHome) &&
+			    local != null && hasEJBLocalObjectInterface(local))
+				localVerified = true;
+
+            if (!(remoteVerified || localVerified)) {
+                localOrRemoteExists = false;
+                fireSpecViolationEvent(session, new Section("7.10.1"));
+            }
+		} catch (ClassNotFoundException e) {
+
+            /*
+             * The bean provider MUST specify the fully-qualified name of the
+             * enterprise bean's  home interface in the <home> element.
+             *
+             * Spec 22.2
+             */
+            fireSpecViolationEvent(session, new Section("22.2"));
+		}
+
+        boolean beanVerified   = verifySessionBean(session);
+        beanVerified = beanVerified && verifySessionHome(session);
+        beanVerified = beanVerified && verifySessionRemote(session);
+        beanVerified = beanVerified && verifySessionLocalHome(session);
+        beanVerified = beanVerified && verifySessionLocal(session);
+
+        if (beanVerified && localOrRemoteExists) {
             /*
              * Verification for this session bean done. Fire the event
              * to tell listeners everything is ok.
@@ -118,24 +149,6 @@ public class EJBVerifier20 extends AbstractVerifier {
     }
 
     private void checkBmpOrCmp2Entity(EntityMetaData entity) {
-        boolean pkVerified     = false;
-        boolean beanVerified   = false; 
-        boolean remoteHomeVerified = false;
-        boolean remoteVerified = false;
-        boolean localHomeVerified  = false;
-        boolean localVerified = false;
-        boolean localOrHomeExists = true;
-
-        remoteHomeVerified   = verifyEntityHome(entity);
-        localHomeVerified   = verifyEntityLocalHome(entity);
-        remoteVerified = verifyEntityRemote(entity);
-        localVerified = verifyEntityLocal(entity);
-        pkVerified     = verifyPrimaryKey(entity);
-
-        if (entity.isCMP())
-          beanVerified   = verifyCMPEntityBean(entity);
-        else if (entity.isBMP())
-          beanVerified   = verifyBMPEntityBean(entity);
 
         /*
          * The entity bean MUST implement either a remote home and remote, or 
@@ -144,13 +157,62 @@ public class EJBVerifier20 extends AbstractVerifier {
          *
          * Spec 12.2.1
          */
-        if (!(remoteHomeVerified && remoteVerified) &&
-            !(localHomeVerified && localVerified)) {
-            localOrHomeExists = false;
-            fireSpecViolationEvent(entity, new Section("12.2.1"));
-        }
 
-        if ( beanVerified && localOrHomeExists && pkVerified) {
+		boolean localOrRemoteExists = true;
+        String homeName = entity.getHome();
+		String remoteName = entity.getRemote();
+		String localHomeName = entity.getLocalHome();
+		String localName = entity.getLocal();
+
+        try {
+            Class home = null;
+			Class remote = null;
+			Class localHome = null;
+			Class local = null;
+
+			if (homeName != null) home = classloader.loadClass(homeName);
+			if (remoteName != null) remote = classloader.loadClass(remoteName);
+			if (localHomeName != null)
+				localHome = classloader.loadClass(localHomeName);
+			if (localName != null) local = classloader.loadClass(localName);
+
+			boolean remoteVerified = false;
+  			if (home != null && hasEJBHomeInterface(home) &&
+			    remote != null && hasEJBObjectInterface(remote))
+                remoteVerified = true;
+
+			boolean localVerified = false;
+			if (localHome != null && hasEJBLocalHomeInterface(localHome) &&
+			    local != null && hasEJBLocalObjectInterface(local))
+                localVerified = true;
+
+            if (!(remoteVerified || localVerified)) {
+                localOrRemoteExists = false;
+                fireSpecViolationEvent(entity, new Section("12.2.1"));
+            }
+		} catch (ClassNotFoundException e) {
+            /*
+             * The bean provider MUST specify the fully-qualified name of the
+             * enterprise bean's  home interface in the <home> element.
+             *
+             * Spec 22.2
+             */
+            fireSpecViolationEvent(entity, new Section("22.2"));
+		}
+
+        boolean beanVerified   = false; 
+        if (entity.isCMP())
+          beanVerified   = verifyCMPEntityBean(entity);
+        else if (entity.isBMP())
+          beanVerified   = verifyBMPEntityBean(entity);
+
+        beanVerified = beanVerified && verifyEntityHome(entity);
+        beanVerified = beanVerified && verifyEntityLocalHome(entity);
+        beanVerified = beanVerified && verifyEntityRemote(entity);
+        beanVerified = beanVerified && verifyEntityLocal(entity);
+        beanVerified = beanVerified && verifyPrimaryKey(entity);
+
+        if (beanVerified && localOrRemoteExists) {
             /*
              * Verification for this entity bean done. Fire the event
              * to tell listeneres everything is ok.
@@ -325,7 +387,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              *
              * There CAN NOT be other create() methods in the home interface.
              *
-             * Spec 7.8
+             * Spec 7.10.6
              */
              if (session.isStateless()) {
 
@@ -490,7 +552,7 @@ public class EJBVerifier20 extends AbstractVerifier {
 
         String name = session.getLocalHome();
         if (name == null)
-           return false;
+           return true;
 
         try {
             Class home = classloader.loadClass(name);
@@ -651,7 +713,7 @@ public class EJBVerifier20 extends AbstractVerifier {
 
         String  name   = session.getRemote();
         if (name == null)
-           return false;
+           return true;
 
 
         try {
@@ -786,7 +848,7 @@ public class EJBVerifier20 extends AbstractVerifier {
 
         String  name   = session.getLocal();
         if (name == null)
-           return false;
+           return true;
 
         try {
             Class local = classloader.loadClass(name);
@@ -899,7 +961,6 @@ public class EJBVerifier20 extends AbstractVerifier {
         boolean status = true;
 
         String  name   = session.getEjbClass();
-
 
         try {
             Class bean = classloader.loadClass(name);
@@ -1546,10 +1607,10 @@ public class EJBVerifier20 extends AbstractVerifier {
              * Entity bean's local interface MUST extend
              * the javax.ejb.EJBLocalObject interface.
              *
-             * Spec 9.2.7
+             * Spec 12.2.10
              */
             if (!hasEJBLocalObjectInterface(local)) {
-                fireSpecViolationEvent(entity, new Section("9.2.7.a"));
+                fireSpecViolationEvent(entity, new Section("12.2.10.a"));
                 status = false;
             }
 
@@ -1557,7 +1618,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              * The methods defined in the entity bean's local interface MUST NOT
              * have java.rmi.RemoteException in their throws clause.
              *
-             * Spec 9.2.7
+             * Spec 12.2.10
              */
             Iterator localMethods = Arrays.asList(local.getMethods()).iterator();
 
@@ -1566,7 +1627,7 @@ public class EJBVerifier20 extends AbstractVerifier {
                 Method method = (Method)localMethods.next();
 
                 if (throwsRemoteException(method)) {
-                    fireSpecViolationEvent(entity, method, new Section("9.2.7.d"));
+                    fireSpecViolationEvent(entity, method, new Section("12.2.10.b"));
                     status = false;
                 }
             }
@@ -1584,7 +1645,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              *       defined in the throws clause of the method of the local
              *       interface.
              *
-             * Spec 9.2.7
+             * Spec 12.2.10
              */
             localMethods = Arrays.asList(local.getMethods()).iterator();
 
@@ -1602,7 +1663,7 @@ public class EJBVerifier20 extends AbstractVerifier {
                         continue;
 
                     if (!hasMatchingMethod(bean, method)) {
-                        fireSpecViolationEvent(entity, method, new Section("9.2.7.e"));
+                        fireSpecViolationEvent(entity, method, new Section("12.2.10.c"));
                         status = false;
                     }
 
@@ -1612,13 +1673,13 @@ public class EJBVerifier20 extends AbstractVerifier {
                             Method beanMethod = bean.getMethod(method.getName(), method.getParameterTypes());
 
                             if (!hasMatchingReturnType(beanMethod, method)) {
-                                fireSpecViolationEvent(entity, method, new Section("9.2.7.f"));
+                                fireSpecViolationEvent(entity, method, new Section("12.2.10.d"));
                                 status = false;
                             }
 
                             if (!hasMatchingExceptions(beanMethod, method)) {
 
-                                fireSpecViolationEvent(entity, method, new Section("9.2.7.g"));
+                                fireSpecViolationEvent(entity, method, new Section("12.2.10.e"));
 
                                 status = false;
                             }
