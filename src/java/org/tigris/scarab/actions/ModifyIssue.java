@@ -75,6 +75,8 @@ import org.tigris.scarab.om.Condition;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependManager;
 import org.tigris.scarab.om.DependType;
+import org.tigris.scarab.om.GlobalParameter;
+import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.IssueType;
@@ -98,7 +100,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.198 2005/01/09 22:37:11 dabbous Exp $
+ * @version $Id: ModifyIssue.java,v 1.199 2005/01/10 20:29:23 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -114,6 +116,8 @@ public class ModifyIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = scarabR.getIssue();
+        Module module = scarabR.getCurrentModule();
+
         if (issue == null)
         {
             // no need to set the message here as
@@ -132,7 +136,7 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabGlobalTool scarabG = this.getGlobalTool(data);
         
-        boolean isReasonRequired = scarabG.isIssueChangeReasonRequired();
+        boolean isReasonRequired = GlobalParameterManager.getBoolean(GlobalParameter.ISSUE_ALLOW_EMPTY_REASON,module);
         
         // Reason field is required to modify attributes
         Group reasonGroup = intake.get("Attachment", "attCommentKey" + issue.getQueryKey(), false);

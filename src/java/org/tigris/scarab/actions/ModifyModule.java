@@ -75,7 +75,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.40 2004/11/14 21:06:55 dep4b Exp $
+ * @version $Id: ModifyModule.java,v 1.41 2005/01/10 20:29:23 dabbous Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -137,7 +137,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 Module newParent = me.getParent();
                 String newCode = me.getCode();
 
-                if (newParent.getParent() == me)
+                if (newParent.getParent() == me && origParent!=me)
                 {
                     scarabR.setAlertMessage(L10NKeySet.CircularParentChildRelationship);
                     intake.remove(moduleGroup);
@@ -199,6 +199,11 @@ public class ModifyModule extends RequireLoginFirstAction
                     }
                 }
 
+                ParameterParser pp = data.getParameters();
+                String name = GlobalParameter.ISSUE_ALLOW_EMPTY_REASON;
+                boolean allowEmptyReason = pp.getBoolean(name,false);
+                GlobalParameterManager.setBoolean(name, me,allowEmptyReason);
+         
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
                 scarabR.setConfirmMessage(L10NKeySet.ModuleUpdated);

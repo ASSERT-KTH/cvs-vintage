@@ -127,7 +127,7 @@
 
  #if ($scarabG.Parameter.getBoolean($scarabG.ParameterName.EMAIL_ALLOW_MODULE_OVERRIDE)) 
  <tr>
-  <th>$l10n.EmailEnable</th>
+  <th nowrap="nowrap">$l10n.EmailEnable</th>
   <td> 
    #set ($name = $scarabG.ParameterName.EMAIL_ENABLED)
    #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
@@ -136,7 +136,7 @@
   </td> 
  </tr>
  <tr>
-  <th>$l10n.EmailIncludeIssueDetails</th>
+  <th nowrap="nowrap">$l10n.EmailIncludeIssueDetails</th>
   <td> 
    #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_ISSUE_DETAILS)
    #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
@@ -145,10 +145,21 @@
   </td> 
  </tr>
  #end
+ 
+ <tr>
+  <th nowrap="nowrap">Reason-field required</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.ISSUE_ALLOW_EMPTY_REASON)
+   #set ($selected = $scarabG.isIssueAllowEmptyReason($editModule))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     Issue updates need valid Reason field
+  </td> 
+ </tr>
+ 
 
 #if ($editModule || $createNew != "true")
   <tr>
-    <th>$l10n.Deleted</th>
+    <th nowrap="nowrap">$l10n.Deleted</th>
     <td>
         #booleanCheckbox($moduleGroup.Deleted)
     </td>
