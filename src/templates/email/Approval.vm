@@ -3,16 +3,15 @@ $l10n.Details:
 
 #set ($args = [$user.getUserName(), $actionIndex, $artifactIndex, $artifactName])
 $l10n.format("ApprovalEmailBody", $args)
-
-#if($comment)
+#if(!$comment.equals(""))
 
 $l10n.Comment:
-$comment
+ $comment
 #end
-#if($globalComment)
+#if(!$globalComment.equals(""))
 
 $l10n.GeneralComment:
-$globalComment
+ $globalComment
 #end
 
 ---------------------------------------------------------------------
@@ -20,3 +19,4 @@ $l10n.EmailFooterA
 $l10n.EmailFooterB
 $l10n.EmailFooterC
 $l10n.EmailFooterD
+

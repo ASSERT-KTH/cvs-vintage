@@ -82,16 +82,18 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.37 2003/04/30 01:09:30 jon Exp $
+ * @version $Id: Approval.java,v 1.38 2003/05/08 22:31:12 beril Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
     private static final String REJECT = "reject";
     private static final String APPROVE = "approve";
+    private static final String COMMENT = "comment";
 
     private static final Integer QUERY = new Integer(0);
     private static final Integer ISSUE_ENTRY_TEMPLATE = new Integer(1);
-    
+    private static final Integer COMMENTED = new Integer(2);
+
     private static final Integer REJECTED = QUERY;
     private static final Integer APPROVED = ISSUE_ENTRY_TEMPLATE;
     
@@ -157,7 +159,10 @@ public class Approval extends RequireLoginFirstAction
                    }
                    actionWord = APPROVED;
                }
-
+               else if (action.equals(COMMENT))
+               {
+                   actionWord = COMMENTED; 
+               }
             }
             else if (key.startsWith("template_id_"))
             {
@@ -197,8 +202,11 @@ public class Approval extends RequireLoginFirstAction
                    }
                    actionWord = APPROVED;
                }
+               else if (action.equals(COMMENT))
+               {
+                   actionWord = COMMENTED;
+               }
             }
-
             if (!action.equals("none"))
             {
                 // send email
