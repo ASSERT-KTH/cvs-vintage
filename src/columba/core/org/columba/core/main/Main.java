@@ -137,6 +137,7 @@ public class Main {
 				return name.endsWith("jar");
 			}
 		});
+		if( nativeJars == null ) return;		
 		
 		// Get the current classpath from the sysloader
 		// through reflection

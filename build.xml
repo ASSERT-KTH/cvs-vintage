@@ -313,7 +313,8 @@
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>									
+				<include name="${lib.je}"/>						
+				<include name="${manual.jar}"/>
 				<include name="${native.linux}/${lib.jdic}" />
 				<include name="${native.linux}/lib/*.so"/>
 			</tarfileset>
@@ -343,6 +344,7 @@
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="columba.jar"/>
+				<include name="${manual.jar}"/>
 				<include name="${lib.forms}"/>
 				<include name="${lib.jscf}"/>
 				<include name="${lib.jargs}"/>
@@ -378,8 +380,8 @@
 	<target name="source-unix" depends="init,linefeeds-unix"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<zip zipfile="${release.base}/columba-unix-${version}-src.zip" update="true">
-			<zipfileset dir="." prefix="columba-unix-${version}-src">
+		<tar tarfile="${release.base}/columba-unix-${version}-src.tar" compression="bz2">
+			<tarfileset dir="." prefix="columba-unix-${version}-src">
 				<include name="**/*.java"/>
 				<include name="**/*.jar"/>
 				<include name="**/*.xml"/>
@@ -397,8 +399,8 @@
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
 				<include name="plugins/**/*.xml"/>
-			</zipfileset>
-		</zip>
+			</tarfileset>
+		</tar>
 	</target>
 
 	<!-- create a source zip file for windows flavors, containing all sources and README, LICENSE, CHANGES, AUTHORS -->
@@ -523,7 +525,6 @@
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
 	<target name="run" depends="init-native,compile"  description="Starts Columba">
 		<java classname="org.columba.core.main.Main" fork="yes">
-			<jvmarg value="-Djava.library.path=${native.library.path}"/>
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
@@ -531,7 +532,6 @@
 	<target name="run-debug" depends="init-native,compile"  description="Starts Columba with the --debug option">
 		<java classname="org.columba.core.main.Main" fork="yes">
 			<arg value="--debug"/>
-			<jvmarg value="-Djava.library.path=${native.library.path}"/>
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
