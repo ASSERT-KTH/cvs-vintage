@@ -1,4 +1,4 @@
-// $Id: GoListToDecisionsToItems.java,v 1.10 2004/09/05 13:18:08 mvw Exp $
+// $Id: GoListToDecisionsToItems.java,v 1.11 2004/10/03 07:07:29 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,10 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 
 
+/**
+ * Rule for sorting the ToDo list: Decision -> Item.
+ *
+ */
 public class GoListToDecisionsToItems implements TreeModel {
   
     ////////////////////////////////////////////////////////////////
