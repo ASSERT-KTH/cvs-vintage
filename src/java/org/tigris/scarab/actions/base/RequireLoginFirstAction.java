@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.30 2002/03/05 22:57:36 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.31 2002/03/08 06:40:51 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -258,14 +258,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
             {
                 cancelTargets.pop();
             }
-            if (user.hasLoggedIn())
-            {
-                data.setTarget("ArtifactTypeSelect.vm");
-            }
-            else
-            {
-                data.setTarget("Login.vm");
-            }
+            data.setTarget("Index.vm");
             return;
         }
 
