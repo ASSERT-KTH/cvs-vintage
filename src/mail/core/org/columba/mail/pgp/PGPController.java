@@ -130,7 +130,6 @@ public class PGPController {
 		int exitVal = -1;
 		try {
 			exitVal = utils[GPG].encrypt(item, message);
-			checkError(exitVal, item);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 		}
@@ -160,7 +159,6 @@ public class PGPController {
 		this.getPassphrase(item);
 		try {
 			exitVal = utils[GPG].sign(item, pgpMessage);
-			checkError(exitVal, item);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
@@ -252,6 +250,24 @@ public class PGPController {
 			ret = false;
 		}
 		return ret;
+	}
+	
+	/**
+	 * Returnes the Result from the GPG Util as an InputStream. On each operation with the GPG Util this Stream is
+	 *  overidden. The ResultStream can be empty if it has earliyer readed out.
+	 * @return The Result from the GPG Util as an InputStream.
+	 */
+	public InputStream getPGPResultStream() {
+		return utils[GPG].getStreamResult();
+	}
+	
+	/**
+	 * Returns the ErrorResult from the GPG Util as an InputStream. On each operation with the GPG Util this Stream is
+	 *  overidden. The ResultStream can be empty if it has earliyer readed out.
+	 * @return The ErrorResult from the GPG Util as an InputStream.
+	 */
+	public InputStream getPGPErrorStream() {
+		return utils[GPG].getErrorStream();
 	}
 
 }
