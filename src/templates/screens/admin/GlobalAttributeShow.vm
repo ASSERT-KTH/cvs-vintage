@@ -1,0 +1,79 @@
+$page.setTitle("Global Attribute Editor")
+
+#set ($module = $scarabR.CurrentModule)
+
+<h1>Global Attributes</h1>
+
+<p>
+This page is for editing the Global Attributes.
+</p>
+
+<form>
+<p class="functnbar">
+<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+</p>
+</form>
+
+<div class="grouper">
+
+#datatitle("Attributes")
+
+<p>#actionErrorMsg()</p>
+
+<div class="datatable">
+
+<form action="$link.setPage("admin,AttributeShow.vm")" method="get">
+    <input type="hidden" name="action" value="admin.ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/>
+<img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
+<th>attribute name:</th>
+<th>input type:</th>
+<th>description:</th>
+<th>author:</th>
+<th>creation date:</th>
+</tr>
+
+#set ( $attgroup = $intake.Attribute.Default ) 
+#set ( $allAttributes = $scarabG.AllAttributes )
+
+#foreach( $attribute in $allAttributes )
+#set ($attribute = $rma.Attribute)
+#if ( $velocityCount % 2 > 0 )
+<tr class="a">
+#else
+<tr class="b">
+#end
+<td><input type="checkbox"/></td>
+<td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
+<td>
+    #set ($attType = $attribute.AttributeType)
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      #if($attType.AttributeTypeId == $atype.AttributeTypeId)
+        $atype.Name
+      #end
+    #end
+</td>
+<td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
+#set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+<td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+<td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
+</tr>
+#end
+</table>
+
+</div>
+
+$intake.declareGroups()
+</form>
+
+<form>
+<p class="functnbar">
+<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+</p>
+</form>
+
+#end
