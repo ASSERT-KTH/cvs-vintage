@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.37 2004/11/21 20:20:09 mvw Exp $
+// $Id: ProjectManager.java,v 1.38 2004/11/29 15:24:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,10 +251,12 @@ public final class ProjectManager implements PropertyChangeListener {
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent pce) {
-        if (pce.getPropertyName().equals(Designer.MODEL_TODOITEM_ADDED)) {
+        if (pce.getPropertyName().equals(
+                Designer.MODEL_TODOITEM_ADDED)) {
             getCurrentProject().setNeedsSave(true);
         }
-        else if (pce.getPropertyName().equals(Designer.MODEL_TODOITEM_DISMISSED)) {
+        else if (pce.getPropertyName().equals(
+                Designer.MODEL_TODOITEM_DISMISSED)) {
             getCurrentProject().setNeedsSave(true);
         }
         
