@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.16 2002/01/13 02:28:28 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.17 2002/02/02 15:58:05 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -1064,13 +1064,16 @@ error response if not specified.</p>
     <td>null, <i>use default Tomcat server string</i></td>
   </tr>
   <tr valign="top">
-    <td>delaySocketClose<br><b>[Tomcat 3.3.1]</b></td>
-    <td>When set true, a Thread.sleep(0) is executed just prior to closing
-      the socket for a request. This can help when running a test against
-      Tomcat on a very fast system. Otherwise, thread execution may complete
-      the socket close before the test thread gets a chance to read the data
-      resulting in a "Socket reset by peer" error.</td>
-    <td>false</td>
+    <td>socketCloseDelay<br><b>[Tomcat 3.3.1]</b></td>
+    <td>When set to 0, a Thread.yield() is executed just prior to closing
+      the socket for a request. When set greater than 0, the thread will
+      &quot;spin&quot; in a wait loop for the specified number of milliseconds
+      before closing the socket. If less than 0, no extra action is performed
+      before closing the socket.<br>
+      This delay can help when running tests against Tomcat on certain systems
+      where the normal sequence of thread execution between Tomcat and client
+      results in a &quot;Socket reset by peer&quot; error.</td>
+    <td>-1</td>
   </tr>
   <tr valign="top">
     <td><b>Connection Properties</b></td>
@@ -1085,7 +1088,8 @@ error response if not specified.</p>
   <tr valign="top">
     <td>keystore</td>
     <td>Keystore containing the Server certificate</td>
-    <td>.keystore in directory specified by the user.home System property</td>
+    <td>PureTLS: server.pem<br>
+        JSSE: .keystore in directory specified by the user.home System property</td>
   </tr>
   <tr valign="top">
     <td>keypass</td>
@@ -1118,6 +1122,22 @@ error response if not specified.</p>
     <td><i>no default, must be specified</i></td>
   </tr>
   <tr valign="top">
+    <td>SSLImplementation<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Class which implements the
+        <code>org.apache.tomcat.util.net.SSLImplementation</code> interface.
+        This setting controls which SSL support is used by secure connections.
+        Currently supported are:<br>
+        <ol>
+        <li>PureTLS - specify
+            <code>org.apache.tomcat.util.net.PureTLSImplementation</code></li>
+        <li>JSSE - specify
+            <code>org.apache.tomcat.util.net.JSSEImplementation</code></li>
+        </ol></td>
+    <td><i>not set</i><br>
+        default behavior will detect PureTLS and JSSE and choose the one
+        available, or PureTLS if both are available.</td>
+  </tr>
+  <tr valign="top">
     <td>timeout</td>
     <td>Socket read timeout in seconds.</td>
     <td>300</td>
@@ -1148,6 +1168,61 @@ error response if not specified.</p>
     <td>pools</td>
     <td>Enables use of a Thread pool.</td>
     <td>true</td>
+  </tr>
+</table>
+
+<p><b>Note:</b> In Tomcat 3.3.1 and later, you may specify attributes that do
+not appear in the list above. These attribute settings will be saved in a list
+and made available to the secure socket factory when <code>secure</code> is set
+<code>true</code>.  Supported attributes are:</p>
+
+<h4>PureTLS</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>rootfile</td>
+    <td>File containing root certificates.</td>
+    <td>root.pem</td>
+  </tr>
+  <tr>
+    <td>randomfile</td>
+    <td>File to initialize random number generation.</td>
+    <td>random.pem</td>
+  </tr>
+</table>
+
+<h4>JSSE</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>algorithm</td>
+    <td>Algorithm used to encode the certificate.</td>
+    <td>SunX509</td>
+  </tr>
+  <tr>
+    <td>keystoreType</td>
+    <td>Type of keystore.</td>
+    <td>JKS</td>
+  </tr>
+  <tr>
+    <td>keystorePass</td>
+    <td>Password to Keystore file.</td>
+    <td><i>defaults to keypass setting</i></td>
+  </tr>
+  <tr>
+    <td>protocol</td>
+    <td>Protocol for the SSL.</td>
+    <td>TLS</td>
   </tr>
 </table>
 
@@ -1232,7 +1307,7 @@ the configuration files during normal startup, add:</p>
   <tr valign="top">
     <td>isapiRedirector&nbsp;&nbsp;<br><b>[Tomcat 3.3.1]</b></td>
     <td>Name of the ISAPI connector DLL.  This setting controls the name of
-      the redirector DLL included in the configuration settings. This setting
+      the redirector DLL used in the configuration settings. This setting
       appears in the registry settings configuration file specified by the
       <code>regConfig</code> attribute. It is also written to a file with the
       same name as the DLL, but with a &quot;.properties&quot; extension.
@@ -1624,6 +1699,11 @@ as IBM's <code>Jikes</code> Java compiler.</p>
     <td>&nbsp;</td>
   </tr>
   <tr valign="top">
+    <td>classDebugInfo</td>
+    <td>Enables compiling the class file with debugging information.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
     <td>javaCompiler</td>
     <td>Jasper class for invoking the Java compiler.  For using Sun's
     <code>javac</code> Java compiler in process, specify
@@ -1634,8 +1714,11 @@ as IBM's <code>Jikes</code> Java compiler.</p>
     <td>org.apache.jasper.compiler.SunJavaCompiler</td>
   </tr>
   <tr valign="top">
-    <td>classDebugInfo</td>
-    <td>Enables compiling the class file with debugging information.</td>
+    <td>useWebAppCL</td>
+    <td>If true, Java compilation with &quot;sun.tools.javac.Main&quot; will
+        be performed using the web application classloader instead of using
+        the &quot;container&quot; classloader. This was added as a workaround
+        for problems encountered on some HP-UX systems.</td>
     <td>false</td>
   </tr>
   <tr valign="top">
@@ -1749,7 +1832,7 @@ parent.</p>
     <td>Enables providing a default XML parser to web applications that don't
       already have one.  If the <code>javax.xml.parsers.SAXParserFactory</code>
       class is found in a web application, it is assumed to already contain
-      an XML parser and not action is taken for that web application.</td>
+      an XML parser and no action is taken for that web application.</td>
     <td>true</td>
   </tr>
   <tr valign="top">
@@ -1784,9 +1867,15 @@ parent.</p>
     <td>true</td>
   </tr>
   <tr valign="top">
-    <td>use11Loader</td>
-    <td>If <code>true</code>, use the 1.1 Classloader even under Java2. 
-        For compatiblity with Tomcat 3.2.x.</td>
+    <td>use11Loader<br><b>[Tomcat 3.3.1]</b></td>
+    <td>If <code>true</code>, use the SimpleClassLoader (normally used in 
+        JDK 1.1.8 environments) even under Java2.  Otherwise the default
+        URLClassLoader is used when running with Java2.<br>
+        The primary reason for this attribute is as a workaround for known
+        jar reloading problems in the URLClassLoader of some JVM's.  If you
+        have problems with reloading web applications after updating jars,
+        try setting this attribute true. This provides compatiblity with
+        Tomcat 3.2.x. with respect to jar reloading.</td>
     <td>false</td>
   </tr>
 </table>
@@ -1795,6 +1884,7 @@ parent.</p>
 
 <pre>
 &lt;LoaderInterceptor11 jaxp=&quot;true&quot; /&gt;
+&lt;LoaderInterceptor11 jaxp=&quot;true&quot; use11Loader=&quot;true&quot;/&gt;
 </pre>
 
 <h4>Additional Note</h4>
