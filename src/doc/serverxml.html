@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.28 2002/09/19 11:13:18 hgomez Exp $ -->
+  <!-- $Id: serverxml.html,v 1.29 2002/11/03 02:42:13 billbarker Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -2501,13 +2501,21 @@ Servlet 2.2 specification.</p>
   </tr>
   <tr valign="top">
     <td>checkSSLSessionId<br><b>[Tomcat 3.3.1]</b></td>
-    <td>If true, Tomcat session will be verified against SSL session to prevent
+    <td>If <code>true</code>, Tomcat session will be verified against SSL session to prevent
       (malicious) use of other users' sessions. In order for this to work, SSL
       has to be enabled (through Apache) and SSL Session ID has to be known to
       Tomcat. More information can be found in mod_jk documentation.</td>
     <td>false</td>
   </tr>
-
+  <tr valign="top>
+    <td>secureCookie<br><b>[Tomcat 3.3.2]</b></td>
+    <td>If <code>true</code>, then Tomcat will mark the Session ID cookie as
+      as "Secure" if the session is created over a SSL connection.  A 
+      conforming browser will only send the cookie back to a page that is using
+      SSL.  The effect is that if a session is created from a SSL page, than 
+      it is not available to any non-SSL pages.</td>
+    <td>true</td>
+  </tr>
 </table>
 
 <h4>Example(s)</h4>
