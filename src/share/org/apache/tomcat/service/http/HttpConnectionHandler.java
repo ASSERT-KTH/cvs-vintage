@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.26 2000/06/22 23:14:50 alex Exp $
- * $Revision: 1.26 $
- * $Date: 2000/06/22 23:14:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.27 2000/07/11 03:16:10 alex Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/07/11 03:16:10 $
  *
  * ====================================================================
  *
@@ -85,12 +85,13 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
     public void setAttribute(String name, Object value ) {
 	if("context.manager".equals(name) ) {
-	    contextM=(ContextManager)value;
+	    setServer(value);
 	}
     }
     
     public void setServer( Object  contextM ) {
 	this.contextM=(ContextManager)contextM;
+	loghelper.setProxy(this.contextM.getLoggerHelper());
     }
 
     public Object[] init() {
@@ -112,7 +113,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
     public void setReuse( boolean b ) {
 	reuse=b;
-	System.out.println("Reuse = " + b );
+	log("Reuse = " + b );
     }
     // XXX
     //    Nothing overriden, right now AJPRequest implment AJP and read everything.
@@ -123,7 +124,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	HttpRequestAdapter reqA=null;
 	HttpResponseAdapter resA=null;
 
-	//	System.out.println("New Connection");
+	//	log("New Connection");
 	try {
 	    // XXX - Add workarounds for the fact that the underlying
 	    // serverSocket.accept() call can now time out.  This whole
@@ -142,7 +143,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		resA=(HttpResponseAdapter)thData[1];
 		if( reqA!=null ) reqA.recycle();
 		if( resA!=null ) resA.recycle();
-		//		System.out.println("Request ID " + thData[2]);
+		//		log("Request ID " + thData[2]);
 	    }
 	    // No thData - use Pool
 
@@ -154,13 +155,13 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 			myPos=pos; // >=0
 			reqA =  (HttpRequestAdapter)pool[pos]; // (HttpRequestAdapter)pool.lastElement();
 			if( reqA==null )
-			    System.out.println("Get Obj " + pos + " " + reqA);
+			    log("Get Obj " + pos + " " + reqA);
 			else
 			    resA= (HttpResponseAdapter)reqA.getResponse();
 		    }
 		}
 		if( reqA==null ) {
-		    //System.out.println("XXX REQUEST_IMPL new " + pool.size());
+		    //log("XXX REQUEST_IMPL new " + pool.size());
 		    reqA=new HttpRequestAdapter();
 		    resA=new HttpResponseAdapter();
 		    contextM.initRequest( reqA, resA );
@@ -170,7 +171,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    } 
 	    
 	    if( reqA==null || resA==null ) {	
-		//System.out.println("XXX NO POOL " );
+		//log("XXX NO POOL " );
 		reqA=new HttpRequestAdapter();
 		resA=new HttpResponseAdapter();
 		contextM.initRequest( reqA, resA );
@@ -212,20 +213,22 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	}
 	catch(java.net.SocketException e) {
 	    // SocketExceptions are normal
-	    contextM.doLog( "SocketException reading request, ignored", e, Logger.INFORMATION);
+	    log( "SocketException reading request, ignored", null, Logger.INFORMATION);
+	    log( "SocketException reading request:", e, Logger.DEBUG);
 	}
 	catch (java.io.IOException e) {
 	    // IOExceptions are normal 
-	    contextM.doLog( "IOException reading request, ignored", e, Logger.INFORMATION);
+	    log( "IOException reading request, ignored", null, Logger.INFORMATION);
+	    log( "IOException reading request:", e, Logger.DEBUG);
 	}
 	// Future developers: if you discover any other
-	// rare-but-nonfatal exceptions, catch them here, and log
-	// with INFORMATION level.
+	// rare-but-nonfatal exceptions, catch them here, and log as
+	// above.
 	catch (Throwable e) {
 	    // any other exception or error is odd. Here we log it
 	    // with "ERROR" level, so it will show up even on
 	    // less-than-verbose logs.
-	    contextM.doLog( "Error reading request, ignored", e, Logger.ERROR);
+	    log( "Error reading request, ignored", e, Logger.ERROR);
 	} 
 	finally {
 	    // recycle kernel sockets ASAP
@@ -235,7 +238,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	if( reuse ) {
 	    synchronized( this ) {
 		if( pos<pool.length && reqA!= null ) {
-		    //System.out.println("Set Obj " + pos + " " + reqA);
+		    //log("Set Obj " + pos + " " + reqA);
 		    pool[pos]= reqA ;
 		    pos++;
 		}
@@ -245,5 +248,16 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	//	System.out.print("6");
     }
 
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    // note: as soon as we get a ContextManager, we start using its
+    // log stream, see setServer()
+
+    void log(String msg) {
+	loghelper.log(msg);
+    }
+
+    void log(String msg, Throwable t, int level) {
+	loghelper.log(msg,t,level);
+    }
 
 }
