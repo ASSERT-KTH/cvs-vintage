@@ -22,6 +22,8 @@ import java.security.Principal;
 import java.security.MessageDigest;
 import java.security.DigestOutputStream;
 
+import javax.transaction.Transaction;
+
 import org.jboss.invocation.Invocation;
 
 /*
@@ -56,7 +58,7 @@ import javax.transaction.Transaction;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -207,6 +209,16 @@ implements java.io.Externalizable
       super(payload);
    }
    
+   public MarshalledInvocation(
+      Object id, 
+      Method m, 
+      Object[] args, 
+      Transaction tx, 
+      Principal identity, 
+      Object credential)
+   {
+       super(id, m, args, tx, identity, credential);
+   }
    // Public --------------------------------------------------------
    
    
