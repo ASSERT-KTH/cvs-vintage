@@ -68,7 +68,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.93 $
+* @version $Revision: 1.94 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -440,21 +440,7 @@ public class ContainerFactory
          {
             BeanVerifier verifier = new BeanVerifier();
 
-            verifier.addVerificationListener( new VerificationListener()
-               {
-                  public void beanChecked( VerificationEvent event )
-                  {
-                     log.debug( event.getMessage() );
-                  }
-
-                  public void specViolation( VerificationEvent event )
-                  {
-                     if( verifierVerbose )
-                        log.info( event.getVerbose() );
-                     else
-                        log.info( event.getMessage() );
-                  }
-               } );
+            verifier.addVerificationListener( new DeployListener ());
             log.info( "Verifying " + url );
             verifier.verify( url, metaData, cl );
          }
@@ -985,10 +971,29 @@ public class ContainerFactory
 
       return ic;
    }
+
+   /** A callback listener for the EJB verifier.
+   */
+   class DeployListener implements VerificationListener
+   {
+      /* Accessing the ContainerFactory.log directory is
+         causing a NoSuchMethodError when the log is used
+         so obtain it via the getLog() method and then use
+         logger
+      */
+      final Logger logger = ContainerFactory.this.getLog();
+      public void beanChecked( VerificationEvent event )
+      {
+         logger.debug( event.getMessage() );
+      }
+      public void specViolation( VerificationEvent event )
+      {
+         if( verifierVerbose )
+            logger.info( event.getVerbose() );
+         else
+            logger.info( event.getMessage() );
+      }
+  }
+
 }
 
-/* Change log:
- *
- * o Thu Jun 14 23:28:58  2001 UTC, starksm
- *   Added support for validation of the j2ee related deployment descriptors.
- */
