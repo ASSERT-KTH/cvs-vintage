@@ -1,4 +1,4 @@
-// $Id: ArgoModuleEvent.java,v 1.5 2003/09/17 21:08:21 thierrylach Exp $
+// $Id: ArgoModuleEvent.java,v 1.6 2004/10/20 11:12:06 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.events;
-import org.argouml.application.api.*;
+import org.argouml.application.api.ArgoModule;
 
 /** ArgoModuleEvent is used to notify interested parties
  *  that the module which is the event source
