@@ -19,7 +19,12 @@ cd $ROOT
 cd $ROOT/tomcat
 bin/tomcat.sh stop 
 
-pkill java
-killall -9 java
+if [ -f /usr/bin/pkill ] ; then 
+   pkill java
+fi
+
+if [ -f /usr/bin/killall ] ; then 
+   killall -9 java
+fi
 
 

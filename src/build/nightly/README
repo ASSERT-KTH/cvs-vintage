@@ -53,12 +53,33 @@ stop_tomcat.sh -> ATTENTION: it'll first try to be nice, but then it'll
 run_watchdog.sh -> start, run watchdog 3 times, run sanity, grep the
              results for error counts 
 
-cvs_get.sh -> update or clean checkoug, for tomcat or all
-
-build_tomcat.sh -> just build and zip the result ( after adding jaxp )
-
 functions_build.sh -> various shell functions ( I use to source it and 
              use them in command line to repeat individual steps )
+
+Build Functions
+===============
+
+build_tomcat SUFIX TARGET -> build, add jaxp1.0 and zip the result
+ant_build REPOSITORY DISTNAME LOGFILE TARGET -> use ant to build 
+          repository ( jakarta-tomcat ) into DISTNAME ( tomcat ), 
+	  with log ( build-full.log ) and using TARGET ( main )
+
+cvs_update REPOSITORY CVSTAG -> update or clean get of repository
+cvs_get REPOSITORY CVSTAG
+
+zip_src REPOSITORY ZIPNAME -> 
+zip_dist DISTNAME ARCHBASE -> zip dist ( tomcat ) to .zip and 
+             tgz ( tomcat-full)
+
+count_errors LOGFILE -> do greps for OK and FAILURE in a watchdog log file
+...
+
+Future 
+======
+
+Move back to ant ( as much as possible - we'll have to use a lot of <java>
+tasks to run ant1.1 and test with different VMs )
+
 
 
 NOTE: don't expect nice code, it's just a hack to build and test tomcat.

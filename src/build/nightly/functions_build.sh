@@ -4,10 +4,6 @@
 # PATH 
 # JDK11_HOME JDK12_HOME
 
-if [ -f $HOME/.nightlyrc ] ; then 
-   . $HOME/.nightlyrc
-fi
-
 # Defaults 
 if [ "$WS" = "" ] ; then
    WS=$HOME/ws
@@ -23,8 +19,18 @@ LOGDIR=$WS/log
 CVSROOT=:pserver:anoncvs@jakarta.apache.org:/home/cvspublic
 PATH=$HOME/bin:$HOME/bin/nightly:/usr/local/bin:$PATH
 JSSE=$HOME/java/jsse
-EXTENTSIONS=$JSSE/jsse.jar:$JSSE/jnet.jar:$JSSE/jcert.jar:.
+EXTENSIONS=$JSSE/jsse.jar:$JSSE/jnet.jar:$JSSE/jcert.jar:.
 ANT_HOME=$HOME/opt/ant-1.2
+
+if [ ! -d $WS ] ; then 
+    mkdir $WS
+fi 
+if [ ! -d $LOGDIR ] ; then 
+   mkdir $LOGDIR
+fi
+if [ ! -d $ZIPDIR ] ; then 
+   mkdir $ZIPDIR
+fi
 
 export JAVA_HOME
 export ZIP
@@ -35,6 +41,11 @@ export PATH
 export JSSE
 export EXTENSIONS
 export ANT_HOME
+
+#Override
+if [ -f $HOME/.nightlyrc ] ; then
+   . $HOME/.nightlyrc
+fi
 
 ## Make sure all dirs exists
 mkdir -p $ZIPDIR
@@ -57,12 +68,13 @@ check() {
 # functions
 
 cvs_get() {
-   MOD=$1
+  MOD=$1
+  TAG=$2
 
   cd $WS
   rm -rf $MOD
-  echo cvs -d $CVSROOT co $MOD
-  cvs co $MOD >$LOGDIR/cvs-get-$MOD.log 2>&1
+  echo cvs -d $CVSROOT co $TAG $MOD
+  cvs co $TAG $MOD >$LOGDIR/cvs-get-$MOD.log 2>&1
   wc $LOGDIR/cvs-get-$MOD.log
   tail -5 $LOGDIR/cvs-get-$MOD.log
   echo 
@@ -70,6 +82,7 @@ cvs_get() {
 
 cvs_update() {
   MOD=$1
+  TAG=$2
 
   cd $WS/$MOD
   echo cvs -d -P $CVSROOT update 
@@ -129,49 +142,6 @@ ant_build() {
   echo ---------- DONE $DIST BUILD `date` ---------- 
 }
 
-ant_build_xml() {
-  MOD=$1
-  DIST=$2
-  LOG=$LOGDIR/$3
-  # ANT_HOME
-  # JAVA_HOME
-
-  echo ---------- $DIST BUILD `date` ---------- 
-  echo JAVA_HOME=$JAVA_HOME
-  echo LOG=$LOG
-  echo WS=$WS/$MOD
-  echo CLASSPATH=$CLASSPATH 
-  echo 
-
-  echo ---------- $DIST BUILD `date` ---------- >> $LOG 2>&1 
-  echo JAVA_HOME=$JAVA_HOME >> $LOG 2>&1
-  echo LOG=$LOG >> $LOG 2>&1
-  echo WS=$WS/$MOD >> $LOG 2>&1
-  echo CLASSPATH=$CLASSPATH >> $LOG 2>&1
-  echo  >> $LOG 2>&1
-  $JAVA_HOME/bin/java -version  >> $LOG 2>&1
-
-  cd $WS/$MOD
-  echo rm -rf $WS/$MOD/build >> $LOG 2>&1
-  rm -rf $WS/$MOD/build >> $LOG 2>&1
-
-  JAVACMD=$JAVA_HOME/bin/java
-  export JAVACMD
-  $ANT_HOME/bin/ant dist 2>&1 >> $LOG
-
-  grep "BUILD SUCCESSFUL" $LOG 
-  if [ "$?" != "0" ]; then 
-    echo BUILD FAILED. 
-    echo ---------- HEAD:
-    head -10 $LOG
-    echo ---------- TAIL:
-    tail -20 $LOG
-    echo ----------
-    echo 
-  fi
-  echo ---------- DONE $DIST BUILD `date` ---------- 
-}
-
 zip_src() {
   MOD=$1
   ZIPNAME=$2
@@ -209,6 +179,17 @@ fix_tomcat() {
   cp $ANT_HOME/lib/jaxp.jar $WS/dist/tomcat/lib
 }
 
+## Will build tomcat, copy the jaxp files, and zip the result
+build_tomcat() {
+  SUFIX=$1
+  TARGET=$2
+  
+  ant_build jakarta-tomcat tomcat tomcat-build-$SUFIX.log $TARGET
+  fix_tomcat
+  zip_dist tomcat tomcat-$SUFIX 
+}
+
+## Will count the errors in a watchdog script
 count_errors() {
     BASELOG=$1
 

@@ -48,6 +48,12 @@ while [ "$STARTED" != "0" ] ; do
         grep "Http10Interceptor"  $LOGDIR/tomcat-run$EXT.log \
 		>/dev/null 2>&1
 	STARTED=$?
+	if [ "$STARTED" != "0" ] ; then 
+           grep "HttpConnectionHandler"  $LOGDIR/tomcat-run$EXT.log \
+		>/dev/null 2>&1
+	   STARTED=$?
+        fi
+
 	i=`expr $i + 1`
         if [ "$i" = "120" ] ; then
 	    echo "Can't start after 120 seconds "
