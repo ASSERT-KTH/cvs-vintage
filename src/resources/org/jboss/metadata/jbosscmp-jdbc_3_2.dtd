@@ -851,7 +851,7 @@ Updated time, default is audit_updated_time
   type and translates it to a column value; when loading, it takes a column
   value and translates it to an instance of the user type.
 -->
-<!ELEMENT user-type-mapping (java-type, mapped-type, mapper)>
+<!ELEMENT user-type-mapping (java-type, mapped-type, mapper, check-dirty-after-get?, state-factory?)>
 
 <!--
   The type a java-type in user-type-mapping is mapped to.
