@@ -110,6 +110,8 @@ public class TraceCarol {
     public static void verbose(String msg) {
         if (carolLogger != null) {
             carolLogger.log(BasicLevel.INFO, msg);
+        } else {
+        	System.out.println("CAROL Verbose message:" + msg);
         }
     }
 
@@ -121,7 +123,9 @@ public class TraceCarol {
     public static void error(String msg) {
         if (carolLogger != null) {
             carolLogger.log(BasicLevel.ERROR, msg);
-        }
+        } else {
+		   System.err.println("CAROL Error:"+msg);
+	    }
     }
 
     /**
@@ -133,7 +137,10 @@ public class TraceCarol {
     public static void error(String msg, Throwable th) {
         if (carolLogger != null) {
             carolLogger.log(BasicLevel.ERROR, msg, th);
-        }
+        } else {
+		System.err.println("CAROL Error:"+msg);
+		th.printStackTrace();
+	    }
     }
 
 	/**

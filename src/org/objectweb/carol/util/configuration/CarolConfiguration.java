@@ -130,8 +130,6 @@ public class CarolConfiguration {
 	  * for instantiate the carol communication layer
 	  */
 	 public static void init() throws RMIConfigurationException {
-		 // init Trace 
-		 TraceCarol.configure();
 		 new CarolConfiguration();
 	 }
 	 
@@ -200,8 +198,6 @@ public class CarolConfiguration {
      * @throws RMIConfigurationException if a problem occurs in the configuration loading
      */
     public static void loadCarolConfiguration() throws RMIConfigurationException {
-        // init Trace 
-        TraceCarol.configure();
         // load the configuration files	
         try {
 
