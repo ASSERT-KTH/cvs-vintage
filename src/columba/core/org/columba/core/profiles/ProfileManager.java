@@ -413,7 +413,7 @@ public class ProfileManager {
 
 		// delete all files
 		for (int i = 0; i < files.length; i++) {
-			new File(files[i]).delete();
+			new File(location, files[i]).delete();
 		}
 
 		// if config-folder is really empty
