@@ -28,7 +28,7 @@ import javax.management.loading.*;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.40 $
+ *   @version $Revision: 1.41 $
  */
 public class Main
 {
@@ -39,27 +39,15 @@ public class Main
 
    // Static --------------------------------------------------------
    public static void main(final String[] args)
-   throws Exception
-   {
-		
-		
-   // Constants -----------------------------------------------------
-   
-   String versionIdentifier = "3.0 ALPHA [RABBIT-HOLE]";
-   
-   // Attributes ----------------------------------------------------
-   
-   // Static --------------------------------------------------------
-   public static void main(final String[] args)
-   throws Exception
+      throws Exception
    {
       /* 
-      *  Set a jboss.home property from the location of the Main.class jar
-      *  if the property does not exist.
-      *  marcf: we don't use this property at all for now 
-      *  it should be used for all the modules that need a file "anchor"
-      *  it should be moved to an "FileSystemAnchor" MBean
-      */
+       *  Set a jboss.home property from the location of the Main.class jar
+       *  if the property does not exist.
+       *  marcf: we don't use this property at all for now 
+       *  it should be used for all the modules that need a file "anchor"
+       *  it should be moved to an "FileSystemAnchor" MBean
+       */
       if( System.getProperty("jboss.home") == null )
       {
          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
@@ -100,7 +88,7 @@ public class Main
       //final String lDir = loadDir;
       final String pDir = patchDir;
       
-      // Start server - Main does not have the proper permissions
+            // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()      
          {
             public Object run()
@@ -160,7 +148,7 @@ public class Main
                      return name.endsWith(".jar") || name.endsWith(".zip");
                   }
                }
-            );
+                                        );
             // Add the normal configuration directory
             tmp.add(confDirectory);
             
@@ -248,32 +236,32 @@ public class Main
 
 
 /*
-// Setup security
-// XXX marcf: what are the reason that would prevent us from making this an MBean
-// Set the JAAS login config file if not already set
-if( System.getProperty("java.security.auth.login.config") == null )
-{
-URL loginConfig = mlet.getResource("auth.conf");
-if( loginConfig != null )
-{
-System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
-}
-else
-{
-System.out.println("Warning: no auth.conf found in config="+confName);
-}
-}
+  // Setup security
+  // XXX marcf: what are the reason that would prevent us from making this an MBean
+  // Set the JAAS login config file if not already set
+  if( System.getProperty("java.security.auth.login.config") == null )
+  {
+  URL loginConfig = mlet.getResource("auth.conf");
+  if( loginConfig != null )
+  {
+  System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
+  System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+  }
+  else
+  {
+  System.out.println("Warning: no auth.conf found in config="+confName);
+  }
+  }
 
-// Set security using the mlet, if a patch was passed it will look in that path first
-URL serverPolicy = mlet.getResource("server.policy");
+  // Set security using the mlet, if a patch was passed it will look in that path first
+  URL serverPolicy = mlet.getResource("server.policy");
 
-if ( serverPolicy == null )
-{
-throw new IOException("server.policy missing");
-}
+  if ( serverPolicy == null )
+  {
+  throw new IOException("server.policy missing");
+  }
 
-System.setProperty("java.security.policy", serverPolicy.getFile());
+  System.setProperty("java.security.policy", serverPolicy.getFile());
 
 // Set security manager
 // Optional for better performance
@@ -282,15 +270,15 @@ System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("jav
 */
 
 /*
-*   Revisions:
-*   20010618 marcf: 
-*     - Removed the jboss.properties, fully deprecated the use of properties
-*     - Moved security properties to the main body to take advantage of patch dir
-*     - Removed storage of initial configuration... useless!
-*     - Moved to addConfiguration call with explicit services.xml arguments
-*     - New signature support --net-install --patch-dir --conf-dir and [-n -p -c]   
-*     - Support for http based installations added
-*     - Got rid of wildcard imports 
-*     - Moved lib structure to lib 
-*
-*/
+ *   Revisions:
+ *   20010618 marcf: 
+ *     - Removed the jboss.properties, fully deprecated the use of properties
+ *     - Moved security properties to the main body to take advantage of patch dir
+ *     - Removed storage of initial configuration... useless!
+ *     - Moved to addConfiguration call with explicit services.xml arguments
+ *     - New signature support --net-install --patch-dir --conf-dir and [-n -p -c]   
+ *     - Support for http based installations added
+ *     - Got rid of wildcard imports 
+ *     - Moved lib structure to lib 
+ *
+ */
