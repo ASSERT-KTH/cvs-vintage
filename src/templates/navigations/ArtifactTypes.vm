@@ -1,11 +1,5 @@
-#if ($scarabR.CurrentModule.NavIssueTypes)
-  #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
-#end
+#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
-
-<div><strong>
-$link.setPage("SelectArtifactType.vm").setLabel("Issue types")
-</strong>
 
 #if ($scarabR.CurrentModule.Dedupe)
 #set ($wizardScreen = "entry,Wizard1.vm")
@@ -30,7 +24,4 @@ $link.setPage("SelectArtifactType.vm").setLabel("Issue types")
   #end
 #end
 
-</div>
 #end
-
-
