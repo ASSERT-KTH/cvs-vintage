@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.3 2000/01/08 14:50:41 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 14:50:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.4 2000/06/08 23:10:30 nacho Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/08 23:10:30 $
  *
  * ====================================================================
  *
@@ -24,7 +24,7 @@
  *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
@@ -65,10 +65,7 @@
 package org.apache.tomcat.util;
 
 import java.text.MessageFormat;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * An internationalization / localization helper class which reduces
@@ -98,7 +95,7 @@ public class StringManager {
     /**
      * The ResourceBundle for this StringManager.
      */
-    
+
     private ResourceBundle bundle;
 
     /**
@@ -111,16 +108,21 @@ public class StringManager {
      */
 
     private StringManager(String packageName) {
-	String bundleName = packageName + ".LocalStrings";
-	bundle = ResourceBundle.getBundle(bundleName);
+        String bundleName = packageName + ".LocalStrings";
+        bundle = ResourceBundle.getBundle(bundleName);
+    }
+
+    private StringManager(String packageName,Locale loc) {
+        String bundleName = packageName + ".LocalStrings";
+        bundle = ResourceBundle.getBundle(bundleName,loc);
     }
 
     /**
      * Get a string from the underlying resource bundle.
      *
-     * @param key 
+     * @param key
      */
-    
+
     public String getString(String key) {
         if (key == null) {
             String msg = "key is null";
@@ -149,13 +151,13 @@ public class StringManager {
      */
 
     public String getString(String key, Object[] args) {
-	String iString = null;
+	      String iString = null;
         String value = getString(key);
 
 	// this check for the runtime exception is some pre 1.1.6
 	// VM's don't do an automatic toString() on the passed in
 	// objects and barf out
-	
+
 	try {
             // ensure the arguments are not null so pre 1.2 VM's don't barf
             Object nonNullArgs[] = args;
@@ -165,7 +167,7 @@ public class StringManager {
 		    nonNullArgs[i] = "null";
 		}
 	    }
- 
+
             iString = MessageFormat.format(value, nonNullArgs);
 	} catch (IllegalArgumentException iae) {
 	    StringBuffer buf = new StringBuffer();
@@ -223,7 +225,7 @@ public class StringManager {
 	Object[] args = new Object[] {arg1, arg2, arg3};
 	return getString(key, args);
     }
-    
+
     /**
      * Get a string from the underlying resource bundle and format it
      * with the given object arguments. These arguments can of course
@@ -240,7 +242,7 @@ public class StringManager {
 			    Object arg3, Object arg4) {
 	Object[] args = new Object[] {arg1, arg2, arg3, arg4};
 	return getString(key, args);
-    }   
+    }
     // --------------------------------------------------------------
     // STATIC SUPPORT METHODS
     // --------------------------------------------------------------
@@ -256,11 +258,29 @@ public class StringManager {
      */
 
     public synchronized static StringManager getManager(String packageName) {
-	StringManager mgr = (StringManager)managers.get(packageName);
-	if (mgr == null) {
-	    mgr = new StringManager(packageName);
-	    managers.put(packageName, mgr);
-	}
-	return mgr;
+      StringManager mgr = (StringManager)managers.get(packageName);
+      if (mgr == null) {
+          mgr = new StringManager(packageName);
+          managers.put(packageName, mgr);
+      }
+      return mgr;
     }
+     /**
+     * Get the StringManager for a particular package and Locale. If a manager for
+     * a package already exists, it will be reused, else a new
+     * StringManager will be created for that Locale and returned.
+     *
+     *
+     * @param packageName
+     */
+
+   public synchronized static StringManager getManager(String packageName,Locale loc) {
+      StringManager mgr = (StringManager)managers.get(packageName+"_"+loc.toString());
+      if (mgr == null) {
+          mgr = new StringManager(packageName,loc);
+          managers.put(packageName+"_"+loc.toString(), mgr);
+      }
+      return mgr;
+    }
+
 }
