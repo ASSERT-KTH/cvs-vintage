@@ -6,6 +6,7 @@
  */
 package org.jboss.logging.log4j;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 import org.apache.log4j.Category;
@@ -16,12 +17,14 @@ This class is used to map PrintStream/PrintWriter oriented logging onto
 the log4j Categories. Examples include capturing System.out/System.err writes.
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class CategoryStream extends PrintStream
 {
     private Category category;
     private Priority priority;
+    private boolean inWrite;
+    private boolean issuedWarning;
 
     /** Redirect logging to the indicated category using Priority.INFO
     */
@@ -40,19 +43,52 @@ public class CategoryStream extends PrintStream
     }
     public void println(String msg)
     {
-        category.log(priority, msg);
+        if( msg == null )
+            msg = "null";
+        byte[] bytes = msg.getBytes();
+        write(bytes, 0, bytes.length);
     }
     public void println(Object msg)
     {
-        category.log(priority, msg);
+        if( msg == null )
+            msg = "null";
+        byte[] bytes = msg.toString().getBytes();
+        write(bytes, 0, bytes.length);
     }
-    public void write(byte[] b, int off, int len)
+    public void write(byte b)
     {
+        byte[] bytes = {b};
+        write(bytes, 0, 1);
+    }
+    public synchronized void write(byte[] b, int off, int len)
+    {
+        if( inWrite == true )
+        {
+            /* There is a configuration error that is causing looping. Most
+             likely there are two console appenders so just return to prevent
+             spinning.
+            */
+            if( issuedWarning == false )
+            {
+                String msg = "ERROR: invalid console appender config detected, console stream is looping";
+                try
+                {
+                    out.write(msg.getBytes());
+                }
+                catch(IOException e)
+                {
+                }
+                issuedWarning = true;
+            }
+            return;
+        }
+        inWrite = true;
         // Remove the end of line chars
         while( len > 0 && (b[len-1] == '\n' || b[len-1] == '\r') && len > off )
             len --;
 
         String msg = new String(b, off, len);
         category.log(priority, msg);
+        inWrite = false;
     }
 }

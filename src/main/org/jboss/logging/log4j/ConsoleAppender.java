@@ -19,7 +19,7 @@ and System.err to route logging through those objects to the log4j
 system via a category named Default.
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class ConsoleAppender extends AppenderSkeleton
 {
@@ -61,8 +61,8 @@ public class ConsoleAppender extends AppenderSkeleton
     {
         String msg = this.layout.format(event);
         if( event.priority == Priority.ERROR )
-            out.print(msg);
-        else
             err.print(msg);
+        else
+            out.print(msg);
     }
 }

@@ -13,11 +13,13 @@ import java.rmi.server.*;
 import java.util.*;
 import javax.management.*;
 
+import org.apache.log4j.NDC;
+
 /** The legacy JBoss logging framework base class.
  * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
  * @author Rickard Öberg (rickard.oberg@telkel.com)
  * @author Scott_Stark@displayscape.com
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public abstract class Log
 {
@@ -63,6 +65,7 @@ public abstract class Log
       {
          s.push(log);
       }
+      NDC.push(log.source.toString());
    }
 
    public static void unsetLog()
@@ -73,6 +76,7 @@ public abstract class Log
          s.pop();
          if (s.size() == 0)
             currentLog.set(null);
+         NDC.pop();
       }
    }
 
