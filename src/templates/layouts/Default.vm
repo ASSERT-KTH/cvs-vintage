@@ -45,8 +45,9 @@
  $link.setPage("SelectModule.vm").setLabel("$scarabR.CurrentModule.Name")
 #else
  &nbsp;
-</td></tr></table></div>
 #end
+</td></tr></table></div>
+
 
 <table border="0" cellspacing="0" cellpadding="8" width="100%" id="main">
  <tr valign="top">
