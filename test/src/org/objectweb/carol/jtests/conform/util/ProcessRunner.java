@@ -30,7 +30,7 @@ import java.net.Socket;
  * task. </p>
  *
  * @author  Vadim Nasardinov (vadimn@redhat.com)
- * @version $Id: ProcessRunner.java,v 1.2 2005/02/01 18:40:02 el-vadimo Exp $
+ * @version $Id: ProcessRunner.java,v 1.3 2005/02/01 19:09:12 el-vadimo Exp $
  * @since   2005-01-04
  *
  * @see ProcessStopper
@@ -51,7 +51,9 @@ public class ProcessRunner {
         System.arraycopy(args, 1, serverArgs, 0, nServerArgs);
 
 
-        new Runner(serverClass, serverArgs).start();
+        final int remaining = getNShutdowns();
+        final Runner runner = new Runner(serverClass, serverArgs, remaining);
+        runner.start();
 
         int listenerPort = getListenerPort();
 
@@ -64,7 +66,12 @@ public class ProcessRunner {
         }
 
         try {
-            new Listener(listenerPort, listenerSocket.accept()).start();
+            for (int ii=0; ii<remaining; ii++) {
+                new Listener(listenerPort,
+                             listenerSocket.accept(),
+                             runner)
+                    .start();
+            }
         } catch (IOException ex) {
             throw new RuntimeException("Error accepting connection", ex);
         }
@@ -106,11 +113,30 @@ public class ProcessRunner {
         }
     }
 
+    private static int getNShutdowns() {
+        String N_SHUTDOWNS = "process.runner.n.shutdowns";
+
+        String nShutdowns = System.getProperty(N_SHUTDOWNS);
+        if (nShutdowns == null) {
+            throw new IllegalArgumentException
+                ("The " + N_SHUTDOWNS + " property not set");
+        }
+        try {
+            return Integer.parseInt(nShutdowns);
+        } catch (NumberFormatException ex) {
+            throw (IllegalArgumentException) new IllegalArgumentException
+                ("The value of " + N_SHUTDOWNS +
+                 " is not a integer: " + nShutdowns).initCause(ex);
+        }
+    }
+
     private static class Listener extends Thread {
         private Socket m_socket;
+        private Runner m_runner;
 
-        Listener(int port, Socket socket) {
+        Listener(int port, Socket socket, Runner runner) {
             m_socket = socket;
+            m_runner = runner;
         }
 
         public void run() {
@@ -121,18 +147,11 @@ public class ProcessRunner {
                 String command;
                 while (null != (command = reader.readLine())) {
                     if (SHUTDOWN_COMMAND.equals(command)) {
-                        final String exitStamp = getExitStamp();
-                        if (exitStamp != null) {
-                            File exitStampFile = new File(exitStamp);
-                            try {
-                                exitStampFile.createNewFile();
-                            } catch (IOException ex) {
-                                throw new RuntimeException
-                                    ("Couldn't create " + exitStamp, ex);
-                            }
-                        }
+                        possiblyShutdown();
 
-                        System.exit(0);
+                        try { m_socket.close(); }
+                        catch (IOException ex) { ; }
+                        break;
                     }
                 }
             } catch (UnsupportedEncodingException ex) {
@@ -141,13 +160,34 @@ public class ProcessRunner {
                 throw new RuntimeException(ex);
             }
         }
+
+        private void possiblyShutdown() {
+            synchronized(m_runner) {
+                m_runner.decrementRemaining();
+                if (!m_runner.hasRemaining()) {
+                    final String exitStamp = getExitStamp();
+                    if (exitStamp != null) {
+                        File exitStampFile = new File(exitStamp);
+                        try {
+                            exitStampFile.createNewFile();
+                        } catch (IOException ex) {
+                            throw new RuntimeException
+                                ("Couldn't create " + exitStamp, ex);
+                        }
+                    }
+                    System.exit(0);
+                }
+            }
+        }
     }
 
     private static class Runner extends Thread {
         private final String[] m_serverArgs;
         private final Method m_main;
+        private int m_nRemaining;
 
-        Runner(String serverClassname, String[] serverArgs) {
+        Runner(String serverClassname, String[] serverArgs, int remaining) {
+            m_nRemaining = remaining;
             m_serverArgs = serverArgs;
 
             final Class serverClass;
@@ -169,6 +209,21 @@ public class ProcessRunner {
                      ex);
             }
             setDaemon(true);
+        }
+
+
+        /**
+         * Not a thread-safe method.  Caller must synchronize.
+         **/
+        public void decrementRemaining() {
+            m_nRemaining--;
+        }
+
+        /**
+         * Not a thread-safe method.  Caller must synchronize.
+         **/
+        public boolean hasRemaining() {
+            return m_nRemaining > 0;
         }
 
         public void run() {

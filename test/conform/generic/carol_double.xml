@@ -34,6 +34,12 @@
   <property name="trace.properties.file.name"     value="trace.properties"/>
   <property name="basic.server.exit.stamp"     location="${build}/build/BasicServerExit.stamp"/>
 
+  <condition property="n.concurrent.clients" value="2">
+    <isset property="stub.jar.name2"/>
+  </condition>
+
+  <property name="n.concurrent.clients" value="1"/>
+
   <path id="test.client.classpath1"> 
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
@@ -167,6 +173,7 @@
 
         <jvmarg value="-Dprocess.runner.tcp.port=${process.runner.tcp.port}"/>
         <jvmarg value="-Dprocess.runner.exit.stamp=${process.runner.exit.stamp}"/>
+        <jvmarg value="-Dprocess.runner.n.shutdowns=${process.runner.n.shutdowns}"/>
         <jvmarg line="${process.runner.jvm.args}"/>
 
         <arg value="${process.runner.target.class}"/>
@@ -221,6 +228,9 @@
       </batchtest>
     </junit>
 
+    <antcall target="process.stopper">
+      <param name="process.runner.tcp.port" value="30303"/>
+    </antcall>
     <antcall target="maybe.stop.nameserver2"/>
   </target>
 
@@ -231,6 +241,7 @@
     <antcall target="process.runner">
       <param name="process.runner.tcp.port" value="30303"/>
       <param name="process.runner.exit.stamp" value="${basic.server.exit.stamp}"/>
+      <param name="process.runner.n.shutdowns" value="${n.concurrent.clients}"/>
       <param name="process.runner.target.class"
              value="org.objectweb.carol.jtests.conform.basic.server.BasicServer"/>
       <param name="process.runner.target.args" value="10101"/>
@@ -305,6 +316,7 @@
     <antcall target="process.runner">
       <param name="process.runner.tcp.port" value="20201"/>
       <param name="process.runner.exit.stamp" value=""/>
+      <param name="process.runner.n.shutdowns" value="1"/>
       <param name="process.runner.target.class"
              value="${name.server.class.name1}"/>
       <param name="process.runner.target.args" value="${name.server.option1}"/>
@@ -319,6 +331,7 @@
     <antcall target="process.runner">
       <param name="process.runner.tcp.port" value="20202"/>
       <param name="process.runner.exit.stamp" value=""/>
+      <param name="process.runner.n.shutdowns" value="1"/>
       <param name="process.runner.target.class"
              value="${name.server.class.name2}"/>
       <param name="process.runner.target.args" value="${name.server.option2}"/>
