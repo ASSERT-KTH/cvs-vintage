@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.121 2004/08/09 16:52:02 mvw Exp $
+// $Id: ParserDisplay.java,v 1.122 2004/08/09 20:18:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsHelper;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
@@ -3598,5 +3599,34 @@ public class ParserDisplay extends Parser {
             .createActionExpression(language, s);
         ModelFacade.setScript(entry, actionExpression);
        return actionState;
+    }
+    
+    /**
+     * An objectFlowState is represented on a diagram by 2 strings:
+     * 1. Classifier name
+     * 2. State name
+     * This function solely handles 1.
+     * 
+     * @param s the string to be parsed
+     * @param objectFlowState the input object
+     */
+    public void parseObjectFlowState1(String s, Object objectFlowState) {
+        
+        Object c = ActivityGraphsHelper.getHelper()
+                    .findClassifierByName(objectFlowState, s);
+        if (c != null) ModelFacade.setType(objectFlowState, c);
+    }
+    
+    /**
+     * An objectFlowState is represented on a diagram by 2 strings:
+     * 1. Classifier name
+     * 2. State name
+     * This function solely handles 2.
+     * 
+     * @param s the string to be parsed
+     * @param objectFlowState the input object
+     */
+    public void parseObjectFlowState2(String s, Object objectFlowState) {
+        
     }
 } /* end class ParserDisplay */

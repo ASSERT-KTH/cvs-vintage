@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactory.java,v 1.15 2004/07/17 16:38:37 mvw Exp $
+// $Id: ActivityGraphsFactory.java,v 1.16 2004/08/09 20:18:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,8 @@ import ru.novosoft.uml.behavior.activity_graphs.MClassifierInState;
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
 import ru.novosoft.uml.behavior.activity_graphs.MPartition;
 import ru.novosoft.uml.behavior.activity_graphs.MSubactivityState;
+import ru.novosoft.uml.behavior.state_machines.MCompositeState;
+import ru.novosoft.uml.behavior.state_machines.MSimpleState;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -171,6 +173,26 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
 	    throw new IllegalArgumentException("In buildActivityGraph: "
 					       + "context null or not legal");
     }
+    
+    /**
+     * Builds an objectflowstate. The objectflowstate will be a subvertix of
+     * the given compositestate. The parameter compositeState is of
+     * type Object to decouple the factory and NSUML as much as
+     * possible from the rest of ArgoUML.
+     *
+     * @author MVW
+     * @param compositeState the given compositestate
+     * @return MObjectFlowState the newly build objectflow state 
+     */
+    public MObjectFlowState buildObjectFlowState(Object compositeState) {
+        if (compositeState instanceof MCompositeState) {
+            MObjectFlowState state = createObjectFlowState();           
+            state.setContainer((MCompositeState) compositeState);
+            return state;
+        }
+        return null;
+    }
+
     
     /**
      * @param elem the ActionState to be deleted

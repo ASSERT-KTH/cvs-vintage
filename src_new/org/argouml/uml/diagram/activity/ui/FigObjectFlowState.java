@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.4 2004/08/07 12:55:38 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.5 2004/08/09 20:18:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.argouml.uml.generator.ParserDisplay;
 
 
 /** Class to display graphics for a UML ObjectFlowState in a diagram. 
@@ -232,11 +233,13 @@ public class FigObjectFlowState extends FigNodeModelElement {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEdited(org.tigris.gef.presentation.FigText)
      */
     protected void textEdited(FigText ft) throws PropertyVetoException {
-        /*if (ft == getNameFig() && this.getOwner() != null) {
-            //TODO: Write this function in ParserDisplay. Uncomment then. 
-            ParserDisplay.SINGLETON.parseObjectFlowState(ft.getText(), 
+        if (ft == getNameFig() && this.getOwner() != null) {  
+            ParserDisplay.SINGLETON.parseObjectFlowState1(ft.getText(), 
                     this.getOwner());
-        } else*/
+        } else if (ft == state && this.getOwner() != null) {  
+            ParserDisplay.SINGLETON.parseObjectFlowState2(state.getText(), 
+                    this.getOwner());
+        }
         super.textEdited(ft);
     } 
 
