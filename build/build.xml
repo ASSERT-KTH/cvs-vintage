@@ -756,13 +756,13 @@
     <!-- ================================================================== -->
     <target name="build-torque">
         <exec executable="ant" dir="${torque.dir}">
-            <arg line="clean"/>
+            <arg line="-f build-legacy.xml clean"/>
         </exec>
         <exec executable="ant" dir="${torque.dir}">
-            <arg line="dist-lite"/>
+            <arg line="-f build-legacy.xml dist-lite"/>
         </exec>
         <exec executable="ant" dir="${torque.dir}">
-            <arg line="install-jar"/>
+            <arg line="-f build-legacy.xml install-jar"/>
         </exec>
     </target>
 
