@@ -135,7 +135,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    if(page==null || errorPage==null) {
 		ctx.log( "Form login without form pages, defaulting to basic "
 			 + page + " " + errorPage);
-		ctx.addServlet( new BasicAuthHandler());
+		BasicAuthHandler baH=new BasicAuthHandler();
+		baH.setModule( this );
+		ctx.addServlet( baH );
 		ctx.addErrorPage( "401", "tomcat.basicAuthHandler");
 		return;
 	    }
@@ -173,9 +175,11 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    ctx.setFormErrorPage( errorPage );
 
 	    FormAuthHandler formH=new FormAuthHandler();
-	    formH.setDebug(20);
+	    formH.setModule( this );
 	    ctx.addServlet( formH );
-	    ctx.addServlet( new FormSecurityCheckHandler() );
+	    FormSecurityCheckHandler fscH=new FormSecurityCheckHandler();
+	    fscH.setModule( this );
+	    ctx.addServlet( fscH );
 	    ctx.addErrorPage( "401", "tomcat.formAuthHandler");
 
 	    // Add mapping for the POST handler
@@ -193,7 +197,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 			 " to tomcat.formSecurityCheck for " +
 			 page);
 	} else if( "BASIC".equals( login_type )) {
-	    ctx.addServlet( new BasicAuthHandler());
+	    BasicAuthHandler baH=new BasicAuthHandler();
+	    baH.setModule( this );
+	    ctx.addServlet( baH );
 	    ctx.addErrorPage( "401", "tomcat.basicAuthHandler");
 	} else {
 	    // if unknown, leave the normal 404 error handler to deal
@@ -344,7 +350,7 @@ class BasicAuthHandler extends Handler {
     int sbNote=0;
     
     BasicAuthHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.basicAuthHandler";
     }
 
@@ -390,7 +396,7 @@ class BasicAuthHandler extends Handler {
 class FormAuthHandler extends Handler {
     
     FormAuthHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formAuthHandler";
     }
 
@@ -447,7 +453,7 @@ class FormAuthHandler extends Handler {
 class FormSecurityCheckHandler extends Handler {
     
     FormSecurityCheckHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formSecurityCheck";
     }
 

@@ -327,7 +327,8 @@ public final class Context implements LogAware {
 
 	containers.put( path, map );
 	mappings.put( path, sw );
-
+	if( debug > 4 )
+	    log( "Map " + path + " -> " + mappings.get(path));
     }
 
     /** Will add a new security constraint:
@@ -492,6 +493,7 @@ public final class Context implements LogAware {
 	if( "/".equals(path) )
 	    path="";
 	this.path = path;
+	loghelper.setLogPrefix("Ctx("+ path +") ");
     }
 
     /**
@@ -819,7 +821,7 @@ public final class Context implements LogAware {
     public final  void addServlet(Handler wrapper)
     	throws TomcatException
     {
-	wrapper.setContext( this );
+	//	wrapper.setContext( this );
 	wrapper.setState( Handler.STATE_ADDED );
 	String name=wrapper.getName();
 
@@ -828,6 +830,8 @@ public final class Context implements LogAware {
 	    log("Removing duplicate servlet " + name  + " " + wrapper);
             removeServletByName(name);
         }
+	if( debug>5 ) log( "Adding servlet=" + name + "-> "
+			   + wrapper);
 	servlets.put(name, wrapper);
     }
 

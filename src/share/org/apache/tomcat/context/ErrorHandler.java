@@ -102,13 +102,13 @@ public final class ErrorHandler extends BaseInterceptor {
     {
 	if( ctx.getHost() == null && ctx.getPath().equals(""))
 	    rootContext = ctx;
-	ctx.addServlet( new ExceptionHandler());
-	ctx.addServlet( new StatusHandler());
+	ctx.addServlet( new ExceptionHandler(this));
+	ctx.addServlet( new StatusHandler(this));
 
 	// Default status handlers
-	ctx.addServlet( new RedirectHandler());
+	ctx.addServlet( new RedirectHandler(this));
 	ctx.addErrorPage( "302", "tomcat.redirectHandler");
-	ctx.addServlet( new NotFoundHandler());
+	ctx.addServlet( new NotFoundHandler(this));
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
     }
 
@@ -186,7 +186,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	    // has clicked "STOP"
 	    // we need to log any other error - something may be
 	    // broken if the error servlet has errors.
-	    ctx.log( "Error in errorServlet", ex);
+	    ctx.log( "Error in default status handler", ex);
 	} 
     }
 
@@ -330,9 +330,10 @@ class NotFoundHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
     
-    NotFoundHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+    NotFoundHandler(BaseInterceptor bi) {
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.notFoundHandler";
+	setModule(bi);
     }
 
     public void doService(Request req, Response res)
@@ -382,9 +383,10 @@ class ExceptionHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
 
-    ExceptionHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+    ExceptionHandler(BaseInterceptor bi) {
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.exceptionHandler";
+	setModule( bi );
     }
 
     public void doService(Request req, Response res)
@@ -455,9 +457,10 @@ class StatusHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
 
-    StatusHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+    StatusHandler(BaseInterceptor bi) {
+	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.statusHandler";
+	setModule( bi );
     }
     
     // We don't want interceptors called for redirect
@@ -515,9 +518,10 @@ class RedirectHandler extends Handler {
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
 
-    RedirectHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+    RedirectHandler(BaseInterceptor bi) {
+	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.redirectHandler";
+	setModule( bi );
     }
 
     // We don't want interceptors called for redirect

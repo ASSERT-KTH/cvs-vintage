@@ -92,47 +92,6 @@ import java.util.*;
  * @author Costin Manolache
  */
 public class Handler {
-    /** accounting - various informations we capture about servlet
-     *	execution.
-     *  // XXX Not implemented
-     *  @see org.apache.tomcat.util.Counters
-     */
-    public static final int ACC_LAST_ACCESSED=0;
-    public static final int ACC_INVOCATION_COUNT=1;
-    public static final int ACC_SERVICE_TIME=2;
-    public static final int ACC_ERRORS=3;
-    public static final int ACC_OVERHEAD=4;
-    public static final int ACC_IN_INCLUDE=5;
-    
-    public static final int ACCOUNTS=6;
-
-    // -------------------- Origin --------------------
-    /** The handler is declared in a configuration file.
-     */
-    public static final int ORIGIN_WEB_XML=0;
-    /** The handler is automatically added by an "invoker" interceptor,
-     *  that is able to add new servlets based on request
-     */
-    public static final int ORIGIN_INVOKER=1;
-    /** The handler is automatically added by an interceptor that
-     * implements a templating system.
-     */
-    public static final int ORIGIN_JSP=2;
-    /** any tomcat-specific component that can
-	register mappings that are "re-generable",
-	i.e. can be recreated - the mapping can
-	safely be removed.
-    */
-    public static final int ORIGIN_DYNAMIC=3;
-    /** The handler was added by the admin interface, it should be saved
-     *	preferably in web.xml
-     */
-    public static final int ORIGIN_ADMIN=4;
-
-    /** This handler is created internally by tomcat
-     */
-    public static final int ORIGIN_INTERNAL=5;
-
     // -------------------- State --------------------
 
     /** The handler is new, not part of any application.
@@ -159,14 +118,13 @@ public class Handler {
     public static final int STATE_DISABLED=4;
 
     // -------------------- Properties --------------------
-    protected Context context;
+    // the handler is part of a module
+    protected BaseInterceptor module;
+    
     protected ContextManager contextM;
     
     protected String name;
     protected int state=STATE_NEW;
-
-    // who creates the servlet definition
-    protected int origin;
 
     protected Exception errorException=null;
     
@@ -174,7 +132,7 @@ public class Handler {
     protected int debug=0;
     protected Log logger=null;
 
-    private Counters cntr=new Counters( ACCOUNTS );
+    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
 
     // -------------------- Constructor --------------------
@@ -184,23 +142,25 @@ public class Handler {
     public Handler() {
     }
 
-    /** A handler "belongs" to a single application ( many->one ).
-     *  We don't support handlers that spawn multiple Contexts -
-     *  the model is simpler because we can set the security constraints,
-     *  properties, etc on a application basis.
+    /** A handler is part of a module. The module can create a number
+	of handlers. Since the module is configurable, it can 
+	also configure the handlers - including debug, etc.
+
+	The handler shares the same log file with the module ( it
+	can log to different logs, but the default for debug information
+	is shared with the other components of a module ).
      */
-    public final void setContext( Context context) {
-        this.context = context;
-	contextM=context.getContextManager();
-	logger=context.getLog();
+    public void setModule(BaseInterceptor module ) {
+	this.module=module;
+	contextM=module.getContextManager();
+	debug=module.getDebug();
+	logger=module.getLog();
     }
 
-    /** Return the context associated with the handler
-     */
-    public final Context getContext() {
-	return context;
+    public BaseInterceptor getModule() {
+	return module;
     }
-
+    
     // -------------------- configuration --------------------
 
     public int getState() {
@@ -217,27 +177,6 @@ public class Handler {
 
     public final void setName(String handlerName) {
         this.name=handlerName;
-    }
-
-    /** Who created this servlet definition - default is 0, i.e. the
-     *	web.xml mapping. It can also be the Invoker, the admin ( by using a
-     *  web interface), JSP engine or something else.
-     * 
-     *  Tomcat can do special actions - for example remove non-used
-     *	mappings if the source is the invoker or a similar component
-     */
-    public final void setOrigin( int origin ) {
-	this.origin=origin;
-    }
-    
-    public final int getOrigin() {
-	return origin;
-    }
-
-    /** Accounting information
-     */
-    public final Counters getCounters() {
-	return cntr;
     }
 
     // -------------------- Common servlet attributes
@@ -386,5 +325,14 @@ public class Handler {
     public final Object getNote( int pos ) {
 	return notes[pos];
     }
+
+    /** Accounting information. Not implemented - it'll contain usefull
+	information like LAST_ACCESSED, INVOCATION_COUNT, SERVICE_TIME,
+	ERRROS, IN_INCLUDE, etc.
+     */
+    public final Counters getCounters() {
+	return cntr;
+    }
+
 
 }

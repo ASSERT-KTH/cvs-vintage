@@ -409,14 +409,18 @@ public class BaseInterceptor
     // -------------------- Helpers --------------------
     // Methods used in internal housekeeping
     
-    public void setDebug( int d ) {
+    public final void setDebug( int d ) {
 	debug=d;
     }
 
-    public void setContextManager( ContextManager cm ) {
+    public final void setContextManager( ContextManager cm ) {
 	this.cm=cm;
 	this.ct=cm.getContainer();
 	loghelper.setLogger(cm.getLogger());
+    }
+
+    public final ContextManager getContextManager() {
+	return cm;
     }
 
     /** Called for context-level interceptors
@@ -428,23 +432,27 @@ public class BaseInterceptor
 	loghelper.setLogger(ctx.getLog().getLogger());
     }
 
-    public void log( String s ) {
+    public final void log( String s ) {
 	loghelper.log(s);
     }
 
-    public void log( String s, Throwable t ) {
+    public final void log( String s, Throwable t ) {
 	loghelper.log(s, t);
     }
     
-    public void log( String s, int level ) {
+    public final void log( String s, int level ) {
 	loghelper.log(s, level);
     }
     
-    public void log( String s, Throwable t, int level ) {
+    public final void log( String s, Throwable t, int level ) {
 	loghelper.log(s, t, level);
     }
 
-    public int getDebug() {
+    public Log getLog() {
+	return loghelper;
+    }
+    
+    public final int getDebug() {
         return debug;
     }
     

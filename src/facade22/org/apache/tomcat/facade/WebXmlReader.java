@@ -190,13 +190,14 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
 	    //	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
 
+	    final WebXmlReader wxr=this;
 	    xh.addRule("web-app/servlet", new XmlAction() {
 			   public void end( SaxContext xctx)
 			       throws Exception {
 			       ServletInfo sw=(ServletInfo)
 				   xctx.currentObject();
 			       Context cctx=(Context)xctx.previousObject();
-			       sw.addServlet(cctx);
+			       sw.addServlet(cctx, wxr);
 			   }
 		       }
 		   );

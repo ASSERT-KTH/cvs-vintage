@@ -106,13 +106,16 @@ public class StaticInterceptor extends BaseInterceptor {
     {
 	FileHandler fileHandler=new FileHandler();
 	DirHandler dirHandler=new DirHandler();
+	fileHandler.setModule( this );
+	fileHandler.setContext( ctx );
 	fileHandler.setNoteId( realFileNote );
-	dirHandler.setNoteId( realFileNote );
 	ctx.addServlet( fileHandler );
+
+	dirHandler.setNoteId( realFileNote );
+	dirHandler.setContext( ctx );
+	dirHandler.setModule( this );
 	if (listings)
 	    ctx.addServlet( dirHandler );
-	fileHandler.setDebug( debug );
-	dirHandler.setDebug( debug );
     }
 
     public int requestMap(Request req) {
@@ -129,7 +132,8 @@ public class StaticInterceptor extends BaseInterceptor {
 	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
 					  pathInfo);
 
-	if( debug > 0 ) log( "RequestMap " + req + " " + absPath + " " + ctx.getAbsolutePath() );
+	if( debug > 0 ) log( "RequestMap " + req + " " + absPath + " " +
+			     ctx.getAbsolutePath() );
 	if( absPath == null ) return 0;
 	String requestURI=req.requestURI().toString();
 
@@ -213,12 +217,17 @@ public class StaticInterceptor extends BaseInterceptor {
 /** Serve the content of a file ( and nothing more !).
  *
  */
-class FileHandler extends Handler  {
+final class FileHandler extends Handler  {
     int realFileNote;
-
+    Context context;
+    
     FileHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.fileHandler";
+    }
+
+    public void setContext(Context ctx) {
+	this.context=ctx;
     }
 
     public void setNoteId( int n ) {
@@ -322,13 +331,14 @@ class FileHandler extends Handler  {
 /** HTML-display for directories ( and nothing more !).
  *  This is the handler for static resources of type "dir".
  */
-class DirHandler extends Handler  {
+final class DirHandler extends Handler  {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
     int realFileNote;
     int sbNote=0;
+    Context context;
     
     DirHandler() {
-	setOrigin( Handler.ORIGIN_INTERNAL );
+	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.dirHandler";
     }
 
@@ -336,6 +346,10 @@ class DirHandler extends Handler  {
 	realFileNote=n;
     }
 
+    public void setContext(Context ctx) {
+	this.context=ctx;
+    }
+    
     public void doService(Request req, Response res)
 	throws Exception
     {

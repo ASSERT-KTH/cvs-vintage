@@ -174,8 +174,4 @@ public class AutoSetup extends BaseInterceptor {
 	}
     }
 
-    public void setDebug( int i ) {
-	debug=i;
-    }
-
 }

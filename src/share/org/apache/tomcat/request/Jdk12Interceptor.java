@@ -76,14 +76,6 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     public Jdk12Interceptor() {
     }
 
-    public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
-    }
-
-    public void setDebug( int i ) {
-	debug=i;
-    }
-
     public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {

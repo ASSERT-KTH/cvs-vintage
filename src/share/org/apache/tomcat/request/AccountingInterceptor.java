@@ -80,18 +80,10 @@ public class AccountingInterceptor extends  BaseInterceptor {
     public AccountingInterceptor() {
     }
 
-    public void setDebug( int i ) {
-	debug=i;
-    }
-
     public void setTrace( String file ) {
 	trace=file;
     }
     
-    public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
-    }
-
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {

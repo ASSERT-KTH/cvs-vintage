@@ -37,6 +37,94 @@
             requestMap.Servlet4
         </servlet-class>
     </servlet>
+
+        <servlet>
+      <servlet-name>
+          jspParams1
+      </servlet-name>
+      <jsp-file>
+          /jsp/params.jsp
+      </jsp-file>
+      <init-param>
+        <param-name>abc</param-name>
+        <param-value>def</param-value>
+      </init-param>
+    </servlet>
+    <servlet>
+      <servlet-name>
+          jspParams2.jsp
+      </servlet-name>
+      <jsp-file>
+          /jsp/params.jsp
+      </jsp-file>
+      <init-param>
+        <param-name>xyz</param-name>
+        <param-value>klm</param-value>
+      </init-param>
+    </servlet>
+    <servlet>
+      <servlet-name>
+          jspParams3
+      </servlet-name>
+      <jsp-file>
+          /jsp/params.jsp
+      </jsp-file>
+      <init-param>
+        <param-name>foo</param-name>
+        <param-value>bar</param-value>
+      </init-param>
+      <init-param>
+        <param-name>foo1</param-name>
+        <param-value>bar1</param-value>
+      </init-param>
+    </servlet>
+    
+     <servlet-mapping>
+        <servlet-name>
+           jspParams1            
+        </servlet-name>
+        <url-pattern>
+            /jsp/jspParams1
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+           jspParams1            
+        </servlet-name>
+        <url-pattern>
+            /jsp/jspParams11
+        </url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>
+           jspParams2.jsp            
+        </servlet-name>
+        <url-pattern>
+            /jsp/jspParams2
+        </url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>
+           jspParams2.jsp            
+        </servlet-name>
+        <url-pattern>
+            /jsp/jspParams2.jsp
+        </url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>
+           jspParams3            
+        </servlet-name>
+        <url-pattern>
+            /jsp/jspParams3
+        </url-pattern>
+    </servlet-mapping>
+
+
+
     <servlet-mapping>
         <servlet-name>
             servlet1

@@ -66,6 +66,7 @@ import java.net.*;
 
 import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.depend.*;
 
 import org.apache.jasper.*;
 import org.apache.jasper.Constants;
@@ -186,39 +187,66 @@ public class JspInterceptor extends BaseInterceptor {
 	}
 
 	Context ctx= req.getContext();
+	DependManager dm=ctx.getDependManager();
+	if( dm==null ) {
+	    dm=new DependManager();
+	    ctx.setDependManager( dm );
+	}
 
 	// If this Wrapper was already used, we have all the info
 	JspInfo jspInfo=(JspInfo)wrapper.getNote( jspInfoNOTE );
 	if( jspInfo == null ) {
-	    if( debug > 0 ) log("New jsp page - no jspInfo ");
+	    if( debug>0) log("Handler never processed " + wrapper );
+	    
 	    jspInfo=new JspInfo(req);
-	    mapJspPage( req, jspInfo, jspInfo.uri, jspInfo.fullClassN);
+	    if( "jsp".equals(wrapper.getName())) {
+		wrapper = mapJspPage( ctx, jspInfo );
+	    }
+	    wrapper.setNote( jspInfoNOTE, jspInfo );
+	    dm.addDependency( jspInfo.expireCheck );
+	    ((ServletHandler)wrapper).
+		setServletClassName( jspInfo.fullClassN );
+	    req.setHandler( wrapper );
 	}
 
-	if( debug > 3) {
-	    log( "Check if source is up-to-date " +
-		 jspInfo.jspSource + " " + 
-		 jspInfo.jspSource.lastModified() + " "
-		 + jspInfo.compileTime );
-	}
-
-	if( jspInfo.jspSource.lastModified() 
-	    > jspInfo.compileTime ) {
-	    //XXX 	    destroy();
+	if( debug > 3) 
+	    log( "Check if source is up-to-date " +  jspInfo.jspSource + " " + 
+		 jspInfo.jspSource.lastModified()+" "+ jspInfo.compileTime );
+       
+	if( jspInfo.expireCheck.isExpired() ) {
+	    //XXX old servlet -  destroy(); 
 	    
 	    // jump version number - the file needs to
 	    // be recompiled, and we don't want a reload
 	    if( debug > 0 ) log( "Before sync block  " + jspInfo );
 	    synchronized( jspInfo ) {
-		//		if( debug>0 )
-		if( jspInfo.jspSource.lastModified() 
-		    > jspInfo.compileTime ) {
+		// if still expired ( we may enter the sync block after
+		// another thread re-compiled )
+		if( jspInfo.expireCheck.isExpired() ) {
+		    // reset the handler error, un-initialize the servlet
+		    wrapper.setErrorException( null );
+		    jspInfo.setCompileException( null );
+		    wrapper.setState( Handler.STATE_ADDED );
+		    
 		    if( debug > 0 ) log( "Compiling " + jspInfo );
-		
+		    // Move to the next class name
 		    jspInfo.nextVersion();
+
 		    compile( req, jspInfo );
-		    mapJspPage( req , jspInfo, jspInfo.uri,
-				jspInfo.fullClassN);
+
+		    // Update the class name in wrapper
+		    ((ServletHandler)wrapper).
+			setServletClassName( jspInfo.fullClassN );
+
+		    // set initial exception on the servlet if one is present
+		    if ( jspInfo.isExceptionPresent() ) {
+			wrapper.
+			    setErrorException(jspInfo.getCompileException());
+			wrapper.setState(Handler.STATE_DISABLED);
+			// until the jsp cahnges, when it'll be enabled again
+		    }
+		    jspInfo.expireCheck.setExpired( false );
+
 		}
 	    } 
 	}
@@ -226,57 +254,56 @@ public class JspInterceptor extends BaseInterceptor {
 	return 0;
     }
 
+    private static final String SERVLET_NAME_PREFIX="tomcat_jsp.";
+    
     /** Add an exact map that will avoid *.jsp mapping and intermediate
-     *  steps
+     *  steps. It's equivalent with declaring
+     *  <servlet-name>tomcat_jsp.uri</>
+     *  <servlet-mapping><servlet-name>tomcat_jsp.uri</><url-pattern>uri</></>
      */
-    void mapJspPage( Request req, JspInfo jspInfo,
-		     String servletName, String classN )
+    Handler mapJspPage( Context ctx, JspInfo jspInfo)
     {
-	Context ctx=req.getContext();
-	Handler wrapper=null;
-	String servletPath=servletName;
+	String uri=jspInfo.uri;
+	String servletName= SERVLET_NAME_PREFIX + uri;
+
+	log( "mapJspPage " + ctx + " " + jspInfo + " " + servletName + " " +
+	     uri  );
+
 	// add the mapping - it's a "invoker" map ( i.e. it
 	// can be removed to keep memory under control.
 	// The memory usage is smaller than JspSerlvet anyway, but
 	// can be further improved.
 	try {
-	    wrapper=ctx.getServletByName( servletName );
+	    Handler wrapper=ctx.getServletByName( servletName );
+	    
 	    // We may want to replace the class and reset it if changed
 	    
 	    if( wrapper==null ) {
 		wrapper=new ServletHandler();
-		wrapper.setContext(ctx);
+		wrapper.setModule( this );
+		((ServletHandler)wrapper).setContext(ctx);
 		wrapper.setName(servletName);
-		wrapper.setOrigin( Handler.ORIGIN_INVOKER );
 
 		((ServletHandler)wrapper).getServletInfo().
-		    setPath( servletPath );
+		    setPath( uri );
 		ctx.addServlet( wrapper );
 		
-		ctx.addServletMapping( servletPath ,
-				       servletPath );
+		ctx.addServletMapping( uri ,
+				       servletName );
 		if( debug > 0 )
-		    log( "Added mapping " + servletPath +
-			 " path=" + servletPath );
+		    log( "Added mapping " + uri +
+			 " path=" + servletName );
 	    }
-	    ((ServletHandler)wrapper).setServletClassName( classN );
-	    wrapper.setNote( jspInfoNOTE, jspInfo );
-	    // set initial exception on the servlet if one is present
-	    if ( jspInfo.isExceptionPresent() ) {
-		wrapper.setErrorException(jspInfo.getCompileException());
-		wrapper.setState(Handler.STATE_DISABLED);
-	    }
+	    return wrapper;
 	} catch( TomcatException ex ) {
-	    log("mapJspPage: request=" + req +
+	    log("mapJspPage: ctx=" + ctx +
 		", jspInfo=" + jspInfo +
-		", servletName=" + servletName +
-		", classN=" + classN, ex);
-	    return ;
+		", servletName=" + servletName, ex);
+	    return null;
 	}
-	req.setHandler( wrapper );
-	if( debug>0) log("Handler " + wrapper);
     }
 
+	
     /** Convert the .jsp file to a java file, then compile it to class
      */
     void compile(Request req, JspInfo jspInfo ) {
@@ -302,10 +329,14 @@ public class JspInterceptor extends BaseInterceptor {
 	    // record time of attempted translate-and-compile
 	    jspInfo.touch();
 
-	    synchronized ( this ) {
+	    synchronized ( jspInfo ) {
 		compiler.compile();
 	    }
-	    
+	    if( debug > 0 ) {
+		File f = new File( mangler.getJavaFileName());
+		log( "Created file : " + f +  " " + f.lastModified());
+
+	    }
 	    javac( createJavaCompiler( options ), ctxt, mangler );
 	    
 	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
@@ -345,13 +376,14 @@ public class JspInterceptor extends BaseInterceptor {
 	String cp=System.getProperty("java.class.path")+ sep + 
 	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
         javac.setClasspath( cp );
-	if( debug>0) log( "ClassPath " + cp);
+	if( debug>5) log( "ClassPath " + cp);
 	
 	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
 	javac.setOutputDir(ctxt.getOutputDir());
         javac.setMsgOutput(out);
 
 	String javaFileName = mangler.getJavaFileName();
+	if( debug>0) log( "Compiling java file " + javaFileName);
 	/**
          * Execute the compiler
          */
@@ -367,6 +399,7 @@ public class JspInterceptor extends BaseInterceptor {
             throw new JasperException("Unable to compile "
                                       + msg);
         }
+	if( debug > 0 ) log("Compiled ok");
     }
 
     /** tool for customizing javac
@@ -415,11 +448,13 @@ public class JspInterceptor extends BaseInterceptor {
  */
 class JspInfo {
     Request request;
-    
-    String uri; // path
+
+    String jspPath; // real jsp path - if the request URI is mapped to
+    // a named jsp.
+    String uri; // path from request URI
 
     int version; // version
-    int debug=0;
+    int debug=9;
     String pkg;
     String pkgDir;
     String baseClassN;
@@ -436,13 +471,15 @@ class JspInfo {
     long compileTime;// tstamp of last compile attemp
 
     Exception compileException; // translation/compile exception 
-
+    Dependency expireCheck=new Dependency();
+    
     JspInfo( Request req ) {
+	expireCheck.setLocal( true );
 	init( req );
     }
 
     public String toString() {
-	return uri +" " + version;
+	return "JSPInfo: " + jspPath + " " + uri +" " + version;
     }
 
     /** Update compile time
@@ -519,22 +556,28 @@ class JspInfo {
 	compileException = null;
 	// 	String includeUri
 	// 	    = (String) req.getAttribute(Constants.INC_SERVLET_PATH);
+	Handler w=req.getHandler();
 	uri=req.getServletPath();
+
+	if("jsp".equals( w.getName()))
+	    jspPath=uri;
+	else
+	    jspPath=((ServletHandler)w).getServletInfo().getPath();
 	Context ctx=req.getContext();
 	outputDir = ctx.getWorkDir().getAbsolutePath();
 	String jspFilePath=FileUtil.safePath( ctx.getAbsolutePath(),
-					      uri); 
+					      jspPath); 
 	jspSource = new File(jspFilePath);
 	
 	// extension
-	int lastComp=uri.lastIndexOf(  "/" );
+	int lastComp=jspPath.lastIndexOf(  "/" );
 	String endUnproc=null;
 	if( lastComp > 0 ) {
 	    // has package
-	    pkgDir=uri.substring( 1, lastComp );
-	    endUnproc=uri.substring( lastComp+1 );
+	    pkgDir=jspPath.substring( 1, lastComp );
+	    endUnproc=jspPath.substring( lastComp+1 );
 	} else {
-	    endUnproc=uri.substring( 1 );
+	    endUnproc=jspPath.substring( 1 );
 	}
 
 	if( pkgDir!=null ) {
@@ -554,10 +597,10 @@ class JspInfo {
 	    baseClassN=endUnproc;
 	}
 	// XXX insert "mangle" to make names safer
-    if (pkgDir!=null)
-    	mapPath = outputDir + "/" + pkgDir + "/" + baseClassN + ".ver";
-    else
-    	mapPath = outputDir + "/" + baseClassN + ".ver";
+	if (pkgDir!=null)
+	    mapPath = outputDir + "/" + pkgDir + "/" + baseClassN + ".ver";
+	else
+	    mapPath = outputDir + "/" + baseClassN + ".ver";
 
 	File mapFile=new File(mapPath);
 	if( mapFile.exists() ) {
@@ -570,11 +613,20 @@ class JspInfo {
 	    updateVersionedPaths();
 	    compileTime=0;
 	}
-
+	
+	expireCheck.setOrigin( jspSource );
+	expireCheck.setTarget( this );
+	// if the file has been compiled before, we'll use the
+	// time of the compilation.
+	expireCheck.setLastModified( compileTime );
+	// update isExpired()
+	expireCheck.checkExpiry();
+	
 	if( debug>0  )
 	    log("uri=" + uri +
 		//" outputDir=" + outputDir +
-		//" jspSource=" + jspSource +
+		" jspSource=" + jspSource +
+		" jspPath=" + jspPath +
 		" pkgDir=" + pkgDir +
 		" baseClassN=" + baseClassN +
 		" ext=" + ext +

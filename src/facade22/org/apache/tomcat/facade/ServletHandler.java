@@ -110,6 +110,7 @@ public final class ServletHandler extends Handler {
     private String path;
     protected Class servletClass;
     protected Servlet servlet;
+    protected Context context;
     
     // If init() fails, Handler.errorException will hold the reason.
     // In the case of an UnavailableException, this field will hold
@@ -121,7 +122,7 @@ public final class ServletHandler extends Handler {
     }
 
     public String toString() {
-	return "ServletHandler " + name + "(" + sw  + ")";
+	return "ServletH " + name + "(" + sw  + ")";
     }
 
     public void setServletInfo( ServletInfo sw ) {
@@ -136,6 +137,19 @@ public final class ServletHandler extends Handler {
 	}
 	return sw;
     }
+
+    /**
+     */
+    public void setContext( Context context) {
+        this.context = context;
+    }
+
+    /** Return the context associated with the handler
+     */
+    public Context getContext() {
+	return context;
+    }
+
 
     public void setServletClassName( String servletClassName) {
 	servlet=null; // reset the servlet, if it was set
@@ -394,7 +408,7 @@ public final class ServletHandler extends Handler {
 	    if( state!= STATE_DISABLED ) {
 		init();
 	    }
-	    if( state== STATE_DISABLED ) {
+	    if( state== STATE_DISABLED || state==STATE_DELAYED_INIT ) {
 		// the init failed because of an exception
 		Exception ex=getErrorException();
 		// save error state on request and response

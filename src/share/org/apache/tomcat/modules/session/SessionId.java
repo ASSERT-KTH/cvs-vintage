@@ -101,10 +101,6 @@ public class SessionId extends  BaseInterceptor
     public SessionId() {
     }
 
-    public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
-    }
-
     public void setNoCookies(boolean noCookies) {
         this.noCookies = noCookies;
     }

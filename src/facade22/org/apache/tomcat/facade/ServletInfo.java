@@ -115,16 +115,32 @@ public class ServletInfo {
     }
 
     public String toString() {
-	return "SW " + handler.getName() + "(" + path + "/" +
+	return "SW (" + path + " CN=" +
 	    handler.getServletClassName() +  ")";
     }
 
     // -------------------- Configuration hook
-
     /** This method can called to add the servlet to the web application.
      * ( typlically used from the config - WebXmlReader ).
      */
-    public void addServlet(Context ctx) throws TomcatException {
+    public void addServlet(Context ctx, WebXmlReader wxR)
+	throws TomcatException
+    {
+	// set the owner module for the servlet.
+	// Even if the servlets are defined in WebXmlReader, they should
+	// belong to Servlet22Interceptor. ( it's easy to set WebXmlReader,
+	// but it's more intuitive to set debug and options on Servlet22 )
+	BaseInterceptor mods[]=ctx.getContainer().getInterceptors();
+	for( int i=0; i<mods.length; i++ ) {
+	    if( mods[i] instanceof Servlet22Interceptor ) {
+		handler.setModule( mods[i] );
+		break;
+	    }
+	}
+	// if not found - then we don't have a Servlet22Interceptor.
+	// That means a configuration problem.
+	if( handler.getModule() == null )
+	    throw new TomcatException("Can't find Servlet22Interceptor");
 	ctx.addServlet( handler );
 	handler.setContext( ctx );
     }
