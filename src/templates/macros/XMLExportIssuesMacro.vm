@@ -41,7 +41,8 @@
 #end
 #set ($module = $scarabR.CurrentModule)
 <?xml version="1.0" standalone="no"?>
-##<!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
+## URI must match org.tigris.scarab.util.xmlissues.ImportIssues.SYSTEM_DTD_URI
+<!DOCTYPE scarab-issues SYSTEM "http://scarab.tigris.org/dtd/scarab-0.16.28.dtd">
 <scarab-issues>
   <import-type>create-different-db</import-type>
   <module>
