@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.90 2002/01/18 17:08:52 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.91 2002/01/18 19:59:21 dlr Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -177,12 +177,11 @@ public class ReportIssue extends RequireLoginFirstAction
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
         String template = null;
-        boolean beatThreshold = false;
-        if (matchingIssues.size() > threshold)
+        boolean beatThreshold = (matchingIssues.size() > threshold);
+        if (beatThreshold)
         {
             scarabR.setIssueList(matchingIssues);
             template = "entry,Wizard2.vm";
-            beatThreshold = true;
         }
         else
         {
