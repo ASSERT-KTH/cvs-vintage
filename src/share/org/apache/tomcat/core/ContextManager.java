@@ -250,7 +250,8 @@ public class ContextManager {
      */
     public void setHome(String home) {
 	this.home=home;
-	System.getProperties().put(TOMCAT_HOME, home );
+	if( home != null ) 
+	    System.getProperties().put(TOMCAT_HOME, home );
     }
 
     public String getHome() {
@@ -311,7 +312,8 @@ public class ContextManager {
     }
 
     public void setProperty( String name, String value ) {
-	properties.put( name, value );
+	if( name!=null && value!=null )
+	    properties.put( name, value );
     }
 
     public Hashtable getProperties() {
