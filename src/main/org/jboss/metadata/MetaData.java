@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -181,7 +181,7 @@ public abstract class MetaData
             result += children.item(i).getFirstChild();
          }
       }
-      return result;
+      return result.trim();
    }
 
    /**
