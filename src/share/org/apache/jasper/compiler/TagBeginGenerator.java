@@ -151,9 +151,10 @@ public class TagBeginGenerator
             for(int i = 0; i < attributes.length; i++)
                 if (attr.equals(attributes[i].getName())) {
                     found = true;
-                    if (attributes[i].canBeRequestTime())
+                    if (attributes[i].canBeRequestTime() &&
+			JspUtil.isExpression((String)attribs.get(attr)))
                         attribs.put(attr, TagData.REQUEST_TIME_VALUE);
-                }
+		}
             
             if (!found)
                 throw new JasperException(Constants.getString("jsp.error.bad_attribute",
