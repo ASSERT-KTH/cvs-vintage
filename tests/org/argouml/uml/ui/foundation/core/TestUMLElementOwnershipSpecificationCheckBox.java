@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.6 2003/01/04 17:02:35 kataka Exp $
+// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.7 2003/01/31 20:42:32 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,14 +80,13 @@ public class TestUMLElementOwnershipSpecificationCheckBox extends TestCase {
         super.setUp();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         elem = new MClassImpl();
-        MockUMLUserInterfaceContainer mockcomp = new MockUMLUserInterfaceContainer();
-        mockcomp.setTarget(elem);
-
+        
 	// If we cannot create the box, we assume that it is because
 	// there is no GUI available.
 	// If so, all tests are inconclusive.
 	try {
 	    box = new UMLElementOwnershipSpecificationCheckBox();
+        box.setTarget(elem);
 	} catch (java.lang.InternalError e1) {
 	    return;
 	} catch (java.lang.NoClassDefFoundError e2) {
