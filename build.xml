@@ -867,11 +867,10 @@
     </copy>
     <mkdir dir="${tomcat.build}/webapps/ROOT/doc/jk2" />
     <mkdir dir="${tomcat.build}/webapps/ROOT/doc/jk2/printer" />    
-    <ant dir="${tomcat-jk.home}" target="docs"/>
+    <ant dir="${tomcat-jk.home}/xdocs" />
     <copy todir="${tomcat.build}/webapps/ROOT/doc/jk2">
       <fileset dir="${tomcat-jk.home}/build/docs"/>
     </copy>
-
 
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
