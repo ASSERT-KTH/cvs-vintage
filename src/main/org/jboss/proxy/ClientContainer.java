@@ -27,10 +27,11 @@ import org.jboss.invocation.PayloadKey;
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.13 $
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.14 $
  */
 public class ClientContainer
-   implements IClientContainer, Externalizable, InvocationHandler
+   implements Externalizable, InvocationHandler
 {
    /** The serialVersionUID. @since 1.5 */
    private static final long serialVersionUID = -4061374432170701306L;
@@ -68,11 +69,6 @@ public class ClientContainer
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = EMPTY_ARGS;
-
-      if( m.getDeclaringClass() == IClientContainer.class )
-      {
-         return m.invoke(this, args);
-      }
 
       // Create the invocation object
       Invocation invocation = new Invocation();
