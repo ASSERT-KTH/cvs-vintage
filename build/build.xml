@@ -375,6 +375,22 @@
                 <include name="**/*.properties"/>
             </fileset>
         </copy>
+        <!-- hack -->
+        <copy tofile="${build.dest.scarab}/ScarabBundle_fr.properties" filtering="no">
+            <fileset dir="${src.i18n.dir}">
+                <include name="ScarabBundle_fr_FR.properties"/>
+            </fileset>
+        </copy>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" filtering="no">
+            <fileset dir="${src.i18n.dir}">
+                <include name="ScarabBundle_ru_RU.properties"/>
+            </fileset>
+        </copy>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_pt.properties" filtering="no">
+            <fileset dir="${src.i18n.dir}">
+                <include name="ScarabBundle_pt_BR.properties"/>
+            </fileset>
+        </copy>
 
         <!-- copy JCS configuration into classpath -->
         <copy todir="${build.dest.scarab}" filtering="no">
