@@ -414,8 +414,9 @@ This mapping is not available for many-to-many relationships.
 <!--
 Specifies that the ejb-relation should be mapped with a relation-table.
 -->
-<!ELEMENT relation-table-mapping (table-name?, datasource?, create-table?, 
-         remove-table?, row-locking?, pk-constraint?)>
+<!ELEMENT relation-table-mapping (table-name?, 
+         (datasource, datasource-mapping)?, create-table?, remove-table?,
+         row-locking?, pk-constraint?)>
 
 
 <!--
