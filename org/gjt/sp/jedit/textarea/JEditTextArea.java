@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.126 2002/05/31 04:47:03 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.127 2002/06/01 06:06:25 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2106,7 +2106,7 @@ forward_scan:		do
 
 		if(caret == newCaret)
 		{
-			if(focusedComponent == this)
+			if(view.getTextArea() == this)
 				finishCaretUpdate(doElectricScroll,false);
 			return;
 		}
@@ -2145,7 +2145,7 @@ forward_scan:		do
 		caret = newCaret;
 		caretLine = newCaretLine;
 
-		if(focusedComponent == this)
+		if(view.getTextArea() == this)
 			finishCaretUpdate(doElectricScroll,true);
 	} //}}}
 
@@ -4552,7 +4552,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 		Component focusOwner = ((Window)c).getFocusOwner();
 		boolean hasFocus = (focusOwner == this);
-		if(hasFocus && focusedComponent != this)
+		if(hasFocus)
 			focusedComponent = this;
 		return hasFocus;
 	} //}}}
