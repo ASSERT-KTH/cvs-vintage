@@ -4,12 +4,29 @@
     <!-- Debug low-level events in XmlMapper startup -->
     <xmlmapper:debug level="0" />
 
-    <!-- This is quite flexible; we can either have a log file per
-         module in Tomcat (example: ContextManager) or we can have
-         one for Servlets and one for Jasper, or we can just have
-	 one tomcat.log for both Servlet and Jasper.
+    <!-- 
 
-	 If you omit "path" there, then stderr should be used.
+    Logging:
+
+         Logging in Tomcat is quite flexible; we can either have a log
+         file per module (example: ContextManager) or we can have one
+         for Servlets and one for Jasper, or we can just have one
+         tomcat.log for both Servlet and Jasper.  Right now there are
+         three standard log streams, "tc_log", "servlet_log", and
+         "JASPER_LOG".  
+
+	 Path: 
+
+	 The file to which to output this log, relative to
+	 TOMCAT_HOME.  If you omit a "path" value, then stderr or
+	 stdout will be used.
+
+	 Verbosity: 
+
+	 Threshold for which types of messages are displayed in the
+	 log.  Levels are inclusive; that is, "WARNING" level displays
+	 any log message marked as warning, error, or fatal.  Default
+	 level is WARNING.
 
 	 verbosityLevel values can be: 
 	    FATAL
@@ -17,18 +34,44 @@
 	    WARNING 
             INFORMATION
             DEBUG
+
+	 Timestamps:
+
+	 By default, logs print a timestamp in the form "yyyy-MM-dd
+	 hh:mm:ss" in front of each message.  To disable timestamps
+	 completely, set 'timestamp="no"'. To use the raw
+	 msec-since-epoch, which is more efficient, set
+	 'timestampFormat="msec"'.  If you want a custom format, you
+	 can use 'timestampFormat="hh:mm:ss"' following the syntax of
+	 java.text.SimpleDateFormat (see Javadoc API).  For a
+	 production environment, we recommend turning timestamps off,
+	 or setting the format to "msec".
+
+	 Custom Output:
+
+	 "Custom" means "normal looking".  "Non-custom" means
+	 "surrounded with funny xml tags".  In preparation for
+	 possibly disposing of "custom" altogether, now the default is
+	 'custom="yes"' (i.e. no tags)
+
+	 Per-component Debugging:
+
+	 Some components accept a "debug" attribute.  This further
+	 enhances log output.  If you set the "debug" level for a
+	 component, it may output extra debugging information.
     -->
 
-    <!-- if you don't want messages on screen, add
-         path="logs/tomcat.log" -->
+    <!-- if you don't want messages on screen, add the attribute
+            path="logs/tomcat.log" 
+	 to the Logger element below
+    -->
     <Logger name="tc_log" 
-            customOutput="yes" 
             verbosityLevel = "INFORMATION" 
-            timestamp="no" />
+    />
 
     <Logger name="servlet_log" 
             path="logs/servlet.log"
-            customOutput="yes" />
+    />
 
     <Logger name="JASPER_LOG" 
 	    path="logs/jasper.log"
