@@ -1,4 +1,4 @@
-// $Id: Context.java,v 1.2 2001/03/12 19:51:54 marcus Exp $
+// $Id: Context.java,v 1.3 2001/03/24 15:39:21 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -72,8 +72,11 @@ abstract class Context
 	if(parent instanceof MModel) {
 	    return mPackage.getName();
 	}
-	else {
+	else if(parent != null) {
 	    return getJavaName((MPackage)parent) + "." + mPackage.getName();
+	}
+	else {
+	    return "";
 	}
     }
 }

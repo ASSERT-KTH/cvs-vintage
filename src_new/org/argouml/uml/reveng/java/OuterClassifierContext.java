@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.2 2001/03/12 19:51:54 marcus Exp $
+// $Id: OuterClassifierContext.java,v 1.3 2001/03/24 15:37:22 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -40,6 +40,9 @@ class OuterClassifierContext extends Context
     /** This is appended to classname when searching in classpath. */
     private String namePrefix;
 
+    /** The java style name of the package. */
+    private String packageJavaName;
+
     /** 
 	Create a new context from a classifier.
 	
@@ -49,14 +52,15 @@ class OuterClassifierContext extends Context
 	@param namePrefix Inner class prefix, like "OuterClassname$"
     */
     public OuterClassifierContext(Context base,
-                                      MClassifier mClassifier,
-                                      MPackage mPackage,
-                                      String namePrefix)
+				  MClassifier mClassifier,
+				  MPackage mPackage,
+				  String namePrefix)
     {
 	super(base);
 	this.mClassifier = mClassifier;
 	this.mPackage = mPackage;
 	this.namePrefix = namePrefix;
+	packageJavaName = getJavaName(mPackage);
     }
 
     public MInterface getInterface(String name)
@@ -76,7 +80,7 @@ class OuterClassifierContext extends Context
 		}
 		else {
 		    classifier = 
-			Class.forName(getJavaName(mPackage) + "." +
+			Class.forName(packageJavaName + "." +
 				      namePrefix + name);
 		}		    
 		if(classifier.isInterface()) {
@@ -125,7 +129,7 @@ class OuterClassifierContext extends Context
 		}
 		else {
 		    classifier = 
-			Class.forName(getJavaName(mPackage) + "." +
+			Class.forName(packageJavaName + "." +
 				      namePrefix + name);
 		}		    
 		if(classifier.isInterface()) {
