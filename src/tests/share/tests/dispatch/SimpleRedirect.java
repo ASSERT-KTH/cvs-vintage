@@ -1,4 +1,4 @@
-/* $Id: SimpleRedirect.java,v 1.2 1999/10/14 23:48:50 akv Exp $
+/* $Id: SimpleRedirect.java,v 1.3 1999/11/02 00:46:51 costin Exp $
  */
 
 package tests.dispatch;
@@ -10,6 +10,7 @@ import org.apache.tools.moo.TestableBase;
 import org.apache.tools.moo.TestResult;
 import org.apache.tools.moo.URLHelper;
 
+// XXX XXX Add more info about what fails - and what is tested!!!
 public class SimpleRedirect extends TestableBase {
 
     public String getDescription() {
@@ -50,18 +51,19 @@ public class SimpleRedirect extends TestableBase {
                 return testResult;
             }
 
-	    url = URLHelper.getURL(sLoc);
-	    con = (HttpURLConnection)url.openConnection();
-	    con.setFollowRedirects(false);
-	    con.connect();
-
-            l = con.getHeaderField("Location");
-
-            if (l != null) {
-                testResult.setStatus(false);
-		testResult.setMessage("Incorrect Location header");
-                return testResult;
-            }
+	    // XXX Wrong test - sendRedirect(null) is not specified 
+	    // 	    url = URLHelper.getURL(sLoc);
+	    // 	    con = (HttpURLConnection)url.openConnection();
+	    // 	    con.setFollowRedirects(false);
+	    // 	    con.connect();
+	    
+	    //             l = con.getHeaderField("Location");
+	    
+	    //             if (l != null) {
+	    //                 testResult.setStatus(false);
+	    // 		testResult.setMessage("Incorrect Location header");
+	    //                 return testResult;
+	    //             }
 
             testResult.setStatus(true);
             return testResult;

@@ -32,14 +32,18 @@ file for complete configuration information:
             isWARValidated="false" isInvokerEnabled="true"
             isWorkDirPersistent="false"/>
         
-        <!-- Old TcpEndpoint-based HttpServer. Will be deprecated soon! -->
+        <!-- Old TcpEndpoint-based HttpServer. Will be deprecated soon! 
         <Connector className="org.apache.tomcat.server.HttpServerConnector">
         </Connector>
 
-        <!-- New HttpServer.  -->
         <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
             <Parameter name="port" value="8081"/>
+        </Connector>
+        -->
+
+        <!-- New HttpServer.  -->
+        <Connector className="org.apache.tomcat.service.http.HttpAdapter">
         </Connector>
 
         <!-- AJP11 - works with the old/stable JServ module -->

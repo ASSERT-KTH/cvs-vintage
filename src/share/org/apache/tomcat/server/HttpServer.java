@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.4 1999/10/30 00:29:25 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/30 00:29:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.5 1999/11/02 00:46:20 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/11/02 00:46:20 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.server;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.service.http.HttpAdapter;
 import org.apache.tomcat.net.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
@@ -591,7 +592,8 @@ public class HttpServer implements Server {
 		conn=(ServerConnector)c.newInstance();
 	    } catch(Exception ex) {
 		ex.printStackTrace();
-		return new HttpServerConnector();
+		//		return new HttpServerConnector();
+		return new HttpAdapter();
 	    }
 	    
 	    if( conn != null ) {
@@ -610,8 +612,8 @@ public class HttpServer implements Server {
 	    }
 	}
 	// default 
-	HttpServerConnector con=new HttpServerConnector();
-	return con;
+	// 	HttpServerConnector con=new HttpServerConnector();
+	return new HttpAdapter();
     }
 
     /** Called before starting the connector

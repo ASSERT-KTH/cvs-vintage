@@ -1,6 +1,6 @@
 #! /bin/ksh
 #
-# $Id: runtest.sh,v 1.2 1999/10/15 22:16:51 costin Exp $
+# $Id: runtest.sh,v 1.3 1999/11/02 00:46:46 costin Exp $
 
 # Shell script to run test harness
  
@@ -16,6 +16,9 @@ if [ "$cp" != "" ]; then
     CLASSPATH=${CLASSPATH}:${cp}
 fi
 
+if [ "$1" != "" ]; then
+    port=$1
+fi
 
 # Add tomcat-related classes
 TOMCAT_HOME=..
