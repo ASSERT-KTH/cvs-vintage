@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.26 $" />  
+     <property name="revision" value="$Revision: 1.27 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -52,7 +52,7 @@
      <taskdef name="comment" 
 	      classname="org.apache.tomcat.util.test.Body" />
 
-     <taskdef name="gtestDefaults" 
+     <taskdef name="gtestDefaults"
 	      classname="org.apache.tomcat.util.test.TestDefaults" />
 
      <!-- Backward compatibility -->
@@ -108,7 +108,7 @@
   
   <target name="params" depends="init">
       <httpClient>
-          <comment>Simple GET with parmeters</comment>
+          <comment>Simple GET with parameters</comment>
           <httpRequest path="/test/servlet/params.Params">
              <param name="a" value="k" />
              <param name="c" value="l" />
@@ -120,7 +120,7 @@
       </httpClient>
 
       <httpClient>
-          <comment>Simple POST parmeters</comment>
+          <comment>Simple POST parameters</comment>
           <httpRequest path="/test/servlet/params.Params" 
 		      method="POST">
              <param name="a" value="b" />
@@ -133,7 +133,7 @@
 
       <httpClient>
           <comment>POST and GET parameters</comment>
-          <httpRequest 
+          <httpRequest
               path="/test/servlet/params.Params" 
               method="POST">
              <param name="a" value="x" type="GET" />
@@ -214,7 +214,7 @@
           </httpRequest>
           <responseMatch match="before:a = [ k , m ]" />
           <responseMatch match="before:c = [ l ]" />
-          <responseMatch 
+          <responseMatch
              match="Calling RD.include for: params.Params/include1?a=b"/>
           <responseMatch match="/include1:a = [ b , k , m ]" />
           <responseMatch match="/include1:c = [ l ]" />
@@ -339,9 +339,9 @@
     <target name="dispatch" depends="init">
       <gtest  description="SimpleInclude"
              request="GET /test/servlet/dispatch.SimpleIncludeServlet HTTP/1.0"
-             expectHeaders="Content-Type:text/foobar" 
+             expectHeaders="Content-Type:text/foobar"
              returnCode="${http.protocol} 200"
-             goldenFile="${gdir}/SimpleInclude.txt" 
+             goldenFile="${gdir}/SimpleInclude.txt"
        />
       <gtest  description="SimpleForward"
              request="GET /test/servlet/dispatch.SimpleForwardServlet HTTP/1.0"
@@ -1107,11 +1107,27 @@ mod_webapp into mod_jk )
            request="GET /test/jsp/HelloWorld.jsp%20 HTTP/1.0"
            returnCode="${http.protocol} 404" 
       />
+   </target>
 
+   <target name="writer">
+      <httpClient>
+          <comment>Writer test, closing writer at end</comment>
+          <httpRequest path="/test/servlet/CloseWriter" />
+          <httpStatusMatch match="200" />
+          <headerMatch name="Content-Type" value="text/plain" />
+          <goldenMatch file="${gdir}/CloseWriter.txt"/>
+      </httpClient>
+      <httpClient>
+          <comment>Writer test,trying to catch reciclying issues</comment>
+          <httpRequest path="/test/servlet/CloseWriter" />
+          <httpStatusMatch match="200" />
+          <headerMatch name="Content-Type" value="text/plain" />
+          <goldenMatch file="${gdir}/CloseWriter.txt"/>
+      </httpClient>
    </target>
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers">
+   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
