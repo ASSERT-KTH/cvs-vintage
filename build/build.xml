@@ -320,12 +320,14 @@
         <copy todir="${build.sql.scarab}" filtering="yes">
             <fileset dir="${src.sql.dir}">
                 <include name="**/*.sql"/>
+                <include name="**/*.sh"/>
                 <include name="**/*.lst"/>
                 <include name="**/dbsettings.props"/>
             </fileset>
         </copy>
         <chmod perm="+x">
             <fileset dir="${src.sql.dir}" includes="**/*.sh"/>
+            <fileset dir="${build.sql.scarab}" includes="**/*.sh"/>
         </chmod>
 
         <!-- express the type of database we are generating -->
