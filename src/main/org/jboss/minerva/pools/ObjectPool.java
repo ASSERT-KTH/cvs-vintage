@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -529,7 +529,7 @@ public class ObjectPool implements PoolEventListener {
             return result; // return the same result.  This is unusual.
 
         while(true) {
-            Iterator it = new HashSet(objects.values()).iterator();
+            Iterator it = objects.values().iterator();
             while(it.hasNext()) {
                 ObjectRecord rec = (ObjectRecord)it.next();
                 if(!rec.isInUse()) {
