@@ -123,7 +123,7 @@ $page.setTitle("Enter issue")
      <th>&#160;</th>
      <th>Attachment name</th>
      <th>Attachment description</th>
-##     <th>Type</th>
+     <th>Attachment type</th>
    </tr>
    #foreach ($file in $reportingIssue.Attachments)
      #indexedRows($velocityCount)
@@ -133,6 +133,7 @@ $page.setTitle("Enter issue")
        </td>
        <td>$file.File.FileName</td>
        <td>$file.Name</td>
+       <td>$file.MimeType</td>
      </tr>
      #end
    #end
@@ -151,20 +152,42 @@ $page.setTitle("Enter issue")
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
-       <p>Click Browse and select a file. If you do not see a Browse
+       <p><small>Click Browse and select a file. If you do not see a Browse
        button, your browser does not support file uploads. Windows
        users, set Files of Type: to be All Files (*.*) to get a
        complete file listing. The File field cannot be used to
-       rename files.</p>
+       rename files.</small></p>
       </td>
     </tr>
     <tr>
       <th>Attachment description</th>
       <td>
-       #textAreaMedium("$intakeAttachment.Name.Key" "")
+       #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
        #fieldErrorMsg($intakeAttachment.Name "")
       </td>
     </tr>    
+    <tr>
+      <th>Attachment type</th>
+      <td>
+        <select name="$intakeAttachment.MimeTypeA.Key" class="select">
+        #if ($intakeAttachment.MimeTypeA)
+          #set ($mimeA = $intakeAttachment.MimeTypeA.toString())
+        #end
+          <option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
+          <option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
+          <option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option> 
+          <option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option> 
+          <option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF Image (image/gif)</option> 
+          <option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG Image (image/jpeg)</option> 
+          <option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG Image (image/png)</option> 
+          <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Binary file (application/octet-stream)</option>        
+        </select>
+        <p><small>Other (enter mime type:&#160;
+        <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
+                          value="$intakeAttachment.MimeTypeB" />)</small></p>
+        #fieldErrorMsg($intakeAttachment.MimeTypeA "")
+      </td>
+    </tr>
   </table>
 </div>
 
@@ -188,15 +211,15 @@ $page.setTitle("Enter issue")
    <td>
 #set ($intakeAttachment = $intake.Attachment.setKey("_1"))
 #if ($reasonOptional)
-    Any information that did not fit within one of the attributes shown
-    above can be added here.
+    <small>Any information that did not fit within one of the attributes shown
+    above can be added here.</small>
 #else
     #fieldErrorMsg($intakeAttachment.DataAsString)
-    <strong>Required</strong> Please supply a short description which will be
+    <small><strong>Required</strong> Please supply a short description which will be
     useful for users receiving the new issue email.  Also any information that
-    did not fit within one of the attributes shown above can be added here.
+    did not fit within one of the attributes shown above can be added here.</small>
 #end
-
+<br />
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
    </td>
  </tr>
