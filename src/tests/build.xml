@@ -14,6 +14,7 @@
 
   <property name="tomcat.build" value="${ws}/jakarta-tomcat/build/tomcat"/>
   <property name="tomcat.dist" value="${ws}/jakarta-tomcat/dist/tomcat"/>
+  <property name="wdst.webapp" value="${tomcat.build}/webapps/servlet-tests"/>
 
   <property name="watchdog.src" value="${ws}/jakarta-watchdog"/>
   <property name="watchdog.build" value="${watchdog.src}/../build/watchdog"/>
@@ -76,17 +77,27 @@
     <copy todir="${tomcat.build}/webapps/jsp-tests" >
       <fileset dir="${watchdog.src}/src/server/jsp-tests" />
     </copy>
+    <delete file="${tomcat.build}/webapps/jsp-tests/WEB-INF/lib/moo.jar" />
     <copy todir="${tomcat.build}/webapps/jsp-tests/Golden" >
     <fileset dir="${watchdog.src}/src/clients/org/apache/jcheck/jsp/client" />
     </copy>
+
     <copy todir="${tomcat.build}/webapps/servlet-tests" >
       <fileset dir="${watchdog.src}/src/server/servlet-tests" />
     </copy>
+    <mkdir dir="${wdst.webapp}/WEB-INF/classes/org/apache/jcheck/props"/>
+    <copy todir="${wdst.webapp}//WEB-INF/classes/org/apache/jcheck/props" >
+      <fileset dir="${watchdog.src}/src/clients/org/apache/jcheck/props" />
+    </copy>
+    <mkdir dir="${wdst.webapp}/WEB-INF/classes/org/apache/jcheck/servlet"/>
+    <copy todir="${wdst.webapp}//WEB-INF/classes/org/apache/jcheck/servlet" >
+      <fileset dir="${watchdog.src}/src/clients/org/apache/jcheck/servlet" />
+    </copy>
 
-    <copyfile src="${watchdog.src}/src/conf/jsp-gtest.xml"
-	      dest="${tomcat.build}/webapps/jsp-tests/WEB-INF/jsp-gtest.xml"/>
-    <copyfile src="${watchdog.src}/src/conf/servlet-moo.xml"
-  dest="${tomcat.build}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
+    <copy file="${watchdog.src}/src/conf/jsp-gtest.xml"
+        todir="${tomcat.build}/webapps/jsp-tests/WEB-INF"/>
+    <copy file="${watchdog.src}/src/conf/servlet-moo.xml"
+        todir="${wdst.webapp}//WEB-INF"/>
 
     <javac 
 	   srcdir="${tomcat.build}/webapps/jsp-tests/WEB-INF/classes" 
@@ -119,11 +130,11 @@
   <!-- ==================== Admin & agreagate ==================== -->
    
   <target name="clean-classes" depends="init">
-    <deltree dir="${tomcat.build}/classes/org"/>
+    <delete dir="${tomcat.build}/classes/org"/>
   </target>
 
   <target name="clean" depends="init">
-    <deltree dir="${tomcat.build}"/>
+    <delete dir="${tomcat.build}"/>
   </target>
   
   <target name="all" depends=""/>
