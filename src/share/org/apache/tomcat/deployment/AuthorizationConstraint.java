@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/AuthorizationConstraint.java,v 1.1 1999/10/09 00:20:41 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/AuthorizationConstraint.java,v 1.2 1999/10/31 00:09:51 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/31 00:09:51 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.Enumeration;
     */
 
 public interface AuthorizationConstraint extends WebDescriptor {
-    public static String BASIC_MEHTHOD = "basic";
+    public static String BASIC_METHOD = "basic";
     public static String FORM_METHOD = "form";
     public static String MUTUAL_METHOD = "mutual";
 
