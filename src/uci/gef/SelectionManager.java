@@ -28,7 +28,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.5 1998/04/18 01:26:49 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.6 1998/04/18 02:08:47 jrobbins Exp $
 
 package uci.gef;
 
@@ -53,7 +53,7 @@ import uci.gef.event.*;
  *
  * @see Selection */
 
-public class SelectionManager extends Observable
+public class SelectionManager
 implements Serializable, KeyListener, MouseListener, MouseMotionListener {
 
   /** The collection of Selection instances */

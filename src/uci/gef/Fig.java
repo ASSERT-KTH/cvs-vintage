@@ -27,7 +27,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.6 1998/04/18 01:26:12 jrobbins Exp $
+// $Id: Fig.java,v 1.7 1998/04/18 02:08:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -46,8 +46,7 @@ import uci.graph.*;
  *  be placed in any LayerDiagram. Fig's are also used to define the
  *  look of FigNodes on NetNodes. */
 
-public class Fig extends Observable
-implements java.io.Serializable  {
+public class Fig implements java.io.Serializable  {
 
   ////////////////////////////////////////////////////////////////
   // constants

@@ -27,7 +27,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.5 1998/04/18 01:26:25 jrobbins Exp $
+// $Id: Layer.java,v 1.6 1998/04/18 02:08:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -67,8 +67,7 @@ import uci.util.*;
  * @see LayerGrid
  * @see LayerPolar */
 
-public abstract class Layer extends Observable
-implements java.io.Serializable  { 
+public abstract class Layer implements java.io.Serializable {
 
   ////////////////////////////////////////////////////////////////
   // instance variables

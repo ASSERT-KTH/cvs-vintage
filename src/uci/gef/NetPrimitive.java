@@ -28,7 +28,7 @@
 // File: NetPrimitive.java
 // Classes: NetPrimitive
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NetPrimitive.java,v 1.5 1998/04/18 01:26:42 jrobbins Exp $
+// $Id: NetPrimitive.java,v 1.6 1998/04/18 02:08:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -40,10 +40,7 @@ import uci.ui.*;
 
 /** Abstract superclass for all Net-level objects. I currently
  *  anticipate exactly 4 subclasses: NetNode, NetPort, NetEdge, and
- *  NetList. The only behavior that is common to all of those is that
- *  they pass update notifications on to their Observer's if they don't
- *  handle a notification themselves, and they can highlight by passing
- *  a notification to their FigNode, or FigEdge if any.  <p>
+ *  NetList. <p>
  *
  * The classes that subclass from this class are all used by
  * DefaulGraphModel.  You can also define your own GraphModel with

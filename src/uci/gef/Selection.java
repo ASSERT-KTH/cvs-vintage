@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.5 1998/04/18 01:26:48 jrobbins Exp $
+// $Id: Selection.java,v 1.6 1998/04/18 02:08:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -46,7 +46,7 @@ import uci.util.*;
  *
  * @see Fig */
 
-public abstract class Selection extends Observable
+public abstract class Selection
 implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   ////////////////////////////////////////////////////////////////
