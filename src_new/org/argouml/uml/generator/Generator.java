@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.20 2003/08/17 22:34:50 linus Exp $
+// $Id: Generator.java,v 1.21 2003/08/25 14:08:25 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,10 +213,10 @@ public abstract class Generator
         return un;
     }
 
-    public String generateClassifierRef(MClassifier cls) {
+    public String generateClassifierRef(Object cls) {
         if (cls == null)
             return "";
-        return cls.getName();
+        return ModelFacade.getName(cls);
     }
 
     public String generateStereotype(MStereotype st) {

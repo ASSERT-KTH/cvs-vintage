@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.7 2003/06/29 23:53:41 linus Exp $
+// $Id: NotationProvider.java,v 1.8 2003/08/25 14:08:24 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.7 2003/06/29 23:53:41 linus Exp $
+// $Id: NotationProvider.java,v 1.8 2003/08/25 14:08:24 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -76,7 +76,7 @@ public interface NotationProvider {
     public String generateAction(Object m);
     public String generateGuard(MGuard m);
     public String generateMessage(MMessage m);
-    public String generateClassifierRef(MClassifier m);
+    public String generateClassifierRef(Object m);
     public String generateAssociationRole(MAssociationRole m);
 
     /** Can the notation be parsed for this object?
