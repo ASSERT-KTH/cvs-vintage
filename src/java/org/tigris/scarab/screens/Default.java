@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.66 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: Default.java,v 1.67 2003/02/06 00:29:20 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -147,7 +147,6 @@ public class Default extends TemplateSecureScreen
         String template = data.getTarget();
         {
             template = template.replace(',','.');
-
             String perm = ScarabSecurity.getScreenPermission(template);
             TemplateContext context = getTemplateContext(data);
             ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -192,6 +191,16 @@ public class Default extends TemplateSecureScreen
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
                 scarabR.setAlertMessage(l10n.get("NoPermissionInModule"));
                 setTargetSelectModule(data);
+                return false;
+            }
+            else if (user != null && user.hasLoggedIn())
+            {
+                setTargetSelectModule(data);
+                return true;
+            }
+            else
+            {
+                setTargetLogin(data);
                 return false;
             }
         }
