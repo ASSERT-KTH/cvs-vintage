@@ -11,18 +11,20 @@
 
 #else
 
-#set ($selectAction = $moveIssueGroup.Action)
-#set ($moduleId = $moveIssueGroup.ModuleId)
+#set ($selectAction = $moveIssueGroup.Action.Value)
+#set ($moduleId = $context.get("ModuleId"))
+#set ($issueTypeId = $context.get("issueTypeId"))
 #set ($module = $scarabR.CurrentModule)
 #set ($newModule = $scarabR.getModule("$moduleId"))
+#set ($newIssueType = $scarabR.getIssueType("$issueTypeId"))
 
-#set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId"))
-#set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
+#set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId", "$issueTypeId"))
+#set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId", "$issueTypeId"))
 
 #if ($selectAction.toString().equals("move"))
- #set ($actionText = "Move")
+ #set ($actionText = "move")
 #else
- #set ($actionText = "Copy")
+ #set ($actionText = "copy")
 #end
 
 <form method="post" action="$link.setPage("MoveIssue2.vm")">
@@ -32,6 +34,7 @@
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$moduleId" />
+<input type="hidden" name="$moveIssueGroup.IssueTypeId.key" value="3" />
 <input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
 
 <div class="functnbar">
@@ -42,115 +45,85 @@
 #set ($attrValues = $issue.AllAttributeValuesMap)
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
-<h3>$l10n.IssueToBeCopied</h3>
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
- <tr>
-#if ($issue.DefaultTextAttributeValue)
-   #set ($attVal = $issue.DefaultTextAttributeValue)
-#end
-#if ($attVal)
-  <th>$attVal.RModuleAttribute.DisplayValue</th>
-#end
-  <th>$l10n.DateCommitted</th>
-  <th>$l10n.CommittedBy</th>
- </tr>
- <tr class="a">
-#if ($attVal)
-  <td>
-   $attVal.Value
-  </td>
-#end
-  <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
-  <td>
-   #set ($createdUser = $issue.CreatedBy)
-   <a href="mailTo:$createdUser.Email">$!createdUser.Name</a>
-  </td>
- </tr>
-</table>
 
-<div class="axial">
-<table border="1" cellspacing="2" cellpadding="3">
+<h3>Copy / move options</h3>
+
+
+<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">$l10n.DestinationModule</th>
-<td>$newModule.Name</td>
+<th>$l10n.DestinationModule</th>
+<td> $newModule.Name / $newIssueType.Name </td>
+</tr>
+
 <tr>
-<th>$l10n.Action</th>
-<td>$selectAction</td>
+<th>Action</th>
+<td>
+#if ($actionText.equals("copy"))
+ Copy
+ #else
+ Move
+ #end </td>
 </tr>
 </table>
 </div>
 
-<h3>$l10n.AttributeMappingResults</h3>
-<div class="sidebyside">
-<table border="1" cellspacing="2" cellpadding="3" width="100%">
- <tr>
-  <th>$l10n.AttributesToBeCopied</th>
-  <th>$l10n.MatchingAttributes</th>
- </tr>
- <tr>
-  <td>
-  <div class="datatablechild">
-   <table width="100%" border="1" cellspacing="2" cellpadding="3">
-    <tr>
-     <th>Attribute name (alias)</th>
-     <th>Value (list option/content)</th>
-    </tr>
-    #foreach ($attr in $matchingAttributes)
-     #indexedRows($velocityCount)
-     <td>$attr.Attribute.Name
-      #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
-      #if (!$attr.Attribute.Name.equals($displayValue))
-       ($displayValue)
-      #end
-     </td>
-     <td>$attr.Value</td>
-    </tr>
-    #end
-   </table>
-  </div>
- </td>
- <td>
- <div class="datatablechild">
-  <table width="100%" border="1" cellspacing="2" cellpadding="3">
-   <tr>
-    <th>$l10n.AttributeName</th>
-    <th>$l10n.Value</th>
-   </tr>
-   #foreach ($attr in $matchingAttributes)
-    #indexedRows($velocityCount)
+<h3>$l10n.AttributesToBeCopied</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Value</th>
+</tr>
+#foreach ($attr in $matchingAttributes)
+#indexedRows($velocityCount)
     <td>$attr.Attribute.Name
      #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
     </td>
-    <td>$attr.Value</td>
-   #end
-   </tr>
-  </table>
- </div>
- </td>
- </tr>
+<td>$attr.Attribute.AttributeType.Name</td>
+<td>$attr.Value</td>
+</tr>
+#end
 </table>
-</div>
 
 #if (!$orphanAttributes.isEmpty())
- <h3>$l10n.AttributesThatDoNotExist</h3>
- <table width="100%" border="1" cellspacing="2" cellpadding="3">
-  <tr>
-   ##<th>$l10n.Include</th>
-   <th>$l10n.AttributeName</th>
-   <th>$l10n.OptionName</th>
-  </tr>
-  #foreach($attr in $orphanAttributes)
-   #indexedRows($velocityCount)
-   ##<td><input type="checkbox" name="x" value="x" checked="checked" /></td>
-   <td>$attr.Attribute.Name</td>
-   <td>$attr.Value</td>
-  </tr>
-  #end
- </table>
+<h3>$l10n.AttributesThatDoNotExist</h3>
+<div class="colbar">$l10n.IncludedAsComment</div>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Select</th>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Value</th>
+</tr>
+#foreach($attr in $orphanAttributes)
+#indexedRows($velocityCount)
+<td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked /></td>
+    <td>$attr.Attribute.Name
+     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
+     #if (!$attr.Attribute.Name.equals($displayValue))
+      ($displayValue)
+     #end
+    </td>
+<td>$attr.Attribute.AttributeType.Name</td>
+<td>$attr.Value</td>
+</tr>
 #end
+</table>
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>*$l10n.ReasonForChange</th>
+<td>$l10n.CopyChangeHistory 
+     <p><textarea rows="4" cols="60" name ="reason"></textarea></p>
+</td>
+</tr>
+</table>
+</div>
 
 <div class="functnbar2">
   <input type="submit" value="$actionText issue" name="eventSubmit_doSaveissue" />
@@ -161,4 +134,3 @@ $intake.declareGroups()
 </form>
 
 #end
-</div>

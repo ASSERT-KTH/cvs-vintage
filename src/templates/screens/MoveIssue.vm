@@ -14,84 +14,53 @@
 #else
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
-#set ($attrValues = $issue.AllAttributeValuesMap)
-#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+##set ($attrValues = $issue.AllAttributeValuesMap)
+##set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issue.UniqueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 
-<h3>$l10n.IssueToBeCopied</h3>
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
- <tr>
-#if ($issue.DefaultTextAttributeValue)
-   #set ($attVal = $issue.DefaultTextAttributeValue)
-#end
-#if ($attVal)
-  <th>$attVal.RModuleAttribute.DisplayValue</th>
-#end
-  <th>$l10n.DateCommitted</th>
-  <th>$l10n.CommittedBy</th>
- </tr>
- <tr class="a">
-#if ($attVal)
-  <td>
-   $attVal.Value
-  </td>
-#end
-  <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
-  <td>
-   #set ($createdUser = $issue.CreatedBy)
-   <a href="mailTo:$createdUser.Email">$!createdUser.Name</a>
-  </td>
- </tr>
-</table>
 
-<h4>$l10n.CopyInfo</h4>
+<h3>$l10n.CopyOptions</h3>
 <div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">$l10n.DestinationModule</th>
+<th>$l10n.DestinationModule</th>
 <td>
-#fieldErrorMsg($moveIssueGroup.ModuleId "")
-<select name="$moveIssueGroup.ModuleId.Key">
- <option>Select module...</option>
+<select name="mod_issuetype">
+<option>$l10n.SelectModuleIssueType</option>
  #foreach ($module in $copyToModules)
-  #if ($module.ModuleId.equals($scarabR.CurrentModule.ModuleId))
-    <option selected="selected" value="$module.ModuleId">$module.Name</option>
-  #else
-    <option value="$module.ModuleId">$module.Name</option>
-  #end
+    <option>module $module.Name</option>
+    #foreach ($issueType in $module.IssueTypes)
+      #if (!($module.ModuleId.equals($scarabR.CurrentModule.ModuleId) && $issueType.IssueTypeId.equals($scarabR.CurrentIssueType.IssueTypeId)))
+          <option value="${module.ModuleId}_${issueType.IssueTypeId}">--artifact type $issueType.Name</option>
+      #end
+    #end
  #end
-</select>
 </td>
 </tr>
 <tr>
-<th>$l10n.Action</th>
-#set ($userAction = $moveIssueGroup.Action)
-#if (!$userAction || $userAction.toString().length() == 0)
-   #set ($userAction = 'copy')
-#end
+<th>Action</th>
 <td> <select name="$moveIssueGroup.Action.Key" >
 <option value="copy"
-     #if ($userAction.toString().equals("copy")) selected="selected" #end >Copy</option>
+     #if ($moveIssueGroup.Action.Value.equals("copy")) selected="selected" #end >Copy</option>
 #if ($user.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
 <option value="move" 
-     #if ($userAction.toString().equals("move")) selected="selected" #end >Move</option>
+     #if ($moveIssueGroup.Action.Value.equals("move")) selected="selected" #end >Move</option>
 #end
 </select>
-
 </td>
 </tr>
 </table>
 </div>
-
 <div class="functnbar2">
-  <input type="submit" value="$l10n.Next" name="eventSubmit_doValidate" />
+  <input type="submit" value="$l10n.MapIssueAttributes" name="eventSubmit_doValidate" />
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
 </form>
 
 #end
-</div>
