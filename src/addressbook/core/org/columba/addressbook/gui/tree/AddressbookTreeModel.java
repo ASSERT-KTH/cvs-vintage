@@ -49,29 +49,24 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 
 		XmlElement child;
 
-		if (count > 0) {
-			for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++) {
+			child = parentTreeNode.getElement(i);
+			String name = child.getName();
+			//XmlElement nameNode = child.getName();
+			//                System.out.println( "node: "+child );
+			//                System.out.println( "nodename: "+nameNode.getValue());
 
-				child = parentTreeNode.getElement(i);
-				String name = child.getName();
-				//XmlElement nameNode = child.getName();
-
-				//                System.out.println( "node: "+child );
-				//                System.out.println( "nodename: "+nameNode.getValue());
-
-				/*
-				if ((name.equals("tree")) || (name.equals("folder"))) {
-					FolderTreeNode folder = add(child, parentFolder);
-					if (folder != null)
-						createDirectories(child, folder);
-				}
-				*/
-				if (name.equals("folder")) {
-					AddressbookTreeNode folder = add(child, parentFolder);
-					if (folder != null)
-						createDirectories(child, folder);
-				}
-
+			/*
+			if ((name.equals("tree")) || (name.equals("folder"))) {
+				FolderTreeNode folder = add(child, parentFolder);
+				if (folder != null)
+					createDirectories(child, folder);
+			}
+			*/
+			if (name.equals("folder")) {
+				AddressbookTreeNode folder = add(child, parentFolder);
+				if (folder != null)
+					createDirectories(child, folder);
 			}
 		}
 	}
