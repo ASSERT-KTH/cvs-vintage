@@ -26,6 +26,8 @@
   <property name="test.tmp.registry"       value="${test.tmp}/registry"/>
   <property name="test.single.jvmargs"     value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.policy=${test.ext}/java.policy"/>
 
+  <property name="trace.properties.file.name"     value="trace.properties"/>
+
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="test.client.classpath"> 
     <fileset dir="${carol.dist}/lib">
@@ -87,8 +89,11 @@
     <mkdir dir="${test.tmp.registry}"/>
     <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client}/jndi.properties" />  
     <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client}/carol.properties" /> 
+    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
+
     <copy file="${test.ext}/${server.properties.file.name1}" tofile="${test.tmp.server}/jndi.properties" />  
     <copy file="${test.ext}/${server.properties.file.name2}" tofile="${test.tmp.server}/carol.properties" /> 
+    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" /> 
   </target>
 
   <!-- test launching --> 

@@ -39,6 +39,7 @@ import java.util.Enumeration;
 //carol import
 import org.objectweb.carol.util.configuration.RMIConfiguration;
 import org.objectweb.carol.util.configuration.CommunicationConfiguration; 
+import org.objectweb.carol.util.configuration.TraceCarol; 
 import org.objectweb.carol.jndi.iiop.IIOPReferenceContextWrapper;
 
 /**
@@ -108,6 +109,13 @@ public class ProtocolCurrent {
 	    defaultRMI = CommunicationConfiguration.getDefaultProtocol().getName();
 	    // set the default protocol
 	    threadCtx.set(defaultRMI) ;
+	    
+	    // trace Protocol current
+	    if (TraceCarol.isDebugCarol()) {
+		TraceCarol.debugCarol("ProtocolCurrent: The ProtocolCurrent is set:\n"+
+				       this + "\n");
+	    }
+	    
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -196,9 +204,7 @@ public class ProtocolCurrent {
      * To string method 
      */
     public String toString() {
-	return "Protocol Current :"
-	    + "\nnumber of rmi:" + icHashtable.size() 
-	    + "\ndefault:"+ defaultRMI 
-	    + "\ncurrent:"+ (String)threadCtx.get();
+	return "\nnumber of rmi:" + icHashtable.size() 
+	    + "\ndefault:"+ defaultRMI;
     }
 }  

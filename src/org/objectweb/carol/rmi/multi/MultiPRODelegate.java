@@ -39,6 +39,7 @@ import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 //carol import 
 import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /*
  * Class <code>MultiPRODelegate</code> This is a proxy for multi orb portable remote object delegate 
@@ -72,12 +73,15 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * constructor for this PortableRemoteObjectDelegateProxy
      */
     public MultiPRODelegate() throws RemoteException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.MultiPRODelegate()");
+        }
 	try {
 	    initProtocols();
 	} catch (Exception e) {
-	    throw new RemoteException("init Protocols fail: \n" +
-				      getProperties() 
-				      + e);
+	    String msg = "MultiPRODelegate, init protocols fail";
+	    TraceCarol.error(msg,e);
+	    throw new RemoteException(msg);
 	}
     }
     
@@ -87,6 +91,10 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem 
      */
     public void exportObject(Remote obj) throws RemoteException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.exportObject(" +obj.getClass().getName()
+				     +" obj)/rmi name=" +pcur.getCurrentRMIName());
+        }
 	try {
 	    if (init) { 
 		for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
@@ -102,10 +110,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	    
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new RemoteException("Export Object fail, please check your configuration:\n" 
-				      + getProperties() +
-				      "Erreur:" + e);	    
+	    String msg = "MultiPRODelegate.exportObject(Remote obj) fail";
+	    TraceCarol.error(msg,e);
+	    throw new RemoteException(msg);	    
 	}
     }
 
@@ -116,6 +123,10 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.unexportObject(" + obj.getClass().getName()
+				     +" obj)/rmi name=" + pcur.getCurrentRMIName());
+        }
 	try {
 	    if (init) {	
 		for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
@@ -127,11 +138,10 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 		    ((PortableRemoteObjectDelegate)e.nextElement()).unexportObject(obj);
 		}	
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new NoSuchObjectException("unexport Object fail:\n"
-					    + getProperties() 
-					    + e);
+	} catch (Exception e) {	  
+	    String msg = "MultiPRODelegate.unexportObject(Remote obj) fail";
+	    TraceCarol.error(msg,e);
+	    throw new NoSuchObjectException(msg);
 	}	
     }
 
@@ -142,6 +152,11 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException if the connection fail
      */ 
     public void connect(Remote target,Remote source) throws RemoteException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.connect("+target.getClass().getName() + " target,"
+				     +source.getClass().getName()
+				     +" source)/rmi name="+ pcur.getCurrentRMIName());
+        }
 	try {
 	    if (init) {
 		for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
@@ -154,10 +169,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 		}
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new RemoteException("connect fail:\n" +
-				      getProperties()
-				      + e);
+	    String msg = "MultiPRODelegate.connect(Remote target,Remote source) fail";
+	    TraceCarol.error(msg,e);
+	    throw new RemoteException(msg);
 	}
     }
 
@@ -170,6 +184,11 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception ClassCastException if the obj class is not compatible with a newClass cast 
      */
     public Object narrow(Object obj, Class newClass ) throws ClassCastException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.narrow("+obj.getClass().getName() + " obj,"
+				     +newClass.getName()
+				     +" class)/rmi name="+ pcur.getCurrentRMIName());
+        }
 	try {
 	    if (init) {
 		return pcur.getCurrentPortableRemoteObject().narrow(obj, newClass);
@@ -178,10 +197,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 		return pcur.getCurrentPortableRemoteObject().narrow(obj, newClass);
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new ClassCastException ("default narrow fail:\n"
-					  + getProperties()
-					  + e);
+	    String msg = "MultiPRODelegate.narrow(Object obj, Class newClass) fail";
+	    TraceCarol.error(msg,e);
+	    throw new ClassCastException (msg);
 	}
     }
 
@@ -192,6 +210,10 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.toStub(" +obj.getClass().getName()
+				     +" obj)/rmi name=" +pcur.getCurrentRMIName());
+        }
 	try {
 	    if (init) {
 		return pcur.getCurrentPortableRemoteObject().toStub(obj);
@@ -200,10 +222,9 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 		return pcur.getCurrentPortableRemoteObject().toStub(obj);
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new NoSuchObjectException("toStub fail:\n"
-					    + getProperties()
-					    + e);
+	    String msg = "MultiPRODelegate.toStub(Remote obj) fail";
+	    TraceCarol.error(msg,e);
+	    throw new NoSuchObjectException(msg);
 	}	
     }
 
@@ -212,23 +233,11 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * Private method for orb intanciation
      */
     private void initProtocols() throws Exception {
+	if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("MultiPRODelegate.initProtocols()");
+	}
 	pcur = ProtocolCurrent.getCurrent();
 	activesProtocols = pcur.getPortableRemoteObjectHashtable();
 	init = true;
     }
-
-    /**
-     * Private method for building property string
-     */
-    private String getProperties() {
-	try {
-	    return "CAROL configuration:\n" 
-		+ org.objectweb.carol.util.configuration.CommunicationConfiguration.getAllRMIConfiguration() 
-		+" Classpath: " + System.getProperty("java.class.path") + "\n";
-	} catch (Exception e) {
-	    return "Can't check CAROL configuration:\n" + e 
-		+" Classpath: " + System.getProperty("java.class.path") + "\n";
-	}
-    }
-
 }

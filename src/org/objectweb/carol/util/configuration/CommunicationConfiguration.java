@@ -38,6 +38,9 @@ import java.io.*;
 //javax import 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
+// carol import 
+import org.objectweb.carol.util.multi.ProtocolCurrent;
+
 /*
  * Interface <code>CommunicationConfiguration</code> for Communication environment
  * You must have a communication.xml and communication.dtd in your 
@@ -162,17 +165,18 @@ public class CommunicationConfiguration {
      * @throws RMIConfigurationException if a there is a problem with those environment (field missing for example)
      */ 
       public static synchronized void loadCarolConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
-
+	// init Trace 
+	TraceCarol.configure();
 	Properties carolProps = CarolDefaultValues.getCarolProperties(rmiProps, jndiProps);
-
+	  
 	Properties jvmProps = new Properties();	    
 	jvmProps.putAll(System.getProperties());
- 
+	  
 	String jvmPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JVM_PREFIX;
 	String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX;
 	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
 	String activation_prefix = rmiPref + "."  + CarolDefaultValues.ACTIVATION_PREFIX;
-
+	
     	//Parse the properties
 	for (Enumeration e =  carolProps.propertyNames() ; e.hasMoreElements() ;) {
 
@@ -182,7 +186,9 @@ public class CommunicationConfiguration {
 		if (pTok.hasMoreTokens()) {
 		    defaultRMI = (pTok.nextToken()).trim();
 		} else {
-		   throw new RMIConfigurationException("There is no rmi activated in the file " + CAROL_FILE_NAME); 
+		    String msg = "There is no rmi activated in the file " + CAROL_FILE_NAME;
+		    TraceCarol.error(msg);
+		    throw new RMIConfigurationException(msg);
 		}
 	    } else if (pkey.startsWith(jvmPref)) { // jvm properties
 		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), (carolProps.getProperty(pkey)).trim());	
@@ -196,17 +202,24 @@ public class CommunicationConfiguration {
 		    RMIConfiguration rmiConf =  new RMIConfiguration(rmiName, carolProps, jndiProps);
 		    rmiConfigurationTable.put(rmiName, rmiConf);
 		}
-	    } else { // this is not a carol properties 
-		throw new RMIConfigurationException("The properties " + pkey + "can not be set in the file " + CAROL_FILE_NAME);
+	    } else { // this is not a carol properties
+		String msg = "The properties " + pkey + "can not be set in the file " + CAROL_FILE_NAME;
+		TraceCarol.error(msg);
+		throw new RMIConfigurationException(msg);
 	    }
 	}
 
  	// add the jvm properties in the jvm 
 	System.setProperties(jvmProps);
 	configurationLoaded = true;
-
+	if (TraceCarol.isDebugCarol()) {
+            TraceCarol.debugCarol("CommunicationConfiguration: The configuration is load:\n"+
+				  getConfigurationString() + "\n");
+        }
 	if (getDefaultProtocol() == null) {
-	    throw new RMIConfigurationException("The default protocol : " + defaultRMI + " must be configured inside the carol properties files");
+	    String msg = "The default protocol : " + defaultRMI + " must be configured inside the carol properties files";
+	    TraceCarol.error(msg);
+	    throw new RMIConfigurationException(msg);
 	}
       }
 
@@ -218,12 +231,21 @@ public class CommunicationConfiguration {
      * @throws RMIConfigurationException if the rmi name doesn't exist in the carol configuration
      */
     public static void activateRMI(String rmiName) throws RMIConfigurationException {
+	if (TraceCarol.isDebugCarol()) {
+            TraceCarol.debugCarol("CommunicationConfiguration.activateRMI("+rmiName+")");
+        }
 	if (!configurationLoaded) {
-	    throw new RMIConfigurationException("call for rmi "+rmiName+ " activation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class");
+	    String msg = "call for rmi "
+		+rmiName
+		+ " activation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class";
+	    TraceCarol.error(msg);
+	    throw new RMIConfigurationException(msg);
 	}
 	RMIConfiguration rmiC =  getRMIConfiguration(rmiName);
 	if (rmiC == null) {
-	     throw new RMIConfigurationException("try to activate a non existant rmi configuration :" +rmiName); 
+	    String msg = "try to activate a non existant rmi configuration :" +rmiName;
+	    TraceCarol.error(msg);
+	    throw new RMIConfigurationException(msg); 
 	} else {
 	    rmiC.activate();
 	}
@@ -236,16 +258,37 @@ public class CommunicationConfiguration {
      * @throws RMIConfigurationException if the rmi name doesn't exist in the carol configuration
      */
     public static void desactivateRMI(String rmiName) throws RMIConfigurationException {
+	if (TraceCarol.isDebugCarol()) {
+            TraceCarol.debugCarol("CommunicationConfiguration.desactivateRMI("+rmiName+")");
+        }
 	if (!configurationLoaded) {
-	    throw new RMIConfigurationException("call for rmi "+rmiName+ " desactivation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class");
+	    String msg = "call for rmi "
+		+rmiName
+		+ " desactivation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class";
+	    TraceCarol.error(msg);
+	    throw new RMIConfigurationException(msg);
 	}
 	RMIConfiguration rmiC =  getRMIConfiguration(rmiName);
 	if (rmiC == null) {
-	     throw new RMIConfigurationException("try to desactivate a non existant rmi configuration :" +rmiName); 
+	    String msg = "try to desactivate a non existant rmi configuration :" +rmiName;
+	    TraceCarol.error(msg);
+	    throw new RMIConfigurationException(msg); 
 	} else {
 	    rmiC.desactivate();
 	}
     }
 
- 
+    /**
+     * public static toString method
+     */
+    public static String getConfigurationString() {
+	try {
+	    return "CAROL configuration:\n\n" 
+		+ getAllRMIConfiguration() 
+		+"\n\nClasspath: " + System.getProperty("java.class.path") + "\n";
+	} catch (Exception e) {
+	    return "Can't check CAROL configuration:\n" + e 
+		+" Classpath: " + System.getProperty("java.class.path") + "\n";
+	}
+    }
 }

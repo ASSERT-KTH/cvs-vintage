@@ -39,6 +39,9 @@ import javax.naming.Context;
 import javax.naming.spi.ObjectFactory;
 import javax.naming.spi.InitialContextFactory;
 
+// carol import
+import org.objectweb.carol.util.configuration.TraceCarol;
+
 
 /*
  * Class <code>MultiOrbInitialContextFactory</code> is the CAROL JNDI SPI Context Factory for multi Context management. 
@@ -55,7 +58,10 @@ public class MultiOrbInitialContextFactory implements ObjectFactory, InitialCont
      * @return the new Multi Initial Context
      *
      */
-    public Context getInitialContext(Hashtable env) throws NamingException {
+    public Context getInitialContext(Hashtable env) throws NamingException {	
+	if (TraceCarol.isDebugJndiCarol()) {
+	    TraceCarol.debugJndiCarol("MultiOrbInitialContextFactory.getInitialContext(Hashtable env)");
+	}
 	return new MultiOrbInitialContext();
     }
 
@@ -63,6 +69,9 @@ public class MultiOrbInitialContextFactory implements ObjectFactory, InitialCont
      * never use for the moment
      */
     public Object getObjectInstance(Object ref, Name name, Context nameCtx, Hashtable env) throws NamingException {
+	if (TraceCarol.isDebugJndiCarol()) {
+	    TraceCarol.debugJndiCarol("MultiOrbInitialContextFactory.getObjectInstance(Object ref, Name name, Context nameCtx, Hashtable env)");
+	}
 	// never use
 	return null;
     }
