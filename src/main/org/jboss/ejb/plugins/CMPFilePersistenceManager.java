@@ -1,3 +1,4 @@
+
 /*
  * jBoss, the OpenSource EJB server
  *
@@ -32,7 +33,7 @@ import javax.ejb.RemoveException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
@@ -40,21 +41,24 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.2 $
  */
 public class CMPFilePersistenceManager
-   implements EntityPersistenceManager
+   implements EntityPersistenceStore
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
    EntityContainer con;
    
+   /* The Methods are taken care of by CMPPersistenceManager
    Method ejbStore;
    Method ejbLoad;
    Method ejbActivate;
    Method ejbPassivate;
    Method ejbRemove;
+   */
    File dir;
    Field idField;
     
@@ -71,12 +75,15 @@ public class CMPFilePersistenceManager
    public void init()
       throws Exception
    {
+	   // The methods are now taken care of by CMPPersistenceManager
+	  /*
       ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
       ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
       ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
       ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
       ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
-      
+	  */
+       
       String ejbName = con.getMetaData().getEjbName();
       dir = new File(getClass().getResource("/db/"+ejbName+"/db.properties").getFile()).getParentFile();
       idField = con.getBeanClass().getField("id");
@@ -94,47 +101,27 @@ public class CMPFilePersistenceManager
    {
    }
    
-   public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
-      throws RemoteException, CreateException
-   {
-      // Get methods
-      try
-      {
-         Method createMethod = con.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
-         Method postCreateMethod = con.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
-      
-         // Call ejbCreate
-         createMethod.invoke(ctx.getInstance(), args);
-         Object id = idField.get(ctx.getInstance());
-         
-         // Check exist
-         if (getFile(id).exists())
-            throw new DuplicateKeyException("Already exists:"+id);
-         
-         // Set id
-         ctx.setId(id);
-         
-         // Lock instance in cache
-         ((EntityContainer)con).getInstanceCache().insert(ctx);
-         
-         // Create EJBObject
-         ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(id));
+   public Object createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+      throws RemoteException, CreateException 
+	{                      
+		try { 
 
-         // Store to file
-         storeEntity(ctx);
-         
-         postCreateMethod.invoke(ctx.getInstance(), args);
-      } catch (InvocationTargetException e)
-      {
-         throw new CreateException("Create failed:"+e);
-      } catch (NoSuchMethodException e)
-      {
-         throw new CreateException("Create methods not found:"+e);
-      } catch (IllegalAccessException e)
-      {
-         throw new CreateException("Could not create entity:"+e);
-      }
-   }
+			Object id = idField.get(ctx.getInstance());
+			
+			// Check exist
+			if (getFile(id).exists())
+				throw new DuplicateKeyException("Already exists:"+id);
+			
+			// Store to file
+			storeEntity(id, ctx.getInstance());
+			
+			return id;
+		} 
+		catch (IllegalAccessException e)
+		{
+			throw new CreateException("Could not create entity:"+e);
+		}
+	}
 
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
@@ -155,7 +142,7 @@ public class CMPFilePersistenceManager
    {
       if (finderMethod.getName().equals("findAll"))
       {
-//         System.out.println("Find all entities");
+      //         System.out.println("Find all entities");
          
          String[] files = dir.list();
          ArrayList result = new ArrayList();
@@ -177,14 +164,7 @@ public class CMPFilePersistenceManager
    public void activateEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      // Call bean
-      try
-      {
-         ejbActivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Activation failed", e);
-      }
+      //Nothing to do
    }
    
    public void loadEntity(EntityEnterpriseContext ctx)
@@ -205,29 +185,20 @@ public class CMPFilePersistenceManager
          
          in.close();
          
-         // Call bean
-         ejbLoad.invoke(ctx.getInstance(), new Object[0]);
       } catch (Exception e)
       {
          throw new ServerException("Load failed", e);
       }
    }
       
-   public void storeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
-   {
-//      System.out.println("Store entity");
-      
+   	private void storeEntity(Object id, Object obj) 
+   	throws RemoteException {
+	  
       try
       {
-         // Call bean
-         ejbStore.invoke(ctx.getInstance(), new Object[0]);
-
          // Store fields
-         ObjectOutputStream out = new CMPObjectOutputStream(new FileOutputStream(getFile(ctx.getId())));
-         
-         Object obj = ctx.getInstance();
-         
+         ObjectOutputStream out = new CMPObjectOutputStream(new FileOutputStream(getFile(id)));
+               
          Field[] f = obj.getClass().getFields();
          for (int i = 0; i < f.length; i++)
          {
@@ -239,33 +210,25 @@ public class CMPFilePersistenceManager
       {
          throw new ServerException("Store failed", e);
       }
-      
+   }
+   
+   public void storeEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
+//      System.out.println("Store entity");
+     
+	   storeEntity(ctx.getId(), ctx.getInstance());
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      // Call bean
-      try
-      {
-         ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Passivation failed", e);
-      }
-   }
+     // This plugin doesn't do anything specific
+	}
       
    public void removeEntity(EntityEnterpriseContext ctx)
       throws RemoteException, RemoveException
    {
-      try
-      {
-         // Call ejbRemove
-         ejbRemove.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new RemoveException("Could not remove "+ctx.getId());
-      }
       
       // Remove file
       if (!getFile(ctx.getId()).delete())
