@@ -13,11 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import com.jgoodies.forms.layout.FormLayout;
 
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.LabelWithMnemonic;
 
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.util.MailResourceLoader;
@@ -28,14 +31,11 @@ import java.awt.event.ActionListener;
 
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
-
+/**
+ * Shows PGP-related options.
+ */
 public class SecurityPanel extends DefaultPanel implements ActionListener {
     private JLabel idLabel;
     private JTextField idTextField;
@@ -53,9 +53,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
         this.item = item;
 
         initComponents();
-
         updateComponents(true);
-
         layoutComponents();
 
         //enableCheckBox.setEnabled(false);
@@ -84,7 +82,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
     }
 
     protected void layoutComponents() {
-        //		Create a FormLayout instance. 
+        // Create a FormLayout instance. 
         FormLayout layout = new FormLayout("10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow ",
                 
             // 2 columns
@@ -115,124 +113,21 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
         builder.nextLine();
 
         //      TODO: reactivate when feature is supported
-
         /*
-builder.append(alwaysEncryptCheckBox, 3);
-builder.nextLine();
-*/
-        /*
-setLayout(new BorderLayout());
-add(builder.getPanel(), BorderLayout.CENTER);
-*/
-        /*
-GridBagLayout layout = new GridBagLayout();
-GridBagConstraints c = new GridBagConstraints();
-
-setLayout(new BorderLayout());
-setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-JPanel mainMiddle = new JPanel();
-mainMiddle.setLayout(new BorderLayout());
-
-JPanel middle = new JPanel();
-middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "pgp_options"))); //$NON-NLS-1$
-middle.setLayout(new BorderLayout());
-
-JPanel enablePanel = new JPanel();
-enablePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-enablePanel.setLayout(new BoxLayout(enablePanel, BoxLayout.X_AXIS));
-
-enablePanel.add(enableCheckBox);
-enablePanel.add(Box.createHorizontalGlue());
-layout = new GridBagLayout();
-c = new GridBagConstraints();
-c = new GridBagConstraints();
-c.gridwidth = GridBagConstraints.REMAINDER;
-c.gridx = 0;
-c.weightx = 1.0;
-c.anchor = GridBagConstraints.WEST;
-layout.setConstraints(enablePanel, c);
-add(enablePanel, BorderLayout.NORTH);
-
-JPanel innerPanel = new JPanel();
-innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-innerPanel.setLayout(new BorderLayout());
-
-JPanel leftPanel = new JPanel();
-leftPanel.setLayout(new GridLayout(0, 1, 50, 5));
-leftPanel.add(idLabel);
-leftPanel.add(typeLabel);
-leftPanel.add(pathLabel);
-
-JPanel rightPanel = new JPanel();
-rightPanel.setLayout(new GridLayout(0, 1, 50, 5));
-rightPanel.add(idTextField);
-rightPanel.add(typeComboBox);
-
-rightPanel.add(pathButton);
-
-innerPanel.add(leftPanel, BorderLayout.CENTER);
-innerPanel.add(rightPanel, BorderLayout.EAST);
-
-middle.add(innerPanel, BorderLayout.NORTH);
-
-JPanel alwaysPanel = new JPanel();
-alwaysPanel.setLayout(new BoxLayout(alwaysPanel, BoxLayout.Y_AXIS));
-alwaysPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-
-JPanel alwaysSignPanel = new JPanel();
-alwaysSignPanel.setBorder(
-        BorderFactory.createEmptyBorder(0, 10, 0, 10));
-alwaysSignPanel.setLayout(
-        new BoxLayout(alwaysSignPanel, BoxLayout.X_AXIS));
-
-alwaysSignPanel.add(alwaysSignCheckBox);
-alwaysSignPanel.add(Box.createHorizontalGlue());
-layout = new GridBagLayout();
-c = new GridBagConstraints();
-c = new GridBagConstraints();
-c.gridwidth = GridBagConstraints.REMAINDER;
-c.gridx = 0;
-c.weightx = 1.0;
-c.anchor = GridBagConstraints.WEST;
-layout.setConstraints(alwaysSignPanel, c);
-alwaysPanel.add(alwaysSignPanel);
-
-JPanel alwaysEncryptPanel = new JPanel();
-alwaysEncryptPanel.setBorder(
-        BorderFactory.createEmptyBorder(0, 10, 0, 10));
-alwaysEncryptPanel.setLayout(
-        new BoxLayout(alwaysEncryptPanel, BoxLayout.X_AXIS));
-
-alwaysEncryptPanel.add(alwaysEncryptCheckBox);
-alwaysEncryptPanel.add(Box.createHorizontalGlue());
-layout = new GridBagLayout();
-c = new GridBagConstraints();
-c = new GridBagConstraints();
-c.gridwidth = GridBagConstraints.REMAINDER;
-c.gridx = 0;
-c.weightx = 1.0;
-c.anchor = GridBagConstraints.WEST;
-layout.setConstraints(alwaysEncryptPanel, c);
-alwaysPanel.add(alwaysEncryptPanel);
-
-middle.add(alwaysPanel, BorderLayout.CENTER);
-
-mainMiddle.add(middle, BorderLayout.NORTH);
-
-add(mainMiddle, BorderLayout.CENTER);
-*/
+        builder.append(alwaysEncryptCheckBox, 3);
+        builder.nextLine();
+        */
     }
 
     protected void initComponents() {
-        enableCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
-                    "account", "enable_PGP_Support")); //$NON-NLS-1$
+        enableCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "enable_PGP_Support"));
         enableCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         enableCheckBox.setActionCommand("ENABLE");
         enableCheckBox.addActionListener(this);
 
-        idLabel = new JLabel(MailResourceLoader.getString("dialog", "account",
-                    "User_ID")); //$NON-NLS-1$
+        idLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "User_ID"));
 
         typeLabel = new JLabel(MailResourceLoader.getString("dialog",
                     "account", "PGP_Version")); //$NON-NLS-1$
@@ -258,37 +153,26 @@ add(mainMiddle, BorderLayout.CENTER);
         pathButton.setActionCommand("PATH");
         pathButton.addActionListener(this);
 
-        alwaysSignCheckBox = new JCheckBox(MailResourceLoader.getString(
-                    "dialog", "account", "Always_sign_when_sending_messages")); //$NON-NLS-1$
+        alwaysSignCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "Always_sign_when_sending_messages"));
         alwaysSignCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         alwaysSignCheckBox.setEnabled(false);
 
-        alwaysEncryptCheckBox = new JCheckBox(MailResourceLoader.getString(
+        alwaysEncryptCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "Always_encrypt_when_sending_messages")); //$NON-NLS-1$
         alwaysEncryptCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         alwaysEncryptCheckBox.setEnabled(false);
     }
 
     public void enablePGP(boolean b) {
-        if (b) {
-            //typeComboBox.setEnabled( true );
-            idTextField.setEnabled(true);
-            idLabel.setEnabled(true);
-            typeLabel.setEnabled(true);
-            pathLabel.setEnabled(true);
-            pathButton.setEnabled(true);
-            alwaysSignCheckBox.setEnabled(true);
-            alwaysEncryptCheckBox.setEnabled(true);
-        } else {
-            //typeComboBox.setEnabled( false );
-            idTextField.setEnabled(false);
-            idLabel.setEnabled(false);
-            typeLabel.setEnabled(false);
-            pathLabel.setEnabled(false);
-            pathButton.setEnabled(false);
-            alwaysSignCheckBox.setEnabled(false);
-            alwaysEncryptCheckBox.setEnabled(false);
-        }
+        //typeComboBox.setEnabled(b);
+        idTextField.setEnabled(b);
+        idLabel.setEnabled(b);
+        typeLabel.setEnabled(b);
+        pathLabel.setEnabled(b);
+        pathButton.setEnabled(b);
+        alwaysSignCheckBox.setEnabled(b);
+        alwaysEncryptCheckBox.setEnabled(b);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -319,26 +203,19 @@ add(mainMiddle, BorderLayout.CENTER);
         boolean result = true;
 
         /*
-String name = getAccountName();
-String address = getAddress();
+        String name = getAccountName();
+        String address = getAddress();
 
-if ( name.length() == 0 )
-{
-    result = false;
-    JOptionPane.showMessageDialog( MainInterface.mainFrame,
-                                   "You have to enter a name for this account!");
-}
-else if ( address.length() == 0 )
-{
-    result = false;
-    JOptionPane.showMessageDialog( MainInterface.mainFrame,
-                                   "You have to enter your address!");
-}
-else
-{
-    result = true;
-}
-*/
+        if (name.length() == 0) {
+            result = false;
+            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+                                           "You have to enter a name for this account!");
+        } else if (address.length() == 0) {
+            result = false;
+            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+                                           "You have to enter your address!");
+        }
+        */
         return result;
     }
 }
