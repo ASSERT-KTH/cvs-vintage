@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.27 2001/08/22 04:55:33 costin Exp $
+# $Id: tomcat.sh,v 1.28 2001/09/14 04:11:20 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -23,7 +23,7 @@ DEBUG_HOMEFIND=false
 # Follow symbolic links to the real tomcat.sh
 # Extract the base dir.
 # Look in well-known places if this fails
-if [ "$TOMCAT_HOME" = "" ] ; then
+if [ "$TOMCAT_INSTALL" = "" ] ; then
   ## resolve links - $0 may be a link to  home
   PRG=$0
   progname=`basename $0`
@@ -38,40 +38,40 @@ if [ "$TOMCAT_HOME" = "" ] ; then
     fi
   done
   
-  TOMCAT_HOME_1=`dirname "$PRG"`/..
+  TOMCAT_INSTALL_1=`dirname "$PRG"`/..
   if [ "$DEBUG_HOMEFIND" != "false" ] ; then
-    echo "Guessing TOMCAT_HOME from tomcat.sh to ${TOMCAT_HOME_1}" 
+    echo "Guessing TOMCAT_INSTALL from tomcat.sh to ${TOMCAT_INSTALL_1}" 
   fi
-    if [ -d ${TOMCAT_HOME_1}/conf ] ; then 
-	TOMCAT_HOME=${TOMCAT_HOME_1}
+    if [ -d ${TOMCAT_INSTALL_1}/lib ] ; then 
+	TOMCAT_INSTALL=${TOMCAT_INSTALL_1}
         if [ "$DEBUG_HOMEFIND" != "false" ] ; then
-          echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
+          echo "Setting TOMCAT_INSTALL to $TOMCAT_INSTALL"
 	fi
     fi
 fi
 
 
-if [ "$TOMCAT_HOME" = "" ] ; then
+if [ "$TOMCAT_INSTALL" = "" ] ; then
   # try to find tomcat
   if [ -d ${HOME}/opt/tomcat/conf ] ; then 
-    TOMCAT_HOME=${HOME}/opt/tomcat
+    TOMCAT_INSTALL=${HOME}/opt/tomcat
     if [ "$DEBUG_HOMEFIND" != "false" ] ; then
-      echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+      echo "Defaulting TOMCAT_INSTALL to $TOMCAT_INSTALL"
     fi
   fi
 
   if [ -d /opt/tomcat/conf ] ; then 
-    TOMCAT_HOME=/opt/tomcat
+    TOMCAT_INSTALL=/opt/tomcat
     if [ "$DEBUG_HOMEFIND" != "false" ] ; then
-      echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+      echo "Defaulting TOMCAT_INSTALL to $TOMCAT_INSTALL"
     fi
   fi
  
   # Add other "standard" locations for tomcat
 fi
 
-if [ "$TOMCAT_HOME" = "" ] ; then
-    echo TOMCAT_HOME not set, you need to set it or install in a standard location
+if [ "$TOMCAT_INSTALL" = "" ] ; then
+    echo TOMCAT_INSTALL not set, you need to set it or install in a standard location
     exit 1
 fi
 
@@ -83,7 +83,18 @@ if [ "$JSPC_OPTS" = "" ] ; then
   JSPC_OPTS=""
 fi
 
+if [ "$TOMCAT_HOME" = "" ] ; then
+    if [ -d ./conf ] ; then 
+	TOMCAT_HOME=.
+    elif [ -d ../conf ] ; then 
+	TOMCAT_HOME=..
+    else
+	TOMCAT_HOME=$TOMCAT_INSTALL
+    fi
+fi
+
 ## -------------------- Find JAVA_HOME --------------------
+
 
 if [ -z "$JAVA_HOME" ] ;  then
   JAVA=`which java`
@@ -106,12 +117,9 @@ export MAIN
 
 oldCP=$CLASSPATH
 unset CLASSPATH
-CLASSPATH=${TOMCAT_HOME}/lib/tomcat.jar
+CLASSPATH=${TOMCAT_INSTALL}/lib/tomcat.jar
 
 # Ignore previous CLASSPATH
-#if [ "$oldCP" != "" ]; then
-#    CLASSPATH=${CLASSPATH}:${oldCP}
-#fi
 
 if [ -f ${JAVA_HOME}/jre/lib/rt.jar ] ; then
     CLASSPATH=${CLASSPATH}:${JAVA_HOME}/jre/lib/rt.jar
