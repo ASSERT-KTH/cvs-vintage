@@ -30,7 +30,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -51,6 +51,8 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// the datasource to use for this application
 	private String dbURL;
 	private DataSource dataSource;
+   
+   private boolean debug = false;
 
 	// all the available type mappings
 	private Hashtable typeMappings = new Hashtable();
@@ -99,7 +101,9 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
    
 	public TypeMappingMetaData getTypeMapping() { return typeMapping; }
 
-    protected ClassLoader getClassLoader() { return classLoader; }
+   public boolean getDebug() { return debug; }
+   
+   protected ClassLoader getClassLoader() { return classLoader; }
 
 	public JawsEntityMetaData getBeanByEjbName(String name) { 
 		return (JawsEntityMetaData)entities.get(name);
@@ -165,6 +169,14 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 				throw new DeploymentException("Error in jaws.xml : type-mapping " + typeMappingString + " not found");
 			}
 		}
+      
+      //enable extra debugging?
+      Element debugElement = getOptionalChild(element, "debug");
+      if (debugElement != null) {
+         String stringDebug = getElementContent( debugElement );
+         debug = Boolean.valueOf(stringDebug).booleanValue();
+      }
+      
 
 		// get default settings for the beans (optional, but always set in standardjaws.xml)
 		Element defaultEntity = getOptionalChild(element, "default-entity");

@@ -42,7 +42,7 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -52,6 +52,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    private Context javaCtx;
    private JawsEntityMetaData metadata;
    private Log log;
+   private boolean debug = false;
    
    // These support singletons (within the scope of this factory)
    private JDBCBeanExistsCommand beanExistsCommand;
@@ -75,9 +76,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
 	  if (jamd == null) {
 	     // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
 		 JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
-         jamd = jfl.load();
+       jamd = jfl.load();
 		 amd.addPluginData("JAWS", jamd);
 	  }
+     debug = jamd.getDebug();
 		  
 	  metadata = jamd.getBeanByEjbName(ejbName);
 	  if (metadata == null) {
@@ -105,6 +107,11 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public Log getLog()
    {
       return log;
+   }
+   
+   public boolean getDebug() 
+   {
+      return debug;
    }
    
    // Additional Command creation

@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public abstract class JDBCCommand
 {
@@ -122,6 +122,7 @@ public abstract class JDBCCommand
       this.jawsEntity = factory.getMetaData();
       this.log = factory.getLog();
       this.name = name;
+      this.debug = factory.getDebug();
    }
 
    // Protected -----------------------------------------------------
