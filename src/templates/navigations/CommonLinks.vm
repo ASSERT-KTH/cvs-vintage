@@ -5,7 +5,7 @@
   #end
   #if (!$module.isGlobalModule())
     <div>$link.setPage("QueryList.vm").setLabel("Queries")</div>
-    <div>$link.setPage("TemplateList.vm").setLabel("Issue templates")</div>
+    <div>$link.setPage("TemplateList.vm").setLabel("Templates")</div>
     <div>$link.setPage("reports,ReportList.vm").setLabel("Reports")</div>
   #end
 #end
