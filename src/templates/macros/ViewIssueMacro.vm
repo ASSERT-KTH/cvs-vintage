@@ -26,7 +26,7 @@
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
-#set ($copyToModules = $user.getCopyToModules($module))
+#set ($copyToModules = $data.User.getCopyToModules($module))
 
 <input type="hidden" name="action" value="ModifyIssue" />
 <input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
@@ -34,7 +34,7 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="tab" value="$tab" />
 
-#if ($copyToModules.isEmpty())
+#if (!$copyToModules.isEmpty())
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
     <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
@@ -620,7 +620,7 @@ $l10n.NoDependencies
 #end
 #end
 
-#if ($copyToModules.isEmpty())
+#if (!$copyToModules.isEmpty())
 <div class="functnbar2">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
     <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
