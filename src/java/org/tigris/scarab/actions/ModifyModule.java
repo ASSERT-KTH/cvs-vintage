@@ -74,7 +74,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.16 2002/02/05 02:48:44 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.17 2002/02/08 18:19:33 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -86,11 +86,11 @@ public class ModifyModule extends RequireLoginFirstAction
     {
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
-        ModuleEntity me = null;
 
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
+            ModuleEntity me = null;
             try
             {
                 me = getScarabRequestTool(context).getModule();
@@ -106,7 +106,7 @@ public class ModifyModule extends RequireLoginFirstAction
             {
                 setTarget(data, data.getParameters().getString(
                     ScarabConstants.TEMPLATE, "admin,ManageModules.vm"));
-                data.setMessage("Could not locate module.");
+                data.setMessage("Could not locate module group.");
                 return;
             }
             else
