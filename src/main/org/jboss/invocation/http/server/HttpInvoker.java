@@ -36,13 +36,13 @@ import org.jboss.logging.Logger;
 import org.jboss.naming.Util;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.Strings;
+import org.jboss.util.StringPropertyReplacer;
 
 /**
  * The HttpInvoker ... into the JMX base.
  *
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class HttpInvoker extends ServiceMBeanSupport
    implements HttpInvokerMBean
@@ -61,7 +61,7 @@ public class HttpInvoker extends ServiceMBeanSupport
    public void setInvokerURL(String invokerURL)
    {
       // Replace any system properties in the URL
-      String tmp = Strings.replaceProperties(invokerURL);
+      String tmp = StringPropertyReplacer.replaceProperties(invokerURL);
       this.invokerURL = tmp;
       log.debug("Set invokerURL to "+this.invokerURL);
    }

@@ -15,13 +15,13 @@ import org.w3c.dom.Node;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
-import org.jboss.util.Strings;
+import org.jboss.util.StringPropertyReplacer;
 
 /**
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -188,7 +188,7 @@ public abstract class MetaData
             result += children.item(i).getFirstChild();
          }
       }
-      return Strings.replaceProperties(result.trim());
+      return StringPropertyReplacer.replaceProperties(result.trim());
    }
 
    public static String getFirstElementContent(Element element, String defaultStr)
@@ -218,7 +218,7 @@ public abstract class MetaData
          }
          */
       }
-      return Strings.replaceProperties(result.trim());
+      return StringPropertyReplacer.replaceProperties(result.trim());
    }
 
    /**

@@ -21,7 +21,7 @@ import org.jboss.naming.Util;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.Strings;
+import org.jboss.util.StringPropertyReplacer;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * MarshalledValue with the Naming proxy as its content.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class HttpProxyFactory extends ServiceMBeanSupport
    implements HttpProxyFactoryMBean
@@ -85,7 +85,7 @@ public class HttpProxyFactory extends ServiceMBeanSupport
    public void setInvokerURL(String invokerURL)
    {
       // Replace any system properties in the URL
-      String tmp = Strings.replaceProperties(invokerURL);
+      String tmp = StringPropertyReplacer.replaceProperties(invokerURL);
       this.invokerURL = tmp;
       log.debug("Set invokerURL to "+this.invokerURL);
    }
