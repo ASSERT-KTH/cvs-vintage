@@ -30,7 +30,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -118,21 +118,25 @@ public class LogInterceptor
    {
       Log.setLog(log);
       
-      try
+      // Log calls?
+      if (callLogging)
       {
-			StringBuffer str = new StringBuffer();
+      	StringBuffer str = new StringBuffer();
          str.append(id == null ? "" : "["+id.toString()+"] ");
-			str.append(method.getName());
-			str.append("(");
+      	str.append(method.getName());
+      	str.append("(");
          if (args != null)
             for (int i = 0; i < args.length; i++)
-				{
+      		{
                str.append(i==0?"":",");
-					str.append(args[i]);
-				}
-			str.append(")");
+      			str.append(args[i]);
+      		}
+      	str.append(")");
          log.log(str.toString());
-         
+      }
+		
+      try
+      {
          return getNext().invoke(id, method, args, ctx);
       } catch (Exception e)
       {
