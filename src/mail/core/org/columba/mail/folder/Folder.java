@@ -145,6 +145,12 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	
 	protected Folder() {
 		super();
+
+		messageFolderInfo = new MessageFolderInfo();
+
+		changed = false;
+
+		observable = new StatusObservableImpl();
 	}	
 	
 	/**
