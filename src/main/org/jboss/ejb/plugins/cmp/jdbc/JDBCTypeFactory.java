@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database
@@ -153,6 +153,13 @@ public class JDBCTypeFactory {
          
          if(override == null) { 
             finalProperties[i] = defaultProperties[i];
+            finalProperties[i] = new JDBCTypeComplexProperty(
+                  defaultProperties[i],
+                  cmpField.getColumnName() + "_" + 
+                        defaultProperties[i].getColumnName(),
+                  defaultProperties[i].getJDBCType(),
+                  defaultProperties[i].getSQLType(),
+                  cmpField.isNotNull() || defaultProperties[i].isNotNull());
          } else {
             // columnName
             String columnName = override.getColumnName();
@@ -171,7 +178,9 @@ public class JDBCTypeFactory {
                jdbcType = defaultProperties[i].getJDBCType();
             }
 
-            boolean notNull = cmpField.isNotNull();
+            boolean notNull = cmpField.isNotNull() || 
+                  override.isNotNull() ||
+                  defaultProperties[i].isNotNull();
 
             finalProperties[i] = new JDBCTypeComplexProperty(
                   defaultProperties[i],
@@ -240,6 +249,8 @@ public class JDBCTypeFactory {
             jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
          }
 
+         boolean notNull = propertyStack.isNotNull();
+
          Method[] getters = propertyStack.getGetters();
          Method[] setters = propertyStack.getSetters();
 
@@ -249,6 +260,7 @@ public class JDBCTypeFactory {
                   javaType,
                   jdbcType,
                   sqlType,
+                  notNull,
                   getters,
                   setters));
          
@@ -274,6 +286,7 @@ public class JDBCTypeFactory {
       ArrayList properties = new ArrayList();
       ArrayList propertyNames = new ArrayList();
       ArrayList columnNames = new ArrayList();
+      ArrayList notNulls = new ArrayList();
       ArrayList getters = new ArrayList();
       ArrayList setters = new ArrayList();
       
@@ -289,6 +302,7 @@ public class JDBCTypeFactory {
 
          propertyNames.add(propertyMetaData.getPropertyName());
          columnNames.add(propertyMetaData.getColumnName());
+         notNulls.add(new Boolean(propertyMetaData.isNotNull()));
          getters.add(propertyMetaData.getGetter());
          setters.add(propertyMetaData.getSetter());
 
@@ -302,6 +316,7 @@ public class JDBCTypeFactory {
       public void popPropertyMetaData() {
          propertyNames.remove(propertyNames.size()-1);
          columnNames.remove(columnNames.size()-1);
+         notNulls.remove(notNulls.size()-1);
          getters.remove(getters.size()-1);
          setters.remove(setters.size()-1);
          
@@ -328,6 +343,15 @@ public class JDBCTypeFactory {
             buf.append((String)columnNames.get(i));
          }
          return buf.toString();
+      }
+
+      public boolean isNotNull() {
+         for(int i=0; i<notNulls.size(); i++) {
+            if( ((Boolean)notNulls.get(i)).booleanValue() ) {
+               return true;
+            }
+         }
+         return false;
       }
       
       public Method[] getGetters() {

@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * the Java Bean.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCTypeComplexProperty {
    private final String propertyName;
@@ -39,6 +39,7 @@ public class JDBCTypeComplexProperty {
          Class javaType,
          int jdbcType,
          String sqlType,
+         boolean notNull,
          Method[] getters,
          Method[] setters) {
 
@@ -47,7 +48,7 @@ public class JDBCTypeComplexProperty {
       this.javaType = javaType;
       this.jdbcType = jdbcType;
       this.sqlType = sqlType;
-      this.notNull = false;
+      this.notNull = notNull;
       this.getters = getters;
       this.setters = setters;
    }

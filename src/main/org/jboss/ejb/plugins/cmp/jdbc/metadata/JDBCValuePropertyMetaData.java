@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * value object property.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCValuePropertyMetaData {
    private final String propertyName;
@@ -24,6 +24,7 @@ public final class JDBCValuePropertyMetaData {
    private final String columnName;
    private final String sqlType;
    private final int jdbcType;
+   private final boolean notNull;
    private final Method getter;
    private final Method setter;
    
@@ -31,28 +32,38 @@ public final class JDBCValuePropertyMetaData {
     * Constructs a value property metadata class with the data contained in 
     * the property xml element from a jbosscmp-jdbc xml file.
     *
-    * @param propertyElement the xml Element which contains the metadata about
+    * @param element the xml Element which contains the metadata about
     *       this property
     * @param classType the java Class type of the value class on which this 
     *       property is defined
     * @throws DeploymentException if the xml element is not semantically correct
     */
-   public JDBCValuePropertyMetaData(Element propertyElement, Class classType) throws DeploymentException {
-      propertyName = MetaData.getUniqueChildContent(propertyElement, "property-name");
+   public JDBCValuePropertyMetaData(Element element, Class classType)
+         throws DeploymentException {
 
-      String columnNameString = MetaData.getOptionalChildContent(propertyElement, "column-name");
+      // Property name
+      propertyName = MetaData.getUniqueChildContent(element, "property-name");
+
+      // Column name
+      String columnNameString = 
+            MetaData.getOptionalChildContent(element, "column-name");
       if(columnNameString != null) {
          columnName = columnNameString;
       } else {
          columnName = propertyName;
       }
 
-      // resolve getter
+      // Not null
+      Element notNullElement = MetaData.getOptionalChild(element, "not-null");
+      notNull = (notNullElement != null);
+
+      // Getter
       try {
          getter = classType.getMethod(toGetterName(propertyName), new Class[0]);
       } catch(Exception e) {
          throw new DeploymentException("Unable to find getter for property " +
-               propertyName + " on dependent value class " + classType.getName());
+               propertyName + " on dependent value class " + 
+               classType.getName());
       }
 
       // get property type from getter return type
@@ -65,16 +76,18 @@ public final class JDBCValuePropertyMetaData {
                new Class[] { propertyType }  );
       } catch(Exception e) {
          throw new DeploymentException("Unable to find setter for property " +
-               propertyName + " on dependent value class " + classType.getName());
+               propertyName + " on dependent value class " + 
+               classType.getName());
       }
 
       // jdbc type - optional
-      String jdbcString = MetaData.getOptionalChildContent(propertyElement, "jdbc-type");
+      String jdbcString = 
+            MetaData.getOptionalChildContent(element, "jdbc-type");
       if(jdbcString != null) {
          jdbcType = JDBCMappingMetaData.getJdbcTypeFromName(jdbcString); 
          
          // sql type - required if jdbc-type specified
-         sqlType = MetaData.getUniqueChildContent(propertyElement, "sql-type");
+         sqlType = MetaData.getUniqueChildContent(element, "sql-type");
       } else {
          jdbcType = Integer.MIN_VALUE;
          sqlType = null;
@@ -112,8 +125,8 @@ public final class JDBCValuePropertyMetaData {
    }
    
    /**
-    * Gets the jdbc type of this property. The jdbc type is used to retrieve data
-    * from a result set and to set parameters in a prepared statement.
+    * Gets the jdbc type of this property. The jdbc type is used to retrieve
+    * data from a result set and to set parameters in a prepared statement.
     *
     * @return the jdbc type of this property
     */
@@ -129,6 +142,14 @@ public final class JDBCValuePropertyMetaData {
     */
    public String getSqlType() {
       return sqlType;
+   }
+
+   /**
+    * Should this field allow null values?
+    * @return true if this field will not allow a null value.
+    */
+   public boolean isNotNull() {
+      return notNull;
    }
 
    /**
@@ -160,6 +181,7 @@ public final class JDBCValuePropertyMetaData {
    }
    
    private String upCaseFirstCharacter(String propertyName) {
-      return Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+      return Character.toUpperCase(propertyName.charAt(0)) + 
+            propertyName.substring(1);
    }
 }
