@@ -110,6 +110,9 @@ public class SendAllMessagesCommand extends FolderCommand {
 				{
 					//use the default account
 				  accountItem = MailInterface.config.getAccountList().getDefaultAccount();
+				  
+				  if (accountItem == null)
+				    continue; //skip message if there's no account available to send it
 				}
 
 				// Sent folder
