@@ -283,10 +283,15 @@ public class MessageBuilderHelper {
         if (accountUid != null) {
             accountItem = list.uidGet(accountUid.intValue());
         }
-
-        if (accountUid != null) {
-            accountItem = list.getDefaultAccount();
+        
+        // *20040229, karlpeder* Use default account as fall back
+        if (accountItem == null) {
+        	accountItem = list.getDefaultAccount();
         }
+        
+        //if (accountUid != null) {
+        //    accountItem = list.getDefaultAccount();
+        //}
 
         return accountItem;
     }
