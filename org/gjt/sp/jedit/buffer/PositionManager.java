@@ -30,13 +30,10 @@ import org.gjt.sp.util.Log;
 
 /**
  * A class internal to jEdit's document model. You should not use it
- * directly. To improve performance, none of the methods in this class
- * check for out of bounds access, nor are they thread-safe. The
- * <code>Buffer</code> class, through which these methods must be
- * called through, implements such protection.
+ * directly.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.33 2003/08/31 00:43:58 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.34 2003/09/08 04:44:10 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
