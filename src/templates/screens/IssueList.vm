@@ -9,7 +9,6 @@
    #set ($issueList = $scarabR.CurrentSearchResults)
 #end
 
-
 #if ($issueList.size() == 0)
   <h3>$page.Title</h3>
   <p class="alert">There are no matching issues.</p>
@@ -38,7 +37,6 @@
    #set ($issueList = $pagList)
  #end
 #end
-
 
 #set ($queryString = $data.Parameters.getString("queryString",""))
 #if (!$queryString.equals(""))
@@ -148,6 +146,21 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </table>
 
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+       <th>Max items per page</td>
+ <td>
+ <input type="radio" value="25" name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
+ <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
+ <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
+ <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
+ <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
+ </td>
+   </tr>
+  </table>
+</div>
+
 <div class="functnbar3">
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
    <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
@@ -165,24 +178,9 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-    <tr>
-       <th>Max items per page</td>
- <td>
- <input type="radio" value="25" name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
- <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
- <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
- <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
- <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
- </td>
-   </tr>
-  </table>
-</div>
 #end
 
-#if ($searchType.equals("advanced") &&  $queryString)
+#if ($searchType.equals("advanced") && $queryString)
 <div class="functnbar2">
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
