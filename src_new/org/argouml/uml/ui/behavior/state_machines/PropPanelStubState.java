@@ -1,4 +1,4 @@
-// $Id: PropPanelStubState.java,v 1.10 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelStubState.java,v 1.11 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ public class PropPanelStubState extends PropPanelStateVertex {
      */
     public PropPanelStubState() {
         // TODO: give the stubstate it's own icon
-        super("Stub State", stateIcon, ConfigLoader.getTabPropsOrientation());
+        super("Stub State", lookupIcon("State"), 
+                ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), 
                 getNameTextField());

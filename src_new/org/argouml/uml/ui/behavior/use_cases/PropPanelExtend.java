@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.37 2004/09/19 19:29:58 mvw Exp $
+// $Id: PropPanelExtend.java,v 1.38 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,10 +97,10 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         JList extensionPointList =
 	    new UMLMutableLinkedList(new UMLExtendExtensionPointListModel(),
-				     ActionAddExtendExtensionPoint.getInstance(),
-				     ActionNewExtendExtensionPoint.SINGLETON);
+		ActionAddExtendExtensionPoint.getInstance(),
+		ActionNewExtendExtensionPoint.SINGLETON);
         addField(Translator.localize("UMLMenu", "label.extension-points"),
-		 new JScrollPane(extensionPointList));
+		new JScrollPane(extensionPointList));
 
         addSeperator();
 
@@ -126,10 +126,11 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), extensionPointIcon,
-                            localize("New Extension Point"),
-                            "newExtensionPoint",
-                            null);
+        new PropPanelButton(this, getButtonPanel(), 
+                lookupIcon("ExtensionPoint"),
+                localize("New Extension Point"),
+                "newExtensionPoint",
+                null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.37 2004/09/16 20:56:07 mvw Exp $
+// $Id: PropPanelStereotype.java,v 1.38 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,8 +71,8 @@ public class PropPanelStereotype extends PropPanelModelElement {
      * Construct new stereotype properties tab
      */
     public PropPanelStereotype() {
-        super("Stereotype", stereotypeIcon, ConfigLoader
-                .getTabPropsOrientation());
+        super("Stereotype", lookupIcon("Stereotype"), 
+                ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.STEREOTYPE;
 
@@ -106,9 +106,9 @@ public class PropPanelStereotype extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), stereotypeIcon, Translator
-                .localize("UMLMenu", "button.new-stereotype"), "newStereotype",
-                null);
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("Stereotype"), 
+                Translator.localize("UMLMenu", "button.new-stereotype"), 
+                "newStereotype", null);
         addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));
     }

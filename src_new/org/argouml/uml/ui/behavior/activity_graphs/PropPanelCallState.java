@@ -1,4 +1,4 @@
-// $Id: PropPanelCallState.java,v 1.3 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelCallState.java,v 1.4 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class PropPanelCallState extends PropPanelActionState {
      * 
      */
     public PropPanelCallState() {
-        this("CallState", callStateIcon, ConfigLoader
+        this("CallState", lookupIcon("CallState"), ConfigLoader
                 .getTabPropsOrientation());
     }
 

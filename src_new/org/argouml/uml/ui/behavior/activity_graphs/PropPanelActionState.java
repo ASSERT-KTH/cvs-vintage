@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.19 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.20 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.19 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.20 2004/09/22 17:27:46 mvw Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -47,7 +47,7 @@ public class PropPanelActionState extends PropPanelState {
      * 
      */
     public PropPanelActionState() {
-        this("Action State", actionStateIcon, ConfigLoader
+        this("Action State", lookupIcon("ActionState"), ConfigLoader
                 .getTabPropsOrientation());
     }
 
@@ -61,7 +61,7 @@ public class PropPanelActionState extends PropPanelState {
     public PropPanelActionState(String name, ImageIcon icon,
             Orientation orientation) {
 
-        super(name, actionStateIcon, orientation);
+        super(name, icon, orientation);
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
@@ -73,7 +73,8 @@ public class PropPanelActionState extends PropPanelState {
         addField(Translator.localize("UMLMenu", "label.stereotype"),
                 getStereotypeBox());
 
-        addField(Translator.localize("UMLMenu", "label.entry"), getEntryScroll());
+        addField(Translator.localize("UMLMenu", "label.entry"), 
+                getEntryScroll());
         addSeperator();
 
         addField(Translator.localize("UMLMenu", "label.incoming"),

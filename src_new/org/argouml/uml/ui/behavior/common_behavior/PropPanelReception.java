@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.23 2004/09/16 20:56:01 mvw Exp $
+// $Id: PropPanelReception.java,v 1.24 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class PropPanelReception extends PropPanelModelElement {
      * 
      */
     public PropPanelReception() {
-        super("Reception", receptionIcon, ConfigLoader
+        super("Reception", lookupIcon("Reception"), ConfigLoader
                 .getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.RECEPTION;

@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.31 2004/09/16 20:55:58 mvw Exp $
+// $Id: PropPanelInstance.java,v 1.32 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.31 2004/09/16 20:55:58 mvw Exp $
+// $Id: PropPanelInstance.java,v 1.32 2004/09/22 17:27:45 mvw Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -66,8 +66,8 @@ public class PropPanelInstance extends PropPanelModelElement {
      * 
      */
     public PropPanelInstance() {
-        super("Instance Properties", instanceIcon, ConfigLoader
-                .getTabPropsOrientation());
+        super("Instance Properties", lookupIcon("Instance"), 
+                ConfigLoader.getTabPropsOrientation());
         Class mclass = (Class) ModelFacade.INSTANCE;
 
         addField(Translator.localize("UMLMenu", "label.name"),

@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.92 2004/09/16 21:09:23 mvw Exp $
+// $Id: PropPanel.java,v 1.93 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,15 +131,14 @@ public abstract class PropPanel
         setLayout(new LabelledLayout(orientation == Vertical.getInstance()));
 
         if (icon != null) {
-            setTitleLabel(new JLabel(localize(title), icon, 
-                    SwingConstants.LEFT));
-        }
-        else {
-            setTitleLabel(new JLabel(localize(title)));
+            titleLabel = new JLabel(localize(title), icon, 
+                    SwingConstants.LEFT);
+        } else {
+            titleLabel = new JLabel(localize(title));
         }
         //buttonPanel = new JPanel(new SerialLayout());
-        getTitleLabel().setLabelFor(buttonPanel);
-        add(getTitleLabel());
+        titleLabel.setLabelFor(buttonPanel);
+        add(titleLabel);
         add(buttonPanel);
     }
 
@@ -370,11 +369,12 @@ public abstract class PropPanel
         SwingUtilities.invokeLater(dispatch);
 
         // update the titleLabel
-        if (getTitleLabel() != null) {
+        //MVW: This overrules the icon set initiallly... Why do we need this?
+        if (titleLabel != null) {
             Icon icon =
 		ResourceLoaderWrapper.getInstance().lookupIcon(t);
             if (icon != null)
-                getTitleLabel().setIcon(icon);
+                titleLabel.setIcon(icon);
         }
     }
 

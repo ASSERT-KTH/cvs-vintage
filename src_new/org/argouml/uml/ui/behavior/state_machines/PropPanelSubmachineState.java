@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.12 2004/09/19 19:29:57 mvw Exp $
+// $Id: PropPanelSubmachineState.java,v 1.13 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
      * Constructor for PropPanelSubmachineState.
      */
     public PropPanelSubmachineState() {
-        super("Submachine State", compositeStateIcon, 
+        super("Submachine State", lookupIcon("SubmachineState"), 
                 ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("UMLMenu", "label.name"), 
                 getNameTextField());

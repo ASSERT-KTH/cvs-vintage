@@ -1,4 +1,4 @@
-// $Id: PropPanelTimeEvent.java,v 1.6 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelTimeEvent.java,v 1.7 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class PropPanelTimeEvent extends PropPanelEvent {
      * 
      */
     public PropPanelTimeEvent() {
-        super("Time event", eventIcon, 
+        super("Time event", lookupIcon("TimeEvent"), 
               ConfigLoader.getTabPropsOrientation());
     }
 } 

@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.25 2004/09/19 21:06:25 mvw Exp $
+// $Id: PropPanelEvent.java,v 1.26 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,8 +77,8 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
 
-        new PropPanelButton(this, getButtonPanel(), parameterIcon, Translator
-                .localize("UMLMenu", "button.new-parameter"),
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("Parameter"), 
+                Translator.localize("UMLMenu", "button.new-parameter"),
                 "buttonAddParameter", null);
 
         addField(Translator.localize("UMLMenu", "label.name"),

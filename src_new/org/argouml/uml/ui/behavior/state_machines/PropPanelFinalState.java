@@ -1,4 +1,4 @@
-// $Id: PropPanelFinalState.java,v 1.13 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelFinalState.java,v 1.14 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class PropPanelFinalState extends PropPanelState {
      * 
      */
     public PropPanelFinalState() {
-        super("Final State", finalStateIcon, 
+        super("Final State", lookupIcon("FinalState"), 
                 ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), 

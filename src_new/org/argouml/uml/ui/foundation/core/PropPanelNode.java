@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.33 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelNode.java,v 1.34 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.33 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelNode.java,v 1.34 2004/09/22 17:27:46 mvw Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -62,7 +62,8 @@ public class PropPanelNode extends PropPanelClassifier {
      * 
      */
     public PropPanelNode() {
-        super("Node", nodeIcon, ConfigLoader.getTabPropsOrientation());
+        super("Node", lookupIcon("Node"), 
+                ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.NODE;
 
@@ -94,7 +95,7 @@ public class PropPanelNode extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, getButtonPanel(), receptionIcon, 
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
                 Translator.localize("UMLMenu", "button.new-reception"), 
                 getActionNewReception());
         addButton(new PropPanelButton2(this, 

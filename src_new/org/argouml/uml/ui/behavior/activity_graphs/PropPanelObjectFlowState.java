@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.5 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.6 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class PropPanelObjectFlowState extends PropPanelState {
      * Constructor
      */
     public PropPanelObjectFlowState() {
-        this("ObjectFlowState", objectFlowStateIcon, ConfigLoader
+        this("ObjectFlowState", lookupIcon("ObjectFlowState"), ConfigLoader
                 .getTabPropsOrientation());    
     }
     
@@ -62,7 +62,7 @@ public class PropPanelObjectFlowState extends PropPanelState {
      */
     public PropPanelObjectFlowState(String name, ImageIcon icon,
             Orientation orientation) {
-        super(name, objectFlowStateIcon, ConfigLoader.getTabPropsOrientation());
+        super(name, icon, ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());

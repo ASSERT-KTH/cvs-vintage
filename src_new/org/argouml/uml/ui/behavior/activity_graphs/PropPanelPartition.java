@@ -1,4 +1,4 @@
-// $Id: PropPanelPartition.java,v 1.4 2004/09/12 09:54:03 mvw Exp $
+// $Id: PropPanelPartition.java,v 1.5 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.util.ConfigLoader;
 
 
 /**
+ * The properties panel for a Partition (Swimlane).
  * 
  * @author mkl
  *
@@ -43,7 +44,7 @@ public class PropPanelPartition extends PropPanelModelElement {
      * constructor.
      */
     public PropPanelPartition() {
-        super("Swimlane",  partitionIcon,
+        super("Swimlane",  lookupIcon("Partition"),
       	      ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.name"), getNameTextField());

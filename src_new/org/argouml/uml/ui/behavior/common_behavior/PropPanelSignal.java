@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.41 2004/09/16 20:55:58 mvw Exp $
+// $Id: PropPanelSignal.java,v 1.42 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,8 @@ public class PropPanelSignal extends PropPanelModelElement {
      * 
      */
     public PropPanelSignal() {
-        super("Signal", signalIcon, ConfigLoader.getTabPropsOrientation());
+        super("Signal", lookupIcon("SignalSending"), 
+                ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.SIGNAL;
 
@@ -88,7 +89,8 @@ public class PropPanelSignal extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), signalIcon, 
+        new PropPanelButton(this, getButtonPanel(), 
+                lookupIcon("SignalSending"), 
                 Translator.localize("UMLMenu", "button.new-signal"), 
                 "newSignal", null);
         addButton(new PropPanelButton2(this, 

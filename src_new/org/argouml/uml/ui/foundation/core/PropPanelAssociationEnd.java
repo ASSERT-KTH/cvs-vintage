@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.47 2004/09/19 21:06:25 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.48 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,8 +137,6 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     private String associationLabel;
 
-    protected Icon assocEndorRoleIcon = assocEndIcon;
-
     /**
      * Constructs the proppanel and places all scrollpanes etc. on the canvas.
      * 
@@ -227,11 +225,14 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
                 new ActionNavigateAssociation()));
         addButton(new PropPanelButton2(this,
                 new ActionNavigateOppositeAssocEnd()
-                        .setIcon(assocEndorRoleIcon)));
+                        .setIcon(lookupIcon("AssociationEnd"))));
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
 
     }
 
+    /**
+     * @param label the label
+     */
     protected void setAssociationLabel(String label) {
     }
 

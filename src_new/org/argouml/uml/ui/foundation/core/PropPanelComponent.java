@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.36 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelComponent.java,v 1.37 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.util.ConfigLoader;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.36 2004/09/16 20:56:06 mvw Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.37 2004/09/22 17:27:46 mvw Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -79,7 +79,7 @@ public class PropPanelComponent extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-	new PropPanelButton(this, getButtonPanel(), receptionIcon, 
+	new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
             Translator.localize("UMLMenu", "button.new-reception"), 
             getActionNewReception());
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

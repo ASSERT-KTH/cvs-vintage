@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.45 2004/09/19 21:06:25 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.46 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelParameter extends PropPanelModelElement {
     public PropPanelParameter() {
         super(
 	      "Parameter",
-	      parameterIcon,
+	      lookupIcon("Parameter"),
 	      ConfigLoader.getTabPropsOrientation());
         Class mclass = (Class) ModelFacade.PARAMETER;
 
@@ -91,7 +91,7 @@ public class PropPanelParameter extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, getButtonPanel(), parameterIcon, 
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("Parameter"), 
                 Translator.localize("UMLMenu", "button.new-parameter"), 
                 "addParameter", null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

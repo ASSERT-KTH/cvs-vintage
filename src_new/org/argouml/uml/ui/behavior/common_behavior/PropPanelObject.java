@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.39 2004/09/16 20:55:58 mvw Exp $
+// $Id: PropPanelObject.java,v 1.40 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,8 @@ public class PropPanelObject extends PropPanelInstance {
      * Constructor.
      */
     public PropPanelObject() {
-	super("Object", objectIcon, ConfigLoader.getTabPropsOrientation());
+	super("Object", lookupIcon("Object"), 
+            ConfigLoader.getTabPropsOrientation());
 
 	Class mclass = (Class) ModelFacade.OBJECT;
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.18 2004/09/19 19:29:57 mvw Exp $
+// $Id: PropPanelState.java,v 1.19 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.18 2004/09/19 19:29:57 mvw Exp $
+// $Id: PropPanelState.java,v 1.19 2004/09/22 17:27:45 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -62,10 +62,8 @@ public abstract class PropPanelState extends PropPanelStateVertex {
      * @param icon the icon to be shown next to the name
      * @param orientation the orientation of the panel
      */
-    public PropPanelState(
-        String name,
-        ImageIcon icon,
-        Orientation orientation) {
+    public PropPanelState(String name, ImageIcon icon, Orientation orientation) 
+    {
         super(name, icon, orientation);
         
         JList deferrableList = new UMLLinkedList(

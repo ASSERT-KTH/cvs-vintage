@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.45 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelDataType.java,v 1.46 2004/09/22 17:27:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class PropPanelDataType extends PropPanelClassifier {
      * 
      */
     public PropPanelDataType() {
-        super("DataType", dataTypeIcon, ConfigLoader.getTabPropsOrientation());
+        super("DataType", lookupIcon("DataType"), 
+                ConfigLoader.getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.DATATYPE;
 
@@ -100,14 +101,15 @@ public class PropPanelDataType extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, getButtonPanel(), dataTypeIcon, Translator
-                .localize("UMLMenu", "button.new-datatype"), "newDataType",
-                null);
-        new PropPanelButton(this, getButtonPanel(), addAttrIcon, Translator
-                .localize("UMLMenu", "button.new-enumeration-literal"),
-                "addAttribute", null);
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("DataType"), 
+                Translator.localize("UMLMenu", "button.new-datatype"), 
+                "newDataType", null);
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("NewAttribute"), 
+            Translator.localize("UMLMenu", "button.new-enumeration-literal"),
+            "addAttribute", null);
 
-        new PropPanelButton(this, getButtonPanel(), addOpIcon, Translator.localize(
+        new PropPanelButton(this, getButtonPanel(), lookupIcon("NewOperation"), 
+                Translator.localize(
                 "UMLMenu", "button.new-operation"), "addOperation", null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.42 2004/09/19 19:29:57 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.43 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.42 2004/09/19 19:29:57 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.43 2004/09/22 17:27:45 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -83,12 +83,12 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
             getMultiplicityComboBox()); 
 	JList baseList =
 	    new UMLMutableLinkedList(new UMLClassifierRoleBaseListModel(),
-				     ActionAddClassifierRoleBase.SINGLETON,
-				     null,
-				     ActionRemoveClassifierRoleBase.getInstance(),
-				     false);
+		ActionAddClassifierRoleBase.SINGLETON,
+		null,
+		ActionRemoveClassifierRoleBase.getInstance(),
+		false);
 	addField(Translator.localize("UMLMenu", "label.base"),
-		 new JScrollPane(baseList));
+		new JScrollPane(baseList));
 
 
 	addSeperator();
@@ -122,7 +122,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-	new PropPanelButton(this, getButtonPanel(), receptionIcon, 
+	new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
             Translator.localize("UMLMenu", "button.new-reception"), 
             getActionNewReception());
 	addButton(new PropPanelButton2(this, 

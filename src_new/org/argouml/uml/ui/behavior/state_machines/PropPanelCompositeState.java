@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.16 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelCompositeState.java,v 1.17 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class PropPanelCompositeState extends PropPanelState {
      * 
      */
     public PropPanelCompositeState() {
-        super("Composite State", compositeStateIcon, 
+        super("Composite State", lookupIcon("CompositeState"), 
                 ConfigLoader.getTabPropsOrientation());
         initialize();
 
@@ -79,9 +79,12 @@ public class PropPanelCompositeState extends PropPanelState {
                 getContainerScroll());
         addField(Translator.localize("UMLMenu", "label.modifiers"), 
                 new UMLCompositeStateConcurentCheckBox());
-        addField(Translator.localize("UMLMenu", "label.entry"), getEntryScroll());
-        addField(Translator.localize("UMLMenu", "label.exit"), getExitScroll());
-        addField(Translator.localize("UMLMenu", "label.do-activity"), getDoScroll());
+        addField(Translator.localize("UMLMenu", "label.entry"), 
+                getEntryScroll());
+        addField(Translator.localize("UMLMenu", "label.exit"), 
+                getExitScroll());
+        addField(Translator.localize("UMLMenu", "label.do-activity"), 
+                getDoScroll());
 
         addSeperator();
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelDestroyAction.java,v 1.4 2004/09/12 16:47:12 mvw Exp $
+// $Id: PropPanelDestroyAction.java,v 1.5 2004/09/22 17:27:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class PropPanelDestroyAction extends PropPanelAction {
      * 
      */
     public PropPanelDestroyAction() {
-        super("DestroyAction", callActionIcon);
+        super("DestroyAction", lookupIcon("DestroyAction"));
     }
 
 } 
