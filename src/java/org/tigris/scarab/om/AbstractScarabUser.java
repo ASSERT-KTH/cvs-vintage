@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.2 2001/11/01 01:43:54 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.3 2001/11/01 19:07:58 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -161,7 +161,7 @@ public abstract class AbstractScarabUser
         throws Exception;
             
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, Attribute, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
      */
     public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
                                                        Attribute attribute,
