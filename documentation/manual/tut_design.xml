@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: tut_design.xml,v 1.9 2004/06/26 09:13:15 linus Exp $ -->
+<!-- $Id: tut_design.xml,v 1.10 2004/06/27 06:20:34 mvw Exp $ -->
 
 <!--
 
@@ -553,10 +553,10 @@ Sequence diagrams does not work in ArgoUML version 0.14.
 
         <remark>To be written&hellip;</remark>
 
-        <!-- Branch  -->
+        <!-- Junction and Choice  -->
 
         <sect4>
-          <title>Branch (To be written)</title>
+          <title>Junction and Choice (To be written)</title>
 
           <remark>To be written&hellip;</remark>
         </sect4>
@@ -664,10 +664,10 @@ Sequence diagrams does not work in ArgoUML version 0.14.
 
         <remark>To be written&hellip;</remark>
 
-        <!-- Branch  -->
+        <!-- Junction and Choice  -->
 
         <sect4>
-          <title>Branch (To be written)</title>
+          <title>Junction and Choice (To be written)</title>
 
           <remark>To be written&hellip;</remark>
         </sect4>
