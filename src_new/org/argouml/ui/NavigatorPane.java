@@ -93,7 +93,7 @@ import ru.novosoft.uml.model_management.MModel;
  *  <li>statistics gathering - not really used</li>
  * </ol>
  *
- * $Id: NavigatorPane.java,v 1.29 2003/04/13 10:11:32 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.30 2003/04/14 09:27:08 jhraigniac Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -527,7 +527,7 @@ public class NavigatorPane
                 if (obj instanceof MPackage || obj instanceof MModel){
                     popup.add(ActionAddPackage.SINGLETON);
                 }
-                popup.add(new ActionGoToDetails(menuLocalize("Properties")));
+                popup.add(new ActionGoToDetails(menuLocalize("action.properties")));
             }
             popup.show(_tree, me.getX(), me.getY());
         }
