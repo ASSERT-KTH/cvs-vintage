@@ -691,7 +691,7 @@
             </mapping>
             <mapping>
                 <java-type>java.lang.Object</java-type>
-                <jdbc-type>BLOB</jdbc-type>
+                <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>BLOB</sql-type>
             </mapping>
             <mapping>
@@ -701,8 +701,8 @@
             </mapping>
             <mapping>
                 <java-type>java.lang.Short</java-type>
-                <jdbc-type>INTEGER</jdbc-type>
-                <sql-type>INTEGER</sql-type>
+                <jdbc-type>SMALLINT</jdbc-type>
+                <sql-type>SMALLINT</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.sql.Timestamp</java-type>
@@ -727,12 +727,22 @@
             <mapping>
                 <java-type>java.lang.String</java-type>
                 <jdbc-type>VARCHAR</jdbc-type>
-                <sql-type>VARCHAR(256)</sql-type>
+                <sql-type>VARCHAR(255)</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.util.Date</java-type>
                 <jdbc-type>DATE</jdbc-type>
-                <sql-type>DATE</sql-type>
+                <sql-type>DATETIME</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.util.Date</java-type>
+                <jdbc-type>DATE</jdbc-type>
+                <sql-type>DATETIME</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.sql.Time</java-type>
+                <jdbc-type>TIME</jdbc-type>
+                <sql-type>BIGINT</sql-type>
             </mapping>
         </type-mapping>
         <type-mapping>
