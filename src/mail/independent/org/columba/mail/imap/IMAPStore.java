@@ -16,9 +16,11 @@
 
 package org.columba.mail.imap;
 
-import java.io.IOException;
 import java.net.SocketException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -38,7 +40,8 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPResponse;
 import org.columba.ristretto.imap.parser.FlagsParser;
-import org.columba.ristretto.imap.parser.ImapHeaderParser;
+import org.columba.ristretto.imap.parser.IMAPHeader;
+import org.columba.ristretto.imap.parser.IMAPHeaderlistParser;
 import org.columba.ristretto.imap.parser.ListInfo;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
 import org.columba.ristretto.imap.parser.MessageSet;
@@ -64,29 +67,81 @@ import org.columba.ristretto.parser.ParserException;
 import org.columba.ristretto.progress.ProgressObserver;
 
 /**
- * @author freddy
+ * IMAPStore encapsulates IMAPProtocol and the parsers for
+ * IMAPFolder.
+ * <p>
+ * This way {@link IMAPFolder} doesn't need to do any parsing work, etc.
+ * <p>
+ * Every {@link IMAPFolder} of a single account has also an {@link IMAPRootFolder},
+ * which keeps a reference to {@link IMAPStore}. Which itself uses 
+ * {@link IMAPProtocol}.
+ * <p>
+ * IMAPStore handles the current state of connection:
+ * <ul>
+ *  <li>STATE_NONAUTHENTICATE - not authenticated</li>
+ *  <li>STATE_AUTHENTICATE - authenticated</li>
+ *  <li>STATE_SELECTED - mailbox is selected</li>
+ * </ul>
+ * <p>
+ * It keeps a reference to the currently selected mailbox.
+ * <p>
+ * IMAPFolder shouldn't use IMAPProtocol directly, instead it 
+ * should use IMAPStore.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class IMAPStore {
 
+	/**
+	 * not connected to IMAP server
+	 */
 	public static final int STATE_NONAUTHENTICATE = 0;
+
+	/**
+	 * connected an authenticated to IMAP server
+	 */
 	public static final int STATE_AUTHENTICATE = 1;
+
+	/**
+	 * mailbox selected
+	 */
 	public static final int STATE_SELECTED = 2;
 
+	/**
+	 * list of IMAP server capabilites
+	 */
 	private List capabilities;
+
+	/**
+	 * current state
+	 */
 	private int state = STATE_NONAUTHENTICATE;
-	// non-authenticate=0, authenticate=1, selected=2,
+
+	/**
+	 * currently selected mailbox
+	 */
 	private String selectedFolderPath;
+
+	/**
+	 * mailbox name delimiter 
+	 * <p>
+	 * example: "/" (uw-imap), or "." (cyrus)
+	 */
 	private String delimiter;
 
+	/**
+	 * reference to IMAP protocol
+	 */
 	private IMAPProtocol imap;
 
+	/**
+	 * configuration options of this IMAP account
+	 */
 	private ImapItem item;
 
+	/**
+	 * reference to root folder
+	 */
 	private IMAPRootFolder parent;
 
 	private MimeTree aktMimePartTree;
@@ -99,26 +154,44 @@ public class IMAPStore {
 		this.item = item;
 		this.parent = root;
 
+		// create IMAP protocol
 		imap =
 			new IMAPProtocol(
 				item.get("host"),
 				item.getInteger("port"),
 				item.getBoolean("enable_ssl", true));
 
+		// register interest on status updates
 		imap.registerInterest((ProgressObserver) root.getObservable());
+
+		// initialy set state to be not authenticated
 		state = 0;
 	}
 
+	/**
+	 * @return
+	 */
 	public StatusObservable getObservable() {
 		return parent.getObservable();
 	}
 
+	/**
+	 * @param message
+	 */
 	protected void printStatusMessage(String message) {
 		getObservable().setMessage(item.get("host") + ": " + message);
 	}
 
+	/**
+	 * Get mailbox path delimiter
+	 * <p>
+	 * example: "/" (uw-imap), or "." (cyrus)
+	 * 
+	 * @return	delimiter
+	 */
 	public String getDelimiter() {
 		if (delimiter == null) {
+			// try to determine delimiter
 			try {
 				delimiter = fetchDelimiter();
 			} catch (Exception e) {
@@ -128,31 +201,46 @@ public class IMAPStore {
 		return delimiter;
 	}
 
+	/**
+	 * @return	currenlty selected mailbox
+	 */
 	public String getSelectedFolderPath() {
 		return selectedFolderPath;
 	}
 
+	/**
+	 * @param s	currenlty selected mailbox
+	 */
 	public void setSelectedFolderPath(String s) {
 		selectedFolderPath = s;
 	}
 
+	/**
+	 * Logout cleanly.
+	 * 
+	 * @throws Exception
+	 */
 	public void logout() throws Exception {
 		if (state != STATE_NONAUTHENTICATE)
 			getProtocol().logout();
 	}
 
+	/**
+	 * 
+	 * @return	current state
+	 */
 	public int getState() {
 		return state;
 	}
 
+	/**
+	 * Login to IMAP server.
+	 * <p>
+	 * Ask user for password.
+	 * 
+	 * @throws Exception
+	 */
 	public void login() throws Exception {
-
-		/*
-		if (worker != null) {
-			worker.setText(" Login " + item.getHost());
-			worker.startTimer();
-		}
-		*/
 
 		PasswordDialog dialog = null;
 
@@ -252,6 +340,15 @@ public class IMAPStore {
 		//System.out.println("login successful");
 	}
 
+	/**
+	 * Check if mailbox is already selected.
+	 * <p>
+	 * If its not selected -> select it.
+	 * 
+	 * @param path	mailbox path
+	 * @return	
+	 * @throws Exception
+	 */
 	public boolean isSelected(String path) throws Exception {
 		//System.out.println("isSelected");
 
@@ -263,25 +360,12 @@ public class IMAPStore {
 				select(path);
 				return false;
 			}
-			/*
-			if (getSelectedFolderPath().equals(path))
-				return true;
-			else {
-				select(worker, path);
-				return false;
-			}
-			*/
+
 		} else if (getState() == STATE_AUTHENTICATE) {
 			select(path);
 			return false;
 		} else {
 			// we are in Imap4.STATE_NONAUTHENTICATE
-
-			/*
-			getImapRootFolder().lsub(worker);
-			*/
-
-			//isLogin(worker);
 
 			select(path);
 
@@ -289,6 +373,12 @@ public class IMAPStore {
 		}
 	}
 
+	/**
+	 * Ensure that we are in login state.
+	 * 
+	 * @param state
+	 * @throws Exception
+	 */
 	private void ensureState(int state) throws Exception {
 		if (state == state)
 			return;
@@ -296,6 +386,13 @@ public class IMAPStore {
 		login();
 	}
 
+	/**
+	 * Selected mailbox.
+	 * 
+	 * @param path	mailbox to selected
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean select(String path) throws Exception {
 		ensureState(STATE_AUTHENTICATE);
 
@@ -310,7 +407,7 @@ public class IMAPStore {
 			} catch (CommandFailedException ex) {
 			} catch (DisconnectedException ex) {
 				state = STATE_NONAUTHENTICATE;
-				selectedFolderPath=null;
+				selectedFolderPath = null;
 				select(path);
 
 			}
@@ -362,6 +459,9 @@ public class IMAPStore {
 	}
 
 	/**
+	 * @return
+	 */
+	/**
 	 * Returns the IMAPProtocol
 	 * @return IMAPProtocol
 	 */
@@ -369,6 +469,13 @@ public class IMAPStore {
 		return imap;
 	}
 
+	/**
+	 * Convert list of indices to list of UIDs.
+	 * 
+	 * @param v		list of indices
+	 * @return		list of UIDs
+	 * @throws Exception
+	 */
 	public List convertIndexToUid(List v) throws Exception {
 		if (v.size() == 0)
 			return v;
@@ -392,6 +499,10 @@ public class IMAPStore {
 
 	/**************************** authenticate state ************************/
 
+	/**
+	 * Fetch delimiter.
+	 * 
+	 */
 	protected String fetchDelimiter() throws Exception {
 		isLogin();
 
@@ -417,6 +528,14 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * List mailbox.
+	 * 
+	 * @param reference	
+	 * @param pattern
+	 * @return
+	 * @throws Exception
+	 */
 	public ListInfo[] lsub(String reference, String pattern) throws Exception {
 
 		isLogin();
@@ -458,6 +577,13 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Append message to mailbox.
+	 * 
+	 * @param mailboxName		name of mailbox
+	 * @param messageSource		message source
+	 * @throws Exception
+	 */
 	public void append(String mailboxName, String messageSource)
 		throws Exception {
 
@@ -473,6 +599,13 @@ public class IMAPStore {
 		}
 	}
 
+	/**
+	 * Create new mailbox.
+	 * 
+	 * @param mailboxName	name of new mailbox
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean createFolder(String mailboxName) throws Exception {
 		try {
 			getProtocol().create(mailboxName);
@@ -492,6 +625,13 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Delete mailbox.
+	 * 
+	 * @param mailboxName	name of mailbox
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean deleteFolder(String mailboxName) throws Exception {
 		// we need to ensure that this folder is closed
 		try {
@@ -525,6 +665,14 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Rename mailbox.
+	 * 
+	 * @param oldMailboxName	old mailbox name
+	 * @param newMailboxName	new mailbox name
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean renameFolder(String oldMailboxName, String newMailboxName)
 		throws Exception {
 
@@ -543,6 +691,13 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Subscribe to mailbox.
+	 * 
+	 * @param mailboxName	name of mailbox
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean subscribeFolder(String mailboxName) throws Exception {
 		ensureState(STATE_AUTHENTICATE);
 		try {
@@ -557,6 +712,13 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Unsubscribe to mailbox.
+	 * 
+	 * @param mailboxName	name of mailbox
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean unsubscribeFolder(String mailboxName) throws Exception {
 		ensureState(STATE_AUTHENTICATE);
 		try {
@@ -573,6 +735,13 @@ public class IMAPStore {
 
 	/**************************** selected state ****************************/
 
+	/**
+	 * Fetch UID list and parse it.
+	 * 
+	 * @param path			mailbox name
+	 * @return				list of UIDs
+	 * @throws Exception
+	 */
 	public List fetchUIDList(String path) throws Exception {
 
 		isLogin();
@@ -605,6 +774,15 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Expunge folder.
+	 * <p>
+	 * Delete every message mark as expunged.
+	 * 
+	 * @param path		name of mailbox
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean expunge(String path) throws Exception {
 
 		isLogin();
@@ -625,6 +803,15 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Copy a set of messages to another mailbox on the same
+	 * IMAP server.
+	 * 
+	 * @param destFolder	destination mailbox
+	 * @param uids			UIDs of messages
+	 * @param path			source mailbox
+	 * @throws Exception
+	 */
 	public void copy(String destFolder, Object[] uids, String path)
 		throws Exception {
 
@@ -646,6 +833,13 @@ public class IMAPStore {
 		}
 	}
 
+	/**
+	 * Fetch list of flags and parse it.
+	 * 
+	 * @param path			mailbox name
+	 * @return				list of flags
+	 * @throws Exception
+	 */
 	public Flags[] fetchFlagsList(String path) throws Exception {
 
 		Flags[] result = null;
@@ -664,7 +858,9 @@ public class IMAPStore {
 
 			result = FlagsParser.parseFlags(responses);
 		} catch (BadCommandException ex) {
+			ex.printStackTrace();
 		} catch (CommandFailedException ex) {
+			ex.printStackTrace();
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			fetchFlagsList(path);
@@ -672,6 +868,10 @@ public class IMAPStore {
 		return result;
 	}
 
+	/**
+	 * @param headerString
+	 * @return
+	 */
 	private ColumbaHeader parseMessage(String headerString) {
 
 		try {
@@ -685,85 +885,28 @@ public class IMAPStore {
 		}
 	}
 
-	/*
-	private ColumbaHeader fetchHeader(
-		Object uid,
-		WorkerStatusController worker,
-		String path)
-		throws Exception {
-	
-		isLogin(worker);
-	
-		isSelected(worker, path);
-	
-		boolean answer = false;
-		ColumbaHeader h = new ColumbaHeader();
-	
-		Vector v = new Vector();
-		String buffer = new String();
-	
-		TableItem items = MailConfig.getMainFrameOptionsConfig().getTableItem();
-		StringBuffer headerFields = new StringBuffer();
-	
-		for (int i = 0; i < items.count(); i++) {
-			HeaderItem headerItem = items.getHeaderItem(i);
-	
-			String name = headerItem.get("name");
-			if ((!name.equals("Status"))
-				|| (!name.equals("Flagged"))
-				|| (!name.equals("Attachment"))
-				|| (!name.equals("Priority"))
-				|| (!name.equals("Size"))) {
-				headerFields.append(name + " ");
-			}
-		}
-	
-		try {
-	
-			IMAPResponse[] responses =
-				getProtocol().fetchHeaderList(
-					(String) uid,
-					headerFields.toString().trim());
-	
-			buffer = HeaderParser.parse(responses);
-			//System.out.println("buffer=" + buffer);
-	
-			h = parseMessage(buffer);
-	
-			return h;
-	
-		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
-		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-		} catch (DisconnectedException ex) {
-			state = STATE_NONAUTHENTICATE;
-			fetchHeader(uid, worker, path);
-		} finally {
-	
-		}
-	
-		return null;
-	
-	}
-	*/
-
+	/**
+	 * Fetch list of headers and parse them.
+	 * 
+	 * @param headerList		headerlist to add new headers
+	 * @param list				list of UIDs to download
+	 * @param path				mailbox name
+	 * @throws Exception
+	 */
 	public void fetchHeaderList(HeaderList headerList, List list, String path)
 		throws Exception {
 
-		ColumbaLogger.log.debug("list-count=" + list.size());
-
+		// make sure we are logged in
 		isLogin();
+
+		// make sure this mailbox is selected
 		isSelected(path);
 
-		getObservable().setMax(list.size());
-		getObservable().setCurrent(0);
-		MessageSet set = new MessageSet(list.toArray());
-
-		//	get list of used-defined headerfields
+		//	get list of user-defined headerfields
 		String[] headercacheList =
 			CachedHeaderfieldOwner.getCachedHeaderfieldArray();
+
+		// create string representation
 		StringBuffer headerFields = new StringBuffer();
 		String name;
 		for (int j = 0; j < headercacheList.length; j++) {
@@ -771,84 +914,76 @@ public class IMAPStore {
 			headerFields.append(name + " ");
 		}
 
-		boolean finished = false;
-		String clientTag = null;
-		IMAPResponse imapResponse = null;
+		// calculate number of requests
+		int requestCount = list.size() / 100;
 
-		ColumbaLogger.log.debug("messageSet=" + set.getString());
-		ColumbaLogger.log.debug(
-			"headerFields=" + headerFields.toString().trim());
+		// initialize progressbar
+		getObservable().setMax(requestCount);
+		getObservable().setCurrent(0);
 
-		try {
-			clientTag =
-				getProtocol().sendString(
-					"UID FETCH "
-						+ set.getString().trim()
-						+ " BODY.PEEK[HEADER.FIELDS ("
-						+ headerFields.toString().trim()
-						+ ")]",
-					null);
-		} catch (IOException ex) {
-			// disconnect exception
-			ex.printStackTrace();
-		}
+		for (int i = 0; i <= requestCount; i++) {
+			String messageset = null;
+			// always use 100 as step size
+			int startIndex = i * 100;
+			int endIndex = startIndex + 100;
 
-		int i = 0;
-		while (!finished) {
-			try {
+			// check for boundary
+			if (endIndex > list.size())
+				endIndex = list.size() - 1;
 
-				imapResponse = getProtocol().getResponse();
-			} catch (IOException ex) {
-				// disconnect exception
-				ex.printStackTrace();
-			}
+			ColumbaLogger.log.debug("fetching from "+startIndex+" to "+endIndex);
+			
+			// create sublist
+			List sublist = list.subList(startIndex, endIndex);
 
-			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
-				finished = true;
+			// create messageset from UID list subset
+			MessageSet set = new MessageSet(sublist.toArray());
 
-			if (imapResponse.isTagged()
-				&& imapResponse.getTag().equals(clientTag))
-				finished = true;
+			// fetch headers from server
+			IMAPResponse[] r =
+				getProtocol().fetchHeaderList(
+					set.getString().trim(),
+					headerFields.toString().trim());
 
-			if (!finished) {
-				IMAPResponse[] r = new IMAPResponse[1];
-				r[0] = imapResponse;
-				//System.out.println("header=" + imapResponse.getSource());
+			// parse headers
+			List input = new ArrayList(Arrays.asList(r));
+			List result = IMAPHeaderlistParser.parse(input);
 
-				String buffer = imapResponse.getSource();
+			Iterator it = result.iterator();
 
-				if (buffer.length() != 0) {
+			// add all parsed headers to the headerlist
+			while (it.hasNext()) {
+				IMAPHeader imapHeader = (IMAPHeader) it.next();
 
-					if (buffer.indexOf("FLAGS") != -1) {
-						// flags updated
-					} else {
-						Object uid = null;
-						ColumbaHeader header =
-							parseMessage(ImapHeaderParser.parse(r));
+				ColumbaHeader header =
+					new ColumbaHeader(imapHeader.getHeader());
+				Object uid = imapHeader.getUid();
+				header.set("columba.uid", uid);
 
-						if (header != null) {
-							header.set("columba.uid", list.get(i));
-							headerList.add(header, list.get(i));
-						}
-
-						i++;
-						if ((getObservable() != null) && (i % 100 == 0))
-							getObservable().setCurrent(i);
-						printStatusMessage(
-							MessageFormat.format(
-								MailResourceLoader.getString(
-									"statusbar",
-									"message",
-									"fetch_headers"),
-								new Object[] {
-									new Integer(i),
-									new Integer(list.size())}));
-					}
+				if (header != null) {
+					headerList.add(header, uid);
 				}
 			}
+
+			if (getObservable() != null)
+				getObservable().setCurrent(i);
+
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"fetch_headers"));
 		}
+
+		
 	}
 
+	/**
+	 * Ensure that we are in login state.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean isLogin() throws Exception {
 		if ((getState() == STATE_AUTHENTICATE)
 			|| (getState() == STATE_SELECTED))
@@ -860,6 +995,14 @@ public class IMAPStore {
 		}
 	}
 
+	/**
+	 * Get {@link MimeTree}.
+	 * 
+	 * @param uid			message UID
+	 * @param path			mailbox name
+	 * @return				mimetree
+	 * @throws Exception
+	 */
 	public MimeTree getMimePartTree(Object uid, String path) throws Exception {
 
 		isLogin();
@@ -884,6 +1027,15 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Get {@link MimePart}.
+	 * 
+	 * @param uid			message UID
+	 * @param address		address of MimePart in MimeTree
+	 * @param path			mailbox name
+	 * @return				mimepart
+	 * @throws Exception
+	 */
 	public MimePart getMimePart(Object uid, Integer[] address, String path)
 		throws Exception {
 
@@ -915,6 +1067,14 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Get complete message source.
+	 * 
+	 * @param uid			message UID
+	 * @param path			mailbox name
+	 * @return				message source
+	 * @throws Exception
+	 */
 	public String getMessageSource(Object uid, String path) throws Exception {
 
 		isLogin();
@@ -936,6 +1096,16 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Mark message as specified by variant.
+	 * <p>
+	 * See {@link MarkMessageCommand} for a list of variants.
+	 * 
+	 * @param uids				message UID
+	 * @param variant			variant (read/flagged/expunged/etc.)
+	 * @param path				mailbox name
+	 * @throws Exception
+	 */
 	public void markMessage(Object[] uids, int variant, String path)
 		throws Exception {
 
@@ -971,6 +1141,15 @@ public class IMAPStore {
 		}
 	}
 
+	/**
+	 * Search messages.
+	 * 
+	 * @param uids				message UIDs
+	 * @param filterRule		filter rules
+	 * @param path				mailbox name
+	 * @return					list of UIDs which match filter rules
+	 * @throws Exception
+	 */
 	public LinkedList search(Object[] uids, FilterRule filterRule, String path)
 		throws Exception {
 		LinkedList result = new LinkedList();
@@ -1041,6 +1220,12 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * @param filterRule
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
 	public LinkedList search(FilterRule filterRule, String path)
 		throws Exception {
 		LinkedList result = new LinkedList();
@@ -1107,6 +1292,12 @@ public class IMAPStore {
 		return null;
 	}
 
+	/**
+	 * Check if string contains US-ASCII characters.
+	 * 
+	 * @param s
+	 * @return		true, if string contains US-ASCII characters
+	 */
 	protected static boolean isAscii(String s) {
 		int l = s.length();
 
@@ -1117,6 +1308,14 @@ public class IMAPStore {
 		return true;
 	}
 
+	/**
+	 * Create string representation of {@ link MarkMessageCommand}
+	 * constants.
+	 * 
+	 * 
+	 * @param variant
+	 * @return
+	 */
 	private String parseVariant(int variant) {
 		StringBuffer buf = new StringBuffer();
 		List arg = new Vector();
