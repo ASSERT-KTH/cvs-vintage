@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.51 2005/01/04 19:39:51 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.52 2005/01/04 20:09:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.OsUtil;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 import org.tigris.gef.base.Globals;
@@ -97,14 +98,14 @@ public class ActionOpenProject extends ActionFileOperations
             if (p != null && p.getURL() != null) {
                 File file = new File(p.getURL().getFile());
                 if (file.getParentFile() != null) {
-                    chooser = OsUtil.getFileChooser(file.getParent());
+                    chooser = FileChooserFactory.getFileChooser(file.getParent());
                 }
             } else {
-                chooser = OsUtil.getFileChooser();
+                chooser = FileChooserFactory.getFileChooser();
             }
 
             if (chooser == null) {
-                chooser = OsUtil.getFileChooser();
+                chooser = FileChooserFactory.getFileChooser();
             }
 
             chooser.setDialogTitle(

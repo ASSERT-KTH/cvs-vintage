@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.25 2005/01/04 19:39:51 bobtarling Exp $
+// $Id: ActionSaveGraphics.java,v 1.26 2005/01/04 20:09:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.application.api.CommandLineInterface;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.OsUtil;
+import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
@@ -118,12 +119,12 @@ public class ActionSaveGraphics
 
 		String filename = p.getURL().getFile();
 		if (!filename.startsWith("/FILE1/+/")) {
-		    chooser = OsUtil.getFileChooser(p.getURL().getFile());
+		    chooser = FileChooserFactory.getFileChooser(p.getURL().getFile());
 		}
 	    }
 
 	    if (chooser == null) {
-		chooser = OsUtil.getFileChooser();
+		chooser = FileChooserFactory.getFileChooser();
 	    }
 
 	    chooser.setDialogTitle("Save Diagram as Graphics: "

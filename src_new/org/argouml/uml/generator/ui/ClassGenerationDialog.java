@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.38 2005/01/04 19:39:50 bobtarling Exp $
+// $Id: ClassGenerationDialog.java,v 1.39 2005/01/04 20:09:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.OsUtil;
 import org.argouml.ui.ArgoDialog;
+import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
@@ -366,13 +367,13 @@ public class ClassGenerationDialog
         try {
             // Show Filechooser to select OuputDirectory
             JFileChooser chooser =
-                OsUtil.getFileChooser(
+                FileChooserFactory.getFileChooser(
                     (String) outputDirectoryComboBox
                         .getModel()
                         .getSelectedItem());
 
             if (chooser == null) {
-                chooser = OsUtil.getFileChooser();
+                chooser = FileChooserFactory.getFileChooser();
             }
 
             chooser.setFileHidingEnabled(true);

@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.70 2005/01/04 19:39:50 bobtarling Exp $
+// $Id: Import.java,v 1.71 2005/01/04 20:09:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.OsUtil;
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
@@ -1001,8 +1002,8 @@ class ImportClasspathDialog extends JDialog {
         public void actionPerformed(ActionEvent e) {
 
 	    String directory = Globals.getLastDirectory();
-	    JFileChooser ch = OsUtil.getFileChooser(directory);
-	    if (ch == null) ch = OsUtil.getFileChooser();
+	    JFileChooser ch = FileChooserFactory.getFileChooser(directory);
+	    if (ch == null) ch = FileChooserFactory.getFileChooser();
 
 	    final JFileChooser chooser = ch;
 

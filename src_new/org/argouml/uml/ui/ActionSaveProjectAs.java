@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.36 2005/01/04 19:39:51 bobtarling Exp $
+// $Id: ActionSaveProjectAs.java,v 1.37 2005/01/04 20:09:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.OsUtil;
 import org.argouml.persistence.AbstractFilePersister;
 import org.argouml.persistence.PersistenceManager;
+import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -107,10 +108,10 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         JFileChooser chooser = null;
         URL url = p.getURL();
         if ((url != null) && (url.getFile().length() > 0)) {
-            chooser = OsUtil.getFileChooser(url.getFile());
+            chooser = FileChooserFactory.getFileChooser(url.getFile());
         }
         if (chooser == null) {
-            chooser = OsUtil.getFileChooser();
+            chooser = FileChooserFactory.getFileChooser();
         }
 
         if (url != null) {

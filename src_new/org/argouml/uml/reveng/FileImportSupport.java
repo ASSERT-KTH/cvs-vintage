@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.12 2005/01/04 19:39:50 bobtarling Exp $
+// $Id: FileImportSupport.java,v 1.13 2005/01/04 20:09:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -187,6 +187,7 @@ public abstract class FileImportSupport implements PluggableImport {
 	//JFileChooser ch = OsUtil.getFileChooser(directory);
 
 	JFileChooser ch;
+        // TODO: Remove test when JRE1.3 support dropped
         if (OsUtil.isWin32() && OsUtil.isSunJdk() && OsUtil.isJdk131()) {
             ch = new ImportFileChooser(
                 imp,
