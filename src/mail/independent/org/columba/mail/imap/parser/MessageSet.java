@@ -50,6 +50,10 @@ public class MessageSet {
 		
 		if ( uids.length == 1 ) 
 		{
+			// don't parse if string is empty
+			String s = (String) uids[0];
+			if ( s.length() == 0 ) return "";
+			
 			Integer uid = new Integer(Integer.parseInt((String) uids[0]));
 			return uid.toString();
 		} 

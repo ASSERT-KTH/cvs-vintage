@@ -70,6 +70,8 @@ public class ApplyFilterCommand extends Command{
 			Filter filter = list.get(i);
 
 			Object[] result = srcFolder.searchMessages(filter, worker);
+			if ( result == null ) continue;
+			
 			if (result.length != 0) {
 				CompoundCommand command =
 					filter.getCommand(srcFolder, result);

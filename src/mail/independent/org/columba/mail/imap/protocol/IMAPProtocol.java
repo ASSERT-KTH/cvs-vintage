@@ -1043,7 +1043,7 @@ public class IMAPProtocol {
 		throws Exception {
 
 		Arguments args = new Arguments();
-		args.add(messageSet);
+		args.add(new Atom(messageSet));
 		args.add(mailbox);
 
 		IMAPResponse[] responses = sendCommand("UID COPY", args);

@@ -336,6 +336,8 @@ public class SearchRequestBuilder {
 				conditionString = "OR";
 			}
 
+			
+			
 			// concatenate all criteria together
 			//  -> create one search-request string
 			for (int i = 0; i < rule.count(); i++) {
@@ -346,6 +348,7 @@ public class SearchRequestBuilder {
 				args.add((Arguments) ruleStringList.get(i));
 
 			}
+			
 		} else {
 
 			args.add((Arguments) ruleStringList.get(0));
