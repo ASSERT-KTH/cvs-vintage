@@ -87,7 +87,6 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 </tr>
 #end
 
-
 #if ($canEdit)
 #set ($newDependGroup = $intake.Depend.Default)
 <tr class="a">
@@ -120,6 +119,20 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 </tr>
 #end
 </table>
+
+#if ($canEdit)
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+      <th>$l10n.Reason</th>
+      <td>
+        #textAreaMedium("$newDependGroup.Description.Key" "$newDependGroup.Description")
+        #fieldErrorMsg($newDependGroup.Description "")
+      </td>
+    </tr>
+  </table>
+</div>
+#end
 
 #if ($canEdit)
 <div class="functnbar3">
