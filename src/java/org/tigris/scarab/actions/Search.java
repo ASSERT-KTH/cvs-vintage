@@ -89,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.59 2002/02/14 22:27:08 elicia Exp $
+    @version $Id: Search.java,v 1.60 2002/02/26 00:24:40 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -159,7 +159,7 @@ public class Search extends RequireLoginFirstAction
             query.setUserId(user.getUserId());
             query.setIssueType(scarabR.getCurrentIssueType());
             query.saveAndSendEmail(user, scarabR.getCurrentModule(),
-                new ContextAdapter(context));
+                                   context);
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -186,9 +186,8 @@ public class Search extends RequireLoginFirstAction
         String newValue = getQueryString(data);
         queryGroup.setProperties(query);
         query.setValue(newValue);
-        query.saveAndSendEmail((ScarabUser)data.getUser(), 
-                        scarabR.getCurrentModule(), 
-                        new ContextAdapter(context));
+        query.saveAndSendEmail((ScarabUser)data.getUser(), scarabR.getCurrentModule(),
+                                   context);
     }
 
     /**

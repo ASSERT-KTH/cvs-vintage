@@ -78,10 +78,14 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.12 2002/02/08 18:18:20 jmcnally Exp $
+    @version $Id: Approval.java,v 1.13 2002/02/26 00:24:40 elicia Exp $
 */
 public class Approval extends TemplateAction
 {
+
+    private static final String EMAIL_ERROR = "Your changes were saved, " +
+                                "but could not send notification email due " + 
+                                "to a sendmail error.";
 
     public void doSubmit( RunData data, TemplateContext context )
         throws Exception
@@ -207,13 +211,13 @@ public class Approval extends TemplateAction
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.approval.template",
                               "email/Approval.vm");
-                Email.sendEmail(new ContextAdapter(context), module, null, 
-                                toUser, subject, template);
+                if (!Email.sendEmail(new ContextAdapter(context), 
+                                     module, user, toUser, subject,
+                                     template))
+                {
+                    data.setMessage(EMAIL_ERROR);
+                }
             }
         }
-
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, template);            
     }
 }

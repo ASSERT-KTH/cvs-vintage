@@ -47,9 +47,12 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.fulcrum.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
+//import org.apache.fulcrum.template.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.Turbine;
 
 import org.apache.torque.util.Criteria;
@@ -142,12 +145,13 @@ public class Query
         return new Query();
     }
 
-    public void saveAndSendEmail( ScarabUser user, ModuleEntity module, 
-                                  TemplateContext context )
+    public boolean saveAndSendEmail( ScarabUser user, ModuleEntity module, 
+                                     TemplateContext context )
         throws Exception
     {
         // If it's a global query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
+        boolean success = true;
         if (getScopeId().equals(Scope.PERSONAL__PK))
         {
             setApproved(true);
@@ -175,11 +179,16 @@ public class Query
 
                 ScarabUser[] toUsers = module
                     .getUsers(ScarabSecurity.MODULE__EDIT);
-                Email.sendEmail(context, module, null, Arrays.asList(toUsers), 
-                                null, subject, template);
+                String fromUser = "scarab.email.default";
+                if (!Email.sendEmail(new ContextAdapter(context), module, 
+                    fromUser, Arrays.asList(toUsers), null, subject, template))
+                {
+                    success = false;
+                }
             }
         }
         save();
+        return success;
     }
 
     /**
