@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.25 2001/08/14 02:29:24 user57 Exp $ ###
+### $Id: run.sh,v 1.26 2001/08/28 04:49:10 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -58,6 +58,11 @@ case "$JAXP" in
     crimson)
 	JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
 	JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
+	;;
+
+    xerces)
+	JAXP_DOM_FACTORY="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"
+	JAXP_SAX_FACTORY="org.apache.xerces.jaxp.SAXParserFactoryImpl"
 	;;
 
     *)
