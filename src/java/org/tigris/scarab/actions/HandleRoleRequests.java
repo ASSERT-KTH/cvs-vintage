@@ -47,6 +47,8 @@ package org.tigris.scarab.actions;
  */
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 // Turbine Stuff
@@ -61,8 +63,13 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.tools.SecurityAdminTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.util.EmailContext;
+import org.tigris.scarab.util.Email;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for moderated self-serve role assignments
@@ -79,6 +86,8 @@ public class HandleRoleRequests extends RequireLoginFirstAction
         String nextTemplate = getNextTemplate(data, template);
         ScarabUser user = (ScarabUser)data.getUser();
         SecurityAdminTool scarabA = getSecurityAdminTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         // List roles = scarabA.getNonRootRoles();
         List groups = scarabA.getNonMemberGroups(user);
@@ -86,42 +95,35 @@ public class HandleRoleRequests extends RequireLoginFirstAction
         Iterator gi = groups.iterator();
         while (gi.hasNext()) 
         {
-            Module module = ((Module)gi.next());
-            String[] autoRoles = 
-                ((ScarabModule)module).getAutoApprovedRoles();
+            ScarabModule module = ((ScarabModule)gi.next());
+            String[] autoRoles = module.getAutoApprovedRoles();
             String role = data.getParameters().getString(module.getName());
             if (role != null && role.length() > 0) 
             {
-                boolean autoApprove = false;
-                if (autoRoles != null) 
-                {
-                    for (int i=0; i<autoRoles.length; i++) 
-                    {
-                        if (role.equals(autoRoles[i])) 
-                        {
-                            autoApprove = true;
-                            break;
-                        }
-                    }
-                }
-                
+                boolean autoApprove = Arrays.asList(autoRoles).contains(role);
                 if (autoApprove) 
                 {
                     TurbineSecurity.grant(user, 
                         (org.apache.fulcrum.security.entity.Group)module, 
                         TurbineSecurity.getRole(role));
                     getScarabRequestTool(context).setConfirmMessage(
-                        "Your role request was granted.");    
+                        l10n.get("Your role request was granted."));    
                 }
                 else 
                 {
+                    if (!sendNotification(module, user, role)) 
+                    {
+                        scarabR.setAlertMessage(
+                            l10n.get("CouldNotSendNotification"));
+                    } 
+
                     PendingGroupUserRole pend = new PendingGroupUserRole();
                     pend.setGroupId(module.getModuleId());
                     pend.setUserId(user.getUserId());
                     pend.setRoleName(role);
                     pend.save();
-                    getScarabRequestTool(context).setInfoMessage(
-                        "Your role request is awaiting approval.");    
+                    scarabR.setInfoMessage(
+                        l10n.get("RoleRequestAwaiting"));
                 }                
             }
         }
@@ -135,6 +137,50 @@ public class HandleRoleRequests extends RequireLoginFirstAction
     {
         return (SecurityAdminTool)context
             .get(ScarabConstants.SECURITY_ADMIN_TOOL);
+    }
+
+    /**
+     * Send email notification about role request to all users which have the rights
+     * to approve the request. If those users include both users which have
+     * a role in the module, and those who don't (like global admin), only
+     * users with roles in the module are notified.
+     * Returns true if everything is OK, and false in case of error.
+     */
+    private boolean sendNotification(ScarabModule module, ScarabUser user, 
+                                  String role)
+        throws Exception
+    {
+        EmailContext econtext = new EmailContext();
+
+        econtext.setModule(module);
+        econtext.setUser(user);
+        econtext.put("role", role);
+                
+        // Who can approve this request?
+        List approvers = Arrays.asList(module.
+            getUsers(ScarabSecurity.USER__APPROVE_ROLES));
+
+        // Which potential approvers has any role in this module?
+        ArrayList approversWithRole = new ArrayList();
+        for(Iterator i = approvers.iterator(); i.hasNext();)
+        {
+            ScarabUser u = (ScarabUser)i.next();
+            if (u.hasAnyRoleIn(module))
+            {
+                approversWithRole.add(u);
+            }
+        }
+
+        // If some approvers have role in this module, sent email only to them.
+        if (!approversWithRole.isEmpty())
+        {
+            approvers = approversWithRole;
+        }
+
+        return Email.sendEmail(econtext, module, 
+                               "scarab.email.default", module.getSystemEmail(),
+                               approvers, null,
+                               "RoleRequest.vm");        
     }
 }
 
