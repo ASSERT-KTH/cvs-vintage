@@ -65,6 +65,7 @@ public class ApplyFilterCommand extends Command{
         
         // get filter list from folder
 		FilterList list = srcFolder.getFilterList();
+		if ( list == null ) return;
 		
 		// initialize progressbar 
 		worker.setProgressBarMaximum(list.count());
