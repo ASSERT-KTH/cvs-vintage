@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.66 2003/09/05 22:35:21 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.67 2003/09/06 00:53:58 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -357,18 +357,19 @@ public class CoreHelper {
      * @param operation
      * @return Collection
      */
-    public Collection getReturnParameters(MOperation operation) {
+    public Collection getReturnParameters(Object operation) {
         Vector returnParams = new Vector();
         MParameter firstReturnParameter = null;
-        Iterator params = operation.getParameters().iterator();
+        Iterator params = ((MOperation)operation).getParameters().iterator();
         while (params.hasNext()) {
             MParameter parameter = (MParameter) params.next();
             if ((parameter.getKind()).equals(MParameterDirectionKind.RETURN)) {
                 returnParams.add(parameter);
             }
         }
-        return (Collection) returnParams;
+        return returnParams;
     }
+    
     /**
      * Returns the operation that some method realized. Returns null if
      * object isn't a method or, possibly, if the method isn't properly

@@ -1,5 +1,5 @@
 
-// $Id: PackageCodePiece.java,v 1.8 2003/08/30 14:40:24 alexb Exp $
+// $Id: PackageCodePiece.java,v 1.9 2003/09/06 00:53:58 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ package org.argouml.language.java.generator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.Stack;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.MNamespace;
 
@@ -100,12 +101,12 @@ public class PackageCodePiece extends NamedCodePiece
     */
     public void write(BufferedReader reader,
                       BufferedWriter writer,
-                      Stack parseStateStack) throws Exception
-    {
+                      Stack parseStateStack) throws Exception {
+                          
 	ParseState parseState = (ParseState) parseStateStack.peek();
-	MNamespace mNamespace = parseState.getNamespace();
+	Object mNamespace = parseState.getNamespace();
 
-	if (!(org.argouml.model.ModelFacade.isAModel(mNamespace))) {
+	if (!(ModelFacade.isAModel(mNamespace))) {
 	    writer.write("package ");
 	    writer.write(GeneratorJava.getInstance()
 			 .getPackageName(mNamespace));

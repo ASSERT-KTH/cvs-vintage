@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.75 2003/08/30 14:40:24 alexb Exp $
+// $Id: GeneratorJava.java,v 1.76 2003/09/06 00:53:58 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.75 2003/08/30 14:40:24 alexb Exp $
+// $Id: GeneratorJava.java,v 1.76 2003/09/06 00:53:58 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -280,7 +280,7 @@ public class GeneratorJava
                         UmlHelper
 			.getHelper()
 			.getCore()
-			.getReturnParameters((MOperation) mFeature)
+			.getReturnParameters(/*(MOperation)*/mFeature)
 			.iterator();
                     while (it.hasNext()) {
                         Object parameter = it.next();

@@ -1,5 +1,4 @@
-
-// $Id: ClassifierEndCodePiece.java,v 1.9 2003/08/30 14:40:24 alexb Exp $
+// $Id: ClassifierEndCodePiece.java,v 1.10 2003/09/06 00:53:58 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,10 +109,9 @@ public class ClassifierEndCodePiece extends NamedCodePiece
     */
     public void write (BufferedReader reader,
                        BufferedWriter writer,
-                       Stack parseStateStack) throws Exception
-    {
+                       Stack parseStateStack) throws Exception {
         ParseState parseState = (ParseState) parseStateStack.pop();
-        MClassifier mClassifier = parseState.getClassifier();
+        Object mClassifier = parseState.getClassifier();
         Vector newFeatures = parseState.getNewFeatures();
         Vector newInnerClasses = parseState.getNewInnerClasses();
 
@@ -121,11 +119,11 @@ public class ClassifierEndCodePiece extends NamedCodePiece
         for (Iterator i = newFeatures.iterator(); i.hasNext(); ) {
             MFeature mFeature = (MFeature) i.next();
             if (ModelFacade.isAOperation(mFeature)) {
-                CodeGenerator.generateOperation((MOperation) mFeature,
+                CodeGenerator.generateOperation(mFeature,
 						mClassifier, reader, writer);
             }
             else if (ModelFacade.isAAttribute(mFeature)) {
-                CodeGenerator.generateAttribute((MAttribute) mFeature,
+                CodeGenerator.generateAttribute(mFeature,
 						mClassifier, reader, writer);
             }
         }
@@ -143,7 +141,7 @@ public class ClassifierEndCodePiece extends NamedCodePiece
         }
 
 	StringBuffer sb = GeneratorJava.getInstance()
-	    .appendClassifierEnd (new StringBuffer (2), mClassifier, true);
+	    .appendClassifierEnd (new StringBuffer (2), (MClassifier)mClassifier, true);
 	writer.write (sb.toString());
 	// fast forward original code (overwriting)
 	ffCodePiece(reader, null);
