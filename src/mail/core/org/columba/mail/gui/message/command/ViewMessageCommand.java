@@ -69,19 +69,8 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 		
-		AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator
-				.getSelectionManager().getHandler("mail.attachment"));
-
-		// this is a hack to notify the attachment selection handler which
-		// folder/uid is selected
-		// TODO: use listener pattern instead
-		h.setMessage(srcFolder, uid);
-
 		MessageController messageController = ((MessageViewOwner) frameMediator)
-				.getMessageController();
-		// update attachment model
-		messageController.getAttachmentController().setMimePartTree(
-				mimePartTree);
+		.getMessageController();
 
 		// display changes
 		messageController.updateGUI();
@@ -147,5 +136,18 @@ public class ViewMessageCommand extends FolderCommand {
 			mimePartTree = srcFolder.getMimePartTree(uid);
 		} 
 		messageController.showMessage(srcFolder, uid);
+		
+		AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator
+				.getSelectionManager().getHandler("mail.attachment"));
+
+		// this is a hack to notify the attachment selection handler which
+		// folder/uid is selected
+		// TODO: use listener pattern instead
+		h.setMessage(srcFolder, uid);
+
+		
+		// update attachment model
+		messageController.getAttachmentController().setMimePartTree(
+				mimePartTree);		
 	}
 }
