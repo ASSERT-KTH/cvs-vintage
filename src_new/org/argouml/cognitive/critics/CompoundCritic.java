@@ -1,4 +1,4 @@
-// $Id: CompoundCritic.java,v 1.9 2004/09/04 21:33:02 mvw Exp $
+// $Id: CompoundCritic.java,v 1.10 2004/10/05 17:58:29 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.9 2004/09/04 21:33:02 mvw Exp $
+// $Id: CompoundCritic.java,v 1.10 2004/10/05 17:58:29 mvw Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -44,7 +44,7 @@ import org.tigris.gef.util.VectorSet;
 /** A CompoundCritic acts like a regular critic in that it checks the
  *  design and produces design feedback.  However, a CompoundCritic is
  *  composed of several regular critics that are applied in order.
- *  The first one the produces feedback ends the application.  This is
+ *  The first one that produces feedback ends the application.  This is
  *  useful when criticism can be ordered from specific to general:
  *  general feedback should not be produced if specific feedback is
  *  available.  For example, one critic might check for the legality
