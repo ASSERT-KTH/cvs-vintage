@@ -87,23 +87,35 @@ public class FreshenUserValve
     public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
+        // set the thread key 
+        String key = data.getParameters()
+            .getString(ScarabConstants.THREAD_QUERY_KEY);
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (key != null) 
+        {
+            user.setThreadKey(new Integer(key));
+        }
+        else
+        {
+            user.setThreadKey(null);
+        }
+        
         // remove any report that was aborted
         String reportKey = data.getParameters()
             .getString(ScarabConstants.REMOVE_CURRENT_REPORT);
         if (reportKey != null && reportKey.length() > 0)
         {
-            ((ScarabUser)data.getUser()).setCurrentReport(reportKey, null);
+            user.setCurrentReport(reportKey, null);
         }
 
         // remove the current module/issuetype list
-        String key = data.getParameters()
-            .getString(ScarabConstants.THREAD_QUERY_KEY);
         String removeMitKey = data.getParameters()
             .getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
-        if (key != null && key.length() > 0 && (removeMitKey != null 
-            || !xmitScreens.containsKey(data.getTarget())) )
+        if (removeMitKey != null 
+            || !xmitScreens.containsKey(data.getTarget()) )
         {
-            ((ScarabUser)data.getUser()).setCurrentMITList(null);
+            user.setThreadKey(null);
+            user.setCurrentMITList(null);
         }
 
         // should add the currently reporting issue here as well

@@ -98,15 +98,6 @@ public class ResetCacheValve
                 System.out.println(s);
             }
         }
-
-        // this only needs to be done at the beginning of the pipeline.  it 
-        // should go into its own valve.
-        String key = data.getParameters()
-            .getString(ScarabConstants.THREAD_QUERY_KEY);
-        if (key != null) 
-        {
-            ((ScarabUser)data.getUser()).setThreadKey(new Integer(key));
-        }
         
         // clear the short-term cache
         ScarabCache.clear();

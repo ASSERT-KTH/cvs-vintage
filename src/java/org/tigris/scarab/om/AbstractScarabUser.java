@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.30 2002/06/28 20:02:36 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.31 2002/06/28 22:00:38 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -815,16 +815,14 @@ public abstract class AbstractScarabUser
         // make sure user is not using up too many resources, set a 
         // reasonable limit of 10 open "threads"/browser windows.
         Integer testKey = new Integer(key.intValue()-10);
-        if (activeKeys.containsKey(testKey))
-        {
-            activeKeys.remove(testKey);
-            // remove any usage of testKey
-            if (getCurrentMITList(testKey) != null) 
-            {
-                mitListMap.remove(testKey);
-            }            
-        } 
+        invalidateKey(testKey);
         return key;
+    }
+
+    private void invalidateKey(Object key)
+    {
+        activeKeys.remove(key);
+        mitListMap.remove(key);
     }
 
     /**
@@ -840,7 +838,10 @@ public abstract class AbstractScarabUser
      */
     public void setThreadKey(Integer key)
     {  
-        threadKey.set(key);
+        if (activeKeys.containsKey(key)) 
+        {
+            threadKey.set(key);
+        }        
     }
 
     public MITList getCurrentMITList()
@@ -857,7 +858,14 @@ public abstract class AbstractScarabUser
      */
     public void setCurrentMITList(MITList list)
     {
-            setCurrentMITList(getGenThreadKey(), list);
+        if (list != null) 
+        {
+            setCurrentMITList(getGenThreadKey(), list);            
+        }
+        else if (getThreadKey() != null)
+        {
+            setCurrentMITList(getThreadKey(), list);            
+        }
     }
     private void setCurrentMITList(Object key, MITList list)
     {

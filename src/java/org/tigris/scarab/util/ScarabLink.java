@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.46 2002/06/28 20:02:36 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.47 2002/06/28 22:00:38 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -165,9 +165,8 @@ public class ScarabLink extends TemplateLink
         {
             addPathInfo(ScarabConstants.REPORTING_ISSUE, issueKey);
         }
-        String threadKey = data.getParameters()
-            .getString(ScarabConstants.THREAD_QUERY_KEY);
-        if (isSet(threadKey))
+        Object threadKey = ((ScarabUser)data.getUser()).getThreadKey();
+        if (threadKey != null)
         {
             addPathInfo(ScarabConstants.THREAD_QUERY_KEY, threadKey);
         }
