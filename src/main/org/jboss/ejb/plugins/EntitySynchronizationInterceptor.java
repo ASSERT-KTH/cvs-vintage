@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.32 $
+*   @version $Revision: 1.33 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -62,6 +62,11 @@ extends AbstractInterceptor
     *  The current commit option.
     */
     protected int commitOption;
+
+    /**
+     *  The refresh rate for commit option d
+     */
+    protected long optionDRefreshRate;
 
     /**
     *  The container of this interceptor.
@@ -95,14 +100,15 @@ extends AbstractInterceptor
 	try{
 
        validContexts = new HashSet();
-       commitOption = container.getBeanMetaData().getContainerConfiguration().getCommitOption();
+       ConfigurationMetaData configuration = container.getBeanMetaData().getContainerConfiguration();
+       commitOption = configuration.getCommitOption();
+       optionDRefreshRate = configuration.getOptionDRefreshRate();
 
 	   //start up the validContexts thread if commit option D
        if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION){
-	       ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts);
+	       ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts, optionDRefreshRate);
 	       new Thread(vcr).start();
-	   }
-
+       }
 
          isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
          if (!isModified.getReturnType().equals(Boolean.TYPE))
@@ -470,16 +476,10 @@ extends AbstractInterceptor
 class ValidContextsRefresher implements Runnable{
 	private HashSet validContexts;
 	private long refreshRate;
-	private final int THIRTY_SECS = 30000;
 
 	public ValidContextsRefresher(HashSet validContexts,long refreshRate){
 		this.validContexts = validContexts;
 		this.refreshRate = refreshRate;
-	}
-
-	public ValidContextsRefresher(HashSet validContexts){
-		this(validContexts, THIRTY_SECS);
-
 	}
 
 	public void run(){
