@@ -25,7 +25,6 @@ $page.setTitle("Enter issue")
   </tr>
   </table>
 </div>
-<p>
 
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
@@ -62,9 +61,12 @@ $page.setTitle("Enter issue")
 <form method="post" enctype="multipart/form-data" action="$link.setPage("entry,Wizard3.vm")"> 
 <input type="hidden" name="action" value="ReportIssue" />
 
-<p class="functnbar"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
+<p class="functnbar">
+<input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
+<input type="reset" value="Reset form" />&#160;
+<input type="reset" value="Cancel" />
+</p>
 	
-<p>
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
     <h3>$group.Name</h3>
@@ -167,7 +169,11 @@ $page.setTitle("Enter issue")
     </table>
 </div>
 
-<p class="functnbar2"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
+<p class="functnbar2">
+<input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
+<input type="reset" value="Reset form" />&#160;
+<input type="reset" value="Cancel" />
+</p>
 
 $intake.declareGroups()
 </form>
