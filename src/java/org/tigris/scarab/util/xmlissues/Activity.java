@@ -65,11 +65,18 @@ public class Activity implements java.io.Serializable
     private String newValue = null;
     private String description = null;
     private Attachment attachment = null;
+
+    private boolean isNewActivity = true;
     
     public Activity()
     {
     }
 
+    public boolean isNewActivity()
+    {
+        return isNewActivity;
+    }
+    
     public String getId()
     {
         return id;
@@ -93,6 +100,7 @@ public class Activity implements java.io.Serializable
     public void setOldNumericValue(String oldNumericValue)
     {
         this.oldNumericValue = oldNumericValue;
+        isNewActivity = false;
     }
 
     public String getOldNumericValue()
@@ -113,6 +121,7 @@ public class Activity implements java.io.Serializable
     public void setOldUser(String oldUser)
     {
         this.oldUser = oldUser;
+        isNewActivity = false;
     }
 
     public String getOldUser()
@@ -133,6 +142,7 @@ public class Activity implements java.io.Serializable
     public void setOldOption(String oldOption)
     {
         this.oldOption = oldOption;
+        isNewActivity = false;
     }
 
     public String getOldOption()
@@ -153,6 +163,7 @@ public class Activity implements java.io.Serializable
     public void setOldValue(String oldValue)
     {
         this.oldValue = oldValue;
+        isNewActivity = false;
     }
 
     public String getOldValue()
@@ -188,5 +199,10 @@ public class Activity implements java.io.Serializable
     public Attachment getAttachment()
     {
         return this.attachment;
+    }
+    
+    public String toString()
+    {
+        return ("Activity Id: " + id);
     }
 }
