@@ -24,12 +24,14 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.14 2003/04/29 19:25:07 kataka Exp $
+// $Id: FigTransition.java,v 1.15 2003/05/20 10:42:41 mkl Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Graphics;
+
 import java.beans.PropertyVetoException;
 
 import org.apache.log4j.Category;
@@ -52,13 +54,15 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 public class FigTransition extends FigEdgeModelElement {
     protected static Category cat = Category.getInstance(FigTransition.class);
 
+    private ArrowHeadGreater endArrow = new ArrowHeadGreater();
+
   ////////////////////////////////////////////////////////////////
   // constructors
   public FigTransition() {
     super();
     addPathItem(_name, new PathConvPercent(this, 50, 10));
     _fig.setLineColor(Color.black);
-    setDestArrowHead(new ArrowHeadGreater());
+    setDestArrowHead(endArrow);
   }
   
   public FigTransition(Object edge, Layer lay) {
@@ -146,7 +150,9 @@ public class FigTransition extends FigEdgeModelElement {
         return null;
     }
     
-    
+    public void paint(Graphics g) {
+        endArrow.setLineColor(getLineColor());
+        super.paint(g);
+    }
 
 } /* end class FigTransition */
-
