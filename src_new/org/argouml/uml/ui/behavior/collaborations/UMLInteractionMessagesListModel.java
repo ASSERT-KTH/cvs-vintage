@@ -1,4 +1,4 @@
-// $Id: UMLInteractionMessagesListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLInteractionMessagesListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLInteractionMessagesListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         removeAllElements();
-        Iterator it = ((MInteraction)getTarget()).getMessages().iterator();
+        Iterator it = ((MInteraction) getTarget()).getMessages().iterator();
         while (it.hasNext()) {
             addElement(it.next());
         }
@@ -63,7 +63,7 @@ public class UMLInteractionMessagesListModel extends UMLModelElementListModel2 {
      */
     protected boolean isValidElement(MBase elem) {
         return elem instanceof MMessage && 
-            ((MMessage)elem).getInteraction() == getTarget();
+            ((MMessage) elem).getInteraction() == getTarget();
     }
 
 }

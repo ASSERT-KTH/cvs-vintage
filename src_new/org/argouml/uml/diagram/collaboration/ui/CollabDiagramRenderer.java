@@ -1,3 +1,4 @@
+// $Id: CollabDiagramRenderer.java,v 1.8 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CollabDiagramRenderer.java
 // Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramRenderer.java,v 1.7 2003/05/29 10:37:06 mkl Exp $
+// $Id: CollabDiagramRenderer.java,v 1.8 2003/06/29 23:52:15 linus Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -41,38 +42,39 @@ import org.apache.log4j.Category;
 import org.argouml.uml.diagram.ui.*;
 
 public class CollabDiagramRenderer
-implements GraphNodeRenderer, GraphEdgeRenderer {
+    implements GraphNodeRenderer, GraphEdgeRenderer 
+{
     protected static Category cat = Category.getInstance(CollabDiagramRenderer.class);
 
-  /** Return a Fig that can be used to represent the given node */
-  public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
-    if (node instanceof MClassifierRole) return new FigClassifierRole(gm, lay, node);
-    if (node instanceof MMessage) return new FigMessage(gm, lay, node);
-    cat.debug("TODO CollabDiagramRenderer getFigNodeFor");
-    return null;
-  }
-
-  /** Return a Fig that can be used to represent the given edge */
-  /** Generally the same code as for the ClassDiagram, since its
-      very related to it. */
-  public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
-    if (edge instanceof MAssociationRole) {
-      FigAssociationRole asrFig = new FigAssociationRole(edge, lay);
-      return asrFig;
-    } else 
-    if (edge instanceof MGeneralization) {
-    	MGeneralization   gen    = (MGeneralization) edge;
-        FigGeneralization genFig = new FigGeneralization(gen, lay);
-        return genFig;
-    }
-    if (edge instanceof MDependency) {
-        MDependency dep = (MDependency) edge;
-        FigDependency depFig = new FigDependency(dep ,lay);
-        return depFig;
+    /** Return a Fig that can be used to represent the given node */
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
+	if (node instanceof MClassifierRole) return new FigClassifierRole(gm, lay, node);
+	if (node instanceof MMessage) return new FigMessage(gm, lay, node);
+	cat.debug("TODO CollabDiagramRenderer getFigNodeFor");
+	return null;
     }
 
-    cat.debug("TODO CollabDiagramRenderer getFigEdgeFor");
-    return null;
-  }
+    /** Return a Fig that can be used to represent the given edge */
+    /** Generally the same code as for the ClassDiagram, since its
+	very related to it. */
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
+	if (edge instanceof MAssociationRole) {
+	    FigAssociationRole asrFig = new FigAssociationRole(edge, lay);
+	    return asrFig;
+	} else 
+	    if (edge instanceof MGeneralization) {
+		MGeneralization   gen    = (MGeneralization) edge;
+		FigGeneralization genFig = new FigGeneralization(gen, lay);
+		return genFig;
+	    }
+	if (edge instanceof MDependency) {
+	    MDependency dep = (MDependency) edge;
+	    FigDependency depFig = new FigDependency(dep , lay);
+	    return depFig;
+	}
+
+	cat.debug("TODO CollabDiagramRenderer getFigEdgeFor");
+	return null;
+    }
 
 } /* end class CollabDiagramRenderer */

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationRepresentedClassifierListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLCollaborationRepresentedClassifierListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class UMLCollaborationRepresentedClassifierListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(((MCollaboration)getTarget()).getRepresentedClassifier());
+        addElement(((MCollaboration) getTarget()).getRepresentedClassifier());
     }
 
     /**
@@ -61,7 +61,7 @@ public class UMLCollaborationRepresentedClassifierListModel
      */
     protected boolean isValidElement(MBase elem) {         
         return elem instanceof MClassifier && 
-            ((MCollaboration)getTarget()).getRepresentedClassifier() == elem;
+            ((MCollaboration) getTarget()).getRepresentedClassifier() == elem;
     }
 
 }

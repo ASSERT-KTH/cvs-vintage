@@ -1,3 +1,4 @@
+// $Id: CrAssocNameConflict.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrAssocNameConflict.java
 // Classes: CrAssocNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAssocNameConflict.java,v 1.3 2002/10/20 21:11:14 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -43,27 +44,27 @@ import org.argouml.cognitive.critics.*;
 
 public class CrAssocNameConflict extends CrUML {
 
-  public CrAssocNameConflict() {
-    setHeadline("Resolve Assocaiation Name Conflict");
-    addSupportedDecision(CrUML.decNAMING);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-    // no good trigger
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MNamespace)) return NO_PROBLEM;
-    MNamespace ns = (MNamespace) dm;
-    Collection oes = ns.getOwnedElements();
-    if (oes == null) return NO_PROBLEM;
-    Vector namesSeen = new Vector();
-    Iterator enum = oes.iterator();
-    while (enum.hasNext()) {
-      MModelElement me = (MModelElement) enum.next();
-      if (!(me instanceof MAssociation)) continue;
-      // TODO: not implemented yet
+    public CrAssocNameConflict() {
+	setHeadline("Resolve Assocaiation Name Conflict");
+	addSupportedDecision(CrUML.decNAMING);
+	setKnowledgeTypes(Critic.KT_SYNTAX);
+	// no good trigger
     }
-    return NO_PROBLEM;
-  }
+
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MNamespace)) return NO_PROBLEM;
+	MNamespace ns = (MNamespace) dm;
+	Collection oes = ns.getOwnedElements();
+	if (oes == null) return NO_PROBLEM;
+	Vector namesSeen = new Vector();
+	Iterator enum = oes.iterator();
+	while (enum.hasNext()) {
+	    MModelElement me = (MModelElement) enum.next();
+	    if (!(me instanceof MAssociation)) continue;
+	    // TODO: not implemented yet
+	}
+	return NO_PROBLEM;
+    }
 
 } /* end class CrAssocNameConflict.java */
 

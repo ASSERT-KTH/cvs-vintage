@@ -1,3 +1,4 @@
+// $Id: SelectionEdgeClarifiers.java,v 1.2 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: SelectionEdgeClarifiers.java
 // Classes: SelectionEdgeClarifiers
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionEdgeClarifiers.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: SelectionEdgeClarifiers.java,v 1.2 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -36,18 +37,18 @@ import org.tigris.gef.presentation.*;
 
 public class SelectionEdgeClarifiers extends SelectionReshape {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
+    ////////////////////////////////////////////////////////////////
+    // constructors
 
-  /** Construct a new SelectionEdgeClarifiers for the given Fig */
-  public SelectionEdgeClarifiers(Fig f) { super(f); }
+    /** Construct a new SelectionEdgeClarifiers for the given Fig */
+    public SelectionEdgeClarifiers(Fig f) { super(f); }
 
-  /** Paint the handles at the four corners and midway along each edge
-   * of the bounding box.  */
-  public void paint(Graphics g) {
-    ((FigEdgeModelElement)_content).paintClarifiers(g);
-    super.paint(g);
-  }  
+    /** Paint the handles at the four corners and midway along each edge
+     * of the bounding box.  */
+    public void paint(Graphics g) {
+	((FigEdgeModelElement) _content).paintClarifiers(g);
+	super.paint(g);
+    }  
   
 } /* end class SelectionEdgeClarifiers */
 

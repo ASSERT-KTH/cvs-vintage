@@ -1,3 +1,4 @@
+// $Id: ClassifierContext.java,v 1.7 2003/06/29 23:53:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ClassifierContext.java,v 1.6 2003/02/03 19:02:35 thn Exp $
+// $Id: ClassifierContext.java,v 1.7 2003/06/29 23:53:01 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -56,12 +57,12 @@ class ClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Check if it is this interface
-	if(name.equals(ModelFacade.getName(mClassifier)) && ModelFacade.isAInterface(mClassifier)) {
+	if (name.equals(ModelFacade.getName(mClassifier)) && ModelFacade.isAInterface(mClassifier)) {
 	    return mClassifier;
 	}
 	else {
 	    // Continue the search through the rest of the model
-	    if(context != null) {
+	    if (context != null) {
 		return context.getInterface(name);
 	    }
 	    else {
@@ -80,12 +81,12 @@ class ClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Check if it is this classifier
-	if(classifierName.equals(ModelFacade.getName(mClassifier))) {
+	if (classifierName.equals(ModelFacade.getName(mClassifier))) {
 	    return mClassifier;
 	}
 	else {
 	    // Continue the search through the rest of the model
-	    if(context != null) {
+	    if (context != null) {
 		return context.get(classifierName);
 	    }
 	    else {

@@ -1,3 +1,4 @@
+// $Id: CrUnnavigableAssoc.java,v 1.3 2003/06/29 23:52:59 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.3 2003/06/29 23:52:59 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -43,27 +44,27 @@ import org.argouml.cognitive.*;
 
 public class CrUnnavigableAssoc extends CrUML {
 
-  public CrUnnavigableAssoc() {
-    setHeadline("Make <ocl>self</ocl> Navigable");
+    public CrUnnavigableAssoc() {
+	setHeadline("Make <ocl>self</ocl> Navigable");
 
-    addSupportedDecision(CrUML.decRELATIONSHIPS);
-    addTrigger("end_navigable");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MAssociation)) return NO_PROBLEM;
-    MAssociation asc = (MAssociation) dm;
-    Collection conn = asc.getConnections();
-    if (asc instanceof MAssociationRole)
-      conn = ((MAssociationRole)asc).getConnections();
-    for (Iterator iter = conn.iterator(); iter.hasNext();) {
-      MAssociationEnd ae = (MAssociationEnd) iter.next();
-      if (ae.isNavigable()) return NO_PROBLEM;
+	addSupportedDecision(CrUML.decRELATIONSHIPS);
+	addTrigger("end_navigable");
     }
-    return PROBLEM_FOUND;
-  }
 
-  public Class getWizardClass(ToDoItem item) { return WizNavigable.class; }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MAssociation)) return NO_PROBLEM;
+	MAssociation asc = (MAssociation) dm;
+	Collection conn = asc.getConnections();
+	if (asc instanceof MAssociationRole)
+	    conn = ((MAssociationRole) asc).getConnections();
+	for (Iterator iter = conn.iterator(); iter.hasNext();) {
+	    MAssociationEnd ae = (MAssociationEnd) iter.next();
+	    if (ae.isNavigable()) return NO_PROBLEM;
+	}
+	return PROBLEM_FOUND;
+    }
+
+    public Class getWizardClass(ToDoItem item) { return WizNavigable.class; }
 
 } /* end class CrUnnavigableAssoc */
 

@@ -1,3 +1,4 @@
+// $Id: UMLTreeCellRenderer.java,v 1.21 2003/06/29 23:50:04 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +85,7 @@ public class UMLTreeCellRenderer extends DefaultTreeCellRenderer {
                 _hasFocus);
 
         if (r instanceof JLabel) {
-            JLabel lab = (JLabel)r;
+            JLabel lab = (JLabel) r;
             Icon icon =
                 ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(
                     value);

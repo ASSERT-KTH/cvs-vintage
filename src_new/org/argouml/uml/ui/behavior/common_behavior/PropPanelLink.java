@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.21 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.22 2003/06/29 23:50:11 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.21 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.22 2003/06/29 23:50:11 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -49,8 +49,8 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 public class PropPanelLink extends PropPanelModelElement {
 
 
-  ////////////////////////////////////////////////////////////////
-  // contructors
+    ////////////////////////////////////////////////////////////////
+    // contructors
     public PropPanelLink() {
         super("Link Properties", _linkIcon, ConfigLoader.getTabPropsOrientation());
 
@@ -59,16 +59,16 @@ public class PropPanelLink extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
-        new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
+        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete object"), "removeElement", null);
     }
 
-     public void navigateNamespace() {
+    public void navigateNamespace() {
         Object target = getTarget();
-        if(target instanceof MModelElement) {
+        if (target instanceof MModelElement) {
             MModelElement elem = (MModelElement) target;
             MNamespace ns = elem.getNamespace();
-            if(ns != null) {
+            if (ns != null) {
                 TargetManager.getInstance().setTarget(ns);
             }
         }
@@ -79,7 +79,7 @@ public class PropPanelLink extends PropPanelModelElement {
 	MModelElement newTarget = (MModelElement) target.getNamespace();
 
         UmlFactory.getFactory().delete(target);
-	if(newTarget != null) TargetManager.getInstance().setTarget(newTarget);
+	if (newTarget != null) TargetManager.getInstance().setTarget(newTarget);
     }
 } /* end class PropPanelLink */
 

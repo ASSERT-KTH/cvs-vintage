@@ -1,3 +1,4 @@
+// $Id: CrZeroLengthEdge.java,v 1.6 2003/06/29 23:53:43 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.5 2003/05/31 03:52:01 mkl Exp $
+// $Id: CrZeroLengthEdge.java,v 1.6 2003/06/29 23:53:43 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -36,30 +37,30 @@ import org.tigris.gef.presentation.FigEdge;
  *  improve the layout of the diagram.
  */
 public class CrZeroLengthEdge extends CrUML {
-  ////////////////////////////////////////////////////////////////
-  // constants
-  public static int THRESHOLD = 20;
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static int THRESHOLD = 20;
   
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CrZeroLengthEdge() {
-    // TODO: {name} is not expanded for diagram objects
-    setHeadline("Make Edge More Visible");
-    addSupportedDecision(CrUML.decRELATIONSHIPS);
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    setKnowledgeTypes(Critic.KT_PRESENTATION);    
-  }
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CrZeroLengthEdge() {
+	// TODO: {name} is not expanded for diagram objects
+	setHeadline("Make Edge More Visible");
+	addSupportedDecision(CrUML.decRELATIONSHIPS);
+	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	setKnowledgeTypes(Critic.KT_PRESENTATION);    
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // critiquing API
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof FigEdge)) return NO_PROBLEM;
-    FigEdge fe = (FigEdge) dm;
-    int length = fe.getPerimeterLength();
-    if (length > THRESHOLD) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof FigEdge)) return NO_PROBLEM;
+	FigEdge fe = (FigEdge) dm;
+	int length = fe.getPerimeterLength();
+	if (length > THRESHOLD) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
 
 
 } /* end class CrZeroLengthEdge */

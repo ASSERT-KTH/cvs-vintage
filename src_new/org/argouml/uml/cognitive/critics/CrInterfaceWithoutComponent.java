@@ -1,3 +1,4 @@
+// $Id: CrInterfaceWithoutComponent.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrInterfaceWithoutComponent.java
 // Classes: CrInterfaceWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrInterfaceWithoutComponent.java,v 1.3 2002/08/19 08:41:39 kataka Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,59 +46,59 @@ import org.argouml.uml.diagram.deployment.ui.*;
 
 public class CrInterfaceWithoutComponent extends CrUML {
 
-  public CrInterfaceWithoutComponent() {
-    setHeadline("Interfaces normally are inside components");
-    addSupportedDecision(CrUML.decPATTERNS);
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
-    UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
-    VectorSet offs = computeOffenders(dd);
-    if (offs == null) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
-
-  public ToDoItem toDoItem(Object dm, Designer dsgr) {
-    UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
-    VectorSet offs = computeOffenders(dd);
-    return new ToDoItem(this, offs, dsgr);
-  }
-
-  public boolean stillValid(ToDoItem i, Designer dsgr) {
-    if (!isActive()) return false;
-    VectorSet offs = i.getOffenders();
-    UMLDeploymentDiagram dd = (UMLDeploymentDiagram) offs.firstElement();
-    //if (!predicate(dm, dsgr)) return false;
-    VectorSet newOffs = computeOffenders(dd);
-    boolean res = offs.equals(newOffs);
-    return res;
-  }
-
-  /**
-   * If there are interfaces that are not inside a component
-   * the returned vector-set is not null. Then in the vector-set
-   * are the UMLDeploymentDiagram and all FigInterfaces with no
-   * enclosing FigComponent
-   **/
-  public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
-    Vector figs = dd.getLayer().getContents();
-    VectorSet offs = null;
-    int size = figs.size();
-    for (int i=0; i<size; i++) {
-      Object obj = figs.elementAt(i);
-      if (!(obj instanceof FigInterface)) continue;
-      FigInterface fi = (FigInterface) obj;
-      if (fi.getEnclosingFig() == null || (!(fi.getEnclosingFig().getOwner() instanceof MComponent))) {
-        if (offs == null) {
-          offs = new VectorSet();
-          offs.addElement(dd);
-        }
-        offs.addElement(fi);
-      }
+    public CrInterfaceWithoutComponent() {
+	setHeadline("Interfaces normally are inside components");
+	addSupportedDecision(CrUML.decPATTERNS);
     }
-    return offs;
-  } 
+
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
+	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
+	VectorSet offs = computeOffenders(dd);
+	if (offs == null) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
+
+    public ToDoItem toDoItem(Object dm, Designer dsgr) {
+	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
+	VectorSet offs = computeOffenders(dd);
+	return new ToDoItem(this, offs, dsgr);
+    }
+
+    public boolean stillValid(ToDoItem i, Designer dsgr) {
+	if (!isActive()) return false;
+	VectorSet offs = i.getOffenders();
+	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) offs.firstElement();
+	//if (!predicate(dm, dsgr)) return false;
+	VectorSet newOffs = computeOffenders(dd);
+	boolean res = offs.equals(newOffs);
+	return res;
+    }
+
+    /**
+     * If there are interfaces that are not inside a component
+     * the returned vector-set is not null. Then in the vector-set
+     * are the UMLDeploymentDiagram and all FigInterfaces with no
+     * enclosing FigComponent
+     **/
+    public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
+	Vector figs = dd.getLayer().getContents();
+	VectorSet offs = null;
+	int size = figs.size();
+	for (int i = 0; i < size; i++) {
+	    Object obj = figs.elementAt(i);
+	    if (!(obj instanceof FigInterface)) continue;
+	    FigInterface fi = (FigInterface) obj;
+	    if (fi.getEnclosingFig() == null || (!(fi.getEnclosingFig().getOwner() instanceof MComponent))) {
+		if (offs == null) {
+		    offs = new VectorSet();
+		    offs.addElement(dd);
+		}
+		offs.addElement(fi);
+	    }
+	}
+	return offs;
+    } 
 
 } /* end class CrInterfaceWithoutComponent.java */
 

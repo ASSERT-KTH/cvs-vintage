@@ -1,3 +1,4 @@
+// $Id: CrTooManyClasses.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.3 2002/10/20 21:11:15 linus Exp $
+// $Id: CrTooManyClasses.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,30 +43,30 @@ import org.argouml.uml.diagram.static_structure.ui.*;
 
 public class CrTooManyClasses extends CrUML {
 
-  ////////////////////////////////////////////////////////////////
-  // constants
-  public static String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CrTooManyClasses() {
-    // TODO: <ocl>self.name</ocl> is not expanded for diagram objects
-    setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decCLASS_SELECTION);
-    setArg(THRESHOLD, new Integer(20));
-  }
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CrTooManyClasses() {
+	// TODO: <ocl>self.name</ocl> is not expanded for diagram objects
+	setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decCLASS_SELECTION);
+	setArg(THRESHOLD, new Integer(20));
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // critiquing API
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof UMLClassDiagram)) return NO_PROBLEM;
-    UMLClassDiagram d = (UMLClassDiagram) dm;
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof UMLClassDiagram)) return NO_PROBLEM;
+	UMLClassDiagram d = (UMLClassDiagram) dm;
 
-    int threshold = ((Integer)getArg(THRESHOLD)).intValue();
-    Vector nodes = d.getGraphModel().getNodes();
-    if (nodes.size() <= threshold) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
+	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	Vector nodes = d.getGraphModel().getNodes();
+	if (nodes.size() <= threshold) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
 
 } /* end class CrTooManyClasses */
 

@@ -1,3 +1,4 @@
+// $Id: UMLButtonGroup.java,v 1.4 2003/06/29 23:50:03 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +53,8 @@ public abstract class UMLButtonGroup
     /**
      * This map contains the radiobuttons as key and the action that should
      * be performed when the button is pressed as value. We don't use 
-     * the functionallity provided by JDK 1.3 to link an action to a button.     */
+     * the functionallity provided by JDK 1.3 to link an action to a button.
+     */
     private Map _actions = new HashMap();
     
     private Object _target = null;
@@ -151,7 +153,7 @@ public abstract class UMLButtonGroup
      */
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        Action action = (Action)_actions.get(o);
+        Action action = (Action) _actions.get(o);
         if (action != null) {
             // e.setSource(this);
             action.actionPerformed(e);

@@ -1,3 +1,4 @@
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.3 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.2 2003/02/09 14:18:43 kataka Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.3 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.uml.ui.ActionSetMultiplicity;
@@ -53,10 +54,10 @@ public class ActionSetStructuralFeatureMultiplicity
     public void setSelectedItem(Object item, Object target) {
         if (target != null && target instanceof MStructuralFeature) {
             if (item instanceof MMultiplicity) {
-                ((MStructuralFeature)target).setMultiplicity(
-                    (MMultiplicity)item);
+                ((MStructuralFeature) target).setMultiplicity(
+                    (MMultiplicity) item);
             } else
-                 ((MStructuralFeature)target).setMultiplicity(null);
+                 ((MStructuralFeature) target).setMultiplicity(null);
 
         }
     }

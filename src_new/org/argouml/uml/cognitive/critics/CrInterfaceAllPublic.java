@@ -1,3 +1,4 @@
+// $Id: CrInterfaceAllPublic.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrInterfaceAllPublic.java
 // Classes: CrInterfaceAllPublic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,27 +45,27 @@ import org.argouml.cognitive.critics.*;
 
 public class CrInterfaceAllPublic extends CrUML {
 
-  public CrInterfaceAllPublic() {
-    setHeadline("Operations in Interfaces must be public");
-    addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-    addTrigger("behavioralFeature");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MInterface)) return NO_PROBLEM;
-    MInterface inf = (MInterface) dm;
-    Collection bf = inf.getFeatures();
-    if (bf == null) return NO_PROBLEM;
-    Iterator enum = bf.iterator();
-    while (enum.hasNext()) {
-      MFeature f = (MFeature) enum.next();
-	  if (f.getVisibility() == null) return NO_PROBLEM;
-      if (!f.getVisibility().equals(MVisibilityKind.PUBLIC))
-	return PROBLEM_FOUND;
+    public CrInterfaceAllPublic() {
+	setHeadline("Operations in Interfaces must be public");
+	addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+	setKnowledgeTypes(Critic.KT_SYNTAX);
+	addTrigger("behavioralFeature");
     }
-    return NO_PROBLEM;
-  }
+
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MInterface)) return NO_PROBLEM;
+	MInterface inf = (MInterface) dm;
+	Collection bf = inf.getFeatures();
+	if (bf == null) return NO_PROBLEM;
+	Iterator enum = bf.iterator();
+	while (enum.hasNext()) {
+	    MFeature f = (MFeature) enum.next();
+	    if (f.getVisibility() == null) return NO_PROBLEM;
+	    if (!f.getVisibility().equals(MVisibilityKind.PUBLIC))
+		return PROBLEM_FOUND;
+	}
+	return NO_PROBLEM;
+    }
 
 } /* end class CrInterfaceAllPublic.java */
 

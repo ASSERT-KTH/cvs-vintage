@@ -1,3 +1,4 @@
+// $Id: GoUseCaseToExtensionPoint.java,v 1.11 2003/06/29 23:52:22 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.10 2003/04/15 00:17:27 alexb Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.11 2003/06/29 23:52:22 linus Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -65,7 +66,7 @@ public class GoUseCaseToExtensionPoint extends AbstractGoRule {
 
     public Collection getChildren(Object parent) { 
         if (parent instanceof MUseCase) {
-            return ((MUseCase)parent).getExtensionPoints();
+            return ((MUseCase) parent).getExtensionPoints();
         }
         return null;
     }

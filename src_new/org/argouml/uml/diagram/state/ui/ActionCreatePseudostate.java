@@ -1,3 +1,4 @@
+// $Id: ActionCreatePseudostate.java,v 1.6 2003/06/29 23:52:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: ActionCreatePseudostate.java
 // Classes: ActionCreatePseudostate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ActionCreatePseudostate.java,v 1.5 2002/12/15 17:51:34 kataka Exp $
+// $Id: ActionCreatePseudostate.java,v 1.6 2003/06/29 23:52:18 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -40,30 +41,30 @@ import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 public class ActionCreatePseudostate extends CmdCreateNode {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
+    ////////////////////////////////////////////////////////////////
+    // constructors
 
-  /** Construct a new Cmd with the given classes for the NetNode
-   *  and its FigNode. */
-  public ActionCreatePseudostate(MPseudostateKind kind, String name) {
-    super(new Hashtable(), name);
-    setArg("className", MPseudostate.class);
+    /** Construct a new Cmd with the given classes for the NetNode
+     *  and its FigNode. */
+    public ActionCreatePseudostate(MPseudostateKind kind, String name) {
+	super(new Hashtable(), name);
+	setArg("className", MPseudostate.class);
 	//??? don't know, Toby, nsuml
-    setArg("kind", kind);
-  }
+	setArg("kind", kind);
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // Cmd API
+    ////////////////////////////////////////////////////////////////
+    // Cmd API
 
-  /** Actually instanciate the NetNode and FigNode objects and
-   * set the global next mode to ModePlace */
-  // TODO: should call super, reduce code volume!
-  public Object makeNode() {
-    Object newNode = super.makeNode();
-    MPseudostateKind kind = (MPseudostateKind) _args.get("kind");
-    ((MPseudostate)newNode).setKind(kind);
+    /** Actually instanciate the NetNode and FigNode objects and
+     * set the global next mode to ModePlace */
+    // TODO: should call super, reduce code volume!
+    public Object makeNode() {
+	Object newNode = super.makeNode();
+	MPseudostateKind kind = (MPseudostateKind) _args.get("kind");
+	((MPseudostate) newNode).setKind(kind);
     
-    return newNode;
-  }
+	return newNode;
+    }
 
 } /* end class ActionCreatePseudostate */

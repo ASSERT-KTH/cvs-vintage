@@ -1,4 +1,5 @@
-// Copyright (c) 1996-03 The Regents of the University of California. All
+// $Id: FigSubsystem.java,v 1.3 2003/06/29 23:52:19 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: FigSubsystem.java,v 1.2 2003/05/30 07:25:34 mkl Exp $
+// $Id: FigSubsystem.java,v 1.3 2003/06/29 23:52:19 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -76,8 +77,12 @@ public class FigSubsystem extends FigPackage {
     public FigSubsystem() {
         super();
         _figPoly = new FigPoly(Color.black, Color.black);
-        int[] xpoints = { 125, 125, 130, 130, 130, 135, 135 };
-        int[] ypoints = {  45,  40,  40,  35,  40,  40,  45 };
+        int[] xpoints = {
+	    125, 125, 130, 130, 130, 135, 135 
+	};
+        int[] ypoints = {
+	    45,  40,  40,  35,  40,  40,  45 
+	};
         Polygon polygon = new Polygon(xpoints, ypoints, 7);
         _figPoly.setPolygon(polygon);
         _figPoly.setFilled(false);

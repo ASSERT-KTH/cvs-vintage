@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.13 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelInclude.java,v 1.14 2003/06/29 23:50:15 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class PropPanelInclude extends PropPanelModelElement {
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"),
-            new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
+            new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
 
         addSeperator();
@@ -153,7 +153,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use setAddition() rather
         // than setBase() to set the base use case.
 
-        if(target instanceof MInclude) {
+        if (target instanceof MInclude) {
             ((MInclude) target).setAddition((MUseCase) base);
         }
     }
@@ -211,7 +211,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use setBase() rather
         // than setAddition() to set the addition use case.
 
-        if(target instanceof MInclude) {
+        if (target instanceof MInclude) {
             ((MInclude) target).setBase((MUseCase) addition);
         }
     }

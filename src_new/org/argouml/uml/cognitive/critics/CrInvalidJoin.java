@@ -1,3 +1,4 @@
+// $Id: CrInvalidJoin.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrInvalidJoin.java
 // Classes: CrInvalidJoin
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidJoin.java,v 1.3 2003/06/23 12:31:21 mkl Exp $
+// $Id: CrInvalidJoin.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -40,27 +41,27 @@ import org.argouml.cognitive.*;
 
 public class CrInvalidJoin extends CrUML {
 
-  public CrInvalidJoin() {
-    setHeadline("Change Join Transitions");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    addTrigger("outgoing");
-  }
+    public CrInvalidJoin() {
+	setHeadline("Change Join Transitions");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addTrigger("outgoing");
+    }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(ModelFacade.isAPseudostate(dm))) return NO_PROBLEM;
-    Object k = ModelFacade.getPseudostateKind(dm);
-    if (!ModelFacade.
-        equalsPseudostateKind(k,
-                              ModelFacade.FORK_PSEUDOSTATEKIND))
-        return NO_PROBLEM;
-    Collection outgoing = ModelFacade.getOutgoings(dm);
-    Collection incoming = ModelFacade.getIncomings(dm);
-    int nOutgoing = outgoing == null ? 0 : outgoing.size();
-    int nIncoming = incoming == null ? 0 : incoming.size();
-    if (nOutgoing > 1) return PROBLEM_FOUND;
-    if (nIncoming == 1) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(ModelFacade.isAPseudostate(dm))) return NO_PROBLEM;
+	Object k = ModelFacade.getPseudostateKind(dm);
+	if (!ModelFacade.
+	    equalsPseudostateKind(k,
+				  ModelFacade.FORK_PSEUDOSTATEKIND))
+	    return NO_PROBLEM;
+	Collection outgoing = ModelFacade.getOutgoings(dm);
+	Collection incoming = ModelFacade.getIncomings(dm);
+	int nOutgoing = outgoing == null ? 0 : outgoing.size();
+	int nIncoming = incoming == null ? 0 : incoming.size();
+	if (nOutgoing > 1) return PROBLEM_FOUND;
+	if (nIncoming == 1) return PROBLEM_FOUND;
+	return NO_PROBLEM;
+    }
 
 } /* end class CrInvalidJoin */
 

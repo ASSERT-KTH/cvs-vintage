@@ -1,3 +1,4 @@
+// $Id: CrNoInitialState.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrNoInitialState.java
 // Classes: CrNoInitialState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInitialState.java,v 1.3 2003/01/06 09:43:32 mkl Exp $
+// $Id: CrNoInitialState.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,32 +43,32 @@ import org.argouml.cognitive.*;
 
 public class CrNoInitialState extends CrUML {
 
-  public CrNoInitialState() {
-    setHeadline("Place an Initial MState");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    addTrigger("substate");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MCompositeState)) return NO_PROBLEM;
-    MCompositeState cs = (MCompositeState) dm;
-    
-    // if this composite state is not attached to a statemachine
-    // it is not the toplevel composite state.
-    if (cs.getStateMachine() == null) return NO_PROBLEM;
-    Collection peers = cs.getSubvertices();
-    int initialStateCount = 0;
-    if (peers == null) return PROBLEM_FOUND;
-    int size = peers.size();
-    for (Iterator iter = peers.iterator(); iter.hasNext();) {
-      Object sv = iter.next();
-      if (sv instanceof MPseudostate &&
-	  (MPseudostateKind.INITIAL.equals(((MPseudostate)sv).getKind())))
-	initialStateCount++;
+    public CrNoInitialState() {
+	setHeadline("Place an Initial MState");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addTrigger("substate");
     }
-    if (initialStateCount == 0) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MCompositeState)) return NO_PROBLEM;
+	MCompositeState cs = (MCompositeState) dm;
+    
+	// if this composite state is not attached to a statemachine
+	// it is not the toplevel composite state.
+	if (cs.getStateMachine() == null) return NO_PROBLEM;
+	Collection peers = cs.getSubvertices();
+	int initialStateCount = 0;
+	if (peers == null) return PROBLEM_FOUND;
+	int size = peers.size();
+	for (Iterator iter = peers.iterator(); iter.hasNext();) {
+	    Object sv = iter.next();
+	    if (sv instanceof MPseudostate &&
+		(MPseudostateKind.INITIAL.equals(((MPseudostate) sv).getKind())))
+		initialStateCount++;
+	}
+	if (initialStateCount == 0) return PROBLEM_FOUND;
+	return NO_PROBLEM;
+    }
 
 } /* end class CrNoInitialState */
 

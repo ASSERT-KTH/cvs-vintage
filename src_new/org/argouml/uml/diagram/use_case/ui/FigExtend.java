@@ -1,3 +1,4 @@
+// $Id: FigExtend.java,v 1.10 2003/06/29 23:52:22 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.9 2003/05/20 10:37:43 mkl Exp $
+// $Id: FigExtend.java,v 1.10 2003/06/29 23:52:22 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.

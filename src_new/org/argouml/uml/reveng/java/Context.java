@@ -1,3 +1,4 @@
+// $Id: Context.java,v 1.8 2003/06/29 23:53:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: Context.java,v 1.7 2003/02/03 19:02:35 thn Exp $
+// $Id: Context.java,v 1.8 2003/06/29 23:53:01 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -77,10 +78,10 @@ abstract class Context
     protected String getJavaName(Object mPackage)
     {
 	Object parent = ModelFacade.getNamespace(mPackage);
-	if(ModelFacade.isAModel(parent)) {
+	if (ModelFacade.isAModel(parent)) {
 	    return ModelFacade.getName(mPackage);
 	}
-	else if(parent != null) {
+	else if (parent != null) {
 	    return getJavaName(parent) + "." + ModelFacade.getName(mPackage);
 	}
 	else {

@@ -1,3 +1,4 @@
+// $Id: ActionNewTransition.java,v 1.2 2003/06/29 23:50:12 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +40,8 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
     
     /**
      * Key used for storing the source of the transition. If this value is not set,
-     * the action assumes that an internal transition should be constructed.     */
+     * the action assumes that an internal transition should be constructed.
+     */
     public final static String SOURCE = "source";
     
      /**

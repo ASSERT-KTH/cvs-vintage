@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.4 2003/01/23 05:50:47 linus Exp $
+// $Id: CrNavFromInterface.java,v 1.5 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,8 +121,8 @@ public class CrNavFromInterface extends CrUML {
 
         Iterator enum = ModelFacade.getConnections(dm);
 
-        boolean haveInterfaceEnd  = false ;  // End at an Interface?
-        boolean otherEndNavigable = false ;  // Navigable other end?
+        boolean haveInterfaceEnd  = false;  // End at an Interface?
+        boolean otherEndNavigable = false;  // Navigable other end?
 
         while (enum.hasNext()) {
 

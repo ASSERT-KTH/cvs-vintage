@@ -1,3 +1,4 @@
+// $Id: ActionAddPackage.java,v 1.3 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +61,7 @@ public class ActionAddPackage  extends UMLAction {
     public void actionPerformed(ActionEvent e) {
         
         ProjectBrowser pb = ProjectBrowser.getInstance();
-        MNamespace namespace = (MNamespace)pb.getNavigatorPane().getSelectedObject();
+        MNamespace namespace = (MNamespace) pb.getNavigatorPane().getSelectedObject();
         namespace.addOwnedElement(
             UmlFactory.getFactory().getModelManagement().createPackage());
     }

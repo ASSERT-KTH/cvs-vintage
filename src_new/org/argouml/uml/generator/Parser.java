@@ -1,3 +1,4 @@
+// $Id: Parser.java,v 1.11 2003/06/29 23:48:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.10 2003/06/20 06:44:33 kataka Exp $
+// $Id: Parser.java,v 1.11 2003/06/29 23:48:33 linus Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -50,34 +51,34 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 
 public abstract class Parser {
 
-  public abstract MExtensionPoint parseExtensionPoint(String s);
-  public abstract void parseOperation(String s, MOperation op) throws ParseException;
-  public abstract void parseAttribute(String s, MAttribute attr) throws ParseException;
-  public abstract MParameter parseParameter(String s);
-//   public abstract Package parsePackage(String s);
-//   public abstract MClassImpl parseClassifier(String s);
-  public abstract MStereotype parseStereotype(String s);
-  public abstract MTaggedValue parseTaggedValue(String s);
-//   public abstract MAssociation parseAssociation(String s);
-//   public abstract MAssociationEnd parseAssociationEnd(String s);
-  public abstract ru.novosoft.uml.foundation.data_types.MMultiplicity parseMultiplicity(String s);
-  public abstract MState parseState(String s);
-  public abstract MTransition parseTransition(MTransition trans, String s);
-  public abstract Object parseAction(String s);
-  public abstract MGuard parseGuard(String s);
-  public abstract MEvent parseEvent(String s);
+    public abstract MExtensionPoint parseExtensionPoint(String s);
+    public abstract void parseOperation(String s, MOperation op) throws ParseException;
+    public abstract void parseAttribute(String s, MAttribute attr) throws ParseException;
+    public abstract MParameter parseParameter(String s);
+    //   public abstract Package parsePackage(String s);
+    //   public abstract MClassImpl parseClassifier(String s);
+    public abstract MStereotype parseStereotype(String s);
+    public abstract MTaggedValue parseTaggedValue(String s);
+    //   public abstract MAssociation parseAssociation(String s);
+    //   public abstract MAssociationEnd parseAssociationEnd(String s);
+    public abstract ru.novosoft.uml.foundation.data_types.MMultiplicity parseMultiplicity(String s);
+    public abstract MState parseState(String s);
+    public abstract MTransition parseTransition(MTransition trans, String s);
+    public abstract Object parseAction(String s);
+    public abstract MGuard parseGuard(String s);
+    public abstract MEvent parseEvent(String s);
 
 
-  public MExpression parseExpression(String s) {
-    return UmlFactory.getFactory().getDataTypes().createExpression("Java", s);
-  }
+    public MExpression parseExpression(String s) {
+	return UmlFactory.getFactory().getDataTypes().createExpression("Java", s);
+    }
 
-  public String parseName(String s) {
-    return new String(s);
-  }
+    public String parseName(String s) {
+	return new String(s);
+    }
 
-  public String parseUninterpreted(String s) {
-    return new String(s);
-  }
+    public String parseUninterpreted(String s) {
+	return new String(s);
+    }
 
 } /* end class Parser */

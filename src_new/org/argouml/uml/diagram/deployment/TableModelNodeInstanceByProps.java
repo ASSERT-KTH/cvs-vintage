@@ -1,3 +1,4 @@
+// $Id: TableModelNodeInstanceByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: TableModelNodeInstanceByProps.java
 // Classes: TableModelNodeInstanceByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelNodeInstanceByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
+// $Id: TableModelNodeInstanceByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -39,29 +40,29 @@ import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 
 public class TableModelNodeInstanceByProps extends TableModelComposite {
-  ////////////////
-  // constructor
-  public TableModelNodeInstanceByProps() { }
+    ////////////////
+    // constructor
+    public TableModelNodeInstanceByProps() { }
 
-  public void initColumns() {
-    addColumn(ColumnDescriptor.Name);
-    addColumn(ColumnDescriptor.BaseForNodeInstance); 
-    addColumn(ColumnDescriptor.MStereotype);
-  }
-
-  public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram)) return new Vector();
-    UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
-    Vector nodes = d.getNodes();
-    Vector res = new Vector();
-    int size = nodes.size();
-    for (int i = 0; i < size; i++) {
-      Object node = nodes.elementAt(i);
-      if (node instanceof MNodeInstance) res.addElement(node);
+    public void initColumns() {
+	addColumn(ColumnDescriptor.Name);
+	addColumn(ColumnDescriptor.BaseForNodeInstance); 
+	addColumn(ColumnDescriptor.MStereotype);
     }
-    return res;
-  }
 
-  public String toString() { return "Node-instances vs. Properties"; }
+    public Vector rowObjectsFor(Object t) {
+	if (!(t instanceof UMLDeploymentDiagram)) return new Vector();
+	UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
+	Vector nodes = d.getNodes();
+	Vector res = new Vector();
+	int size = nodes.size();
+	for (int i = 0; i < size; i++) {
+	    Object node = nodes.elementAt(i);
+	    if (node instanceof MNodeInstance) res.addElement(node);
+	}
+	return res;
+    }
+
+    public String toString() { return "Node-instances vs. Properties"; }
 } /* end class TableModelNodeByProps */
 

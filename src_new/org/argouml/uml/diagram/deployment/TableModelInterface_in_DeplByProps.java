@@ -1,3 +1,4 @@
+// $Id: TableModelInterface_in_DeplByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: TableModelInterface_in_DeplByProps.java
 // Classes: TableModelInterface_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelInterface_in_DeplByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
+// $Id: TableModelInterface_in_DeplByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -38,47 +39,47 @@ import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.*;
 
 public class TableModelInterface_in_DeplByProps extends TableModelComposite {
-  ////////////////
-  // constructor
-  public TableModelInterface_in_DeplByProps() { }
+    ////////////////
+    // constructor
+    public TableModelInterface_in_DeplByProps() { }
 
-  public void initColumns() {
-    addColumn(ColumnDescriptor.Name);
-    addColumn(ColumnDescriptor.ImplLocation);
-    addColumn(ColumnDescriptor.ClassVisibility);
-    addColumn(ColumnDescriptor.Extends);
+    public void initColumns() {
+	addColumn(ColumnDescriptor.Name);
+	addColumn(ColumnDescriptor.ImplLocation);
+	addColumn(ColumnDescriptor.ClassVisibility);
+	addColumn(ColumnDescriptor.Extends);
 	//nsuml problem realization    addColumn(ColumnDescriptor.Implements);
-    addColumn(ColumnDescriptor.MStereotype);
-  }
-
-  public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponent)) return new Vector();
-    if (t instanceof UMLDeploymentDiagram) {
-      UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
-      Vector nodes = d.getNodes();
-      Vector res = new Vector();
-      int size = nodes.size();
-      for (int i = 0; i < size; i++) {
-        Object node = nodes.elementAt(i);
-        if (node instanceof MInterface) res.addElement(node);
-      }
-      return res;
+	addColumn(ColumnDescriptor.MStereotype);
     }
-    else {
-      MComponent d = (MComponent) t;
-      Vector res = new Vector();
-      Collection elementResidences = d.getResidentElements();
-      Iterator it = elementResidences.iterator();
-      while (it.hasNext()) {
-        MElementResidence residence = (MElementResidence) it.next();
-        MModelElement node = (MModelElement) residence.getResident();
-        if (node instanceof MInterface) res.addElement(node);
 
-      }
-      return res;
+    public Vector rowObjectsFor(Object t) {
+	if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponent)) return new Vector();
+	if (t instanceof UMLDeploymentDiagram) {
+	    UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
+	    Vector nodes = d.getNodes();
+	    Vector res = new Vector();
+	    int size = nodes.size();
+	    for (int i = 0; i < size; i++) {
+		Object node = nodes.elementAt(i);
+		if (node instanceof MInterface) res.addElement(node);
+	    }
+	    return res;
+	}
+	else {
+	    MComponent d = (MComponent) t;
+	    Vector res = new Vector();
+	    Collection elementResidences = d.getResidentElements();
+	    Iterator it = elementResidences.iterator();
+	    while (it.hasNext()) {
+		MElementResidence residence = (MElementResidence) it.next();
+		MModelElement node = (MModelElement) residence.getResident();
+		if (node instanceof MInterface) res.addElement(node);
+
+	    }
+	    return res;
+	}
     }
-  }
 
-  public String toString() { return "Interfaces vs. Properties"; }
+    public String toString() { return "Interfaces vs. Properties"; }
 } /* end class TableModelInterface_in_DeplByProps */
 

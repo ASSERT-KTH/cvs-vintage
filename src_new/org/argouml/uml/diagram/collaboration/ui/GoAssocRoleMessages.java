@@ -1,3 +1,4 @@
+// $Id: GoAssocRoleMessages.java,v 1.8 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +33,11 @@ import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 
 public class GoAssocRoleMessages extends AbstractGoRule {
 
-  public String getRuleName() { return "AssociationRole->Messages"; }
+    public String getRuleName() { return "AssociationRole->Messages"; }
 
-  public Collection getChildren(Object parent) {
-    if (!(parent instanceof MAssociationRole)) return null;
-    return ((MAssociationRole)parent).getMessages();
-  }
+    public Collection getChildren(Object parent) {
+	if (!(parent instanceof MAssociationRole)) return null;
+	return ((MAssociationRole) parent).getMessages();
+    }
 
 }

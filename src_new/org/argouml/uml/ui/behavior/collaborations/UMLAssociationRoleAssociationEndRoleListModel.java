@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,14 +51,14 @@ public class UMLAssociationRoleAssociationEndRoleListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MAssociationRole)getTarget()).getConnections());
+        setAllElements(((MAssociationRole) getTarget()).getConnections());
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return o instanceof MAssociationEndRole && ((MAssociationRole)getTarget()).getConnections().contains(o);
+        return o instanceof MAssociationEndRole && ((MAssociationRole) getTarget()).getConnections().contains(o);
     }
 
 }

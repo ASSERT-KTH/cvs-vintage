@@ -1,3 +1,4 @@
+// $Id: ToDoPerspective.java,v 1.6 2003/06/29 23:53:43 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,10 +42,11 @@ import org.apache.log4j.Category;
  *   - a todo tree model / perspective (which is a collection of GoRules)
  *</pre>
  *
- * $Id: ToDoPerspective.java,v 1.5 2003/04/16 19:39:40 alexb Exp $
+ * $Id: ToDoPerspective.java,v 1.6 2003/06/29 23:53:43 linus Exp $
  */
 public abstract class ToDoPerspective extends TreeModelComposite
-implements Serializable {
+    implements Serializable 
+{
     
     private static Category cat = Category.getInstance(ToDoPerspective.class);
     
@@ -126,7 +128,7 @@ implements Serializable {
             _flatChildren.addElement(node);
         
         int nKids = getChildCount(node);
-        for (int i = 0; i <nKids; i++) {
+        for (int i = 0; i < nKids; i++) {
             addFlatChildren(getChild(node, i));
         }
     }

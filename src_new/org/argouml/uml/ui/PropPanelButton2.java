@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.4 2003/06/09 23:47:14 bobtarling Exp $
+// $Id: PropPanelButton2.java,v 1.5 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,15 +73,15 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
      * @see #setAction
      */
     protected void configurePropertiesFromAction(Action a) {
-        setText((a!=null?(String)a.getValue(Action.NAME):null));
-        setIcon((a!=null?(Icon)a.getValue(Action.SMALL_ICON):null));
-        setEnabled((a!=null?a.isEnabled():true));
-        setToolTipText((a!=null?(String)a.getValue(Action.SHORT_DESCRIPTION):null));    
+        setText((a != null ? (String) a.getValue(Action.NAME) : null));
+        setIcon((a != null ? (Icon) a.getValue(Action.SMALL_ICON) : null));
+        setEnabled((a != null ? a.isEnabled() : true));
+        setToolTipText((a != null ? (String) a.getValue(Action.SHORT_DESCRIPTION) : null));    
         if (a != null)  {
  	    // TODO: When no longer requiring support for JDK1.2 this constant
 	    // can be changed to Action.MNEMONIC_KEY.
 	    final String MNEMONIC_KEY = "MnemonicKey";
-            Integer i = (Integer)a.getValue(MNEMONIC_KEY);
+            Integer i = (Integer) a.getValue(MNEMONIC_KEY);
             if (i != null)
                 setMnemonic(i.intValue());
         }

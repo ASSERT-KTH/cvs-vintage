@@ -1,3 +1,4 @@
+// $Id: TableModelComponentByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: TableModelComponentByProps.java
 // Classes: TableModelComponentByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelComponentByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
+// $Id: TableModelComponentByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -38,43 +39,43 @@ import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 
 public class TableModelComponentByProps extends TableModelComposite {
-  ////////////////
-  // constructor
-  public TableModelComponentByProps() { }
+    ////////////////
+    // constructor
+    public TableModelComponentByProps() { }
 
-  public void initColumns() {
-    addColumn(ColumnDescriptor.Name);
-    addColumn(ColumnDescriptor.CompNode);
+    public void initColumns() {
+	addColumn(ColumnDescriptor.Name);
+	addColumn(ColumnDescriptor.CompNode);
 	//nsuml problem realization    addColumn(ColumnDescriptor.Implements);
-    addColumn(ColumnDescriptor.MStereotype);
-  }
-
-  public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram || t instanceof MNode)) return new Vector();
-    if (t instanceof UMLDeploymentDiagram) {
-      UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
-      Vector nodes = d.getNodes();
-      Vector res = new Vector();
-      int size = nodes.size();
-      for (int i = 0; i < size; i++) {
-        Object node = nodes.elementAt(i);
-        if (node instanceof MComponent) res.addElement(node);
-      }
-      return res;
+	addColumn(ColumnDescriptor.MStereotype);
     }
-    else {
-      MNode n = (MNode) t;
-      Vector res = new Vector();
-      Collection residences = n.getResidents();
-      Iterator it = residences.iterator();
-      while (it.hasNext()) {
-        MClassifier cls = (MClassifier) it.next();
-        if (cls instanceof MComponent) res.addElement(cls);
-      }
-      return res;
-    }
-  }
 
-  public String toString() { return "Components vs. Properties"; }
+    public Vector rowObjectsFor(Object t) {
+	if (!(t instanceof UMLDeploymentDiagram || t instanceof MNode)) return new Vector();
+	if (t instanceof UMLDeploymentDiagram) {
+	    UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
+	    Vector nodes = d.getNodes();
+	    Vector res = new Vector();
+	    int size = nodes.size();
+	    for (int i = 0; i < size; i++) {
+		Object node = nodes.elementAt(i);
+		if (node instanceof MComponent) res.addElement(node);
+	    }
+	    return res;
+	}
+	else {
+	    MNode n = (MNode) t;
+	    Vector res = new Vector();
+	    Collection residences = n.getResidents();
+	    Iterator it = residences.iterator();
+	    while (it.hasNext()) {
+		MClassifier cls = (MClassifier) it.next();
+		if (cls instanceof MComponent) res.addElement(cls);
+	    }
+	    return res;
+	}
+    }
+
+    public String toString() { return "Components vs. Properties"; }
 } /* end class TableModelComponentByProps */
 

@@ -1,3 +1,4 @@
+// $Id: StylePanelFigUseCase.java,v 1.3 2003/06/29 23:52:22 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: StylePanelFigUseCase.java
 // Classes: StylePanelFigUseCase
 // Original Author: mail@jeremybennett.com
-// $Id: StylePanelFigUseCase.java,v 1.2 2003/06/27 15:24:22 jjones Exp $
+// $Id: StylePanelFigUseCase.java,v 1.3 2003/06/29 23:52:22 linus Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // optional display of extension points.

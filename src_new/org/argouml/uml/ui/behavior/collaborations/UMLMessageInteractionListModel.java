@@ -1,3 +1,4 @@
+// $Id: UMLMessageInteractionListModel.java,v 1.2 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMessageInteractionListModel.java,v 1.1 2003/01/25 08:00:59 kataka Exp $
+// $Id: UMLMessageInteractionListModel.java,v 1.2 2003/06/29 23:50:10 linus Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
@@ -51,7 +52,7 @@ public class UMLMessageInteractionListModel extends UMLModelElementListModel2 {
     protected void buildModelList() {
         if (getTarget() instanceof MMessage) {
             removeAllElements();
-            addElement(((MMessage)getTarget()).getInteraction());
+            addElement(((MMessage) getTarget()).getInteraction());
         }
     }
 
@@ -59,7 +60,7 @@ public class UMLMessageInteractionListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return element instanceof MInteraction && ((MMessage)getTarget()).getInteraction() == element;
+        return element instanceof MInteraction && ((MMessage) getTarget()).getInteraction() == element;
     }
 
 }

@@ -1,3 +1,4 @@
+// $Id: ActionNewAction.java,v 1.4 2003/06/29 23:50:11 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,22 +40,27 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
     /**
      * The constant defining the role the action to be created plays for its parent. 
      * For example, if one wishes to create an entry action for a state, this is 
-     * filled with "entry". The values are defined in the interface Roles     */
+     * filled with "entry". The values are defined in the interface Roles
+     */
     public final static String ROLE = "role";
     
     public static interface Roles {
         
         /**
-         * The entry activity for some state         */
+         * The entry activity for some state
+         */
         public final static String ENTRY = "entry";
         /**
-         * The exit activity for some state         */
+         * The exit activity for some state
+         */
         public final static String EXIT = "exit";
         /**
-         * The doactivity with some state         */
+         * The doactivity with some state
+         */
         public final static String DO = "do"; 
         /**
-         * The action with some message         */
+         * The action with some message
+         */
         public final static String ACTION = "action";
         
         /**
@@ -71,7 +77,9 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
     }
     
     /**
-     * Implementors should create a concrete action like a CallAction in this method.     * @return Object     */
+     * Implementors should create a concrete action like a CallAction in this method.
+     * @return Object
+     */
     protected abstract Object createAction();
 
     /**
@@ -83,18 +91,18 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
         if (getValue(ROLE).equals(Roles.EXIT)) {
             ModelFacade.setExit(getTarget(), action);
         } else
-        if (getValue(ROLE).equals(Roles.ENTRY)) {
-            ModelFacade.setEntry(getTarget(), action);          
-        } else
-        if (getValue(ROLE).equals(Roles.DO)) {
-            ModelFacade.setDoActivity(getTarget(), action);
-        } else
-        if (getValue(ROLE).equals(Roles.ACTION)) {
-            ModelFacade.setAction(getTarget(), action);
-        } else
-        if (getValue(ROLE).equals(Roles.EFFECT)) {
-            ModelFacade.setEffect(getTarget(), action);
-        }
+	    if (getValue(ROLE).equals(Roles.ENTRY)) {
+		ModelFacade.setEntry(getTarget(), action);          
+	    } else
+		if (getValue(ROLE).equals(Roles.DO)) {
+		    ModelFacade.setDoActivity(getTarget(), action);
+		} else
+		    if (getValue(ROLE).equals(Roles.ACTION)) {
+			ModelFacade.setAction(getTarget(), action);
+		    } else
+			if (getValue(ROLE).equals(Roles.EFFECT)) {
+			    ModelFacade.setEffect(getTarget(), action);
+			}
         
     }
 

@@ -1,3 +1,4 @@
+// $Id: UMLClassifierInstanceListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLClassifierInstanceListModel.java,v 1.1 2003/01/27 20:06:59 kataka Exp $
+// $Id: UMLClassifierInstanceListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
@@ -48,7 +49,7 @@ public class UMLClassifierInstanceListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(((MClassifier)getTarget()).getInstances());
+            setAllElements(((MClassifier) getTarget()).getInstances());
         }
     }
 
@@ -56,7 +57,7 @@ public class UMLClassifierInstanceListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return ((MClassifier)getTarget()).getInstances().contains(element);
+        return ((MClassifier) getTarget()).getInstances().contains(element);
     }
 
 }

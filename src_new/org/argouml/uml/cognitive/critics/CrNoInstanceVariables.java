@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.11 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrNoInstanceVariables.java,v 1.12 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,12 +46,12 @@ import org.argouml.model.ModelFacade;
  */
 public class CrNoInstanceVariables extends CrUML {
 
-  public CrNoInstanceVariables() {
-    setHeadline("Add Instance Variables to <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decSTORAGE);
-    setKnowledgeTypes(Critic.KT_COMPLETENESS);
-    addTrigger("structuralFeature");
-  }
+    public CrNoInstanceVariables() {
+	setHeadline("Add Instance Variables to <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decSTORAGE);
+	setKnowledgeTypes(Critic.KT_COMPLETENESS);
+	addTrigger("structuralFeature");
+    }
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class UMLCollaborationRepresentedOperationListModel
     protected void buildModelList() {
         Object target = getTarget();
         if (target instanceof MCollaboration) {
-            MCollaboration col = (MCollaboration)target;
+            MCollaboration col = (MCollaboration) target;
             removeAllElements();
             if (col.getRepresentedOperation() != null)
                 addElement(col.getRepresentedOperation());
@@ -65,7 +65,7 @@ public class UMLCollaborationRepresentedOperationListModel
      */
     protected boolean isValidElement(MBase elem) {
         return elem instanceof MOperation && 
-            ((MCollaboration)getTarget()).getRepresentedOperation() == elem;
+            ((MCollaboration) getTarget()).getRepresentedOperation() == elem;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.2 2003/05/31 10:20:14 mkl Exp $
+// $Id: PropPanelSubsystem.java,v 1.3 2003/06/29 23:50:45 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class PropPanelSubsystem extends PropPanelPackage
 
         addField(Argo.localize("UMLMenu", "label.available-features"), getFeatureScroll());
 
-        new PropPanelButton(this,buttonPanel,_addOpIcon, Argo.localize("UMLMenu", "button.add-operation"), "addOperation", null);
+        new PropPanelButton(this, buttonPanel, _addOpIcon, Argo.localize("UMLMenu", "button.add-operation"), "addOperation", null);
     
     }
 

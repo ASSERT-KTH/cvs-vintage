@@ -1,3 +1,4 @@
+// $Id: ActionAddExtendExtensionPoint.java,v 1.6 2003/06/29 23:50:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddExtendExtensionPoint.java,v 1.5 2002/12/29 20:33:45 kataka Exp $
+// $Id: ActionAddExtendExtensionPoint.java,v 1.6 2003/06/29 23:50:15 linus Exp $
 package org.argouml.uml.ui.behavior.use_cases;
 
 import java.util.Vector;
@@ -49,7 +50,7 @@ public class ActionAddExtendExtensionPoint extends AbstractActionAddModelElement
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
-        ((MExtend)getTarget()).setExtensionPoints(selected);
+        ((MExtend) getTarget()).setExtensionPoints(selected);
     }
 
     /**
@@ -58,7 +59,7 @@ public class ActionAddExtendExtensionPoint extends AbstractActionAddModelElement
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(((MExtend)getTarget()).getBase().getExtensionPoints());
+            ret.addAll(((MExtend) getTarget()).getBase().getExtensionPoints());
         }
         return ret;
     }
@@ -75,7 +76,7 @@ public class ActionAddExtendExtensionPoint extends AbstractActionAddModelElement
      */
     protected Vector getSelected() {
         Vector ret = new Vector();
-        ret.addAll(((MExtend)getTarget()).getExtensionPoints());
+        ret.addAll(((MExtend) getTarget()).getExtensionPoints());
         return ret;
     }
 

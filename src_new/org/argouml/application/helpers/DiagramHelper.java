@@ -1,3 +1,4 @@
+// $Id: DiagramHelper.java,v 1.4 2003/06/29 23:53:42 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,13 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.helpers;
-import java.util.Vector;import javax.swing.JMenuItem;import org.argouml.application.api.Argo;import org.argouml.application.api.PluggableDiagram;import org.argouml.ui.ArgoDiagram;
+import java.util.Vector;
+
+import javax.swing.JMenuItem;
+
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.PluggableDiagram;
+import org.argouml.ui.ArgoDiagram;
 
 /** Helper object for Diagrams
  *
@@ -31,7 +38,8 @@ import java.util.Vector;import javax.swing.JMenuItem;import org.argouml.appl
  */
 
 public abstract class DiagramHelper extends ArgoDiagram
-implements PluggableDiagram {
+    implements PluggableDiagram
+{
 
     /** Default localization key for diagrams
      */
@@ -51,7 +59,9 @@ implements PluggableDiagram {
     public boolean isModuleEnabled() { return true; }
     public Vector getModulePopUpActions(Vector v, Object o) { return null; }
     public boolean shutdownModule() { return true; }
-    public JMenuItem getDiagramMenuItem() { return new JMenuItem(Argo.localize(_bundle,"menu.item.diagram-type")); } // add icon if desired
+    public JMenuItem getDiagramMenuItem() {
+	return new JMenuItem(Argo.localize(_bundle, "menu.item.diagram-type"));
+    } // add icon if desired
 
     public String getDiagramResourceBundleKey() {
         return DIAGRAM_BUNDLE;

@@ -1,3 +1,4 @@
+// $Id: FigLink.java,v 1.5 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // Classes: FigLink
 // Original Author: your email address here
 
-// $Id: FigLink.java,v 1.4 2002/11/29 10:21:08 kataka Exp $
+// $Id: FigLink.java,v 1.5 2003/06/29 23:52:19 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -38,21 +39,21 @@ import ru.novosoft.uml.behavior.common_behavior.MLink;
 
 public class FigLink extends FigEdgeModelElement {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
+    ////////////////////////////////////////////////////////////////
+    // constructors
 
-  public FigLink() {
-    _fig.setLineColor(Color.black);
-    setBetweenNearestPoints(true);
-  }
+    public FigLink() {
+	_fig.setLineColor(Color.black);
+	setBetweenNearestPoints(true);
+    }
 
-  public FigLink(Object edge) {
-    this();
-    setOwner(edge);
-  }
+    public FigLink(Object edge) {
+	this();
+	setOwner(edge);
+    }
 
-  // TODO: should edit something...
-  protected boolean canEdit(Fig f) { return false; }
+    // TODO: should edit something...
+    protected boolean canEdit(Fig f) { return false; }
 
 
     /**
@@ -60,7 +61,7 @@ public class FigLink extends FigEdgeModelElement {
      */
     protected Object getDestination() {
         if (getOwner() != null) {
-            return CommonBehaviorHelper.getHelper().getDestination((MLink)getOwner());
+            return CommonBehaviorHelper.getHelper().getDestination((MLink) getOwner());
         }
         return null;
     }
@@ -70,7 +71,7 @@ public class FigLink extends FigEdgeModelElement {
      */
     protected Object getSource() {
         if (getOwner() != null) {
-            return CommonBehaviorHelper.getHelper().getSource((MLink)getOwner());
+            return CommonBehaviorHelper.getHelper().getSource((MLink) getOwner());
         }
         return null;
     }

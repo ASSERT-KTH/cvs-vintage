@@ -1,3 +1,4 @@
+// $Id: CrIllegalName.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrIllegalName.java
 // Classes: CrIllegalName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.3 2002/10/28 06:07:16 mkl Exp $
+// $Id: CrIllegalName.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,34 +45,34 @@ import org.argouml.cognitive.*;
  */
 public class CrIllegalName extends CrUML {
 
-  public CrIllegalName() {
-    setHeadline("Choose a Legal Name");
-    addSupportedDecision(CrUML.decNAMING);
-    addTrigger("name");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MModelElement)) return NO_PROBLEM;
-    MModelElement me = (MModelElement) dm;
-    String meName = me.getName();
-    if (meName == null || meName.equals("")) return NO_PROBLEM;
-    String nameStr = meName;
-    int len = nameStr.length();
-
-    // normal model elements are not allowed to have spaces,
-    // but for States we make an exception
-    for (int i = 0; i < len; i++) {
-      char c = nameStr.charAt(i);
-      if (!(Character.isLetterOrDigit(c) || c == '_' ||
-            (c == ' ' && me instanceof MStateVertex)))
-          return PROBLEM_FOUND;
+    public CrIllegalName() {
+	setHeadline("Choose a Legal Name");
+	addSupportedDecision(CrUML.decNAMING);
+	addTrigger("name");
     }
-    return NO_PROBLEM;
-  }
 
-  public Icon getClarifier() {
-    return ClClassName.TheInstance;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MModelElement)) return NO_PROBLEM;
+	MModelElement me = (MModelElement) dm;
+	String meName = me.getName();
+	if (meName == null || meName.equals("")) return NO_PROBLEM;
+	String nameStr = meName;
+	int len = nameStr.length();
+
+	// normal model elements are not allowed to have spaces,
+	// but for States we make an exception
+	for (int i = 0; i < len; i++) {
+	    char c = nameStr.charAt(i);
+	    if (!(Character.isLetterOrDigit(c) || c == '_' ||
+		  (c == ' ' && me instanceof MStateVertex)))
+		return PROBLEM_FOUND;
+	}
+	return NO_PROBLEM;
+    }
+
+    public Icon getClarifier() {
+	return ClClassName.TheInstance;
+    }
 
 } /* end class CrIllegalName */
 

@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.4 2003/06/21 08:27:21 linus Exp $
+// $Id: DiagramInfo.java,v 1.5 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,19 +51,19 @@ import org.argouml.uml.diagram.deployment.ui.*;
 
 public class DiagramInfo extends JComponent {
 
-  ////////////////////////////////////////////////////////////////
-  // instance variables
+    ////////////////////////////////////////////////////////////////
+    // instance variables
 
-  protected Diagram _diagram = null;
+    protected Diagram _diagram = null;
     private JLabel _name = null;
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
+    ////////////////////////////////////////////////////////////////
+    // constructor
 
-  public DiagramInfo(Diagram d) {
-    _diagram = d;
-    //setBorder(new EtchedBorder());
-  }
+    public DiagramInfo(Diagram d) {
+	_diagram = d;
+	//setBorder(new EtchedBorder());
+    }
 
     public JComponent getJComponent() {
 	_name = new JLabel("");
@@ -74,29 +74,29 @@ public class DiagramInfo extends JComponent {
 	return this;
     }
 
-  ////////////////////////////////////////////////////////////////
-  // updates
-  public void updateName() {
-      if (_name == null)
-	  return;
+    ////////////////////////////////////////////////////////////////
+    // updates
+    public void updateName() {
+	if (_name == null)
+	    return;
 
-    String type = "Diagram";
-    if (_diagram instanceof UMLClassDiagram)
-      type = "Class Diagram";
-    if (_diagram instanceof UMLStateDiagram)
-      type = "State Diagram";
-    if (_diagram instanceof UMLUseCaseDiagram)
-      type = "Use Case Diagram";
-    if (_diagram instanceof UMLActivityDiagram)
-      type = "Activity Diagram";
-    if (_diagram instanceof UMLCollaborationDiagram)
-      type = "Collaboration Diagram";
-    if (_diagram instanceof UMLSequenceDiagram)
-      type = "Sequence Diagram";
-    if (_diagram instanceof UMLDeploymentDiagram)
-      type = "Deployment Diagram";
+	String type = "Diagram";
+	if (_diagram instanceof UMLClassDiagram)
+	    type = "Class Diagram";
+	if (_diagram instanceof UMLStateDiagram)
+	    type = "State Diagram";
+	if (_diagram instanceof UMLUseCaseDiagram)
+	    type = "Use Case Diagram";
+	if (_diagram instanceof UMLActivityDiagram)
+	    type = "Activity Diagram";
+	if (_diagram instanceof UMLCollaborationDiagram)
+	    type = "Collaboration Diagram";
+	if (_diagram instanceof UMLSequenceDiagram)
+	    type = "Sequence Diagram";
+	if (_diagram instanceof UMLDeploymentDiagram)
+	    type = "Deployment Diagram";
     
-    _name.setText(type + ": " + _diagram.getName());
-  }
+	_name.setText(type + ": " + _diagram.getName());
+    }
 
 } /* end class DiagramInfo */

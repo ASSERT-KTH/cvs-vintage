@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.36 2003/06/03 11:49:30 mkl Exp $
+// $Id: PropPanelPackage.java,v 1.37 2003/06/29 23:50:44 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
     protected JScrollPane _generalizationScroll;
     protected JScrollPane _specializationScroll;
 
-     private static UMLGeneralizableElementGeneralizationListModel generalizationListModel =
+    private static UMLGeneralizableElementGeneralizationListModel generalizationListModel =
         new UMLGeneralizableElementGeneralizationListModel();
     private static UMLGeneralizableElementSpecializationListModel specializationListModel =
         new UMLGeneralizableElementSpecializationListModel();
@@ -100,7 +100,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addField(Argo.localize("UMLMenu", "label.owned-elements"), getOwnedElementsScroll());
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this,buttonPanel,_packageIcon, Argo.localize("UMLMenu", "button.add-package"), "addPackage", null);
+        new PropPanelButton(this, buttonPanel, _packageIcon, Argo.localize("UMLMenu", "button.add-package"), "addPackage", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-package"), "removeElement", "isRemovableElement");
     }
 
@@ -117,7 +117,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
         }
     }
 
-     /**
+    /**
      * Returns the generalizationScroll.
      * @return JScrollPane
      */

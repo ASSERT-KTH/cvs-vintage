@@ -1,3 +1,4 @@
+// $Id: ActionAddAssociationSpecification.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddAssociationSpecification.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.Vector;
@@ -52,7 +53,7 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
-        ((MAssociationEnd)getTarget()).setSpecifications(selected);
+        ((MAssociationEnd) getTarget()).setSpecifications(selected);
     }
 
     /**
@@ -78,7 +79,7 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
      */
     protected Vector getSelected() {
         Vector ret = new Vector();
-        ret.addAll(((MAssociationEnd)getTarget()).getSpecifications());
+        ret.addAll(((MAssociationEnd) getTarget()).getSpecifications());
         return ret;
     }
 }

@@ -1,3 +1,4 @@
+// $Id: GoClassToSummary.java,v 1.4 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,100 +37,100 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  *
- * @author  alexb, $Author: kataka $
+ * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoClassToSummary extends AbstractGoRule {
 
-  public String getRuleName() {
-    return Argo.localize ("Tree", "misc.class.attribute");
-  }
+    public String getRuleName() {
+	return Argo.localize ("Tree", "misc.class.attribute");
+    }
 
 
-  public Collection getChildren(Object parent) {
-      if (ModelFacade.isAClass(parent)) {
+    public Collection getChildren(Object parent) {
+	if (ModelFacade.isAClass(parent)) {
           
-          ArrayList list = new ArrayList();
+	    ArrayList list = new ArrayList();
           
-          if(ModelFacade.getAttributes(parent).size() > 0)
+	    if (ModelFacade.getAttributes(parent).size() > 0)
                 list.add(new AttributesNode(parent));
           
-          if(ModelFacade.getAssociationEnds(parent).size() > 0)
+	    if (ModelFacade.getAssociationEnds(parent).size() > 0)
                 list.add(new AssociationsNode(parent));
           
-          if(ModelFacade.getOperations(parent).size() > 0)
+	    if (ModelFacade.getOperations(parent).size() > 0)
                 list.add(new OperationsNode(parent));
           
-          if(hasIncomingDependencies( parent))
-              list.add(new IncomingDependencyNode(parent));
+	    if (hasIncomingDependencies( parent))
+		list.add(new IncomingDependencyNode(parent));
           
-          if(hasOutGoingDependencies( parent))
+	    if (hasOutGoingDependencies( parent))
                 list.add(new OutgoingDependencyNode(parent));
           
-          if(hasInheritance( parent))
+	    if (hasInheritance( parent))
                 list.add(new InheritanceNode(parent));
           
-          return list;
-      }
-      return null;
-  }
+	    return list;
+	}
+	return null;
+    }
 
-  private boolean hasIncomingDependencies(Object parent){
+    private boolean hasIncomingDependencies(Object parent) {
       
-            Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
+	Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
           
-          while(incomingIt.hasNext()){
+	while (incomingIt.hasNext()) {
               
-              // abstractions are represented in the Inheritance Node.
-              if(!ModelFacade.isAAbstraction(incomingIt.next()))
+	    // abstractions are represented in the Inheritance Node.
+	    if (!ModelFacade.isAAbstraction(incomingIt.next()))
                 return true;
-          }
-          return false;
-  }
+	}
+	return false;
+    }
   
-  private boolean hasOutGoingDependencies(Object parent){
+    private boolean hasOutGoingDependencies(Object parent) {
       
-          Iterator incomingIt = ModelFacade.getClientDependencies(parent).iterator();
+	Iterator incomingIt = ModelFacade.getClientDependencies(parent).iterator();
           
-          while(incomingIt.hasNext()){
+	while (incomingIt.hasNext()) {
               
-              // abstractions are represented in the Inheritance Node.
-              if(!ModelFacade.isAAbstraction(incomingIt.next()))
+	    // abstractions are represented in the Inheritance Node.
+	    if (!ModelFacade.isAAbstraction(incomingIt.next()))
                 return true;
-          }
-          return false;
-  }
+	}
+	return false;
+    }
  
-  private boolean hasInheritance(Object parent){
+    private boolean hasInheritance(Object parent) {
       
-          Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
-          Iterator outgoingIt = ModelFacade.getClientDependencies(parent).iterator();
-          Iterator generalizationsIt = ModelFacade.getGeneralizations(parent);
-          Iterator specializationsIt = ModelFacade.getSpecializations(parent);
+	Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
+	Iterator outgoingIt = ModelFacade.getClientDependencies(parent).iterator();
+	Iterator generalizationsIt = ModelFacade.getGeneralizations(parent);
+	Iterator specializationsIt = ModelFacade.getSpecializations(parent);
           
-          if(generalizationsIt.hasNext())
-              return true;
+	if (generalizationsIt.hasNext())
+	    return true;
           
-          if(specializationsIt.hasNext())
-              return true;
+	if (specializationsIt.hasNext())
+	    return true;
           
-          while(incomingIt.hasNext()){
+	while (incomingIt.hasNext()) {
               
-              // abstractions are represented in the Inheritance Node.
-              if(ModelFacade.isAAbstraction(incomingIt.next()))
+	    // abstractions are represented in the Inheritance Node.
+	    if (ModelFacade.isAAbstraction(incomingIt.next()))
                 return true;
-          }
+	}
           
-          while(outgoingIt.hasNext()){
+	while (outgoingIt.hasNext()) {
               
-              // abstractions are represented in the Inheritance Node.
-              if(ModelFacade.isAAbstraction(outgoingIt.next()))
+	    // abstractions are represented in the Inheritance Node.
+	    if (ModelFacade.isAAbstraction(outgoingIt.next()))
                 return true;
-          }
+	}
           
-          return false;
-  }
+	return false;
+    }
 
 }

@@ -1,3 +1,4 @@
+// $Id: WizNavigable.java,v 1.5 2003/06/29 23:52:59 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.4 2002/10/20 21:11:15 linus Exp $
+// $Id: WizNavigable.java,v 1.5 2003/06/29 23:52:59 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,7 +35,8 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.apache.log4j.Category;import org.argouml.cognitive.ui.*;
+import org.apache.log4j.Category;
+import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.model_management.*;
@@ -46,101 +48,101 @@ import org.argouml.kernel.*;
 /** A non-modal wizard to help the user change navigability
  *  of an association. */
 
-public class WizNavigable extends Wizard {    protected static Category cat = Category.getInstance(WizNavigable.class);
-
-  protected String _instructions =
-  "Please select one of the following navigability options.";
-  protected String _option0 = "Navigable Toward Start";
-  protected String _option1 = "Navigable Toward End";
-  protected String _option2 = "Navigable Both Ways";
-
-  protected WizStepChoice _step1 = null;
-
-  public WizNavigable() { }
-
-  public int getNumSteps() { return 1; }
-
-  public MModelElement getModelElement() {
-    if (_item != null) {
-      VectorSet offs = _item.getOffenders();
-      if (offs.size() >= 1) {
-	MModelElement me = (MModelElement) offs.elementAt(0);
-	return me;
-      }
+public class WizNavigable extends Wizard {
+    protected static Category cat = Category.getInstance(WizNavigable.class);
+					      
+    protected String _instructions =
+	"Please select one of the following navigability options.";
+    protected String _option0 = "Navigable Toward Start";
+    protected String _option1 = "Navigable Toward End";
+    protected String _option2 = "Navigable Both Ways";
+							      
+    protected WizStepChoice _step1 = null;
+								  
+    public WizNavigable() { }
+								      
+    public int getNumSteps() { return 1; }
+									  
+    public MModelElement getModelElement() {
+	if (_item != null) {
+	    VectorSet offs = _item.getOffenders();
+	    if (offs.size() >= 1) {
+		MModelElement me = (MModelElement) offs.elementAt(0);
+		return me;
+	    }
+	}
+	return null;
     }
-    return null;
-  }
-
-  public Vector getOptions() {
-    Vector res = new Vector();
-    MAssociation asc = (MAssociation) getModelElement();
-    MAssociationEnd ae0 = (MAssociationEnd) asc.getConnections().get(0);
-    MAssociationEnd ae1 = (MAssociationEnd) asc.getConnections().get(1);
-    MClassifier cls0 = ae0.getType();
-    MClassifier cls1 = ae1.getType();
-
-    if (cls0 != null && !"".equals(cls0.getName()))
-      _option0 = "Navigable Toward " + cls0.getName();
-
-    if (cls1 != null && !"".equals(cls1.getName()))
-      _option1 = "Navigable Toward " + cls1.getName();
-
-    // TODO: put in class names
-    res.addElement(_option0);
-    res.addElement(_option1);
-    res.addElement(_option2);
-    return res;
-  }
-
-  public void setInstructions(String s) { _instructions = s; }
-
-  /** Create a new panel for the given step.  */
-  public JPanel makePanel(int newStep) {
-    switch (newStep) {
-    case 1:
-      if (_step1 == null) {
-	_step1 = new WizStepChoice(this, _instructions, getOptions());
-	_step1.setTarget(_item);
-      }
-      return _step1;
-    }
-    return null;
-  }
-
-  /** Take action at the completion of a step. For example, when the
-   *  given step is 0, do nothing; and when the given step is 1, do
-   *  the first action.  Argo non-modal wizards should take action as
-   *  they do along, as soon as possible, they should not wait until
-   *  the final step. */
-  public void doAction(int oldStep) {
-    cat.debug("doAction " + oldStep);
-    switch (oldStep) {
-    case 1:
-      int choice = -1;
-      if (_step1 != null) choice = _step1.getSelectedIndex();
-      if (choice == -1) {
-	throw new Error("nothing selected, should not get here");
-      }
-      try {
+									      
+    public Vector getOptions() {
+	Vector res = new Vector();
 	MAssociation asc = (MAssociation) getModelElement();
 	MAssociationEnd ae0 = (MAssociationEnd) asc.getConnections().get(0);
 	MAssociationEnd ae1 = (MAssociationEnd) asc.getConnections().get(1);
-	ae0.setNavigable(choice == 0 || choice == 2);
-	ae1.setNavigable(choice == 1 || choice == 2);
-      }
-      catch (Exception pve) {
-	cat.error("could not set navigablity", pve);
-      }
+	MClassifier cls0 = ae0.getType();
+	MClassifier cls1 = ae1.getType();
+			
+	if (cls0 != null && !"".equals(cls0.getName()))
+	    _option0 = "Navigable Toward " + cls0.getName();
+									   
+	if (cls1 != null && !"".equals(cls1.getName()))
+	    _option1 = "Navigable Toward " + cls1.getName();
+ 
+	// TODO: put in class names
+	res.addElement(_option0);
+	res.addElement(_option1);
+	res.addElement(_option2);
+	return res;
     }
-  }
-
-  public boolean canFinish() {
-    if (!super.canFinish()) return false;
-    if (_step == 0) return true;
-    if (_step == 1 && _step1 != null && _step1.getSelectedIndex() != -1)
-      return true;
-    return false;
-  }
-
-
+ 
+    public void setInstructions(String s) { _instructions = s; }
+ 
+    /** Create a new panel for the given step.  */
+    public JPanel makePanel(int newStep) {
+	switch (newStep) {
+	case 1:
+	    if (_step1 == null) {
+		_step1 = new WizStepChoice(this, _instructions, getOptions());
+		_step1.setTarget(_item);
+	    }
+	    return _step1;
+	}
+	return null;
+    }
+ 
+    /** Take action at the completion of a step. For example, when the
+     *  given step is 0, do nothing; and when the given step is 1, do
+     *  the first action.  Argo non-modal wizards should take action as
+     *  they do along, as soon as possible, they should not wait until
+     *  the final step. */
+    public void doAction(int oldStep) {
+	cat.debug("doAction " + oldStep);
+	switch (oldStep) {
+	case 1:
+	    int choice = -1;
+	    if (_step1 != null) choice = _step1.getSelectedIndex();
+	    if (choice == -1) {
+		throw new Error("nothing selected, should not get here");
+	    }
+	    try {
+		MAssociation asc = (MAssociation) getModelElement();
+		MAssociationEnd ae0 = (MAssociationEnd) asc.getConnections().get(0);
+		MAssociationEnd ae1 = (MAssociationEnd) asc.getConnections().get(1);
+		ae0.setNavigable(choice == 0 || choice == 2);
+		ae1.setNavigable(choice == 1 || choice == 2);
+	    }
+	    catch (Exception pve) {
+		cat.error("could not set navigablity", pve);
+	    }
+	}
+    }
+ 
+    public boolean canFinish() {
+	if (!super.canFinish()) return false;
+	if (_step == 0) return true;
+	if (_step == 1 && _step1 != null && _step1.getSelectedIndex() != -1)
+	    return true;
+	return false;
+    }
+ 
 } /* end class WizNavigable */

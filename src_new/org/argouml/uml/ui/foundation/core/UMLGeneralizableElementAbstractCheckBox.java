@@ -1,3 +1,4 @@
+// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.1 2003/01/27 20:06:59 kataka Exp $
+// $Id: UMLGeneralizableElementAbstractCheckBox.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
@@ -51,7 +52,7 @@ public class UMLGeneralizableElementAbstractCheckBox extends UMLCheckBox2 {
      */
     public void buildModel() {
         if (getTarget() != null)
-            setSelected(((MGeneralizableElement)getTarget()).isAbstract());
+            setSelected(((MGeneralizableElement) getTarget()).isAbstract());
     }
 
 

@@ -1,3 +1,4 @@
+// $Id: FigRealization.java,v 1.4 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.3 2003/01/24 20:20:00 kataka Exp $
+// $Id: FigRealization.java,v 1.4 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -39,48 +40,48 @@ import ru.novosoft.uml.MElementEvent;
 
 public class FigRealization extends FigEdgeModelElement {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
+    ////////////////////////////////////////////////////////////////
+    // constructors
 
-  ArrowHeadTriangle endArrow;
+    ArrowHeadTriangle endArrow;
 
-  public FigRealization() {
-    addPathItem(_stereo, new PathConvPercent(this, 50, 10));
-    endArrow = new ArrowHeadTriangle();
-    endArrow.setFillColor(Color.white);
-    setDestArrowHead(endArrow);
-    setBetweenNearestPoints(true);
-    _stereo.setText("");
-  }
+    public FigRealization() {
+	addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+	endArrow = new ArrowHeadTriangle();
+	endArrow.setFillColor(Color.white);
+	setDestArrowHead(endArrow);
+	setBetweenNearestPoints(true);
+	_stereo.setText("");
+    }
 
-  public FigRealization(Object edge) {
-    this();
-    setOwner(edge);
-  }
+    public FigRealization(Object edge) {
+	this();
+	setOwner(edge);
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // accessors
+    ////////////////////////////////////////////////////////////////
+    // accessors
 
-  public void setFig(Fig f) {
-    super.setFig(f);
-    _fig.setDashed(true);
-  }
+    public void setFig(Fig f) {
+	super.setFig(f);
+	_fig.setDashed(true);
+    }
 
 
-  protected boolean canEdit(Fig f) { return false; }
+    protected boolean canEdit(Fig f) { return false; }
 
-  /** This is called aftern any part of the UML MModelElement has
-   *  changed. This method automatically updates the name FigText.
-   *  Subclasses should override and update other parts. */
-  protected void modelChanged(MElementEvent e) {
-    // do not set _name
-      //updateStereotypeText();
-  }
+    /** This is called aftern any part of the UML MModelElement has
+     *  changed. This method automatically updates the name FigText.
+     *  Subclasses should override and update other parts. */
+    protected void modelChanged(MElementEvent e) {
+	// do not set _name
+	//updateStereotypeText();
+    }
 
-  public void paint(Graphics g) {
+    public void paint(Graphics g) {
         endArrow.setLineColor(getLineColor());
         super.paint(g);
-  }
+    }
 
 } /* end class FigRealization */
 

@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.1 2003/01/07 04:34:01 mkl Exp $
+// $Id: StartCritics.java,v 1.2 2003/06/29 23:53:41 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,10 @@ public class StartCritics implements Runnable {
         java.util.Enumeration models = (p.getUserDefinedModels()).elements();
         while (models.hasMoreElements()) {
             Object o = models.nextElement();    
-            // UmlModelEventPump.getPump().removeModelEventListener(dsgr, (MModel)o);
-            UmlModelEventPump.getPump().addModelEventListener(dsgr, (MModel)o); 
+            // UmlModelEventPump.getPump()
+	    // .removeModelEventListener(dsgr, (MModel)o);
+            UmlModelEventPump.getPump().addModelEventListener(dsgr,
+							      (MModel) o); 
         }
         Argo.log.info("spawned critiquing thread");
 

@@ -1,3 +1,4 @@
+// $Id: UMLMultiplicityComboBox2.java,v 1.2 2003/06/29 23:50:03 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBox2.java,v 1.1 2003/01/06 20:03:04 kataka Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.2 2003/06/29 23:50:03 linus Exp $
 package org.argouml.uml.ui;
 
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
@@ -52,7 +53,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
      * @see org.argouml.uml.ui.UMLEditableComboBox#doOnEdit(java.lang.Object)
      */
     protected void doOnEdit(Object item) {
-        String text = (String)item;
+        String text = (String) item;
         MMultiplicity multi = null;
         try {
             multi = new MMultiplicity(text);
@@ -60,7 +61,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
         catch (IllegalArgumentException e) {
             Object o = search(text);
             if (o != null && o instanceof MMultiplicity) {
-                multi = (MMultiplicity)o;
+                multi = (MMultiplicity) o;
             }
         }
         if (multi != null) {

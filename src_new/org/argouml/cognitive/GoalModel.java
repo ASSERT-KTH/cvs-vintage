@@ -1,3 +1,4 @@
+// $Id: GoalModel.java,v 1.4 2003/06/29 23:53:42 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: GoalModel.java
 // Classes: GoalModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GoalModel.java,v 1.3 2002/11/03 19:39:13 kataka Exp $
+// $Id: GoalModel.java,v 1.4 2003/06/29 23:53:42 linus Exp $
 
 
 package org.argouml.cognitive;
@@ -42,60 +43,62 @@ import java.util.*;
  *  much. */
 
 public class GoalModel extends Observable
-implements java.io.Serializable {
-  ////////////////////////////////////////////////////////////////
-  // instance variables
+    implements java.io.Serializable 
+{
+    ////////////////////////////////////////////////////////////////
+    // instance variables
 
-  private Vector _goals = new Vector();
+    private Vector _goals = new Vector();
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
+    ////////////////////////////////////////////////////////////////
+    // constructor
 
-  public GoalModel() {
-    addGoal(Goal.UNSPEC);
-  }
+    public GoalModel() {
+	addGoal(Goal.UNSPEC);
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // accessors
+    ////////////////////////////////////////////////////////////////
+    // accessors
 
-  public Vector getGoals() { return _goals; }
-  public void addGoal(Goal g) { _goals.addElement(g); }
-  public void removeGoal(Goal g) { _goals.removeElement(g); }
+    public Vector getGoals() { return _goals; }
+    public void addGoal(Goal g) { _goals.addElement(g); }
+    public void removeGoal(Goal g) { _goals.removeElement(g); }
   
-   /** Reply true iff the Designer wants to achieve the given goal. */
-   public boolean hasGoal(String goalName) {
-     Enumeration goalEnum = _goals.elements();
-     while (goalEnum.hasMoreElements()) {
-       Goal g = (Goal) goalEnum.nextElement();
-       if (g.getName().equals(goalName)) return g.getPriority() > 0;
-     }
-     return false;
-   }
+    /** Reply true iff the Designer wants to achieve the given goal. */
+    public boolean hasGoal(String goalName) {
+	Enumeration goalEnum = _goals.elements();
+	while (goalEnum.hasMoreElements()) {
+	    Goal g = (Goal) goalEnum.nextElement();
+	    if (g.getName().equals(goalName)) return g.getPriority() > 0;
+	}
+	return false;
+    }
 
-  public synchronized void setGoalPriority(String goalName, int priority) {
-    Goal g = new Goal(goalName, priority);
-    _goals.removeElement(g);
-    _goals.addElement(g);
-  }
+    public synchronized void setGoalPriority(String goalName, int priority) {
+	Goal g = new Goal(goalName, priority);
+	_goals.removeElement(g);
+	_goals.addElement(g);
+    }
 
-//   public Object getGoalInfo(String goal) {
-//     return _goals.getProperty(goal);
-//     /* TODO, we need a better representation of goals */
-//   }
+    //   public Object getGoalInfo(String goal) {
+    //     return _goals.getProperty(goal);
+    //     /* TODO, we need a better representation of goals */
+    //   }
 
-//   public void setGoalInfo(String goal, String info) {
-//     _goals.put(goal, info);
-//     /* TODO, we need a better representation of goals */
-//   }
+    //   public void setGoalInfo(String goal, String info) {
+    //     _goals.put(goal, info);
+    //     /* TODO, we need a better representation of goals */
+    //   }
 
-  /** The Designer wants to achieve the given goal. */
-  public void startDesiring(String goalName) {
-    addGoal(new Goal(goalName, 1)); }
+    /** The Designer wants to achieve the given goal. */
+    public void startDesiring(String goalName) {
+	addGoal(new Goal(goalName, 1));
+    }
 
-  /** The Designer does not care about the given goal. */
-  public void stopDesiring(String goalName) {
-    removeGoal(new Goal(goalName, 0));
-  }
+    /** The Designer does not care about the given goal. */
+    public void stopDesiring(String goalName) {
+	removeGoal(new Goal(goalName, 0));
+    }
 
 
 } /* end class GoalModel */

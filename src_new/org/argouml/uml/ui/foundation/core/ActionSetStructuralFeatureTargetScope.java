@@ -1,3 +1,4 @@
+// $Id: ActionSetStructuralFeatureTargetScope.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureTargetScope.java,v 1.1 2003/01/29 22:21:57 kataka Exp $
+// $Id: ActionSetStructuralFeatureTargetScope.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -39,30 +40,30 @@ import ru.novosoft.uml.foundation.data_types.MScopeKind;
  */
 public class ActionSetStructuralFeatureTargetScope extends UMLChangeAction {
 
-	public static final ActionSetStructuralFeatureTargetScope SINGLETON =
-		new ActionSetStructuralFeatureTargetScope();
+    public static final ActionSetStructuralFeatureTargetScope SINGLETON =
+	new ActionSetStructuralFeatureTargetScope();
 
-	/**
-	 * Constructor for ActionSetCompositeStateConcurrent.
-	 * @param s
-	 */
-	protected ActionSetStructuralFeatureTargetScope() {
-		super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
-	}
+    /**
+     * Constructor for ActionSetCompositeStateConcurrent.
+     * @param s
+     */
+    protected ActionSetStructuralFeatureTargetScope() {
+	super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+    }
 
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
-		if (e.getSource() instanceof UMLCheckBox2) {
-			UMLCheckBox2 source = (UMLCheckBox2)e.getSource();
-			Object target = source.getTarget();
-			if (target instanceof MStructuralFeature) {
-                MStructuralFeature m = (MStructuralFeature)target;
-				m.setTargetScope(source.isSelected() ? MScopeKind.CLASSIFIER : MScopeKind.INSTANCE);
-			}
-		}
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+	super.actionPerformed(e);
+	if (e.getSource() instanceof UMLCheckBox2) {
+	    UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
+	    Object target = source.getTarget();
+	    if (target instanceof MStructuralFeature) {
+                MStructuralFeature m = (MStructuralFeature) target;
+		m.setTargetScope(source.isSelected() ? MScopeKind.CLASSIFIER : MScopeKind.INSTANCE);
+	    }
 	}
+    }
 
 }

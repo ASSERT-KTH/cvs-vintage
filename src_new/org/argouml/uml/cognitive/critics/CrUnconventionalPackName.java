@@ -1,3 +1,4 @@
+// $Id: CrUnconventionalPackName.java,v 1.4 2003/06/29 23:52:59 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrUnconventionalPackName.java
 // Classes: CrUnconventionalPackName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalPackName.java,v 1.3 2003/02/01 06:21:43 mkl Exp $
+// $Id: CrUnconventionalPackName.java,v 1.4 2003/06/29 23:52:59 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,52 +43,52 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 
 public class CrUnconventionalPackName extends CrUML {
 
-  public CrUnconventionalPackName() {
-    setHeadline("Revise Package Name <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decNAMING);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-    addTrigger("name");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
-
-    String myName = ModelFacade.getName(dm);
-    if (myName == null || myName.equals("")) return NO_PROBLEM;
-    String nameStr = myName;
-    if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
-    int size = nameStr.length();
-    for (int i = 0; i < size; i++) {
-      char c = nameStr.charAt(i);
-      if (!Character.isLowerCase(c) && c != '.') return PROBLEM_FOUND;
+    public CrUnconventionalPackName() {
+	setHeadline("Revise Package Name <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decNAMING);
+	setKnowledgeTypes(Critic.KT_SYNTAX);
+	addTrigger("name");
     }
-    return NO_PROBLEM;
-  }
 
-  public Icon getClarifier() {
-    return ClClassName.TheInstance;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
+
+	String myName = ModelFacade.getName(dm);
+	if (myName == null || myName.equals("")) return NO_PROBLEM;
+	String nameStr = myName;
+	if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
+	int size = nameStr.length();
+	for (int i = 0; i < size; i++) {
+	    char c = nameStr.charAt(i);
+	    if (!Character.isLowerCase(c) && c != '.') return PROBLEM_FOUND;
+	}
+	return NO_PROBLEM;
+    }
+
+    public Icon getClarifier() {
+	return ClClassName.TheInstance;
+    }
 
     public void initWizard(Wizard w) {
-    if (w instanceof WizMEName) {
-      ToDoItem item = w.getToDoItem();
-      MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
-      String ins = "Change the name of this package.";
-      String nameStr = me.getName();
-      String sug = "";
-      int size = nameStr.length();
-      for (int i = 0; i < size; i++) {
-	char c = nameStr.charAt(i);
-	if (Character.isLowerCase(c) || c == '.') sug += c;
-	else if (Character.isUpperCase(c))
-	  sug += Character.toLowerCase(c);
-      }
-      if (sug.equals("")) sug = "PackageName";
-      ((WizMEName)w).setInstructions(ins);
-      ((WizMEName)w).setSuggestion(sug);
+	if (w instanceof WizMEName) {
+	    ToDoItem item = w.getToDoItem();
+	    MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
+	    String ins = "Change the name of this package.";
+	    String nameStr = me.getName();
+	    String sug = "";
+	    int size = nameStr.length();
+	    for (int i = 0; i < size; i++) {
+		char c = nameStr.charAt(i);
+		if (Character.isLowerCase(c) || c == '.') sug += c;
+		else if (Character.isUpperCase(c))
+		    sug += Character.toLowerCase(c);
+	    }
+	    if (sug.equals("")) sug = "PackageName";
+	    ((WizMEName) w).setInstructions(ins);
+	    ((WizMEName) w).setSuggestion(sug);
+	}
     }
-  }
-  public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
+    public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrUnconventionalPackName */
 

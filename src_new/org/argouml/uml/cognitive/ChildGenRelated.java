@@ -1,3 +1,4 @@
+// $Id: ChildGenRelated.java,v 1.6 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.5 2002/12/31 14:09:14 linus Exp $
+// $Id: ChildGenRelated.java,v 1.6 2003/06/29 23:52:58 linus Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -42,89 +43,89 @@ import org.tigris.gef.util.*;
 /** @stereotype singleton
  */
 public class ChildGenRelated implements ChildGenerator {
-  public static ChildGenRelated SINGLETON = new ChildGenRelated();
+    public static ChildGenRelated SINGLETON = new ChildGenRelated();
 
     /** Reply a java.util.Enumeration of the children of the given Object 
      *
      * @return an enumeration or null if not possible to get the children.
      */
-	public Enumeration gen(Object o) {
+    public Enumeration gen(Object o) {
 		
-		Vector res = new Vector();
+	Vector res = new Vector();
 		
-		if (o instanceof MPackage) {
-			Collection ownedElements = ((MPackage)o).getOwnedElements();
-			if (ownedElements != null)
-			    return null;
-		}
-		
-		if (o instanceof MClassifier) {
-			MClassifier cls = (MClassifier) o;
-			Collection assocEnds = cls.getAssociationEnds();
-			Iterator assocIterator = assocEnds.iterator();
-			while (assocIterator.hasNext()) {
-				res.add(((MAssociationEnd)assocIterator.next()).getAssociation());
-			}
-
-			res.addAll(cls.getFeatures());
-			res.addAll(cls.getBehaviors());
-			return res.elements();
-		}
-		
-		if (o instanceof MAssociation) {
-			MAssociation asc = (MAssociation) o;
-			List assocEnds = asc.getConnections();
-			Iterator iter = assocEnds.iterator();
-			while (iter.hasNext()) {
-				res.add(((MAssociationEnd)iter.next()).getType());
-			}
-			return res.elements();
-		}
-		
-		if (o instanceof MStateMachine) {
-			MStateMachine sm = (MStateMachine) o;
-			MState top = sm.getTop();
-			if (top != null)
-				res.addAll(((MCompositeState)top).getSubvertices());
-			res.add(sm.getContext()); //wasteful!
-			res.addAll(sm.getTransitions());
-			return res.elements();
-		}
-		
-		if (o instanceof MStateVertex) {
-			MStateVertex sv = (MStateVertex) o;
-			res.addAll(sv.getIncomings());
-			res.addAll(sv.getOutgoings());
-			
-			if (o instanceof MState) {
-				MState s = (MState) o;
-				res.addAll(s.getInternalTransitions());
-			}
-			
-			if (o instanceof MCompositeState) {
-				MCompositeState cs = (MCompositeState) o;
-				res.addAll(cs.getSubvertices());
-			}
-			return res.elements();
-		}
-		
-		if (o instanceof MTransition) {
-			MTransition tr = (MTransition) o;
-			res.add(tr.getTrigger());
-			res.add(tr.getGuard());
-			res.add(tr.getEffect());
-			res.add(tr.getSource());
-			res.add(tr.getTarget());
-			return res.elements();
-		}
-		
-		// tons more cases
-		
-		if (o instanceof Diagram) {
-			Diagram d = (Diagram) o;
-			res.add(d.getGraphModel().getNodes());
-			res.add(d.getGraphModel().getEdges());
-		}
-		return res.elements();
+	if (o instanceof MPackage) {
+	    Collection ownedElements = ((MPackage) o).getOwnedElements();
+	    if (ownedElements != null)
+		return null;
 	}
+		
+	if (o instanceof MClassifier) {
+	    MClassifier cls = (MClassifier) o;
+	    Collection assocEnds = cls.getAssociationEnds();
+	    Iterator assocIterator = assocEnds.iterator();
+	    while (assocIterator.hasNext()) {
+		res.add(((MAssociationEnd) assocIterator.next()).getAssociation());
+	    }
+
+	    res.addAll(cls.getFeatures());
+	    res.addAll(cls.getBehaviors());
+	    return res.elements();
+	}
+		
+	if (o instanceof MAssociation) {
+	    MAssociation asc = (MAssociation) o;
+	    List assocEnds = asc.getConnections();
+	    Iterator iter = assocEnds.iterator();
+	    while (iter.hasNext()) {
+		res.add(((MAssociationEnd) iter.next()).getType());
+	    }
+	    return res.elements();
+	}
+		
+	if (o instanceof MStateMachine) {
+	    MStateMachine sm = (MStateMachine) o;
+	    MState top = sm.getTop();
+	    if (top != null)
+		res.addAll(((MCompositeState) top).getSubvertices());
+	    res.add(sm.getContext()); //wasteful!
+	    res.addAll(sm.getTransitions());
+	    return res.elements();
+	}
+		
+	if (o instanceof MStateVertex) {
+	    MStateVertex sv = (MStateVertex) o;
+	    res.addAll(sv.getIncomings());
+	    res.addAll(sv.getOutgoings());
+			
+	    if (o instanceof MState) {
+		MState s = (MState) o;
+		res.addAll(s.getInternalTransitions());
+	    }
+			
+	    if (o instanceof MCompositeState) {
+		MCompositeState cs = (MCompositeState) o;
+		res.addAll(cs.getSubvertices());
+	    }
+	    return res.elements();
+	}
+		
+	if (o instanceof MTransition) {
+	    MTransition tr = (MTransition) o;
+	    res.add(tr.getTrigger());
+	    res.add(tr.getGuard());
+	    res.add(tr.getEffect());
+	    res.add(tr.getSource());
+	    res.add(tr.getTarget());
+	    return res.elements();
+	}
+		
+	// tons more cases
+		
+	if (o instanceof Diagram) {
+	    Diagram d = (Diagram) o;
+	    res.add(d.getGraphModel().getNodes());
+	    res.add(d.getGraphModel().getEdges());
+	}
+	return res.elements();
+    }
 } /* end class ChildGenRelated */

@@ -1,3 +1,4 @@
+// $Id: UMLUseCaseDiagram.java,v 1.25 2003/06/29 23:52:22 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.24 2003/05/19 16:01:46 bobtarling Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.25 2003/06/29 23:52:22 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -102,26 +103,26 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         new ActionAddAssociation(MAggregationKind.NONE, false, "Association");
     protected static Action _actionAggregation =
         new ActionAddAssociation(
-            MAggregationKind.AGGREGATE,
-            false,
-            "Aggregation");
+				 MAggregationKind.AGGREGATE,
+				 false,
+				 "Aggregation");
     protected static Action _actionComposition =
         new ActionAddAssociation(
-            MAggregationKind.COMPOSITE,
-            false,
-            "Composition");
+				 MAggregationKind.COMPOSITE,
+				 false,
+				 "Composition");
     protected static Action _actionUniAssociation =
         new ActionAddAssociation(MAggregationKind.NONE, true, "UniAssociation");
     protected static Action _actionUniAggregation =
         new ActionAddAssociation(
-            MAggregationKind.AGGREGATE,
-            true,
-            "UniAggregation");
+				 MAggregationKind.AGGREGATE,
+				 true,
+				 "UniAggregation");
     protected static Action _actionUniComposition =
         new ActionAddAssociation(
-            MAggregationKind.COMPOSITE,
-            true,
-            "UniComposition");
+				 MAggregationKind.COMPOSITE,
+				 true,
+				 "UniComposition");
 
     /**
      * <p>Tool to create a generalization between UML artifacts using a
@@ -129,10 +130,10 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      */
     protected static Action _actionGeneralize =
         new CmdSetMode(
-            ModeCreatePolyEdge.class,
-            "edgeClass",
-            MGeneralization.class,
-            "Generalization");
+		       ModeCreatePolyEdge.class,
+		       "edgeClass",
+		       MGeneralization.class,
+		       "Generalization");
 
     /**
      * <p>Tool to create an extend relationship between UML use cases using a
@@ -140,10 +141,10 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      */
     protected static Action _actionExtend =
         new CmdSetMode(
-            ModeCreatePolyEdge.class,
-            "edgeClass",
-            MExtend.class,
-            "Extend");
+		       ModeCreatePolyEdge.class,
+		       "edgeClass",
+		       MExtend.class,
+		       "Extend");
 
     /**
      * <p>Tool to create an include relationship between UML use cases using a
@@ -151,10 +152,10 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      */
     protected static Action _actionInclude =
         new CmdSetMode(
-            ModeCreatePolyEdge.class,
-            "edgeClass",
-            MInclude.class,
-            "Include");
+		       ModeCreatePolyEdge.class,
+		       "edgeClass",
+		       MInclude.class,
+		       "Include");
 
     /**
      * <p>Tool to create a dependency between UML artifacts using a
@@ -163,10 +164,10 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
     protected static Action _actionDependency =
         new CmdSetMode(
-            ModeCreatePolyEdge.class,
-            "edgeClass",
-            MDependency.class,
-            "Dependency");
+		       ModeCreatePolyEdge.class,
+		       "edgeClass",
+		       MDependency.class,
+		       "Dependency");
     /**
      * <p>A static counter of the use case index (used in constructing a unique
      *   name for each new diagram.</p>
@@ -245,11 +246,11 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     public void setNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
             cat.error(
-                "Illegal argument. Object " + handle + " is not a namespace");
+		      "Illegal argument. Object " + handle + " is not a namespace");
             throw new IllegalArgumentException(
-                "Illegal argument. Object " + handle + " is not a namespace");
+					       "Illegal argument. Object " + handle + " is not a namespace");
         }
-        MNamespace m = (MNamespace)handle;
+        MNamespace m = (MNamespace) handle;
         super.setNamespace(m);
 
         UseCaseDiagramGraphModel gm = new UseCaseDiagramGraphModel();
@@ -287,9 +288,9 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
     private Object[] getAssociationActions() {
         Object actions[][] = {
-            {_actionAssociation,_actionUniAssociation},
-            {_actionAggregation,_actionUniAggregation},
-            {_actionComposition,_actionUniComposition}
+        {_actionAssociation, _actionUniAssociation},
+	{_actionAggregation, _actionUniAggregation},
+	{_actionComposition, _actionUniComposition}
         };
 
         return actions;
@@ -300,10 +301,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         String name = null;
         name = "Usecase Diagram " + _UseCaseDiagramSerial;
         _UseCaseDiagramSerial++;
-        if (!ProjectManager
-            .getManager()
-            .getCurrentProject()
-            .isValidDiagramName(name)) {
+        if (!(ProjectManager.getManager().getCurrentProject()
+	      .isValidDiagramName(name))) {
             name = getNewDiagramName();
         }
         return name;

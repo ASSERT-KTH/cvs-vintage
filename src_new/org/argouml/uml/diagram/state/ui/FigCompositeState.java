@@ -1,3 +1,4 @@
+// $Id: FigCompositeState.java,v 1.9 2003/06/29 23:52:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigCompositeState.java
 // Classes: FigCompositeState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigCompositeState.java,v 1.8 2002/12/31 09:58:48 kataka Exp $
+// $Id: FigCompositeState.java,v 1.9 2003/06/29 23:52:18 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 

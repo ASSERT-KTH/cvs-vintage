@@ -1,3 +1,4 @@
+// $Id: CheckManager.java,v 1.2 2003/06/29 23:53:43 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CheckManager.java
 // Class: CheckManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckManager.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: CheckManager.java,v 1.2 2003/06/29 23:53:43 linus Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -39,42 +40,42 @@ import java.util.*;
 
 public class CheckManager implements java.io.Serializable {
 
-  ////////////////////////////////////////////////////////////////
-  // static variables
+    ////////////////////////////////////////////////////////////////
+    // static variables
 
-  protected static Hashtable _lists = new Hashtable();
-  protected static Hashtable _stats = new Hashtable();
+    protected static Hashtable _lists = new Hashtable();
+    protected static Hashtable _stats = new Hashtable();
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CheckManager() { }
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CheckManager() { }
 
-  ////////////////////////////////////////////////////////////////
-  // static accessors
+    ////////////////////////////////////////////////////////////////
+    // static accessors
 
-  public static Checklist getChecklistFor(Object dm) {
-    Checklist cl = (Checklist) _lists.get(dm);
-    if (cl != null) return cl;
-    java.lang.Class cls = dm.getClass();
-    while (cls != null) {
-      cl = (Checklist) _lists.get(cls);
-      if (cl != null) return cl;
-      cls = cls.getSuperclass();
+    public static Checklist getChecklistFor(Object dm) {
+	Checklist cl = (Checklist) _lists.get(dm);
+	if (cl != null) return cl;
+	java.lang.Class cls = dm.getClass();
+	while (cls != null) {
+	    cl = (Checklist) _lists.get(cls);
+	    if (cl != null) return cl;
+	    cls = cls.getSuperclass();
+	}
+	return null;
     }
-    return null;
-  }
 
-  public static void register(Object dm, Checklist cl) {
-    _lists.put(dm, cl);
-  }
-
-  public static ChecklistStatus getStatusFor(Object dm) {
-    ChecklistStatus cls = (ChecklistStatus) _stats.get(dm);
-    if (cls == null) {
-      cls = new ChecklistStatus();
-      _stats.put(dm, cls);
+    public static void register(Object dm, Checklist cl) {
+	_lists.put(dm, cl);
     }
-    return cls;
-  }
+
+    public static ChecklistStatus getStatusFor(Object dm) {
+	ChecklistStatus cls = (ChecklistStatus) _stats.get(dm);
+	if (cls == null) {
+	    cls = new ChecklistStatus();
+	    _stats.put(dm, cls);
+	}
+	return cls;
+    }
 } /* end class CheckManager */
 

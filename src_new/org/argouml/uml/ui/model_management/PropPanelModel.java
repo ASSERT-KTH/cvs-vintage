@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.9 2003/01/26 16:22:47 kataka Exp $
+// $Id: PropPanelModel.java,v 1.10 2003/06/29 23:50:44 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,15 +31,16 @@ import org.argouml.application.ArgoVersion;
 import ru.novosoft.uml.model_management.*;
 
 public class PropPanelModel extends PropPanelPackage
-implements PluggablePropertyPanel {
-  ////////////////////////////////////////////////////////////////
-  // instance vars
+    implements PluggablePropertyPanel 
+{
+    ////////////////////////////////////////////////////////////////
+    // instance vars
 
-  ////////////////////////////////////////////////////////////////
-  // contructors
-  public PropPanelModel() {
-      super("Model", ConfigLoader.getTabPropsOrientation());
-  }
+    ////////////////////////////////////////////////////////////////
+    // contructors
+    public PropPanelModel() {
+	super("Model", ConfigLoader.getTabPropsOrientation());
+    }
 
     public Class getClassForPanel() {
         return MModelImpl.class;

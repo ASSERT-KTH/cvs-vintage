@@ -1,4 +1,4 @@
-// $Id: CrAttrNameConflict.java,v 1.6 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrAttrNameConflict.java,v 1.7 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAttrNameConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.6 2003/02/02 20:47:42 kataka Exp $
+// $Id: CrAttrNameConflict.java,v 1.7 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -56,15 +56,15 @@ import org.argouml.model.ModelFacade;
  */
 public class CrAttrNameConflict extends CrUML {
 
-  public CrAttrNameConflict() {
-    setHeadline("Revise MAttribute Names to Avoid Conflict");
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addSupportedDecision(CrUML.decSTORAGE);
-    addSupportedDecision(CrUML.decNAMING);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-    addTrigger("structuralFeature");
-    addTrigger("feature_name");
-  }
+    public CrAttrNameConflict() {
+	setHeadline("Revise MAttribute Names to Avoid Conflict");
+	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.decSTORAGE);
+	addSupportedDecision(CrUML.decNAMING);
+	setKnowledgeTypes(Critic.KT_SYNTAX);
+	addTrigger("structuralFeature");
+	addTrigger("feature_name");
+    }
 
     /**
      * Examines the classifier and tells if we have two attributes
@@ -90,9 +90,9 @@ public class CrAttrNameConflict extends CrUML {
 	return NO_PROBLEM;
     }
 
-  public Icon getClarifier() {
-    return ClAttributeCompartment.TheInstance;
-  }
+    public Icon getClarifier() {
+	return ClAttributeCompartment.TheInstance;
+    }
 
 } /* end class CrAttrNameConflict.java */
 

@@ -1,3 +1,4 @@
+// $Id: CrNameConflictAC.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrNameConflictAC.java
 // Classes: CrNameConflictAC
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflictAC.java,v 1.3 2002/10/20 21:11:15 linus Exp $
+// $Id: CrNameConflictAC.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,16 +43,16 @@ import org.argouml.cognitive.critics.*;
 
 public class CrNameConflictAC extends CrUML {
 
-  public CrNameConflictAC() {
-    setHeadline("Role name conflicts with member");
-    addSupportedDecision(CrUML.decNAMING);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-  }
+    public CrNameConflictAC() {
+	setHeadline("Role name conflicts with member");
+	addSupportedDecision(CrUML.decNAMING);
+	setKnowledgeTypes(Critic.KT_SYNTAX);
+    }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    // TODO: not implemented
-    return NO_PROBLEM;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	// TODO: not implemented
+	return NO_PROBLEM;
+    }
 
 } /* end class CrNameConflictAC.java */
 

@@ -1,3 +1,4 @@
+// $Id: GoProjectToModel.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoProjectToModel.java,v 1.2 2003/04/15 00:17:27 alexb Exp $
+// $Id: GoProjectToModel.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -33,15 +34,15 @@ import org.argouml.ui.AbstractGoRule;
 
 public class GoProjectToModel extends AbstractGoRule {
 
-  public String getRuleName() {
-    return Argo.localize ("Tree", "misc.project.package");
-  }
+    public String getRuleName() {
+	return Argo.localize ("Tree", "misc.project.package");
+    }
  
-  public Collection getChildren(Object parent) { 
-      if (parent instanceof Project) {
-          return ((Project)parent).getUserDefinedModels();
-      }
-      return null;
-  }
+    public Collection getChildren(Object parent) { 
+	if (parent instanceof Project) {
+	    return ((Project) parent).getUserDefinedModels();
+	}
+	return null;
+    }
 
 }

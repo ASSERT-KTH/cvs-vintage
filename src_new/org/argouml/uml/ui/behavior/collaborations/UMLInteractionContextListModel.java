@@ -1,4 +1,4 @@
-// $Id: UMLInteractionContextListModel.java,v 1.4 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLInteractionContextListModel.java,v 1.5 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class UMLInteractionContextListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(((MInteraction)getTarget()).getContext());
+        addElement(((MInteraction) getTarget()).getContext());
     }
 
     /**
@@ -58,7 +58,7 @@ public class UMLInteractionContextListModel
      */
     protected boolean isValidElement(MBase elem) {
         return elem instanceof MCollaboration && 
-            ((MCollaboration)elem).getInteractions().contains(getTarget());
+            ((MCollaboration) elem).getInteractions().contains(getTarget());
     }
 
 }

@@ -1,3 +1,4 @@
+// $Id: ActionSetStructuralFeatureChangeability.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureChangeability.java,v 1.1 2003/01/29 22:21:57 kataka Exp $
+// $Id: ActionSetStructuralFeatureChangeability.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -42,38 +43,38 @@ import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 public class ActionSetStructuralFeatureChangeability extends UMLChangeAction {
     public static final ActionSetStructuralFeatureChangeability SINGLETON = new ActionSetStructuralFeatureChangeability();
 
-        public final static String ADDONLY_COMMAND = "addonly";
-        public final static String CHANGEABLE_COMMAND = "changeable";
-        public final static String FROZEN_COMMAND = "frozen";
+    public final static String ADDONLY_COMMAND = "addonly";
+    public final static String CHANGEABLE_COMMAND = "changeable";
+    public final static String FROZEN_COMMAND = "frozen";
 
-        /**
-         * Constructor for ActionSetElementOwnershipSpecification.
-         * @param s
-         */
-        protected ActionSetStructuralFeatureChangeability() {
-            super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
-        }
+    /**
+     * Constructor for ActionSetElementOwnershipSpecification.
+     * @param s
+     */
+    protected ActionSetStructuralFeatureChangeability() {
+	super(Argo.localize("CoreMenu", "Set"), true, NO_ICON);
+    }
 
-        /**
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         */
-        public void actionPerformed(ActionEvent e) {
-            super.actionPerformed(e);
-            if (e.getSource() instanceof JRadioButton) {
-                JRadioButton source = (JRadioButton) e.getSource();
-                String actionCommand = source.getActionCommand();
-                Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
-                if (target instanceof MStructuralFeature) {
-                    MStructuralFeature m = (MStructuralFeature) target;
-                    MChangeableKind kind = null;
-                    if (actionCommand.equals(ADDONLY_COMMAND)) {
-                        kind = MChangeableKind.ADD_ONLY;
-                    } else if (actionCommand.equals(CHANGEABLE_COMMAND)) {
-                        kind = MChangeableKind.CHANGEABLE;
-                    } else
-                        kind = MChangeableKind.FROZEN;
-                    m.setChangeability(kind);
-                }
-            }
-        }
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+	super.actionPerformed(e);
+	if (e.getSource() instanceof JRadioButton) {
+	    JRadioButton source = (JRadioButton) e.getSource();
+	    String actionCommand = source.getActionCommand();
+	    Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
+	    if (target instanceof MStructuralFeature) {
+		MStructuralFeature m = (MStructuralFeature) target;
+		MChangeableKind kind = null;
+		if (actionCommand.equals(ADDONLY_COMMAND)) {
+		    kind = MChangeableKind.ADD_ONLY;
+		} else if (actionCommand.equals(CHANGEABLE_COMMAND)) {
+		    kind = MChangeableKind.CHANGEABLE;
+		} else
+		    kind = MChangeableKind.FROZEN;
+		m.setChangeability(kind);
+	    }
+	}
+    }
 }

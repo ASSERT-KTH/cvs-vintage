@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.13 2003/02/02 12:39:27 kataka Exp $
+// $Id: CrNoOperations.java,v 1.14 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,12 +43,12 @@ import org.argouml.model.ModelFacade;
  */
 public class CrNoOperations extends CrUML {
 
-  public CrNoOperations() {
-    setHeadline("Add Operations to <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decBEHAVIOR);
-    setKnowledgeTypes(Critic.KT_COMPLETENESS);
-    addTrigger("behavioralFeature");
-  }
+    public CrNoOperations() {
+	setHeadline("Add Operations to <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decBEHAVIOR);
+	setKnowledgeTypes(Critic.KT_COMPLETENESS);
+	addTrigger("behavioralFeature");
+    }
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;

@@ -1,3 +1,4 @@
+// $Id: GoSummaryToAssociation.java,v 1.3 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,37 +37,37 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToAssociation extends AbstractGoRule {
 
-  public String getRuleName() {
-    return Argo.localize ("Tree", "misc.class.attribute");
-  }
+    public String getRuleName() {
+	return Argo.localize ("Tree", "misc.class.attribute");
+    }
 
 
-  public Collection getChildren(Object parent) {
-      if ( parent instanceof AssociationsNode) {
+    public Collection getChildren(Object parent) {
+	if ( parent instanceof AssociationsNode) {
           
-          //List list = new ArrayList();
+	    //List list = new ArrayList();
           
-          return UmlHelper.getHelper().getCore().getAssociations(((AssociationsNode)parent).getParent());
-          //ModelFacade.getAssociationEnds(((AssociationsNode)parent).getParent());
-          /*
-          Iterator it = col.iterator();
+	    return UmlHelper.getHelper().getCore().getAssociations(((AssociationsNode) parent).getParent());
+	    //ModelFacade.getAssociationEnds(((AssociationsNode)parent).getParent());
+	    /*
+	      Iterator it = col.iterator();
           
-          while(it.hasNext()){
+	      while(it.hasNext()){
               
               list.add(it.next());
-          }
-          return list;
-           */
+	      }
+	      return list;
+	    */
            
-      }
-      return null;
-  }
+	}
+	return null;
+    }
 
 }

@@ -1,3 +1,4 @@
+// $Id: GoLinkStimuli.java,v 1.10 2003/06/29 23:52:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -13,14 +14,14 @@
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY O
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkStimuli.java,v 1.9 2003/04/15 00:17:26 alexb Exp $
+// $Id: GoLinkStimuli.java,v 1.10 2003/06/29 23:52:16 linus Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.util.Collection;
@@ -34,10 +35,10 @@ import ru.novosoft.uml.behavior.common_behavior.MLink;
 
 public class GoLinkStimuli extends AbstractGoRule {
     
-  public Collection getChildren(Object parent) {
-    if (!(parent instanceof MLink)) return null;
-    return ((MLink)parent).getStimuli();
-  }
+    public Collection getChildren(Object parent) {
+	if (!(parent instanceof MLink)) return null;
+	return ((MLink) parent).getStimuli();
+    }
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getRuleName()

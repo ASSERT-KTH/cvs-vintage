@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationConstrainingElementListModel.java,v 1.4 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLCollaborationConstrainingElementListModel.java,v 1.5 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,14 +50,14 @@ public class UMLCollaborationConstrainingElementListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MCollaboration)getTarget()).getConstrainingElements());
+        setAllElements(((MCollaboration) getTarget()).getConstrainingElements());
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase elem) {
-        return (((MCollaboration)getTarget()).getConstrainingElements().contains(elem));
+        return (((MCollaboration) getTarget()).getConstrainingElements().contains(elem));
     }
 
 }

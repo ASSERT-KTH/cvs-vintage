@@ -1,3 +1,4 @@
+// $Id: ActionAddDiagram.java,v 1.17 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.16 2003/05/09 23:26:07 alexb Exp $
+// $Id: ActionAddDiagram.java,v 1.17 2003/06/29 23:50:02 linus Exp $
 
 package org.argouml.uml.ui;
 
@@ -76,7 +77,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
                 }
             }
         }
-        if (ns!= null && isValidNamespace(ns)) {
+        if (ns != null && isValidNamespace(ns)) {
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
             TargetManager.getInstance().setTarget(diagram);

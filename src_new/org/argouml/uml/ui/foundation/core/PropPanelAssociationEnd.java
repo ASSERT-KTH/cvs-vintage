@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.33 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.34 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
- * @todo this property panel needs refactoring to remove dependency on
+ * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
 public class PropPanelAssociationEnd extends PropPanelModelElement {

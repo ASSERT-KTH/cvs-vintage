@@ -1,3 +1,4 @@
+// $Id: UMLUseCaseExtendListModel.java,v 1.5 2003/06/29 23:50:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,14 +49,14 @@ public class UMLUseCaseExtendListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MUseCase)getTarget()).getExtends());
+        setAllElements(((MUseCase) getTarget()).getExtends());
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
-     protected boolean isValidElement(MBase o) {
-        return ((MUseCase)getTarget()).getExtends().contains(o);
+    protected boolean isValidElement(MBase o) {
+        return ((MUseCase) getTarget()).getExtends().contains(o);
     }
 
 }

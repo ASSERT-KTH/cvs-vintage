@@ -1,3 +1,4 @@
+// $Id: ActionSetElementOwnershipVisibility.java,v 1.6 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.5 2003/04/29 19:25:09 kataka Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.6 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -65,19 +66,19 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
         if (e.getSource() instanceof JRadioButton) {
             Object target = _group.getTarget();
             if (target instanceof MModelElement) {
-                MModelElement m = (MModelElement)target;
+                MModelElement m = (MModelElement) target;
                 String command = e.getActionCommand();
                 if (command.equals(PUBLIC_ACTION_COMMAND)) {
                     m.setVisibility(MVisibilityKind.PUBLIC);
                     
                 } else
-                if (command.equals(PRIVATE_ACTION_COMMAND)) {
-                    m.setVisibility(MVisibilityKind.PRIVATE);
-                } else
-                if (command.equals(PROTECTED_ACTION_COMMAND)) {
-                    m.setVisibility(MVisibilityKind.PROTECTED);
-                } else
-                    throw new IllegalArgumentException("Illegal action. Actioncommand was not correct. It was " + command);
+		    if (command.equals(PRIVATE_ACTION_COMMAND)) {
+			m.setVisibility(MVisibilityKind.PRIVATE);
+		    } else
+			if (command.equals(PROTECTED_ACTION_COMMAND)) {
+			    m.setVisibility(MVisibilityKind.PROTECTED);
+			} else
+			    throw new IllegalArgumentException("Illegal action. Actioncommand was not correct. It was " + command);
             }
         }
     }

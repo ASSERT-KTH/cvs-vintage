@@ -1,3 +1,4 @@
+// $Id: CrIllegalGeneralization.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrIllegalGeneralization.java
 // Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.3 2003/01/06 10:40:36 mkl Exp $
+// $Id: CrIllegalGeneralization.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,25 +45,25 @@ import org.argouml.cognitive.*;
 
 public class CrIllegalGeneralization extends CrUML {
 
-  public CrIllegalGeneralization() {
-    setHeadline("Illegal MGeneralization ");
+    public CrIllegalGeneralization() {
+	setHeadline("Illegal MGeneralization ");
 
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addTrigger("supertype");
-    addTrigger("subtype");
-  }
+	addSupportedDecision(CrUML.decINHERITANCE);
+	addTrigger("supertype");
+	addTrigger("subtype");
+    }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MGeneralization)) return NO_PROBLEM;
-    MGeneralization gen = (MGeneralization) dm;
-    Object cls1 = gen.getParent();
-    Object cls2 = gen.getChild();
-    if (cls1 == null || cls2 == null) return NO_PROBLEM;
-    java.lang.Class javaClass1 = cls1.getClass();
-    java.lang.Class javaClass2 = cls2.getClass();
-    if (javaClass1 != javaClass2) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MGeneralization)) return NO_PROBLEM;
+	MGeneralization gen = (MGeneralization) dm;
+	Object cls1 = gen.getParent();
+	Object cls2 = gen.getChild();
+	if (cls1 == null || cls2 == null) return NO_PROBLEM;
+	java.lang.Class javaClass1 = cls1.getClass();
+	java.lang.Class javaClass2 = cls2.getClass();
+	if (javaClass1 != javaClass2) return PROBLEM_FOUND;
+	return NO_PROBLEM;
+    }
 
 } /* end class CrIllegalGeneralization.java */
 

@@ -1,3 +1,4 @@
+// $Id: ControlMech.java,v 1.3 2003/06/29 23:53:43 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: ControlMech.java
 // Classes: ControlMech EnabledCM NotHushedCM CompositeCM
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ControlMech.java,v 1.2 2003/05/31 03:52:01 mkl Exp $
+// $Id: ControlMech.java,v 1.3 2003/06/29 23:53:43 linus Exp $
 
 // TO DO: Do all these classes need to be in their own files? public?
 
@@ -42,10 +43,10 @@ import org.argouml.cognitive.*;
 
 public abstract class ControlMech implements java.io.Serializable {
 
-  public ControlMech() { }
-  public boolean isRelevant(Critic c, Designer d) {
-    return true;
-  }
+    public ControlMech() { }
+    public boolean isRelevant(Critic c, Designer d) {
+	return true;
+    }
 } // end class ControlMech
 
 

@@ -1,3 +1,4 @@
+// $Id: TabStyle.java,v 1.17 2003/06/29 23:50:03 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.16 2003/06/08 21:48:10 kataka Exp $
+// $Id: TabStyle.java,v 1.17 2003/06/29 23:50:03 linus Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -135,14 +136,14 @@ public class TabStyle
     }
 
     /** Adds a style panel to the internal list. This allows a plugin to
-    *  add and register a new style panel at run-time. This property style will
-    *  then be displayed in the detatils pane whenever an element of the given 
-    *  metaclass is selected.
-    *
-    * @param c the metaclass whose details show be displayed in the property panel p
-    * @param s an instance of the style panel for the metaclass m
-    *
-    */
+     *  add and register a new style panel at run-time. This property style will
+     *  then be displayed in the detatils pane whenever an element of the given 
+     *  metaclass is selected.
+     *
+     * @param c the metaclass whose details show be displayed in the property panel p
+     * @param s an instance of the style panel for the metaclass m
+     *
+     */
     public void addPanel(Class c, StylePanel s) {
         _panels.put(c, s);
     }
@@ -241,7 +242,7 @@ public class TabStyle
             _panels.put(targetClass, p);
         } else
             _cat.debug("found style for " + targetClass.getName());
-        return (StylePanel)p;
+        return (StylePanel) p;
     }
 
     public Class panelClassFor(Class targetClass) {
@@ -327,8 +328,8 @@ public class TabStyle
     }
 
     /**
-         * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
-         */
+     * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
+     */
     public void targetAdded(TargetEvent e) {
         // we can neglect this, the TabProps allways selects the first target
         // in a set of targets. The first target can only be 
@@ -379,7 +380,7 @@ public class TabStyle
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == TargetListener.class) {
                 // Lazily create the event:                     
-                 ((TargetListener) listeners[i + 1]).targetSet(targetEvent);
+		((TargetListener) listeners[i + 1]).targetSet(targetEvent);
             }
         }
     }
@@ -391,7 +392,7 @@ public class TabStyle
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == TargetListener.class) {
                 // Lazily create the event:                     
-                 ((TargetListener) listeners[i + 1]).targetAdded(targetEvent);
+		((TargetListener) listeners[i + 1]).targetAdded(targetEvent);
             }
         }
     }

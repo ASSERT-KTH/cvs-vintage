@@ -1,3 +1,4 @@
+// $Id: ActionSetMultiplicity.java,v 1.3 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.2 2003/02/09 14:18:43 kataka Exp $
+// $Id: ActionSetMultiplicity.java,v 1.3 2003/06/29 23:50:02 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -50,8 +51,8 @@ public abstract class ActionSetMultiplicity extends UMLChangeAction {
         super.actionPerformed(e);
         Object source = e.getSource();
         if (source instanceof UMLComboBox2) {
-            Object selected = ((UMLComboBox2)source).getSelectedItem();
-            Object target = ((UMLComboBox2)source).getTarget();
+            Object selected = ((UMLComboBox2) source).getSelectedItem();
+            Object target = ((UMLComboBox2) source).getTarget();
             if (target != null && selected != null)
                 setSelectedItem(selected, target);
         }

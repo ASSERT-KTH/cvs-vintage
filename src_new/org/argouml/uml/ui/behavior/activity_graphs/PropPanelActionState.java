@@ -1,3 +1,4 @@
+// $Id: PropPanelActionState.java,v 1.11 2003/06/29 23:50:10 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.10 2003/05/10 15:22:41 bobtarling Exp $
+// $Id: PropPanelActionState.java,v 1.11 2003/06/29 23:50:10 linus Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 

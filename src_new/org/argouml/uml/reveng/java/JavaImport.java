@@ -1,4 +1,5 @@
- // Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: JavaImport.java,v 1.21 2003/06/29 23:53:01 linus Exp $
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: JavaImport.java,v 1.20 2003/03/19 23:35:08 alexb Exp $
+//$Id: JavaImport.java,v 1.21 2003/06/29 23:53:01 linus Exp $
 
 package org.argouml.uml.reveng.java;
 
@@ -37,8 +38,8 @@ import java.io.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.20 $
- * $Date: 2003/03/19 23:35:08 $
+ * $Revision: 1.21 $
+ * $Date: 2003/06/29 23:53:01 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -52,56 +53,56 @@ public class JavaImport extends FileImportSupport {
      */
     public void parseFile( Project p, Object o, DiagramInterface diagram, Import _import)
 	throws Exception {
-		if (o instanceof File ) {
-			File f = (File)o;
-			// Create a scanner that reads from the input stream passed to us
-			JavaLexer lexer = new JavaLexer(new BufferedReader(new FileReader(f)));
+	if (o instanceof File ) {
+	    File f = (File) o;
+	    // Create a scanner that reads from the input stream passed to us
+	    JavaLexer lexer = new JavaLexer(new BufferedReader(new FileReader(f)));
 
-			// We use a special Argo token, that stores the preceding
-			// whitespaces.
-			lexer.setTokenObjectClass( "org.argouml.uml.reveng.java.ArgoToken");
+	    // We use a special Argo token, that stores the preceding
+	    // whitespaces.
+	    lexer.setTokenObjectClass( "org.argouml.uml.reveng.java.ArgoToken");
 
-			// Create a parser that reads from the scanner
-			JavaRecognizer parser = new JavaRecognizer( lexer);
+	    // Create a parser that reads from the scanner
+	    JavaRecognizer parser = new JavaRecognizer( lexer);
 
-			// Create a modeller for the parser
-			Modeller modeller = new Modeller(p.getModel(),
-                                         diagram, _import,
-					 attribute.isSelected(),
-					 datatype.isSelected(),
-                                         f.getName());
+	    // Create a modeller for the parser
+	    Modeller modeller = new Modeller(p.getModel(),
+					     diagram, _import,
+					     attribute.isSelected(),
+					     datatype.isSelected(),
+					     f.getName());
 
-			// Print the name of the current file, so we can associate
-			// exceptions to the file.
-			Argo.log.info("Parsing " + f.getAbsolutePath());
+	    // Print the name of the current file, so we can associate
+	    // exceptions to the file.
+	    Argo.log.info("Parsing " + f.getAbsolutePath());
 
-			// start parsing at the compilationUnit rule
-			parser.compilationUnit(modeller, lexer);
-		}
+	    // start parsing at the compilationUnit rule
+	    parser.compilationUnit(modeller, lexer);
+	}
     }
 
-	/** 
-	 * Provides an array of suffix filters for the module.
-	 * @return SuffixFilter[] files with these suffixes will be processed.
-	 */
-	public SuffixFilter[] getSuffixFilters() {
-		SuffixFilter[] result = {FileFilters.JavaFilter};
-		return result;
-	}
+    /** 
+     * Provides an array of suffix filters for the module.
+     * @return SuffixFilter[] files with these suffixes will be processed.
+     */
+    public SuffixFilter[] getSuffixFilters() {
+	SuffixFilter[] result = {FileFilters.JavaFilter};
+	return result;
+    }
 	
-		/** Display name of the module. */
-		public String getModuleName() {
-			return "Java";
-		}
+    /** Display name of the module. */
+    public String getModuleName() {
+	return "Java";
+    }
 
-		/** Textual description of the module. */
-		public String getModuleDescription() {
-			return "Java import from files";
-		}
+    /** Textual description of the module. */
+    public String getModuleDescription() {
+	return "Java import from files";
+    }
 
-		public String getModuleKey() {
-			return "module.import.java-files";
-		}
+    public String getModuleKey() {
+	return "module.import.java-files";
+    }
 
 }
 

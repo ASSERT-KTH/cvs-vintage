@@ -1,3 +1,4 @@
+// $Id: UMLExtensionPointLocationDocument.java,v 1.5 2003/06/29 23:50:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,14 +48,14 @@ public class UMLExtensionPointLocationDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#setProperty(java.lang.String)
      */
     protected void setProperty(String text) {
-        ((MExtensionPoint)getTarget()).setLocation(text);
+        ((MExtensionPoint) getTarget()).setLocation(text);
     }
 
     /**
      * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
      */
     protected String getProperty() {
-        return ((MExtensionPoint)getTarget()).getLocation();
+        return ((MExtensionPoint) getTarget()).getLocation();
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: CrClassMustBeAbstract.java,v 1.8 2003/02/02 12:39:27 kataka Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.9 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrClassMustBeAbstract.java
 // Classes: CrClassMustBeAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.8 2003/02/02 12:39:27 kataka Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.9 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,13 +45,13 @@ import org.argouml.model.ModelFacade;
 
 public class CrClassMustBeAbstract extends CrUML {
 
-  public CrClassMustBeAbstract() {
-    setHeadline("Class Must be Abstract");
+    public CrClassMustBeAbstract() {
+	setHeadline("Class Must be Abstract");
 
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addSupportedDecision(CrUML.decMETHODS);
-    setKnowledgeTypes(Critic.KT_SEMANTICS);
-  }
+	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.decMETHODS);
+	setKnowledgeTypes(Critic.KT_SEMANTICS);
+    }
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;

@@ -1,4 +1,4 @@
-// $Id: PropPanelAction.java,v 1.1 2003/06/21 07:53:08 mkl Exp $
+// $Id: PropPanelAction.java,v 1.2 2003/06/29 23:50:11 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 /**
- * @todo this property panel needs refactoring to remove dependency on
+ * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
 public abstract class PropPanelAction extends PropPanelModelElement {
@@ -62,9 +62,9 @@ public abstract class PropPanelAction extends PropPanelModelElement {
         UMLExpressionModel expressionModel =
             new UMLExpressionModel(
                 this,
-                (Class)ModelFacade.ACTION,
+                (Class) ModelFacade.ACTION,
                 "script",
-                (Class)ModelFacade.ACTION_EXPRESSION,
+                (Class) ModelFacade.ACTION_EXPRESSION,
                 "getScript",
                 "setScript");
         addField(Argo.localize("UMLMenu", "label.expression"), new JScrollPane(new UMLExpressionBodyField(expressionModel, true)));

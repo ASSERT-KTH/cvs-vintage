@@ -1,3 +1,4 @@
+// $Id: GoSummaryToInheritance.java,v 1.4 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,56 +37,56 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  *
- * @author  alexb, $Author: kataka $
+ * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToInheritance extends AbstractGoRule {
 
-  public String getRuleName() {
-    return Argo.localize ("Tree", "misc.class.attribute");
-  }
+    public String getRuleName() {
+	return Argo.localize ("Tree", "misc.class.attribute");
+    }
 
-  public Collection getChildren(Object parent) {
-      if ( parent instanceof InheritanceNode) {
+    public Collection getChildren(Object parent) {
+	if ( parent instanceof InheritanceNode) {
           
-          List list = new ArrayList();
+	    List list = new ArrayList();
           
-          Iterator it = ModelFacade.getSupplierDependencies(
-                                        ((InheritanceNode)parent).getParent()).iterator();
+	    Iterator it = ModelFacade.getSupplierDependencies(
+							      ((InheritanceNode) parent).getParent()).iterator();
           
-          while(it.hasNext()){
+	    while (it.hasNext()) {
               
-              Object next = it.next();
-              if(ModelFacade.isAAbstraction(next))
-                list.add(next);
-          }
+		Object next = it.next();
+		if (ModelFacade.isAAbstraction(next))
+		    list.add(next);
+	    }
           
-          it = ModelFacade.getClientDependencies(
-                            ((InheritanceNode)parent).getParent()).iterator();
+	    it = ModelFacade.getClientDependencies(
+						   ((InheritanceNode) parent).getParent()).iterator();
           
-          while(it.hasNext()){
+	    while (it.hasNext()) {
               
-              Object next = it.next();
-              if(ModelFacade.isAAbstraction(next))
-                list.add(next);
-          }
+		Object next = it.next();
+		if (ModelFacade.isAAbstraction(next))
+		    list.add(next);
+	    }
           
-          Iterator generalizationsIt = ModelFacade.getGeneralizations(
-                                            ((InheritanceNode)parent).getParent());
-          Iterator specializationsIt = ModelFacade.getSpecializations(
-                                            ((InheritanceNode)parent).getParent());
+	    Iterator generalizationsIt = ModelFacade.getGeneralizations(
+									((InheritanceNode) parent).getParent());
+	    Iterator specializationsIt = ModelFacade.getSpecializations(
+									((InheritanceNode) parent).getParent());
           
-          while(generalizationsIt.hasNext())
-              list.add(generalizationsIt.next());
+	    while (generalizationsIt.hasNext())
+		list.add(generalizationsIt.next());
           
-          while(specializationsIt.hasNext())
-              list.add(specializationsIt.next());
+	    while (specializationsIt.hasNext())
+		list.add(specializationsIt.next());
           
-          return list;
-      }
-      return null;
-  }
+	    return list;
+	}
+	return null;
+    }
 
 }

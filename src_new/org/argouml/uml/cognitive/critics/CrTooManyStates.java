@@ -1,3 +1,4 @@
+// $Id: CrTooManyStates.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrTooManyStates.java
 // Classes: CrTooManyStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyStates.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrTooManyStates.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,30 +43,30 @@ import org.argouml.cognitive.*;
 
 public class CrTooManyStates extends CrUML {
 
-  ////////////////////////////////////////////////////////////////
-  // constants
-  public static String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CrTooManyStates() {
-    setHeadline("Reduce States in machine <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    setArg(THRESHOLD, new Integer(20));
-    addTrigger("substate");
-  }
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CrTooManyStates() {
+	setHeadline("Reduce States in machine <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	setArg(THRESHOLD, new Integer(20));
+	addTrigger("substate");
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // critiquing API
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MCompositeState)) return NO_PROBLEM;
-    MCompositeState cs = (MCompositeState) dm;
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MCompositeState)) return NO_PROBLEM;
+	MCompositeState cs = (MCompositeState) dm;
 
-    int threshold = ((Integer)getArg(THRESHOLD)).intValue();
-    Collection subs = cs.getSubvertices();
-    if (subs.size() <= threshold) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
+	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	Collection subs = cs.getSubvertices();
+	if (subs.size() <= threshold) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
 
 } /* end class CrTooManyStates */
 

@@ -1,3 +1,4 @@
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -65,18 +66,18 @@ public class UMLAssociationEndAggregationRadioButtonPanel extends UMLRadioButton
      */
     public void buildModel() {
         if (getTarget() != null) {
-            MAssociationEnd target = (MAssociationEnd)getTarget();
+            MAssociationEnd target = (MAssociationEnd) getTarget();
             MAggregationKind kind = target.getAggregation();
             if (kind == null || kind.equals(MAggregationKind.NONE)) {
                 setSelected(ActionSetAssociationEndAggregation.NONE_COMMAND);
             } else
-            if (kind.equals(MAggregationKind.AGGREGATE)) {
-                setSelected(ActionSetAssociationEndAggregation.AGGREGATE_COMMAND); 
-            } else
-            if (kind.equals(MAggregationKind.COMPOSITE)) {
-                setSelected(ActionSetAssociationEndAggregation.COMPOSITE_COMMAND);
-            } else
-                setSelected(ActionSetAssociationEndAggregation.NONE_COMMAND);
+		if (kind.equals(MAggregationKind.AGGREGATE)) {
+		    setSelected(ActionSetAssociationEndAggregation.AGGREGATE_COMMAND); 
+		} else
+		    if (kind.equals(MAggregationKind.COMPOSITE)) {
+			setSelected(ActionSetAssociationEndAggregation.COMPOSITE_COMMAND);
+		    } else
+			setSelected(ActionSetAssociationEndAggregation.NONE_COMMAND);
         }
     }
 

@@ -1,3 +1,4 @@
+// $Id: GoFilteredChildren.java,v 1.15 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoFilteredChildren.java,v 1.14 2003/05/06 21:52:16 alexb Exp $
+// $Id: GoFilteredChildren.java,v 1.15 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 

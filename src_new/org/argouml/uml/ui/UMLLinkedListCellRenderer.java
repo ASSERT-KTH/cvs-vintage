@@ -1,3 +1,4 @@
+// $Id: UMLLinkedListCellRenderer.java,v 1.2 2003/06/29 23:50:03 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLLinkedListCellRenderer.java,v 1.1 2003/01/03 16:44:25 kataka Exp $
+// $Id: UMLLinkedListCellRenderer.java,v 1.2 2003/06/29 23:50:03 linus Exp $
 package org.argouml.uml.ui;
 import java.awt.Component;
 
@@ -49,7 +50,7 @@ public class UMLLinkedListCellRenderer extends UMLListCellRenderer2 {
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         /*        
         label.setBackground(list.getBackground());
         label.setForeground(list.getForeground());

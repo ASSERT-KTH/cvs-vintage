@@ -1,3 +1,4 @@
+// $Id: PropPanelActor.java,v 1.32 2003/06/29 23:50:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.31 2003/05/19 08:07:28 mkl Exp $
+// $Id: PropPanelActor.java,v 1.32 2003/06/29 23:50:15 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -73,12 +74,12 @@ public class PropPanelActor extends PropPanelClassifier {
 
 
     	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-    	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
+    	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 
         addField(Argo.localize("UMLMenu", "label.modifiers"),
                  _modifiersPanel);
 
-    	addField(Argo.localize("UMLMenu", "label.namespace"),getNamespaceComboBox());
+    	addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
     	addSeperator();
 

@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.8 2003/02/01 21:53:34 kataka Exp $
+// $Id: CrEmptyPackage.java,v 1.9 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,12 +48,12 @@ import org.argouml.model.ModelFacade;
 public class CrEmptyPackage extends CrUML {
     protected static Category cat = Category.getInstance(CrEmptyPackage.class);
 
-  public CrEmptyPackage() {
-    setHeadline("Add Elements to Package <ocl>self</ocl>");
+    public CrEmptyPackage() {
+	setHeadline("Add Elements to Package <ocl>self</ocl>");
        
-    addSupportedDecision(CrUML.decMODULARITY);
-    addTrigger("ownedElement");
-  }
+	addSupportedDecision(CrUML.decMODULARITY);
+	addTrigger("ownedElement");
+    }
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	cat.debug("predicate2 on " + dm);

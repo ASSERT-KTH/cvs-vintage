@@ -1,3 +1,4 @@
+// $Id: FigPermission.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigPermission.java
 // Classes: FigPermission
 // Original Author: Markus Klink
-// $Id: FigPermission.java,v 1.2 2002/10/22 08:48:45 mkl Exp $
+// $Id: FigPermission.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -51,7 +52,7 @@ public class FigPermission extends FigDependency {
     }
 
     public FigPermission(Object edge, Layer lay) {
-        super(edge,lay);
+        super(edge, lay);
     }
         
 } /* end class FigPermission */

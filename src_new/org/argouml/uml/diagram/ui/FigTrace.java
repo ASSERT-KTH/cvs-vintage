@@ -1,3 +1,4 @@
+// $Id: FigTrace.java,v 1.2 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigTrace.java
 // Classes: FigTrace
 // Original Author: your email address here
-// $Id: FigTrace.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: FigTrace.java,v 1.2 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -36,23 +37,23 @@ import org.tigris.gef.presentation.*;
 
 public class FigTrace extends FigEdgeLine {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
+    ////////////////////////////////////////////////////////////////
+    // constructors
 
-  public FigTrace() {
-    _fig.setLineColor(Color.red);
-    ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
-    endArrow.setFillColor(Color.red);
-    setDestArrowHead(endArrow);
-    setBetweenNearestPoints(true);
-  }
+    public FigTrace() {
+	_fig.setLineColor(Color.red);
+	ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
+	endArrow.setFillColor(Color.red);
+	setDestArrowHead(endArrow);
+	setBetweenNearestPoints(true);
+    }
 
-  public FigTrace(Object edge) {
-    this();
-    setOwner(edge);
-  }
+    public FigTrace(Object edge) {
+	this();
+	setOwner(edge);
+    }
 
-  static final long serialVersionUID = -2094146244090391544L;
+    static final long serialVersionUID = -2094146244090391544L;
 
 } /* end class FigTrace */
 

@@ -1,3 +1,4 @@
+// $Id: CrAlreadyRealizes.java,v 1.5 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,27 +27,47 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.4 2003/02/02 18:17:17 kataka Exp $
+// $Id: CrAlreadyRealizes.java,v 1.5 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.Collection;import java.util.HashSet;import java.util.Set;import org.argouml.cognitive.Designer;import org.argouml.cognitive.critics.Critic;import org.argouml.model.ModelFacade;import org.argouml.model.uml.foundation.core.CoreHelper;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.foundation.core.CoreHelper;
 
 /** Critic to detect whether a class implements unneedded realizations through
  *  inheritance.
  */
 public class CrAlreadyRealizes extends CrUML {
+    
+    /** Constructor
+     */
+    public CrAlreadyRealizes() {
+	setHeadline("Remove Unneeded Realizes from <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decINHERITANCE);
+	setKnowledgeTypes(Critic.KT_SEMANTICS, Critic.KT_PRESENTATION);
+	addTrigger("genealization");
+	addTrigger("realization");
+    }
+						  
+    public boolean predicate2(Object dm, Designer dsgr) {
+	boolean problem = NO_PROBLEM;
+	if (ModelFacade.isAClass(dm)) {
+	    Collection col = CoreHelper.getHelper().getAllRealizedInterfaces(dm);
+	    int size = col.size();
+	    Set set = new HashSet();
+	    set.addAll(col);
+	    if (set.size() < col.size()) {
+		problem = PROBLEM_FOUND; 
+	    }
+	}
+	return problem;
+    }
 
-  /** Constructor
-   */
-  public CrAlreadyRealizes() {
-    setHeadline("Remove Unneeded Realizes from <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decINHERITANCE);
-    setKnowledgeTypes(Critic.KT_SEMANTICS, Critic.KT_PRESENTATION);
-    addTrigger("genealization");
-    addTrigger("realization");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {      boolean problem = NO_PROBLEM;      if (ModelFacade.isAClass(dm)) {          Collection col = CoreHelper.getHelper().getAllRealizedInterfaces(dm);          int size = col.size();          Set set = new HashSet();          set.addAll(col);          if (set.size() < col.size()) {              problem = PROBLEM_FOUND;           }      }      return problem;  }
 } /* end class CrAlreadyRealizes */
 

@@ -1,3 +1,4 @@
+// $Id: CrTooManyTransitions.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrTooManyTransitions.java
 // Classes: CrTooManyTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyTransitions.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrTooManyTransitions.java,v 1.3 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,35 +43,35 @@ import org.argouml.cognitive.*;
 
 public class CrTooManyTransitions extends CrUML {
 
-  ////////////////////////////////////////////////////////////////
-  // constants
-  public static String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CrTooManyTransitions() {
-    setHeadline("Reduce Transitions on <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    setArg(THRESHOLD, new Integer(10));
-    addTrigger("incoming");
-    addTrigger("outgoing");
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CrTooManyTransitions() {
+	setHeadline("Reduce Transitions on <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	setArg(THRESHOLD, new Integer(10));
+	addTrigger("incoming");
+	addTrigger("outgoing");
 
-  }
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // critiquing API
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MStateVertex)) return NO_PROBLEM;
-    MStateVertex sv = (MStateVertex) dm;
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MStateVertex)) return NO_PROBLEM;
+	MStateVertex sv = (MStateVertex) dm;
 
-    int threshold = ((Integer)getArg(THRESHOLD)).intValue();
-    Collection in = sv.getIncomings();
-    Collection out = sv.getOutgoings();
-    int inSize = (in == null) ? 0 : in.size();
-    int outSize = (out == null) ? 0 : out.size();
-    if (inSize + outSize <= threshold) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
+	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	Collection in = sv.getIncomings();
+	Collection out = sv.getOutgoings();
+	int inSize = (in == null) ? 0 : in.size();
+	int outSize = (out == null) ? 0 : out.size();
+	if (inSize + outSize <= threshold) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
 
 } /* end class CrTooManyTransitions */
 

@@ -1,3 +1,4 @@
+// $Id: CrNoIncomingTransitions.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.3 2003/06/23 12:31:21 mkl Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -40,32 +41,32 @@ import org.argouml.cognitive.*;
 
 public class CrNoIncomingTransitions extends CrUML {
 
-  public CrNoIncomingTransitions() {
-    setHeadline("Add Incoming Transitions to <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    addTrigger("incoming");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MStateVertex)) return NO_PROBLEM;
-    MStateVertex sv = (MStateVertex) dm;
-    if (sv instanceof MState) {
-      MStateMachine sm = ((MState)sv).getStateMachine();
-      if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
+    public CrNoIncomingTransitions() {
+	setHeadline("Add Incoming Transitions to <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addTrigger("incoming");
     }
 
-    Collection incoming = sv.getIncomings();
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MStateVertex)) return NO_PROBLEM;
+	MStateVertex sv = (MStateVertex) dm;
+	if (sv instanceof MState) {
+	    MStateMachine sm = ((MState) sv).getStateMachine();
+	    if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
+	}
 
-    boolean needsIncoming = incoming == null || incoming.size() == 0;
-    if (sv instanceof MPseudostate) {
-      MPseudostateKind k = ((MPseudostate)sv).getKind();
-      if (k.equals(MPseudostateKind.INITIAL)) needsIncoming = false;
+	Collection incoming = sv.getIncomings();
 
+	boolean needsIncoming = incoming == null || incoming.size() == 0;
+	if (sv instanceof MPseudostate) {
+	    MPseudostateKind k = ((MPseudostate) sv).getKind();
+	    if (k.equals(MPseudostateKind.INITIAL)) needsIncoming = false;
+
+	}
+
+	if (needsIncoming) return PROBLEM_FOUND;
+	return NO_PROBLEM;
     }
-
-    if (needsIncoming) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
 
 } /* end class CrNoIncomingTransitions */
 

@@ -1,3 +1,4 @@
+// $Id: ActionSetGeneralizableElementRoot.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetGeneralizableElementRoot.java,v 1.1 2003/01/27 20:06:59 kataka Exp $
+// $Id: ActionSetGeneralizableElementRoot.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -55,10 +56,10 @@ public class ActionSetGeneralizableElementRoot extends UMLChangeAction {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (e.getSource() instanceof UMLCheckBox2) {
-            UMLCheckBox2 source = (UMLCheckBox2)e.getSource();
+            UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
             if (target instanceof MGeneralizableElement) {
-                MGeneralizableElement m = (MGeneralizableElement)target;
+                MGeneralizableElement m = (MGeneralizableElement) target;
                 m.setRoot(source.isSelected());                
             }
         }

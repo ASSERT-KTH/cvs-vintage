@@ -1,3 +1,4 @@
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -65,18 +66,18 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
      */
     public void buildModel() {
         if (getTarget() != null) {
-            MAssociationEnd target = (MAssociationEnd)getTarget();
+            MAssociationEnd target = (MAssociationEnd) getTarget();
             MChangeableKind kind = target.getChangeability();
             if (kind == null || kind.equals(MChangeableKind.CHANGEABLE)) {
                 setSelected(ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
             } else
-            if (kind.equals(MChangeableKind.ADD_ONLY)) {
-                setSelected(ActionSetAssociationEndChangeability.ADDONLY_COMMAND); 
-            } else
-            if (kind.equals(MChangeableKind.FROZEN)) {
-                setSelected(ActionSetAssociationEndChangeability.FROZEN_COMMAND);
-            } else
-                setSelected(ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
+		if (kind.equals(MChangeableKind.ADD_ONLY)) {
+		    setSelected(ActionSetAssociationEndChangeability.ADDONLY_COMMAND); 
+		} else
+		    if (kind.equals(MChangeableKind.FROZEN)) {
+			setSelected(ActionSetAssociationEndChangeability.FROZEN_COMMAND);
+		    } else
+			setSelected(ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
         }
     }
 }

@@ -1,3 +1,4 @@
+// $Id: IncomingDependencyNode.java,v 1.2 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +28,9 @@ package org.argouml.uml.diagram.static_structure.ui;
  * This class is a support class for The Navigation panel Go Rules.
  * Don't confuse it with anything to do with GEF nodes or the like.
  *
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class IncomingDependencyNode {
@@ -42,7 +43,7 @@ public class IncomingDependencyNode {
         this.parent = parent;
     }
     
-    public Object getParent(){return parent;}
+    public Object getParent() { return parent; }
         
-    public String toString(){return "Incoming Dependencies";}
+    public String toString() { return "Incoming Dependencies"; }
 }

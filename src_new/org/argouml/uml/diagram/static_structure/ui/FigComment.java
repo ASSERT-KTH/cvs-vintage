@@ -1,3 +1,4 @@
+// $Id: FigComment.java,v 1.11 2003/06/29 23:52:19 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.10 2003/04/29 19:25:07 kataka Exp $
+// $Id: FigComment.java,v 1.11 2003/06/29 23:52:19 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 

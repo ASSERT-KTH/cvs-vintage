@@ -1,3 +1,4 @@
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.2 2003/04/15 00:17:26 alexb Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
@@ -50,16 +51,16 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractGoRule {
     public Collection getChildren(Object parent) {
         
         if (parent instanceof MBehavioralFeature) {
-            MBehavioralFeature operation = (MBehavioralFeature)parent;
+            MBehavioralFeature operation = (MBehavioralFeature) parent;
             Collection col = operation.getBehaviors();
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
             Vector diagrams = p.getDiagrams();
             Iterator it = diagrams.iterator();
             while (it.hasNext()) {
-                ArgoDiagram diagram = (ArgoDiagram)it.next();
+                ArgoDiagram diagram = (ArgoDiagram) it.next();
                 if (diagram instanceof UMLStateDiagram &&
-                    col.contains(((UMLStateDiagram)diagram).getStateMachine())) {
+                    col.contains(((UMLStateDiagram) diagram).getStateMachine())) {
                     ret.add(diagram);
                 }
                 

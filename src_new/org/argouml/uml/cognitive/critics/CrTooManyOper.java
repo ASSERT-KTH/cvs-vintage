@@ -1,3 +1,4 @@
+// $Id: CrTooManyOper.java,v 1.5 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: CrTooManyOper.java
 // Classes: CrTooManyOper
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyOper.java,v 1.4 2002/10/28 03:46:05 mkl Exp $
+// $Id: CrTooManyOper.java,v 1.5 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,41 +39,41 @@ import ru.novosoft.uml.foundation.extension_mechanisms.*;
 import org.argouml.cognitive.*;
 
 /** A critic to detect when a classifier has to many operations). 
- *  @todo exclude getter and setter operations from count
+ *  TODO: exclude getter and setter operations from count
  */
 
 public class CrTooManyOper extends CrUML {
 
-  ////////////////////////////////////////////////////////////////
-  // constants
-  public static String THRESHOLD = "Threshold";
+    ////////////////////////////////////////////////////////////////
+    // constants
+    public static String THRESHOLD = "Threshold";
 
-  ////////////////////////////////////////////////////////////////
-  // constructor
-  public CrTooManyOper() {
-    setHeadline("Reduce Operations on <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decMETHODS);
-    setArg(THRESHOLD, new Integer(20));
-    addTrigger("behavioralFeature");
-  }
+    ////////////////////////////////////////////////////////////////
+    // constructor
+    public CrTooManyOper() {
+	setHeadline("Reduce Operations on <ocl>self</ocl>");
+	addSupportedDecision(CrUML.decMETHODS);
+	setArg(THRESHOLD, new Integer(20));
+	addTrigger("behavioralFeature");
+    }
 
-  ////////////////////////////////////////////////////////////////
-  // critiquing API
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MClassifier)) return NO_PROBLEM;
-    MClassifier cls = (MClassifier) dm;
-    // TODO: consider inherited attributes?
-    int threshold = ((Integer)getArg(THRESHOLD)).intValue();
-    Collection str = cls.getFeatures();
-    if (str == null) return NO_PROBLEM;
-    int n=0;
-    for (Iterator iter = str.iterator(); iter.hasNext();) {
-      if (iter.next() instanceof MBehavioralFeature)
-        n++;
-    };
-    if (n <= threshold) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
+    ////////////////////////////////////////////////////////////////
+    // critiquing API
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
+	MClassifier cls = (MClassifier) dm;
+	// TODO: consider inherited attributes?
+	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	Collection str = cls.getFeatures();
+	if (str == null) return NO_PROBLEM;
+	int n = 0;
+	for (Iterator iter = str.iterator(); iter.hasNext();) {
+	    if (iter.next() instanceof MBehavioralFeature)
+		n++;
+	};
+	if (n <= threshold) return NO_PROBLEM;
+	return PROBLEM_FOUND;
+    }
 
 } /* end class CrTooManyOper */
 

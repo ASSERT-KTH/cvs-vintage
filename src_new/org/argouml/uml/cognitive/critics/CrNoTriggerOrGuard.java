@@ -1,3 +1,4 @@
+// $Id: CrNoTriggerOrGuard.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: CrNoTriggerOrGuard.java
 // Classes: CrNoTriggerOrGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTriggerOrGuard.java,v 1.3 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.4 2003/06/29 23:52:58 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,31 +42,31 @@ import org.argouml.cognitive.critics.*;
 
 public class CrNoTriggerOrGuard extends CrUML {
 
-  public CrNoTriggerOrGuard() {
-    setHeadline("Add Trigger or Guard to Transistion");
-    addSupportedDecision(CrUML.decSTATE_MACHINES);
-    setKnowledgeTypes(Critic.KT_COMPLETENESS);
-    addTrigger("trigger");
-    addTrigger("guard");
-  }
+    public CrNoTriggerOrGuard() {
+	setHeadline("Add Trigger or Guard to Transistion");
+	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	setKnowledgeTypes(Critic.KT_COMPLETENESS);
+	addTrigger("trigger");
+	addTrigger("guard");
+    }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MTransition)) return NO_PROBLEM;
-    MTransition tr = (MTransition) dm;
-    MEvent t = tr.getTrigger();
-    MGuard g = tr.getGuard();
-    MStateVertex sv = tr.getSource();
-    if (!(sv instanceof MState)) return NO_PROBLEM;
-    if (((MState)sv).getDoActivity()!=null) return NO_PROBLEM;
-    boolean hasTrigger = (t != null && t.getName() != null && t.getName().length() > 0);
-    if (hasTrigger) return NO_PROBLEM;
-    boolean noGuard = (g == null || g.getExpression() == null ||
-			g.getExpression().getBody() == null ||
-			g.getExpression().getBody() == null ||
-			g.getExpression().getBody().length() == 0);
-    if (noGuard) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MTransition)) return NO_PROBLEM;
+	MTransition tr = (MTransition) dm;
+	MEvent t = tr.getTrigger();
+	MGuard g = tr.getGuard();
+	MStateVertex sv = tr.getSource();
+	if (!(sv instanceof MState)) return NO_PROBLEM;
+	if (((MState) sv).getDoActivity() != null) return NO_PROBLEM;
+	boolean hasTrigger = (t != null && t.getName() != null && t.getName().length() > 0);
+	if (hasTrigger) return NO_PROBLEM;
+	boolean noGuard = (g == null || g.getExpression() == null ||
+			   g.getExpression().getBody() == null ||
+			   g.getExpression().getBody() == null ||
+			   g.getExpression().getBody().length() == 0);
+	if (noGuard) return PROBLEM_FOUND;
+	return NO_PROBLEM;
+    }
 
 } /* end class CrNoTriggerOrGuard */
 

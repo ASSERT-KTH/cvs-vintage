@@ -1,3 +1,4 @@
+// $Id: AbstractActionNewModelElement.java,v 1.6 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.5 2003/04/01 15:45:17 jhraigniac Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.6 2003/06/29 23:50:02 linus Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.application.api.Argo;
@@ -52,7 +53,7 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
      * @param target The target to set
      */
     public void setTarget(Object target) {
-        _target = (MModelElement)target;
+        _target = (MModelElement) target;
     }
        
 }

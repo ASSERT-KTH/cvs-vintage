@@ -1,3 +1,4 @@
+// $Id: AbstractActionAddModelElement.java,v 1.5 2003/06/29 23:50:02 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.4 2003/04/29 19:25:08 kataka Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.5 2003/06/29 23:50:02 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;

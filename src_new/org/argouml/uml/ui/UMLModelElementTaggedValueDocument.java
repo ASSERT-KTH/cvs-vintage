@@ -1,4 +1,4 @@
-// $Id: UMLModelElementTaggedValueDocument.java,v 1.2 2003/05/01 08:49:40 kataka Exp $
+// $Id: UMLModelElementTaggedValueDocument.java,v 1.3 2003/06/29 23:50:03 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,8 +56,8 @@ public class UMLModelElementTaggedValueDocument extends UMLPlainTextDocument {
     protected void setProperty(String text) {
         if (getTarget() != null)
             ((MModelElement) getTarget()).setTaggedValue(
-                this.getEventName(),
-                text);
+							 this.getEventName(),
+							 text);
     }
 
     /**
@@ -65,7 +65,7 @@ public class UMLModelElementTaggedValueDocument extends UMLPlainTextDocument {
      * @return the value of the tagged value
      */
     protected String getProperty() {
-        return ((MModelElement)getTarget()).getTaggedValue(this.getEventName());
+        return ((MModelElement) getTarget()).getTaggedValue(this.getEventName());
     }
 }
 

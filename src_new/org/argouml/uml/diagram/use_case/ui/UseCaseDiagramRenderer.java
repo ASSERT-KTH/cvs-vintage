@@ -1,3 +1,4 @@
+// $Id: UseCaseDiagramRenderer.java,v 1.8 2003/06/29 23:52:22 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.7 2002/11/26 19:52:22 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.8 2003/06/29 23:52:22 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -75,8 +76,9 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 
 public class UseCaseDiagramRenderer
-    implements GraphNodeRenderer, GraphEdgeRenderer {
-        protected static Category cat = Category.getInstance(UseCaseDiagramRenderer.class);
+    implements GraphNodeRenderer, GraphEdgeRenderer 
+{
+    protected static Category cat = Category.getInstance(UseCaseDiagramRenderer.class);
 
 
     /**
@@ -106,9 +108,9 @@ public class UseCaseDiagramRenderer
         // If we get here we were asked for a fig we can't handle.
 
         cat.debug(this.getClass().toString() +
-                           ": getFigNodeFor(" + gm.toString() + ", " +
-                           lay.toString() + ", " + node.toString() +
-                           ") - cannot create this sort of node.");
+		  ": getFigNodeFor(" + gm.toString() + ", " +
+		  lay.toString() + ", " + node.toString() +
+		  ") - cannot create this sort of node.");
         return null;
     }
 
@@ -218,9 +220,9 @@ public class UseCaseDiagramRenderer
             // there are some here for safety.
 
             MModelElement supplier =
-                (MModelElement)((dep.getSuppliers().toArray())[0]);
+                (MModelElement) ((dep.getSuppliers().toArray())[0]);
             MModelElement client =
-                (MModelElement)((dep.getClients().toArray())[0]);
+                (MModelElement) ((dep.getClients().toArray())[0]);
 
             // The figs for the two end nodes
 
@@ -245,12 +247,12 @@ public class UseCaseDiagramRenderer
         // remove any of the methods that are there now.
 
         cat.debug(this.getClass().toString() +
-                           ": getFigEdgeFor(" + gm.toString() + ", " +
-                           lay.toString() + ", " + edge.toString() +
-                           ") - needs more work to handle this sort of edge");
+		  ": getFigEdgeFor(" + gm.toString() + ", " +
+		  lay.toString() + ", " + edge.toString() +
+		  ") - needs more work to handle this sort of edge");
         return null;
-  }
+    }
 
-  static final long serialVersionUID = 2217410137377934879L;
+    static final long serialVersionUID = 2217410137377934879L;
 
 } /* end class UseCaseDiagramRenderer */

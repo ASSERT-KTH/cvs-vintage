@@ -1,3 +1,4 @@
+// $Id: TableModelDependency_in_DeplByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: TableModelDependency_in_DeplByProps.java
 // Classes: TableModelDependency_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelDependency_in_DeplByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
+// $Id: TableModelDependency_in_DeplByProps.java,v 1.3 2003/06/29 23:52:15 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -39,30 +40,30 @@ import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 
 public class TableModelDependency_in_DeplByProps extends TableModelComposite {
-  ////////////////
-  // constructor
-  public TableModelDependency_in_DeplByProps() { }
+    ////////////////
+    // constructor
+    public TableModelDependency_in_DeplByProps() { }
 
-  public void initColumns() {
-    addColumn(ColumnDescriptor.Name);
-    addColumn(ColumnDescriptor.Supplier);
-    addColumn(ColumnDescriptor.Client);
-    addColumn(ColumnDescriptor.MStereotype);
-  }
-
-  public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram)) return new Vector();
-    UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
-    Vector edges = d.getEdges();
-    Vector res = new Vector();
-    int size = edges.size();
-    for (int i = 0; i < size; i++) {
-      Object edge = edges.elementAt(i);
-      if (edge instanceof MDependency) res.addElement(edge);
+    public void initColumns() {
+	addColumn(ColumnDescriptor.Name);
+	addColumn(ColumnDescriptor.Supplier);
+	addColumn(ColumnDescriptor.Client);
+	addColumn(ColumnDescriptor.MStereotype);
     }
-    return res;
-  }
 
-  public String toString() { return "Dependencies vs. Properties"; }
+    public Vector rowObjectsFor(Object t) {
+	if (!(t instanceof UMLDeploymentDiagram)) return new Vector();
+	UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
+	Vector edges = d.getEdges();
+	Vector res = new Vector();
+	int size = edges.size();
+	for (int i = 0; i < size; i++) {
+	    Object edge = edges.elementAt(i);
+	    if (edge instanceof MDependency) res.addElement(edge);
+	}
+	return res;
+    }
+
+    public String toString() { return "Dependencies vs. Properties"; }
 } /* end class TableModelDependency_in_DeplByProps */
 

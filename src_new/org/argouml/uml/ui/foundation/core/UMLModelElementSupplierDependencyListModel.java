@@ -1,4 +1,4 @@
-// $Id: UMLModelElementSupplierDependencyListModel.java,v 1.4 2002/12/31 09:58:50 kataka Exp $
+// $Id: UMLModelElementSupplierDependencyListModel.java,v 1.5 2003/06/29 23:50:17 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class UMLModelElementSupplierDependencyListModel
      */
     protected void buildModelList() {
         if (_target != null) {
-            setAllElements(((MModelElement)getTarget()).getSupplierDependencies());
+            setAllElements(((MModelElement) getTarget()).getSupplierDependencies());
         }
     }
 
@@ -58,7 +58,7 @@ public class UMLModelElementSupplierDependencyListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return o instanceof MDependency && ((MModelElement)getTarget()).getSupplierDependencies().contains(o);
+        return o instanceof MDependency && ((MModelElement) getTarget()).getSupplierDependencies().contains(o);
     }
 
 }

@@ -1,3 +1,4 @@
+// $Id: PropPanelTransition.java,v 1.21 2003/06/29 23:50:12 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.20 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelTransition.java,v 1.21 2003/06/29 23:50:12 linus Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 

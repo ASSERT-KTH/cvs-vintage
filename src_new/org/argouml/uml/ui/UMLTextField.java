@@ -1,3 +1,4 @@
+// $Id: UMLTextField.java,v 1.23 2003/06/29 23:50:04 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +24,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.22 2003/05/10 12:38:42 alexb Exp $
+// $Id: UMLTextField.java,v 1.23 2003/06/29 23:50:04 linus Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -97,8 +98,8 @@ public class UMLTextField
         }
         
         public TextSetter(String textToSet, JTextField field) {
-        	_text = textToSet;
-        	_field = field;
+	    _text = textToSet;
+	    _field = field;
         }
     }
 
@@ -163,7 +164,7 @@ public class UMLTextField
             if ((eventSource == null || eventSource == _target) && 
             	((event.getOldValue() == null && event.getNewValue() != null) ||
             	(event.getNewValue() == null && event.getOldValue() != null) ||
-            	(event.getOldValue()!= null && !event.getOldValue().equals(event.getNewValue())))) {
+            	(event.getOldValue() != null && !event.getOldValue().equals(event.getNewValue())))) {
                 update();
                 // TextSetter textSetter = new TextSetter((String)event.getNewValue(), this);
 	            // SwingUtilities.invokeLater(textSetter);
@@ -222,17 +223,17 @@ public class UMLTextField
         // start new code
         Iterator it = p.findFigsForMember(_target).iterator();
         while (it.hasNext()) {
-            Fig o = (Fig)it.next();
+            Fig o = (Fig) it.next();
            	
             
             Vector figs = o.getEnclosedFigs();
             if (figs != null) {
-            for (int i = 0; i < figs.size(); i++) {
-            	((Fig)figs.get(i)).damage();
-            }
+		for (int i = 0; i < figs.size(); i++) {
+		    ((Fig) figs.get(i)).damage();
+		}
             }
             
-             o.damage();
+	    o.damage();
             
             
             
@@ -322,8 +323,7 @@ public class UMLTextField
      */
     public void removeUpdate(final DocumentEvent p1) {
         if (_viaUserInput) {	
-            	_textChanged =
-                	p1.getLength() > 0;
+	    _textChanged = p1.getLength() > 0;
         }
         handleEvent();
     }
@@ -343,18 +343,18 @@ public class UMLTextField
         try {
             if (_viaUserInput) {
             	if (_textChanged) {
-                	// next line dirty hack to enable the continuous updating 
-                	// of the textfields in the figs and in the navigator
-                	_textChanged = false;
-                	// _property.setProperty(_container, _oldPropertyValue);
-                	_property.setProperty(_container, getText(), true);
+		    // next line dirty hack to enable the continuous updating 
+		    // of the textfields in the figs and in the navigator
+		    _textChanged = false;
+		    // _property.setProperty(_container, _oldPropertyValue);
+		    _property.setProperty(_container, getText(), true);
             	}
             }
             else {
             	String proptext = _property.getProperty(_container);
             	String fieldtext = getText();
             	if (proptext != null && !proptext.equals(fieldtext)) {
-                	_property.setProperty(_container, proptext, false);
+		    _property.setProperty(_container, proptext, false);
             	}	
             }
         }
@@ -369,7 +369,7 @@ public class UMLTextField
                 try {
                     _property.setProperty(_container, _oldPropertyValue);
                     TextSetter textSetter = new TextSetter(_oldPropertyValue, this);
-            		SwingUtilities.invokeLater(textSetter);
+		    SwingUtilities.invokeLater(textSetter);
                 }
                 catch (Exception e) {
                     cat.fatal("Repeating exception");
@@ -406,10 +406,9 @@ public class UMLTextField
     protected void showException(Exception ex) {
         String message = ex.getMessage();
         // cant show the messagebox in this container
-        JOptionPane.showMessageDialog(
-            ProjectBrowser.getInstance(),
-            message,
-            "error",
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(ProjectBrowser.getInstance(),
+				      message,
+				      "error",
+				      JOptionPane.ERROR_MESSAGE);
     }
 } //...end of class UMLTextField...
