@@ -36,7 +36,8 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.24 $
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @version $Revision: 1.25 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -226,6 +227,11 @@ public class LogInterceptor extends AbstractInterceptor
             type == InvocationType.LOCAL ||
             type == InvocationType.LOCALHOME;
       
+      // If we got a RemoteException for a local invocation wrap it
+      // in an EJBException.
+      if (isLocal && e instanceof RemoteException) 
+         e = new EJBException((RemoteException)e);
+
       if (e instanceof TransactionRolledbackLocalException ||
             e instanceof TransactionRolledbackException)
       {
