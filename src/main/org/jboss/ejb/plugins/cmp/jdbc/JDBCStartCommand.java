@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCStartCommand {
 
@@ -96,7 +96,7 @@ public class JDBCStartCommand {
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          // if the table for the related entity has been created
-         if(cmrField.getRelatedEntity().getTableExists()) {
+         if(cmrField.getRelatedJDBCEntity().getTableExists()) {
 
             // create the relation table
             if(relationMetaData.isTableMappingStyle() &&
@@ -281,8 +281,8 @@ public class JDBCStartCommand {
                   cmrField.getEntity().getTableName(),
                   cmrField.getFieldName(),
                   cmrField.getForeignKeyFields(),
-                  cmrField.getRelatedEntity().getTableName(),
-                  cmrField.getRelatedEntity().getPrimaryKeyFields());
+                  cmrField.getRelatedJDBCEntity().getTableName(),
+                  cmrField.getRelatedJDBCEntity().getPrimaryKeyFields());
          }
       } else {
          log.debug("Foreign key constraint not added as requested: " + 

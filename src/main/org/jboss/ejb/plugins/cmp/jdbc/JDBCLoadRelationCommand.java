@@ -33,7 +33,7 @@ import org.jboss.ejb.FinderResults;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -195,7 +195,7 @@ public class JDBCLoadRelationCommand {
       List relatedKeyFields = getRelatedKeyFields(cmrField);
       List preloadFields = getPreloadFields(cmrField);
       String relationTable = getRelationTable(cmrField);
-      String relatedTable = cmrField.getRelatedEntity().getTableName();
+      String relatedTable = cmrField.getRelatedJDBCEntity().getTableName();
       
       // do we need to join the relation table and the related table
       boolean join = (preloadFields.size() > 0 && 
@@ -246,7 +246,7 @@ public class JDBCLoadRelationCommand {
          whereClause.append(SQLUtil.getJoinClause(
                   relatedKeyFields,
                   relationTable,
-                  cmrField.getRelatedEntity().getPrimaryKeyFields(),
+                  cmrField.getRelatedJDBCEntity().getPrimaryKeyFields(),
                   relatedTable));
          whereClause.append(") AND (");
       }
@@ -304,7 +304,7 @@ public class JDBCLoadRelationCommand {
          return cmrField.getRelatedCMRField().getTableKeyFields();
       } else if(cmrField.getRelatedCMRField().hasForeignKey()) {
          // related has foreign key
-         return cmrField.getRelatedEntity().getPrimaryKeyFields();
+         return cmrField.getRelatedJDBCEntity().getPrimaryKeyFields();
       } else {
          // i have foreign key
          return cmrField.getForeignKeyFields();
@@ -337,7 +337,7 @@ public class JDBCLoadRelationCommand {
          return cmrField.getRelationMetaData().getTableName();
       } else if(cmrField.getRelatedCMRField().hasForeignKey()) {
          // related has foreign key
-         return cmrField.getRelatedEntity().getTableName();
+         return cmrField.getRelatedJDBCEntity().getTableName();
       } else {
          // i have foreign key
          return entity.getTableName();
@@ -360,9 +360,9 @@ public class JDBCLoadRelationCommand {
          }
       } else if(cmrField.getRelatedCMRField().hasForeignKey()) {
          // related has foreign key
-         if(cmrField.getRelatedEntity().getMetaData().hasRowLocking()) {
+         if(cmrField.getRelatedJDBCEntity().getMetaData().hasRowLocking()) {
             selectTemplate =
-               cmrField.getRelatedEntity().getMetaData().getTypeMapping().getRowLockingTemplate();
+               cmrField.getRelatedJDBCEntity().getMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null) {
                throw new IllegalStateException("row-locking is not allowed " +
                      "for this type of datastore");
