@@ -63,6 +63,7 @@ ID_CODE, not the primary key column.
                         <name>Priority</name>
                         <value>High</value>
                         <old-value>NULL</old-value>
+                        <type>combo-box</type>
                     </activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Priority set to high
@@ -73,6 +74,7 @@ ID_CODE, not the primary key column.
                         <name>Status</name>
                         <value>unconfirmed</value>
                         <old-value>NULL</old-value>
+                        <type>combo-box</type>
                     </activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Status set to 
