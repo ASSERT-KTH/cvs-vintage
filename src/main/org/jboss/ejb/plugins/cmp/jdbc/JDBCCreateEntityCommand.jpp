@@ -37,18 +37,23 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class JDBCCreateEntityCommand {
-   private JDBCStoreManager manager;
-   private JDBCEntityBridge entity;
-   private Logger log;
-   private List insertFields;
-   private String entityExistsSQL;
-   private String insertEntitySQL;
-   private boolean createAllowed;
+public class JDBCCreateEntityCommand
+{
 
-   public JDBCCreateEntityCommand(JDBCStoreManager manager) {
+   protected JDBCStoreManager manager;
+   protected JDBCEntityBridge entity;
+   protected Logger log;
+   protected List insertFields;
+   protected String entityExistsSQL;
+   protected String insertEntitySQL;
+   protected boolean createAllowed;
+
+   public JDBCCreateEntityCommand() { }
+
+   public void init(JDBCStoreManager manager) {
+
       this.manager = manager;
       entity = manager.getEntityBridge();
 
@@ -80,7 +85,7 @@ public class JDBCCreateEntityCommand {
       }
    }
   
-   private List getInsertFields() {
+   protected List getInsertFields() {
       List fields = entity.getFields();
       List insertFields = new ArrayList(fields.size());
 
@@ -104,7 +109,7 @@ public class JDBCCreateEntityCommand {
       return insertFields;
    }
 
-   private String createEntityExistsSQL() {
+   protected String createEntityExistsSQL() {
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT COUNT(*)");
       sql.append(" FROM ").append(entity.getTableName());
@@ -114,7 +119,7 @@ public class JDBCCreateEntityCommand {
       return sql.toString();
    }
 
-   private String createInsertEntitySQL() {
+   protected String createInsertEntitySQL() {
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO ").append(entity.getTableName());      
       sql.append(" (");
@@ -179,7 +184,7 @@ public class JDBCCreateEntityCommand {
       return pk;         
    }
 
-   private boolean entityExists(Object pk)
+   protected boolean entityExists(Object pk)
          throws CreateException {
 
       Connection con = null;
@@ -216,7 +221,7 @@ public class JDBCCreateEntityCommand {
       }
    }
    
-   private void insertEntity(EntityEnterpriseContext ctx)
+   protected void insertEntity(EntityEnterpriseContext ctx)
          throws CreateException{
 
       Connection con = null;
@@ -299,7 +304,7 @@ public class JDBCCreateEntityCommand {
     * Sets generated primary key value in the context if
     * entity has unknown primary key
     */
-   private void setUnknownPk(EntityEnterpriseContext ctx)
+   protected void setUnknownPk(EntityEnterpriseContext ctx)
    throws CreateException {
       for( Iterator iter = entity.getPrimaryKeyFields().iterator();
          iter.hasNext(); ) {
