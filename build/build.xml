@@ -383,16 +383,21 @@
             <fileset dir="${tomcat.cvs.dir}/build/bin"/>
         </copy>
         <copy todir="${tomcat.dist.dir}/common" filtering="no">
-            <fileset dir="${tomcat.cvs.dir}/build/common"/>
+            <fileset dir="${tomcat.cvs.dir}/build/common">
+                <include name="**/naming-common.jar"/>
+                <include name="**/naming-resources.jar"/>
+                <include name="**/servlet.jar"/>
+            </fileset>
         </copy>
         <copy todir="${tomcat.dist.dir}/lib" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/lib">
-                <include name="**/namingfactory.jar"/>
+                <include name="**/naming-factory.jar"/>
             </fileset>
         </copy>
         <copy todir="${tomcat.dist.dir}/server" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/server">
                 <exclude name="**/warp.jar"/>
+                <exclude name="**/servlets-*.jar"/>
             </fileset>
         </copy>
     </target>
