@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.237 2002/12/19 21:08:23 jon Exp $
+ * @version $Id: Issue.java,v 1.238 2002/12/19 23:24:31 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1208,6 +1208,31 @@ public class Issue
 
      
     /**
+     * The initial activity set from issue creation.
+     *
+     * @return a <code>ActivitySet</code> value
+     * @exception Exception if an error occurs
+     */
+    public ActivitySet getInitialActivitySet()
+        throws Exception
+    {
+        ActivitySet activitySet = null;
+        if ( !isNew() ) 
+        {
+            NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
+                          ActivitySetTypePeer.MOVE_ISSUE__PK};
+            Criteria crit = new Criteria();
+            crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
+                         ActivityPeer.TRANSACTION_ID);
+            crit.add(ActivityPeer.ISSUE_ID, getIssueId());
+            crit.addIn(ActivitySetPeer.TYPE_ID, types);
+            List activitySets = ActivitySetPeer.doSelect(crit);
+            activitySet = (ActivitySet)activitySets.get(0);
+        }
+        return activitySet;
+    }
+
+    /**
      * The date the issue was created.
      *
      * @return a <code>Date</code> value
@@ -1222,18 +1247,8 @@ public class Issue
             Object obj = ScarabCache.get(this, GET_CREATED_DATE); 
             if ( obj == null ) 
             {        
-                Criteria crit = new Criteria();
-                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                             ActivityPeer.TRANSACTION_ID);
-                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(ActivitySetPeer.TYPE_ID, 
-                         ActivitySetTypePeer.CREATE_ISSUE__PK);
-                // there could be multiple attributes modified during the 
-                // creation which will lead to duplicates
-                crit.setDistinct();
-                List activitySets = ActivitySetPeer.doSelect(crit);
-                ActivitySet t = (ActivitySet)activitySets.get(0);
-                result = t.getCreatedDate();
+                ActivitySet activitySet = getInitialActivitySet();
+                result = activitySet.getCreatedDate();
                 ScarabCache.put(result, this, GET_CREATED_DATE);
             }
             else 
@@ -1247,10 +1262,7 @@ public class Issue
 
     /**
      * The user that created the issue.
-     * FIXME: Not sure if this is the best way to get created user.
-     *
      * @return a <code>ScarabUser</code> value
-     * @exception Exception if an error occurs
      */
     public ScarabUser getCreatedBy()
         throws Exception
@@ -1261,18 +1273,8 @@ public class Issue
             Object obj = ScarabCache.get(this, GET_CREATED_BY); 
             if ( obj == null ) 
             {        
-                Criteria crit = new Criteria();
-                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                             ActivityPeer.TRANSACTION_ID);
-                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(ActivitySetPeer.TYPE_ID, 
-                         ActivitySetTypePeer.CREATE_ISSUE__PK);
-                List activitySets = ActivitySetPeer.doSelect(crit);
-                if (activitySets.size() > 0)
-                {
-                    ActivitySet t = (ActivitySet)activitySets.get(0);
-                    result = ScarabUserManager.getInstance(t.getCreatedBy());
-                }
+                ActivitySet activitySet = getInitialActivitySet();
+                result = ScarabUserManager.getInstance(activitySet.getCreatedBy());
                 ScarabCache.put(result, this, GET_CREATED_BY);
             }
             else 
