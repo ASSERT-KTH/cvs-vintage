@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.33 $
+* @version $Revision: 1.34 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -477,7 +477,13 @@ implements ContainerInvokerContainer, InstancePoolContainer
          if (!m[i].getDeclaringClass().getName().equals(declaringClass))
          {
             // Implemented by bean
-            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+            try {
+               map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+            }
+            catch (NoSuchMethodException ex)
+            {
+               throw new NoSuchMethodException("Method not found in bean class: " + formatMethod(m[i]));
+            }
             if (debug)
                log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
          }
@@ -667,4 +673,22 @@ implements ContainerInvokerContainer, InstancePoolContainer
       {
       }
    }
+
+   private StringBuffer formatMethod(Method method)
+   {
+      StringBuffer buffer = new StringBuffer();
+      buffer.append(method.getName()).append("(");
+      Class[] paramTypes = method.getParameterTypes();
+      for (int count = 0; count < paramTypes.length; count++) {
+         if (count > 0) {
+            buffer.append(",");
+         }
+         buffer.
+            append(paramTypes[count].getName().substring(paramTypes[count].getName().lastIndexOf(".")+1));
+      }
+      buffer.append(")");
+
+      return buffer;
+   }
+
 }
