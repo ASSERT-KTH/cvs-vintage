@@ -15,18 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.general;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.help.HelpManager;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -42,12 +30,24 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -59,16 +59,16 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
     protected JButton okButton;
     protected JButton cancelButton;
     protected JButton helpButton;
-    protected JCheckBox markCheckBox;
+    protected CheckBoxWithMnemonic markCheckBox;
     protected JSpinner markSpinner;
-    protected JCheckBox preferHtmlCheckBox;
-    protected JCheckBox enableSmiliesCheckBox;
-    protected JCheckBox quotedColorCheckBox;
+    protected CheckBoxWithMnemonic preferHtmlCheckBox;
+    protected CheckBoxWithMnemonic enableSmiliesCheckBox;
+    protected CheckBoxWithMnemonic quotedColorCheckBox;
     protected JButton quotedColorButton;
     protected JCheckBox emptyTrashCheckBox;
-    protected JCheckBox emptySubjectCheckBox;
-    protected JCheckBox sendHtmlMultipartCheckBox;
-    protected JLabel forwardLabel;
+    protected CheckBoxWithMnemonic emptySubjectCheckBox;
+    protected CheckBoxWithMnemonic sendHtmlMultipartCheckBox;
+    protected LabelWithMnemonic forwardLabel;
     protected JComboBox forwardComboBox;
 
     public MailOptionsDialog(JFrame frame) {
@@ -289,36 +289,36 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
     protected void initComponents() {
         // general
-        markCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
+        markCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog",
                     "general", "mark_messages_read"));
 
         markSpinner = new JSpinner();
         markSpinner.setModel(new SpinnerNumberModel(1, 0, 99, 1));
 
-        emptyTrashCheckBox = new JCheckBox(MailResourceLoader.getString(
+        emptyTrashCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "empty_trash"));
         emptyTrashCheckBox.setEnabled(false);
 
-        enableSmiliesCheckBox = new JCheckBox(MailResourceLoader.getString(
+        enableSmiliesCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "enable_smilies"));
 
-        quotedColorCheckBox = new JCheckBox(MailResourceLoader.getString(
+        quotedColorCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "color_quoted_text"));
         quotedColorButton = new JButton("...");
         quotedColorButton.setActionCommand("COLOR");
         quotedColorButton.addActionListener(this);
 
-        preferHtmlCheckBox = new JCheckBox(MailResourceLoader.getString(
+        preferHtmlCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "prefer_html"));
 
         // composer
-        emptySubjectCheckBox = new JCheckBox(MailResourceLoader.getString(
+        emptySubjectCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "ask_on_empty_subject"));
 
-        sendHtmlMultipartCheckBox = new JCheckBox(MailResourceLoader.getString(
+        sendHtmlMultipartCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "send_html_multipart"));
 
-        forwardLabel = new JLabel(MailResourceLoader.getString("dialog",
+        forwardLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog",
                     "general", "forward_as"));
 
         String[] items = {
