@@ -45,7 +45,8 @@ public class PluginManager {
 
 	public void initPlugins() {
 		File[] pluginFolders = PluginFinder.searchPlugins();
-
+		if ( pluginFolders == null ) return;
+		
 		for (int i = 0; i < pluginFolders.length; i++) {
 			File folder = pluginFolders[i];
 			if (folder.getName().equals("CVS"))
