@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.17 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.18 2002/05/29 11:19:57 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -138,7 +138,7 @@ public class HelpViewer extends JFrame implements EBComponent
 		toc = new TOCTree(tocModel);
 
 		// looks bad with the OS X L&F, apparently...
-		if(!OperatingSystem.isMacOS())
+		if(!OperatingSystem.isMacOSLF())
 			toc.putClientProperty("JTree.lineStyle", "Angled");
 
 		toc.setCellRenderer(new TOCCellRenderer());

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.38 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.39 2002/05/29 11:19:57 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -69,7 +69,7 @@ public class BrowserView extends JPanel
 		tree.addTreeExpansionListener(new TreeHandler());
 
 		// looks bad with the OS X L&F, apparently...
-		if(!OperatingSystem.isMacOS())
+		if(!OperatingSystem.isMacOSLF())
 			tree.putClientProperty("JTree.lineStyle", "Angled");
 
 		tree.setRootVisible(false);

@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.11 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.12 2002/05/29 11:19:57 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -66,7 +66,7 @@ public class HyperSearchResults extends JPanel implements EBComponent
 		resultTree.setShowsRootHandles(true);
 
 		// looks bad with the OS X L&F, apparently...
-		if(!OperatingSystem.isMacOS())
+		if(!OperatingSystem.isMacOSLF())
 			resultTree.putClientProperty("JTree.lineStyle", "Angled");
 
 		resultTree.setEditable(false);

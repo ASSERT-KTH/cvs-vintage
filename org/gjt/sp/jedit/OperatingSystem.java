@@ -19,13 +19,14 @@
 
 package org.gjt.sp.jedit;
 
+import javax.swing.UIManager;
 import java.io.File;
 import org.gjt.sp.util.Log;
 
 /**
  * Contains operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.2 2002/05/29 09:53:13 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.3 2002/05/29 11:19:57 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -92,6 +93,15 @@ public class OperatingSystem
 	{
 		return os == MAC_OS_X;
 	} //}}}
+
+	//{{{ isMacOSLF() method
+        /**
+         * Returns if we're running MacOS X and using the native L&F.
+         */
+        public static final boolean isMacOSLF()
+        {
+                return (isMacOS() && UIManager.getLookAndFeel().isNativeLookAndFeel());
+        } //}}}
 
 	//{{{ isJava14() method
 	/**

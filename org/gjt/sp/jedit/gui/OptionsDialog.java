@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.9 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.10 2002/05/29 11:19:57 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -72,7 +72,7 @@ public class OptionsDialog extends EnhancedDialog
 		paneTree.setCellRenderer(new PaneNameRenderer());
 
 		// looks bad with the OS X L&F, apparently...
-		if(!OperatingSystem.isMacOS())
+		if(!OperatingSystem.isMacOSLF())
 			paneTree.putClientProperty("JTree.lineStyle", "Angled");
 
 		paneTree.setShowsRootHandles(true);
