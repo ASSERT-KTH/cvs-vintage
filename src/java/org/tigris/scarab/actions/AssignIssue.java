@@ -101,7 +101,7 @@ import org.tigris.scarab.tools.Email;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.37 2002/02/20 20:25:28 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.38 2002/02/20 20:37:43 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -165,6 +165,9 @@ public class AssignIssue extends RequireLoginFirstAction
                             othersAction = buf2.toString();
                             attachment.setName(othersAction);
                             isChanged = true;
+                            // remove the user from the List and reset the 
+                            // index, so the next AttributeValue is not skipped
+                            attVals.remove(j--);
                         }
                         else if (!newAttributeId.equals(oldAttributeId))
                         {
@@ -318,6 +321,9 @@ public class AssignIssue extends RequireLoginFirstAction
                             attVal.setUserId(new NumberKey(assigneeId));
                             attVal.setValue(assignee.getUserName());
                             attVal.save();
+                            // add assignee to the List so they appear on the
+                            // template which follows this action
+                            assignees.add(attVal);
                             // Notification email
                             if (!notify(issue, assignee, 
                                          userAction, othersAction))
