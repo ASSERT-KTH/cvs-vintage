@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.113 2005/01/16 22:18:46 mvw Exp $
+// $Id: Main.java,v 1.114 2005/01/30 09:29:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,6 @@ import org.argouml.ui.SplashScreen;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionExit;
 import org.argouml.uml.ui.ActionOpenProject;
-import org.argouml.util.Trash;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
 
@@ -296,9 +295,6 @@ public class Main {
         p = ProjectManager.getManager().getCurrentProject();
 
         st.mark("set project");
-
-        // Touch the trash
-        Trash.SINGLETON.getSize();
 
         ProjectManager.getManager().setCurrentProject(p);
         Designer.enableCritiquing();

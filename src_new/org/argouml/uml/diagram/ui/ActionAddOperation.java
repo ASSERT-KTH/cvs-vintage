@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.16 2005/01/29 15:25:57 mvw Exp $
+// $Id: ActionAddOperation.java,v 1.17 2005/01/30 09:29:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class ActionAddOperation extends UMLAction {
 	    	.buildOperation(cls, model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(oper);
 
-        Iterator it = p.findPresentationsFor(cls).iterator();
+        Iterator it = p.findAllPresentationsFor(cls).iterator();
         while (it.hasNext()) {
             PropertyChangeListener listener =
                 (PropertyChangeListener) it.next();
