@@ -16,6 +16,8 @@
 
 package org.columba.core.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -81,6 +83,19 @@ public class StreamUtils {
 		}
 		
 		return result;		
+	}
+	
+	/** Copies all bytes from the given InputStream in a intern ByteArrayOutputStream and returnes a new InputStream
+	 * with all bytes from the ByteArrayOutputStream. The data are real copied so this methods "clones" the given
+	 * Inputstream and gives back a new InputStream with same Data.
+	 * @param from InputStream from which all datas are to copy
+	 * @return a new InputStream with all data from the given InputStream
+	 * @throws IOException
+	 */
+	public static InputStream streamClone(InputStream from) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		 streamCopy(from, out);
+		 return new ByteArrayInputStream(out.toByteArray()); 
 	}
 
 }
