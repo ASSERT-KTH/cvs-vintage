@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.102 2002/01/24 22:32:39 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.103 2002/01/25 00:47:14 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -486,27 +486,61 @@ public class ReportIssue extends RequireLoginFirstAction
         Group group = intake.get("Attachment", 
                                  attachment.getQueryKey(), false);
         
-        Field nameField = group.get("Name"); 
-        nameField.setRequired(true);
-        // set any required flags
-        setRequiredFlags(issue, intake);
-
-        if (!nameField.isValid())
+        if (group != null)
         {
-            nameField.setMessage("This field requires a value.");
+            Field nameField = group.get("Name");
+            Field descField = group.get("File");
+            nameField.setRequired(true);
+            descField.setRequired(true);
+            if (!nameField.isValid())
+            {
+                nameField.setMessage("This field requires a value.");
+            }
+            if (!descField.isValid())
+            {
+                descField.setMessage("This field requires a value.");
+            }
         }
+        else
+        {
+            data.setMessage("Could not locate Attachment group");
+        }
+
         if (intake.isAllValid())
         {
             if (group != null) 
             {
+                Field mimeAField = group.get("MimeTypeA");
+                Field mimeBField = group.get("MimeTypeB");
+        
+                String mimeA = mimeAField.toString();
+                String mimeB = mimeBField.toString();
+                String mimeType = null;
+                if (mimeA != null && mimeA.trim().length() > 0)
+                {
+                    mimeType = mimeA;
+                }
+                else if (mimeB != null && mimeB.trim().length() > 0)
+                {
+                    mimeType = mimeB;
+                }
+                if (mimeType == null)
+                {
+                    mimeAField.setMessage("This field requires a value.");
+                    data.setMessage(ERROR_MESSAGE);
+                    doGotowizard3(data, context);
+                    return;
+                }
+
                 group.setProperties(attachment);
+                attachment.setMimeType(mimeType);
                 if (attachment.getData() != null 
                     && attachment.getData().length > 0)
                 {
                     issue.addFile(attachment);
                 }
-                data.getParameters().add("intake-grp", "issue"); 
-                data.getParameters().add("id",issue.getUniqueId().toString());
+                data.getParameters().setString("intake-grp", "issue"); 
+                data.getParameters().setString("id",issue.getUniqueId().toString());
             }
         }
         else
