@@ -38,18 +38,18 @@ $page.setTitle("Enter Issue")
  <td>
  <select>
 #foreach ($template in $privateTemplateList)
-<option value="">$template.Name
+<option value="">$template.TemplateInfo.Name
 #end
 #foreach ($template in $globalTemplateList)
-<option value="">$template.Name
+<option value="">$template.TemplateInfo.Name
 #end
 </select>
+   <input type="submit" value="select"/> &#160;<a href="$link.setPage("TemplateList.vm")">Template List</a>
  </td>
 
-    <input type="submit" value="select"/> &#160;<a href="$link.setPage("TemplateList.vm")">template list</a>
  </tr>
  </table>
-</div>
+ </div>
 #end
 
 <h3>Input your issue</h3>
