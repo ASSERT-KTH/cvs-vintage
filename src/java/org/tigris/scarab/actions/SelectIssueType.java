@@ -63,7 +63,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  *  This class will allow you to set the selected Issue Type for a user.
  *       
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectIssueType.java,v 1.7 2002/03/14 01:13:09 jmcnally Exp $
+ *  @version $Id: SelectIssueType.java,v 1.8 2002/06/19 03:44:25 jmcnally Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
@@ -80,13 +80,13 @@ public class SelectIssueType extends RequireLoginFirstAction
             setTarget(data, "SelectIssueType.vm");
             return;
         }
-        data.getParameters().setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
+        data.getParameters().setString(ScarabConstants.NAV_ISSUE_TYPE, 
             newIssueType);
         
         IssueType issueType = IssueTypeManager
             .getInstance(new NumberKey(newIssueType), false);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        scarabR.setCurrentIssueType(issueType);
+        scarabR.setNavIssueType(issueType);
         scarabR.setReportingIssue(null);
         data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
 

@@ -1,0 +1,158 @@
+#set ($user = $data.User)
+
+<div class="app" id="xmodulelist">
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+    <td><a href="$link.setPage("home,ModuleQuery.vm")">Module query</a></td>
+	<td><a href="$link.setPage("home,EnterNew.vm")">Enter new...</a></td>
+	<th>Build X-project query</th>
+	</tr>
+  </table>
+</div>
+
+<form method="post" action="$link.setPage("home,XModuleList.vm")">
+<input type="hidden" name="action" value="DefineXModuleList" />
+        
+#if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
+<div class="functnbar">
+ <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
+</div>
+#end
+		
+<h3>Issue types selected for this query</h3>
+
+<!-- not implemented yet
+<div class="colbar">
+  <select name="list_id">
+    <option value="">Select a saved x-module query...</option>
+  #foreach ($list in $user.MITLists)
+    <option value="$list.QueryKey">$list.Name</option>
+  #end
+  </select>&nbsp;
+  <input type="submit" name="eventSubmit_doChooselist" value="Go" />
+</div>
+-->
+		
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th nowrap="nowrap">Select</th>
+    <th>Module</th>
+    <th>Issue type</th>
+    <th># of issues</th>
+    <th>Description</th>
+  </tr>
+#if (!$user.CurrentMITList || $user.CurrentMITList.isEmpty())
+    <td colspan="5">
+    <strong class="alert">
+    No issue types have been selected.  Please select from the list below.
+    </strong>
+    </td>
+#else
+ #foreach ($item in $user.CurrentMITList.MITListItems)
+  #indexedRows($velocityCount)
+    <td>
+    <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
+    </td>
+    <td>$item.Module.RealName</td>
+    <td><a href="#">$item.IssueType.Name</a></td>
+    <td>$item.IssueCount</td>
+    <td>$item.IssueType.Description</td>
+  </tr>        
+ #end
+#end
+</table>  
+
+#if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
+ <div class="functnbar3">
+  <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
+     value="Remove from list" />&nbsp;
+<!-- not implemented
+  <input type="submit" name="eventSubmit_doSavelist" value="Save this list" />
+-->
+ </div>
+
+ <div class="functnbar2">
+  <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
+ </div>
+#end
+
+<a name="add"></a>
+
+<h3>Modules / issues in this domain</h3>
+
+<!-- foo
+<div class="axial"> bar
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>Filter string</th>
+   <td><input type="text" value="" />&nbsp;<select name="#"
+   size=""><option value="">Project</option>
+            <option value="18">Issue type</option>
+            </select>&nbsp;<input type="submit" value="filter" /></td>
+  </tr>
+ <tr>
+</table>
+</div>
+-->
+
+<!--
+<div class="colbar"><div>1-10 of 26</div>
+<div>p. 1 <a href="#">2</a> <a href="#">3</a></div></div>
+-->
+
+<div class="directory">
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+	  <th nowrap="nowrap">Select</th>
+	  <th>
+          <a href="#"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" 
+              width="13" height="8" alt="sort descending" border="0" /></a>
+          &nbsp;Project
+      </th>
+	  <th><a href="#">Issue type</a></th>
+	  <th><a href="#">Description</a></th>
+    </tr>
+
+#foreach ($rmit in $user.getSearchableRMITs())
+  #indexedRows($velocityCount)
+    <td>
+    <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
+    </td>
+    <td>$rmit.Module.Name</td>
+    <td><a href="#">$rmit.IssueType.Name</a></td>
+    <td>$rmit.IssueType.Description</td>
+  </tr>        
+#end      
+</table>  
+</div>
+
+<!-- commented out until paging is implemented
+<div class="colbar">p. 1 <a href="#">2</a> <a href="#">3</a></div>
+-->
+
+<div class="functnbar3">
+ <input type="submit"  name="eventSubmit_doAddselectedrmits" 
+     value="Add selected to x-project query list" />
+</div>
+
+<!-- commented out until paging is implemented
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+       <th>Max items per page</td>
+       <td><input type="radio" name="foo" checked="checked" /> 25 
+           <input type="radio" name="foo" /> 50 
+           <input type="radio" name="foo" /> 75 
+           <input type="radio" name="foo" /> 100&#160;
+           <input type="submit" value="refresh" />
+       </td>
+    </tr>
+  </table>
+</div>
+-->
+
+$intake.declareGroups()
+</form>
+</div>

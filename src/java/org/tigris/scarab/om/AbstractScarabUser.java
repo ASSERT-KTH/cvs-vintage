@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -78,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.25 2002/06/06 01:55:56 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.26 2002/06/19 03:44:25 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -121,7 +122,12 @@ public abstract class AbstractScarabUser
      */
     private int enterIssueRedirect = 0;
 
-
+    /**
+     * The list of MITListItems that will be searched in a 
+     * X-project query.
+     */
+    private MITList mitList;
+    
     /**
      * Calls the superclass constructor to initialize this object.
      */
@@ -613,4 +619,154 @@ public abstract class AbstractScarabUser
         up.save();
         enterIssueRedirect = templateCode;
     }
+
+    public List getMITLists()
+        throws TorqueException    
+    {
+        List result = null;
+
+        Criteria crit = new Criteria();
+        crit.add(MITListPeer.ACTIVE, true);
+        Criteria.Criterion userCrit = crit.getNewCriterion(
+            MITListPeer.USER_ID, getUserId(), Criteria.EQUAL);
+        userCrit.or(crit.getNewCriterion(
+            MITListPeer.USER_ID, null, Criteria.EQUAL));
+        crit.add(userCrit);
+        result = MITListPeer.doSelect(crit);
+
+        return result;
+    }
+
+    /**
+     * @see ScarabUser#getSearchableRMITs().  This list does not include
+     * RModuleIssueTypes that are part of the current MITList.
+     */
+    public List getSearchableRMITs()
+        throws Exception    
+    {
+        List result = null;
+        Module[] userModules = getModules(ScarabSecurity.ISSUE__SEARCH);
+        if (userModules != null && userModules.length > 0) 
+        {
+            List moduleIds = new ArrayList(userModules.length);
+            for (int i=0; i<userModules.length; i++) 
+            {
+                moduleIds.add(userModules[i].getModuleId());
+            }
+            Criteria crit = new Criteria();
+            crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
+            crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
+                         IssueTypePeer.ISSUE_TYPE_ID);
+            crit.add(IssueTypePeer.PARENT_ID, 0);
+            crit.addAscendingOrderByColumn(RModuleIssueTypePeer.MODULE_ID);
+
+            // do not include RMIT's related to current MITListItems.
+            if (getCurrentMITList() != null 
+                && getCurrentMITList().getMITListItems() != null) 
+            {
+                boolean addAnd = false;
+                StringBuffer sb = new StringBuffer();
+                Iterator mitItems = 
+                    getCurrentMITList().getMITListItems().iterator();
+                while (mitItems.hasNext()) 
+                {
+                    MITListItem item = (MITListItem)mitItems.next();
+                    if (item.getModuleId() != null 
+                        && item.getIssueTypeId() != null) 
+                    {                  
+                        if (addAnd) 
+                        {
+                            sb.append(" AND ");
+                        }
+                        
+                        sb.append(" NOT (")
+                            .append(RModuleIssueTypePeer.MODULE_ID)
+                            .append('=')
+                            .append(item.getModuleId())
+                            .append(" AND ")
+                            .append(RModuleIssueTypePeer.ISSUE_TYPE_ID)
+                            .append('=')
+                            .append(item.getIssueTypeId())
+                            .append(')');
+                        addAnd = true;
+                    }
+                }   
+                // the column name used here is arbitrary (within limits)
+                crit.add(IssueTypePeer.ISSUE_TYPE_ID, 
+                         (Object)sb.toString(), Criteria.CUSTOM);
+            }
+            
+            result = RModuleIssueTypePeer.doSelect(crit);
+        }
+        else 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+        
+
+        return result;
+    }
+
+    public void addRMITsToCurrentMITList(List rmits)
+        throws TorqueException
+    {
+        if (rmits != null && !rmits.isEmpty()) 
+        {
+            if (mitList == null) 
+            {
+                mitList = MITListManager.getInstance();
+            }
+
+            Iterator i = rmits.iterator();
+            while (i.hasNext()) 
+            {
+                RModuleIssueType rmit = (RModuleIssueType)i.next();
+                MITListItem item = MITListItemManager.getInstance();
+                item.setModuleId(rmit.getModuleId());
+                item.setIssueTypeId(rmit.getIssueTypeId());
+                mitList.addMITListItem(item);
+            }
+        }
+        
+    }
+
+    public MITList getCurrentMITList()
+    {
+        return mitList;
+    }
+
+    public void setCurrentMITList(MITList list)
+    {
+        mitList = list;
+    }
+
+    public void clearCurrentMITList()
+    {
+        mitList = null;
+    }
+
+
+    public void removeItemsFromCurrentMITList(String[] ids)
+    {
+        MITList mitList = getCurrentMITList();
+        if (mitList != null && !mitList.isEmpty() 
+            && ids != null && ids.length > 0) 
+        {
+            for (int i=0; i<ids.length; i++) 
+            {
+                Iterator iter = mitList.iterator();
+                while (iter.hasNext()) 
+                {
+                    MITListItem item = (MITListItem)iter.next();
+                    if (item.getQueryKey().equals(ids[i])) 
+                    {
+                        iter.remove();
+                        continue;
+                    }
+                }
+                
+            }
+        }
+    }
+
 }

@@ -1,10 +1,8 @@
-#macro( advancedQuery $module )
+#macro( advancedQuery )
 #set ($search = $scarabR.Search)
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
-#set ($attrValues = $search.ModuleAttributeValuesMap)
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($attrValues = $search.CommonAttributeValuesMap)
 
 <h3>Issue ID query</h3>
 <div class="axial">
@@ -41,42 +39,34 @@ from:&#160;<input type="text" size="20"
 
 ## ATTRIBUTES
 <div class="axial">
-#foreach ($group in $module.getAttributeGroups($issueType))
+#if ( $search.isXMITSearch() )
+ <h3>Common Attributes</h3>
+ <table cellpadding="3" cellspacing="2" border="0">
+ #foreach ( $attKey in $attrValues.sequence() )
+     #set ( $attVal = $attrValues.get($attKey) )
+     #if (!$attVal.Attribute.isUserAttribute())
+         #attributeWidget($attVal)
+     #end     
+ #end
+ </table>
+#else
+ ## single module/issuetype search so we will show attribute groups
+ #set ( $module = $search.getModule() )
+ #set ( $issueType = $search.getIssueType() )
+ #foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
-  #foreach ($att in $group.Attributes)
+   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
         #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
-        #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-        #if ( $attVal.Attribute.AttributeType.ValidationKey )
-              #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-              #set ( $field = "OptionIds" )
-        #else
-              #set ( $field = "Value" )
-        #end
-        <tr>
-         <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
-            <td>
-                #attrValueErrorMsg ( $attVal $field )
-      #if ($attVal.Attribute.isOptionAttribute() )
-          #attrValueHierarchySelect ($attVal $field "4" true)
-      #else
-        #if ($attVal.Attribute.AttributeType.Name == "long-string" )
-             #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
-        #else
-           <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="25" type="text" />
-        #end
-      #end
-            </td>
-        </tr>
+        #attributeWidget($attVal)
     #end
+   #end
+    </table>
   #end
-</table>
-  #end
+ #end
 #end
 </div>
 
@@ -90,7 +80,7 @@ from:&#160;<input type="text" size="20"
 <th align="left"><strong>Association</strong></th>
 </tr>
 #set ($userList = $data.Parameters.getStrings("user_list"))
-#set ($userAttrs = $module.getUserAttributes($issueType)) 
+#set ($userAttrs = $search.getUserAttributes()) 
 
 #foreach ($userId in $userList)
   <input type="hidden" name="user_list" value="$userId"  />
@@ -166,7 +156,7 @@ from:&#160;<input type="text" size="20"
      <select name="$searchGroup.StateChangeAttributeId.Key">
 #foreach ( $attKey in $attrValues.sequence() )
     #set ( $attVal = $attrValues.get($attKey) )
-    #if ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST )
+    #if ($attVal.Attribute.isOptionAttribute())
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
         #set ( $selected = false )
         #if ($searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
@@ -174,7 +164,11 @@ from:&#160;<input type="text" size="20"
             #set ( $selectedAttribute = $attVal.Attribute )
         #end
     <option#selected($selected) value="$attVal.AttributeId">
+ #if ($attVal.Issue.Module)
         $attVal.RModuleAttribute.DisplayValue
+ #else
+        $attVal.Attribute.Name
+ #end
                 </option>
     #end
 #end
@@ -191,7 +185,16 @@ from:&#160;<input type="text" size="20"
   #set ( $selected = true )
  #end
     <option#selected($selected) value="">any value</option>
-#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
+
+#if ( $search.isXMITSearch() )
+ #set ( $options = $search.getLeafRModuleOptions($selectedAttribute))
+#else
+ ## single module/issuetype search so we will show attribute groups
+ #set ( $module = $search.getModule() )
+ #set ( $issueType = $search.getIssueType() )
+ #set ( $options = $module.getLeafRModuleOptions($selectedAttribute, $issueType) )
+#end
+#foreach ($option in $options)
     #set ( $selected = false )
     #if ( $searchGroup.StateChangeFromOptionId.Value && $option.OptionId == $searchGroup.StateChangeFromOptionId.Value )
   #set ( $selected = true )
@@ -207,7 +210,7 @@ from:&#160;<input type="text" size="20"
       #set ( $selected = true )
     #end
     <option#selected($selected) value="">any value</option>
-#foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
+#foreach ($option in $options)
     #set ( $selected = false )
     #if ( $searchGroup.StateChangeToOptionId.Value && $option.OptionId == $searchGroup.StateChangeToOptionId.Value )
         #set ( $selected = true )
@@ -275,4 +278,73 @@ from:&#160;<input type="text" size="20"
 </table>
 </div>
 
+#end
+
+#macro (attributeWidget $attVal)
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+    #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+    #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
+        #set ( $field = "OptionIds" )
+    #else
+        #set ( $field = "Value" )
+    #end
+  <tr>
+    <th width="120">
+ #if ($attVal.Issue.Module)
+        $attVal.RModuleAttribute.DisplayValue
+ #else
+        $attVal.Attribute.Name
+ #end
+    </th>
+    <td>
+      #attrValueErrorMsg ( $attVal $field )
+      #if ($attVal.Attribute.isOptionAttribute() )
+        #if ($search.isXMITSearch())
+          #attrValueCommonSelect ($search $attVal $field "4" true)
+        #else
+          #attrValueHierarchySelect ($attVal $field "4" true)
+        #end
+      #else
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )
+             #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
+        #else
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value" size="25" type="text" />
+        #end
+      #end
+    </td>
+  </tr>
+#end
+
+#macro (attrValueCommonSelect $search $attrValue $optionFieldName $size $multiple)
+#set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
+#set ($attr = $attrValue.Attribute)
+#set ($values = $attrInput.get($optionFieldName).Value)
+
+<select name="$attrInput.get($optionFieldName).Key"
+#if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
+  #if ($size.length() == 0)
+  <option value="">Choose...</option>
+  #end
+  #foreach ($option in $search.getCommonOptionTree($attr))
+    #set ($selected = false)
+    #if ($values)   
+       #if ($multiple.toString().equals("true"))
+         #foreach ($value in $values)
+            #if ($value.equals($option.OptionId))
+               #set ($selected=true)
+            #end
+         #end
+       #else
+         #if ($values.equals($option.OptionId))
+           #set ($selected=true)
+          #end
+       #end
+    #end
+    <option value="$option.OptionId"#selected($selected)>
+#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+          $option.DisplayValue</option>
+  #end
+</select>
 #end

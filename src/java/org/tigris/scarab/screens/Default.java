@@ -75,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.56 2002/06/14 01:37:37 jon Exp $
+ * @version $Id: Default.java,v 1.57 2002/06/19 03:44:25 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -173,16 +173,6 @@ public class Default extends TemplateSecureScreen
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectModule(data);
-                    return false;
-                }
-                else if (currentIssueType == null 
-                         && data.getParameters().getString("id") == null
-                         && template.indexOf("admin") == -1)
-                {
-                    scarabR.setInfoMessage("Please select the Issue type " +
-                                    "that you would like to work " +
-                                    "in.");
-                    setTargetSelectIssueType(data);
                     return false;
                 }
             }

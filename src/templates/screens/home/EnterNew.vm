@@ -1,0 +1,49 @@
+<div id="home-enternew" class="app">
+
+<div class="tabs">
+ <table cellpadding="3" cellspacing="0" border="0">
+  <tr>
+    <td><a href="$link.setPage("home,ModuleQuery.vm")">Project query</a></td>
+    <th>Enter new...</th>
+	<td><a href="$link.setPage("home,XModuleList.vm")">Build x-project query</a></td>
+  </tr>
+ </table>
+</div>
+
+<!-- commenting out until functionality is added
+<div class="functnbar">
+     <input type="submit" value="Save" name="#" />
+</div>
+-->       
+
+  <h3>Issue types in this project</h3>
+		        
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+    <tr>
+      <th>Name</th>
+<!-- commenting out until functionality is added
+      <th>Show in left nav</th>
+-->
+      <th>Description</th>
+    </tr>
+
+#foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
+
+    #indexedRows($velocityCount)
+      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.CURRENT_ISSUE_TYPE, $issueType.QueryKey)">$issueType.Name</a></td>
+<!-- commenting out until functionality is added
+      <td><input type="checkbox" /></td>
+-->
+      <td>$issueType.Description</td>
+    </tr>        
+#end   
+             
+  </table>
+				
+<!-- commenting out until functionality is added
+  <div class="functnbar2">
+     <input type="submit" value="Save" name="#" />
+  </div>
+-->
+
+</div>

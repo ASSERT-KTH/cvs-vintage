@@ -58,7 +58,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
-// Turbine classes
+import com.workingdogs.village.Record;
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
@@ -83,6 +84,8 @@ import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListItem;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -130,6 +133,7 @@ public class IssueSearch
 
     private NumberKey sortAttributeId;
     private String sortPolarity;
+    private MITList mitList;
      
     static 
     {
@@ -162,6 +166,129 @@ public class IssueSearch
         throws Exception
     {
         super(module, issueType);
+    }
+
+    public IssueSearch(MITList mitList)
+        throws TorqueException
+    {
+        super();
+        if (mitList == null || mitList.size() == 0) 
+        {
+            throw new IllegalArgumentException("A non-null list with at" +
+               " least one item is required.");
+        }
+        if (mitList.isSingleModuleIssueType()) 
+        {
+            MITListItem item = mitList.getFirstItem();
+            setModuleId(item.getModuleId());
+            setTypeId(item.getIssueTypeId());
+        }
+        else 
+        {
+            this.mitList = mitList;   
+        }        
+    }
+
+
+    public boolean isXMITSearch()
+    {
+        return mitList != null && !mitList.isSingleModuleIssueType();
+    }
+
+
+    public SequencedHashMap getCommonAttributeValuesMap()
+        throws Exception
+    {
+        SequencedHashMap result = null;
+        if (isXMITSearch()) 
+        {
+            result = getMITAttributeValuesMap();
+        }
+        else 
+        {
+            result = super.getModuleAttributeValuesMap();
+        }
+        return result;
+    }
+
+
+    /**
+     * AttributeValues that are relevant to the issue's current module.
+     * Empty AttributeValues that are relevant for the module, but have 
+     * not been set for the issue are included.  The values are ordered
+     * according to the module's preference
+     */
+    private SequencedHashMap getMITAttributeValuesMap() 
+        throws Exception
+    {
+        SequencedHashMap result = null;
+
+        List attributes = null;
+        //HashMap siaValuesMap = null;
+
+        attributes = mitList.getCommonAttributes();
+        //siaValuesMap = getAttributeValuesMap();
+        if (attributes != null) 
+        {
+            result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
+            Iterator i = attributes.iterator();
+            while (i.hasNext()) 
+            {
+                Attribute attribute = (Attribute)i.next();
+                String key = attribute.getName().toUpperCase();
+                /*
+                  if ( siaValuesMap.containsKey(key) ) 
+                  {
+                  result.put( key, siaValuesMap.get(key) );
+                  }
+                  else 
+                  {
+                */
+                AttributeValue aval = AttributeValue
+                    .getNewInstance(attribute, this);
+                addAttributeValue(aval);
+                result.put(key, aval);
+                //}
+            }
+        }
+        return result;
+    }
+
+    public List getUserAttributes()
+        throws Exception
+    {
+        List result = null;
+        if (isXMITSearch()) 
+        {
+            result = mitList.getCommonUserAttributes();
+        }
+        else 
+        {
+            result = getModule().getUserAttributes(getIssueType());
+        }
+        return result;        
+    } 
+
+    public List getLeafRModuleOptions(Attribute attribute)
+        throws Exception
+    {
+        List result = null;
+        if (isXMITSearch()) 
+        {
+            result = mitList.getCommonLeafRModuleOptions(attribute);
+        }
+        else 
+        {
+            result = getModule()
+                .getLeafRModuleOptions(attribute, getIssueType());
+        }
+        return result;        
+    } 
+
+    public List getCommonOptionTree(Attribute attribute)
+        throws Exception
+    {
+        return mitList.getCommonRModuleOptionTree(attribute);
     }
 
     /**
@@ -575,7 +702,7 @@ public class IssueSearch
     private List getTextAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashMap searchValues = getModuleAttributeValuesMap();
+        SequencedHashMap searchValues = getCommonAttributeValuesMap();
         List searchAttributes = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
@@ -626,7 +753,7 @@ public class IssueSearch
     private List getOptionAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashMap searchValues = getModuleAttributeValuesMap();
+        SequencedHashMap searchValues = getCommonAttributeValuesMap();
         List searchAttributeValues = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
@@ -689,8 +816,14 @@ public class IssueSearch
             {
                 maxFid = new Issue.FederatedId(maxId);
                 setDefaults(null, maxFid);
-                crit.add(IssuePeer.ID_DOMAIN, maxFid.getDomain());
-                crit.add(IssuePeer.ID_PREFIX, maxFid.getPrefix());
+                if (maxFid.getDomain() != null) 
+                {
+                    crit.add(IssuePeer.ID_DOMAIN, maxFid.getDomain());
+                }
+                if (maxFid.getPrefix() != null) 
+                {
+                    crit.add(IssuePeer.ID_PREFIX, maxFid.getPrefix());
+                }
                 crit.add(IssuePeer.ID_COUNT, maxFid.getCount(), 
                          Criteria.LESS_EQUAL);
             }
@@ -698,11 +831,16 @@ public class IssueSearch
             {
                 minFid = new Issue.FederatedId(minId);
                 setDefaults(minFid, null);
-                crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
-                crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                if (minFid.getDomain() != null) 
+                {
+                    crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
+                }
+                if (minFid.getPrefix() != null) 
+                {
+                    crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                }
                 crit.add(IssuePeer.ID_COUNT, minFid.getCount(), 
                          Criteria.GREATER_EQUAL);
-
             }
             else 
             {
@@ -714,7 +852,7 @@ public class IssueSearch
                 // parts are equal otherwise skip the query, there are no 
                 // matches
                 if ( minFid.getCount() <= maxFid.getCount() 
-                     && minFid.getPrefix().equals(maxFid.getPrefix())
+                     && Strings.equals(minFid.getPrefix(), maxFid.getPrefix())
                      && Strings
                      .equals( minFid.getDomain(), maxFid.getDomain() ))
                 {
@@ -725,8 +863,14 @@ public class IssueSearch
                         IssuePeer.ID_COUNT, new Integer(maxFid.getCount()), 
                         Criteria.LESS_EQUAL) );
                     crit.add(c1);
-                    crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
-                    crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                    if (minFid.getDomain() != null) 
+                    {
+                        crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
+                    }
+                    if (minFid.getPrefix() != null) 
+                    {
+                        crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                    }
                 }
                 else 
                 {
@@ -775,17 +919,21 @@ public class IssueSearch
                              FederatedId maxFid)
         throws Exception
     {
-        if ( minFid != null && minFid.getDomain() == null ) 
+        Module module = getModule();
+        if (module != null) 
         {
-            minFid.setDomain(getModule().getDomain());
-        }
-        if ( minFid != null && minFid.getPrefix() == null ) 
-        {
-            minFid.setPrefix(getModule().getCode());
-        }
-        if ( maxFid != null && maxFid.getDomain() == null ) 
-        {
-            maxFid.setDomain(getModule().getDomain());
+            if ( minFid != null && minFid.getDomain() == null ) 
+            {
+                minFid.setDomain(module.getDomain());
+            }
+            if ( maxFid != null && maxFid.getDomain() == null ) 
+            {
+                maxFid.setDomain(module.getDomain());
+            }
+            if ( minFid != null && minFid.getPrefix() == null ) 
+            {
+                minFid.setPrefix(module.getCode());
+            }            
         }
         if ( maxFid != null && maxFid.getPrefix() == null ) 
         {
@@ -1025,10 +1173,26 @@ public class IssueSearch
         Criteria crit = new Criteria();
         Criteria.Criterion criterion = null;        
         String index = aval.getAttributeId().toString();
-        IssueType issueType = getIssueType();
-        List descendants = getModule()
-            .getRModuleOption(aval.getAttributeOption(), issueType)
-            .getDescendants(issueType);
+        List descendants = null;
+        // it would be a more correct query to separate the descendant
+        // options by module and do something like
+        // ... (module_id=1 and option_id in (1,2,3)) OR (module_id=5...
+        // but we are not checking which options are active here so i
+        // don't think the complexity of the query is needed.  might want
+        // to revisit, especially the part about ignoring active setting.
+        if (isXMITSearch()) 
+        {
+            descendants = 
+                mitList.getDescendantsUnion(aval.getAttributeOption());
+        }
+        else 
+        {
+            IssueType issueType = getIssueType();
+            descendants = getModule()
+                .getRModuleOption(aval.getAttributeOption(), issueType)
+                .getDescendants(issueType);
+        }
+        
         if ( descendants.size() == 0 ) 
         {
             criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
@@ -1142,20 +1306,19 @@ public class IssueSearch
         }
     }
 
-
-    /**
-     * Get a List of Issues that match the criteria given by this
-     * SearchIssue's searchWords and the quick search attribute values.
-     *
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    public List getMatchingIssues()
+    private NumberKey[] addCoreSearchCriteria(Criteria crit)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
-        crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
+        if (isXMITSearch()) 
+        {
+            crit.addIn(IssuePeer.MODULE_ID, mitList.getModuleIds());
+            crit.addIn(IssuePeer.TYPE_ID, mitList.getIssueTypeIds());
+        }
+        else 
+        {
+            crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
+            crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
+        }
         crit.add(IssuePeer.DELETED, false);
 
         // add option values
@@ -1182,7 +1345,25 @@ public class IssueSearch
 
             // state change query
             addStateChangeQuery(crit);
-            
+        }
+        return matchingIssueIds;
+    }
+
+    /**
+     * Get a List of Issues that match the criteria given by this
+     * SearchIssue's searchWords and the quick search attribute values.
+     *
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getMatchingIssues()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+        List sortedIssues = null;
+        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+        {            
             // Get matching issues, with sort criteria
             sortedIssues = sortIssues(crit);
         }
@@ -1198,6 +1379,22 @@ public class IssueSearch
             sortedIssueIds.add(((Issue)sortedIssues.get(i)).getUniqueId());
         }
         return sortedIssueIds;
+    }
+
+    public int getIssueCount()
+        throws Exception
+    {
+        int count = 0;
+        Criteria crit = new Criteria();
+        NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+        {
+            crit.addSelectColumn("count(DISTINCT " + IssuePeer.ISSUE_ID + ')');
+            List records = IssuePeer.doSelectVillageRecords(crit);
+            count = ((Record)records.get(0)).getValue(1).asInt();
+        }
+
+        return count;
     }
 
     private List sortIssues(Criteria crit)
@@ -1259,7 +1456,7 @@ public class IssueSearch
             }
             else 
             {
-            sortValue = sortAttVal.getValue();
+                sortValue = sortAttVal.getValue();
             }
             if (sortValue == null)
             {

@@ -63,7 +63,7 @@ import org.apache.torque.om.NumberKey;
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.3 2002/05/16 23:55:16 elicia Exp $
+ * @version $Id: SelectModule.java,v 1.4 2002/06/19 03:44:25 jmcnally Exp $
  */
 public class SelectModule extends Default
 {
@@ -101,7 +101,7 @@ public class SelectModule extends Default
                 }
                 else
                 {
-                    template = "entry,Wizard1.vm";
+                    template = "home,EnterNew.vm";
                 }
             }catch(Exception e){e.printStackTrace();}
             return super.setPage(template, moduleId);

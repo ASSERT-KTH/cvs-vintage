@@ -1,0 +1,99 @@
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+	  <th>Project query</th>
+      <td><a href="$link.setPage("home,EnterNew.vm")">Enter new...</a></td>
+	  <td><a href="$link.setPage("home,XModuleList.vm")">Build x-project query</a></td>
+	</tr>
+  </table>
+</div>
+        
+<h3>Issue types in this project</h3>
+<p><strong class="alert">This screen is not implemented.</strong></p>
+		<div class="colbar">	
+		Click issue type <strong>Name</strong> to query a single issue type, or choose one of the following three options, select multiple issue types, and click "Go"</div>
+		<div class="colbar">	
+     		<div><input type="radio" name="x" value="x" />&nbsp;<strong>Query selected:</strong> query common fields from Issue types in this project</div>
+            <div><input type="radio" name="x" value="x" />&nbsp;<strong>All issues:</strong> generates a list of all issues from issue types selected from the list</div>
+            <div><input type="radio" name="x" value="x" />&nbsp;<strong>My issues:</strong></div>
+      	</div>
+		        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th>
+      	Select
+      	</th>
+        <th>Name</th>
+        <th>Description</th>
+        </tr>
+
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Milestone 1 defect</a></td>
+        <td>Initial framework development defects</td>
+        </tr>        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Milestone 2 defect</a></td>
+        <td>Defect tracking during the integration of Tool-X</td>
+        </tr>
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Milestone 3 defect</a></td>
+        <td>Bugs introduced during UI integration / production</td>
+        </tr>
+        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Patch</a></td>
+        <td>Patches needed for all milestones</td>
+        </tr>        
+
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Task</a></td>
+        <td>Comprehensive project task list</td>
+        </tr>
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Testing issues</a></td>
+        <td>Issues found during testing (to be classified / distributed by tech leads)</td>
+        </tr>        
+        </table>
+				
+<div class="functnbar3">
+     <input type="submit" value="Go" name="#" />
+</div>
+ 	</div>
+</div>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
+</td>
+
+</tr>
+</table>
+<!-- Structural Elements -->
+
+	<!-- SourceCast -->
+	<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2002 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curproject/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
+
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curproject/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
+
+</td></tr>
+</table>
+</div>
+
+ </body>
+</html>

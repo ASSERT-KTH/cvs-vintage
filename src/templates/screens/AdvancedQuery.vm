@@ -12,7 +12,7 @@
 <input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" />
 </div>
 
-#advancedQuery($scarabR.CurrentModule)
+#advancedQuery()
 
 <div class="functnbar2">
 <input type="Submit"  name="eventSubmit_doSearch" value="Submit" />&#160;

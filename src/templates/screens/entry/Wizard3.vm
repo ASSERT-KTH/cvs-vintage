@@ -1,7 +1,7 @@
 #set ($issue = $scarabR.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
 #set ($user = $data.User)
 #if ($data.Parameters.getString("templateId"))
   #set ($templateId = $data.Parameters.getString("templateId"))
@@ -14,6 +14,8 @@
 
 <form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
 <input type="hidden" name="action" value="ReportIssue" />
+<input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
+    value="$issueType.QueryKey" />
 
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))

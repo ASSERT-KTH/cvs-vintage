@@ -110,6 +110,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.SearchIndex;
@@ -195,6 +196,11 @@ public class ScarabRequestTool
      * selected by the user within a request.
      */
     private IssueType currentIssueType = null;
+
+    /**
+     * A IssueType object which represents the navigation's open issue type
+     */
+    private IssueType navIssueType = null;
 
     /**
      * The issue that is currently being entered.
@@ -978,9 +984,8 @@ try{
 
     /**
      * Gets the IssueType associated with the information
-     * passed around in the query string. 
-     * If it has not been selected, defaults to first nav issue type.
-     * will return null if none of the conditions pass
+     * passed around in the query string. if a current issue type
+     * is not specifies, fall back to getNavIssueType()
      */
     public IssueType getCurrentIssueType() throws Exception
     {
@@ -993,6 +998,33 @@ try{
             {
                 currentIssueType = getIssueType(data.getParameters()
                     .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
+            }
+            else 
+            {
+                currentIssueType = getNavIssueType();
+            }
+        }
+        return currentIssueType;
+    }
+
+
+    /**
+     * Gets the IssueType associated with the information
+     * passed around in the query string. 
+     * If it has not been selected, defaults to first nav issue type.
+     * will return null if none of the conditions pass
+     */
+    public IssueType getNavIssueType() throws Exception
+    {
+        if (navIssueType == null)
+        {
+            // if the nav issue_type_id is present in the parameter list
+            //then select that issue as the nav issue_type
+            if (data.getParameters()
+                .containsKey(ScarabConstants.NAV_ISSUE_TYPE))
+            {
+                navIssueType = getIssueType(data.getParameters()
+                    .getString(ScarabConstants.NAV_ISSUE_TYPE));
             }
             else if (getCurrentModule() != null)
             {
@@ -1008,7 +1040,7 @@ try{
                 }
             }
         }
-        return currentIssueType;
+        return navIssueType;
     }
 
     /**
@@ -1076,9 +1108,9 @@ try{
     /**
      * Sets the current ArtifactType
      */
-    public void setCurrentIssueType(IssueType issueType)
+    public void setNavIssueType(IssueType issueType)
     {
-        currentIssueType = issueType;
+        navIssueType = issueType;
     }
 
     /**
@@ -1266,7 +1298,17 @@ try{
     public IssueSearch getSearch()
         throws Exception
     {
-        return new IssueSearch(getCurrentModule(), getCurrentIssueType());
+        IssueSearch is = null;
+        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
+        if (mitList == null) 
+        {
+            is = new IssueSearch(getCurrentModule(), getCurrentIssueType());
+        }
+        else 
+        {
+            is = new IssueSearch(mitList);
+        }
+        return is; 
     }
 
     /**
@@ -1438,7 +1480,7 @@ try{
             searchGroup.setProperties(search);
 
             // Set attribute values to search on
-            SequencedHashMap avMap = search.getModuleAttributeValuesMap();
+            SequencedHashMap avMap = search.getCommonAttributeValuesMap();
             Iterator i = avMap.iterator();
             while (i.hasNext()) 
             {

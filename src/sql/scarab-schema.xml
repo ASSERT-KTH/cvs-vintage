@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.101 2002/06/13 22:06:08 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.102 2002/06/19 03:44:25 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -625,6 +625,59 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
+
+
+<table name="SCARAB_MIT_LIST" idMethod="idbroker" javaName="MITList">
+    <!--
+        Unique identifier used for primary key.
+    -->
+    <column name="LIST_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Name.
+    -->
+    <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
+            size="100"/>
+    <column name="ACTIVE" type="BOOLEANINT" default="1" size="1" />
+    <column name="MODIFIABLE" type="BOOLEANINT" default="1" size="1" />
+    <column name="USER_ID" required="false" type="INTEGER"/>
+
+    <foreign-key foreignTable="TURBINE_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+</table>
+
+<!--
+    Mapping between modules and issue types.
+-->
+<table name="SCARAB_MIT_LISTITEM" idMethod="idbroker" javaName="MITListItem">
+    <!--
+        Module.
+    -->
+    <column name="ITEM_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"/>
+    <!--
+        Artifact type.
+    -->
+    <column name="ISSUE_TYPE_ID" required="false" type="INTEGER"/>
+    <!--
+        The list this item belongs to.
+    -->
+    <column name="LIST_ID" required="true" type="INTEGER"/>
+
+    <foreign-key foreignTable="SCARAB_MIT_LIST">
+        <reference local="LIST_ID" foreign="LIST_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+</table>
+
 
 <!--
     Actual attribute of the issue with its value.

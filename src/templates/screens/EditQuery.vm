@@ -3,13 +3,12 @@
 #set ($queryId = $data.Parameters.getString("queryId"))
 #set ($currentQuery = $scarabR.getQuery())
 #set ($queryGroup = $intake.Query.mapTo($currentQuery))
-#set ($module = $scarabR.CurrentModule)
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search"))
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
-<input type="hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
+<input type="hidden" name="$queryGroup.ModuleId.Key" value = "$queryGroup.ModuleId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="QueryList.vm" />
 
 <div class="functnbar">
@@ -57,7 +56,7 @@
 ##set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
 ##set ($searchValues = $search.QuickSearchOptionAttributeValues)
 
-#advancedQuery($module)
+#advancedQuery()
 
 #if ($currentQuery.QueryType.Name.equals("All users"))
 
