@@ -530,10 +530,10 @@ public class ContextManager {
 	    int err=authorize( rrequest, rresponse );
 	    if( err != 0 ) {
 		// redirect to the right servlet 
-		Context ctx=req.getContext();
+		Context ctx=rrequest.getContext();
 		String authMethod=ctx.getAuthMethod();
 		ServletWrapper authWrapper=ctx.getServletByName( "authServlet" );
-		req.setWrapper( authWrapper );
+		rrequest.setWrapper( authWrapper );
 		
 		// unauthorized access, redirect to login page.
 		// XXX authorize will set request
