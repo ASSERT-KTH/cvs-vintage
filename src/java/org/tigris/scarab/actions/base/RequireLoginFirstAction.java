@@ -69,7 +69,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.43 2002/10/25 15:13:59 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.44 2002/12/04 22:44:44 jon Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -82,6 +82,8 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         ScarabConstants.NO_PERMISSION_MESSAGE;
     protected static final String DEFAULT_MSG = "YourChangesWereSaved";
     protected static final String EMAIL_ERROR = "CouldNotSendEmail";
+    protected static final String NO_CHANGES_MADE = "NoChangesMade";
+
 
     /**
      * sets the template to template.login if the user hasn't logged in yet
