@@ -16,7 +16,11 @@
 
 package org.columba.mail.folder.command;
 
+import java.io.IOException;
+
 import java.text.MessageFormat;
+
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
@@ -71,7 +75,6 @@ public class CopyMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		
 		// get references
 		FolderCommandReference[] references =
 			(FolderCommandReference[]) getReferences();
@@ -86,7 +89,7 @@ public class CopyMessageCommand extends FolderCommand {
 		destFolder = adapter.getDestinationFolder();
 
 		// for each message
-		for (int i = 0; i < r.length; i++) {
+		for (int i = 0; i < r.length && !worker.cancelled(); i++) {
 			Object[] uids = r[i].getUids();
 
 			// get source folder
@@ -114,15 +117,55 @@ public class CopyMessageCommand extends FolderCommand {
                         if (srcFolder.getRootFolder().equals(destFolder.getRootFolder())) {
                                 srcFolder.innerCopy(destFolder, uids);
                         } else {
-                                for (int j = 0; j < uids.length; j++) {
+                                for (int j = 0; j < uids.length && !worker.cancelled(); j++) {
                                         // if message exists in sourcefolder
+                                        // FIXME: Check whether the email already
+                                        // already exists in the destination folder
                                         if (srcFolder.exists(uids[j])) {
-                                                // FIXME: Check whether the email already
-                                                // already exists in the destination folder
-                                                
+                                                continue;
+                                        }
+                                        
+                                        try {
                                                 // add source to destination folder
                                                 destFolder.addMessage(
                                                         srcFolder.getMessageSourceStream(uids[j]));
+                                        } catch (IOException ioe) {
+                                                String[] options = new String[]{
+                                                        MailResourceLoader.getString(
+                                                                "statusbar",
+                                                                "message",
+                                                                "err_copy_messages_retry"),
+                                                        MailResourceLoader.getString(
+                                                                "statusbar",
+                                                                "message",
+                                                                "err_copy_messages_ignore"),
+                                                        MailResourceLoader.getString(
+                                                                "",
+                                                                "global",
+                                                                "cancel")
+                                                };
+                                                switch(JOptionPane.showOptionDialog(
+                                                        null, MailResourceLoader.getString(
+                                                                "statusbar",
+                                                                "message",
+                                                                "err_copy_messages_msg"), 
+                                                        MailResourceLoader.getString(
+                                                                "statusbar",
+                                                                "message",
+                                                                "err_copy_messages_title"),
+                                                        JOptionPane.YES_NO_CANCEL_OPTION,
+                                                        JOptionPane.ERROR_MESSAGE,
+                                                        null, options, options[0])) {
+
+                                                        case JOptionPane.YES_OPTION:
+                                                                //retry copy
+                                                                j--;
+                                                                break;
+                                                        case JOptionPane.CANCEL_OPTION:
+                                                                worker.cancel();
+                                                        default:
+                                                                continue;
+                                                }
                                         }
 
                                         // update progress bar
@@ -134,7 +177,14 @@ public class CopyMessageCommand extends FolderCommand {
                         worker.setProgressBarValue(0);
                 }
 		
-		// We are done - clear the status message (with a delay of 500 ms)
-		worker.clearDisplayText(500);
+                if (worker.cancelled()) {
+                        worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "copy_messages_cancelled"));
+                } else {
+                        // We are done - clear the status message (with a delay of 500 ms)
+                        worker.clearDisplayText(500);
+                }
 	}
 }
