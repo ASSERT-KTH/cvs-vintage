@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.85 2003/08/30 20:43:52 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.86 2003/08/30 20:49:16 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1420,11 +1420,11 @@ public class ModelFacade {
         if (handle instanceof MAssociationEndRole) {
             return ((MAssociationEndRole) handle).getBase();
         } else if (handle instanceof MAssociationRole) {
-            return ((MAssociationEndRole) handle).getBase();
+            return ((MAssociationRole) handle).getBase();
         } else if (handle instanceof MExtend) {
-            return ((MAssociationEndRole) handle).getBase();
+            return ((MExtend) handle).getBase();
         } else if (handle instanceof MInclude) {
-            return ((MAssociationEndRole) handle).getBase();
+            return ((MInclude) handle).getBase();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
