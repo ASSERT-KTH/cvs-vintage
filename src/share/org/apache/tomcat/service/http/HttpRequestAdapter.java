@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.12 2000/05/24 04:41:55 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/05/24 04:41:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.13 2000/05/24 16:34:14 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/05/24 16:34:14 $
  *
  * ====================================================================
  *
@@ -72,16 +72,28 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+class RecycleBufferedInputStream extends BufferedInputStream {
+    RecycleBufferedInputStream( InputStream is ) {
+	super( is );
+    }
+
+    void setInputStream( InputStream is ) {
+	this.in=is;
+    }
+
+    
+}
+
 public class HttpRequestAdapter extends RequestImpl {
     private Socket socket;
     private boolean moreRequests = false;
-    InputStream sin;
+    RecycleBufferedInputStream sin;
     byte[] buf;
     int bufSize=2048; // default
     int off=0;
     int count=0;
     public static final String DEFAULT_CHARACTER_ENCODING = "8859_1";
-
+    
     
     public HttpRequestAdapter() {
         super();
@@ -89,7 +101,10 @@ public class HttpRequestAdapter extends RequestImpl {
     }
 
     public void setSocket(Socket socket) throws IOException {
-	sin = new BufferedInputStream ( socket.getInputStream());
+	if( sin==null)
+	    sin = new RecycleBufferedInputStream ( socket.getInputStream());
+	else
+	    sin.setInputStream( socket.getInputStream());
 	in = new BufferedServletInputStream(this);
         this.socket = socket;
     	moreRequests = true;
@@ -128,8 +143,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	processRequestLine(response  );
 
 	// for 0.9, we don't have headers!
-	if ((protocol!=null) &&
-            !protocol.toLowerCase().startsWith("http/0.")) {
+	if (protocol!=null) { // all HTTP versions with protocol also have headers ( 0.9 has no HTTP/0.9 !)
 	    readHeaders( headers, in  );
 	}
 
@@ -361,7 +375,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	    queryString = new String( buf, qryIdx+1, endReq - qryIdx -1 );
 	}
 
-	System.out.println("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
+	//	System.out.println("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
 
     }
 

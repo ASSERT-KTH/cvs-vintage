@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Ascii.java,v 1.2 2000/02/14 04:59:42 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/14 04:59:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Ascii.java,v 1.3 2000/05/24 16:34:20 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/24 16:34:20 $
  *
  * ====================================================================
  *
@@ -187,7 +187,8 @@ public class Ascii {
      */
 
     public static int parseInt(byte[] b, int off, int len)
-    throws NumberFormatException {
+	throws NumberFormatException
+    {
         int c;
 
 	if (b == null || len <= 0 || !isDigit(c = b[off++])) {

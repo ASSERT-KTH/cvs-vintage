@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.1 2000/05/24 01:58:17 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/24 01:58:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.2 2000/05/24 16:34:20 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/24 16:34:20 $
  *
  * ====================================================================
  *
@@ -107,8 +107,7 @@ public class DateTool {
     /** Pattern used for old cookies
      */
     public final static String OLD_COOKIE_PATTERN = "EEE, dd-MMM-yyyy HH:mm:ss z";
-    
-    
+
     /** DateFormat to be used to format dates
      */
     public final static SimpleDateFormat rfc1123Format =

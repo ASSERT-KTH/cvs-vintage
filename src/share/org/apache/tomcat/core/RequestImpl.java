@@ -418,23 +418,31 @@ public class RequestImpl  implements Request {
     }
 
     // --------------------
-    public Cookie[] getCookies() {
-	// XXX need to use Cookie[], Vector is not needed
+    public int getCookieCount() {
 	if( ! didCookies ) {
-	    // XXX need a better test
-	    // XXX need to use adapter for hings
 	    didCookies=true;
 	    RequestUtil.processCookies( this, cookies );
 	}
+	return cookies.size();
+    }
 
-	Cookie[] cookieArray = new Cookie[cookies.size()];
+    public Cookie getCookie( int idx ) {
+	if( ! didCookies ) {
+	    didCookies=true;
+	    RequestUtil.processCookies( this, cookies );
+	}
+	return (Cookie)cookies.elementAt(idx);
+    }
+    
+    public Cookie[] getCookies() {
+	int count=request.getCookieCount();
+	Cookie[] cookieArray = new Cookie[ count ];
 
-	for (int i = 0; i < cookies.size(); i ++) {
-	    cookieArray[i] = (Cookie)cookies.elementAt(i);
+	for (int i = 0; i < count; i ++) {
+	    cookieArray[i] = request.getCookie( i );
 	}
 
 	return cookieArray;
-	//        return cookies;
     }
     // -------------------- LookupResult
     public ServletWrapper getWrapper() {

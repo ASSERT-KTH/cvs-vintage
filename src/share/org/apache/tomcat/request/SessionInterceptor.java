@@ -136,12 +136,12 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     public int requestMap(Request request ) {
 	String sessionId = null;
 
-	Cookie cookies[]=request.getCookies(); // assert !=null
+	int count=request.getCookieCount();
 	
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
-	for( int i=0; i<cookies.length; i++ ) {
-	    Cookie cookie = cookies[i];
+	for( int i=0; i<count; i++ ) {
+	    Cookie cookie = request.getCookie(i);
 	    
 	    if (cookie.getName().equals("JSESSIONID")) {
 		sessionId = cookie.getValue();

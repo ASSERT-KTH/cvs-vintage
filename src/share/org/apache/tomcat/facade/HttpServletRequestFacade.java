@@ -140,7 +140,14 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public Cookie[] getCookies() {
-	return request.getCookies();
+	int count=request.getCookieCount();
+	Cookie[] cookieArray = new Cookie[ count ];
+
+	for (int i = 0; i < count; i ++) {
+	    cookieArray[i] = request.getCookie( i );
+	}
+
+	return cookieArray;
     }
 
     /** Tomcat Request doesn't deal with header to date conversion.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.10 2000/05/23 21:39:53 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/05/23 21:39:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.11 2000/05/24 16:34:15 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/05/24 16:34:15 $
  *
  * ====================================================================
  *
@@ -141,7 +141,7 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	// This avoids redundant setting of date ( very expensive ).
 	// XXX XXX Check if IIS, NES do generate the date
 	MimeHeaderField dateH= headers.find( "Date" );
-	if( dateH == null ) {
+	if( false && dateH == null ) {
 	    // no date header set by user
 	    dateH=headers.putHeader();
 	    dateH.setName("Date");
