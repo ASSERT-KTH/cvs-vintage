@@ -454,16 +454,134 @@ vAlign=top><B>Extends:</B></TD>
             Extensions:</B> 
             <UL>
               <LI>None </LI></UL></TD></TR></TBODY></TABLE><BR>
-      <HR>
+      
+<!-- --------------------------------------------------------------- -->
+<A name=UC-17></A>
+      <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
+        <TBODY>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Name:</B></TD>
+          
+    <TD bgColor=white vAlign=top>UC-17 Attaching One or More Files to an Issue 
+    </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top height="59"><B>Extends:</B></TD>
+          
+    <TD bgColor=white vAlign=top height="59">Creating or Changing an Issue once 
+      the user clicks Submit</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Purpose:</B></TD>
+          <TD bgColor=white vAlign=top>
+      <p>Allows user to have the option of attaching one or more files to an Issue 
+        during the creation of an issue or the editing of an existing issue. User 
+        would be able to browse their local file system or enter the name of a 
+        file attachment:</p>
+      <ul>
+        <li>Patch</li>
+        <li>Plain Text</li>
+        <li>html</li>
+        <li>.gif</li>
+        <li>.jpeg</li>
+        <li>.png</li>
+        <li>binary</li>
+        <li>other (specify)</li>
+      </ul>
+          </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Feature(s):</B></TD>
+          <TD bgColor=white vAlign=top><A 
+            href="http://www.tigris.org/features/feature.html">FeatureName</A></TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Direct Actors:</B></TD>
+          
+    <TD bgColor=white vAlign=top>CompOwner: Component Owner (High Priority, High 
+      Frequency)<br>
+      Other Users on the Project <br>
+      Scarab: The scarab system. </TD>
+  </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Stakeholders:</B></TD>
+          
+    <TD bgColor=white vAlign=top>CompOwner: <br>
+      Other project members: The ability to view/download the attached file(s)</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
+          
+    <TD bgColor=white vAlign=top> Logged In<br>
+      Project set up<br>
+      User has access to the project </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Results:</B></TD>
+          
+    <TD bgColor=white vAlign=top>File(s) is attached to an issue if the user elects 
+      to attach during the creation and/or editing stages.</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Data sets:</B></TD>
+          <TD bgColor=white vAlign=top><BR>
+          </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Notes/Questions:</B></TD>
+          
+    <TD bgColor=white vAlign=top> 
+      <p>Does the user have access to the project?<br>
+        Does it make sense to offer this as an option at the end of the issue 
+        creation process? <br>
+        Can the user attach file(s) to several projects at one time? <br>
+        No anonymous users can attach files to an issue<br>
+        At what point do users have to log in?<br>
+        Is it necessary for the user to define the type of file if they are browsing 
+        their local and selecting the file? <BR>
+      </p>
+            </TD>
+        </TR>
+        <TR> 
+          
+    <TD bgColor=white colSpan=2 vAlign=top><B>Main Success Scenario:</B> 
+      <OL>
+        <li>Note: Extension of Creating an Issue and/or Editing an Issue 
+        <li>User: elects to attach a file(s) to the issue by clicking &quot;Attach 
+          Files&quot; 
+        <li>Scarab: display a file window which allows the user to either enter 
+          the path/name of the file or to browse their local environment to select 
+          the file(s) they want to atach (Note: Browsing allows the ability to 
+          select several files at once) 
+        <li>User: enters the name or selects the file(s) from their local environment. 
+        <li>User: provides a brief description of the file(s) (Note: Define MaxChar) 
+        <li>User: Define file type? 
+        <li>User: click submit 
+        <li>Scarab: validate data or bounce back to prev screen 
+        <li>Scarab: store values in database 
+        <li>Scarab: display <a 
+              href="http://projects.collab.net/project/jrobbins/scarab/ProjectIssues.html">ProjectIssues</a> 
+          page with <a 
+              href="http://projects.collab.net/project/jrobbins/scarab/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </OL>
+            
+          </TD>
+        </TR>
+        <TR>
+          <TD bgColor=white colSpan=2 vAlign=top><B>Alternative Scenario 
+            Extensions:</B> 
+            <UL>
+              <LI>None </LI></UL></TD>
+
+<HR>
       <BR><!-- project-specific footer --><!--
 WARNING: Include: Error reading file /usr/tigris/html/jrobbins/www/project_footer.html 
---><!-- end project-specific footer --><!-- End Servlet-Specific Content --><!-- Page End --><!-- End Main Window Table --></TD></TR>
+--><!-- end project-specific footer --><!-- End Servlet-Specific Content --><!-- Page End --><!-- End Main Window Table -->
   <TR>
     <TD align=left bgColor=#ffffff><FONT 
       face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
       href="mailto:projects-admin@collab.net">Comments</A>? </FONT></TD>
     <TD align=left 
-bgColor=#ffffff></TD></TR></TBODY></TABLE>
+bgColor=#ffffff></TD></TR></TBODY></TABLE><BR>
 <br><hr><br>
   </body>
 </html>
