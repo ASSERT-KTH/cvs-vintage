@@ -81,7 +81,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.51 2002/08/03 19:33:16 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.52 2002/08/06 17:19:33 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -844,6 +844,7 @@ public abstract class AbstractScarabUser
         crit.add(MITListPeer.LIST_ID, 4, Criteria.GREATER_THAN);
         crit.add(MITListPeer.ACTIVE, true);
         crit.add(MITListPeer.NAME, (Object)null, Criteria.NOT_EQUAL);
+        crit.addAscendingOrderByColumn(MITListPeer.NAME);
         result = MITListPeer.doSelect(crit);
 
         return result;
