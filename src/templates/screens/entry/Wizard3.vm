@@ -121,6 +121,9 @@ $page.setTitle("Enter issue")
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
       <td>
+#if ( !$intakeAttachment.Name.isValid())
+<p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
+#end
        <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2"
            >$!intakeAttachment.Name</textarea>
         <p>
