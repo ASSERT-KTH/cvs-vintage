@@ -421,10 +421,14 @@ public class CarolConfiguration {
      * @return carol jndi properties
      */
     private static Properties jndi2Carol(Properties p) {	
+        TraceCarol.debugCarol("map properties found in jndi.properties to CAROL ones");
 	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
 	Properties result = new Properties();
 	// get the rmi name 
 	jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(CarolDefaultValues.URL_PREFIX));
+        TraceCarol.debugCarol("jndi prefix="+ jndiPref);
+        TraceCarol.debugCarol("rmi used="+ jndiRMIName);
+        TraceCarol.debugCarol("initial properties = "+ p);
 	if (jndiRMIName==null) {
 	    return null;
 	} else {
@@ -433,11 +437,12 @@ public class CarolConfiguration {
 		if (current.trim().equals(CarolDefaultValues.PKGS_PREFIX)) {
 		    // pkgs for other context, only in use for all protocol in the jvm
 		    result.setProperty(CarolDefaultValues.CAROL_PREFIX+"."+CarolDefaultValues.JVM_PREFIX+"."+current, p.getProperty(current));
-		} else if (current.startsWith(jndiPref)) {
-		    result.setProperty(jndiPref +"."+jndiRMIName+"."+current, p.getProperty(current));
-		}		    
+		} else {
+		    result.setProperty(jndiPref +"."+jndiRMIName+"."+current, p.getProperty(current));		
+		}
 	    }
 	}
+    TraceCarol.debugCarol("resulting properties = "+ result);
 	return result;
     }
 
