@@ -16,7 +16,7 @@
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
 
-    <property name="ant.home" value="."/>
+    <property name="ant.home" value=".."/>
 
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
