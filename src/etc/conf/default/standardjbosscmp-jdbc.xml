@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.44 2002/09/13 17:56:39 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.45 2002/09/16 20:31:33 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -398,7 +398,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>length</function-name>
-            <function-sql>len(?1)</function-sql>
+            <function-sql>length(?1)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
@@ -524,7 +524,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>length</function-name>
-            <function-sql>len(?1)</function-sql>
+            <function-sql>length(?1)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
@@ -658,7 +658,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>length</function-name>
-            <function-sql>len(?1)</function-sql>
+            <function-sql>length(?1)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
