@@ -63,7 +63,7 @@ import org.tigris.scarab.om.AttachmentPeer;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.1 2002/02/05 23:30:22 jmcnally Exp $
+ * @version $Id: ViewAttachment.java,v 1.2 2002/02/05 23:49:25 jmcnally Exp $
  */
 public class ViewAttachment extends Default
 {
@@ -87,6 +87,7 @@ public class ViewAttachment extends Default
             fis = new FileInputStream(attachment.getFullPath());
             bis = new BufferedInputStream(fis);
             OutputStream os = data.getResponse().getOutputStream();
+            // FIXME! this could be more efficient
             int onebyte = bis.read();
             while ( onebyte != -1 ) 
             {
@@ -106,7 +107,7 @@ public class ViewAttachment extends Default
             }
         }
 
-        //data.getRequest().setAttribute("stop.pipeline", Boolean.TRUE);
+        // we already sent the response, there is no target to render
         data.setTarget(null);
     }
 }
