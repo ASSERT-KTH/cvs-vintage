@@ -43,22 +43,6 @@
         #end
     #end
 
-#*
-          <td>Issue summary x</td>
-
-          <td>*platform x</td>
-
-          <td>*OS x</td>
-
-          <td>*issue type x</td>
-
-          <td>*severity x</td>
-
-          <td>xx/xx/2001</td>
-
-          <td>unassigned</td>
-*#
-
 
          </tr>
         </table>
@@ -98,27 +82,15 @@
         #set ( $attVal = $attrValues.get($attKey) )
         #if ($attVal.isDedupeAttribute())
 
-            <th><a href="#">$attVal.Attribute.Name: </a></th>
+            <th>$attVal.Attribute.Name: </th>
 
         #end
     #end
 
-#*
-          <th><a href="#">issue summary:</a></th>
 
-          <th><a href="#">platform:</a></th>
+          <th>creation date:</th>
 
-          <th><a href="#">os:</a></th>
-
-          <th><a href="#">issue type:</a></th>
-
-          <th><a href="#">severity:</a></th>
-
-*#
-
-          <th><a href="#">creation date:</a></th>
-
-          <th><a href="#">date closed:</a></th>
+          <th>date closed:</th>
 
          </tr>
 
