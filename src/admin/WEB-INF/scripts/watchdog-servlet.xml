@@ -1,6 +1,6 @@
 <project name="Watchdog-moo" default="main" basedir=".">
 
-  <property name="tomcat.home" value="../../../../.."/>
+  <property name="tomcat.home" value="../../../.."/>
   <property name="ant-file" 
    value="${tomcat.home}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
   <property name="stests.home" 
@@ -20,7 +20,7 @@
 	<pathelement 
 		path="${tomcat.home}/lib/container/jaxp.jar" />
 	<pathelement 
-		path="${tomcat.home}/lib/container/parser.jar" />
+		path="${tomcat.home}/lib/container/crimson.jar" />
       </classpath>
       <arg value="-f" />
       <arg value="${stests.home}/WEB-INF/servlet-moo.xml" />
