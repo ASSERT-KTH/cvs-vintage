@@ -388,9 +388,18 @@ public  class AttributeGroup
         RAttributeAttributeGroup raag =
             addRAttributeAttributeGroup(attribute);
         raag.save();
-        Log.get().debug("Calling getAttributes() from addAttribute in order to add attribute id=" + attribute.getAttributeId() + " to the List");
-        getAttributes().add(attribute);
-
+        if (Log.get().isDebugEnabled()) 
+        {
+            Log.get().debug("Calling getAttributes() from addAttribute in order to add attribute id="
+                            + attribute.getAttributeId() + " to the List");
+        }
+        // FIXME! Distributed cache buster, cache should be invalidated.
+        List attributes = getAttributes();
+        if (!attributes.contains(attribute)) 
+        {
+            attributes.add(attribute);
+        }
+        
         List allOptions = attribute.getAttributeOptions(false);
         // remove duplicate options
         // FIXME! why would we ever want Attribute.getAttributeOptions to
@@ -589,8 +598,12 @@ public  class AttributeGroup
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
         raag.setGroupId(getAttributeGroupId());
         raag.setAttributeId(attribute.getAttributeId());
-        Log.get().debug("Calling getAttributes() from addRAttributeAttributeGroup in order to determine order for attribute id=" + attribute.getAttributeId());
-
+        if (Log.get().isDebugEnabled()) 
+        {
+            Log.get().debug("Calling getAttributes() from addRAttributeAttributeGroup "
+                            + "in order to determine order for attribute id=" + 
+                            attribute.getAttributeId());
+        }
         raag.setOrder(getAttributes().size() +1);
         return raag;
     }
