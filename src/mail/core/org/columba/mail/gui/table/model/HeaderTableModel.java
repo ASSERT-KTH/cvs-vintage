@@ -161,9 +161,9 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 
 		tree.setRootNode(root);
 		
-		Enumeration enum = visitors.elements();
-		while (enum.hasMoreElements()) {
-			ModelVisitor v = (ModelVisitor) enum.nextElement();
+		Enumeration e = visitors.elements();
+		while (e.hasMoreElements()) {
+			ModelVisitor v = (ModelVisitor) e.nextElement();
 			v.visit(this);
 		}
 		
