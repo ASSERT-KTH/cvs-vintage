@@ -15,6 +15,10 @@ $page.setTitle("Queue list")
 #set ($issueList = $scarabR.IssueList)
 
 
+#if ($issueList.size() == 0)
+  <p class="alert">There are no matching issues.</p>
+#else
+
 #if ($resultsPerPage == 0)
   #set ($resultsPerPage = 25)
 #end
@@ -171,3 +175,4 @@ $page.setTitle("Queue list")
 $intake.declareGroups()
 </form>
 </div>
+#end
