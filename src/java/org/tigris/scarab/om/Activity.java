@@ -56,10 +56,8 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.pool.DBConnection;
 
-// import org.apache.turbine.om.peer.BasePeer;
-// import org.apache.turbine.Log;
-// import org.apache.turbine.util.db.pool.DBConnection;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -120,8 +118,48 @@ public class Activity
                oldNumericValue, newNumericValue,
                oldUserId, newUserId,
                oldOptionId, newOptionId,
-               oldValue, newValue, null);
+               oldValue, newValue, null, null);
         issue.getActivity(true).add(this);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       String oldValue, String newValue)
+         throws TorqueException
+    {
+        create(issue, attribute, desc, transaction,
+               0, 0, null, null, null, null,
+               oldValue, newValue, null, null);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       NumberKey oldUserId, NumberKey newUserId, 
+                       Attachment attachment)
+         throws TorqueException
+    {
+        create(issue, attribute, desc, transaction,
+               0, 0, oldUserId, newUserId, null, null,
+               null, null, attachment, null);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       String oldValue, String newValue, Attachment attachment)
+         throws TorqueException
+    {
+        create(issue, attribute, desc, transaction,
+               0, 0, null, null, null, null,
+               oldValue, newValue, attachment, null);
     }
 
     /**
@@ -132,7 +170,8 @@ public class Activity
                        int oldNumericValue, int newNumericValue,
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
-                       String oldValue, String newValue, DBConnection dbCon)
+                       String oldValue, String newValue, 
+                       Attachment attachment,DBConnection dbCon)
          throws TorqueException
     {
         setIssue(issue);
@@ -151,6 +190,10 @@ public class Activity
         setNewOptionId(newOptionId);
         setOldValue(oldValue);
         setNewValue(newValue);
+        if (attachment != null)
+        {
+            setAttachment(attachment);
+        }
         if (dbCon == null) 
         {
             try
@@ -183,20 +226,6 @@ public class Activity
             throw new TorqueException(e);
         }
     }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       String oldValue, String newValue)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               0, 0, null, null, null, null,
-               oldValue, newValue, null);
-    }
-
 
     /**
      * Gets the AttributeOption object associated with the Old Value field
