@@ -24,7 +24,7 @@
 // File: FigComponentInstance.java
 // Classes: FigComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponentInstance.java,v 1.7 2001/12/25 20:46:18 thn Exp $
+// $Id: FigComponentInstance.java,v 1.8 2002/03/29 11:03:55 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -133,6 +133,7 @@ public class FigComponentInstance extends FigNodeModelElement {
   public Dimension getMinimumSize() {
     Dimension stereoDim = _stereo.getMinimumSize();
     Dimension nameDim = _name.getMinimumSize();
+
     int h = stereoDim.height + nameDim.height - OVERLAP;
     int w = Math.max(stereoDim.width, nameDim.width);
     return new Dimension(w, h);
@@ -149,12 +150,12 @@ public class FigComponentInstance extends FigNodeModelElement {
     Dimension nameDim = _name.getMinimumSize();
 
     if (h<50) {
-      _upperRect.setBounds(x-10, y+h/6, 20, 10);
-      _lowerRect.setBounds(x-10, y+3*h/6, 20, 10);
+      _upperRect.setBounds(x - 10, y + h / 6, 20, 10);
+      _lowerRect.setBounds(x - 10, y + 3*h / 6, 20, 10);
     }
     else {
-      _upperRect.setBounds(x-10, y+13, 20, 10);
-      _lowerRect.setBounds(x-10, y+39, 20, 10);
+      _upperRect.setBounds(x - 10, y + 13, 20, 10);
+      _lowerRect.setBounds(x - 10, y + 39, 20, 10);
     }
 
     _stereo.setBounds(x+1, y+1, w-2, stereoDim.height);
