@@ -204,6 +204,18 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 		this.getNode().addElement(folder.getNode());
 	}
 
+	/**
+	 * @see javax.swing.tree.MutableTreeNode#removeFromParent()
+	 */
+	public void removeFromParent() {
+		
+		// remove xml config
+		getNode().removeFromParent();
+		
+		// remove node
+		super.removeFromParent();
+	}
+	
 	public String getName() {
 		String name = null;
 
