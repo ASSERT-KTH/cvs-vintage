@@ -12,10 +12,8 @@ import java.security.Policy;
 import java.security.Principal;
 import java.security.ProtectionDomain;
 import java.util.Set;
-import javax.ejb.EJBException;
 import javax.security.auth.Subject;
 import javax.security.jacc.EJBMethodPermission;
-import javax.security.jacc.PolicyContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
@@ -24,12 +22,10 @@ import org.jboss.metadata.BeanMetaData;
 /** This interceptor is where the JACC ejb container authorization is performed.
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JaccAuthorizationInterceptor extends AbstractInterceptor
 {
-   /** The JACC PolicyContext key for the current Subject */
-   private static final String SUBJECT_CONTEXT_KEY = "javax.security.auth.Subject.container";
    private Policy policy;
    private String ejbName;
    private CodeSource ejbCS;
@@ -80,7 +76,7 @@ public class JaccAuthorizationInterceptor extends AbstractInterceptor
       String iface = mi.getType().toInterfaceString();
       EJBMethodPermission methodPerm = new EJBMethodPermission(ejbName, iface, m);
       // Get the caller, return if there is no authenticated caller
-      Subject caller = (Subject) PolicyContext.getContext(SUBJECT_CONTEXT_KEY);
+      Subject caller = SecurityActions.getContextSubject();
       if( caller == null )
          return;
 

@@ -1,10 +1,15 @@
 package org.jboss.ejb.plugins;
 
 import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
 import java.security.Principal;
 import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.lang.reflect.UndeclaredThrowableException;
 
 import javax.security.auth.Subject;
+import javax.security.jacc.PolicyContext;
+import javax.security.jacc.PolicyContextException;
 
 import org.jboss.security.SecurityAssociation;
 import org.jboss.security.RunAsIdentity;
@@ -197,6 +202,50 @@ class SecurityActions
       Exception getContextException();
    }
 
+   interface PolicyContextActions
+   {
+      /** The JACC PolicyContext key for the current Subject */
+      static final String SUBJECT_CONTEXT_KEY = "javax.security.auth.Subject.container";
+      PolicyContextActions PRIVILEGED = new PolicyContextActions()
+      {
+         private final PrivilegedExceptionAction exAction = new PrivilegedExceptionAction()
+         {
+            public Object run() throws Exception
+            {
+               return (Subject) PolicyContext.getContext(SUBJECT_CONTEXT_KEY);
+            }
+         };
+         public Subject getContextSubject()
+            throws PolicyContextException
+         {
+            try
+            {
+            return (Subject) AccessController.doPrivileged(exAction);
+            }
+            catch(PrivilegedActionException e)
+            {
+               Exception ex = e.getException();
+               if( ex instanceof PolicyContextException )
+                  throw (PolicyContextException) ex;
+               else
+                  throw new UndeclaredThrowableException(ex);
+            }
+         }
+      };
+
+      PolicyContextActions NON_PRIVILEGED = new PolicyContextActions()
+      {
+         public Subject getContextSubject()
+            throws PolicyContextException
+         {
+            return (Subject) PolicyContext.getContext(SUBJECT_CONTEXT_KEY);
+         }
+      };
+
+      Subject getContextSubject()
+         throws PolicyContextException;
+   }
+   
    static ClassLoader getContextClassLoader()
    {
       return TCLAction.UTIL.getContextClassLoader();
@@ -283,6 +332,19 @@ class SecurityActions
       {
          return ContextInfoActions.PRIVILEGED.getContextException();
       }
+   }
+
+   static Subject getContextSubject()
+      throws PolicyContextException
+   {
+      if(System.getSecurityManager() == null)
+      {
+         return PolicyContextActions.NON_PRIVILEGED.getContextSubject();
+      }
+      else
+      {
+         return PolicyContextActions.PRIVILEGED.getContextSubject();
+      }      
    }
 
    interface TCLAction
