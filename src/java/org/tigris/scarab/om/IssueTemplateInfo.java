@@ -56,7 +56,6 @@ import org.apache.torque.om.Persistent;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabConstants;
@@ -66,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.22 2003/04/15 16:01:44 jmcnally Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.23 2003/04/30 01:10:43 jon Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
@@ -137,7 +136,6 @@ public  class IssueTemplateInfo
                 }
 
                 EmailContext ectx = new EmailContext();
-                ectx.setLinkTool((ScarabLink)context.get("link"));
                 ectx.setUser(user);
                 ectx.setModule(module);
                 ectx.setDefaultTextKey("NewTemplateRequiresApproval");
