@@ -107,10 +107,33 @@ public class StartTomcat {
 	    task.execute();     
 	    return;
 	}
-	startTomcat();
+
+	ContextManager cm=prepareContextManager();
+	
+	// XXX Make this optional, and make sure it doesn't require
+	// a full start. It is called after init to make sure
+	// auto-configured contexts are initialized.
+	if( doGenerateConfigs ) {
+	    generateServerConfig( cm );
+	    return;
+	}
+
+	try {
+	    cm.start(); // start serving
+	}
+	catch (java.net.BindException be) {
+	    loghelper.log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
+	    System.out.println(sm.getString("tomcat.bindexception"));
+	    try {
+		cm.stop();
+	    }
+	    catch (Exception e) {
+		loghelper.log("Stopping ContextManager", e);
+	    }
+	}
     }
 
-    public void startTomcat() throws Exception {
+    public ContextManager prepareContextManager() throws Exception {
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
@@ -151,25 +174,8 @@ public class StartTomcat {
 	System.out.println(sm.getString("tomcat.start", new Object[] { path }));
 	
 	cm.init(); // set up contexts
-	loghelper.log(Constants.TOMCAT_NAME + " " + Constants.TOMCAT_VERSION);	
-
-	// XXX Make this optional, and make sure it doesn't require
-	// a full start. It is called after init to make sure
-	// auto-configured contexts are initialized.
-	generateServerConfig( cm );
-	try {
-	    cm.start(); // start serving
-	}
-	catch (java.net.BindException be) {
-	    loghelper.log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
-	    System.out.println(sm.getString("tomcat.bindexception"));
-	    try {
-		cm.stop();
-	    }
-	    catch (Exception e) {
-		loghelper.log("Stopping ContextManager", e);
-	    }
-	}
+	loghelper.log(Constants.TOMCAT_NAME + " " + Constants.TOMCAT_VERSION);
+	return cm;
     }
 
     /** Special call to support a multiple class paths
@@ -250,6 +256,9 @@ public class StartTomcat {
 	} else if( "config".equals( n ) ||
 		   "f".equals(n) ) {
 	    setConfig( (String)v);
+	} else if( "generateConfigs".equals( n ) ||
+		   "g".equals(n) ) {
+	    setGenerateConfigs( true );
 	} else if( "home".equals( n ) ||
 		   "h".equals(n)) {
 	    setHome( (String)v);
@@ -261,9 +270,17 @@ public class StartTomcat {
     String configFile=null;
     boolean doHelp=false;
     boolean doStop=false;
+    boolean doGenerateConfigs=false;
     // relative to TOMCAT_HOME 
     static final String DEFAULT_CONFIG="conf/server.xml";
 
+    public void setGenerateConfigs( boolean b ) {
+	doGenerateConfigs=b;
+    }
+
+    public void setG( boolean b ) {
+	doGenerateConfigs=b;
+    }
 
     /** Print help message
      */
@@ -298,4 +315,98 @@ public class StartTomcat {
     }
 
 
+    // -------------------- Command-line based startup
+    /** Originally part of JNI endpoint
+     */
+    public int startup(String cmdLine,
+		       String stdout,
+		       String stderr)
+    {
+        try {
+            if(null != stdout) {
+                System.setOut(new PrintStream(new FileOutputStream(stdout)));
+            }
+            if(null != stderr) {
+                System.setErr(new PrintStream(new FileOutputStream(stderr)));
+            }
+        } catch(Throwable t) {
+        }
+	
+	// We need to make sure tomcat did start successfully and
+	// report this back.
+        try {
+            StartupThread startup = new StartupThread(cmdLine);
+            startup.start();
+	    System.out.println("Starting up StartupThread");
+            synchronized (this) {
+                wait(60*1000);
+            }
+	    System.out.println("End waiting");
+        } catch(Throwable t) {
+        }
+
+        if(running) {
+	    System.out.println("Running fine ");
+            return 1;
+        }
+	System.out.println("Error - why doesn't run ??");
+        return 0;
+    }
+
+    boolean running = false;
+    
+    // Called back when the server is initializing the handler
+    public void startNotify(Object handler) {
+	// the handler is no longer useable
+    	if( handler==null ) {
+	    running=false;
+	    notify();
+	    return;
+	}
+
+	System.out.println("Running ...");
+	running=true;
+        notify();
+    }
+}
+
+/** Tomcat is started in a separate thread. It may be loaded on demand,
+    and we can't take up the request thread, as it may be affect the server.
+
+    During startup the JNIConnectionHandler will be initialized and
+    will configure JNIEndpoint ( static - need better idea )
+ */
+class StartupThread extends Thread {
+    String []cmdLine = null;
+
+    public StartupThread(String cmdLine) {
+
+        if(null == cmdLine) {
+        	this.cmdLine = new String[0];
+        } else {
+            Vector v = new Vector();
+            StringTokenizer st = new StringTokenizer(cmdLine);
+            while (st.hasMoreTokens()) {
+                v.addElement(st.nextToken());
+            }
+            this.cmdLine = new String[v.size()];
+            v.copyInto(this.cmdLine);
+        }
+    }
+
+    public void run() {
+        boolean failed = true;
+        try {
+	    System.out.println("Calling main" );
+            org.apache.tomcat.startup.Tomcat.main(cmdLine);
+	    System.out.println("Main returned" );
+            failed = false;
+        } catch(Throwable t) {
+            t.printStackTrace(); // OK
+        } finally {
+            if(failed) {
+		System.out.println("Failed ??");
+            }
+        }
+    }
 }

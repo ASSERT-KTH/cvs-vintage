@@ -56,12 +56,13 @@ public class Tomcat extends Logger.Helper {
 	}
 
 	StartTomcat st=new StartTomcat();
+	if( doGenerate ) st.setGenerateConfigs( true );
 
 	// load server.xml
 	if( configFile!=null)
 	    st.setConfig( configFile );
 	
-	st.startTomcat();
+	st.execute();
     }
     
     public static void main(String args[] ) {
@@ -83,6 +84,7 @@ public class Tomcat extends Logger.Helper {
     static final String DEFAULT_CONFIG="conf/server.xml";
 
     boolean doStop=false;
+    boolean doGenerate=false;
     
     public static void printUsage() {
 	System.out.println(sm.getString("tomcat.usage"));
@@ -100,6 +102,8 @@ public class Tomcat extends Logger.Helper {
 		
 	    } else if (arg.equals("-stop")) {
 		doStop=true;
+	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
+		doGenerate=true;
 	    } else if (arg.equals("-f") || arg.equals("-config")) {
 		i++;
 		if( i < args.length )

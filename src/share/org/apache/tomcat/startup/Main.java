@@ -243,12 +243,14 @@ public class Main {
 
 	    // add CLASSPATH
 	    String cpath=System.getProperty( "tomcat.cp");
-	    System.out.println("Extra CLASSPATH: " + cpath);
-	    String pathSep=System.getProperty( "path.separator");
-	    StringTokenizer st=new StringTokenizer( cpath, pathSep );
-	    while( st.hasMoreTokens() ) {
-		String path=st.nextToken();
-		urlV.addElement( getURL( path, "" ));
+	    if( cpath!=null ) {
+		System.out.println("Extra CLASSPATH: " + cpath);
+		String pathSep=System.getProperty( "path.separator");
+		StringTokenizer st=new StringTokenizer( cpath, pathSep );
+		while( st.hasMoreTokens() ) {
+		    String path=st.nextToken();
+		    urlV.addElement( getURL( path, "" ));
+		}
 	    }
 
 	    // Add tools.jar if JDK1.2
@@ -340,7 +342,7 @@ public class Main {
        boolean task;
        }
     */
-    String args0[]= { "help", "stop" };
+    String args0[]= { "help", "stop", "g", "generateConfigs" };
     String args1[]= { "f", "config", "h", "home" };
 
     /** Read command line arguments and set properties in proxy,
