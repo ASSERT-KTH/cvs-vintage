@@ -15,6 +15,7 @@ import javax.ejb.Handle;
 import javax.ejb.EJBObject;
 import javax.naming.InitialContext;
 
+import org.jboss.security.SecurityAssociation;
 
 /**
  * An EJB stateful session bean handle.
@@ -22,7 +23,7 @@ import javax.naming.InitialContext;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com>Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class StatefulHandleImpl
     extends AbstractHandle
@@ -80,6 +81,14 @@ public class StatefulHandleImpl
     /**
      * Handle implementation.
      *
+     * This differs from Stateless and Entity handles which just invoke standard methods
+     * (<tt>create</tt> and <tt>findByPrimaryKey</tt> respectively) on the Home interface (proxy).
+     * There is no equivalent option for stateful SBs, so a direct invocation on the container has to
+     * be made to locate the bean by its id (the stateful SB container provides an implementation of
+     * <tt>getEJBObject</tt>).
+     *
+     * This means the security context has to be set here just as it would be in the Proxy.
+     *
      * @return  <tt>EJBObject</tt> reference.
      *
      * @throws ServerException    Could not get EJBObject.
@@ -117,6 +126,10 @@ public class StatefulHandleImpl
             // is the credential thread local? (don't think so... but...)
             //rmi.setPrincipal( getPrincipal() );
             // rmi.setCredential( getCredential() );
+
+            // LT: added next two lines as fix for bug 474134 (26/10/01). Not sure which of the above comments are relevant...
+            rmi.setPrincipal(SecurityAssociation.getPrincipal());
+            rmi.setCredential(SecurityAssociation.getCredential());
 
             // Invoke on the remote server, enforce marshalling
             MarshalledObject mo = new MarshalledObject(rmi);
