@@ -164,13 +164,20 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	cm.initRequest(request,response);
 	
 	String requestURI = path + "?jsp_precompile=true";
-	
+
+	if( !path.startsWith( "/" ) ) path="/" + path;
 	request.requestURI().setString(context.getPath() + path);
+
+	// this is not used with JspInterceptor, but maybe a jsp servlet is
+	// used
 	request.queryString().setString( "jsp_precompile=true" );
 	
 	request.setContext(context);
 
-	cm.service( request, response );
+	//cm.service( request, response );
+	// If we switch to JspInterceptor, it's enough to process the
+	// request, it'll detect the page and precompile
+	cm.processRequest( request );
     }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.
