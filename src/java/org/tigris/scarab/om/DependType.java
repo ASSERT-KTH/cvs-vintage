@@ -55,19 +55,10 @@ import org.apache.torque.om.Persistent;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependType.java,v 1.10 2002/07/02 18:56:55 jon Exp $
+ * @version $Id: DependType.java,v 1.11 2002/08/21 23:09:16 jon Exp $
  */
 public class DependType 
     extends BaseDependType
     implements Persistent
 {
-    /**
-     * Get the DependType using a depend type name
-     * @deprecated Use DependTypeManager.getInstance(String dependTypeName)
-     */
-    public static DependType findDependTypeByName(String dependTypeName)
-        throws Exception
-    {
-        return DependTypeManager.getInstance(dependTypeName);
-    }
 }

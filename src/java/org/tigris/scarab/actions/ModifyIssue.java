@@ -111,7 +111,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.117 2002/08/20 21:30:45 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.118 2002/08/21 23:09:15 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -135,9 +135,16 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage(se.getMessage());
             return;
         }
-        IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
 
+        IssueType issueType = issue.getIssueType();
         IntakeTool intake = getIntakeTool(context);       
         // Comment field is required to modify attributes
         Group commentGroup = intake.get("Attachment", "attCommentKey", false);
@@ -268,6 +275,16 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage(se.getMessage());
             return;
         }
+
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         List urls = issue.getAttachments();
         for (int i = 0; i<urls.size(); i++)
         {
@@ -318,11 +335,31 @@ public class ModifyIssue extends BaseModifyIssue
     public void doSubmiturl (RunData data, TemplateContext context) 
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = null;
+        try
+        {
+            issue = getIssueFromRequest(data.getParameters());
+        }
+        catch (ScarabException se)
+        {
+            scarabR.setAlertMessage(se.getMessage());
+            return;
+        }
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Attachment", "urlKey", false);
         if (group != null) 
         {
-            handleAttachment(data, context, Attachment.URL__PK, group);
+            handleAttachment(data, context, Attachment.URL__PK, group, issue);
         }
     }
 
@@ -332,11 +369,31 @@ public class ModifyIssue extends BaseModifyIssue
     public void doSubmitcomment (RunData data, TemplateContext context) 
          throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = null;
+        try
+        {
+            issue = getIssueFromRequest(data.getParameters());
+        }
+        catch (ScarabException se)
+        {
+            scarabR.setAlertMessage(se.getMessage());
+            return;
+        }
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Attachment", "commentKey", false);
         if (group != null) 
         {
-            handleAttachment(data, context, Attachment.COMMENT__PK, group);
+            handleAttachment(data, context, Attachment.COMMENT__PK, group, issue);
         }
     } 
 
@@ -346,16 +403,36 @@ public class ModifyIssue extends BaseModifyIssue
     public void doSubmitfile (RunData data, TemplateContext context)
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = null;
+        try
+        {
+            issue = getIssueFromRequest(data.getParameters());
+        }
+        catch (ScarabException se)
+        {
+            scarabR.setAlertMessage(se.getMessage());
+            return;
+        }
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Attachment", "fileKey", false);
         if (group != null) 
         {
-            handleAttachment(data, context, Attachment.FILE__PK, group);
+            handleAttachment(data, context, Attachment.FILE__PK, group, issue);
         }
     }
 
     private void handleAttachment (RunData data, TemplateContext context, 
-                                 NumberKey typeId, Group group)
+                                 NumberKey typeId, Group group, Issue issue)
         throws Exception
     {
         // grab the data from the group
@@ -377,16 +454,6 @@ public class ModifyIssue extends BaseModifyIssue
         // validate intake
         if (intake.isAllValid())
         {
-            Issue issue = null;
-            try
-            {
-                issue = getIssueFromRequest(data.getParameters());
-            }
-            catch (ScarabException se)
-            {
-                scarabR.setAlertMessage(se.getMessage());
-                return;
-            }
             // create the new attachment
             Attachment attachment = AttachmentManager.getInstance();
             String message = null;
@@ -523,6 +590,14 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         ActivitySet activitySet = null;
@@ -550,7 +625,7 @@ public class ModifyIssue extends BaseModifyIssue
     }
 
    /**
-    *  Deletes an url.
+    *  Deletes a url.
     */
    public void doDeleteurl (RunData data, TemplateContext context)
         throws Exception
@@ -573,6 +648,14 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         ScarabUser user = (ScarabUser)data.getUser();
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(
+                "Insufficient permission to edit this issue.");
+            return;
+        }
+
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         ActivitySet activitySet = null;
@@ -691,10 +774,10 @@ public class ModifyIssue extends BaseModifyIssue
         if (intake.isAllValid())
         {
             ScarabUser user = (ScarabUser)data.getUser();
-            Issue currentIssue = null;
+            Issue issue = null;
             try
             {
-                currentIssue = getIssueFromRequest(data.getParameters());
+                issue = getIssueFromRequest(data.getParameters());
             }
             catch (ScarabException se)
             {
@@ -702,63 +785,47 @@ public class ModifyIssue extends BaseModifyIssue
                 return;
             }
 
-            List dependencies = new ArrayList();
-            List children = currentIssue.getChildren();
-            List parents = currentIssue.getParents();
-            dependencies.addAll(children);
-            dependencies.addAll(parents);
+            if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                                   issue.getModule()))
+            {
+                scarabR.setAlertMessage(
+                    "Insufficient permission to edit this issue.");
+                return;
+            }
 
+            List dependencies = issue.getAllDependencies();
+            ActivitySet activitySet = null;
             for (int i=0; i< dependencies.size(); i++)
             {
                 Depend depend = (Depend)dependencies.get(i);
                 Group group = intake.get("Depend", depend.getQueryKey(), false);
-                String oldValue = depend.getDependType().getName();
+
+                DependType oldDependType = depend.getDependType();
+                // set properties on the object
                 group.setProperties(depend);
-                depend.save();
-                String newValue = null;
-      
-                // User is deleting dependency
-                if (group.get("Deleted").toString().equals("true"))
+                DependType newDependType = depend.getDependType();
+
+                // make the changes
+                if (depend.getDeleted() == true)
                 {
-                    newValue = "none";
+                    activitySet = 
+                        issue.doDeleteDependency(activitySet, depend, user);
+                    intake.remove(group);
                 }
                 else
                 {
-                    newValue = depend.getDependType().getName();
+                    // make the changes
+                    activitySet = 
+                        issue.doChangeDependencyType(activitySet, depend, 
+                                                     oldDependType, newDependType, user);
+                    intake.remove(group);
                 }
-               
-                // User is changing dependency type
-                if (!newValue.equals(oldValue))
-                {
-                    Issue otherIssue = null;
-                    if (currentIssue.getIssueId().toString()
-                        .equals(depend.getObservedId().toString()))
-                    {
-                        otherIssue = IssueManager
-                            .getInstance(depend.getObserverId(), false);
-                    }
-                    else
-                    {
-                        otherIssue = IssueManager
-                            .getInstance(depend.getObservedId(), false);
-                    }
-
-                    currentIssue.save();
-                    String uniqueId = otherIssue.getUniqueId();
-                    String s = "changed dependency type for issue ";
-                    String from = " from ";
-                    String to = " to ";
-                    int capacity = s.length() + uniqueId.length() + 
-                        from.length() + oldValue.length() + to.length() + 
-                        newValue.length();
-                    String desc = new StringBuffer(capacity)
-                        .append(s).append(uniqueId).append(from)
-                        .append(oldValue).append(to).append(newValue)
-                        .toString();
-                    registerActivity(desc, DEFAULT_MSG, currentIssue, 
-                        user, null, context, data, oldValue, newValue);
-                    scarabR.setConfirmMessage(DEFAULT_MSG);  
-                }
+            }
+            // something changed...
+            if (activitySet != null)
+            {
+                scarabR.setConfirmMessage(DEFAULT_MSG);
+                sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
             }
         }
         else

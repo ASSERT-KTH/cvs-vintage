@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.184 2002/08/20 23:46:01 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.185 2002/08/21 23:09:16 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1520,6 +1520,18 @@ public class Issue
     }
 
     /**
+     * Returns the combined output from getChildren() and getParents()
+     */
+    public List getAllDependencies()
+        throws Exception
+    {
+        List dependencies = new ArrayList();
+        dependencies.addAll(getChildren());
+        dependencies.addAll(getParents());
+        return dependencies;
+    }
+
+    /**
      * Returns list of child dependencies
      * i.e., related to this issue through the DEPEND table.
      */
@@ -2392,6 +2404,96 @@ public class Issue
         attVal.setUserId(assignee.getUserId());
         attVal.setValue(assignee.getUserName());
         attVal.save();
+    }
+
+    /**
+     * Deletes a specific dependency on this issue.
+     */
+    public ActivitySet doDeleteDependency(ActivitySet activitySet, Depend depend, ScarabUser user)
+        throws Exception
+    {
+        depend.setDeleted(true);
+        depend.save();
+
+        Issue otherIssue = IssueManager
+                        .getInstance(depend.getObserverId(), false);
+
+        String description = new StringBuffer()
+            .append("Deleted '")
+            .append(depend.getDependType().getName())
+            .append("' dependency that ")
+            .append(otherIssue.getUniqueId())
+            .append(" had on ")
+            .append(this.getUniqueId())
+            .toString();
+
+        if (activitySet == null)
+        {
+            // Save activitySet record
+            activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, user);
+            activitySet.save();
+        }
+
+        ActivityManager
+            .createTextActivity(this, null, activitySet,
+                                description, null,
+                                "true", "false");
+        ActivityManager
+            .createTextActivity(otherIssue, null, activitySet,
+                                description, null,
+                                "true", "false");
+        return activitySet;
+    }
+
+    /**
+     * changes the dependency type as well as. will not change deptype
+     * for deleted deps
+     */
+    public ActivitySet doChangeDependencyType(ActivitySet activitySet, Depend depend, DependType newDependType,
+                                              DependType oldDependType, ScarabUser user)
+        throws Exception
+    {
+        String oldName = oldDependType.getName();
+        String newName = newDependType.getName();
+        // check to see if something changed
+        // only change dependency type for non-deleted deps
+        if (!newName.equals(oldName) && depend.getDeleted() == false)
+        {
+            depend.save();
+
+            Issue otherIssue = IssueManager
+                            .getInstance(depend.getObserverId(), false);
+
+            String description = new StringBuffer()
+                .append("On issue ")
+                .append(this.getUniqueId())
+                .append(", the dependency type for issue ")
+                .append(otherIssue.getUniqueId())
+                .append(" was changed from '")
+                .append(oldName)
+                .append("' to '")
+                .append(newName)
+                .toString();
+
+            if (activitySet == null)
+            {
+                // Save activitySet record
+                activitySet = ActivitySetManager
+                    .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, user);
+                activitySet.save();
+            }
+
+            ActivityManager
+                .createTextActivity(this, null, activitySet,
+                                    description, null,
+                                    oldName, newName);
+            ActivityManager
+                .createTextActivity(otherIssue, null, activitySet,
+                                    description, null,
+                                    oldName, newName);
+        }
+        return activitySet;
     }
 
     /**
