@@ -30,6 +30,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
+import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
@@ -50,7 +51,7 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -215,7 +216,14 @@ public abstract class EnterpriseContext
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-    
+
+   protected boolean isContainerManagedTx()
+   {
+      BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
+      return md.isContainerManagedTx();
+   }
+      
+   
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
@@ -413,8 +421,11 @@ public abstract class EnterpriseContext
       { 
          if (userTransaction == null)
          {
-            if (con.getBeanMetaData().isContainerManagedTx())
-               throw new IllegalStateException("CMT beans are not allowed to get a UserTransaction");
+            if (isContainerManagedTx()) {
+               throw new IllegalStateException
+                  ("CMT beans are not allowed to get a UserTransaction");
+            }
+            
             userTransaction = new UserTransactionImpl(); 
          }
          return userTransaction;
