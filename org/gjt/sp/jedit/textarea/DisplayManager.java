@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.12 2003/04/02 01:45:27 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.13 2003/04/02 01:52:28 spestov Exp $
  */
 public class DisplayManager
 {
@@ -543,7 +543,8 @@ public class DisplayManager
 		this.index = buffer._displayLock();
 
 		scrollLineCount = new ScrollLineCount(index);
-		scrollLineCount.reset();
+		// propertiesChanged() takes care of this
+		// scrollLineCount.reset();
 		// reset() calls this
 		//offsetMgr.addAnchor(scrollLineCount);
 		firstLine = new FirstLine(index);
