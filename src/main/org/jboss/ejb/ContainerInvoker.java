@@ -13,6 +13,7 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.naming.Name;
+import org.jboss.util.FastKey;
 
 /**
  *	This is an interface for Container plugins. Implementations of this
@@ -28,7 +29,8 @@ import javax.naming.Name;
  *
  *	@see Container
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public interface ContainerInvoker
    extends ContainerPlugin
@@ -84,7 +86,7 @@ public interface ContainerInvoker
 	 * @return     an implementation of the remote interface for this container
 	 * @exception   RemoteException  thrown if the EJBObject could not be created
 	 */
-   public EJBObject getEntityEJBObject(Object id)
+   public EJBObject getEntityEJBObject(FastKey id)
       throws RemoteException;
 
 
