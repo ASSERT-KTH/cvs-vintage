@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class PersistentContext
 {
@@ -97,5 +97,15 @@ public class PersistentContext
    public void flush() throws SQLException, DuplicateKeyException
    {
       row.flush();
+   }
+
+   public void nullForeignKey(EntityTable.ForeignKeyConstraint constraint)
+   {
+      row.nullForeignKey(constraint);
+   }
+
+   public void nonNullForeignKey(EntityTable.ForeignKeyConstraint constraint)
+   {
+      row.nonNullForeignKey(constraint);
    }
 }

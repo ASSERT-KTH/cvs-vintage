@@ -62,7 +62,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -83,6 +83,8 @@ public class JDBCCMRFieldBridge2
 
    private CMRFieldLoader loader;
    private RelationTable relationTable;
+
+   private EntityTable.ForeignKeyConstraint fkConstraint;
 
    private final TransactionManager tm;
 
@@ -490,6 +492,11 @@ public class JDBCCMRFieldBridge2
          foreignKeyFields = (JDBCCMPFieldBridge2[]) fkList.toArray(new JDBCCMPFieldBridge2[fkList.size()]);
          relatedPKFields =
             (JDBCCMPFieldBridge2[]) relatedPKList.toArray(new JDBCCMPFieldBridge2[relatedPKList.size()]);
+
+         if(metadata.hasForeignKeyConstraint())
+         {
+            fkConstraint = entity.getTable().addFkConstraint(foreignKeyFields, relatedEntity.getTable());
+         }
       }
       else
       {
@@ -1296,17 +1303,37 @@ public class JDBCCMRFieldBridge2
       {
          for(int i = 0; i < foreignKeyFields.length; ++i)
          {
-            foreignKeyFields[i].setValueInternal(ctx, null, true);
+            foreignKeyFields[i].setValueInternal(ctx, null, fkConstraint == null);
+         }
+
+         if(fkConstraint != null)
+         {
+            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
+            pctx.nullForeignKey(fkConstraint);
          }
       }
 
       public void addRelatedId(EntityEnterpriseContext ctx, Object relatedId)
       {
+         final boolean markDirty = relatedId != null || fkConstraint == null;
          for(int i = 0; i < foreignKeyFields.length; ++i)
          {
             JDBCCMPFieldBridge2 relatedPKField = relatedPKFields[i];
             Object fieldValue = relatedPKField.getPrimaryKeyValue(relatedId);
-            foreignKeyFields[i].setValueInternal(ctx, fieldValue, true);
+            foreignKeyFields[i].setValueInternal(ctx, fieldValue, markDirty);
+         }
+
+         if(fkConstraint != null)
+         {
+            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
+            if(relatedId == null)
+            {
+               pctx.nullForeignKey(fkConstraint);
+            }
+            else
+            {
+               pctx.nonNullForeignKey(fkConstraint);
+            }
          }
       }
    }

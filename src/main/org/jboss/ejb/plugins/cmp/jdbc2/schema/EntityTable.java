@@ -40,13 +40,15 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  */
 public class EntityTable
    implements Table
@@ -84,6 +86,8 @@ public class EntityTable
 
    private int[] references;
    private int[] referencedBy;
+
+   private ForeignKeyConstraint[] fkConstraints;
 
    public EntityTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity, Schema schema, int tableId)
       throws DeploymentException
@@ -326,78 +330,25 @@ public class EntityTable
       return fieldsTotal++;
    }
 
-   public void addReference(EntityTable table)
+   public ForeignKeyConstraint addFkConstraint(JDBCCMPFieldBridge2[] fkFields, EntityTable referenced)
    {
-      boolean wasRegistered = false;
-      if(references != null)
-      {
-         for(int i = 0; i < references.length; ++i)
-         {
-            if(references[i] == table.getTableId())
-            {
-               wasRegistered = true;
-               break;
-            }
-         }
+      addReference(referenced);
+      referenced.addReferencedBy(this);
 
-         if(!wasRegistered)
-         {
-            int[] tmp = references;
-            references = new int[references.length + 1];
-            System.arraycopy(tmp, 0, references, 0, tmp.length);
-            references[tmp.length] = table.getTableId();
-         }
+      if(fkConstraints == null)
+      {
+         fkConstraints = new ForeignKeyConstraint[1];
       }
       else
       {
-         references = new int[1];
-         references[0] = table.getTableId();
+         ForeignKeyConstraint[] tmp = fkConstraints;
+         fkConstraints = new ForeignKeyConstraint[tmp.length + 1];
+         System.arraycopy(tmp, 0, fkConstraints, 0, tmp.length);
       }
-
-      if(!wasRegistered)
-      {
-         if(log.isTraceEnabled())
-         {
-            log.trace("references " + table.getTableName());
-         }
-      }
-   }
-
-   public void addReferencedBy(EntityTable table)
-   {
-      boolean wasRegistered = false;
-      if(referencedBy != null)
-      {
-         for(int i = 0; i < referencedBy.length; ++i)
-         {
-            if(referencedBy[i] == table.getTableId())
-            {
-               wasRegistered = true;
-               break;
-            }
-         }
-
-         if(!wasRegistered)
-         {
-            int[] tmp = referencedBy;
-            referencedBy = new int[referencedBy.length + 1];
-            System.arraycopy(tmp, 0, referencedBy, 0, tmp.length);
-            referencedBy[tmp.length] = table.getTableId();
-         }
-      }
-      else
-      {
-         referencedBy = new int[1];
-         referencedBy[0] = table.getTableId();
-      }
-
-      if(!wasRegistered)
-      {
-         if(log.isTraceEnabled())
-         {
-            log.trace("referenced by " + table.getTableName());
-         }
-      }
+      final int fkindex = fkConstraints.length - 1;
+      final ForeignKeyConstraint fkc = new ForeignKeyConstraint(fkindex, fkFields);
+      fkConstraints[fkindex] = fkc;
+      return fkc;
    }
 
    public DataSource getDataSource()
@@ -513,6 +464,80 @@ public class EntityTable
    }
 
    // Private
+
+   private void addReference(EntityTable table)
+   {
+      boolean wasRegistered = false;
+      if(references != null)
+      {
+         for(int i = 0; i < references.length; ++i)
+         {
+            if(references[i] == table.getTableId())
+            {
+               wasRegistered = true;
+               break;
+            }
+         }
+
+         if(!wasRegistered)
+         {
+            int[] tmp = references;
+            references = new int[references.length + 1];
+            System.arraycopy(tmp, 0, references, 0, tmp.length);
+            references[tmp.length] = table.getTableId();
+         }
+      }
+      else
+      {
+         references = new int[1];
+         references[0] = table.getTableId();
+      }
+
+      if(!wasRegistered)
+      {
+         if(log.isTraceEnabled())
+         {
+            log.trace("references " + table.getTableName());
+         }
+      }
+   }
+
+   private void addReferencedBy(EntityTable table)
+   {
+      boolean wasRegistered = false;
+      if(referencedBy != null)
+      {
+         for(int i = 0; i < referencedBy.length; ++i)
+         {
+            if(referencedBy[i] == table.getTableId())
+            {
+               wasRegistered = true;
+               break;
+            }
+         }
+
+         if(!wasRegistered)
+         {
+            int[] tmp = referencedBy;
+            referencedBy = new int[referencedBy.length + 1];
+            System.arraycopy(tmp, 0, referencedBy, 0, tmp.length);
+            referencedBy[tmp.length] = table.getTableId();
+         }
+      }
+      else
+      {
+         referencedBy = new int[1];
+         referencedBy[0] = table.getTableId();
+      }
+
+      if(!wasRegistered)
+      {
+         if(log.isTraceEnabled())
+         {
+            log.trace("referenced by " + table.getTableName());
+         }
+      }
+   }
 
    private void delete(View view) throws SQLException
    {
@@ -718,6 +743,8 @@ public class EntityTable
       private Row clean;
 
       private Row cacheUpdates;
+
+      private List rowsWithNullFks;
 
       public View(Transaction tx)
       {
@@ -941,6 +968,20 @@ public class EntityTable
          return has;
       }
 
+      public void addRowWithNullFk(Row row)
+      {
+         if(rowsWithNullFks == null)
+         {
+            rowsWithNullFks = new ArrayList();
+         }
+         rowsWithNullFks.add(row);
+      }
+
+      public void parentRemoved(View view)
+      {
+         //todo
+      }
+
       private Row createCleanRow(Object pk)
       {
          Row row = new Row(this);
@@ -961,6 +1002,12 @@ public class EntityTable
 
       public void flushDeleted(Schema.Views views) throws SQLException
       {
+         if(rowsWithNullFks != null)
+         {
+            nullifyForeignKeys();
+            rowsWithNullFks = null;
+         }
+
          if(deleted == null)
          {
             if(log.isTraceEnabled())
@@ -1131,6 +1178,71 @@ public class EntityTable
          }
           */
       }
+
+      private void nullifyForeignKeys()
+         throws SQLException
+      {
+         if(log.isTraceEnabled())
+         {
+            log.trace("nullifying foreign keys");
+         }
+
+         Connection con = null;
+         PreparedStatement[] ps = new PreparedStatement[fkConstraints.length];
+
+         try
+         {
+            final JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) entity.getPrimaryKeyFields();
+            con = dataSource.getConnection();
+
+            for(int i = 0; i < rowsWithNullFks.size(); ++i)
+            {
+               final Row row = (Row) rowsWithNullFks.get(i);
+               if(row.state != DELETED)
+               {
+                  final ForeignKeyConstraint[] cons = row.fkUpdates;
+                  for(int c = 0; c < fkConstraints.length; ++c)
+                  {
+                     if(cons[c] != null)
+                     {
+                        PreparedStatement s = ps[c];
+                        if(s == null)
+                        {
+                           if(log.isDebugEnabled())
+                           {
+                              log.debug("nullifying fk: " + cons[c].nullFkSql);
+                           }
+                           s = con.prepareStatement(cons[c].nullFkSql);
+                           ps[c] = s;
+                        }
+
+                        int paramInd = 1;
+                        for(int fInd = 0; fInd < pkFields.length; ++fInd)
+                        {
+                           JDBCCMPFieldBridge2 pkField = pkFields[fInd];
+                           Object fieldValue = row.getFieldValue(pkField.getRowIndex());
+                           paramInd = pkField.setArgumentParameters(s, paramInd, fieldValue);
+                        }
+
+                        final int affected = s.executeUpdate();
+                        if(affected != 1)
+                        {
+                           throw new EJBException("Affected " + affected + " rows while expected just one");
+                        }
+                     }
+                  }
+               }
+            }
+         }
+         finally
+         {
+            for(int i = 0; i < ps.length; ++i)
+            {
+               JDBCUtil.safeClose(ps[i]);
+            }
+            JDBCUtil.safeClose(con);
+         }
+      }
    }
 
    public class Row
@@ -1148,6 +1260,8 @@ public class EntityTable
       private boolean cacheUpdateScheduled;
       private Row nextCacheUpdate;
       //private boolean lockedForUpdate;
+
+      private ForeignKeyConstraint[] fkUpdates;
 
       public Row(EntityTable.View view)
       {
@@ -1229,6 +1343,28 @@ public class EntityTable
          else if(state == DELETED)
          {
             throw new IllegalStateException("The row is already deleted: pk=" + pk);
+         }
+      }
+
+      public void nullForeignKey(ForeignKeyConstraint constraint)
+      {
+         if(fkUpdates == null)
+         {
+            fkUpdates = new ForeignKeyConstraint[fkConstraints.length];
+         }
+
+         if(fkUpdates[constraint.index] == null)
+         {
+            fkUpdates[constraint.index] = constraint;
+            view.addRowWithNullFk(this);
+         }
+      }
+
+      public void nonNullForeignKey(ForeignKeyConstraint constraint)
+      {
+         if(fkUpdates != null)
+         {
+            fkUpdates[constraint.index] = null;
          }
       }
 
@@ -1474,4 +1610,37 @@ public class EntityTable
       {
       }
    };
+
+   public class ForeignKeyConstraint
+   {
+      public final int index;
+      private final String nullFkSql;
+
+      public ForeignKeyConstraint(int index, JDBCCMPFieldBridge2[] fkFields)
+      {
+         this.index = index;
+
+         StringBuffer buf = new StringBuffer();
+         buf.append("update ").append(tableName).append(" set ")
+            .append(fkFields[0].getColumnName()).append("=null");
+         for(int i = 1; i < fkFields.length; ++i)
+         {
+            buf.append(", ").append(fkFields[i].getColumnName()).append("=null");
+         }
+
+         buf.append(" where ");
+         JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) entity.getPrimaryKeyFields();
+         buf.append(pkFields[0].getColumnName()).append("=?");
+         for(int i = 1; i < pkFields.length; ++i)
+         {
+            buf.append(" and ").append(pkFields[i].getColumnName()).append("=?");
+         }
+
+         nullFkSql = buf.toString();
+         if(log.isDebugEnabled())
+         {
+            log.debug("update foreign key sql: " + nullFkSql);
+         }
+      }
+   }
 }

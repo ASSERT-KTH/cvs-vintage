@@ -27,7 +27,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class Schema
 {
@@ -48,8 +48,7 @@ public class Schema
          }
          catch(RollbackException e)
          {
-            e.printStackTrace();
-            throw new EJBException("Transaction already marked to roll back: " + e.getMessage());
+            throw new EJBException("Transaction already marked to roll back: " + e.getMessage(), e);
          }
          catch(SystemException e)
          {
@@ -101,54 +100,6 @@ public class Schema
 
    public void resolveTableReferences() throws DeploymentException
    {
-      Connection con = null;
-      try
-      {
-         final DataSource ds = entityTables[0].getDataSource();
-         con = ds.getConnection();
-         final DatabaseMetaData db = con.getMetaData();
-
-         for(int i = 0; i < entityTables.length; ++i)
-         {
-            EntityTable pkTable = entityTables[i];
-            ResultSet rs = null;
-            try
-            {
-               rs = db.getExportedKeys(null, null, pkTable.getTableName());
-               while(rs.next())
-               {
-                  String fkTableName = rs.getString(7);
-                  EntityTable fkTable = null;
-                  for(int j = 0; j < entityTables.length; ++j)
-                  {
-                     if(entityTables[j].getTableName().equalsIgnoreCase(fkTableName))
-                     {
-                        fkTable = entityTables[j];
-                        break;
-                     }
-                  }
-
-                  if(fkTable != null)
-                  {
-                     pkTable.addReferencedBy(fkTable);
-                     fkTable.addReference(pkTable);
-                  }
-               }
-            }
-            finally
-            {
-               JDBCUtil.safeClose(rs);
-            }
-         }
-      }
-      catch(SQLException e)
-      {
-         throw new DeploymentException("Failed to order tables: " + e.getMessage(), e);
-      }
-      finally
-      {
-         JDBCUtil.safeClose(con);
-      }
    }
 
    public Table.View getView(EntityTable table)

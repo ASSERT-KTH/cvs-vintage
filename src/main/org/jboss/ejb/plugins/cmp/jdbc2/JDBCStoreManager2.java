@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -161,8 +161,6 @@ public class JDBCStoreManager2
             JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
             manager.startCmd.addForeignKeyConstraints();
          }
-
-         schema.resolveTableReferences();
       }
    }
 
