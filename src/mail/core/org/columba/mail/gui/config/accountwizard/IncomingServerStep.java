@@ -18,13 +18,7 @@ package org.columba.mail.gui.config.accountwizard;
 
 import java.lang.reflect.Method;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -66,19 +60,8 @@ class IncomingServerStep extends AbstractStep {
                                     "incomingserver_text")));
                 component.add(Box.createVerticalStrut(40));
                 WizardTextField middlePanel = new WizardTextField();
-                /*
-                JLabel nameLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "login")); //$NON-NLS-1$
-                nameLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "accountwizard",
-                                    "login")); //$NON-NLS-1$
-                */
-				LabelWithMnemonic nameLabel = new LabelWithMnemonic(
-						MailResourceLoader.getString(
-							"dialog", "accountwizard", "login"));
+		LabelWithMnemonic nameLabel = new LabelWithMnemonic(
+                        MailResourceLoader.getString("dialog", "accountwizard", "login"));
                 middlePanel.addLabel(nameLabel);
                 loginTextField = new JTextField();
                 Method method = null;
@@ -110,19 +93,8 @@ class IncomingServerStep extends AbstractStep {
                                     "accountwizard",
                                     "example") + "billgates");
                 middlePanel.addExample(exampleLabel);
-                /*
-                addressLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "host")); //$NON-NLS-1$
-                addressLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "accountwizard",
-                                    "host")); //$NON-NLS-1$)
-                */
-				addressLabel = new LabelWithMnemonic(
-						MailResourceLoader.getString(
-							"dialog", "accountwizard", "host"));
+		addressLabel = new LabelWithMnemonic(
+                        MailResourceLoader.getString("dialog", "accountwizard", "host"));
                 middlePanel.addLabel(addressLabel);
                 hostTextField = new JTextField();
                 data.registerDataLookup("IncomingServer.host", new DefaultDataLookup(hostTextField, method, null));
@@ -134,20 +106,8 @@ class IncomingServerStep extends AbstractStep {
                                     "accountwizard",
                                     "example") + "mail.microsoft.com");
                 middlePanel.addExample(addressExampleLabel);
-
-                /*
-                JLabel typeLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "type")); //$NON-NLS-1$
-                typeLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "accountwizard",
-                                    "type"));
-                */
-				LabelWithMnemonic typeLabel = new LabelWithMnemonic(
-						MailResourceLoader.getString(
-							"dialog", "accountwizard", "type"));
+		LabelWithMnemonic typeLabel = new LabelWithMnemonic(
+                        MailResourceLoader.getString("dialog", "accountwizard", "type"));
                 middlePanel.addLabel(typeLabel);
                 typeComboBox = new JComboBox();
                 typeLabel.setLabelFor(typeComboBox);
@@ -163,5 +123,11 @@ class IncomingServerStep extends AbstractStep {
                 return component;
         }
         
-        public void prepareRendering() {}
+        public void prepareRendering() {
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                                loginTextField.requestFocus();
+                        }
+                });
+        }
 }
