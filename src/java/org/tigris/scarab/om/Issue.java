@@ -643,6 +643,26 @@ public class Issue
         return assignees;
     }
 
+    /**
+     * Returns attribute values for user attributes.
+     */
+    public List getUserAttributeValues() throws Exception
+    {
+        List attributeList = getModule().getUserAttributes(getIssueType());
+        List attributeIdList = new ArrayList();
+
+        for ( int i=0; i<attributeList.size(); i++ ) 
+        {
+            Attribute att = (Attribute) attributeList.get(i);
+            attributeIdList.add(att.getAttributeId());
+        }
+        Criteria crit = new Criteria()
+           .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+           .add(AttributeValuePeer.ISSUE_ID, getIssueId())
+           .add(AttributeValuePeer.DELETED, 0);
+        return AttributeValuePeer.doSelect(crit);
+    }
+
 
      
     /**
