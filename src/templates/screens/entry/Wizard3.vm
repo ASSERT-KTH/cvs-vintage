@@ -183,18 +183,26 @@ $page.setTitle("Enter issue")
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
  <tr>
-   <th>* Reason</th>
-   <td>
+   <th>
 #if ($issue.DefaultTextAttributeValue)
+    #set ($reasonOptional = true)
+#else
+      * 
+#end
+      Reason
+   </th>
+   <td>
+#set ($intakeAttachment = $intake.Attachment.setKey("_1"))
+#if ($reasonOptional)
     Any information that did not fit within one of the attributes shown
     above can be added here.
 #else
-    <strong>Required</strong>Please supply a short description which will be
+    #fieldErrorMsg($intakeAttachment.DataAsString)
+    <strong>Required</strong> Please supply a short description which will be
     useful for users receiving the new issue email.  Also any information that
     did not fit within one of the attributes shown above can be added here.
 #end
 
-#set ($intakeAttachment = $intake.Attachment.setKey("_1"))
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
    </td>
  </tr>

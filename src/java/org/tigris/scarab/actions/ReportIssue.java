@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.97 2002/01/23 06:18:14 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.98 2002/01/23 23:53:14 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -326,14 +326,12 @@ public class ReportIssue extends RequireLoginFirstAction
         // set any required flags
         setRequiredFlags(issue, intake);
         String summary = issue.getDefaultText();
-        /* this needs more work, commenting out until i can fix tomorrow -jdm
         if ( summary.length() == 0 ) 
         {
             Group commentGroup = intake.get("Attachment", "_1", false);
             Field commentField = commentGroup.get("DataAsString");
             commentField.setRequired(true);
         }
-        */
 
         if (intake.isAllValid())
         {
