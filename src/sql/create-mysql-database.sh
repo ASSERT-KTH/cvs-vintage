@@ -72,7 +72,7 @@ if [ $base_exists -eq 1 ] ; then
         echo y | ${MYSQLADMIN} -u ${USER} ${PASSCMD} drop ${DB_NAME} > /dev/null
 fi
 
-# Creating new base and inputting default data
+# Creating new database and inputting default data
 
 echo "Creating Database ${DB_NAME}..."
 ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
@@ -80,11 +80,6 @@ ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 FILES=`cat ${LOAD_ORDER}`
 
 for i in ${FILES} ; do
-    if [ -e ${POPULATION_SCRIPT_DIR}/mysql-${i} ] ; then
-        echo "Importing mysql-${i}..."
-        ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/mysql-${i}
-    else
-        echo "Importing ${i}..."
-        ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
-    fi
+    echo "Importing ${i}..."
+    ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
 done
