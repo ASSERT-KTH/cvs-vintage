@@ -11,6 +11,7 @@
        <read-only>false</read-only>
        <time-out>300</time-out>
        <select-for-update>false</select-for-update>
+       <read-ahead>false</read-ahead>
     </default-entity>
 
     <type-mappings>
