@@ -69,17 +69,7 @@
     of permissions for each issue type in your project. Issues remain within the 
     issue type in which they are entered until a user moves or copies them to 
     another issue type.</p>
-  <p> The default issue types are:</p>
-  <ul>
-    <li><strong>Defects</strong> are issues identified within existing feature/functionality.</li>
-    <li><strong>Patches</strong> are edits submitted as fixes to defects.</li>
-    <li><strong>Tasks</strong> describe undertakings required for the support of a Feature 
-      or enhancement. Tasks can be upgrading software to support new functionality, 
-      reviewing similar projects to discover how similar problems were solved, 
-      or reading up on a new technology.</li>
-    <li><strong>Features</strong> are new functionality to be incorporated into the project</li>
-    <li><strong>Enhancements</strong> are improvements to existing features.</li>
-  </ul>
+  
   <p>Before you enter issues for your project, you should familiarize yourself 
     with the available set of issue types. Where you enter an issue will be determined 
     by how your project is organized. Once you have selected the issue type that 
