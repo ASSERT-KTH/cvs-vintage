@@ -9,13 +9,13 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.67 2003/12/20 20:22:21 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.68 2003/12/20 20:34:44 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
    <defaults>
       <datasource>java:/DefaultDS</datasource>
-      <datasource-mapping>Hypersonic SQL</datasource-mapping>
+      <datasource-mapping>@default.type.mapping@</datasource-mapping>
 
       <create-table>true</create-table>
       <remove-table>false</remove-table>
