@@ -47,9 +47,9 @@ package org.tigris.scarab.util.xml;
  */
 import java.util.ArrayList;
 
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.apache.fulcrum.security.TurbineSecurity;
 
 import org.tigris.scarab.om.ScarabUser;
@@ -79,7 +79,7 @@ public class CommittedByRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("("+state+") committed-by body: " + text);
+        log().debug("(" + getState() + ") committed-by body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -102,7 +102,7 @@ public class CommittedByRule extends BaseRule
         }
         catch(Exception e)
         {
-            if (!userList.contains(committedByName))
+            if (!getUserList().contains(committedByName))
             {
                 throw new Exception("User: " + committedByName + 
                                     ", is not defined");

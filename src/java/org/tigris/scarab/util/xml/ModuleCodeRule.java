@@ -45,11 +45,12 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.services.module.ModuleManager;
+
 import org.apache.torque.om.NumberKey;
 
 /**
@@ -74,7 +75,7 @@ public class ModuleCodeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") module code body: " + text);
+        log().debug("(" + getState() + ") module code body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

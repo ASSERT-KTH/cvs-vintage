@@ -45,11 +45,11 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Transaction;
 
@@ -74,7 +74,7 @@ public class IssueRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("(" + state + ") issue begin()");
+        log().debug("(" + getState() + ") issue begin()");
         digester.push(attributes.getValue("id"));
     }
     
@@ -84,14 +84,14 @@ public class IssueRule extends BaseRule
      */
     public void end() throws Exception
     {
-        cat.debug("(" + state + ") issue end()");
+        log().debug("(" + getState() + ") issue end()");
         
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             Transaction transaction = (Transaction)digester.pop();
             Issue issue = (Issue)digester.pop();
         }
-        else if(state.equals(DBImport.STATE_DB_VALIDATION))
+        else if(getState().equals(DBImport.STATE_DB_VALIDATION))
         {
             //push the issueXmlId out
             digester.pop();

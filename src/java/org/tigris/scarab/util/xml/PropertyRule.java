@@ -45,9 +45,8 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
 
 /**
  * Generic handler to push the text onto the stack.
@@ -97,7 +96,7 @@ public class PropertyRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") " + identifier + " body: " + text);
+        log().debug("(" + getState() + ") " + identifier + " body: " + text);
         digester.push(text);
     }
 }

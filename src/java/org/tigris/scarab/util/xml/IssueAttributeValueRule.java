@@ -45,9 +45,8 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+ 
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
 
 /**
  * Handler for the xpath "scarab/module/issue/issue-attribute/value"
@@ -71,7 +70,7 @@ public class IssueAttributeValueRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") issue attribute value body: " + text);
+        log().debug("(" + getState() + ") issue attribute value body: " + text);
         super.digesterPush(text);
     }
 }

@@ -45,12 +45,12 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import java.util.List;
 import java.util.Iterator;
 
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
@@ -80,7 +80,7 @@ public class IssueAttributeRule extends BaseRule
      */
     public void end() throws Exception
     {
-        cat.debug("(" + state + ") issue attribute end()");  
+        log().debug("(" + getState() + ") issue attribute end()");  
         super.doInsertionOrValidationAtEnd();
     }
     
@@ -96,7 +96,7 @@ public class IssueAttributeRule extends BaseRule
         // if the attribute is not found, create it
         if(attribute == null)
         {
-            cat.debug("Creating new attribute: " + attributeName);
+            log().debug("Creating new attribute: " + attributeName);
             attribute = Attribute.getInstance();
             attribute.setName(attributeName);
             attribute.setAttributeType(attributeType);

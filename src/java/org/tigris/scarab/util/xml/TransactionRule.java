@@ -45,11 +45,11 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.tigris.scarab.om.Transaction;
 
 /**
@@ -73,11 +73,11 @@ public class TransactionRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("(" + state + ") transaction begin()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") transaction begin()");
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             Transaction transaction = new Transaction();
-            cat.debug("transaction id: " + attributes.getValue("id"));
+            log().debug("transaction id: " + attributes.getValue("id"));
             digester.push(transaction);
         }
     }
@@ -88,8 +88,8 @@ public class TransactionRule extends BaseRule
      */
     public void end() throws Exception
     {
-        cat.debug("(" + state + ") transaction end()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") transaction end()");
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             Transaction transaction = (Transaction)digester.pop();
         }

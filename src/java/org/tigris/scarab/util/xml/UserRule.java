@@ -45,13 +45,13 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
+
 import org.apache.commons.util.GenerateUniqueId;
-import org.apache.log4j.Category;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
@@ -80,7 +80,7 @@ public class UserRule extends BaseRule
     public void end()
         throws Exception
     {
-        cat.debug("(" + state + ") user end()");
+        log().debug("(" + getState() + ") user end()");
         super.doInsertionOrValidationAtEnd();
     }
     
@@ -131,11 +131,11 @@ public class UserRule extends BaseRule
         String lastName = (String)digester.pop();
         String firstName = (String)digester.pop();
         
-        if (userList.contains(email))
+        if (getUserList().contains(email))
         {
             throw new Exception("User: " + email + ", already defined");
         }
         
-        userList.add(email);
+        getUserList().add(email);
     }
 }

@@ -48,8 +48,6 @@ package org.tigris.scarab.util.xml;
 import java.util.List;
 import java.util.Iterator;
 
-import org.apache.log4j.Category;
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.Activity;
@@ -79,8 +77,8 @@ public class ActivityRule extends BaseRule
      */
     public void end() throws Exception
     {
-        cat.debug("(" + state + ") activity end()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") activity end()");
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             Activity activity = new Activity();
             String description = (String)digester.pop();

@@ -45,6 +45,7 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import java.util.Hashtable;
 import org.apache.torque.om.NumberKey;
 

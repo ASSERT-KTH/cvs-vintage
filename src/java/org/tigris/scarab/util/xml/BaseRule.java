@@ -46,6 +46,7 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.digester.Rule;
@@ -59,12 +60,12 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  */
-public class BaseRule extends Rule
+public abstract class BaseRule extends Rule
 {
-    protected String state = null;
-    protected DependencyTree dependTree = null;
-    protected ArrayList userList = null;
-    protected Category cat = null;
+    private String state = null;
+    private DependencyTree dependencyTree = null;
+    private ArrayList userList = null;
+    private Category cat = null;
     
     /**
      * Sets the state and calls super(digester)
@@ -80,25 +81,46 @@ public class BaseRule extends Rule
      * Sets the state and DependencyTree and calls super(digester)
      */
     protected BaseRule(Digester digester, String state, 
-                    DependencyTree dependTree)
+                    DependencyTree dependencyTree)
     {
-        super(digester);
-        this.state = state;
-        this.dependTree = dependTree;
-        initLogging();
+        this(digester, state);
+        this.dependencyTree = dependencyTree;
     }
 
     public BaseRule(Digester digester, String state, ArrayList userList)
     {
-        super(digester);
-        this.state = state;
+        this(digester, state);
         this.userList = userList;
-        initLogging();
     }
 
     private void initLogging()
     {
         cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+    }
+
+    public Category log()
+    {
+        return cat;
+    }
+
+    public String getState()
+    {
+        return this.state;
+    }
+
+    public Digester getDigester()
+    {
+        return this.digester;
+    }
+
+    public DependencyTree getDependencyTree()
+    {
+        return this.dependencyTree;
+    }    
+
+    public List getUserList()
+    {
+        return this.userList;
     }
 
     /**
@@ -111,7 +133,7 @@ public class BaseRule extends Rule
     protected void digesterPush(String text)
         throws Exception
     {
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             digester.push(text);
         }
@@ -127,11 +149,11 @@ public class BaseRule extends Rule
     protected void doInsertionOrValidationAtBody(String text)
         throws Exception
     {
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             doInsertionAtBody(text);
         }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
         {
             doValidationAtBody(text);
         }
@@ -144,11 +166,11 @@ public class BaseRule extends Rule
     protected void doInsertionOrValidationAtEnd()
         throws Exception
     {
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             doInsertionAtEnd();
         }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
         {
             doValidationAtEnd();
         }

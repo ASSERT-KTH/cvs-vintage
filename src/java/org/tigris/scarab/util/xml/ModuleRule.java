@@ -45,11 +45,11 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.om.ScarabModule;
@@ -77,12 +77,12 @@ public class ModuleRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("(" + state + ") module begin()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") module begin()");
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             doInsertionAtBegin(attributes);
         }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
         {
             doValidationAtBegin(attributes);
         }
@@ -119,7 +119,7 @@ public class ModuleRule extends BaseRule
         catch (Exception e)
         {
             // store it for check later in file
-            dependTree.addModuleDependency(
+            getDependencyTree().addModuleDependency(
                 new NumberKey(attributes.getValue("id")), 
                 new NumberKey(attributes.getValue("parent")));
         }
@@ -131,12 +131,12 @@ public class ModuleRule extends BaseRule
      */
     public void end() throws Exception
     {
-        cat.debug("(" + state + ") module end()");
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") module end()");
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             ScarabModule module = (ScarabModule)digester.pop();
         }
-        else if (state.equals(DBImport.STATE_DB_VALIDATION))
+        else if (getState().equals(DBImport.STATE_DB_VALIDATION))
         {
             String moduleCode = (String)digester.pop();
         }

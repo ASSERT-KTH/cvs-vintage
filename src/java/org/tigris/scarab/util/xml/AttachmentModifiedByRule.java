@@ -47,10 +47,10 @@ package org.tigris.scarab.util.xml;
  */
 import java.util.ArrayList;
 
-import org.apache.log4j.Category;
-import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.Digester;
+
 import org.apache.fulcrum.security.TurbineSecurity;
+
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attachment;
 
@@ -77,7 +77,7 @@ public class AttachmentModifiedByRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") attachment ModifiedBy body: " + text);
+        log().debug("(" + getState() + ") attachment ModifiedBy body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -97,7 +97,7 @@ public class AttachmentModifiedByRule extends BaseRule
         }
         catch(Exception e)
         {
-            if (!userList.contains(text))
+            if (!getUserList().contains(text))
             {
                 throw new Exception("User: " + text + ", is not defined");
             }

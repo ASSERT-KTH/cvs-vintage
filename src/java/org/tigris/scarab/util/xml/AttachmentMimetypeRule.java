@@ -45,9 +45,9 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
+
 import org.tigris.scarab.om.Attachment;
 
 /**
@@ -72,8 +72,8 @@ public class AttachmentMimetypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") attachment Mime Type body: " + text);
-        if(state.equals(DBImport.STATE_DB_INSERTION))
+        log().debug("(" + getState() + ") attachment Mime Type body: " + text);
+        if(getState().equals(DBImport.STATE_DB_INSERTION))
         {
             Attachment attachment = (Attachment)digester.pop();
             attachment.setMimeType(text);

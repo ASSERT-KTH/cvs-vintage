@@ -45,11 +45,13 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+ 
 import java.text.SimpleDateFormat;
+
 import org.xml.sax.Attributes;
-import org.apache.log4j.Category;
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
+
 import org.tigris.scarab.om.Attachment;
 
 /**
@@ -74,7 +76,7 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        cat.debug("(" + state + ") attachment modified date begin()");
+        log().debug("(" + getState() + ") attachment modified date begin()");
         digester.push(attributes.getValue("format"));
     }
     
@@ -87,7 +89,7 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") attachment ModifiedDate body: " + text);
+        log().debug("(" + getState() + ") attachment ModifiedDate body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

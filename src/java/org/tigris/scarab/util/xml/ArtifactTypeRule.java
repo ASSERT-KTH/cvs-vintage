@@ -45,9 +45,8 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
 
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.Issue;
@@ -80,7 +79,7 @@ public class ArtifactTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") artifact-type body: " + text);
+        log().debug("(" + getState() + ") artifact-type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -98,7 +97,7 @@ public class ArtifactTypeRule extends BaseRule
         // prefix,but we need the prefix for 
         // the key of dependency tree
         String xmlId = module.getCode()+ xmlIssueId;
-        dependTree.addIssueId(xmlId, issue.getIssueId());
+        getDependencyTree().addIssueId(xmlId, issue.getIssueId());
         digester.push(module);
         digester.push(issue);
     }

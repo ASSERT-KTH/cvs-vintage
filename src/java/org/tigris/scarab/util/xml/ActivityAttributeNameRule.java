@@ -45,9 +45,8 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import org.apache.commons.digester.Rule;
+
 import org.apache.commons.digester.Digester;
-import org.apache.log4j.Category;
 
 /**
  * Handler for the xpath "scarab/module/issue/transaction/activity/activity-attribute/name"
@@ -74,7 +73,7 @@ public class ActivityAttributeNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        cat.debug("(" + state + ") activity attribute name body: " + text);
+        log().debug("(" + getState() + ") activity attribute name body: " + text);
         super.digesterPush(text);
     }
 }
