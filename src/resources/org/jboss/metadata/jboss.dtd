@@ -1,12 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- 
-This is the XML DTD for the JBoss 2.2 EJB deployment descriptor.
-The DOCTYPE is:
-  <!DOCTYPE jboss PUBLIC
-      "-//JBoss//DTD JBOSS//EN"
-      "http://www.jboss.org/j2ee/dtd/jboss.dtd">
-
 Overview of the architecture of jboss.xml
 
 <jboss>
@@ -33,15 +27,6 @@ Overview of the architecture of jboss.xml
         <resource-name />
       </resource-ref>
     </session>          
-
-	<message-driven>
-	 	<ejb-name />
-		<destination-jndi-name />
-		<configuration-name />
-		<security-proxy />
-		<ejb-ref />
-		<resource-ref />
-	</message-driven>
 
   </enterprise-beans>
 
@@ -93,7 +78,7 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (secure?, security-domain?, enterprise-beans?, resource-managers?, container-configurations?)>
+<!ELEMENT jboss (secure? , security-domain?, enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
   The secure element tells the container to enforce ejb1.1 restrictions
@@ -125,7 +110,8 @@ level using the authentication-module and role-mapping-manager elements.
   
   Used in: jboss
   -->
-<!ELEMENT enterprise-beans (session | entity | message-driven)+>
+<!ELEMENT enterprise-beans (session | entity)+>
+
 <!--
     The entity element holds information specific to jboss and not declared
     in ejb-jar.xml about an entity bean, such as jndi name, container 
@@ -135,7 +121,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT entity (ejb-name, jndi-name?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*)>
+<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
 
 <!--
     The session element holds information specific to jboss and not declared
@@ -146,17 +132,8 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT session (ejb-name, jndi-name?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*)>
-<!--
-    The message-driven element holds information specific to jboss and not declared
-    in ejb-jar.xml about a message driven  bean, such as destination jndi name, container 
-    configuration, and resource managers. (see tags for details)
-    The bean should already be declared in ejb-jar.xml, with the same 
-    ejb-name.
-    
-    Used in: enterprise-beans
-    -->
-<!ELEMENT message-driven (ejb-name, destination-jndi-name, configuration-name?, security-proxy?, ejb-ref*, resource-ref*)>
+<!ELEMENT session (ejb-name , jndi-name? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
+
 <!-- 
       The ejb-name element gives the name of the bean, it must correspond to 
       an ejb-name element in ejb-jar.xml
@@ -184,7 +161,7 @@ level using the authentication-module and role-mapping-manager elements.
       Used in: entity and session
       -->
 <!ELEMENT configuration-name (#PCDATA)>
-<!ELEMENT destination-jndi-name (#PCDATA)>
+
 <!-- The security-proxy gives the class name of the security proxy implementation.
 	This may be an instance of org.jboss.security.SecurityProxy, or an
 	just an object that implements methods in the home or remote interface
@@ -202,7 +179,7 @@ level using the authentication-module and role-mapping-manager elements.
        
       Used in: entity, session
       -->
-<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
 
 <!-- 
         The ejb-ref-name element is the name of the ejb reference as given in
@@ -234,7 +211,7 @@ level using the authentication-module and role-mapping-manager elements.
       
       Used in: session, entity
       -->
-<!ELEMENT resource-ref (res-ref-name, resource-name)>
+<!ELEMENT resource-ref (res-ref-name , resource-name)>
 
 <!-- 
         The res-ref-name element gives the "code name" of a resource. It is 
@@ -292,7 +269,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: resource-managers
     -->
-<!ELEMENT resource-manager (res-name, (res-jndi-name | res-url))>
+<!ELEMENT resource-manager (res-name , (res-jndi-name | res-url))>
 
 <!--
     The res-class attribute is used to indicate which implementation
@@ -490,7 +467,8 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (Optimized, RMIObjectPort, RMIClientSocketFactory?, RMIServerSocketFactory?, JMSProviderAdapterJNDI?, ServerSessionPoolFactoryJNDI?, MaximumSize?, MaxMessages?)>
+<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort, RMIClientSocketFactory?, RMIServerSocketFactory?)>
+
 <!-- 
         This element is only valid if the container invoker is 
         JRMPContainerInvoker.
@@ -554,9 +532,7 @@ default if metricsEnabled is not explicitly given.
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIServerSocketFactory (#PCDATA)>
-<!ELEMENT JMSProviderAdapterJNDI (#PCDATA)>
-<!ELEMENT ServerSessionPoolFactoryJNDI (#PCDATA)>
-<!ELEMENT MaxMessages (#PCDATA)>
+
 <!-- 
       The container-cache-conf element holds dynamic configuration data 
       for the instance cache.
@@ -570,7 +546,7 @@ default if metricsEnabled is not explicitly given.
 
       Used in: container-configuration
       -->
-<!ELEMENT container-cache-conf (cache-policy?, cache-policy-conf?)>
+<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
 
 <!--
         The implementation class for the cache policy, which controls
@@ -586,7 +562,7 @@ default if metricsEnabled is not explicitly given.
 
         Used in: container-cache-conf (when cache-policy is the LRU cache)
 	-->
-<!ELEMENT cache-policy-conf (min-capacity, max-capacity, overager-period, resizer-period, max-bean-age, max-cache-miss-period, min-cache-miss-period, cache-load-factor)>
+<!ELEMENT cache-policy-conf (min-capacity , max-capacity , overager-period , resizer-period , max-bean-age , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
 
 <!--
 	  The minimum capacity of this cache
@@ -644,7 +620,7 @@ default if metricsEnabled is not explicitly given.
 
       Used in: container-configuration
       -->
-<!ELEMENT container-pool-conf (MaximumSize, MinimumSize)>
+<!ELEMENT container-pool-conf (MaximumSize , MinimumSize)>
 
 <!-- 
         This element is only valid if the instance pool is a subclass of
