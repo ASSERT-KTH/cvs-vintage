@@ -70,7 +70,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.38 2002/03/14 01:31:13 jmcnally Exp $
+ * @version $Id: Module.java,v 1.39 2002/04/03 00:35:17 elicia Exp $
  */
 public interface Module
     extends Serializable
@@ -215,6 +215,10 @@ public interface Module
      * Gets the sequence where the dedupe screen fits between groups.
      */
     public int getDedupeSequence(IssueType issueType)
+        throws Exception;
+
+    public List getRModuleAttributes(IssueType issueType, boolean activeOnly,
+                                     String attributeType)
         throws Exception;
 
     public List getRModuleAttributes(IssueType issueType, boolean activeOnly)

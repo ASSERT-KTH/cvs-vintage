@@ -173,7 +173,11 @@ public class RModuleAttribute
                 .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleAttributePeer.doDelete(c);
-            ScarabCache.clear();
+            Attribute attr = getAttribute();
+            String attributeType = null;
+            attributeType = (attr.isUserAttribute() ? Module.USER : Module.NON_USER);
+            module.getRModuleAttributes(getIssueType(), false, attributeType)
+                                        .remove(this);
         } 
         else
         {

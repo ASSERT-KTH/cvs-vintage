@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.14 2002/03/29 01:08:25 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.15 2002/04/03 00:35:17 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -177,16 +177,6 @@ public abstract class AbstractScarabModule
     protected static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
         "getDefaultTextAttribute";
 
-    /* removing the internal cache until it can be fixed using artifact_types
-    private List allRModuleAttributes;
-    private List activeRModuleAttributes;
-    private Attribute[] activeAttributes;
-    private Attribute[] dedupeAttributes;
-    private Attribute[] quicksearchAttributes;
-    private Attribute[] requiredAttributes;
-    private Map allRModuleOptionsMap = new HashMap();
-    private Map activeRModuleOptionsMap = new HashMap();
-    */
     private List parentModules;
     
     private String domain;
@@ -1044,14 +1034,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         String attributeType = null;
-        if (attribute.isUserAttribute())
-        {
-            attributeType = USER;
-        }
-        else
-        {
-            attributeType = NON_USER;
-        }
+        attributeType = (attribute.isUserAttribute() ? USER : NON_USER);
 
         RModuleAttribute rma = new RModuleAttribute();
         rma.setModuleId(getModuleId());
@@ -1059,6 +1042,7 @@ public abstract class AbstractScarabModule
         rma.setAttributeId(attribute.getAttributeId());
         rma.setOrder(getLastAttribute(issueType, attributeType) + 1);
         rma.save();
+        getRModuleAttributes(issueType, false, attributeType).add(attribute);
 
         // Add to template type
         IssueType templateType = IssueTypeManager
