@@ -36,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -273,21 +273,22 @@ public class StatefulSessionInstanceInterceptor
          
          // Set the current security information
          ctx.setPrincipal(mi.getPrincipal());
-         
+
+         boolean validContext = true;
          try
          {
             ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
 
             // Invoke through interceptors
-            return getNext().invoke(mi);
-
+            Object ret = getNext().invoke(mi);
+            return ret;
          }
          catch (RemoteException e)
          {
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
-            ctx = null;
+            validContext = false;
 
             throw e;
          }
@@ -296,7 +297,7 @@ public class StatefulSessionInstanceInterceptor
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
-            ctx = null;
+            validContext = false;
 
             throw e;
          }
@@ -305,7 +306,7 @@ public class StatefulSessionInstanceInterceptor
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
-            ctx = null;
+            validContext = false;
 
             throw e;
          }
@@ -313,7 +314,7 @@ public class StatefulSessionInstanceInterceptor
          {
             ctx.popInMethodFlag();
 
-            if (ctx != null)
+            if (validContext)
             {
                // Still a valid instance
                lock.sync(); // synchronized(ctx)
