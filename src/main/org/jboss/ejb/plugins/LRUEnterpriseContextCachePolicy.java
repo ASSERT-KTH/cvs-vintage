@@ -27,7 +27,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy
@@ -113,7 +113,7 @@ public class LRUEnterpriseContextCachePolicy
 
    // Z implementation ----------------------------------------------
 
-   public void start() throws Exception 
+   public void start()
    {
       if (m_resizerPeriod > 0)
       {

@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * Least Recently Used cache policy for StatefulSessionEnterpriseContexts.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePolicy
 {
@@ -51,7 +51,7 @@ public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePoli
 	// Monitorable implementation ------------------------------------
 
 	// Z implementation ----------------------------------------------
-	public void start() throws Exception
+	public void start()
 	{
 		super.start();
 		if (m_maxBeanLife > 0)
