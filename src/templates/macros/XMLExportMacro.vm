@@ -17,20 +17,20 @@
   #set ($issue = $scarabR.getIssue("${fid.Prefix}${fid.Count}"))
   #if ($issue)
     #set ($module = $scarabR.getModule("${issue.ModuleId}"))
-    #if ($currentModule)
-      #if ($currentModule.ModuleId != $module.ModuleId)
+    #if ($currentModuleId)
+      #if ($currentModuleId != $module.ModuleId)
         #xmlModuleFooter()
         #xmlModuleHeader($module)
-        #set ($currentModule = $module)
+        #set ($currentModuleId = $module.ModuleId)
       #end
     #else
       #xmlModuleHeader($module)
-      #set ($currentModule = $module)
+      #set ($currentModuleId = $module.ModuleId)
     #end
     #xmlIssue($issue)
   #end
 #end
-#if ($currentModule)
+#if ($currentModuleId)
     #xmlModuleFooter()
 #end
 #xmlScarabFooter()
@@ -81,21 +81,58 @@
       <attachment>
         <name>$attachment.Name</name>
         <type>$attachment.AttachmentType.Name</type>
-        <path>$attachment.FilePath</path>
+        <path>$!attachment.FilePath</path>
         <data>$attachment.DataAsString</data>
         <mimetype>$attachment.MimeType</mimetype>
         <created-date format="$sdf.toPattern()">$sdf.format($attachment.CreatedDate)</created-date>
         <modified-date format="$sdf.toPattern()">$sdf.format($attachment.ModifiedDate)</modified-date>
-        <created-by>$attachment.CreatedBy</created-by>
-        <modified-by>$attachment.ModifiedBy</modified-by>
+        <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
+        <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
       </attachment>
       #end
-      
-      ##
-      ## FIXME need to add in the transaction stuff here.
-      ##
+      #foreach ($activity in $issue.getActivity(true))
+        #if ($currentTransaction)
+          #if ($currentTransaction != $activity.TransactionId)
+            #xmlTransactionFooter()
+            #xmlTransactionHeader($activity.Transaction)
+            #set ($currentTransaction = $activity.TransactionId)
+          #end
+        #else
+          #xmlTransactionHeader($activity.Transaction)
+          #set ($currentTransaction = $activity.TransactionId)
+        #end
+        #xmlTransactionActivity($activity)
+      #end
+      #if ($currentTransaction)
+        #xmlTransactionFooter()
+      #end
       
     </issue>
+#end
+
+#macro ( xmlTransactionHeader $transaction )
+
+      <transaction id="$transaction.TransactionId">
+        <type>$transaction.TransactionType.Name</type>
+        <committed-by>$scarabR.getUser($transaction.CreatedBy).UserName</committed-by>
+#end
+
+#macro ( xmlTransactionActivity $activity )
+
+        <activity>
+          <activity-attribute>
+            <name>$activity.Attribute.Name</name>
+            <value>$activity.NewValue</value>
+            <old-value>$!activity.OldValue</old-value>
+            <type>$activity.Attribute.AttributeType.Name</type>
+          </activity-attribute>
+          <description>$activity.Description</description>
+        </activity>
+#end
+
+#macro ( xmlTransactionFooter )
+
+      </transaction>
 #end
 
 #macro ( xmlModuleFooter )
