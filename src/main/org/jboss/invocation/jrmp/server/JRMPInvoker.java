@@ -17,6 +17,8 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RemoteStub;
 import java.rmi.MarshalledObject;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import javax.management.ObjectName;
 import javax.management.MBeanRegistration;
@@ -52,7 +54,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -337,8 +339,7 @@ public class JRMPInvoker
    public Object invoke(Invocation invocation)
       throws Exception
    {
-      Thread currentThread = Thread.currentThread();
-      ClassLoader oldCl = currentThread.getContextClassLoader();
+      ClassLoader oldCl = GetTCLAction.getContextClassLoader();
       ObjectName mbean = null;
       try
       {
@@ -368,7 +369,7 @@ public class JRMPInvoker
       }
       finally
       {
-         currentThread.setContextClassLoader(oldCl);
+         SetTCLAction.setContextClassLoader(oldCl);
          Thread.interrupted(); // clear interruption because this thread may be pooled.
       }
    }
@@ -419,7 +420,7 @@ public class JRMPInvoker
    */
    protected void loadCustomSocketFactories()
    {
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      ClassLoader loader = GetTCLAction.getContextClassLoader();
 
       try
       {
@@ -589,5 +590,39 @@ public class JRMPInvoker
    public void postDeregister()
    {
       support.postDeregister();
+   }
+
+   private static class GetTCLAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetTCLAction();
+      public Object run()
+      {
+         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         return loader;
+      }
+      static ClassLoader getContextClassLoader()
+      {
+         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
+         return loader;
+      }
+   }
+   private static class SetTCLAction implements PrivilegedAction
+   {
+      ClassLoader loader;
+      SetTCLAction(ClassLoader loader)
+      {
+         this.loader = loader;
+      }
+      public Object run()
+      {
+         Thread.currentThread().setContextClassLoader(loader);
+         loader = null;
+         return null;
+      }
+      static void setContextClassLoader(ClassLoader loader)
+      {
+         PrivilegedAction action = new SetTCLAction(loader);
+         AccessController.doPrivileged(action);
+      }
    }
 }
