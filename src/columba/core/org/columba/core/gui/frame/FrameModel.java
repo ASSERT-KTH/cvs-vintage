@@ -25,18 +25,16 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.FramePluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
 /**
- * FrameModel manages all frames. It keeps a list of every controller.
- * 
- * Its also the place to create a new frame, or save and close all frames at
- * once.
+ * FrameModel manages all frames. It keeps a list of every controller. Its also
+ * the place to create a new frame, or save and close all frames at once.
  * 
  * Frame controllers are plugins.
  * 
@@ -56,25 +54,30 @@ public class FrameModel {
     /** Default view specifications to be used when opening a new view */
     protected XmlElement defaultViews = MainInterface.config.get("options")
             .getElement("/options/gui/defaultviews");
+    
+    protected FramePluginHandler handler;
 
     /**
-     * Constructor which initializes fields for view lists and creates the views
-     * stored in the existing view list using createFrameController (used at
-     * start-up to display the same views/windows as when last time Columba was
-     * closed).
+     * Obtains a reference to the frame plugin handler and registers a
+     * shutdown hook with the ShutdownManager.
      */
     public FrameModel() {
+        // get plugin handler for handling frames
+        try {
+            handler = (FramePluginHandler) MainInterface.pluginManager
+                    .getHandler("org.columba.core.frame");
+        } catch (PluginHandlerNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        
         //this is executed on shutdown: store all open frames so that they
         //can be restored on the next start
         ShutdownManager.getShutdownManager().register(new Runnable() {
-
             public void run() {
                 storeViews();
             }
-
         });
     }
-    
     
     /**
      * Close all frames and re-open them again.
@@ -138,14 +141,22 @@ public class FrameModel {
             String id = view.getAttribute("id");
 
             // create frame controller for this view...
-            FrameMediator c = createFrameController(id, new ViewItem(view));
+            FrameMediator c;
+            try {
+                c = createFrameController(id, new ViewItem(view));
+            } catch (PluginLoadingFailedException plfe) {
+                //should not occur
+                continue;
+            }
 
             // ...and display it
             c.openView();
         }
 
         if (activeFrameCtrls.size() == 0) {
-            openView("ThreePaneMail");
+            try {
+                openView("ThreePaneMail");
+            } catch (PluginLoadingFailedException plfe) {} //should not occur
         }
     }
 
@@ -186,10 +197,7 @@ public class FrameModel {
     }
 
     /**
-     * Create new frame controller.
-     * <p>
-     * 
-     * FrameControllers are plugins.
+     * Create new frame controller. FrameControllers are plugins.
      * 
      * @see FramePluginHandler
      * 
@@ -200,27 +208,13 @@ public class FrameModel {
      * 
      * @return frame controller
      */
-    public FrameMediator createFrameController(String id, ViewItem viewItem) {
-        // get plugin handler for handling frames
-        FramePluginHandler handler = null;
-
-        try {
-            handler = (FramePluginHandler) MainInterface.pluginManager
-                    .getHandler("org.columba.core.frame");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
-
+    public FrameMediator createFrameController(String id, ViewItem viewItem)
+    throws PluginLoadingFailedException {
         // get frame controller using the plugin handler found above
-        Object[] args = { viewItem};
+        Object[] args = {viewItem};
         FrameMediator frame = null;
 
-        try {
-            frame = (FrameMediator) handler.getPlugin(id, args);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        frame = (FrameMediator) handler.getPlugin(id, args);
 
         // save reference to frame controller
         activeFrameCtrls.add(frame);
@@ -235,13 +229,12 @@ public class FrameModel {
      *            id specifying view type, e.g. "ThreePaneMail" or "Addressbook"
      * @return Frame controller for the given view type
      */
-    public FrameMediator openView(String id) {
+    public FrameMediator openView(String id) throws PluginLoadingFailedException {
         // look for default view settings (if not found, null is returned)
         ViewItem view = loadDefaultView(id);
 
         // Create a frame controller for this view
         // view = null => defaults specified by frame controller is used
-        ////FrameMediator controller = createFrameController(id, null);
         FrameMediator controller = createFrameController(id, view);
 
         // Display the view and return reference
@@ -294,7 +287,8 @@ public class FrameModel {
      *            view settings to be stored
      */
     protected void saveDefaultView(ViewItem view) {
-        if (view == null) { return; // nothing to save
+        if (view == null) { 
+            return; // nothing to save
         }
 
         String id = view.get("id");
@@ -315,8 +309,7 @@ public class FrameModel {
      * active (shown) frames. If it's the last open view, the view settings are
      * stored in the view list.
      * 
-     * @param c
-     *            Reference to frame controller for the view which is closed
+     * @param c Reference to frame controller for the view which is closed
      */
     public void close(FrameMediator c) {
         // Check if the frame controller has been registered, else do nothing

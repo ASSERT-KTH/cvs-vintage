@@ -27,8 +27,11 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
+
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
@@ -38,6 +41,7 @@ public class URLController implements ActionListener {
     private String address;
     private URL link;
 
+    //TODO: i18n
     public JPopupMenu createContactMenu(String contact) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Add Contact to Addressbook");
@@ -52,6 +56,7 @@ public class URLController implements ActionListener {
         return popup;
     }
 
+    //TODO: i18n
     public JPopupMenu createLinkMenu() {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Open");
@@ -103,13 +108,17 @@ public class URLController implements ActionListener {
         String enableHtml = htmlElement.getAttribute("enable", "false");
         model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 
-        ComposerController controller = (ComposerController)
+        try {
+            ComposerController controller = (ComposerController)
                 MainInterface.frameModel.openView("Composer");
-        controller.setComposerModel(model);
+            controller.setComposerModel(model);
+        } catch (PluginLoadingFailedException plfe) {} //should not occur
     }
 
     public void contact(String address) {
-        SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+        //FIXME: remove dependency to addressbook here
+        SelectAddressbookFolderDialog dialog = 
+            AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
         org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
 

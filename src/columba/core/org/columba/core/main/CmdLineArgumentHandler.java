@@ -18,6 +18,10 @@ package org.columba.core.main;
 
 import java.util.logging.Logger;
 
+import org.columba.core.plugin.PluginLoadingFailedException;
+
+//FIXME: Command line handling should me modularized in order to remove
+// dependencies here
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
@@ -86,7 +90,7 @@ public class CmdLineArgumentHandler {
                 /*
                  * *20030917, karlpeder* Set the model to html or text
                  * based on the body specified on the command line. This
-                 * is done using a simple check: Does the body contains
+                 * is done using a simple check: Does the body contain
                  * <html> and </html>
                  */
                 boolean html = false;
@@ -102,9 +106,11 @@ public class CmdLineArgumentHandler {
                 model.setBodyText(body);
             }
 
-            ComposerController c = (ComposerController)
+            try {
+                ComposerController c = (ComposerController)
                     MainInterface.frameModel.openView("Composer");
-            c.setComposerModel(model);
+                c.setComposerModel(model);
+            } catch (PluginLoadingFailedException plfe) {} //should not occur
         }
     }
 }

@@ -15,12 +15,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -50,6 +52,8 @@ public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
      * addressbook window.
      */
     public void actionPerformed(ActionEvent evt) {
-        MainInterface.frameModel.openView("Addressbook");
+        try {
+            MainInterface.frameModel.openView("Addressbook");
+        } catch (PluginLoadingFailedException plfe) {} //should not occur
     }
 }

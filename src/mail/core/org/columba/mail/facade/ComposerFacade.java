@@ -17,6 +17,7 @@
 package org.columba.mail.facade;
 
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
 
 /**
  * Message Composer functionality.
@@ -24,12 +25,14 @@ import org.columba.core.main.MainInterface;
  * @author fdietz
  */
 public class ComposerFacade {
-	/**
-	 * 
-	 * open up composer window
-	 */
-	public static void openComposer() {
-		// Choice btw. text and html will be based on stored option
-		MainInterface.frameModel.openView("Composer");
-	}
+    
+    /**
+     * Open up composer window.
+     */
+    public static void openComposer() {
+        // Choice btw. text and html will be based on stored option
+        try {
+            MainInterface.frameModel.openView("Composer");
+        } catch (PluginLoadingFailedException plfe) {} //should not occur
+    }
 }

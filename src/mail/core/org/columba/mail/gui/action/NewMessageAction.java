@@ -22,6 +22,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
 
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -55,7 +56,9 @@ public class NewMessageAction extends AbstractColumbaAction {
         // stored option
         // only open composer when at least one account exists
         if (MailInterface.config.getAccountList().count() != 0) {
-            MainInterface.frameModel.openView("Composer");
+            try {
+                MainInterface.frameModel.openView("Composer");
+            } catch (PluginLoadingFailedException plfe) {} //should not occur
         }
     }
 }
