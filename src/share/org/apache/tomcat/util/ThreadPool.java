@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.6 2000/05/26 23:06:39 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/26 23:06:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.7 2000/05/30 14:08:23 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/30 14:08:23 $
  *
  * ====================================================================
  *
@@ -422,7 +422,7 @@ public class ThreadPool  {
         public void run() {
             while(true) {
                 try {
-                    // Wait for work.
+		    // Wait for work.
                     synchronized(this) {
                         if(!shouldRun && !shouldTerminate) {
                             this.wait();
