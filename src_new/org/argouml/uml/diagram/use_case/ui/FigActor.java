@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.15 2004/08/04 17:24:21 bobtarling Exp $
+// $Id: FigActor.java,v 1.16 2004/08/05 12:36:42 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.15 2004/08/04 17:24:21 bobtarling Exp $
+// $Id: FigActor.java,v 1.16 2004/08/05 12:36:42 bobtarling Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -69,8 +69,7 @@ public class FigActor extends FigNodeModelElement {
     public FigActor() {
         // Put this rectangle behind the rest, so it goes first
         FigRect bigPort = new FigRect(10, 30, 15, 45);
-        bigPort.setFilled(false);
-        bigPort.setLineWidth(0);
+        bigPort.setVisible(false);
         head = new FigCircle(10, 30, 15, 15, Color.black, Color.white);
         body = new FigLine(20, 45, 20, 60, Color.black);
         arms = new FigLine(10, 50, 30, 50, Color.black);
