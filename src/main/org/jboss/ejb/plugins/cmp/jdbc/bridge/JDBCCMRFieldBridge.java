@@ -63,7 +63,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1219,10 +1219,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
    }
 
-   private Transaction getTransacction()
+   private Transaction getTransaction()
    {
       try
       {
+         EntityContainer container = getJDBCStoreManager().getContainer();
          TransactionManager tm = container.getTransactionManager();
          return tm.getTransaction();
       }
