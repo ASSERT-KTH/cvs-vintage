@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.34 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelObject.java,v 1.35 2004/07/26 08:37:16 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,9 @@ import java.util.Vector;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.i18n.Translator;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;

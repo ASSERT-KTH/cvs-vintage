@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.22 2004/07/17 13:10:32 kataka Exp $
+// $Id: PropPanelInclude.java,v 1.23 2004/07/26 08:38:41 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,8 @@ import javax.swing.JComboBox;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBox2;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 

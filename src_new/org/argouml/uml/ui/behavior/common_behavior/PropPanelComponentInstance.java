@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.27 2004/05/17 07:53:15 linus Exp $
+// $Id: PropPanelComponentInstance.java,v 1.28 2004/07/26 08:37:16 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,8 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.i18n.Translator;
-
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;
 import org.argouml.uml.ui.UMLComboBox;
