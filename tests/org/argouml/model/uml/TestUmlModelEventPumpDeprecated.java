@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.19 2004/09/08 19:31:39 mvw Exp $
+// $Id: TestUmlModelEventPumpDeprecated.java,v 1.1 2004/09/30 06:25:02 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import ru.novosoft.uml.model_management.MModel;
  * @since Oct 15, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class TestUmlModelEventPump extends TestCase {
+public class TestUmlModelEventPumpDeprecated extends TestCase {
 
     private MClass elem;
     private MockModelEventListener listener;
@@ -110,7 +110,7 @@ public class TestUmlModelEventPump extends TestCase {
      *
      * @param arg0 is the name of the test case.
      */
-    public TestUmlModelEventPump(String arg0) {
+    public TestUmlModelEventPumpDeprecated(String arg0) {
         super(arg0);
     }
 
