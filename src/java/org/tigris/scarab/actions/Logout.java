@@ -51,14 +51,13 @@ import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.turbine.services.resources.TurbineResources;
 import org.apache.turbine.services.security.TurbineSecurity;
 
 /**
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.3 2001/07/11 07:33:46 jon Exp $
+    @version $Id: Logout.java,v 1.4 2001/07/17 01:38:40 jmcnally Exp $
 */
 public class Logout extends TemplateAction
 {
