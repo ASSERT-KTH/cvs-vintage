@@ -19,7 +19,7 @@ function launch(theURL, type, atts){
 	} else if (type==2) {
 		theAttributes = 'resizable=yes,left=10,top=10,screenX=12,screenY=12,height=485,width=724';
 	} else if (type==3) {
-		theAttributes = 'whatever you want';
+		theAttributes = 'resizable=yes,left=10,top=10,screenX=12,screenY=12,height=485,width=724,status=yes,scrollbars=yes,toolbar=yes';
 		}
 		
 	if (atts) {
@@ -38,8 +38,8 @@ function launch(theURL, type, atts){
 	<h2>Help Window System</h2>
 	<ul>
 	<li><a href="duplicates.html" onclick="return launch(this.href, 1)">Launch</a> (normal)</li>
-	<li><a href="duplicates.html" onclick="return launch(this.href, 2, 'scrollbars=yes')">Launch</a> (sized window, scrollbars)</li>
-	<li><a href="duplicates.html" onclick="return launch(this.href, 2, 'status=yes scrollbars=yes toolbar=yes')">Launch</a> (sized window, status bar, scrollbars, menubar)</li>
+	<li><a href="duplicates.html" onclick="return launch(this.href, 2)">Launch</a> (sized window, scrollbars)</li>
+	<li><a href="duplicates.html" onclick="return launch(this.href, 3)">Launch</a> (sized window, status bar, scrollbars, menubar)</li>
 	</ul>
 </td>
 </tr>
