@@ -24,71 +24,43 @@
 
 
 
-// File: Poster.java
-// Classes: Poster
-// Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.9 1998/09/29 21:50:38 jrobbins Exp $
 
-package uci.argo.kernel;
+package uci.uml.ui;
 
+//import jargo.kernel.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
+import java.beans.*;
 import com.sun.java.swing.*;
+import com.sun.java.swing.event.*;
+import com.sun.java.swing.tree.*;
+import com.sun.java.swing.text.*;
+//import com.sun.java.swing.border.*;
 
 import uci.util.*;
+import uci.uml.Foundation.Core.*;
+import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Foundation.Extension_Mechanisms.*;
+import uci.uml.Model_Management.*;
 
-/** Interface that defines methods required on any object that can
- *  post a ToDoItem to the Designer's ToDoList. Basically requires that
- *  the poster (1) have contact information, (2) be able to snooze
- *  and unsnooze itself, and (3) be able to determine if a ToDoItem it
- *  posted previously should still be on the Designer's ToDoList. <p>
+/** This is an abstract superclass for panels that go in the
+ *  "Properties" tab in the Argo/UML user interface.
  *
- *  Currently Critic and Designer implement this interface.
- *
- * @see Critic
- * @see Designer */
+ * @see TabProps */
 
-public interface Poster {
+public class PropPanelGeneralization extends PropPanel
+implements TabModelTarget, DocumentListener {
 
   ////////////////////////////////////////////////////////////////
-  // accessors
+  // constructors
 
-  /** Get some contact information on the Poster. */
-  String getExpertEmail();
+  public PropPanelGeneralization() {
+    super("Generalization");
 
-  /** Update the Poster's contact info. Is this needed? */
-  void setExpertEmail(String addr);
+    remove(_nameField);
+    remove(_nameLabel);    
+  }
 
-  /** Reply true if the given item should be kept on the Designer's
-   * ToDoList, false if it is no longer valid. */
-  boolean stillValid(ToDoItem i, Designer d);
-
-  boolean supports(Decision d);
-  Vector getSupportedDecisions();
-  boolean supports(Goal g);
-  Vector getSupportedGoals();
-  boolean containsKnowledgeType(String knowledgeType);
-  Set getKnowledgeTypes();
-
-  /** Customize the description string just before it is displayed. */
-  String expand(String desc, Set offs);
-
-  public Icon getClarifier();
-
-  ////////////////////////////////////////////////////////////////
-  // criticism control
-
-  /** temporarily disable this Poster. */
-  void snooze();
-
-  /** Unsnooze this Poster, it may resume posting without further
-   * delay. */
-  void unsnooze();
-
-  ////////////////////////////////////////////////////////////////
-  // issue resolution
-
-  void fixIt(ToDoItem item, Object arg);
-
-  boolean canFixIt(ToDoItem item);
-
-} /* end interface Poster */
+  
+} /* end class PropPanelGeneralization */

@@ -27,7 +27,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.12 1998/08/06 21:31:15 jrobbins Exp $
+// $Id: Designer.java,v 1.13 1998/09/29 21:50:36 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -378,8 +378,8 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
   public void stopDesiring(String goal) { _goals.stopDesiring(goal); }
   public String getExpertEmail() { return _emailAddr; }
   public void setExpertEmail(String addr) { _emailAddr = addr; }
-  public void hush() { /* do nothing */ }
-  public void unhush() { /* do nothing */ }
+  public void snooze() { /* do nothing */ }
+  public void unsnooze() { /* do nothing */ }
 
   /** Reply the Agency object that is helping this Designer. */
   public Agency getAgency() { return _agency; }

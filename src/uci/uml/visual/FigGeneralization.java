@@ -27,21 +27,25 @@
 // File: FigGeneralization.java
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.7 1998/07/15 18:18:03 jrobbins Exp $
+// $Id: FigGeneralization.java,v 1.8 1998/09/29 21:50:55 jrobbins Exp $
 
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.util.*;
 
 import uci.gef.*;
 import uci.uml.ui.*;
 import uci.uml.Foundation.Core.*;
+//import uci.uml.Foundation.Extension_Mechanisms.*;
 
-public class FigGeneralization extends FigEdgeLine {
+public class FigGeneralization extends FigEdgeModelElement {
 
   public FigGeneralization(Object edge) {
-    super();
+    super(edge);
+    addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+
     setOwner(edge);
 
     ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
@@ -49,15 +53,26 @@ public class FigGeneralization extends FigEdgeLine {
 
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+    modelChanged();
   }
 
-  public void dispose() {
-    if (!(getOwner() instanceof Generalization)) return;
-    Generalization gen = (Generalization) getOwner();
-    if (gen == null) return;
-    Project p = ProjectBrowser.TheInstance.getProject();
-    p.moveToTrash(gen);
-    super.dispose();
+//   public void dispose() {
+//     if (!(getOwner() instanceof Generalization)) return;
+//     Generalization gen = (Generalization) getOwner();
+//     if (gen == null) return;
+//     Project p = ProjectBrowser.TheInstance.getProject();
+//     p.moveToTrash(gen);
+//     super.dispose();
+//   }
+
+  protected boolean canEdit(Fig f) { return false; }
+  
+  /** This is called aftern any part of the UML ModelElement has
+   *  changed. This method automatically updates the name FigText.
+   *  Subclasses should override and update other parts. */
+  protected void modelChanged() {
+    // do not set _name
+    updateStereotypeText();
   }
 
 

@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.7 1998/09/17 18:48:57 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.8 1998/09/29 21:50:57 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -111,7 +111,7 @@ public class FigUseCase extends FigNodeModelElement {
     _bigPort.setBounds(x, y, w, h);
     _cover.setBounds(x, y, w, h);
     Dimension nameDim = _name.getMinimumSize();
-    _name.setBounds(x + (w - nameDim.width)/2, y + (h - nameDim.height),
+    _name.setBounds(x + (w - nameDim.width)/2, y + (h - nameDim.height)/2,
 		    nameDim.width, nameDim.height);
     _x = x; _y = y; _w = w; _h = h;
     firePropChange("bounds", oldBounds, getBounds());

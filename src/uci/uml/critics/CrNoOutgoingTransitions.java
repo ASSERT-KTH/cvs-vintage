@@ -25,7 +25,7 @@
 // File: CrNoOutgoingTransitions.java
 // Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOutgoingTransitions.java,v 1.1 1998/07/15 18:17:05 jrobbins Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.2 1998/09/29 21:50:43 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -62,15 +62,16 @@ public class CrNoOutgoingTransitions extends CrUML {
       if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
     }
     Vector outgoing = sv.getOutgoing();
-    Vector incoming = sv.getIncoming();
+    //Vector incoming = sv.getIncoming();
     boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
-    boolean needsIncoming = incoming == null || incoming.size() == 0;
+    //boolean needsIncoming = incoming == null || incoming.size() == 0;
     if (sv instanceof Pseudostate) {
       PseudostateKind k = ((Pseudostate)sv).getKind();
-      if (k.equals(PseudostateKind.INITIAL)) needsIncoming = false;
+      //if (k.equals(PseudostateKind.INITIAL)) needsIncoming = false;
       if (k.equals(PseudostateKind.FINAL)) needsOutgoing = false;
     }
-    if (!needsIncoming && needsOutgoing) return PROBLEM_FOUND;
+    // if (!needsIncoming && needsOutgoing) return PROBLEM_FOUND;
+    if (needsOutgoing) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }
 

@@ -27,7 +27,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.4 1998/09/17 18:48:54 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.5 1998/09/29 21:50:56 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -97,17 +97,18 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
   public FigText getNameFig() { return _name; }
 
   public void vetoableChange(PropertyChangeEvent pce) {
-    System.out.println("in vetoableChange");
+    //System.out.println("in vetoableChange");
     Object src = pce.getSource();
     if (src == getOwner()) {
       DelayedChangeNotify delayedNotify = new DelayedChangeNotify(this, pce);
       SwingUtilities.invokeLater(delayedNotify);
     }
-    else System.out.println("aaaaa");
+    else System.out.println("FigNodeModelElement got vetoableChange"+
+			    " from non-owner:" + src);
   }
 
   public void delayedVetoableChange(PropertyChangeEvent pce) {
-    System.out.println("in delayedVetoableChange");
+    //System.out.println("in delayedVetoableChange");
     Object src = pce.getSource();
     startTrans();
     // update any text, colors, fonts, etc.

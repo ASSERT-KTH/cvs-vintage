@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/argo/kernel
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.2 1998/06/28 02:52:40 jrobbins Exp $
+# $Id: Makefile,v 1.3 1998/09/29 21:50:37 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -45,7 +45,7 @@ CLASSES = \
 	HistoryItemManipulation.class \
 	HistoryItemResolve.class \
 	HistoryListener.class \
-	HushOrder.class \
+	SnoozeOrder.class \
 	Poster.class \
 	StandardCM.class \
 	EnabledCM.class \
