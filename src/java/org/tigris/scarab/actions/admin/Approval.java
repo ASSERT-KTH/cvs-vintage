@@ -48,6 +48,7 @@ package org.tigris.scarab.actions.admin;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.Locale;
 import java.sql.SQLException;
 
 // Turbine Stuff 
@@ -62,6 +63,7 @@ import org.apache.turbine.ParameterParser;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
+import org.apache.fulcrum.localization.Localization;
 
 
 // Scarab Stuff
@@ -91,17 +93,22 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.26 2002/10/09 22:28:09 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.27 2002/10/10 01:05:44 jmcnally Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
-
     private static final String EMAIL_ERROR = "Your changes were saved, " +
                                 "but could not send notification email due " + 
                                 "to a sendmail error.";
 
     private static final String REJECT = "reject";
     private static final String APPROVE = "approve";
+
+    private static Integer QUERY = new Integer(0);
+    private static Integer ISSUE_ENTRY_TEMPLATE = new Integer(1);
+    
+    private static Integer REJECTED = QUERY;
+    private static Integer APPROVED = ISSUE_ENTRY_TEMPLATE;
     
     public void doSubmit( RunData data, TemplateContext context )
         throws Exception
@@ -117,8 +124,8 @@ public class Approval extends RequireLoginFirstAction
         Object[] keys = params.getKeys();
         String key;
         String action = null;
-        String actionWord = null;
-        String artifact = null;
+        Integer actionWord = null;
+        Integer artifact = null;
         String artifactName = null;
         String comment = null;
         ScarabUser toUser = null;
@@ -139,7 +146,7 @@ public class Approval extends RequireLoginFirstAction
 
                userId = params.getString("query_user_" + queryId);
                toUser = scarabR.getUser(userId);
-               artifact = "query";
+               artifact = QUERY;
                artifactName = query.getName();
 
                if (action.equals(REJECT))
@@ -152,7 +159,7 @@ public class Approval extends RequireLoginFirstAction
                    {
                        scarabR.setAlertMessage(e.getMessage());
                    }
-                   actionWord = "rejected";
+                   actionWord = REJECTED;
                } 
                else if (action.equals(APPROVE))
                {
@@ -164,7 +171,7 @@ public class Approval extends RequireLoginFirstAction
                    {
                        scarabR.setAlertMessage(e.getMessage());
                    }
-                   actionWord = "approved";
+                   actionWord = APPROVED;
                }
 
             }
@@ -179,7 +186,7 @@ public class Approval extends RequireLoginFirstAction
 
                userId = params.getString("template_user_" + templateId);
                toUser = scarabR.getUser(userId);
-               artifact = "issue entry template";
+               artifact = ISSUE_ENTRY_TEMPLATE;
                artifactName = info.getName();
 
                if (action.equals(REJECT))
@@ -192,7 +199,7 @@ public class Approval extends RequireLoginFirstAction
                    {
                        scarabR.setAlertMessage(e.getMessage());
                    }
-                   actionWord = "rejected";
+                   actionWord = REJECTED;
                } 
                else if (action.equals(APPROVE))
                {
@@ -204,25 +211,33 @@ public class Approval extends RequireLoginFirstAction
                    {
                        scarabR.setAlertMessage(e.getMessage());
                    }
-                   actionWord = "approved";
+                   actionWord = APPROVED;
                }
             }
 
             if (!action.equals("none"))
             {
                 // send email
-                StringBuffer bodyBuf = new StringBuffer("The user ");
-                bodyBuf.append(user.getUserName());
-                bodyBuf.append(" has just ").append(actionWord);
-                bodyBuf.append(" your ").append(artifact).append(" '");
-                bodyBuf.append(artifactName).append("'.");
+                Object[] subjectArgs = {artifact, actionWord};
+                String subject = Localization.format(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "ApprovalEmailSubject",
+                    subjectArgs);
+
+                Object[] bodyArgs = {user.getUserName(), actionWord, 
+                           artifact, artifactName};
+                String body = Localization.format(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "ApprovalEmailBody",
+                    bodyArgs);
 
                 // add data to context for email template
-                context.put("body", bodyBuf.toString());
+                context.put("body", body);
                 context.put("comment", comment);
                 context.put("globalComment", globalComment);
 
-                String subject = "Scarab " + artifact + " " + actionWord;
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.approval.template",
                               "email/Approval.vm");

@@ -47,8 +47,10 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.fulcrum.template.TemplateContext;
+import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 import org.apache.torque.om.Persistent;
@@ -108,7 +110,11 @@ public  class IssueTemplateInfo
                 context.put("user", user);
                 context.put("module", module);
 
-                String subject = "New template requires approval";
+                String subject = Localization.getString(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "NewTemplateRequiresApproval");
+
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.requireapproval.template",
                               "email/RequireApproval.vm");

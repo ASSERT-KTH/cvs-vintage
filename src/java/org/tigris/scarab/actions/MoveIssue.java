@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -59,6 +60,7 @@ import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.tool.IntakeTool;
 
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.localization.Localization;
 
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.om.ObjectKey; 
@@ -98,7 +100,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.33 2002/10/09 22:28:09 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.34 2002/10/10 01:05:44 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -181,19 +183,25 @@ public class MoveIssue extends RequireLoginFirstAction
         getScarabRequestTool(context).setConfirmMessage(l10n.get(DEFAULT_MSG));
 
         // generate comment
-        StringBuffer descBuf = new StringBuffer();
-        String comment = null;
+        Object[] msgArgs = {
+            newIssue.getUniqueId(),
+            issue.getUniqueId(),
+            oldModule.getName()};
+        String subject = null;
         if (selectAction.equals("copy"))
         {
-            comment = " copied from issue ";
+            subject = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "CopiedIssueEmailSubject",
+                msgArgs);
         }
         else
         {
-            comment = " moved from issue ";
+            subject = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "MovedIssueEmailSubject",
+                msgArgs);
         }
-        descBuf.append(comment);
-        descBuf.append(issue.getUniqueId());
-        descBuf.append(" in module ").append(oldModule.getName());
 
         // placed in the context for the email to be able to access them
         context.put("action", selectAction);
@@ -211,7 +219,7 @@ public class MoveIssue extends RequireLoginFirstAction
                              issue.getUsersToEmail(AttributePeer.EMAIL_TO),
                              issue.getUsersToEmail(AttributePeer.CC_TO),
                               "Issue " +  newIssue.getUniqueId() 
-                              + descBuf.toString(), template))
+                              + subject, template))
         {
              getScarabRequestTool(context).setAlertMessage(
                  l10n.get(EMAIL_ERROR));

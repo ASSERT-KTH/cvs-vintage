@@ -50,11 +50,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.turbine.TemplateContext;
 //import org.apache.fulcrum.template.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.Turbine;
+import org.apache.fulcrum.localization.Localization;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
@@ -70,6 +72,7 @@ import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.Log;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -211,13 +214,35 @@ public class Query
                 context.put("user", user);
                 context.put("module", module);
 
-                String subject = "New query requires approval";
+                String subject = Localization.getString(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    Locale.getDefault(),
+                    "NewQueryRequiresApproval");
+
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.requireapproval.template",
                               "email/RequireApproval.vm");
 
                 ScarabUser[] toUsers = module
                     .getUsers(ScarabSecurity.ITEM__APPROVE);
+
+                if (Log.get().isDebugEnabled()) 
+                {
+                    if (toUsers == null || toUsers.length ==0) 
+                    {
+                        Log.get().debug("No users to approve query.");    
+                    }
+                    else 
+                    {
+                        Log.get().debug("Users to approve query: ");    
+                        for (int i=0; i<toUsers.length; i++) 
+                        {
+                            Log.get().debug(toUsers[i].getEmail());
+                        }  
+                    }          
+                }
+                
+                
                 String fromUser = "scarab.email.default";
                 if (!Email.sendEmail(new ContextAdapter(context), module, 
                     fromUser, module.getSystemEmail(), Arrays.asList(toUsers),
