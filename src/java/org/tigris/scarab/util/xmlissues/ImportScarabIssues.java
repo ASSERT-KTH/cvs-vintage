@@ -151,6 +151,7 @@ public class ImportScarabIssues extends MatchingTask
             log.debug("Importing: " + getXmlFile().getAbsolutePath());
             ScarabIssues si = (ScarabIssues) reader.parse(
                 getXmlFile().getAbsolutePath());
+            si.doHandleDependencies();
 
             // now lets output it to a buffer
 //            StringWriter buffer = new StringWriter();
