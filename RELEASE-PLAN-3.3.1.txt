@@ -80,7 +80,7 @@ Tomcat 3.3.1 Beta 1 Release:
 
 Tomcat 3.3.1 Release Candidate 1 Release:
 
-	Code Freeze/Tag Date:	Feb 2, 2002
+	Code Freeze/Tag Date:	Feb 23, 2002
 	Release Manager:	Larry Isaacs
 
         Only safe fixes or documentation updates allowed prior to
@@ -104,11 +104,23 @@ Tomcat 3.3.1 Release Candidate 1 Release:
 
         4364  build-solaris for Apache connector does not compile with -DE
               (do what we can to review and update the connector make files)
+
+        6214  Problems on ClientAuth
+              (fix documentation to indicate PoolTcpConnector's attribute
+               is clientauth, not clientAuth)
+
+        6448  NullPointerException when docBase is missing
+              (implement better error handling)
+
+        6518  class name generated from jsp filename mangles some valid
+                  identifier characters
+              (derive patch from the one supplied and Tomcat 4.x
+               implementation)
     
 
 Tomcat 3.3.1 Final Release:
 
-	Code Freeze/Tag Date:	Feb 9, 2002
+	Code Freeze/Tag Date:	March 2, 2002
 	Release Manager:	Larry Isaacs
 
         The current jakarta-tomcat HEAD will be built and released
@@ -131,6 +143,9 @@ Bug   Resolution  From   Description
 5560  WONTFIX     NEW    Removal of unnecessary white space in output
 5746  INVALID     REOPND Settting an error page for the status code 500 doesn't
                          display the page.
+6088  WONTFIX     NEW    Too many custom tags?
+6369  LATER       NEW    jk_nt_service.exe does not set exit code
+                         (fix in jakarta-tomcat-connectors)
 
 
 The following bugs will be left with their current resolution:
