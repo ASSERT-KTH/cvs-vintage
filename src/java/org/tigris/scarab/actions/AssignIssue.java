@@ -78,7 +78,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.98 2003/06/25 17:46:01 mpoeschl Exp $
+ * @version $Id: AssignIssue.java,v 1.99 2003/06/30 19:38:22 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -144,14 +144,15 @@ public class AssignIssue extends BaseModifyIssue
         ScarabLocalizationTool l10n = getLocalizationTool(context); 
         Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
-        String[] userIds =  params.getStrings(SELECTED_USER);
-        if (userIds != null && userIds.length > 0) 
+        String[] selectedUsers =  params.getStrings(SELECTED_USER);
+        if (selectedUsers != null && selectedUsers.length > 0) 
         {
-            for (int i =0; i<userIds.length; i++)
+            for (int i =0; i<selectedUsers.length; i++)
             {
                 List item = new ArrayList(2);
-                String userId = userIds[i];
-                String attrId = params.getString("old_attr_" + userId);
+                String selectedUser = selectedUsers[i];
+                String userId = selectedUser.substring(1, selectedUser.indexOf('_')-1);
+                String attrId = selectedUser.substring(selectedUser.indexOf('_')+1, selectedUser.length());
                 Attribute attribute = AttributeManager
                     .getInstance(new Integer(attrId));
                 ScarabUser su = ScarabUserManager
@@ -179,19 +180,20 @@ public class AssignIssue extends BaseModifyIssue
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Set userList = (Set) user.getAssociatedUsersMap().get(issueId);
         ValueParser params = data.getParameters();
-        String[] userIds =  params.getStrings(SELECTED_USER);
-        if (userIds != null && userIds.length > 0) 
+        String[] selectedUsers =  params.getStrings(SELECTED_USER);
+        if (selectedUsers != null && selectedUsers.length > 0) 
         {
-            for (int i =0; i<userIds.length; i++)
+            for (int i =0; i < selectedUsers.length; i++)
             {
-                List item = new ArrayList(2);
-                List newItem = new ArrayList(2);
-                String userId = userIds[i];
-                String attrId = params.getString("old_attr_" + userId);
+                String selectedUser = selectedUsers[i];
+                String userId = selectedUser.substring(1, selectedUser.indexOf('_')-1);
+                String attrId = selectedUser.substring(selectedUser.indexOf('_')+1, selectedUser.length());
                 Attribute attribute = AttributeManager
                     .getInstance(new Integer(attrId));
                 ScarabUser su = ScarabUserManager
                     .getInstance(new Integer(userId));
+                List item = new ArrayList(2);
+                List newItem = new ArrayList(2);
                 item.add(attribute);
                 item.add(su);
                 userList.remove(item);
@@ -274,13 +276,23 @@ public class AssignIssue extends BaseModifyIssue
                     {
                         // unless user has different attribute id, then
                         // switch their user attribute
-                        alreadyAssigned = true;
                         if (!newAttr.getAttributeId().equals(oldAttr.getAttributeId()))
                         {
-                            activitySet = issue.changeUserAttributeValue(
-                                                  activitySet,
-                                                  assignee, assigner, 
-                                                  oldAttVal, newAttr, attachment);
+                            List tmpItem = new ArrayList();
+                            tmpItem.add(newAttr);
+                            tmpItem.add(assignee);
+                            if (!userList.contains(tmpItem))
+                            {
+                                alreadyAssigned = true;
+                                activitySet = issue.changeUserAttributeValue(
+                                                      activitySet,
+                                                      assignee, assigner, 
+                                                      oldAttVal, newAttr, attachment);
+                            }
+                        }
+                        else
+                        {
+                            alreadyAssigned = true;
                         }
                     }
                 }
@@ -301,8 +313,10 @@ public class AssignIssue extends BaseModifyIssue
                 for (Iterator iter = userList.iterator(); iter.hasNext();)
                 {
                     List item = (List)iter.next();
-                    ScarabUser assignee = (ScarabUser)item.get(1);
-                    if (assignee.getUserId().equals(oldAttVal.getUserId()))
+                    Attribute attr = (Attribute)item.get(0);
+                    ScarabUser su = (ScarabUser)item.get(1);
+                    if (su.getUserId().equals(oldAttVal.getUserId())
+                        && attr.getAttributeId().equals(oldAttVal.getAttributeId()))
                     {
                          userStillAssigned = true;
                     }

@@ -32,7 +32,7 @@
   #set ($userId = $user.UserId)
     #indexedRows($velocityCount)
     <td>
-      <input type="checkbox" name="select_user" value="$userId" />
+      <input type="checkbox" name="select_user" value="{$userId}_$attr.AttributeId" />
       <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
     </td>
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
