@@ -282,10 +282,9 @@ public  class AttributeGroup
             c = new Criteria()
                 .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
             AttributeGroupPeer.doDelete(c);
-            List attrGroups = module.getAttributeGroups(getIssueType());
+            List attrGroups = module.getAttributeGroups(getIssueType(), false);
             attrGroups.remove(this);
-            ScarabCache.put(attrGroups, module, GET_ATTRIBUTE_GROUPS, 
-                            getIssueType(), Boolean.FALSE);
+            attrGroups = module.getAttributeGroups(getIssueType(), false);
         } 
         else
         {
