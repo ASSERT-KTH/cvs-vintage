@@ -27,7 +27,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -836,8 +836,11 @@ public class ApplicationMetaData
             String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
             SecurityRoleMetaData securityRoleMetaData = assemblyDescriptor.getSecurityRoleByName(roleName);
             if (securityRoleMetaData == null)
-               throw new DeploymentException("Security role '" + roleName + "' defined in jboss.xml" +
-                       "is not defined in ejb-jar.xml");
+            {
+               // Create a new SecurityRoleMetaData
+               securityRoleMetaData = new SecurityRoleMetaData(roleName);
+               assemblyDescriptor.addSecurityRoleMetaData(securityRoleMetaData);
+            }
 
             Iterator itPrincipalNames = getChildrenByTagName(securityRole, "principal-name");
             while (itPrincipalNames.hasNext())
