@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.7 2003/04/30 21:22:40 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.8 2003/07/14 23:00:54 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -96,6 +96,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 					actionSet.getActionNames()));
 			}
 		}
+		Collections.sort(models,new MiscUtilities.StringICaseCompare());
 		currentModel = (ShortcutsModel)models.elementAt(0);
 	}
 

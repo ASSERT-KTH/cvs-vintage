@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.13 2003/07/03 21:06:33 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.14 2003/07/14 23:00:54 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -100,10 +100,28 @@ public class KeyEventTranslator
 				return null;
 			}
 
-			boolean mod = (System.currentTimeMillis() -
-				KeyEventWorkaround.lastKeyTime < 750
-				&& (KeyEventWorkaround.modifiers
-				& ~(InputEvent.SHIFT_MASK | InputEvent.ALT_GRAPH_MASK)) != 0);
+			boolean mod;
+			if(System.currentTimeMillis()
+				-  KeyEventWorkaround.lastKeyTime < 750)
+			{
+				if(modifiers == InputEvent.ALT_GRAPH_MASK)
+				{
+					mod = false;
+				}
+				else if((KeyEventWorkaround.modifiers
+					& ~(InputEvent.SHIFT_MASK | InputEvent.ALT_GRAPH_MASK)) != 0)
+				{
+					mod = true;
+				}
+				else
+				{
+					mod = false;
+				}
+			}
+			else
+			{
+				mod = false;
+			}
 
 			if(mod)
 			{

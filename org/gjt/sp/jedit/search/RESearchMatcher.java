@@ -33,9 +33,9 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher using {@link gnu.regexp}.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.21 2003/07/10 19:05:13 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.22 2003/07/14 23:00:54 spestov Exp $
  */
-public class RESearchMatcher implements SearchMatcher
+public class RESearchMatcher extends SearchMatcher
 {
 	/**
 	 * Perl5 syntax with character classes enabled.
@@ -95,7 +95,7 @@ public class RESearchMatcher implements SearchMatcher
 			return null;
 
 		returnValue.substitutions = new String[
-			re.getNumSubs()];
+			re.getNumSubs() + 1];
 		for(int i = 0; i < returnValue.substitutions.length; i++)
 		{
 			returnValue.substitutions[i] = match.toString(i);
@@ -134,6 +134,5 @@ public class RESearchMatcher implements SearchMatcher
 
 	//{{{ Private members
 	private RE re;
-	private Match returnValue;
 	//}}}
 }
