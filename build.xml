@@ -102,12 +102,6 @@
   <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
   
-  <!-- xalan is required by MX4J HTTP adaptor -->
-  <property name="xalan.home" location="${install.dir}/xalan"/>
-  <property name="xalan.lib" location="${xalan.home}/bin"/>
-  <property name="xalan.jar" location="${xalan.lib}/xalan.jar"/>
-  <property name="xml-apis.jar" location="${xalan.lib}/xml-apis.jar"/>
-
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
@@ -133,8 +127,6 @@
                file="${jmx.jar}" />
     <available property="jmxtools-present"
                file="${jmxtools.jar}" />
-    <available property="xalan-present"
-               file="${xalan.jar}" />
     <available property="jaxp10-present"
                file="${jaxp.home}/parser.jar" />
     <available property="jaxp11-present"
@@ -175,6 +167,7 @@
 
   <path id="xml-apis.class.path">
     <pathelement location="${jaxp.home}/jaxp.jar"/>
+    <pathelement location="${jaxp.home}/crimson.jar"/>
     <pathelement location="${xerces2.home}/xmlParserAPIs.jar"/>
     <pathelement location="${xml-parser-apis.jar}"/>
   </path>
@@ -290,17 +283,17 @@
   
   <target name="prepare.xerces2" depends="detect" if="xerces2-present" >
     <echo message="Installing XERCES-2"/>
-    <copy tofile="${tomcat.build}/lib/container/"
+    <copy tofile="${tomcat.build}/lib/container/xercesImpl.jar"
           file="${xerces2.home}/xercesImpl.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/"
+    <copy tofile="${tomcat.build}/lib/container/xmlParserAPIs.jar"
           file="${xerces2.home}/xmlParserAPIs.jar"/>
   </target>
 
   <target name="prepare.xml-parser" depends="detect" if="xml-parser-present" >
     <echo message="Installing XML-PARSER ${xml-parser-impl.jar} and ${xml-parser-apis.jar}"/>
-    <copy tofile="${tomcat.build}/lib/container/"
+    <copy todir="${tomcat.build}/lib/container/"
           file="${xml-parser-impl.jar}"/>
-    <copy tofile="${tomcat.build}/lib/container/"
+    <copy todir="${tomcat.build}/lib/container/"
           file="${xml-parser-apis.jar}"/>
   </target>
 
@@ -612,16 +605,14 @@
 
   <target name="jmx.prepare" depends="prepare" if="jmx-present" >
     <echo message="copying JMX for JMX support"/>
-    <copy tofile="${tomcat.build}/lib/container"
+    <copy todir="${tomcat.build}/lib/container/"
           file="${jmx.jar}"/>
   </target>
   
   <target name="jmxtools.prepare" depends="prepare" if="jmxtools-present" >
     <echo message="copying JMX tools jar for JMX HTTP Adapter support"/>
-    <copy tofile="${tomcat.build}/lib/container"
+    <copy todir="${tomcat.build}/lib/container/"
           file="${jmxtools.jar}"/>
-    <copy tofile="${tomcat.build}/lib/container"
-          file="${xalan.jar}"/>
   </target>
 
   <!-- ====================  "Standard" interceptors  ========== -->
