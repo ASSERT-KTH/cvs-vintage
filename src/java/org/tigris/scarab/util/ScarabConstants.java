@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.66 2004/11/23 08:38:37 dep4b Exp $
+ * @version $Id: ScarabConstants.java,v 1.67 2004/12/03 16:25:01 dep4b Exp $
  */
 public interface ScarabConstants
 {
@@ -118,6 +118,11 @@ public interface ScarabConstants
      * Primary System Object
      */
     String SCARAB_REQUEST_TOOL = "scarabR";
+    
+    /**
+     * Name of the scarab Link Tool
+     */
+    String SCARAB_LINK_TOOL = "link";    
 
     /**
      * Collection of useful methods
