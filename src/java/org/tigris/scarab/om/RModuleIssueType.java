@@ -63,7 +63,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.29 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: RModuleIssueType.java,v 1.30 2003/06/25 06:17:03 venkatesh Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -138,8 +138,8 @@ public  class RModuleIssueType
 
         if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
         {
-            // Delete attribute groups first
-            List attGroups = module.getAttributeGroups(issueType);
+            // Delete both active and inactive attribute groups first
+            List attGroups = module.getAttributeGroups(issueType, false);
             for (int j=0; j<attGroups.size(); j++)
             {
                 // delete attribute-attribute group map
