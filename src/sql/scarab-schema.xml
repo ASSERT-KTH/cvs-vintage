@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.29 2001/07/19 21:30:07 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.30 2001/07/26 22:36:11 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -968,6 +968,69 @@
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 
+</table>
+
+<!--
+    A saved user query.
+-->
+<table name="SCARAB_QUERY" idMethod="idbroker" javaName="Query">
+
+    <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" required="true" type="INTEGER"></column>
+    <!--
+        The name the query will be saved under.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255" />
+
+    <!--
+        The description of the saved query.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
+    <!--
+        The query string.
+    -->
+    <column name="VALUE" required="true" type="VARCHAR" size="255" />
+
+    <!--
+        Type.
+    -->
+    <column name="QUERY_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        If the type is linked to a module, include module id.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+            default="0" size="1"></column>
+
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_QUERY_TYPE">
+        <reference local="QUERY_TYPE_ID" foreign="QUERY_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+
+</table>
+
+<!--
+    Possible types of queries.
+    Examples: global, project, personal account level
+-->
+<table name="SCARAB_QUERY_TYPE" idMethod="none" 
+    javaName="QueryType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="QUERY_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="QUERY_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
 
