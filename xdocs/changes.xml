@@ -6,7 +6,13 @@
   </properties>
 
   <body>
-    <release version="b19" date="in cvs">
+    <release version="b19" date="in cvs">           
+      <action dev="hdabbous" type="add">
+        <a href="http://scarab.collab.net/scarab/issues/id/SCB1030">SCB1030</a> 
+        Added a valve that updates the database with the user's preferred
+        locale if it changes. The check is done each request, and the
+        locale is used to generate e-mails in the correct language.
+      </action>
 	  <action dev="epugh" type="add">
         Add goal scarab:sample that leverages NSIS to create an installer for windows that bundles a Scarab, 
         Hypersonic, and Tomcat.  This is already to install and run!
@@ -39,8 +45,8 @@
       </action>           
       <action dev="hdabbous" type="add">
         <a href="http://scarab.collab.net/scarab/issues/id/SCB1026">SCB1026</a> 
-        i10n fixes, and patches to German language bundle.
-      </action>       
+        l10n fixes, and patches to German language bundle.
+      </action>
       <action dev="epugh" type="add">
         Added Maven generated docs to scarab-gen.
       </action>             
