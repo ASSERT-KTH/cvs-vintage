@@ -84,11 +84,11 @@
 
    <!-- ******************** Getting binaries from build machines  ******************** -->
     <target name="binaries.get"  depends="init">
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-Solaris-${DSTAMP}.zip" 
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/tomcat.zip" ignoreErrors="true" />
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/servletapi-Solaris-${DSTAMP}.zip" 
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/servletapi-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/servletapi.zip" ignoreErrors="true" />
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ant-Solaris-${DSTAMP}.zip" 
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ant-SunOS-${DSTAMP}.zip" 
              dest="${nightly.dir}/ant.zip"  ignoreErrors="true" />
         <copyfile src="${nightly.dir}/tomcat.zip" dest="${nightly.dir}/tomcat-${DSTAMP}.zip" />
         <copyfile src="${nightly.dir}/ant.zip" dest="${nightly.dir}/ant-${DSTAMP}.zip" />
