@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.37 2002/12/05 21:47:19 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.38 2002/12/21 23:24:03 d00mst Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -280,13 +280,16 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
     if (attr.getInitialValue() != null) {
         initialValue = attr.getInitialValue().getBody();
     }   
-    String finall = "";
+    String changeableKind = "";
     if (attr.getChangeability() != null) {
-        finall = attr.getChangeability().equals(MChangeableKind.FROZEN) ? "frozen" : "";
+	if (attr.getChangeability().equals(MChangeableKind.FROZEN))
+	    changeableKind = "frozen";
+	else if (attr.getChangeability().equals(MChangeableKind.ADD_ONLY))
+	    changeableKind = "addOnly";
     }
     String properties = "";
-    if (finall.length() > 0) {
-    	properties = "{ " + finall + " }";
+    if (changeableKind.length() > 0) {
+    	properties = "{ " + changeableKind + " }";
     }
    
  
