@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *
@@ -349,7 +349,7 @@ public class InvalidationManager
          localGroupInvalidationsEvent (this.groupName, keys, asynchronous);
       }
       
-      public synchronized void register (Invalidable newRegistered)
+      public synchronized void register (Invalidatable newRegistered)
       {
          // we make a temp copy to avoid concurrency issues with the invalidate method
          //
@@ -359,7 +359,7 @@ public class InvalidationManager
          this.registered = newlyRegistered;                  
       }
       
-      public synchronized void unregister (Invalidable oldRegistered)
+      public synchronized void unregister (Invalidatable oldRegistered)
       {
          // we make a temp copy to avoid concurrency issues with the invalidate method
          //
@@ -403,7 +403,7 @@ public class InvalidationManager
                                  
             //Iterator iter = this.registered.iterator ();
             //while (iter.hasNext ())
-            //   ((Invalidable)iter.next ()).groupIsDropped () ;
+            //   ((Invalidatable)iter.next ()).groupIsDropped () ;
          }
       }
       
@@ -554,7 +554,7 @@ public class InvalidationManager
          java.util.Iterator iter = this.registered.iterator ();
          while (iter.hasNext ())
          {
-            Invalidable inv = (Invalidable)iter.next ();
+            Invalidatable inv = (Invalidatable)iter.next ();
             inv.areInvalid (keys);
          }
       }
@@ -564,7 +564,7 @@ public class InvalidationManager
          java.util.Iterator iter = this.registered.iterator ();
          while (iter.hasNext ())
          {
-            Invalidable inv = (Invalidable)iter.next ();
+            Invalidatable inv = (Invalidatable)iter.next ();
             inv.isInvalid (key);
          }
 

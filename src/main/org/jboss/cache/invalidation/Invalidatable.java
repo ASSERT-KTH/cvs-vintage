@@ -23,7 +23,7 @@ import java.io.Serializable;
  * </ul>
  */
 
-public interface Invalidable
+public interface Invalidatable
 {
    /**
     * Indicates that the resource with the given key should be invalidated (i.e. removed

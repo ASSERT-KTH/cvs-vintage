@@ -16,7 +16,7 @@ package org.jboss.ejb.plugins;
  * @see org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *
@@ -28,7 +28,7 @@ package org.jboss.ejb.plugins;
 
 public class InvalidableEntityInstanceCache 
    extends org.jboss.ejb.plugins.EntityInstanceCache 
-   implements org.jboss.cache.invalidation.Invalidable
+   implements org.jboss.cache.invalidation.Invalidatable
 {
    
    // Constants -----------------------------------------------------
@@ -48,7 +48,7 @@ public class InvalidableEntityInstanceCache
    
    // Public --------------------------------------------------------
    
-   // Invalidable implementation ----------------------------------------------
+   // Invalidatable implementation ----------------------------------------------
    
    public void areInvalid (java.io.Serializable[] keys)
    {

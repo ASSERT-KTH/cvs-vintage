@@ -19,7 +19,7 @@ import java.io.Serializable;
  * In this case, we say that both EJBs work in the same InvalidationGroup.
  * @see InvalidationManagerMBean
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *
@@ -98,16 +98,16 @@ public interface InvalidationGroup
    public int getReferenceCount ();
 
    /**  
-    * Register an Invalidable instance has a subscriber of this InvalidationGroup.
+    * Register an Invalidatable instance has a subscriber of this InvalidationGroup.
     * @param registered Subscribing instance
     */   
-   public void register (Invalidable registered);   
+   public void register (Invalidatable registered);   
    
    /**  
-    * Unregister an Invalidable instance
+    * Unregister an Invalidatable instance
     * @param registered Unsubscribing instance
     */   
-   public void unregister (Invalidable registered);
+   public void unregister (Invalidatable registered);
    
    /**  
     * Set the default mode for managing invalidations in this IG: synchronous or
