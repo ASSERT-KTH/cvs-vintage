@@ -58,7 +58,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <option #if ($rmitGroup.Comments.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.Comments.Value == 20) selected="selected" #end>20</option>
 </select>&#160;most recent.
-<p>Full list on seperate screen</p>
+<p>Full list on separate screen</p>
 </td>
 </tr>
 
@@ -70,7 +70,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <option #if ($rmitGroup.History.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.History.Value == 20) selected="selected" #end>20</option>
 </select>&#160;most recent.
-<p>Full list on seperate screen</p>
+<p>Full list on separate screen</p>
 </td>
 </tr>
 </table>
