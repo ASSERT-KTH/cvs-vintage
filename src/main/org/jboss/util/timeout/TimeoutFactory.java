@@ -22,9 +22,36 @@ import org.jboss.logging.Logger;
  *  allocating anything on the heap.
  *   
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
-*/
+ *  @version $Revision: 1.3 $
+ */
 public class TimeoutFactory {
+
+  //  Multithreading notes:
+  //
+  //  While a TimeoutImpl is enqueued, its index field contains the index
+  //  of the instance in the queue; that is, for 1 <= n <= size,
+  //  q[n].index = n.
+  //  Modifications of an enqueued TimeoutImpl instance may only happen
+  //  in code synchronized on the TimeoutFactory instance that has it
+  //  enqueued.
+  //  Modifications on the priority queue may only happen while running in
+  //  code synchronized on the TimeoutFactory instance that holds the queue.
+  //  When a TimeoutImpl instance is no longer enqueued, its index field
+  //  changes to one of the negative constants declared in the TimeoutImpl
+  //  class.
+  //  When a TimeoutImpl is not in use, its index field is TimeoutImpl.DONE
+  //  and it is on the freeList.
+  //
+  //  Cancellation may race with the timeout.
+  //  To avoid problems with this, the TimeoutImpl index field is set to
+  //  TimeoutImpl.TIMEOUT when the TimeoutImpl is taken out of the queue.
+  //  If a cancellation is attempted while the timeout callback is running,
+  //  the TimeoutImpl field index is set to TimeoutImpl.CWAIT to indicate
+  //  that someone is waiting for the timeout callback to finish.
+  //  When the timeout callback returns it is checked if the index field
+  //  was changed to TimeoutImpl.CWAIT, and if it was all waiting threads
+  //  are notified. Finally the index field is set to TimeoutImpl.DONE, and
+  //  the TimeoutImpl instance is discarded.
 
   /**
    *  Our private Timeout implementation.
@@ -44,6 +71,43 @@ public class TimeoutFactory {
     }
   }
 
+  /**
+   *  A worker thread that fires the timeout.
+   */
+  private static class TimeoutWorker extends Thread {
+    private TimeoutImpl work;
+ 
+    /**
+     *  Create a new instance.
+     *
+     *  @param work The timeout that should be fired.
+     */
+    TimeoutWorker(TimeoutImpl work) {
+      this.work = work;
+      setDaemon(false);
+    }
+ 
+    /**
+     *  Override to fire the timeout.
+     */
+    public void run() {
+      try {
+        work.target.timedOut(work);
+      } catch (Throwable t) {
+        Logger.exception(t);
+        //t.printStackTrace();
+      }
+      synchronized (work) {
+        if (work.index == TimeoutImpl.CWAIT) {
+          work.index = TimeoutImpl.DONE;
+          work.notifyAll(); // wake up cancel() threads.
+        } else
+          work.index = TimeoutImpl.DONE;
+      }
+    }
+  }
+
+
   /** Linked list of free TimeoutImpl instances. */
   private TimeoutImpl freeList;
 
@@ -59,6 +123,115 @@ public class TimeoutFactory {
    *  Children of the node at index <code>j</code> are at <code>j*2</code>
    *  and <code>j*2+1</code>. The children of a node always fire the timeout
    *  no earlier than the node.
+   *
+   *
+   *  Or, more formally:
+   *
+   *  Only indices <code>1</code>..<code>size</code> of this array are used.
+   *  All other indices contain the null reference.
+   *  This array represent a balanced binary tree.
+   *
+   *  If <code>size</code> is <code>0</code> the tree is empty, otherwise
+   *  the root of the tree is at index <code>1</code>.
+   *
+   *  Given an arbitrary node at index <code>n</code> that is not the root
+   *  node, the parent node of <code>n</code> is at index <code>n/2</code>.
+   *
+   *  Given an arbitrary node at index <code>n</code>; if
+   *  <code>2*n <= size</code> the node at <code>n</code> has its left child
+   *  at index <code>2*n</code>, otherwise the node at <code>n</code> has
+   *  no left child.
+   *
+   *  Given an arbitrary node at index <code>n</code>; if
+   *  <code>2*n+1 <= size</code> the node at <code>n</code> has its right child
+   *  at index <code>2*n+1</code>, otherwise the node at <code>n</code> has
+   *  no right child.
+   *
+   *  The priority function is called T. Given a node <code>n</code>,
+   *  <code>T(n)</code> denotes the absolute time (in milliseconds since
+   *  the epoch) that the timeout for node <code>n</code> should happen.
+   *  Smaller values of <code>T</code> means higher priority.
+   *
+   *  The tree satisfies the following invariant:
+   *  <i>
+   *  For any node <code>n</code> in the tree:
+   *  If node <code>n</code> has a left child <code>l</code>,
+   *  <code>T(n) <= T(l)</code>.
+   *  If node <code>n</code> has a right child <code>r</code>,
+   *  <code>T(n) <= T(r)</code>.
+   *  </i>
+   *
+   *
+   *  The invariant may be temporarily broken while executing synchronized
+   *  on <code>this</code> instance, but is always reestablished before
+   *  leaving the synchronized code. 
+   *
+   *  The node at index <code>1</code> is always the first node to timeout,
+   *  as can be deduced from the invariant.
+   *
+   *  For the following algorithm pseudocode, the operation
+   *  <code>swap(n,m)</code> denotes the exchange of the nodes at indices
+   *  <code>n</code> and <code>m</code> in the tree.
+   *
+   *  Insertion of a new node happend as follows:
+   *  <pre>
+   *    IF size = q.length THEN
+   *      "expand q array to be larger";
+   *    ENDIF
+   *    size <- size + 1;
+   *    q[size] <- "new node";
+   *    n <- size;
+   *    WHILE n > 1 AND T(n/2) > T(n) DO
+   *      swap(n/2, n);
+   *      n <- n/2;
+   *    ENDWHILE
+   *  </pre>
+   *  Proof that this insertion algorithm respects the invariant is left to
+   *  the interested reader.
+   *
+   *  The removal algorithm is a bit more complicated. To remove the node
+   *  at index <code>n</code>:
+   *  <pre>
+   *    swap(n, size);
+   *    size <- size - 1;
+   *    IF n > 1 AND T(n/2) > T(n) THEN
+   *      WHILE n > 1 AND T(n/2) > T(n) DO
+   *        swap(n/2, n);
+   *        n <- n/2;
+   *      ENDWHILE
+   *    ELSE
+   *      WHILE 2*n <= size DO
+   *        IF 2*n+1 <= size THEN
+   *          // Both children present
+   *          IF T(2*n) <= T(2*n+1) THEN
+   *            IF T(n) <= T(2*n) THEN
+   *              EXIT;
+   *            ENDIF
+   *            swap(n, 2*n);
+   *            n <- 2*n;
+   *          ELSE
+   *            IF T(n) <= T(2*n+1) THEN
+   *              EXIT;
+   *            ENDIF
+   *            swap(n, 2*n+1);
+   *            n <- 2*n+1;
+   *          ENDIF
+   *        ELSE
+   *          // Only left child, right child not present.
+   *          IF T(n) <= T(2*n) THEN
+   *            EXIT;
+   *          ENDIF
+   *          swap(n, 2*n);
+   *          n <- 2*n;
+   *        ENDIF
+   *      ENDWHILE
+   *    ENDIF
+   *  </pre>
+   *  Proof that this removal algorithm respects the invariant is left to
+   *  the interested reader. Really, I am not going to prove it here.
+   *
+   *  If you are interested, you can find this data structure and its
+   *  associated operations in most textbooks on algorithmics.
    *
    *  @see checkTree
    */
@@ -307,7 +480,6 @@ public class TimeoutFactory {
     }
   }
 
-
   /**
    *  Timeout worker method.
    *  This method never returns. Whenever it is time to do a timeout,
@@ -339,22 +511,13 @@ public class TimeoutFactory {
 
       // Do work, if any
       if (work != null) {
-        try {
-          work.target.timedOut(work);
-        } catch (Throwable t) {
-          Logger.exception(t);
-          //t.printStackTrace();
-        }
-        synchronized (work) {
-          if (work.index == TimeoutImpl.CWAIT) {
-            work.index = TimeoutImpl.DONE;
-            work.notifyAll(); // wake up cancel() threads.
-          } else
-            work.index = TimeoutImpl.DONE;
-        }
+        // Create a new thread to do the callback.
+        TimeoutWorker worker = new TimeoutWorker(work);
+        worker.start();
       }
     }
   }
+
 
   /** Our singleton instance. */
   static private TimeoutFactory singleton;
