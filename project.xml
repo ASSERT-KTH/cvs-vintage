@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>scarab</id>
   <name>Scarab</name>
-  <currentVersion>1.0-b19g</currentVersion>
+  <currentVersion>1.0-b19</currentVersion>
   <organization>
     <name>Tigris.org</name>
     <url>http://www.tigris.org/</url>
@@ -261,7 +261,7 @@
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum</artifactId>
-      <version>20040131.153518</version>
+      <version>20040201.163302</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -396,7 +396,7 @@
     <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
-      <version>20040131.015715</version>
+      <version>20040202.092500</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -532,10 +532,6 @@
     <unitTest>
       <includes>
       	<include>**/*Test.java</include>
-        <exclude>**/AttributeValueTest.java</exclude>
-        <exclude>**/IssueTest.java</exclude>
-        <exclude>**/IssueTypeTest.java</exclude>
-        
       </includes>
     </unitTest>
     <resources>      
@@ -561,9 +557,6 @@
     <report>maven-jcoverage-plugin</report>
     <report>maven-simian-plugin</report>
     <report>maven-junit-report-plugin</report>
-    <!--
-    <report>maven-linkcheck-plugin</report>
-    -->
     <report>maven-tasklist-plugin</report>
     
 
