@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-minimal.xml,v 1.7 2003/08/27 04:31:52 patriot1burke Exp $ -->
+<!-- $Id: jboss-minimal.xml,v 1.8 2004/06/15 15:59:10 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -35,8 +35,6 @@
     -->
     <attribute name="Port">1099</attribute>
   </mbean>
-  <mbean code="org.jboss.naming.JNDIView" 
-	 name="jboss:service=JNDIView"/>
 
   <!-- ==================================================================== -->
   <!-- Deployment Scanning                                                  -->
