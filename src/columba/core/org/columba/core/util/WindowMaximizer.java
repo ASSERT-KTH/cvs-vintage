@@ -29,6 +29,7 @@ package org.columba.core.util;
 //Resizing
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -45,23 +46,27 @@ public class WindowMaximizer {
 			We need to know if the given object can be aximized if we use the Java way.
 		*/
 		String sClassName = obj.getClass().getName();
-		if (OSInfo.isWin32Platform() && bLibraryLoaded) { //win32 has its own way to maximize windows, so we need a native method.
+		if (OSInfo.isWin32Platform()
+			&& bLibraryLoaded) { //win32 has its own way to maximize windows, so we need a native method.
 			try {
-//System.out.println(bLibraryLoaded);
+				//System.out.println(bLibraryLoaded);
 				WindowMaximizer wm = new WindowMaximizer();
-//System.out.println(bLibraryLoaded);
+				//System.out.println(bLibraryLoaded);
 				wm.maximizeWindow(sClassName);
-//				new WindowMaximizer().maximizeWindow(sClassName);
+				//				new WindowMaximizer().maximizeWindow(sClassName);
 
-			}
-			catch (UnsatisfiedLinkError ex) {
+			} catch (UnsatisfiedLinkError ex) {
 				//We should get here only if the library hasn't been loaded, so we don't even need to notify the user: we already notified him.
 			}
-		}
-		else { //We can use the Java way to maximize the window (hoping people has given us a window).
+		} else { //We can use the Java way to maximize the window (hoping people has given us a window).
+
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			Component c = (Component)obj;
+			Component c = (Component) obj;
 			c.setSize(screenSize);
+
+			Frame frame = (Frame) obj;
+			frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+
 		}
 		return;
 	}
@@ -77,22 +82,26 @@ public class WindowMaximizer {
 			We need to know if the given object can be aximized if we use the Java way.
 		*/
 		String sClassName = obj.getClass().getName();
-		if (OSInfo.isWin32Platform() && bLibraryLoaded) { //win32 has its own way to maximize windows, so we need a native method.
+		if (OSInfo.isWin32Platform()
+			&& bLibraryLoaded) { //win32 has its own way to maximize windows, so we need a native method.
 			try {
-//System.out.println(bLibraryLoaded);
+				//System.out.println(bLibraryLoaded);
 				WindowMaximizer wm = new WindowMaximizer();
-//System.out.println(bLibraryLoaded);
+				//System.out.println(bLibraryLoaded);
 				return wm.isWindowMaximized(sClassName);
-			}
-			catch (UnsatisfiedLinkError ex) {
+			} catch (UnsatisfiedLinkError ex) {
 				//We should get here only if the library hasn't been loaded, so we don't even need to notify the user: we already notified him.
 			}
-		}
-		else { //We can use the Java way to maximize the window (hoping people has given us a window).
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			Component c = (Component)obj;
-			Dimension windowSize = c.getSize();
-			return (windowSize.equals(screenSize));
+		} else { //We can use the Java way to maximize the window (hoping people has given us a window).
+			
+			Frame frame = (Frame) obj;
+			int state = frame.getExtendedState();
+			if ((state & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH)
+				return true;
+			
+			return false;
+			
+
 		}
 		//Stupid Java.
 		return true;
@@ -106,10 +115,12 @@ public class WindowMaximizer {
 			try {
 				System.loadLibrary(sLibrary);
 				bLibraryLoaded = true;
-				ColumbaLogger.log.error("Library: '" + sLibrary + "' was successfully loaded.");//THIS IS NOT AN ERROR. -> NEEDS A CHANGE
-			}
-			catch (UnsatisfiedLinkError ex) {
-				ColumbaLogger.log.error("Library: '" + sLibrary + "' could not be found.");
+				ColumbaLogger.log.error(
+					"Library: '" + sLibrary + "' was successfully loaded.");
+				//THIS IS NOT AN ERROR. -> NEEDS A CHANGE
+			} catch (UnsatisfiedLinkError ex) {
+				ColumbaLogger.log.error(
+					"Library: '" + sLibrary + "' could not be found.");
 			}
 		}
 	}
