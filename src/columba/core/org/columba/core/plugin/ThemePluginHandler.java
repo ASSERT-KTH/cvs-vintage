@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import javax.swing.UIManager;
+
+import org.columba.core.xml.XmlElement;
+
 /**
  * @author frd
  *
@@ -23,6 +27,8 @@ package org.columba.core.plugin;
  */
 public class ThemePluginHandler extends AbstractPluginHandler {
 
+	public static String[] SYSTEM_DEFAULT_THEMES =
+		{ "Windows", "CDE/Motif", "Gtk", "Mac" };
 	/**
 	 * @param id
 	 * @param config
@@ -31,6 +37,51 @@ public class ThemePluginHandler extends AbstractPluginHandler {
 		super("org.columba.core.theme", "org/columba/core/plugin/theme.xml");
 
 		parentNode = getConfig().getRoot().getElement("themelist");
+
+		// remove all Look and Feels from the list
+		// which aren't supported by this system
+		UIManager.LookAndFeelInfo[] list = UIManager.getInstalledLookAndFeels();
+
+		for (int i = 0; i < parentNode.count(); i++) {
+			XmlElement child = parentNode.getElement(i);
+			String name = child.getAttribute("name");
+
+			boolean isSupported = false;
+			if (isSystemTheme(name)) {
+				// this is a system installed look and feel
+				// -> check if os supports it
+				for (int j = 0; j < list.length; j++) {
+					String s = list[j].getName();
+					if (s.equals(name)) {
+						isSupported = true;
+						break;
+					}
+				}
+
+				if (!isSupported)
+					child.removeFromParent();
+			}
+		}
+
 	}
+
+	/**
+	 * 
+	 * is this a installed system look and feel ?
+	 * 
+	 * @param name
+	 * 
+	 * @return
+	 */
+	protected boolean isSystemTheme(String name) {
+		for (int i = 0; i < SYSTEM_DEFAULT_THEMES.length; i++) {
+			if (name.equals(SYSTEM_DEFAULT_THEMES[i]))
+				return true;
+		}
+
+		return false;
+	}
+
+	
 
 }

@@ -5,6 +5,6 @@
  <theme name="Metal" class="org.columba.core.gui.themes.plugin.MetalLookAndFeelPlugin" />
  <theme name="Windows" class="org.columba.core.gui.themes.plugin.WindowsLookAndFeelPlugin" />
  <theme name="Mac" class="org.columba.core.gui.themes.plugin.MacLookAndFeelPlugin" />
- <theme name="Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
+ <theme name="CDE/Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
  <theme name="Gtk" class="org.columba.core.gui.themes.plugin.GtkLookAndFeelPlugin" />
 </themelist>
