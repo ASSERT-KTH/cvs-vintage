@@ -1,4 +1,4 @@
-// $Id: UMLInteractionContextListModel.java,v 1.3 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLInteractionContextListModel.java,v 1.4 2002/12/31 09:58:48 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,10 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @since Oct 3, 2002
@@ -44,8 +41,8 @@ public class UMLInteractionContextListModel
      * Constructor for UMLInteractionContextListModel.
      * @param container
      */
-    public UMLInteractionContextListModel(UMLUserInterfaceContainer container) {
-        super(container, "context");
+    public UMLInteractionContextListModel() {
+        super("context");
     }
 
     /**
@@ -53,7 +50,7 @@ public class UMLInteractionContextListModel
      */
     protected void buildModelList() {
         removeAllElements();
-        addElement(((MInteraction)getContainer().getTarget()).getContext());
+        addElement(((MInteraction)getTarget()).getContext());
     }
 
     /**
@@ -61,7 +58,7 @@ public class UMLInteractionContextListModel
      */
     protected boolean isValidElement(MBase elem) {
         return elem instanceof MCollaboration && 
-            ((MCollaboration)elem).getInteractions().contains(getContainer().getTarget());
+            ((MCollaboration)elem).getInteractions().contains(getTarget());
     }
 
 }

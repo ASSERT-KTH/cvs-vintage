@@ -1,4 +1,4 @@
-// $Id: UMLModelElementConstraintListModel.java,v 1.3 2002/12/27 10:08:03 linus Exp $
+// $Id: UMLModelElementConstraintListModel.java,v 1.4 2002/12/31 09:58:50 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,8 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -43,8 +41,8 @@ public class UMLModelElementConstraintListModel
      * Constructor for UMLModelElementConstraintListModel.
      * @param container
      */
-    public UMLModelElementConstraintListModel(UMLUserInterfaceContainer container) {
-        super(container, "constraint");
+    public UMLModelElementConstraintListModel() {
+        super("constraint");
     }
 
     /**

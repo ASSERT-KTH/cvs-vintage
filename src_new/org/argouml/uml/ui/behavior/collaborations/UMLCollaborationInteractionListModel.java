@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationInteractionListModel.java,v 1.4 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLCollaborationInteractionListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,10 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @since Oct 3, 2002
@@ -44,15 +41,15 @@ public class UMLCollaborationInteractionListModel
      * Constructor for UMLInteractionCollaborationListModel2.
      * @param container
      */
-    public UMLCollaborationInteractionListModel(UMLUserInterfaceContainer container) {
-        super(container, "interaction");
+    public UMLCollaborationInteractionListModel() {
+        super("interaction");
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MCollaboration)getContainer().getTarget()).getInteractions());
+        setAllElements(((MCollaboration)getTarget()).getInteractions());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleMessageListModel.java,v 1.4 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLAssociationRoleMessageListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,20 +24,11 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.ui.ArgoDiagram;
-import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
-import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
+import ru.novosoft.uml.MBase;
+import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
+import ru.novosoft.uml.behavior.collaborations.MMessage;
 
 public class UMLAssociationRoleMessageListModel extends UMLModelElementListModel2 {
 
@@ -45,8 +36,8 @@ public class UMLAssociationRoleMessageListModel extends UMLModelElementListModel
      * Constructor for UMLAssociationRoleMessageListModel.
      * @param container
      */
-    public UMLAssociationRoleMessageListModel(UMLUserInterfaceContainer container) {
-        super(container, "message");
+    public UMLAssociationRoleMessageListModel() {
+        super("message");
     }
 
     /**

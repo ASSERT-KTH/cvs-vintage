@@ -1,4 +1,4 @@
-// $Id: UMLExtendExtensionPointListModel.java,v 1.5 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLExtendExtensionPointListModel.java,v 1.6 2002/12/31 09:58:49 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
+
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
@@ -41,8 +41,8 @@ public class UMLExtendExtensionPointListModel
      * Constructor for UMLExtendExtensionPointListModel.
      * @param container
      */
-    public UMLExtendExtensionPointListModel(UMLUserInterfaceContainer container) {
-        super(container, "extensionPoint");
+    public UMLExtendExtensionPointListModel() {
+        super("extensionPoint");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationConstrainingElementListModel.java,v 1.3 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLCollaborationConstrainingElementListModel.java,v 1.4 2002/12/31 09:58:48 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,9 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * Shows the constrainingelements for some collaboration. See section 2.10.2.4
@@ -45,8 +42,8 @@ public class UMLCollaborationConstrainingElementListModel
      * Constructor for UMLCollaborationConstrainingElementListModel.
      * @param container
      */
-    public UMLCollaborationConstrainingElementListModel(UMLUserInterfaceContainer container) {
-        super(container, "constrainingElement");
+    public UMLCollaborationConstrainingElementListModel() {
+        super("constrainingElement");
     }
 
     /**

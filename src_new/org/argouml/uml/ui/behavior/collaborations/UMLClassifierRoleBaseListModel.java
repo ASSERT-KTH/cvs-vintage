@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleBaseListModel.java,v 1.4 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLClassifierRoleBaseListModel.java,v 1.5 2002/12/31 09:58:48 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,10 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.uml.ui.UMLModelElementListModel2;
-import org.argouml.uml.ui.UMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * Shows the bases belonging to some classifierrole.
@@ -44,8 +41,8 @@ public class UMLClassifierRoleBaseListModel extends UMLModelElementListModel2 {
      * Constructor for UMLClassifierRoleBaseListModel.
      * @param container
      */
-    public UMLClassifierRoleBaseListModel(UMLUserInterfaceContainer container) {
-        super(container, "base");
+    public UMLClassifierRoleBaseListModel() {
+        super("base");
     }
 
     /**

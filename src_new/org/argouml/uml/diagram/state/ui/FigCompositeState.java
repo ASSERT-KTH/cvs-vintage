@@ -24,7 +24,7 @@
 // File: FigCompositeState.java
 // Classes: FigCompositeState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigCompositeState.java,v 1.7 2002/12/30 12:43:03 kataka Exp $
+// $Id: FigCompositeState.java,v 1.8 2002/12/31 09:58:48 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -35,7 +35,6 @@ import java.beans.PropertyVetoException;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
-import org.argouml.application.api.Notation;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigLine;

@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.7 2002/12/15 10:47:37 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.8 2002/12/31 09:58:49 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -63,7 +63,7 @@ public class PropPanelGuard extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
         addField(Argo.localize("UMLMenu", "label.namespace"),namespaceScroll);
         
-        JList transitionList = new UMLLinkedList(this, new UMLGuardTransitionListModel(this));
+        JList transitionList = new UMLLinkedList(this, new UMLGuardTransitionListModel());
         addField(Argo.localize("UMLMenu", "label.transition"), new JScrollPane(transitionList));
         
         add(LabelledLayout.getSeperator());
