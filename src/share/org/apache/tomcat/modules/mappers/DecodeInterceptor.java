@@ -442,6 +442,10 @@ public class DecodeInterceptor extends  BaseInterceptor  {
             if( pathMB.indexOfIgnoreCase("%5C",start) >= 0 )
                 return false;
         }
+        if (pathMB.indexOf('\0') >= 0)
+        {
+            return false;
+        }
 
         return true;
     }
