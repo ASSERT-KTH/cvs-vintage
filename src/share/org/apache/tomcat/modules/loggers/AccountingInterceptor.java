@@ -83,6 +83,10 @@ public class AccountingInterceptor extends  BaseInterceptor {
     public static final int ACC_IN_OUT=5;
     public static final int ACC_OUT_COUNT=6;
 
+    public static final int COUNTERS_COUNT=10;
+
+    int reqCountNote=0;
+
     
     public AccountingInterceptor() {
     }
@@ -96,6 +100,8 @@ public class AccountingInterceptor extends  BaseInterceptor {
     public void engineInit(ContextManager cm) throws TomcatException {
 	try {
 	    logF=new BufferedOutputStream( new FileOutputStream( trace ));
+	    reqCountNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				      "counters");
 	} catch(IOException ex ) {
 	    ex.printStackTrace();
 	}
@@ -104,21 +110,33 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int requestMap(Request request ) {
 	if( acc ) {
-	    request.getCounters().setCounter( ACC_PRE_RMAP, System.currentTimeMillis() );
+	    Counters ct=(Counters)request.getNote(reqCountNote);
+	    if( ct==null ) {
+		request.setNote( reqCountNote, new Counters(COUNTERS_COUNT));
+	    }
+	    ct.setCounter( ACC_PRE_RMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int contextMap( Request request ) {
 	if( acc ) {
-	    request.getCounters().setCounter( ACC_PRE_CMAP, System.currentTimeMillis() );
+	    Counters ct=(Counters)request.getNote(reqCountNote);
+	    if( ct==null ) {
+		request.setNote( reqCountNote, new Counters(COUNTERS_COUNT));
+	    }
+	    ct.setCounter( ACC_PRE_CMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int authenticate(Request request, Response response) {
 	if( acc  ) {
-	    request.getCounters().setCounter( ACC_POST_MAP, System.currentTimeMillis() );
+	    Counters ct=(Counters)request.getNote(reqCountNote);
+	    if( ct==null ) {
+		request.setNote( reqCountNote, new Counters(COUNTERS_COUNT));
+	    }
+	    ct.setCounter( ACC_POST_MAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -130,7 +148,11 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int preService(Request request, Response response) {
 	if( acc ) {
-	    request.getCounters().setCounter( ACC_PRE_SERVICE, System.currentTimeMillis() );
+	    Counters ct=(Counters)request.getNote(reqCountNote);
+	    if( ct==null ) {
+		request.setNote( reqCountNote, new Counters(COUNTERS_COUNT));
+	    }
+	    ct.setCounter( ACC_PRE_SERVICE, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -150,20 +172,24 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int postService(Request request, Response response) {
 	if( acc  ) {
-	    request.getCounters().setCounter( ACC_POST_SERVICE, System.currentTimeMillis() );
+	    Counters ct=(Counters)request.getNote(reqCountNote);
+	    if( ct==null ) {
+		request.setNote( reqCountNote, new Counters(COUNTERS_COUNT));
+	    }
+	    ct.setCounter( ACC_POST_SERVICE, System.currentTimeMillis() );
 
-	    long t1=request.getCounters().getCounter( ACC_PRE_CMAP );
-	    long t2=request.getCounters().getCounter( ACC_PRE_RMAP );
-	    long t3=request.getCounters().getCounter( ACC_POST_MAP );
-	    long t4=request.getCounters().getCounter( ACC_PRE_SERVICE );
-	    long t5=request.getCounters().getCounter( ACC_POST_SERVICE );
+	    long t1=ct.getCounter( ACC_PRE_CMAP );
+	    long t2=ct.getCounter( ACC_PRE_RMAP );
+	    long t3=ct.getCounter( ACC_POST_MAP );
+	    long t4=ct.getCounter( ACC_PRE_SERVICE );
+	    long t5=ct.getCounter( ACC_POST_SERVICE );
 
 	    long t21=t2-t1;
 	    long t31=t3-t1;
 	    long t54=t5-t4;
 	    long t41=t4-t1;
 
-	    long tout=request.getCounters().getCounter( ACC_OUT_COUNT );
+	    long tout=ct.getCounter( ACC_OUT_COUNT );
 	    StringBuffer sb=new StringBuffer();
 	    // ContextMap, Map, Service, Pre-Service-Overhead
 	    sb.append(t21).append(",");
@@ -171,10 +197,11 @@ public class AccountingInterceptor extends  BaseInterceptor {
 	    sb.append(t54).append(",");
 	    sb.append(tout).append(",");
 	    sb.append(t41).append("\n");
-	    ct++;
+	    ct.recycle();
+	    cnt++;
 	    try {
 		if( logF!=null ) logF.write(sb.toString().getBytes());
-		if( (ct % 64) == 0 ) logF.flush();
+		if( (cnt % 64) == 0 ) logF.flush();
 	    } catch( IOException ex ) {
 		ex.printStackTrace();
 	    }
@@ -184,7 +211,34 @@ public class AccountingInterceptor extends  BaseInterceptor {
 	return 0;
     }
 
-    static int ct=0;
+    static int cnt=0;
     
     
+}
+
+/*
+ */
+final class Counters {
+    long accTable[];
+
+    public Counters( int len ) {
+	accTable=new long[len];
+    }
+    
+
+    public final void touchCounter( int pos ) {
+	accTable[pos]=System.currentTimeMillis();
+    }
+	
+    public final void setCounter( int pos, long value ) {
+	accTable[pos]=value;
+    }
+
+    public final long getCounter( int pos ) {
+	return accTable[pos];
+    }
+
+    public void recycle() {
+	for( int i=0; i<accTable.length; i++ ) accTable[i]=0;
+    }
 }
