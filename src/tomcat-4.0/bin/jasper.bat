@@ -11,7 +11,7 @@ rem       Java runtime options
 rem   JAVA_HOME     
 rem       Must point at your Java Development Kit installation.
 rem
-rem $Id: jasper.bat,v 1.6 2001/05/15 21:38:07 jon Exp $
+rem $Id: jasper.bat,v 1.7 2001/06/07 01:41:25 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem ----- Save Environment Variables That May Change --------------------------
