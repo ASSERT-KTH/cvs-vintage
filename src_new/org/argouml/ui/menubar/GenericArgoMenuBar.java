@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.47 2004/02/12 15:46:17 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.48 2004/02/22 19:52:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -446,16 +446,18 @@ public class GenericArgoMenuBar extends JMenuBar
 	setMnemonic(forwardItem, "Navigate Forward");
         //setAccelerator(forwardItem,altRight);
         _select.addSeparator();
-        JMenuItem selectPrevItem = _select.add(new CmdSelectNext(false));
-        setMnemonic(selectPrevItem, "Select Previous");
+        /* MVW: The following 2 are replaced by the "Navigate Back" and
+           "Navigate Forward". */
+        // JMenuItem selectPrevItem = _select.add(new CmdSelectNext(false));
+        // setMnemonic(selectPrevItem, "Select Previous");
         //tab
-        JMenuItem selectNextItem = _select.add(new CmdSelectNext(true));
-        setMnemonic(selectNextItem, "Select Next");
+        // JMenuItem selectNextItem = _select.add(new CmdSelectNext(true));
+        // setMnemonic(selectNextItem, "Select Next");
         // shift tab
         JMenuItem selectInvert = _select.add(new CmdSelectInvert());
         setMnemonic(selectInvert, "Invert Selection");
 
-        // TODO These are not yet implmeneted - Bob Tarling 12 Oct 2002
+        // TODO These are not yet implemented - Bob Tarling 12 Oct 2002
         // _edit.add(Actions.Undo);
         // editToolbar.add((Actions.Undo));
         // _edit.add(Actions.Redo);
