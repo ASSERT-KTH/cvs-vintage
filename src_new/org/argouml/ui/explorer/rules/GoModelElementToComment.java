@@ -1,4 +1,4 @@
-// $Id: GoModelElementToComment.java,v 1.9 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoModelElementToComment.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoModelElementToComment.java,v 1.9 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoModelElementToComment.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -34,13 +34,18 @@ import org.argouml.model.ModelFacade;
 
 /**
  * Go rule for the package perspective to show the comments belonging to some
- * modelelement.
+ * modelelement. <p>
+ * ModelElement->Comment
+ * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 21, 2003
  */
 public class GoModelElementToComment extends AbstractPerspectiveRule {
 
     
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAModelElement(parent)) {
             return ModelFacade.getComments(parent);
@@ -48,6 +53,9 @@ public class GoModelElementToComment extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
         return Translator.localize ("misc.model-element.comment");
     }

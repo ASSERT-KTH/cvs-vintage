@@ -1,4 +1,4 @@
-// $Id: GoCollaborationInteraction.java,v 1.7 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoClassifierToBehavioralFeature.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,34 +30,40 @@ import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreHelper;
 
 /**
- * Rule for Collaboration->Interaction.
+ * Go rule to navigate from a classifier to the behavioral 
+ * features owned by that classifier.  <p>
+ * Classifier->BehavioralFeature
  *
+ * @since Jul 13, 2004
+ * @author jaap.branderhorst@xs4all.nl
  */
-public class GoCollaborationInteraction extends AbstractPerspectiveRule {
+public class GoClassifierToBehavioralFeature extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("misc.collaboration.interaction");
+	return Translator.localize ("misc.classifier.behavioralfeature");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (!ModelFacade.isACollaboration(parent))
-	    return null;
-	return ModelFacade.getInteractions(parent);
+	if (ModelFacade.isAClassifier(parent)) {	    
+	    return CoreHelper.getHelper().getBehavioralFeatures(parent);
+	}
+	return null;
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isACollaboration(parent)) {
+        if (ModelFacade.isAClassifier(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

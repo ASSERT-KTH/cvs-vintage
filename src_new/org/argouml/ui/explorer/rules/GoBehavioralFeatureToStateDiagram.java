@@ -1,4 +1,4 @@
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.10 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.11 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,11 +44,13 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
  */
 public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         
         if (ModelFacade.isABehavioralFeature(parent)) {
-            Object operation = parent; //MBehavioralFeature
-            Collection col = ModelFacade.getBehaviors(operation);
+            Collection col = ModelFacade.getBehaviors(parent);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
             Vector diagrams = p.getDiagrams();
@@ -76,6 +78,9 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
     }
 
     
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
         return Translator.localize (
                 "misc.behavioral-feature.statechart-diagram");

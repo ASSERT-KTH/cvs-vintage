@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaboration.java,v 1.9 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoOperationToCollaboration.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Operation->Collaboration.
+ * Rule for Operation->Collaboration.<p>
  * Go rule for navigation in the navpane from an operation to the collaboration
  * representing it.
  * @since Oct 1, 2002
@@ -47,6 +47,9 @@ public class GoOperationToCollaboration extends AbstractPerspectiveRule {
         return Translator.localize ("misc.operation.collaboration");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAOperation(parent)) {
             return ModelFacade.getCollaborations(parent);

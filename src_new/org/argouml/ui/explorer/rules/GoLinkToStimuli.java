@@ -1,4 +1,4 @@
-// $Id: GoMachineToState.java,v 1.10 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoLinkToStimuli.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,9 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// $header$
-
+// $Id: GoLinkToStimuli.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -34,39 +32,34 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * PerspectiveRule to navigate from statemachine to
- * its top state.
- * 
- * @author jaap.branderhorst@xs4all.nl
+ * Rule for Link->Stimuli.
+ *
  */
-public class GoMachineToState extends AbstractPerspectiveRule {
+public class GoLinkToStimuli extends AbstractPerspectiveRule {
+    
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
+    public Collection getChildren(Object parent) {
+	if (!ModelFacade.isALink(parent))
+	    return null;
+	return ModelFacade.getStimuli(parent);
+    }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() { 
-        return Translator.localize ("misc.state-machine.state");
-    }
-
-    public Collection getChildren(Object parent) {
-        
-        if (ModelFacade.isAStateMachine(parent)) {
-            if (ModelFacade.getTop(parent) != null) { 
-                return ModelFacade.getSubvertices(ModelFacade.getTop(parent));
-            }
-        }
-        return null;
+    public String getRuleName() {
+        return Translator.localize ("misc.link.stimuli");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAStateMachine(parent)) {
+        if (ModelFacade.isALink(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
-	    if (ModelFacade.getTop(parent) != null)
-		set.add(ModelFacade.getTop(parent));
 	    return set;
 	}
 	return null;

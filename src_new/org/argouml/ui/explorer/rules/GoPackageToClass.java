@@ -1,4 +1,4 @@
-// $Id: GoClassifierToBeh.java,v 1.9 2004/11/01 19:55:07 mvw Exp $
+// $Id: GoPackageToClass.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,36 +25,32 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 
 /**
- * Go rule to navigate from a classifier to the behavioral 
- * features owned by that classifier
- * 
+ * Rule for Package->Class.
  *
- * @since Jul 13, 2004
- * @author jaap.branderhorst@xs4all.nl
  */
-public class GoClassifierToBeh extends AbstractPerspectiveRule {
+public class GoPackageToClass extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() {
-	return Translator.localize ("misc.class.operation");
+    public String getRuleName() { 
+        return Translator.localize ("misc.package.class");
     }
-
+  
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAClassifier(parent)) {	    
-	    return CoreHelper.getHelper().getBehavioralFeatures(parent);
+	if (ModelFacade.isAPackage(parent)) {
+	    return ModelManagementHelper.getHelper()
+                .getAllModelElementsOfKind(parent, (Class) ModelFacade.CLASS);
 	}
 	return null;
     }
@@ -63,11 +59,7 @@ public class GoClassifierToBeh extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAClassifier(parent)) {
-	    Set set = new HashSet();
-	    set.add(parent);
-	    return set;
-	}
+        // Todo: What?
 	return null;
     }
 }

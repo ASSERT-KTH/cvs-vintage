@@ -1,4 +1,4 @@
-// $Id: GoModelToClass.java,v 1.9 2004/11/01 19:55:07 mvw Exp $
+// $Id: GoGeneralizableElementToSpecialized.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,32 +25,33 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 
 /**
- * Rule for Package->Class.
+ * Rule to navigate from a Generalizable element to its children.<p>
+ * Classifier -> Specialized Classifier
  *
  */
-public class GoModelToClass extends AbstractPerspectiveRule {
+public class GoGeneralizableElementToSpecialized 
+    extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() { 
-        return Translator.localize ("misc.package.class");
+    public String getRuleName() {
+	return Translator.localize ("misc.classifier.specialized-classifier");
     }
-  
+
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) {
-	if (ModelFacade.isAPackage(parent)) {
-	    return ModelManagementHelper.getHelper()
-                .getAllModelElementsOfKind(parent, (Class) ModelFacade.CLASS);
+    public Collection getChildren(Object parent) { 
+	if (ModelFacade.isAGeneralizableElement(parent)) {
+	    return ModelFacade.getChildren(parent);
 	}
 	return null;
     }
@@ -59,7 +60,13 @@ public class GoModelToClass extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        // Todo: What?
+        if (ModelFacade.isAGeneralizableElement(parent)) {
+	    Set set = new HashSet();
+	    set.add(parent);
+	    return set;
+	}
 	return null;
     }
-}
+} /* end class GoGenElementToDerived */
+
+

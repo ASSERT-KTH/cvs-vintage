@@ -1,4 +1,4 @@
-// $Id: GoCollaborationDiagram.java,v 1.9 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoCollaborationToInteraction.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,58 +25,43 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
 /**
- * Rule for Collaboration->Diagram.
+ * Rule for Collaboration->Interaction.
  *
  */
-public class GoCollaborationDiagram extends AbstractPerspectiveRule {
+public class GoCollaborationToInteraction extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("misc.collaboration.diagram");
+        return Translator.localize ("misc.collaboration.interaction");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (!ModelFacade.isACollaboration(parent))
-            return null;
-
-        Project p = ProjectManager.getManager().getCurrentProject();
-        if (p == null)
-            return null;
-
-        Vector res = new Vector();
-        Vector diagrams = p.getDiagrams();
-        if (diagrams == null)
-            return null;
-        java.util.Enumeration elems = diagrams.elements();
-        while (elems.hasMoreElements()) {
-            Object d = elems.nextElement();
-            if (d instanceof UMLCollaborationDiagram
-                && ((UMLCollaborationDiagram) d).getNamespace() == parent)
-                res.addElement(d);
-        }
-        return res;
+	if (!ModelFacade.isACollaboration(parent))
+	    return null;
+	return ModelFacade.getInteractions(parent);
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        // TODO: What?
+        if (ModelFacade.isACollaboration(parent)) {
+	    Set set = new HashSet();
+	    set.add(parent);
+	    return set;
+	}
 	return null;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: GoClassifierToStateMachine.java,v 1.10 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoClassifierToStateMachine.java,v 1.11 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,9 @@ public class GoClassifierToStateMachine extends AbstractPerspectiveRule {
 	return Translator.localize ("misc.classifier.statemachine");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAClassifier(parent)) 
 	    return ModelFacade.getBehaviors(parent);

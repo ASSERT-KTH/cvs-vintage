@@ -1,4 +1,4 @@
-// $Id: GoStateToEntry.java,v 1.9 2004/11/12 09:49:24 mkl Exp $
+// $Id: GoStateToEntry.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,16 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for State->Entry.
+ * Rule for navigation from a State to its Entry action.
  * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 25, 2002
  */
 public class GoStateToEntry extends AbstractPerspectiveRule {
     
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAState(parent)
 	        && ModelFacade.getEntry(parent) != null) {
@@ -62,6 +65,9 @@ public class GoStateToEntry extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
         return Translator.localize ("misc.state.entry");
     }

@@ -1,4 +1,4 @@
-// $Id: GoInteractionMessages.java,v 1.7 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoAssocRoleToMessages.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,33 +32,32 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Interaction->Messages.
- * 
+ * The GoRule AssociationRole->Messages.
+ *
  */
-public class GoInteractionMessages extends AbstractPerspectiveRule {
+public class GoAssocRoleToMessages extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() {
-        return Translator.localize("misc.interaction.messages");
+    public String getRuleName() { 
+        return Translator.localize ("misc.association-role.messages");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (ModelFacade.isAInteraction(parent)) {
-            return ModelFacade.getMessages(parent);
-        }
-        return null;
+	if (!ModelFacade.isAAssociationRole(parent))
+	    return null;
+	return ModelFacade.getMessages(parent);
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAInteraction(parent)) {
+        if (ModelFacade.isAAssociationRole(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;

@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.10 2004/11/12 09:49:21 mkl Exp $
+// $Id: GoModelToCollaboration.java,v 1.11 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.model.uml.ModelManagementHelper;
 
 /**
  * Rule for Model->Collaboration.
+ * 
  * @since Oct 1, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -48,11 +49,13 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
         return Translator.localize ("misc.model.collaboration");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAModel(parent)) {
-            Object model = /*(MModel)*/ parent;
             Collection col = ModelManagementHelper.getHelper()
-		.getAllModelElementsOfKind(model,
+		.getAllModelElementsOfKind(parent,
                     (Class) ModelFacade.COLLABORATION);
             List returnList = new ArrayList();
             Iterator it = col.iterator();

@@ -1,4 +1,4 @@
-// $Id: GoSignalToReception.java,v 1.11 2004/11/12 09:49:24 mkl Exp $
+// $Id: GoSignalToReception.java,v 1.12 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,9 @@ public class GoSignalToReception extends AbstractPerspectiveRule {
     	return Translator.localize ("Signal->Reception");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isASignal(parent)) {
 	    return ModelFacade.getReceptions(parent);

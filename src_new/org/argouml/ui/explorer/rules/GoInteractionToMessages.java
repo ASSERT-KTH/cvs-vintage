@@ -1,4 +1,4 @@
-// $Id: GoGenElementToDerived.java,v 1.7 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoInteractionToMessages.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,39 +32,37 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
- * Rule for Class->Subclass.
- *
+ * Rule for Interaction->Messages.
+ * 
  */
-public class GoGenElementToDerived extends AbstractPerspectiveRule {
+public class GoInteractionToMessages extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-	return Translator.localize ("misc.class.subclass");
+        return Translator.localize("misc.interaction.messages");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) { 
-	if (ModelFacade.isAGeneralizableElement(parent)) {
-	    return ModelFacade.getChildren(parent);
-	}
-	return null;
+    public Collection getChildren(Object parent) {
+        if (ModelFacade.isAInteraction(parent)) {
+            return ModelFacade.getMessages(parent);
+        }
+        return null;
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
      */
     public Set getDependencies(Object parent) {
-        if (ModelFacade.isAGeneralizableElement(parent)) {
+        if (ModelFacade.isAInteraction(parent)) {
 	    Set set = new HashSet();
 	    set.add(parent);
 	    return set;
 	}
 	return null;
     }
-} /* end class GoGenElementToDerived */
-
-
+}
