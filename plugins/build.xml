@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="Columba plugins" default="all">
+
+	<target name="clean" description="Removes all plugin releases.">
+		<delete>
+			<fileset dir="." includes="org*.zip"/>
+		</delete>
+	</target>
+	
+	<target name="mail" description="Builds all mail plugins">
+		<ant target="release" inheritall="false" dir="./org.columba.mail.BounceAction"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.EudoraMailImportFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.MozillaMailImportFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.PlaySoundFilterAction"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/>
+	</target>
+	
+	<target name="core" description="Builds all core plugins">
+		<ant target="release" inheritall="false" dir="./org.columba.core.KunststoffLookAndFeel"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.MetouiaLookAndFeel"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.PythonInterpreter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.ThinColumbaLookAndFeel"/>
+	</target>
+	
+	<target name="examples" description="Builds all example plugins">
+		<ant target="release" inheritall="false" dir="./org.columba.example.AddHeaderPOP3PreprocessingFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.ConfigExample"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.CSVAddressbookImportFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.HelloWorldAction"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.MBOXMailImportFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.PythonHelloWorldAction"/>
+		<ant target="release" inheritall="false" dir="./org.columba.example.PythonHelloWorldFilterAction"/>
+	</target>
+	
+	<target name="all" depends="core,mail,examples"/>
+</project>
