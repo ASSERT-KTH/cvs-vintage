@@ -30,7 +30,7 @@ public class FrameView extends JFrame implements WindowListener {
 		this.setIconImage(
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
 
-		setTitle("Columba v" + org.columba.core.main.MainInterface.version);
+		setTitle("Columba - version: " + org.columba.core.main.MainInterface.version);
 
 		JPanel panel = (JPanel) this.getContentPane();
 		panel.setLayout(new BorderLayout());

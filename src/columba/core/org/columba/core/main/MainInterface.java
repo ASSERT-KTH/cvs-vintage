@@ -14,6 +14,8 @@
 
 package org.columba.core.main;
 
+import java.util.Date;
+
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.columba.addressbook.main.AddressbookInterface;
@@ -28,50 +30,30 @@ import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
-	public static String version = "0.9.11";
+	/**
+	 * 
+	 * uncomment this line for release versions
+	 * - date is only used for development snapshots
+	 * 
+	 */
+	//public static String version = "0.11.0";
+	public static String version = new Date().toString();
+	
 	public static Boolean DEBUG = Boolean.FALSE;
 
 	public static Config config;
-	//public static TableController headerTableViewer;
-	//public static AttachmentController attachmentViewer;
-	//public static MessageController messageViewer;
-	//public static TreeController treeController;
-	//public static FrameView mainFrame;
+	
 	public static POP3ServerCollection popServerCollection;
-	//public static Locale currentLocale;
-	//public static GlobalActionCollection globalActionCollection;
-	// public static DefaultCTheme columbaTheme;
-	//public static FolderInfoPanel folderInfoPanel;
-
-	//public static FocusManager focusManager;
 	
 	public static TreeModel treeModel;
 	public static MailFrameModel frameModel;
 	
-	//public static MailFrameController frameController;
-	
-	
-
-	//public static ResourceBundle guiLabels, headerLabels;
-	//public static GlobalResourceLoader parentResourceLoader;
-	//public static String mainFontName;
-	//public static int mainFontSize;
-	//public static String textFontName;
-	//public static int textFontSize;
-
-	/*
-	public static HeaderTableItem headerTableItem;
-	public static WindowItem mainFrameWindowItem;
-	public static WindowItem composerWindowItem;
-	public static ThemeItem themeItem;
-	*/
 	public static MetalLookAndFeel lookAndFeel;
 
 	public static DefaultProcessor processor;
 
 	public static PGPController pgpController;
 
-	//public static ImageSequenceTimer imageSequenceTimer;
 
 	public static AddressbookInterface addressbookInterface;
 
