@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import java.awt.Font;
@@ -28,43 +29,36 @@ import javax.swing.text.html.StyleSheet;
 
 /**
  * Customized HTML JTextPane.
- * 
- * @author fdietz 
+ *
+ * @author fdietz
  */
 public class InfoViewTextPane extends JTextPane {
-
-	/**
-	 *  
-	 */
-	public InfoViewTextPane() {
-		super();
-
-		HTMLEditorKit editorKit = new HTMLEditorKit();
-		StyleSheet styles = new StyleSheet();
-
-		Font font = UIManager.getFont("Label.font");
-		String name = font.getName();
-		int size = font.getSize();
-		String css = "<style type=\"text/css\"><!--p {font-family:\"" + name
-				+ "\"; font-size:\"" + size + "pt\"}--></style>";
-		styles.addRule(css);
-		editorKit.setStyleSheet(styles);
-
-		setEditorKit(editorKit);
-	}
-
-	/**
-	 * @param url
-	 */
-	public InfoViewTextPane(URL url) {
-		this();
-
-		try {
-			setPage(url);
-		} catch (IOException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
-		}
-	}
-
+    
+    /**
+     *
+     */
+    public InfoViewTextPane() {
+        super();
+        
+        HTMLEditorKit editorKit = new HTMLEditorKit();
+        StyleSheet styles = new StyleSheet();
+        
+        Font font = UIManager.getFont("Label.font");
+        String name = font.getName();
+        int size = font.getSize();
+        String css = "<style type=\"text/css\"><!--p {font-family:\"" + name
+            + "\"; font-size:\"" + size + "pt\"}--></style>";
+        styles.addRule(css);
+        editorKit.setStyleSheet(styles);
+        
+        setEditorKit(editorKit);
+    }
+    
+    /**
+     * @param url
+     */
+    public InfoViewTextPane(URL url) throws IOException {
+        this();
+        setPage(url);
+    }
 }
