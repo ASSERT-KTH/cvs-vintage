@@ -41,6 +41,7 @@
       <option value="$option.OptionId">$option.DisplayValue</option>
     #end
   #end
+</select>
 #end
 
 #macro ( dependTypeLeafSelect $childIssue $type)
