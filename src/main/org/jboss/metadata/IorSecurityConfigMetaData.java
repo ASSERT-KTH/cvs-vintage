@@ -6,6 +6,8 @@
  */
 package org.jboss.metadata;
 
+import java.io.Serializable;
+
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
 
@@ -14,10 +16,14 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  */
 public class IorSecurityConfigMetaData
+   implements Serializable
 {
+   /** @since 1.7 */
+   private static final long serialVersionUID = -3341898910508715334L;
+
    /**
     * The root element for security between the end points.
     * Optional element.
