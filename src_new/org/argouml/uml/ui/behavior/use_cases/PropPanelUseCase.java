@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.16 2002/09/09 22:16:12 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.17 2002/09/15 06:55:27 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -368,8 +368,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
     }
     
     /**
-	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
-	 */
+     * @see org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper#getAllUseCases()
+     */
 	protected Vector getGeneralizationChoices() {
 		Vector choices = new Vector();
 		choices.addAll(UseCasesHelper.getHelper().getAllUseCases());

@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.10 2002/09/08 09:00:21 d00mst Exp $
+// $Id: FigPackage.java,v 1.11 2002/09/15 06:55:26 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -499,7 +499,7 @@ public class FigPackage extends FigNodeModelElement {
 
     /** 
      * <p>Sets the bounds, but the size will be at least the one returned by
-     *   {@link #getMinimunSize()}.</p> 
+     *   {@link #getMinimumSize()}.</p> 
      *
      * <p>If the required height is bigger, then the additional height is
      *   equally distributed among all figs (i.e. compartments), such that the

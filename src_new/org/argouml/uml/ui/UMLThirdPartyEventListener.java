@@ -25,7 +25,7 @@
 // File: UMLThirdPartyListener.java
 // Classes: UMLThirdPartyListener
 // Original Author: mail@jeremybennett.com
-// $Id: UMLThirdPartyEventListener.java,v 1.2 2002/05/03 19:25:56 jeremybennett Exp $
+// $Id: UMLThirdPartyEventListener.java,v 1.3 2002/09/15 06:55:26 linus Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created as a generic
 // replacement for the (non-functioning) UMLNameEventListener.
@@ -48,7 +48,8 @@ import ru.novosoft.uml.model_management.*;
  *
  * <p>The class is created by the setThirdPartyEventListener() method within
  *   some {@link PropPanel} and then is passed as an argument
- *   to {@link SwingUtilities#invokeLater()} to be run on the user interface
+ *   to {@link SwingUtilities#invokeLater(Runnable)} 
+ *   to be run on the user interface
  *   thread.</p>
  *
  * @author  Jeremy Bennett (mail@jeremybennett.com), 23 Apr 2002.

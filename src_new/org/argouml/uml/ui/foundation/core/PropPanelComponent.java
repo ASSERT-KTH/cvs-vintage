@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.12 2002/09/08 20:44:29 kataka Exp $
+// $Id: PropPanelComponent.java,v 1.13 2002/09/15 06:55:27 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -94,9 +94,9 @@ public class PropPanelComponent extends PropPanelClassifier {
     }
 
 
-	/**
-	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
-	 */
+    /**
+     * @see org.argouml.model.uml.foundation.core.CoreHelper#getAllComponents()
+     */
 	protected Vector getGeneralizationChoices() {
 		Vector choices = new Vector();
 		choices.addAll(CoreHelper.getHelper().getAllComponents());

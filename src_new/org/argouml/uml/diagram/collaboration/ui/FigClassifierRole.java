@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.9 2002/09/03 15:03:12 kataka Exp $
+// $Id: FigClassifierRole.java,v 1.10 2002/09/15 06:55:26 linus Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -176,7 +176,7 @@ public class FigClassifierRole extends FigNodeModelElement {
      * <p>Variant constructor that associates the classifier role with a
      *   particular NSUML object.</p>
      *
-     * <p>Classifier role is constructed with {@link FigClassifierRole()}.</p>
+     * <p>Classifier role is constructed with {@link #FigClassifierRole()}.</p>
      *
      * @param gm    The graph model to use. Ignored in this implementation.
      *

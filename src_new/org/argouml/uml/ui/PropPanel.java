@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.29 2002/09/07 22:39:41 bobtarling Exp $
+// $Id: PropPanel.java,v 1.30 2002/09/15 06:55:26 linus Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -592,7 +592,7 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
      *   changes or removals on any object that on the same event queue as the
      *   target that is assignable to one of the metaclasses.</p>
      *
-     * <p>Reworked to use {@link #AddThirdPartyEventListening(Object[])}, so
+     * <p>Reworked to use {@link #addThirdPartyEventListening(Object[])}, so
      *   removing the need for NSUML promiscuous listeners.</p>
      *
      * <p><em>Note</em>. Despite the name, the old implementation tried to

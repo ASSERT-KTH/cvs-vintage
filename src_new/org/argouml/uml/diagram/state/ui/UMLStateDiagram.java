@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.14 2002/09/10 15:21:55 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.15 2002/09/15 06:55:26 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -144,12 +144,10 @@ public class UMLStateDiagram extends UMLDiagram {
 
     /** method to perform a number of important initializations of a StateDiagram. 
      * 
-     * @see      each diagram type has a similar <I>UMLxxxDiagram</I> class.
+     * each diagram type has a similar <I>UMLxxxDiagram</I> class.
      *
      * @param m  MClass from the model in NSUML...connects the class to the State diagram.
-     *
      * @param sm MStateMachine from the model in NSUML...
-     *
      * @modified changed <I>lay</I> from <I>LayerPerspective</I> to <I>LayerPerspectiveMutable</I>. 
      *           This class is a child of <I>LayerPerspective</I> and was implemented 
      *           to correct some difficulties in changing the model. <I>lay</I> is used 

@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.33 2002/09/13 08:13:00 kataka Exp $
+// $Id: FigClass.java,v 1.34 2002/09/15 06:55:26 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -865,7 +865,7 @@ public class FigClass extends FigNodeModelElement {
 
   /**
    * <p>Sets the bounds, but the size will be at least the one returned by
-   *   {@link #getMinimunSize()}, unless checking of size is disabled.</p>
+   *   {@link #getMinimumSize()}, unless checking of size is disabled.</p>
    *
    * <p>If the required height is bigger, then the additional height is
    *   equally distributed among all figs (i.e. compartments), such that the

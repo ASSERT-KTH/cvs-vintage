@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.15 2002/09/09 21:59:23 kataka Exp $
+// $Id: PropPanelActor.java,v 1.16 2002/09/15 06:55:27 linus Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -215,9 +215,9 @@ public class PropPanelActor extends PropPanelClassifier {
     }
 
 
-	/**
-	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
-	 */
+    /**
+     * @see org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper#getAllActors()
+     */
 	protected Vector getGeneralizationChoices() {
 		Vector choices = new Vector();
 		choices.addAll(UseCasesHelper.getHelper().getAllActors());

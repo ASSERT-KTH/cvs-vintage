@@ -24,7 +24,7 @@
 // File: UMLModelElementComboBoxEntry.java
 // Classes: UMLModelElementComboBoxEntry
 // Original Author: mail@jeremybennett.com
-// $Id: UMLModelElementComboBoxEntry.java,v 1.1 2002/05/03 19:17:05 jeremybennett Exp $
+// $Id: UMLModelElementComboBoxEntry.java,v 1.2 2002/09/15 06:55:26 linus Exp $
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // UMLModelElementComboBoxModel.
@@ -173,7 +173,7 @@ public class UMLModelElementComboBoxEntry implements Comparable {
      *
      * <p>Implemented using the {@link #compare(Object,Object)} method.</p>
      *
-     * <p>Provided to comply with the {@link Comparator} interface.</p>
+     * <p>Provided to comply with the {@link Comparable} interface.</p>
      *
      * @param other  The other entry against which we are comparing.
      *
