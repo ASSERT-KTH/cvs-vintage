@@ -30,7 +30,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>&nbsp;</th>
+<th>&#160;</th>
 <th>Attribute name</th>
 <th>Description</th>
 <th>Input type</th>

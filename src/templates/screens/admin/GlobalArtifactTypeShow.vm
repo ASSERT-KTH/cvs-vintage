@@ -20,7 +20,7 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>&nbsp;</th>
+<th>&#160;</th>
 <th>Issue Type Name</th>
 <th>Description</th>
 </tr>
