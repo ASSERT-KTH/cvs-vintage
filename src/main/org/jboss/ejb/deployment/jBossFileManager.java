@@ -25,31 +25,37 @@ import com.dreambean.ejx.Util;
 import com.dreambean.ejx.FileManager;
 import com.dreambean.ejx.FileManagerFactory;
 
+import org.jboss.metadata.*;
+import org.jboss.metadata.aggregate.*;
+import org.jboss.metadata.ejbjar.EJBXMLReader;
+
 /**
- *   <description> 
- *      
+ *   <description>
+ *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
    implements FileManager
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    XMLManager xm;
    File file;
    Component comp;
-   
+
    jBossEjbJar ejbJar;
-   
+
    jBossFileManagerFactory fact;
-   
+
    ClassLoader cl;
-    
+
+   ServerMetaData metaData;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -57,39 +63,43 @@ public class jBossFileManager
    {
       fact = f;
    }
-   
+
    // Public --------------------------------------------------------
    public jBossEjbJar getEjbJar()
    {
       return ejbJar;
    }
 
+    public ServerMetaData getMetaData() {
+        return metaData;
+    }
+
 	/*
 	* load(URL file)
 	*
 	* This method creates the jBossEjbJar that encapsulates the MetaData for the container
-	* if no proper jboss.xml and jaws.xml are found the system ones are used 
+	* if no proper jboss.xml and jaws.xml are found the system ones are used
 	*
 	*/
    public jBossEjbJar load(URL file)
       throws Exception
    {
-         
+
       // Create classloader
       {
          URL fileUrl = file;
          if (fileUrl.toString().endsWith("ejb-jar.xml")) {
-			 
+
 			// fileURL points to the top of the directory of the beans
             fileUrl = new File(fileUrl.getFile()).getParentFile().getParentFile().toURL();
-	  	 }  
-		 
+	  	 }
+
 		 // The classLoader has visibility on all the classes in this directory
          cl = new URLClassLoader(new URL[] { fileUrl }, Thread.currentThread().getContextClassLoader());
       }
-         
+
       Document doc;
-      
+
       ejbJar = new jBossEjbJar();
       add(ejbJar);
 
@@ -101,18 +111,25 @@ public class jBossFileManager
          doc = xm.load(in);
          in.close();
          ejbJar.importXml(doc.getDocumentElement());
-         
+
+         in = new BufferedReader(new InputStreamReader(file.openStream()));
+         EJBXMLReader xml = new EJBXMLReader();
+         xml.setClassLoader(cl);
+         ServerMetaData ejbContainer = xml.readXML(in);
+         in.close();
+         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
+
          // Load jBoss XML
          try
          {
             in = new BufferedReader(new InputStreamReader(new URL(file, "jboss.xml").openStream()));
-            
+
             doc = xm.load(in);
             in.close();
             ejbJar.importXml(doc.getDocumentElement());
          } catch (IOException e)
          {
-            // Couldn't find jboss.xml.. that's ok!            
+            // Couldn't find jboss.xml.. that's ok!
 			// Load default jBoss XML
             InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
             if (jbossXml == null)
@@ -123,12 +140,12 @@ public class jBossFileManager
 			in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();
-            
+
             ejbJar.importXml(doc.getDocumentElement());
-            
+
             return ejbJar;
          }
-         
+
       } else if (file.getFile().endsWith(".jar")) // JAR file
       {
          // Load EJB-JAR XML
@@ -141,8 +158,18 @@ public class jBossFileManager
          Reader in = new BufferedReader(new InputStreamReader(ejbXml));
          doc = xm.load(in);
          in.close();
-         
+
          ejbJar.importXml(doc.getDocumentElement());
+
+
+         ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
+         in = new BufferedReader(new InputStreamReader(ejbXml));
+         EJBXMLReader xml = new EJBXMLReader();
+         xml.setClassLoader(cl);
+         ServerMetaData ejbContainer = xml.readXML(in);
+         in.close();
+         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
+
 
          // Load jBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");
@@ -159,14 +186,14 @@ public class jBossFileManager
             in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();
-            
+
             ejbJar.importXml(doc.getDocumentElement());
             return ejbJar;
          }
          in = new BufferedReader(new InputStreamReader(jbossXml));
          doc = xm.load(in);
          in.close();
-         
+
          ejbJar.importXml(doc.getDocumentElement());
       } else
       {
@@ -176,7 +203,15 @@ public class jBossFileManager
          doc = xm.load(in);
          ejbXml.close();
          ejbJar.importXml(doc.getDocumentElement());
-         
+
+         ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
+         in = new BufferedReader(new InputStreamReader(ejbXml));
+         EJBXMLReader xml = new EJBXMLReader();
+         xml.setClassLoader(cl);
+         ServerMetaData ejbContainer = xml.readXML(in);
+         in.close();
+         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
+
          // Load jBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");
          if (jbossXml == null)
@@ -189,34 +224,34 @@ public class jBossFileManager
                // No default found
                return ejbJar;
             }
-			
+
             in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();
- 
+
             ejbJar.importXml(doc.getDocumentElement());
             return ejbJar;
          }
          in = new BufferedReader(new InputStreamReader(jbossXml));
          doc = xm.load(in);
          in.close();
-         
+
          ejbJar.importXml(doc.getDocumentElement());
       }
-      
+
       return ejbJar;
    }
-   
+
    // FileManager implementation ------------------------------------
    public boolean isChanged()
    {
       return true;
    }
-   
+
    public void createNew()
    {
       ejbJar = new jBossEjbJar();
-		
+
       // Load default jBoss XML
       InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
       if (jbossXml == null)
@@ -224,27 +259,27 @@ public class jBossFileManager
          // No default found
          return;
       }
-		
+
 		try
 		{
 			Reader in = new BufferedReader(new InputStreamReader(jbossXml));
 			Document doc = xm.load(in);
 			in.close();
-			
+
 			ejbJar.importXml(doc.getDocumentElement());
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		
+
       add(ejbJar);
    }
-   
+
    public void load(File file)
       throws Exception
    {
       setFile(file);
-      
+
       // Copy to prevent locking by load if we want to save later on
       if (file.toString().endsWith(".jar"))
       {
@@ -259,10 +294,10 @@ public class jBossFileManager
          fout.close();
          file = tmp;
       }
-      
+
       load(file.toURL());
    }
-   
+
    public void save(File f)
       throws Exception
    {
@@ -282,14 +317,14 @@ public class jBossFileManager
             xm.save(doc,w);
             w.close();
             byte[] arr = out.toByteArray();
-            
+
             Util.insertFileIntoZip(f, "META-INF/jboss.xml", arr);
          } else
          {
             ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(f));
-            
+
             zipOut.putNextEntry(new ZipEntry("META-INF/jboss.xml"));
-            
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Writer w = new OutputStreamWriter(out);
             xm.save(doc,w);
@@ -299,7 +334,7 @@ public class jBossFileManager
             zipOut.closeEntry();
             zipOut.close();
          }
-         
+
          setFile(f);
       }
       else if (f.toString().endsWith(".xml"))
@@ -307,7 +342,7 @@ public class jBossFileManager
          FileWriter out = new FileWriter(new File(f.getParentFile(),"jboss.xml"));
          xm.save(doc,out);
          out.close();
-         
+
          setFile(f);
       } else
       {
@@ -322,9 +357,9 @@ public class jBossFileManager
             JOptionPane.showMessageDialog(null, "Unknown filetype. File has not been saved!", "Save", JOptionPane.ERROR_MESSAGE);
          }
       }
-      
+
    }
-   
+
    public File getFile()
    {
       return file;
@@ -336,9 +371,9 @@ public class jBossFileManager
       file = f;
       firePropertyChange("File",old,file);
    }
-   
+
    public FileManagerFactory getFactory() { return fact; }
-   
+
    public Component getComponent()
    {
       if (comp == null)
@@ -347,14 +382,14 @@ public class jBossFileManager
       }
       return comp;
    }
-   
+
    public ClassLoader getClassLoader()
    {
       return cl;
    }
 
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
    protected void initializeBeanContextResources()
    {
@@ -366,7 +401,7 @@ public class jBossFileManager
          e.printStackTrace();
       }
    }
-   
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------

@@ -44,6 +44,7 @@ import org.jboss.ejb.deployment.ResourceManager;
 import org.jboss.ejb.deployment.JDBCResource;
 import org.jboss.ejb.deployment.URLResource;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.BeanMetaData;
 
 import org.jnp.interfaces.Naming;
 import org.jnp.interfaces.java.javaURLContextFactory;
@@ -63,113 +64,123 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public abstract class Container
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-    
+
     // This is the application that this container is a part of
    protected Application application;
-    
+
     // This is the classloader of this container. All classes and resources that
     // the bean uses will be loaded from here. By doing this we make the bean re-deployable
    protected ClassLoader classLoader;
-    
+
     // This is the jBoss-specific metadata. Note that it extends the generic EJB 1.1 class from EJX
    protected jBossEnterpriseBean metaData;
-       
+
     // This is the Home interface class
    protected Class homeInterface;
-    
+
    // This is the Remote interface class
    protected Class remoteInterface;
-    
+
    // This is the EnterpriseBean class
    protected Class beanClass;
-   
+
    // This is the TransactionManager
    protected TransactionManager tm;
-    
+
+   // This is the new MetaData construct
+   protected BeanMetaData newMetaData;
+
    // Public --------------------------------------------------------
-    
+
     public void setTransactionManager(TransactionManager tm)
     {
         this.tm = tm;
     }
-    
+
     public TransactionManager getTransactionManager()
     {
         return tm;
     }
-    
-   public void setApplication(Application app) 
-   { 
+
+   public void setApplication(Application app)
+   {
         if (app == null)
             throw new IllegalArgumentException("Null application");
-            
-      application = app; 
+
+      application = app;
    }
-   
-   public Application getApplication() 
-   { 
-      return application; 
+
+   public Application getApplication()
+   {
+      return application;
    }
-   
-   public void setClassLoader(ClassLoader cl) 
-   { 
-      this.classLoader = cl; 
+
+   public void setClassLoader(ClassLoader cl)
+   {
+      this.classLoader = cl;
    }
-   
-   public ClassLoader getClassLoader() 
-    { 
-        return classLoader; 
+
+   public ClassLoader getClassLoader()
+    {
+        return classLoader;
     }
-    
-   public void setMetaData(jBossEnterpriseBean metaData) 
-   { 
-      this.metaData = metaData; 
+
+   public void setMetaData(jBossEnterpriseBean metaData)
+   {
+      this.metaData = metaData;
    }
-   
-   public jBossEnterpriseBean getMetaData() 
-    { 
-        return metaData; 
-    }       
-                
+
+   public jBossEnterpriseBean getMetaData()
+    {
+        return metaData;
+    }
+
+    public void setBeanMetaData(BeanMetaData metaData) {
+        newMetaData = metaData;
+    }
+    public BeanMetaData getBeanMetaData() {
+        return newMetaData;
+    }
+
     public Class getBeanClass()
     {
        return beanClass;
     }
     /**
-     * The ContainerFactory calls this method.  The ContainerFactory has set all the 
+     * The ContainerFactory calls this method.  The ContainerFactory has set all the
      * plugins and interceptors that this bean requires and now proceeds to initialize
      * the chain.  The method looks for the standard classes in the URL, sets up
      * the naming environment of the bean.
      *
-     * @exception   Exception  
+     * @exception   Exception
      */
    public void init()
       throws Exception
    {
         // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
-      
+
         // Setup "java:" namespace
-      setupEnvironment();           
+      setupEnvironment();
    }
-   
+
    public void start()
       throws Exception
    {
    }
-   
-   public void stop() 
+
+   public void stop()
    {
    }
-   
-   public void destroy() 
+
+   public void destroy()
    {
    }
 
@@ -180,7 +191,7 @@ public abstract class Container
      *
      * @param   mi  the object holding all info about this invocation
      * @return     the result of the home invocation
-     * @exception   Exception  
+     * @exception   Exception
      */
    public abstract Object invokeHome(MethodInvocation mi)
       throws Exception;
@@ -194,25 +205,25 @@ public abstract class Container
      * @param   method  the method being invoked
      * @param   args  the parameters
      * @return     the result of the invocation
-     * @exception   Exception  
+     * @exception   Exception
      */
    public abstract Object invoke(MethodInvocation mi)
       throws Exception;
-      
+
    // Protected -----------------------------------------------------
-   
+
    abstract Interceptor createContainerInterceptor();
-   
+
    // Private -------------------------------------------------------
-   
+
    /*
    * setupEnvironment
    *
    * This method sets up the naming environment of the bean.
    * it sets the root it creates for the naming in the "BeanClassLoader"
-   * that loader shares the root for all instances of the bean and 
+   * that loader shares the root for all instances of the bean and
    * is part of the "static" metaData of the bean.
-   * We create the java: namespace with properties, EJB-References, and 
+   * We create the java: namespace with properties, EJB-References, and
    * DataSource ressources.
    *
    */
@@ -223,15 +234,15 @@ public abstract class Container
         {
             // Create a new java: namespace root
           NamingServer root = new NamingServer();
-            
+
             // Associate this root with the classloader of the bean
           ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
-            
+
           // Since the BCL is already associated with this thread we can start using the java: namespace directly
           Context ctx = (Context) new InitialContext().lookup("java:/");
           ctx.createSubcontext("comp");
           ctx = ctx.createSubcontext("comp/env");
-          
+
           // Bind environment properties
           {
              Iterator enum = getMetaData().getEnvironmentEntries();
@@ -267,18 +278,18 @@ public abstract class Container
                 }
              }
           }
-          
+
           // Bind EJB references
           {
              Iterator enum = getMetaData().getEjbReferences();
              while(enum.hasNext())
              {
-                 
+
                 jBossEjbReference ref = (jBossEjbReference)enum.next();
                 System.out.println("Binding an EJBReference "+ref);
-                
+
                 Name n = ctx.getNameParser("").parse(ref.getLink());
-                
+
                 if (!ref.getJndiName().equals(""))
                 {
                    // External link
@@ -289,26 +300,26 @@ public abstract class Container
                 {
                    // Internal link
                    Logger.debug("Bind "+ref.getName() +" to "+ref.getLink());
-                        
+
                         final Container con = getApplication().getContainer(ref.getLink());
-                        
-                        // Use Reference to link to ensure lazyloading. 
+
+                        // Use Reference to link to ensure lazyloading.
                         // Otherwise we might try to get EJBHome from not yet initialized container
                         // will would result in nullpointer exception
                         RefAddr refAddr = new RefAddr("EJB")
                         {
-                            public Object getContent() 
+                            public Object getContent()
                             {
                                  return con;
                             }
                         };
                         Reference reference = new Reference("javax.ejb.EJBObject",refAddr, new EjbReferenceFactory().getClass().getName(), null);
-                        
+
                         bind(ctx, ref.getName(), reference);
                 }
              }
           }
-          
+
           // Bind resource references
           {
              Iterator enum = getMetaData().getResourceReferences();
@@ -316,9 +327,9 @@ public abstract class Container
              while(enum.hasNext())
              {
                 jBossResourceReference ref = (jBossResourceReference)enum.next();
-                
+
                 ResourceManager rm = rms.getResourceManager(ref.getResourceName());
-                
+
                     if (rm == null)
                     {
                         // Try to locate defaults
@@ -347,9 +358,9 @@ public abstract class Container
                                     Logger.debug(e);
                                 }
                             }
-                        
+
                         }
-                        
+
                         // Default failed? Warn user and move on
                         // POTENTIALLY DANGEROUS: should this be a critical error?
                         if (rm == null)
@@ -358,15 +369,15 @@ public abstract class Container
                             continue;
                         }
                     }
-                        
+
                 if (rm.getType().equals("javax.sql.DataSource"))
                 {
-                   // Datasource bindings   
+                   // Datasource bindings
                    JDBCResource res = (JDBCResource)rm;
                    bind(ctx, ref.getName(), new LinkRef(res.getJndiName()));
                 } else if (rm.getType().equals("java.net.URL"))
                 {
-                   // URL bindings  
+                   // URL bindings
                    try
                    {
                       URLResource res = (URLResource)rm;
@@ -385,16 +396,16 @@ public abstract class Container
             throw new DeploymentException("Could not set up environment", e);
         }
    }
-   
-    
+
+
 
     /**
      *  Bind a value to a name in a JNDI-context, and create any missing subcontexts
      *
-     * @param   ctx  
-     * @param   name  
-     * @param   val  
-     * @exception   NamingException  
+     * @param   ctx
+     * @param   name
+     * @param   val
+     * @exception   NamingException
      */
    private void bind(Context ctx, String name, Object val)
       throws NamingException
@@ -413,10 +424,10 @@ public abstract class Container
          }
          n = n.getSuffix(1);
       }
-      
+
       ctx.bind(n.get(0), val);
    }
-    
+
     public static class EjbReferenceFactory
     implements ObjectFactory
     {
