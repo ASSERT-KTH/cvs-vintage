@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.7 2001/04/07 08:36:34 marcus Exp $
+ * $Id: java.g,v 1.8 2001/04/10 21:17:54 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -1175,7 +1175,7 @@ WS	:	(	' '
 // Single-line comments
 SL_COMMENT
 	:	"//"
-		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
+		(~('\n'|'\r'))* ('\n' | '\r'('\n')?)?
 		{$setType(Token.SKIP); newline();}
 	;
 
