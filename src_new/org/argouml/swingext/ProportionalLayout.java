@@ -1,4 +1,4 @@
-// $Id: ProportionalLayout.java,v 1.7 2004/08/19 19:27:20 mvw Exp $
+// $Id: ProportionalLayout.java,v 1.8 2004/08/20 15:59:58 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import java.util.*;
 
 public class ProportionalLayout extends LineLayout {
 
-    protected Hashtable componentTable;
+    private Hashtable componentTable;
 
     /**
      * The constructor.
@@ -96,7 +96,7 @@ public class ProportionalLayout extends LineLayout {
         double totalProportionalLength = 0;
         int totalLength;
 
-        totalLength = orientation.getLengthMinusInsets(parent);
+        totalLength = getMyOrientation().getLengthMinusInsets(parent);
 
         Enumeration enumKeys = componentTable.keys();
         while (enumKeys.hasMoreElements()) {
@@ -107,7 +107,7 @@ public class ProportionalLayout extends LineLayout {
                     totalProportionalLength += Double.parseDouble(size);
                 }
                 else {
-                    totalLength -= orientation.getLength(comp);
+                    totalLength -= getMyOrientation().getLength(comp);
                 }
             }
         }
@@ -128,12 +128,20 @@ public class ProportionalLayout extends LineLayout {
                     if (length < 0) length = 0;
                 }
                 else {
-                    length = orientation.getLength(comp);
+                    length = getMyOrientation().getLength(comp);
                 }
-                comp.setSize(orientation.setLength(parent.getSize(), length));
+                comp.setSize(getMyOrientation().setLength(parent.getSize(), 
+                        length));
                 comp.setLocation(loc);
-                loc = orientation.addToPosition(loc, length);
+                loc = getMyOrientation().addToPosition(loc, length);
             }
         }
+    }
+
+    /**
+     * @return Returns the componentTable.
+     */
+    protected Hashtable getComponentTable() {
+        return componentTable;
     }
 }

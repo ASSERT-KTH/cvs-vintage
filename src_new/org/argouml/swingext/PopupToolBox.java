@@ -1,4 +1,4 @@
-// $Id: PopupToolBox.java,v 1.2 2003/06/29 23:47:54 linus Exp $
+// $Id: PopupToolBox.java,v 1.3 2004/08/20 15:59:59 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,23 +42,34 @@ import javax.swing.JButton;
  */
 public class PopupToolBox extends Toolbox {
 
-    ArrayList _actions = new ArrayList();
-    MouseListener _mouseListener;
+    private ArrayList actions = new ArrayList();
+    private MouseListener mouseListener;
 
-    /** Creates a new instance of PopupToolBox */
+    /** 
+     * Creates a new instance of PopupToolBox.
+     * 
+     * @param rows the number of rows
+     * @param cols the number of columns
+     */
     public PopupToolBox(int rows, int cols) {
         super(rows, cols);
     }
 
+    /**
+     * @see javax.swing.JToolBar#add(javax.swing.Action)
+     */
     public JButton add(Action action) {
         JButton button = super.add(action);
-        _actions.add(action);
+        actions.add(action);
         
         return button;
     }
 
-    public void setButtonMouseListener(MouseListener mouseListener) {
-        _mouseListener = mouseListener;
+    /**
+     * @param theMouseListener the new mouse listener
+     */
+    public void setButtonMouseListener(MouseListener theMouseListener) {
+        mouseListener = theMouseListener;
     }
 
     /**
@@ -68,12 +79,12 @@ public class PopupToolBox extends Toolbox {
      */
     public void rebuild() {
         super.removeAll();
-        Iterator it = _actions.iterator();
+        Iterator it = actions.iterator();
         while (it.hasNext()) {
             Action a = (Action) it.next();
             JButton button = super.add(a);
-            if (_mouseListener != null) {
-                button.addMouseListener(_mouseListener);
+            if (mouseListener != null) {
+                button.addMouseListener(mouseListener);
             }
         }
     }

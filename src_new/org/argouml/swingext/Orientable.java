@@ -1,4 +1,4 @@
-// $Id: Orientable.java,v 1.2 2003/06/29 23:47:54 linus Exp $
+// $Id: Orientable.java,v 1.3 2004/08/20 15:59:59 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,5 +35,9 @@ package org.argouml.swingext;
  * @author  Bob Tarling
  */
 public interface Orientable {
+    /**
+     * Set the orientation.
+     * @param orientation the given orientation
+     */
     public void setOrientation(Orientation orientation);
 }

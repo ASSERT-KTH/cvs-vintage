@@ -1,4 +1,4 @@
-// $Id: PopupButton.java,v 1.4 2004/05/20 11:12:21 linus Exp $
+// $Id: PopupButton.java,v 1.5 2004/08/20 15:59:59 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class PopupButton extends ModalButton {
     /**
      * The popup component.
      */
-    private Component   _component = null;
+    private Component component = null;
     
     /**
      * Constructs a new PopupButton with no popup assigned.
@@ -78,7 +78,7 @@ public class PopupButton extends ModalButton {
      */
     public PopupButton(Component c, Icon icon) {
         this();
-        _component = c;
+        component = c;
         setIcon(icon);
     }
     
@@ -88,7 +88,7 @@ public class PopupButton extends ModalButton {
      * @return  the popup component
      */
     public Component getPopupComponent() {
-        return _component;
+        return component;
     }
     
     /**
@@ -97,7 +97,7 @@ public class PopupButton extends ModalButton {
      * @param   c   the new popup component
      */
     public void setPopupComponent(Component c) {
-        _component = c;
+        component = c;
     }
     
     /**
@@ -121,9 +121,9 @@ public class PopupButton extends ModalButton {
      * method to perform actions before the popup is shown.
      */
     protected void showPopup() {
-        if (_component != null) {
+        if (component != null) {
             JPopupMenu popupMenu = new JPopupMenu();
-            popupMenu.add(_component);
+            popupMenu.add(component);
             popupMenu.pack();            
             popupMenu.show(this, 0, getHeight());
         }

@@ -1,4 +1,4 @@
-// $Id: Property.java,v 1.3 2004/08/19 20:54:56 mvw Exp $
+// $Id: Property.java,v 1.4 2004/08/20 15:59:59 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +127,9 @@ public class Property implements Comparable {
     
     /**
      * Compares two Properties by comparing their names.
-    **/
+     *
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
     public int compareTo(Object o) {
         return name.compareTo(((Property) o).name);    
     }
