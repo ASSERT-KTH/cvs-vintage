@@ -19,13 +19,12 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.2 2000/06/03 21:43:56 juha Exp $
+ * $Id: BeanVerifier.java,v 1.3 2000/07/19 21:27:43 juha Exp $
  */
 
  
 // standard imports
 import java.util.Iterator;
-import java.io.File;
 import java.net.URL;
 import java.beans.beancontext.BeanContextServicesSupport;
 
@@ -38,9 +37,10 @@ import org.jboss.verifier.strategy.EJBVerifier20;
 
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
-import org.jboss.verifier.event.VerificationEventFactory;
 import org.jboss.verifier.event.VerificationEventGeneratorSupport;
 
+import org.jboss.verifier.factory.VerificationEventFactory;
+import org.jboss.verifier.factory.DefaultEventFactory;
 
 import com.dreambean.ejx.ejb.EnterpriseBeans;
 import com.dreambean.ejx.xml.ProjectX;
@@ -60,10 +60,11 @@ import org.jboss.ejb.deployment.jBossEjbJar;
  * For more detailed documentation, refer to the
  * <a href="" << INSERT DOC LINK HERE >> </a>
  *
- * @see     << OTHER RELATED CLASSES >>
+ * @see     org.jboss.verifier.strategy.VerificationStrategy
+ * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {
@@ -80,14 +81,13 @@ public class BeanVerifier implements VerificationContext {
         new VerificationEventGeneratorSupport();
                               
     /*
-     * Will make this look like a real object factory later on. Specify the
-     * interface and add an example factory implementation.
+     * Factory for creating the events. DefaultEventFactory produces
+     * plain string events.
      */
-    private VerificationEventFactory eventFactory    =
-        new VerificationEventFactory();
+    private VerificationEventFactory eventFactory = new DefaultEventFactory();
        
                            
-    /*
+    /**
      * Default constructor.
      */
     public BeanVerifier()   {  }
@@ -95,11 +95,13 @@ public class BeanVerifier implements VerificationContext {
     
      
      
-    /*
+    /**
      * Checks the Enterprise Java Beans found in this Jar for EJB spec
      * compliance (EJB Spec. 1.1). Ensures that the given interfaces
      * and implementation classes implement required methods and follow
      * the contract given in the spec.
+     *
+     * @param   url     URL to the bean jar file
      */
     public void verify(URL url) {
         
@@ -215,8 +217,8 @@ public class BeanVerifier implements VerificationContext {
 
             // [TODO] a generic exception is no good
             
-            System.err.println(e);
-            return null;
+            throw new IllegalArgumentException(e.toString());
+            //return null;
         }
     }
     

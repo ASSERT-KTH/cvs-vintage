@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.8 2000/06/11 21:22:26 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.9 2000/07/19 21:27:45 juha Exp $
  */
 
 
@@ -35,8 +35,11 @@ import java.lang.reflect.Field;
 // non-standard class dependencies
 import org.gjt.lindfors.pattern.StrategyContext;
 
+import org.jboss.verifier.Section;
 import org.jboss.verifier.event.VerificationEvent;
-import org.jboss.verifier.event.VerificationEventFactory;
+
+import org.jboss.verifier.factory.VerificationEventFactory;
+import org.jboss.verifier.factory.DefaultEventFactory;
 
 import com.dreambean.ejx.ejb.Session;
 import com.dreambean.ejx.ejb.Entity;
@@ -53,7 +56,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -76,7 +79,7 @@ public class EJBVerifier11 extends AbstractVerifier {
         this.classloader   = cl;
         this.context       = context;
 
-        this.factory       = new VerificationEventFactory();
+        this.factory       = new DefaultEventFactory();
     }
 
 
@@ -90,18 +93,9 @@ public class EJBVerifier11 extends AbstractVerifier {
         boolean beanVerified   = false;
         boolean homeVerified   = false;
         boolean remoteVerified = false;
-        /*
-         * [TODO] use state pattern instead, this collection of bools is going
-         *        to grow, and managing them will become messy
-         */
 
         //sessionDescriptorVerified = verifySessionDescriptor();
 
-        /*
-         * Also, the descriptors should most likely be checked in one place,
-         * instead of sprinkling their check code across the bean class
-         * checkers..
-         */
 
 
         beanVerified   = verifySessionBean(session);
@@ -116,9 +110,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              * Verification for this session bean done. Fire the event
              * to tell listeneres everything is ok.
              */
-            VerificationEvent event =
-                    factory.createBeanVerifiedEvent(context, session.getEjbClass());
-
+            VerificationEvent event = factory.createBeanVerifiedEvent(context);
             context.fireBeanChecked(event);
         }
     }
@@ -127,7 +119,8 @@ public class EJBVerifier11 extends AbstractVerifier {
     public void checkEntity(Entity entity) {
         boolean pkVerified = false;
 
-        pkVerified = verifyPrimaryKey(entity.getPrimaryKeyClass());
+        // will put this back later
+        //pkVerified = verifyPrimaryKey(entity.getPrimaryKeyClass());
 
         // NO IMPLEMENTATION
     }
@@ -135,13 +128,13 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
 
-    /*
-     ***********************************************************************
-     *
-     *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
-     *
-     ***********************************************************************
-     */
+/*
+ ***********************************************************************
+ *
+ *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
+ *
+ ***********************************************************************
+ */
 
     public StrategyContext getContext() {
         return context;
@@ -181,11 +174,9 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 /*
  *****************************************************************************
- *****************************************************************************
  *
  *  PRIVATE INSTANCE METHODS
  *
- *****************************************************************************
  *****************************************************************************
  */
 
@@ -216,19 +207,19 @@ public class EJBVerifier11 extends AbstractVerifier {
              if (isStateless(session)) {
                  
                  if (!hasDefaultCreateMethod(home)) {
-                    fireSpecViolationEvent(SECTION_6_8_a, name);
+                    fireSpecViolationEvent(new Section("6.8.a"));
 
                     status = false;
                  }
                  
                  if (!hasRemoteReturnType(getDefaultCreateMethod(home))) {
-                     fireSpecViolationEvent(SECTION_6_8_b, name);
+                     fireSpecViolationEvent(new Section("6.8.b"));;
                      
                      status = false;
                  }
                  
                  if (hasMoreThanOneCreateMethods(home)) {
-                     fireSpecViolationEvent(SECTION_6_8_c, name);
+                     fireSpecViolationEvent(new Section("6.8.c"));
                      
                      status = false;
                  }   
@@ -239,7 +230,7 @@ public class EJBVerifier11 extends AbstractVerifier {
         catch (ClassNotFoundException e) {
 
             VerificationEvent event =
-                    factory.createSpecViolationEvent(context, DTD_HOME, name);
+                    factory.createSpecViolationEvent(context, new Section("16.2.c"));
 
             context.fireBeanChecked(event);
 
@@ -285,7 +276,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasSessionBeanInterface(bean)) {
 
-                fireSpecViolationEvent(SECTION_6_5_1, name);
+                fireSpecViolationEvent(new Section("6.5.1"));
 
                 status = false;
             }
@@ -303,13 +294,13 @@ public class EJBVerifier11 extends AbstractVerifier {
             if (hasSessionSynchronizationInterface(bean)) {
 
                 if (!isStateful(session)) {
-                    fireSpecViolationEvent(SECTION_6_5_3_a, name);
+                    fireSpecViolationEvent(new Section("6.5.3.a"));
 
                     status = false;
                 }
 
                 if (!isContainerManagedTx(session)) {
-                    fireSpecViolationEvent(SECTION_6_5_3_b, name);
+                    fireSpecViolationEvent(new Section("6.5.3.b"));
 
                     status = false;
                 }
@@ -322,8 +313,8 @@ public class EJBVerifier11 extends AbstractVerifier {
              * Spec 6.5.5
              */
             if (!hasEJBCreateMethod(bean)) {
-
-                fireSpecViolationEvent(SECTION_6_5_5, name);
+                
+                fireSpecViolationEvent(new Section("6.5.5"));
 
                 status = false;
 
@@ -345,7 +336,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasSessionSynchronizationInterface(bean) && isBeanManagedTx(session)) {
 
-                fireSpecViolationEvent(SECTION_6_6_1, name);
+                fireSpecViolationEvent(new Section("6.6.1"));
 
                 status = false;
             }
@@ -357,7 +348,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!isPublicClass(bean)) {
 
-               fireSpecViolationEvent(SECTION_6_10_2_a, name);
+               fireSpecViolationEvent(new Section("6.10.2.a"));
 
                status = false;
             }
@@ -369,7 +360,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (isFinalClass(bean)) {
 
-                fireSpecViolationEvent(SECTION_6_10_2_b, name);
+                fireSpecViolationEvent(new Section("6.10.2.b"));
 
                 status = false;
             }
@@ -381,7 +372,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (isAbstractClass(bean)) {
 
-                fireSpecViolationEvent(SECTION_6_10_2_c, name);
+                fireSpecViolationEvent(new Section("6.10.2.c"));
 
                 status = false;
             }
@@ -394,7 +385,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasDefaultConstructor(bean)) {
 
-                fireSpecViolationEvent(SECTION_6_10_2_d, name);
+                fireSpecViolationEvent(new Section("6.10.2.d"));
 
                 status = false;
             }
@@ -406,7 +397,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasFinalizer(bean)) {
 
-                fireSpecViolationEvent(SECTION_6_10_2_e, name);
+                fireSpecViolationEvent(new Section("6.10.2.e"));
 
                 status = false;
             }
@@ -417,7 +408,7 @@ public class EJBVerifier11 extends AbstractVerifier {
         catch (ClassNotFoundException e) {
 
             VerificationEvent event =
-                    factory.createSpecViolationEvent(context, DTD_EJB_CLASS, name);
+                    factory.createSpecViolationEvent(context, new Section("16.2.b"));
 
             context.fireBeanChecked(event);
 
@@ -525,74 +516,15 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
 
-    private void fireSpecViolationEvent(String section, String name) {
+    private void fireSpecViolationEvent(Section section) {
 
         VerificationEvent event =
-                factory.createSpecViolationEvent(context, section, name);
+                factory.createSpecViolationEvent(context, section);
 
         context.fireBeanChecked(event);
     }
 
 
-
-
-    /*
-     ****************************************************************
-     *
-     *      String constants
-     *
-     ****************************************************************
-     */
-    public final static String SECTION_6_5_1         =
-        "Section 6.5.1 Required Sessionbean interface";
-
-    public final static String SECTION_6_5_3_a       =
-        "Section 6.5.3 The optional SessionSynchronization interface (stateful)";
-
-    public final static String SECTION_6_5_3_b       =
-        "Section 6.5.3 The optional SessionSynchronization interface (stateless)";
-
-    public final static String SECTION_6_5_5         =
-        "Section 6.5.5 Session bean's ejbCreate(...) methods";
-
-    public final static String SECTION_6_6_1         =
-        "Section 6.6.1 Operations allowed in the methods of a stateful session bean class";
-
-    public final static String SECTION_6_8_a         =
-        "Section 6.8 Stateless session beans (must have one create)";
-        
-    public final static String SECTION_6_8_b         = 
-        "Section 6.8 Stateless session beans (must return remote interface)";
-        
-    public final static String SECTION_6_8_c         =
-        "Section 6.9 Stateless session beans (must not have other creates)";
-        
-    public final static String SECTION_6_10_2_a      =
-        "Section 6.10.2 Session bean class (public class)";
-
-    public final static String SECTION_6_10_2_b      =
-        "Section 6.10.2 Session bean class (not final class)";
-
-    public final static String SECTION_6_10_2_c      =
-        "Section 6.10.2 Session bean class (not abstract class)";
-
-    public final static String SECTION_6_10_2_d      =
-        "Section 6.10.2 Session bean class (public constructor)";
-
-    public final static String SECTION_6_10_2_e      =
-        "Section 6.10.2 Session bean class (no finalizer)";
-
-    public final static String SECTION_9_2_9_a       =
-        "Section 9.2.9 Primary key class (equals doesn't work)";
-
-    public final static String SECTION_9_2_9_b       =
-        "Section 9.2.9 Primary key class (hashCode doesn't work)";
-
-    public final static String SECTION_9_4_7_2_a     =
-        "Section 9.4.7.2 Primary key class (not public)";
-
-    public final static String SECTION_9_4_7_2_b     =
-        "Section 9.4.7.2 Primary key class (fields not public)";
 
 
 }

@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.2 2000/06/11 21:22:26 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.3 2000/07/19 21:27:45 juha Exp $
  */
 
 // standard imports
@@ -41,7 +41,7 @@ import com.dreambean.ejx.ejb.Session;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -238,7 +238,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     
-    public boolean hasDefaultCreateMethod(Class c) {
+    public boolean hasDefaultCreateMethod(Class home) {
         
         // NOT YET IMPLEMENTED
         

@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Section.java,v 1.1 2000/06/15 20:30:28 juha Exp $
+ * $Id: Section.java,v 1.2 2000/07/19 21:27:44 juha Exp $
  */
 
 // standard imports
@@ -39,12 +39,12 @@ import java.text.ParseException;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
 public class Section {
 
-    private char[] section;
+    private String[] section;
     
     /*
      * Constructor
@@ -68,17 +68,11 @@ public class Section {
  ****************************************************************************
  */
  
-    /*
-     * Uses the hashcode of the id string
-     */
-    public int hashCode() {
-        return getSection().hashCode();
-    }
     
     /*
      * Returns the section number by index
      */
-    public char getSectionToken(int index) {
+    public String getSectionToken(int index) {
     
         if (section.length >= index)
             throw new IndexOutOfBoundsException(GET_SECTION_INDEX_ERROR);
@@ -91,11 +85,6 @@ public class Section {
      */
     public String getSection() {
         
-        /*
-         * [TODO] this can be done more efficiently by creating/storing the string
-         *        at construction time. We can do this cause at the moment we're
-         *        still immutable.
-         */
         StringBuffer buffer = new StringBuffer();
         
         for (int i = 0; i < section.length; ++i) {
@@ -106,6 +95,13 @@ public class Section {
         }
         
         return buffer.toString();
+    }
+    
+    /*
+     * String representation of this object
+     */
+    public String toString() {
+        return getSection();
     }
     
     
@@ -119,22 +115,20 @@ public class Section {
  */
 
     /*
-     * parses the id string into char array
+     * parses the id string into section array
      */
-    private char[] parseSection(String id) throws ParseException {
+    private String[] parseSection(String id) throws ParseException {
     
         StringTokenizer tokenizer = new StringTokenizer(id, DELIMETER);
         int count = tokenizer.countTokens();
         
-        char[] token = new char[count];
+        String[] token = new String[count];
         
         for (int i = 0; tokenizer.hasMoreTokens(); ++i) {
             String str = tokenizer.nextToken();
             
-            if (str.length() > 1)
-                throw new ParseException(PARSE_SECTION_ERROR, i);
-                
-            token[i] = str.toCharArray()[0];
+
+            token[i] = str;
         }
         
         return token;
