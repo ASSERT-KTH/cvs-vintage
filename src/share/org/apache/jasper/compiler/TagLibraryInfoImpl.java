@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.24 2000/08/04 14:57:19 jiricka Exp $
- * $Revision: 1.24 $
- * $Date: 2000/08/04 14:57:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.25 2000/08/07 19:04:37 glenn Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/08/07 19:04:37 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -492,12 +492,18 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                     name = t.getData();
             } else if (tname.equals("required"))  {
                 Text t = (Text) e.getFirstChild();
-                if (t != null)
+                if (t != null) {
                     required = Boolean.valueOf(t.getData()).booleanValue();
+		    if( t.getData().equalsIgnoreCase("yes") )
+			required = true;
+		}
             } else if (tname.equals("rtexprvalue")) {
                 Text t = (Text) e.getFirstChild();
-                if (t != null)
+                if (t != null) {
                     rtexprvalue = Boolean.valueOf(t.getData()).booleanValue();
+                    if( t.getData().equalsIgnoreCase("yes") )
+                        rtexprvalue = true;
+		}
             } else if (tname.equals("type")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
