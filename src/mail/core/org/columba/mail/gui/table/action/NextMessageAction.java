@@ -67,11 +67,15 @@ public class NextMessageAction
 			KeyStroke.getKeyStroke("F"),
 			false);
 		setEnabled(false);
+		
+		// uncomment to enable action
+		/*
 		(
 			(
 				AbstractMailFrameController) frameController)
 					.registerTableSelectionListener(
 			this);
+		*/
 
 	}
 
@@ -93,6 +97,7 @@ public class NextMessageAction
 			if (node == null)
 				return;
 
+			/*
 			MessageNode nextNode = (MessageNode) node.getNextNode();
 			Object nextUid = nextNode.getUid();
 
@@ -108,6 +113,7 @@ public class NextMessageAction
 
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(getFrameController(), r));
+			*/
 
 		}
 

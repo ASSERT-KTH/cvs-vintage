@@ -60,9 +60,16 @@ public class NextUnreadMessageAction
 			null,
 			'U',
 			KeyStroke.getKeyStroke("N"));
+			
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		// uncomment to enable action
+		/*
+		(
+			(
+				AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(
 			this);
+		*/
 	}
 
 	

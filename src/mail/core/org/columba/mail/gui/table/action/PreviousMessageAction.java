@@ -65,9 +65,16 @@ public class PreviousMessageAction
 			'M',
 			KeyStroke.getKeyStroke("B"),
 			false);
+			
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		// uncomment to enable action
+		/*
+		(
+			(
+				AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(
 			this);
+		*/
 	}
 
 	
