@@ -18,6 +18,8 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -30,7 +32,13 @@ public class ClusterId implements Serializable {
     private transient byte id[];
     private transient int hash = 0;
 
+    private ClusterId() {
+    }
+
     ClusterId(byte id[]) {
+        if (id.length > Short.MAX_VALUE) {
+            throw new IllegalArgumentException("Too long array");
+        }
         this.id = id;
         redoHash();
     }
@@ -92,17 +100,30 @@ public class ClusterId implements Serializable {
         return (byte[]) id.clone();
     }
 
+    public void write(DataOutput out) throws IOException {
+        out.writeShort(id.length);
+        out.write(id);
+    }
+
+    public static ClusterId read(DataInput in) throws IOException {
+        int l = in.readShort();
+        byte[] a = new byte[l];
+        in.readFully(a);
+        ClusterId id = new ClusterId();
+        id.id = a;
+        id.redoHash();
+        return id;
+    }
+
     private void writeObject(java.io.ObjectOutputStream out)
         throws IOException {
-        System.out.println("writeObject");
-        out.writeInt(id.length);
+        out.writeShort(id.length);
         out.write(id, 0, id.length);
     }
 
     private void readObject(java.io.ObjectInputStream in)
         throws IOException, ClassNotFoundException {
-        System.out.println("readObject");
-        int l = in.readInt();
+        int l = in.readShort();
         id = new byte[l];
         in.readFully(id);
         redoHash();
