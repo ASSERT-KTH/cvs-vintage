@@ -24,7 +24,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.6 2001/07/10 11:53:21 1sturm Exp $
+// $Id: PropPanelObject.java,v 1.7 2002/06/11 05:59:47 mkl Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -55,7 +55,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	addField(nameField,1,0,0);
 	
 	addCaption("Classifier:",2,0,0);   	
-	UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this,"isAcceptibleClassifier","classifier","getClassifier","setClassifier",false,MClassifier.class,true);
+	UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this,"isAcceptibleClassifier","classifier","getClassifier","setClassifier",true,MClassifier.class,true);
 	UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
 	addField(new UMLComboBoxNavigator(this,"NavClass",clsComboBox),2,0,0);
 	
