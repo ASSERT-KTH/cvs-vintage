@@ -38,6 +38,7 @@ import org.columba.mail.plugin.TableRendererPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 
 /**
@@ -68,6 +69,8 @@ public class MailMain extends DefaultMain {
      */
     public void initGui() {
         MailInterface.popServerCollection = new POP3ServerCollection();
+
+        new MailResourceLoader();
 
         MailInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
 
