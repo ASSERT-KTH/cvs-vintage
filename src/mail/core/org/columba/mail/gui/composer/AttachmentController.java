@@ -22,8 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -33,6 +31,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.main.MainInterface;
+import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -181,16 +180,14 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
      * @param file the file to attach to the email.
      */
     public void addFileAttachment(File file) {
-        if (file.isFile()) {
-            FileNameMap fileNameMap = URLConnection.getFileNameMap();
-            String mimetype = fileNameMap.getContentTypeFor(file.getName());
+    	 if (file.isFile()) {
 
-            if (mimetype == null) {
-                mimetype = "application/octet-stream"; //REALLY NEEDED?
-            }
+           String mimetype = new LookupMimetypeHandler().lookup(file);
+            // fall-back to application
+            if(mimetype == null)
+                mimetype = "application/octet-stream";
 
             MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
-
             header.putContentParameter("name", file.getName());
             header.setContentDisposition("attachment");
             header.putDispositionParameter("filename", file.getName());
