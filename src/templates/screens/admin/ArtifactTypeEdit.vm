@@ -1,0 +1,149 @@
+<div class="app" id="div2-1-4-0">
+
+$page.setTitle("Attribute Editor")
+#set ( $module = $scarabR.CurrentModule )
+
+ <h2>Customize/create artifact type (2.1.4.0)</h2>
+
+  
+
+        <div class="functnbar">
+            <table cellpadding="0" cellspacing="0" border="0">
+
+            <tr>
+            <td><strong>Screen options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>attribute group options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            </tr>
+
+            <tr>
+            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" class="button" /></td>
+            <td><input type="submit" value="add new" class="button" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" class="button" /></td>
+
+            </tr>
+            </table>
+        </div>
+
+        
+        <h3>Artifact type details</h3>
+        
+        <div class="axial">
+            <table border="1" cellspacing="2" cellpadding="3">
+            <tr>
+            <th>Artifact type name:</th>
+            <td><input type="text" size="25" value="" /></td>
+            </tr>
+            
+            <tr>
+            <th>Artifact type descr:</th>
+            <td><textarea rows="4" cols="40"></textarea></td>
+            </tr>
+            
+            <tr>
+            <th>author:</th>
+            <td><div>Joe Smo</div>
+            <a href="#">joes@users.com</a></td>
+            </tr>
+            </table>
+        </div>
+        
+        
+        <h3>Artifact instance "history" and "Comments" display options</h3>
+        
+        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
+        <select class="select">
+        <option>5</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+        </select>
+        most recent artifact instance history entries (otherwise, a link will appear leading to a seperate page).
+        </p>
+        
+        <p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
+        <select class="select">
+        <option>5</option>
+        <option>10</option>
+        <option>15</option>
+        <option>20</option>
+        </select>
+        most recent artifact instance comments (otherwise, a link will appear to a seperate page).
+        </p>
+
+                        
+        <h3>Attribute groups</h3>
+        
+#set ( $groups = $module.AttributeGroups) 
+
+#if ($groups.isEmpty())
+
+## NO GROUPS YET - user must push button to create default groups
+<p class="alert">This module has no groups. Please click to create default groups.
+<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
+      <p><input type="submit" value="create default attribute groups" class="button" name="eventSubmit_doCreatedefaults" />
+</FORM>
+        
+#else
+        #set ( $maxNum = $module.AttributeGroups.size()+1 )
+
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th nowrap="nowrap">select</th>
+        <th>attribute group name:</th>
+        <th>active/inactive:</th>
+        <th>sequence #:</th>
+        </tr>
+
+  #foreach ( $group in $groups )
+## DEDUPE
+     #if ($velocityCount == ($module.DedupeSequence))
+
+    #set ( $moduleGroup = $intake.Module.mapTo($module) )
+         <P>
+         <tr>
+             <td>&nbsp;</td>
+             <td>Duplicate check</td>
+             <td>#booleanCheckbox ($moduleGroup.Dedupe)</td>
+             <td>#numericSelect( "dupe_order" 1 $maxNum $module.DedupeSequence 1 )</td>
+         </tr>
+       #end
+<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
+    #set ( $agGroup = $intake.AttributeGroup.mapTo($group) )
+
+        #rows()
+        <td><input type="checkbox" name="delete_group_$group.AttributeGroupId"/></td>
+        <td><a href="$link.setPage("admin,AttributeGroup.vm").addPathInfo("groupid", $group.AttributeGroupId)">$group.Name</a>
+        <td>#booleanCheckbox ($agGroup.Active)</td>
+        <td>
+            #numericSelect( $agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1 )</td> </tr> 
+#end
+#end
+        </td>
+        </tr>
+        </table>
+
+ 
+        <div class="functnbar2">
+            <table cellpadding="0" cellspacing="0" border="0">
+
+            <tr>
+            <td><strong>Screen options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>attribute group options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            </tr>
+
+            <tr>
+            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" class="button" /></td>
+            <td><input type="submit" value="add new" class="button" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" class="button" /></td>
+
+            </tr>
+            </table>
+        </div>      
+$intake.declareGroups()
+</FORM>
