@@ -29,6 +29,7 @@ public class AddHeaderPOP3PreProcessingFilterPlugin
 	public String modify(String rawString) {
 		
 		String version = rootElement.getAttribute("version");
+		if ( version == null ) version = "cvs";
 		
 		return "X-Columba-version: "+version+"\n"+rawString;
 	}

@@ -64,17 +64,11 @@ class FilterListTable extends JTable {
 
 		tc =
 			getColumn(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"description_tableheader"));
+				"Name");
 		tc.setCellRenderer(new StringFilterRenderer());
 		tc.setHeaderRenderer(
 			new FilterHeaderRenderer(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"description_tableheader")));
+				"Name"));
 
 		sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
 	}

@@ -24,7 +24,7 @@ import org.columba.core.xml.XmlElement;
 class FilterListTableModel extends AbstractTableModel
 {
 
-    final String[] columnNames = {"Description",
+    final String[] columnNames = {"Name",
                                   "Enabled",
                                   };
 
@@ -63,7 +63,7 @@ class FilterListTableModel extends AbstractTableModel
         if ( col == 0 )
         {
             // description
-            String description = filter.getAttribute("description");
+            String description = filter.getAttribute("name");
             if ( description == null ) return new String();
 
             return description;
@@ -71,7 +71,7 @@ class FilterListTableModel extends AbstractTableModel
         else
         {
             // enabled/disabled
-            boolean enabled = Boolean.getBoolean(filter.getAttribute("enabled"));
+            boolean enabled = new Boolean(filter.getAttribute("enabled")).booleanValue();
             
             return new Boolean(enabled);
         }

@@ -115,6 +115,8 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 
 			limitMessageDownloadTextField.setText(item.get("download_limit"));
 
+			enablePreProcessingFilterCheckBox.setSelected( item.getBoolean("enable_pop3preprocessingfilter", false));
+			
 		} else {
 			item.set("leave_messages_on_server", leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
 
@@ -125,6 +127,8 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 			item.set(
 				"enable_download_limit",
 				limitMessageDownloadCheckBox.isSelected());
+			
+			item.set("enable_pop3preprocessingfilter", enablePreProcessingFilterCheckBox.isSelected());
 		}
 	}
 

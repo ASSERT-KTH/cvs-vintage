@@ -49,6 +49,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.Compatibility;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3Server;
@@ -116,7 +118,12 @@ public class ConfigFrame extends JDialog
 
 		initComponents();
 		pack();
-		setLocationRelativeTo(null);
+		//		for jdk1.3 compatibility, this is called dynamically
+		Compatibility.simpleSetterInvoke(
+			dialog,
+			"setLocationRelativeTo",
+			Component.class,
+			null);
 		setVisible(true);
 	}
 
@@ -368,12 +375,22 @@ public class ConfigFrame extends JDialog
 
 			setVisible(false);
 		} else if (action.equals("ADD")) {
-			System.out.println("add");
+			ColumbaLogger.log.debug("add");
 
 			ChooseFilterDialog d = new ChooseFilterDialog(this);
+			d.setVisible(true);
 			
 			String id = d.getSelection();
 			
+			ColumbaLogger.log.debug("selected id="+id);
+			
+			XmlElement filter = filterList.addSubElement("pop3preprocessingfilter");
+			filter.addAttribute("enabled","true");
+			filter.addAttribute("name",id);
+			
+			listView.update();
+			
+			setSelected(filter);
 			/*
 			XmlElement filter = filterList.addSubElement("pop3preprocessingfilter");
 			filter.addAttribute("enabled","true");

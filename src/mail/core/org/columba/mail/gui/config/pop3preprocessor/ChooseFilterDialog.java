@@ -15,6 +15,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -52,12 +54,9 @@ public class ChooseFilterDialog
 
 	POP3PreProcessingFilterPluginHandler pluginHandler;
 
-	
-	
 	public ChooseFilterDialog(JDialog dialog) {
 		super(dialog, true);
 
-		
 		setTitle("Choose Preprocessing Filter");
 
 		pluginHandler = null;
@@ -73,15 +72,23 @@ public class ChooseFilterDialog
 			d.showDialog(ex);
 		}
 
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false);
+			}
+		});
+
 		initComponents();
 
 		dialog.pack();
+
 		//		for jdk1.3 compatibility, this is called dynamically
 		Compatibility.simpleSetterInvoke(
 			dialog,
 			"setLocationRelativeTo",
 			Component.class,
 			null);
+
 		dialog.setVisible(true);
 	}
 
@@ -90,14 +97,19 @@ public class ChooseFilterDialog
 
 		list = new JList(names);
 
+		JPanel listPanel = new JPanel();
+		listPanel.setLayout( new BorderLayout() );
+		listPanel.setBorder( BorderFactory.createEmptyBorder(12,12,11,11));
+		
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.getViewport().setBackground(Color.white);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 
+		listPanel.add(scrollPane, BorderLayout.CENTER);
 		Container mainPanel = getContentPane();
 		mainPanel.setLayout(new BorderLayout());
 
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		mainPanel.add(listPanel, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(
@@ -105,11 +117,11 @@ public class ChooseFilterDialog
 				new WizardTopBorder(),
 				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		JButton closeButton =
+		JButton okButton =
 			new JButton(MailResourceLoader.getString("global", "ok"));
-		closeButton.setActionCommand("OK"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
+		okButton.setActionCommand("OK"); //$NON-NLS-1$
+		okButton.addActionListener(this);
+		buttonPanel.add(okButton);
 		JButton helpButton =
 			new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
@@ -117,7 +129,8 @@ public class ChooseFilterDialog
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(closeButton);
+
+		getRootPane().setDefaultButton(okButton);
 		getRootPane().registerKeyboardAction(
 			this,
 			"OK",
@@ -146,6 +159,7 @@ public class ChooseFilterDialog
 
 		if (action.equals("OK")) {
 			setVisible(false);
+			
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
 			try {

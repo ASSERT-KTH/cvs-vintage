@@ -207,7 +207,8 @@ public class POP3Store {
 			protocol.fetchMessage(new Integer(index).toString(), worker);
 
 		// pipe through preprocessing filter
-		rawString = modifyMessage(rawString);
+		if ( popItem.getBoolean("enable_pop3preprocessingfilter", false))
+			rawString = modifyMessage(rawString);
 
 		int i = rawString.indexOf("\n\n");
 		String headerString = rawString.substring(0, i);
