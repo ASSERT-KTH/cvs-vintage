@@ -320,10 +320,10 @@
         <copy file="${src.sql.dir}/create-mysql-db.sql" 
               todir="${build.src.scarab}"
               filtering="true" overwrite="true"/>
-        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/mysql"/>
+        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/"/>
         <sql
             driver="org.gjt.mm.mysql.Driver"
-            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/mysql"
+            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/"
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
@@ -343,9 +343,10 @@
             <transaction src="${src.sql.dir}/mysql-id-table-schema.sql"/>
             <transaction src="${src.sql.dir}/mysql-turbine-id-table-init.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-id-table-init.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-security.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-required-data.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-default-data.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-sample-data.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-security.sql"/>
         </sql>
     </target>
 
