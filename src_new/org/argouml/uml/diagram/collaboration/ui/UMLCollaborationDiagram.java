@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.67 2005/01/31 20:21:43 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.68 2005/02/04 18:50:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,13 +89,14 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * Constructor.
      */
     public UMLCollaborationDiagram() {
-
         try {
             setName(getNewDiagramName());
         } catch (PropertyVetoException pve) { }
     }
 
     /**
+     * The constructor.
+     * 
      * @param namespace the namespace for the diagram
      */
     private UMLCollaborationDiagram(Object namespace) {
