@@ -24,7 +24,7 @@ import java.util.jar.Manifest;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Deployment
 implements java.io.Serializable {
@@ -252,7 +252,7 @@ implements java.io.Serializable {
         }
         
         // and the config file
-        result.add(J2eeDeployer.CONFIG);
+        result.add("deployment.cfg");
         
         return result;
     }
