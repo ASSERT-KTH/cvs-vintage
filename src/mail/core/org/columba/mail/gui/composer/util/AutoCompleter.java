@@ -72,9 +72,11 @@ public class AutoCompleter implements KeyListener, ItemListener {
 		_options = options;
 	}
 
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+	}
 
-	public void keyPressed(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {
+	}
 
 	public void keyReleased(KeyEvent e) {
 
@@ -82,8 +84,7 @@ public class AutoCompleter implements KeyListener, ItemListener {
 
 		if (ch == KeyEvent.CHAR_UNDEFINED
 			|| Character.isISOControl(ch)
-			|| ch == KeyEvent.VK_DELETE
-			)
+			|| ch == KeyEvent.VK_DELETE)
 			return;
 
 		int pos = _editor.getCaretPosition();
@@ -105,7 +106,7 @@ public class AutoCompleter implements KeyListener, ItemListener {
 		if (opts.length > 0) {
 
 			String str = opts[0].toString();
-			
+
 			HeaderItem item = AddressCollector.getHeaderItem((String) opts[0]);
 
 			if (item == null) {
@@ -122,12 +123,6 @@ public class AutoCompleter implements KeyListener, ItemListener {
 			if (address == null)
 				address = (String) item.get("email;internet");
 
-			System.out.println("address="+address);
-			System.out.println("address-length="+address.length());
-			
-			//_editor.setCaretPosition(address.length()-1);
-
-			System.out.println("cursor-pos="+cursor_pos);
 			_editor.moveCaretPosition(cursor_pos);
 
 			if (_comboBox != null) {
@@ -182,9 +177,8 @@ public class AutoCompleter implements KeyListener, ItemListener {
 			if (address == null)
 				address = (String) item.get("email;internet");
 
-			//_editor.setCaretPosition(address.length());
 			int pos2 = _editor.getCaretPosition();
-			//_editor.setCaretPosition(0);
+
 			if (cursor_pos != -1) {
 				try {
 					_editor.moveCaretPosition(pos2);

@@ -140,7 +140,8 @@ public class AddressbookTableModel extends AbstractTableModel {
 					fireTableRowsInserted(index, index);
 				} else {
 					getHeaderList().add(item);
-					fireTableRowsInserted(getRowCount() - 1, getRowCount() - 1);
+					//fireTableRowsInserted(getRowCount() - 1, getRowCount() - 1);
+					update();
 				}
 			}
 

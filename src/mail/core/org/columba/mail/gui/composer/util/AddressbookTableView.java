@@ -98,7 +98,7 @@ public class AddressbookTableView extends JTable {
 		setShowHorizontalLines(true);
 		setShowVerticalLines(false);
 		setIntercellSpacing(new Dimension(0, 2));
-		setRowHeight(getRowHeight() + 4);
+		setRowHeight(getRowHeight() + 6);
 
 		setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
 		setTableHeader(null);
@@ -112,9 +112,8 @@ public class AddressbookTableView extends JTable {
 				.getEditorComponent())
 				.setNextFocusableComponent(
 			c);
-			
-		addressEditor.setNextFocusableComponent(
-		c);
+
+		addressEditor.setNextFocusableComponent(c);
 	}
 
 	public AddressbookTableModel getAddressbookTableModel() {
@@ -140,9 +139,10 @@ public class AddressbookTableView extends JTable {
 	}
 
 	protected void addEmptyRow() {
+		/*
 		if (emptyRowExists())
 			return;
-
+		*/
 		HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
 		item.add("displayname", "");
 		item.add("field", "To");
@@ -156,12 +156,13 @@ public class AddressbookTableView extends JTable {
 		makeVisible(getRowCount() - 1, 1);
 	}
 
-	protected void editLastRow() {
+	public void editLastRow() {
 		int row = getRowCount() - 1;
 
 		if (editCellAt(row, 1)) {
 			focusToTextField();
 		}
+
 	}
 
 	protected boolean isEmpty(int row) {
@@ -223,10 +224,20 @@ public class AddressbookTableView extends JTable {
 	}
 
 	public void appendRow() {
+
+		if (isEditing()) {
+			// cancel editor, if necessary
+			// (if this is not happening we can't add another row
+			// without loosing table data
+			removeEditor();
+		}
+
 		if (!emptyRowExists()) {
 			addEmptyRow();
 		}
+
 		editLastRow();
+
 	}
 
 	public void cleanupHeaderItemList() {

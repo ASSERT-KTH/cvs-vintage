@@ -33,7 +33,6 @@ import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.message.Message;
 import org.columba.mail.util.AddressCollector;
 
 /**
@@ -75,7 +74,9 @@ public class ComposerController
 	*/
 
 	public ComposerController() {
-		super("Composer", new ViewItem(
+		super(
+			"Composer",
+			new ViewItem(
 				MailConfig.get("composer_options").getElement(
 					"/options/gui/view")));
 
@@ -88,21 +89,13 @@ public class ComposerController
 		getView().setVisible(true);
 
 		initAddressCompletion();
-
-		//headerController.appendRow();
+		
+		headerController.editLastRow();
+		
 
 	}
 
-	public ComposerController(Message message) {
-		this();
-
-		composerModel.setMessage(message);
-
-		//getView().addWindowListener(this);
-		//this.message = message;
-		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
-		//composerModel = new ComposerModel();
-	}
+	
 
 	public void charsetChanged(CharsetEvent e) {
 		((ComposerModel) getModel()).setCharsetName(e.getValue());
@@ -112,56 +105,10 @@ public class ComposerController
 		// update ComposerModel based on user-changes in ComposerView
 		updateComponents(false);
 
-		if (!subjectController.checkState()) return false;
+		if (!subjectController.checkState())
+			return false;
 		return !headerController.checkState();
 	}
-	/*
-	public void saveWindowPosition() {
-	
-		java.awt.Dimension d = view.getSize();
-	
-		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
-		
-		windowItem.set("x", 0);
-		windowItem.set("y", 0);
-		windowItem.set("width", d.width);
-		windowItem.set("height", d.height);
-	
-		composerInterface.viewItem.set("splitpanes","main",
-			view.getMainDividerLocation());
-		composerInterface.viewItem.set("splitpanes","header",
-			view.getRightDividerLocation());
-	
-	}
-	
-	public void loadWindowPosition() {
-		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
-		
-		java.awt.Point point = windowItem.getPoint();
-		java.awt.Dimension dim = windowItem.getDimension();
-	
-		view.setSize(dim);
-	
-		view.setMainDividerLocation(
-			composerInterface.viewItem.getInteger("splitpanes","main"));
-		view.setRightDividerLocation(
-		composerInterface.viewItem.getInteger("splitpanes","header"));
-	}
-	
-	protected void registerWindowListener() {
-		view.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				
-				hideComposerWindow();
-			}
-		});
-	
-	}
-	
-	public ComposerModel getModel() {
-		return model;
-	}
-	*/
 
 	public void updateComponents(boolean b) {
 		subjectController.updateComponents(b);
@@ -175,36 +122,6 @@ public class ComposerController
 
 		//headerController.appendRow();
 	}
-
-	/*
-	
-	public void showComposerWindow() {
-	
-		updateComponents(true);
-	
-		composerInterface.editorController.installListener();
-		composerInterface.subjectController.installListener();
-		composerInterface.priorityController.installListener();
-		//composerInterface.accountController.installListener();
-		composerInterface.attachmentController.installListener();
-	
-		//composerInterface.headerController.installListener();
-	
-		composerInterface.headerController.view.getTable().initFocus(
-			composerInterface.subjectController.view);
-			
-		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true )
-			showAddressbookWindow();
-	
-		view.setVisible(true);
-	
-		
-		initAddressCompletion();
-		
-		
-		composerInterface.headerController.appendRow();
-	}
-	*/
 
 	protected void initAddressCompletion() {
 		AddressCollector.clear();
@@ -235,28 +152,6 @@ public class ComposerController
 				AddressCollector.addAddress((String) item.get("email;internet"), item); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
-	/*
-	public void hideComposerWindow() {
-	
-		saveWindowPosition();
-		
-		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true)
-			hideAddressbookWindow();
-	
-		view.setVisible(false);
-	}
-	
-	public void showAddressbookWindow() {
-		updateAddressbookFrame();
-	
-		composerInterface.addressbookFrame.setVisible(true);
-	}
-	
-	public void hideAddressbookWindow() {
-		composerInterface.addressbookFrame.setVisible(false);
-	}
-	*/
 
 	/*
 	protected void updateAddressbookFrame() {
@@ -399,8 +294,6 @@ public class ComposerController
 		return identityInfoPanel;
 	}
 
-	
-
 	/**
 	 * @return PriorityController
 	 */
@@ -433,32 +326,9 @@ public class ComposerController
 
 		editorController = new EditorController(this);
 
-		//messageComposer = new MessageComposer(this);
-
-		//composerInterface.composerFolder = new TempFolder();
-
-		// FIXME
-		//charsetManager = new CharsetManager();
 		MainInterface.charsetManager.addCharsetListener(this);
 
 		composerSpellCheck = new ComposerSpellCheck(this);
-
-		/*
-		composerInterface.addressbookFrame =
-			AddressBookIC.createAddressbookListFrame(composerInterface);
-		
-		composerInterface.addressbookFrame.addComponentListener(this);
-			*/
-
-		/*
-		getView().addComponentListener(this);
-		
-		//view.setVisible(true);	
-		
-		registerWindowListener();
-		
-		int count = MailConfig.getAccountList().count();
-		if ( count != 0 ) loadWindowPosition();*/
 
 	}
 
@@ -493,6 +363,5 @@ public class ComposerController
 		view.setVisible(false);
 
 	}
-
 
 }

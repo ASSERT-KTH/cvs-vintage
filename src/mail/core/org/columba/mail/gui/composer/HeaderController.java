@@ -113,6 +113,11 @@ public class HeaderController
 		view.getTable().appendRow();
 		
 	}
+	
+	public void editLastRow()
+	{
+		view.getTable().editLastRow();
+	}
 
 	public void cleanupHeaderItemList() {
 		view.getTable().cleanupHeaderItemList();
