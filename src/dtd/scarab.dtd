@@ -11,7 +11,7 @@
 <!ELEMENT created-date ( format, timestamp ) >
 <!ELEMENT data ( #PCDATA ) >
 <!ELEMENT deleted ( #PCDATA ) >
-<!ELEMENT dependency ( id, parent, child, type ) >
+<!ELEMENT dependency ( id, parent, child, type, deleted ) >
 <!ELEMENT description ( #PCDATA ) >
 <!ELEMENT domain ( #PCDATA ) >
 <!ELEMENT end-date ( format, timestamp ) >
