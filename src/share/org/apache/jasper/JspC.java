@@ -70,6 +70,7 @@ import org.apache.jasper.compiler.CommandLineCompiler;
 import org.apache.jasper.servlet.JasperLoader;
 
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.compat.*;
 
 /**
  * Shell for the jspc compiler.  Handles all options associated with the 
@@ -331,8 +332,11 @@ public class JspC implements Options { //, JspCompilationContext {
 //         Constants.jasperLog.setLogger( ql );
 
     }
+
+    static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
     
-    public boolean parseFile(PrintStream log, String file, Writer servletout, Writer mappingout)
+    public boolean parseFile(PrintStream log, String file, Writer servletout,
+			     Writer mappingout)
     {
         try {
             JasperLoader loader =
@@ -342,6 +346,11 @@ public class JspC implements Options { //, JspCompilationContext {
             CommandLineContext clctxt = new CommandLineContext(
                     loader, getClassPath(), file, uriBase, uriRoot, false,
                     this);
+
+	    // Same execution env. as in 'normal' jasper
+	    // Some tags may need it ( at compile time )
+	    jdkCompat.setContextClassLoader(loader);
+	    
             if ((targetClassName != null) && (targetClassName.length() > 0)) {
                 clctxt.setServletClassName(targetClassName);
                 clctxt.lockClassName();
@@ -406,6 +415,9 @@ public class JspC implements Options { //, JspCompilationContext {
             //je.printStackTrace(log);
             Constants.message("jspc.error.jasperException", 
                     new Object[] {file, je}, Log.ERROR);
+	    je.printStackTrace();
+	    if( je.getRootCause() != null )
+		je.getRootCause().printStackTrace();
             if (dieLevel != NO_DIE_LEVEL) {
                 dieOnExit = true;
             }
@@ -415,6 +427,7 @@ public class JspC implements Options { //, JspCompilationContext {
         } catch (Exception e) {
             Constants.message("jspc.error.generalException", 
                     new Object[] {file, e}, Log.ERROR);
+	    e.printStackTrace();
             if (dieLevel != NO_DIE_LEVEL) {
                 dieOnExit = true;
             }
