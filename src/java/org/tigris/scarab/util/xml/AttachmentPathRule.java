@@ -82,4 +82,8 @@ public class AttachmentPathRule extends BaseRule
         attachment.setFilePath(text);
         digester.push(attachment);
     }
+    
+    protected void doValidationAtBody(String text)
+    {
+    }
 }
