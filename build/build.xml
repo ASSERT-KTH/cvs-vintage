@@ -557,8 +557,10 @@
         <ant antfile="build-torque.xml"
              dir="${torque.dir.scarab}" target="sql"
              inheritAll="false">
+            <!-- See the Torque tasks' build.properties for options -->
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
+            <property name="torque.output.dir" value="${src.dir}"/>
             <property name="build.properties"
                       value="${torque.dir.scarab}/build.properties"/>
             <property name="idTableXMLFile" value=""/>
