@@ -129,7 +129,7 @@
 
           <td>$issue.CreatedDate</td>
 
-          <td>$!issue.ClosedDate</td>
+          <td>#if ($issue.ClosedDate)$issue.ClosedDate#else&nbsp;#end</td>
 
          </tr>
 
