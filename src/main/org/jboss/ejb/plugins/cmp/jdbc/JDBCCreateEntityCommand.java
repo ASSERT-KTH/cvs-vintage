@@ -25,6 +25,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMP2xFieldBridge;
 import org.jboss.logging.Logger;
 import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
 
@@ -40,7 +41,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCCreateEntityCommand
 {
@@ -98,13 +99,26 @@ public class JDBCCreateEntityCommand
       for(Iterator iter = fields.iterator(); iter.hasNext(); ) {
          JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
          if(!field.isReadOnly()) {
-
-            // if this field is not a foreign key that is a part of primary key
-            if( !(field instanceof JDBCCMRFieldBridge
-               && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) ) {
+            // instead of CMR fields include its foreign keys that aren't mapped to PK
+            if(field instanceof JDBCCMRFieldBridge) {
+               List foreignKeyFields = ((JDBCCMRFieldBridge)field).getForeignKeyFields();
+               if(foreignKeyFields == null) {
+                  // no foreign key
+                  continue;
+               }
+               Iterator fkFieldIter = ((JDBCCMRFieldBridge)field).getForeignKeyFields().iterator();
+               while(fkFieldIter.hasNext()) {
+                  JDBCCMP2xFieldBridge fkField = (JDBCCMP2xFieldBridge)fkFieldIter.next();
+                  if(fkField.isFkFieldMappedToPkField()) {
+                     // this field is mapped to a PK column
+                     continue;
+                  }
+                  insertFields.add(fkField);
+               }
+            } else {
                insertFields.add(field);
             }
-         } 
+         }
       }
 
       return insertFields;
