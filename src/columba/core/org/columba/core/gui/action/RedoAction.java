@@ -27,16 +27,25 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class RedoAction extends FrameAction implements WorkerListChangeListener {
 
 	public RedoAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString("action", "menu_edit_redo"),
-			MailResourceLoader.getString("action", "menu_edit_redo"),
-			MailResourceLoader.getString("action", "menu_edit_redo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_redo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_redo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_redo"),
 			"REDO",
 			ImageLoader.getSmallImageIcon("stock_redo-16.png"),
 			ImageLoader.getImageIcon("stock_redo.png"),

@@ -24,24 +24,24 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class PasteAction extends FrameAction {
 
 	public PasteAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_paste"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_paste"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_paste"),
 			"PASTE",
 			ImageLoader.getImageIcon("stock_paste-16.png"),
@@ -56,8 +56,5 @@ public class PasteAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		
-		
-		
 	}
-
 }

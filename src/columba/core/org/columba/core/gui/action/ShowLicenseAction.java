@@ -22,8 +22,8 @@ import java.net.URL;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -46,9 +46,9 @@ public class ShowLicenseAction extends FrameAction {
 	public ShowLicenseAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_help_license"),
 			null,
 			"LICENSE",
@@ -56,7 +56,6 @@ public class ShowLicenseAction extends FrameAction {
 			null,
 			'L',
 			null);
-
 	}
 
 	/* (non-Javadoc)

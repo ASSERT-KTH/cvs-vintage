@@ -27,16 +27,25 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class UndoAction extends FrameAction implements WorkerListChangeListener {
 
 	public UndoAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString("action", "menu_edit_undo"),
-			MailResourceLoader.getString("action", "menu_edit_undo"),
-			MailResourceLoader.getString("action", "menu_edit_undo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_undo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_undo"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_undo"),
 			"UNDO",
 			ImageLoader.getSmallImageIcon("stock_undo-16.png"),
 			ImageLoader.getImageIcon("stock_undo.png"),
@@ -58,7 +67,6 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 	 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
 	 */
 	public void workerListChanged(WorkerListChangedEvent e) {
-		if( e.getNewValue() != 0) setEnabled(false);
+		setEnabled(e.getNewValue() != 0);
 	}
-
 }

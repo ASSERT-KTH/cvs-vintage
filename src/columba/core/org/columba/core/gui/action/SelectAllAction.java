@@ -23,20 +23,20 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class SelectAllAction extends FrameAction {
 
 	public SelectAllAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_selectall"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_selectall"),
 			"SELECTALL",
 			null,
@@ -44,5 +44,4 @@ public class SelectAllAction extends FrameAction {
 			'A',
 			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 	}
-
 }

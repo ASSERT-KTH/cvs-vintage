@@ -23,39 +23,36 @@ import javax.swing.JCheckBoxMenuItem;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class ViewToolbarAction extends CheckBoxAction {
 
 	public ViewToolbarAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
 				"menu_view_showtoolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
 				"menu_view_showtoolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
 				"menu_view_showtoolbar"),
 			"SHOW_TOOLBAR",
 			null,
 			null,
 			'1',
 			null);
-
-		
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		frameController.getView().showToolbar();
 	}
 
@@ -63,19 +60,14 @@ public class ViewToolbarAction extends CheckBoxAction {
 	 * @see org.columba.core.action.CheckBoxAction#getInitState()
 	 */
 	protected boolean getInitState() {
-	
-	  return frameController.isToolbarEnabled(AbstractFrameView.MAIN_TOOLBAR);
+              return frameController.isToolbarEnabled(AbstractFrameView.MAIN_TOOLBAR);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
 	 */
 	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem, AbstractFrameView frameView) {
-		
 		super.setCheckBoxMenuItem(checkBoxMenuItem);
-		
 		getCheckBoxMenuItem().setSelected( getInitState() );
 	}
-
-	
 }

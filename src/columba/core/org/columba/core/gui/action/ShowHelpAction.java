@@ -23,8 +23,8 @@ import java.net.URL;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -47,14 +47,16 @@ public class ShowHelpAction extends FrameAction {
 	public ShowHelpAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			MailResourceLoader.getString("menu", "mainframe", "menu_help_help"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_help_help"),
 			null,
 			"HELP",
 			ImageLoader.getImageIcon("stock_help_16.png"),
 			null,
 			'H',
 			null);
-
 	}
 
 	/* (non-Javadoc)
