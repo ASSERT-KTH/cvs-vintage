@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -358,6 +358,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
             uri = clean_uri;
         }
 
+		jk_log(l, JK_LOG_DEBUG, "Attempting to map URI %s\n", uri);
         for(i = 0 ; i < uw_map->size ; i++) {
 
             if(uw_map->maps[i].ctxt_len < longest_match) {
@@ -369,10 +370,20 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
                             uw_map->maps[i].ctxt_len)) {
                 if(MATCH_TYPE_EXACT == uw_map->maps[i].match_type) {
                     if(strlen(uri) == uw_map->maps[i].ctxt_len) {
+			jk_log(l,
+			       JK_LOG_DEBUG,
+			       "jk_uri_worker_map_t::map_uri_to_worker, Found an exact match %s ->%s\n",
+			       uw_map->maps[i].worker_name,
+			       uw_map->maps[i].context );
                         return uw_map->maps[i].worker_name;
                     }
                 } else if(MATCH_TYPE_CONTEXT == uw_map->maps[i].match_type) {
                     if(uw_map->maps[i].ctxt_len > longest_match) {
+			jk_log(l,
+			       JK_LOG_DEBUG,
+			       "jk_uri_worker_map_t::map_uri_to_worker, Found a context match %s -> %s\n",
+			       uw_map->maps[i].worker_name,
+			       uw_map->maps[i].context );
                         longest_match = uw_map->maps[i].ctxt_len;
                         best_match = i;
                     }
@@ -393,6 +404,11 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
                         if(0 == strcmp(suffix, uw_map->maps[i].suffix)) {
 #endif
                             if(uw_map->maps[i].ctxt_len >= longest_match) {
+				jk_log(l,
+				       JK_LOG_DEBUG,
+				       "jk_uri_worker_map_t::map_uri_to_worker, Found a suffix match %s -> *.%s\n",
+				       uw_map->maps[i].worker_name,
+				       uw_map->maps[i].suffix );
                                 longest_match = uw_map->maps[i].ctxt_len;
                                 best_match = i;
                             }
@@ -403,10 +419,6 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         }
 
         if(-1 != best_match) {
-            jk_log(l, JK_LOG_DEBUG, 
-                   "jk_uri_worker_map_t::map_uri_to_worker, Found a match %s\n",
-                   uw_map->maps[best_match].worker_name); 
-
             return uw_map->maps[best_match].worker_name;
         } else {
             /*
