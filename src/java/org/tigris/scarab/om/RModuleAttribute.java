@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import java.util.List;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -142,7 +143,7 @@ public class RModuleAttribute
     }
 
     
-    public Attribute getAttribute() throws Exception
+    public Attribute getAttribute() throws TorqueException
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
@@ -154,7 +155,7 @@ public class RModuleAttribute
         return aAttribute;
     }
 
-    public void setAttribute(Attribute v) throws Exception
+    public void setAttribute(Attribute v) throws TorqueException
     {
         aAttribute = v;
         super.setAttribute(v);

@@ -2,6 +2,7 @@ package org.tigris.scarab.om;
 
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 
 // Scarab classes
@@ -26,7 +27,7 @@ public class AttributeGroupPeer
      * @param ObjectKey pk
      */
     public static AttributeGroup retrieveByPK( ObjectKey pk )
-        throws Exception
+        throws TorqueException
     {
         AttributeGroup result = null;
         Object obj = ScarabCache.get(ATTRIBUTEGROUP_PEER, RETRIEVE_BY_PK, pk); 

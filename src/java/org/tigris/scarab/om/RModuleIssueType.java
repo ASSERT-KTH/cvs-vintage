@@ -2,6 +2,7 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -129,7 +130,7 @@ public  class RModuleIssueType
      * Copies object.
      */
     public RModuleIssueType copy()
-         throws Exception
+         throws TorqueException
     {                
         RModuleIssueType rmit2 = new RModuleIssueType();
         rmit2.setModuleId(getModuleId());
@@ -145,7 +146,8 @@ public  class RModuleIssueType
     /**
      * Adding to debug a problem with project creation
      */
-    public void save(DBConnection dbCon) throws Exception
+    public void save(DBConnection dbCon) 
+        throws TorqueException
     {
         // If this object has been modified, then save it to the database.
         if (isModified())

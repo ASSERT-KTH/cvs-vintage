@@ -65,6 +65,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.Torque;
+import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.Persistent;
@@ -91,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.52 2002/03/01 16:47:25 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.53 2002/03/02 02:32:58 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -152,7 +153,7 @@ public class ScarabUserImpl
             }
             
             protected Vector getRModuleUserAttributes(Criteria crit)
-                throws Exception
+                throws TorqueException
             {
                 return getPrivateRModuleUserAttributes(crit);
             }
@@ -195,7 +196,7 @@ public class ScarabUserImpl
         return getLastName();
     }
     private Vector getPrivateRModuleUserAttributes(Criteria crit)
-        throws Exception
+        throws TorqueException
     {
         return getRModuleUserAttributes(crit);
     }

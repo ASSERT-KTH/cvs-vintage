@@ -50,6 +50,7 @@ package org.tigris.scarab.om;
 import com.workingdogs.village.Record;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.GlobalCacheService;
@@ -84,8 +85,11 @@ public class AttributeValuePeer
      * SCARAB_ISSUE_ATTRIBUTE_VALUE table
      */
     public static Class getOMClass(Record record, int offset) 
-        throws Exception
+        throws TorqueException
     {
+        Class c = null;
+        try
+        {
         NumberKey attId = new NumberKey(record.getValue(offset-1 + 3)
                                         .asString());
         Attribute attribute = Attribute.getInstance(attId);
@@ -96,7 +100,6 @@ public class AttributeValuePeer
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
         
         String key = getClassCacheKey(className);
-        Class c = null;
         try
         {
             c = (Class)tgcs.getObject(key).getContents();
@@ -105,6 +108,12 @@ public class AttributeValuePeer
         {
             c = Class.forName(className);
             tgcs.addObject(key, new CachedObject(c));
+        }
+
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
         }
         
         return c;

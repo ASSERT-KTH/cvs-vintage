@@ -50,6 +50,7 @@ package org.tigris.scarab.om;
 import java.util.Comparator;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -170,7 +171,7 @@ public class RModuleOption
      * Get the AttributeOption associated with this Module
      */
     public AttributeOption getAttributeOption()
-        throws Exception
+        throws TorqueException
     {
         return AttributeOption.getInstance(getOptionId());
     }

@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 
 // Scarab classes
@@ -75,7 +76,7 @@ public class TransactionPeer
      * @param ObjectKey pk
      */
     public static Transaction retrieveByPK( ObjectKey pk )
-        throws Exception
+        throws TorqueException
     {
         Transaction result = null;
         Object obj = ScarabCache.get(TRANSACTION_PEER, RETRIEVE_BY_PK, pk); 

@@ -57,6 +57,7 @@ import java.util.HashMap;
 import org.apache.log4j.Category;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -103,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.92 2002/02/19 05:03:39 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.93 2002/03/02 02:32:58 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -269,7 +270,7 @@ public class ScarabModule
      * @param id a <code>NumberKey</code> value
      */
     public void setParentId(NumberKey id)
-        throws Exception
+        throws TorqueException
     {
         super.setParentId(id);
         setName(null);
@@ -277,14 +278,14 @@ public class ScarabModule
     }
 
     protected List getRModuleAttributesThisModuleOnly(Criteria crit)
-        throws Exception
+        throws TorqueException
     {
         return super.getRModuleAttributes(crit);
     }
 
 
     public Vector getRModuleIssueTypes()
-        throws Exception
+        throws TorqueException
     {
         Vector result = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
@@ -333,7 +334,7 @@ public class ScarabModule
      * Saves the module into the database
      */
     public void save(DBConnection dbCon) 
-        throws Exception
+        throws TorqueException
     {
         // if new, make sure the code has a value.
         if ( isNew() )
@@ -348,8 +349,9 @@ public class ScarabModule
             List result = (List) ScarabModulePeer.doSelect(crit);
             if (result.size() > 0)
             {
-                throw new Exception("Sorry, a module with that name " + 
-                                    "and parent already exist.");
+                throw new TorqueException(
+                    new ScarabException("Sorry, a module with that name " + 
+                                        "and parent already exist.") );
             }
 
             String code = getCode();
@@ -357,12 +359,19 @@ public class ScarabModule
             {
                 if ( getParentId().equals(ROOT_ID) )
                 {
-                    throw new ScarabException(
+                    throw new TorqueException( new ScarabException(
                         "A top level module addition was"
-                        + " attempted without assigning a Code");
+                        + " attempted without assigning a Code") );
                 }
 
-                setCode(getParent().getCode());
+                try
+                {
+                    setCode(getParent().getCode());
+                }
+                catch (Exception e)
+                {
+                    throw new TorqueException(e);
+                }
             }
 
             // need to do this before the relationship save below
@@ -371,13 +380,20 @@ public class ScarabModule
 
             if ( getOwnerId() == null ) 
             {
-                throw new ScarabException(
-                     "Can't save a project without first assigning an owner.");
+                throw new TorqueException( new ScarabException(
+                    "Can't save a project without first assigning an owner."));
             }
-            grant (UserManager.getInstance(getOwnerId()), 
-                   TurbineSecurity.getRole("Project Owner"));
+            try
+            {
+                grant (UserManager.getInstance(getOwnerId()), 
+                       TurbineSecurity.getRole("Project Owner"));
         
-            setInitialAttributesAndIssueTypes();
+                setInitialAttributesAndIssueTypes();
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
         }
         else
         {

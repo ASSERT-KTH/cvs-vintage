@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -69,7 +70,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.8 2002/02/19 05:03:39 jmcnally Exp $
+  * @version $Id: ROptionOption.java,v 1.9 2002/03/02 02:32:58 jmcnally Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -185,7 +186,7 @@ public class ROptionOption
      * Gets the AttributeOption assigned to the Option1Id
      */
     public AttributeOption getOption1Option()
-        throws Exception
+        throws TorqueException
     {
         return AttributeOption.getInstance(getOption1Id());
     }
@@ -194,7 +195,7 @@ public class ROptionOption
      * Gets the AttributeOption assigned to the Option2Id
      */
     public AttributeOption getOption2Option()
-        throws Exception
+        throws TorqueException
     {
         return AttributeOption.getInstance(getOption2Id());
     }

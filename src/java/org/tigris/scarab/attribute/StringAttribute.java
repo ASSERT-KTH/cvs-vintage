@@ -47,14 +47,16 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.apache.torque.pool.DBConnection;
+import org.apache.torque.TorqueException;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.SearchFactory;
+
 
 /**
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.9 $ $Date: 2002/01/18 22:26:06 $
+ * @version $Revision: 1.10 $ $Date: 2002/03/02 02:32:57 $
  */
 public class StringAttribute extends FreeFormAttribute
 {
@@ -64,13 +66,20 @@ public class StringAttribute extends FreeFormAttribute
      * indexes the text value for searching.
      */
     public void save(DBConnection dbCon)
-        throws Exception
+        throws TorqueException
     {
-        super.save(dbCon);
-        SearchIndex searchIndex = SearchFactory.getInstance();
-        if ( searchIndex != null ) 
+        try
         {
-            searchIndex.index(this);
+            super.save(dbCon);
+            SearchIndex searchIndex = SearchFactory.getInstance();
+            if ( searchIndex != null ) 
+            {
+                searchIndex.index(this);
+            }
         }
-    }    
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
+    }
 }

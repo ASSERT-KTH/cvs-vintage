@@ -58,6 +58,7 @@ import java.util.HashMap;
 import org.apache.log4j.Category;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.BaseObject;
@@ -126,7 +127,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.38 2002/02/24 05:36:46 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.39 2002/03/02 02:33:00 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1116,11 +1117,9 @@ public abstract class AbstractScarabModule
     /**
      * Overridden method.  Calls the super method and if no results are
      * returned the call is passed on to the parent module.
-     * FIXME: what the heck is this thing doing? Also, we should expose
-     * things as a List instead of as a Vector...ugly ugly ugly...
      */
     public Vector getRModuleAttributes(Criteria crit)
-        throws Exception
+        throws TorqueException
     {
         List rModAtts = null;
         AbstractScarabModule module = this;
@@ -1129,7 +1128,14 @@ public abstract class AbstractScarabModule
         {
             rModAtts = module.getRModuleAttributesThisModuleOnly(crit);
             prevModule = module;
-            module = (AbstractScarabModule)prevModule.getParent();
+            try
+            {
+                module = (AbstractScarabModule)prevModule.getParent();
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
         }
         while ( rModAtts.size() == 0 &&
                !ROOT_ID.equals(prevModule.getModuleId()));
@@ -1147,13 +1153,13 @@ public abstract class AbstractScarabModule
      * @exception Exception if an error occurs
      */
     protected abstract List getRModuleAttributesThisModuleOnly(Criteria crit)
-        throws Exception;
+        throws TorqueException;
 
     /**
      * Overridden method.
      */
     public abstract Vector getRModuleOptions(Criteria crit)
-        throws Exception;
+        throws TorqueException;
 
     /**
      * Adds module-attribute mapping to module.
@@ -1602,7 +1608,7 @@ if (allRModuleOptions != null)
      * @exception Exception if an error occurs
      */
     public List getOptionTree(Attribute attribute, IssueType issueType)
-        throws Exception
+        throws TorqueException
     {
         return getOptionTree(attribute, issueType, true);
     }
@@ -1618,7 +1624,7 @@ if (allRModuleOptions != null)
      */
     public List getOptionTree(Attribute attribute, IssueType issueType,
                               boolean activeOnly)
-        throws Exception
+        throws TorqueException
     {
         List moduleOptions = null;
 try{
@@ -1669,7 +1675,7 @@ try{
 
 
     public Vector getRModuleIssueTypes()
-        throws Exception
+        throws TorqueException
     {
         Vector types = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 

@@ -56,6 +56,7 @@ import java.util.Date;
 import java.sql.Connection;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -179,7 +180,7 @@ public class Issue
      * Gets the UniqueId for this Issue.
      */
     public String getUniqueId()
-        throws Exception
+        throws TorqueException
     {
         if (getIdPrefix() == null)
         {
@@ -189,7 +190,7 @@ public class Issue
     }
 
     public String getFederatedId()
-        throws Exception
+        throws TorqueException
     {
         if ( getIdDomain() != null ) 
         {
@@ -405,7 +406,7 @@ public class Issue
      * @return a <code>ModuleEntity</code> value
      */
     public ModuleEntity getModule()
-        throws Exception
+        throws TorqueException
     {
         ModuleEntity module = null;
         ObjectKey id = getModuleId();
@@ -1360,7 +1361,7 @@ public class Issue
      * @exception Exception if an error occurs
      */
     public void save(DBConnection dbCon)
-        throws Exception
+        throws TorqueException
     {
         // remove unset AttributeValues before saving
         List attValues = getAttributeValues();
@@ -1380,7 +1381,14 @@ public class Issue
             ModuleEntity module = getModule();
             setIdDomain(module.getDomain());
             setIdPrefix(module.getCode());
-            setIdCount(getNextIssueId(dbCon));
+            try
+            {
+                setIdCount(getNextIssueId(dbCon));
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
         }
         super.save(dbCon);
     }

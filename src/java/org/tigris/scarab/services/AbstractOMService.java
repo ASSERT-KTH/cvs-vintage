@@ -54,14 +54,11 @@ import org.apache.fulcrum.InitializationException;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 
-import org.apache.fulcrum.cache.TurbineGlobalCacheService;
-import org.apache.fulcrum.cache.GlobalCacheService;
-import org.apache.fulcrum.cache.ObjectExpiredException;
-import org.apache.fulcrum.cache.CachedObject;
-
 import org.apache.stratum.jcs.JCS;
 import org.apache.stratum.jcs.access.behavior.ICacheAccess;
+import org.apache.stratum.jcs.access.exception.CacheException;
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.Persistent;
 import org.apache.log4j.Category;
@@ -72,7 +69,7 @@ import org.tigris.scarab.util.ScarabException;
  * instantiating OM's.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractOMService.java,v 1.6 2002/02/27 20:43:41 jmcnally Exp $
+ * @version $Id: AbstractOMService.java,v 1.7 2002/03/02 02:33:00 jmcnally Exp $
  */
 public abstract class AbstractOMService 
     extends BaseService 
@@ -89,6 +86,8 @@ public abstract class AbstractOMService
     private String className;
 
     private String region;
+
+    private boolean lockCache;
 
     /**
      * Initializes the OMService, locating the apropriate class and caching it
@@ -118,10 +117,10 @@ public abstract class AbstractOMService
     /**
      * Get a fresh instance of an om
      */
-    protected Object getOMInstance()
+    protected Persistent getOMInstance()
         throws InstantiationException, IllegalAccessException
     {
-        return omClass.newInstance();
+        return (Persistent)omClass.newInstance();
     }
 
     /**
@@ -156,7 +155,7 @@ public abstract class AbstractOMService
     /**
      * Return an instance of an om based on the id
      */
-    protected Object getOMInstance(ObjectKey id) 
+    protected Persistent getOMInstance(ObjectKey id) 
         throws Exception
     {
         return getOMInstance(id, true);
@@ -165,14 +164,14 @@ public abstract class AbstractOMService
     /**
      * Return an instance of an om based on the id
      */
-    protected Object getOMInstance(ObjectKey id, boolean fromCache) 
+    protected Persistent getOMInstance(ObjectKey id, boolean fromCache) 
         throws Exception
     {
         String key = id.toString();
-        Object om = null;
+        Persistent om = null;
         if (fromCache)
         {
-            om = cache.get(key);
+            om = cacheGet(key);
         }
 
         if (om == null)
@@ -180,14 +179,84 @@ public abstract class AbstractOMService
             om = retrieveStoredOM(id);
             if (fromCache) 
             {
-                cache.put(key, om);                
+                putInstanceImpl(om);
             }
         }
         
         return om;
     }
 
-    protected abstract Object retrieveStoredOM(ObjectKey id)
+    private Persistent cacheGet(String key)
+    {
+        Persistent om = null;
+        if (cache != null) 
+        {
+            if (lockCache) 
+            {
+                synchronized (this)
+                {
+                    om = (Persistent)cache.get(key);
+                }
+            }
+            else 
+            {    
+                om = (Persistent)cache.get(key);
+            }   
+        }
+        return om;
+    }
+
+    protected void clearImpl()
+        throws TorqueException
+    {
+        if (cache != null) 
+        {
+            try
+            {
+                cache.remove();
+            }
+            catch (CacheException ce)
+            {
+                throw new TorqueException(
+                        "Could not clear cache due to internal JCS error.", ce);
+            }
+        }
+    }
+
+    protected void putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        if (getOMClass() != null && !getOMClass().isInstance(om)) 
+        {
+            throw new TorqueException(om + "; class=" + om.getClass().getName()
+                + "; id=" + om.getPrimaryKey() + " cannot be cached with " + 
+                getOMClass().getName() + " objects");   
+        }
+        
+        if (cache != null) 
+        {
+            synchronized (this)
+            {
+                lockCache = true;
+                try
+                {
+                    cache.put(om.getPrimaryKey().toString(), om);
+                }
+                catch (CacheException ce)
+                {
+                    lockCache = false;
+                    throw new TorqueException(
+                        "Could not cache due to internal JCS error.", ce);
+                }
+                finally
+                {
+                    lockCache = false;
+                }
+            }
+        }
+    }
+
+    protected abstract Persistent retrieveStoredOM(ObjectKey id)
         throws Exception;
 
     /**
@@ -213,6 +282,19 @@ public abstract class AbstractOMService
     protected List getOMs(List ids) 
         throws Exception
     {
+        return getOMs(ids, true);
+    }
+
+    /**
+     * Gets a list of om's based on id's.
+     *
+     * @param ids a <code>List</code> of <code>ObjectKey</code>'s
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    protected List getOMs(List ids, boolean fromCache) 
+        throws Exception
+    {
         List oms = null;
         if ( ids != null && ids.size() > 0 ) 
         {
@@ -223,7 +305,11 @@ public abstract class AbstractOMService
             {
                 ObjectKey id = (ObjectKey)ids.get(i);
                 String key = id.toString();
-                Object om = cache.get(key);
+                Persistent om = null;
+                if (fromCache) 
+                {
+                    om = cacheGet(key);                    
+                }
                 if (om == null)
                 {
                     newIds.add(id);
@@ -248,8 +334,12 @@ public abstract class AbstractOMService
                             {
                                 // replace the id with the om and add the om
                                 // to the cache
-                                cache.put(oms.set(i, om).toString(), om);
+                                oms.set(i, om);
                                 newOms.remove(j);
+                                if (fromCache) 
+                                {
+                                    putInstanceImpl(om);
+                                }
                                 break;
                             }
                         }
@@ -279,7 +369,6 @@ public abstract class AbstractOMService
     public void setRegion(String  v) 
         throws InitializationException
     {
-        category.debug(this + " Setting region to: " + v);
         this.region = v;
         try 
         {
@@ -292,10 +381,7 @@ public abstract class AbstractOMService
         }
         if (cache == null) 
         {
-            throw new InitializationException(
-                "Cache could not be initialized for region: " + v);            
-        }
-        
+            category.info("Cache was not be initialized for region: " + v);
+        }        
     }
-    
 }

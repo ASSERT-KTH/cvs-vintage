@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Date;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
@@ -83,7 +84,7 @@ public class Activity
     /**
      * Gets the Attribute that was changed for this Activity record.
      */
-    public Attribute getAttribute() throws Exception
+    public Attribute getAttribute() throws TorqueException
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
@@ -98,7 +99,7 @@ public class Activity
     /**
      * Sets the Attribute that was changed for this Activity record.
      */
-    public void setAttribute(Attribute v) throws Exception
+    public void setAttribute(Attribute v) throws TorqueException
     {
         aAttribute = v;
         super.setAttribute(v);
@@ -113,7 +114,7 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue)
-         throws Exception
+         throws TorqueException
     {
         create(issue, attribute, desc, transaction,
                oldNumericValue, newNumericValue,
@@ -131,7 +132,7 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue, DBConnection dbCon)
-         throws Exception
+         throws TorqueException
     {
             setIssue(issue);
             if (attribute == null)
@@ -151,7 +152,21 @@ public class Activity
             setNewValue(newValue);
             if (dbCon == null) 
             {
-                save();   
+                try
+                {
+                    save();
+                }
+                catch (Exception e)
+                {
+                    if (e instanceof TorqueException) 
+                    {
+                        throw (TorqueException)e;
+                    }
+                    else 
+                    {
+                        throw new TorqueException(e);
+                    }
+                }
             }
             else 
             {
@@ -165,19 +180,11 @@ public class Activity
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
                        String oldValue, String newValue)
-         throws Exception
+         throws TorqueException
     {
-            setIssue(issue);
-            if (attribute == null)
-            {
-                attribute = Attribute.getInstance(0);
-            }
-            setAttribute(attribute);
-            setDescription(desc);
-            setTransaction(transaction);
-            setOldValue(oldValue);
-            setNewValue(newValue);
-            save();
+        create(issue, attribute, desc, transaction,
+               0, 0, null, null, null, null,
+               oldValue, newValue, null);
     }
 
 
@@ -226,7 +233,7 @@ public class Activity
      */
 
     public void save(DBConnection dbCon)
-        throws Exception
+        throws TorqueException
     {
         // make sure to mark last related activity as done
         if ( isNew() ) 
@@ -240,13 +247,14 @@ public class Activity
             {
                 Activity a = (Activity)result.get(0);
                 a.setEndDate(getTransaction().getCreatedDate());
-                a.save();
+                a.save(dbCon);
             }
             else if ( result.size() > 1 ) 
             {
                 // something is wrong with database
-                throw new ScarabException("Multiple activities on the same"
-                                          +" attribute are active.");
+                throw new TorqueException(
+                    new ScarabException("Multiple activities on the same"
+                                        +" attribute are active.") );
             }
             else if ( result.size() == 0 ) 
             {
@@ -259,8 +267,9 @@ public class Activity
                 result = ActivityPeer.doSelect(crit);
                 if ( result.size() != 0 ) 
                 {
-                    throw new ScarabException("Previous activity has occured" 
-                        + " on the same attribute but none are active.");
+                    throw new TorqueException(
+                        new ScarabException("Previous activity has occured" 
+                        + " on the same attribute but none are active.") );
                 }
             }
         }

@@ -53,6 +53,7 @@ import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.commons.util.StringUtils;
 import org.apache.turbine.RunData;
+import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 
 /**
@@ -61,7 +62,7 @@ import org.apache.torque.util.Criteria;
  * duplicate methods.  One should be deprecated.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.19 2002/02/26 17:40:27 jmcnally Exp $
+ * @version $Id: ModuleManager.java,v 1.20 2002/03/02 02:33:00 jmcnally Exp $
  */
 public abstract class ModuleManager
 {
@@ -84,9 +85,18 @@ public abstract class ModuleManager
     }
 
     public static ModuleEntity getInstance(ObjectKey id)
-        throws Exception
+        throws TorqueException
     {
-        return getService().getInstance(id);
+        ModuleEntity module = null;
+        try
+        {
+            module = getService().getInstance(id);
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
+        return module;
     }
 
     public static boolean exists(ModuleEntity module)

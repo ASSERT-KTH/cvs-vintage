@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria; 
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.ObjectUtils;
@@ -114,8 +115,9 @@ public class Transaction
 
     /**
      * Gets the Attachment associated with this Transaction record
+     * FIXME! why is this needed?
      */
-    public Attachment getAttachment() throws Exception
+    public Attachment getAttachment() throws TorqueException
     {
         try
         {
@@ -137,8 +139,9 @@ public class Transaction
 
     /**
      * Sets the Attachment associated with this Transaction record
+     * FIXME! why is this needed?
      */
-    public void setAttachment(Attachment v) throws Exception
+    public void setAttachment(Attachment v) throws TorqueException
     {
         aAttachment = v;
         super.setAttachment(v);

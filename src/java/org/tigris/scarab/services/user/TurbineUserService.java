@@ -51,6 +51,7 @@ import org.apache.fulcrum.InitializationException;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.om.ScarabUser;
@@ -63,7 +64,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineUserService.java,v 1.4 2002/02/26 03:58:26 jmcnally Exp $
+ * @version $Id: TurbineUserService.java,v 1.5 2002/03/02 02:33:01 jmcnally Exp $
  */
 public class TurbineUserService 
     extends AbstractUserService 
@@ -75,7 +76,7 @@ public class TurbineUserService
         setClassName("org.tigris.scarab.om.ScarabUserImpl");
     }
 
-    protected Object retrieveStoredOM(ObjectKey userId)
+    protected Persistent retrieveStoredOM(ObjectKey userId)
         throws Exception
     {
         return ScarabUserImplPeer.retrieveScarabUserImplByPK(userId);

@@ -3,6 +3,7 @@ package org.tigris.scarab.om;
 import java.util.*;
 //import com.workingdogs.village.*;
 //import org.apache.torque.map.*;
+import org.apache.torque.TorqueException;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
@@ -33,7 +34,7 @@ public class IssueTypePeer
      * @param ObjectKey pk
      */
     public static IssueType retrieveByPK( ObjectKey pk )
-        throws Exception
+        throws TorqueException
     {
         IssueType result = null;
         Object obj = ScarabCache.get(ISSUE_TYPE_PEER, RETRIEVE_BY_PK, pk); 

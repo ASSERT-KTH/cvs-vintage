@@ -59,6 +59,7 @@ import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
+import org.apache.torque.TorqueException;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
@@ -82,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.16 2002/03/01 15:44:22 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.17 2002/03/02 02:32:57 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -204,7 +205,7 @@ public abstract class AbstractScarabUser
     }
 
     protected abstract Vector getRModuleUserAttributes(Criteria crit)
-        throws Exception;
+        throws TorqueException;
             
     private static final String GET_R_MODULE_USERATTRIBUTE = 
         "getRModuleUserAttribute";

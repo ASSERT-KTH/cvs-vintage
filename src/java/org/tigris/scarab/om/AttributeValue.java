@@ -52,6 +52,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.util.ObjectUtils;
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -195,7 +196,7 @@ public abstract class AttributeValue
      * sets the AttributeId for this as well as any chained values.
      */
     public void setAttributeId(NumberKey nk)
-        throws Exception
+        throws TorqueException
     {
         super.setAttributeId(nk);
         if ( chainedValue != null ) 
@@ -208,7 +209,7 @@ public abstract class AttributeValue
      * sets the IssueId for this as well as any chained values.
      */
     public void setIssueId(NumberKey nk)
-        throws Exception
+        throws TorqueException
     {
         super.setIssueId(nk);
         if ( chainedValue != null ) 
@@ -325,12 +326,27 @@ public abstract class AttributeValue
      * @param optionId a <code>NumberKey</code> value
      */
     public void setOptionId(NumberKey optionId)
-        throws Exception
+        throws TorqueException
     {
         if ( optionId != null && optionId.getValue() != null ) 
         {
-            List options = getIssue().getModule()
-                .getRModuleOptions(getAttribute(), getIssue().getIssueType());
+            List options = null;
+            try
+            {
+                options = getIssue().getModule().getRModuleOptions(
+                    getAttribute(), getIssue().getIssueType());
+            }
+            catch (Exception e)
+            {
+                if (e instanceof TorqueException) 
+                {
+                    throw (TorqueException)e;
+                }
+                else 
+                {
+                    throw new TorqueException(e);
+                }
+            }
             for ( int i=options.size()-1; i>=0; i-- ) 
             {
                 RModuleOption option = (RModuleOption)options.get(i);
@@ -372,7 +388,7 @@ public abstract class AttributeValue
     }
 
     protected void setOptionIdOnly(NumberKey optionId)
-        throws Exception
+        throws TorqueException
     {
         if ( !ObjectUtils.equals(optionId, getOptionId()) )
         { 
@@ -394,7 +410,7 @@ public abstract class AttributeValue
      * @param userId a <code>NumberKey</code> value
      */
     public void setUserId(NumberKey userId)
-        throws Exception
+        throws TorqueException
     {
         if ( userId != null && userId.getValue() != null ) 
         {
@@ -411,7 +427,7 @@ public abstract class AttributeValue
     }
 
     protected void setUserIdOnly(NumberKey value)
-        throws Exception
+        throws TorqueException
     {
         if ( !ObjectUtils.equals(value, getUserId()) )
         { 
@@ -517,13 +533,12 @@ public abstract class AttributeValue
     }
 
     public boolean isSet()
-       throws Exception
     {
         return !(getOptionId() == null && getValue() == null
                  && getUserId() == null);
     }
 
-    public Attribute getAttribute() throws Exception
+    public Attribute getAttribute() throws TorqueException
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
@@ -544,7 +559,7 @@ public abstract class AttributeValue
                                           getIssue().getIssueType()); 
     }
 
-    public void setAttribute(Attribute v) throws Exception
+    public void setAttribute(Attribute v) throws TorqueException
     {
         aAttribute = v;
         super.setAttribute(v);
@@ -552,7 +567,7 @@ public abstract class AttributeValue
 
 
     public AttributeOption getAttributeOption()
-        throws Exception
+        throws TorqueException
     {
         return getAttribute().getAttributeOption(getOptionId());
     }
@@ -597,7 +612,7 @@ public abstract class AttributeValue
      * @param intId This Attribute's Id
      */
     public static AttributeValue getNewInstance(
-        RModuleAttribute rma, Issue issue) throws Exception
+        RModuleAttribute rma, Issue issue) throws TorqueException
     {
         return getNewInstance(rma.getAttributeId(), issue);
     }
@@ -609,7 +624,7 @@ public abstract class AttributeValue
      * @param attId the Attribute's Id
      */
     public static AttributeValue getNewInstance(
-        ObjectKey attId, Issue issue) throws Exception
+        ObjectKey attId, Issue issue) throws TorqueException
     {
         Attribute attribute = Attribute.getInstance(attId);
         return getNewInstance(attribute, issue);
@@ -622,11 +637,14 @@ public abstract class AttributeValue
      * @param attId the Attribute's Id
      */
     public static synchronized AttributeValue getNewInstance(
-        Attribute attribute, Issue issue) throws Exception
+        Attribute attribute, Issue issue) throws TorqueException
     {
+        AttributeValue attv = null;
+        try
+        {
         String className = attribute
             .getAttributeType().getJavaClassName();
-        AttributeValue attv = (AttributeValue)
+        attv = (AttributeValue)
             Class.forName(className).newInstance();
         attv.setAttribute(attribute);
         attv.setIssue(issue);
@@ -649,6 +667,11 @@ public abstract class AttributeValue
 
         attv.setResources(resources);
         attv.init();
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
         return attv;
     }
 
@@ -683,7 +706,7 @@ public abstract class AttributeValue
         return false;
     }
     
-    public AttributeValue copy() throws Exception
+    public AttributeValue copy() throws TorqueException
     {
         AttributeValue copyObj = AttributeValue
             .getNewInstance(getAttributeId(), getIssue());
@@ -691,11 +714,18 @@ public abstract class AttributeValue
     }
 
     public void save(DBConnection dbcon)
-        throws Exception
+        throws TorqueException
     {
         if ( isModified())
         {
-            checkTransaction("Cannot save a value outside a Transaction");
+            try
+            {
+                checkTransaction("Cannot save a value outside a Transaction");
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
             // Save activity record
             Activity activity = new Activity();
             String desc = getActivityDescription();
@@ -718,7 +748,7 @@ public abstract class AttributeValue
     // the description can be generated from the other data and it brings
     // up i18n issues.
     private String getActivityDescription()
-        throws Exception
+        throws TorqueException
     {
         String id = getIssue().getFederatedId();
         String name = getAttribute().getName();

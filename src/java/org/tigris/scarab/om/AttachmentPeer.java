@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 
 // Scarab classes
@@ -75,7 +76,7 @@ public class AttachmentPeer
      * @param ObjectKey pk
      */
     public static Attachment retrieveByPK( ObjectKey pk )
-        throws Exception
+        throws TorqueException
     {
         Attachment result = null;
         Object obj = ScarabCache.get(ATTACHMENT_PEER, RETRIEVE_BY_PK, pk); 

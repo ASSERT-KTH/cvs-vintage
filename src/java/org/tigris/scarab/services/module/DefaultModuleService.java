@@ -53,6 +53,7 @@ import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
@@ -69,7 +70,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DefaultModuleService.java,v 1.2 2002/02/26 03:58:26 jmcnally Exp $
+ * @version $Id: DefaultModuleService.java,v 1.3 2002/03/02 02:33:00 jmcnally Exp $
  */
 public class DefaultModuleService 
     extends AbstractModuleService 
@@ -94,7 +95,7 @@ public class DefaultModuleService
     }
 
 
-    protected Object retrieveStoredOM(ObjectKey id)
+    protected Persistent retrieveStoredOM(ObjectKey id)
         throws Exception
     {
         return ScarabModulePeer.retrieveByPK(id);

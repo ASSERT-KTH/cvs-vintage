@@ -4,6 +4,7 @@ import java.util.*;
 import com.workingdogs.village.*;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.pool.DBConnection;
@@ -72,7 +73,7 @@ public class ReportPeer
      * @param ObjectKey pk
      */
     public static Report retrieveByPK( ObjectKey pk )
-        throws Exception
+        throws TorqueException
     {
         Report result = null;
         Object obj = ScarabCache.get(REPORT_PEER, RETRIEVE_BY_PK, pk); 

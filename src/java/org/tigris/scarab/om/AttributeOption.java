@@ -56,6 +56,7 @@ import java.util.Comparator;
 import java.util.Collections;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -85,7 +86,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.22 2002/01/18 22:26:07 jon Exp $
+  * @version $Id: AttributeOption.java,v 1.23 2002/03/02 02:32:58 jmcnally Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -170,7 +171,7 @@ public class AttributeOption
     /**
      * Get the Attribute associated with this Option
      */
-    public Attribute getAttribute() throws Exception
+    public Attribute getAttribute() throws TorqueException
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
@@ -185,7 +186,7 @@ public class AttributeOption
     /**
      * Set the Attribute associated with this Option
      */
-    public void setAttribute(Attribute v) throws Exception
+    public void setAttribute(Attribute v) throws TorqueException
     {
         aAttribute = v;
         super.setAttribute(v);
@@ -204,7 +205,7 @@ public class AttributeOption
      * primary key.
      */
     public static AttributeOption getInstance(ObjectKey attId) 
-        throws Exception
+        throws TorqueException
     {
         if (attId == null)
         {
@@ -229,7 +230,7 @@ public class AttributeOption
             }
             catch (Exception e)
             {
-                throw new ScarabException("AttributeOption with ID " + attId + 
+                throw new TorqueException("AttributeOption with ID " + attId + 
                                           " can not be found");
             }
             tgcs.addObject(key, new CachedObject(option));
@@ -319,7 +320,7 @@ public class AttributeOption
      * of this AttributeOption.
      */
     public List getChildren()
-        throws Exception
+        throws TorqueException
     {
         if (sortedChildren == null)
         {
@@ -347,7 +348,7 @@ public class AttributeOption
      * of this AttributeOption.
      */
     private synchronized void buildChildren()
-        throws Exception
+        throws TorqueException
     {
         Criteria crit = new Criteria()
             .add(ROptionOptionPeer.RELATIONSHIP_ID, 

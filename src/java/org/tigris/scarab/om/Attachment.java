@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.io.File;
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
@@ -177,15 +178,17 @@ public class Attachment
      * @exception Exception if an error occurs
      */
     public void save(DBConnection dbCon)
-        throws Exception
+        throws TorqueException
     {
         if ( getIssue().isNew() ) 
         {
-            throw new ScarabException("Cannot save an attachment before saving"
+            throw new TorqueException("Cannot save an attachment before saving"
                                       + " the issue to which it is attached.");
         }
         super.save(dbCon);
         
+        try
+        {
         FileItem file = getFile();
         if ( file != null ) 
         {        
@@ -197,6 +200,11 @@ public class Attachment
             mkdirs(parent);
             }                
             file.write(uploadFile.getPath());
+        }
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
         }
     }        
 

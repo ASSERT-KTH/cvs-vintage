@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 // Turbine classes
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -80,7 +81,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.40 2002/02/23 01:23:36 elicia Exp $
+  * @version $Id: Attribute.java,v 1.41 2002/03/02 02:32:58 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -139,7 +140,7 @@ public class Attribute
      * Return an instance of Attribute based on the passed in attribute id
      */
     public static Attribute getInstance(ObjectKey attId) 
-        throws Exception
+        throws TorqueException
     {
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
@@ -159,7 +160,7 @@ public class Attribute
             }
             catch (Exception e)
             {
-                throw new ScarabException("Attribute with ID " + attId + 
+                throw new TorqueException("Attribute with ID " + attId + 
                                           " can not be found");
             }
             tgcs.addObject(key, new CachedObject(attribute));
@@ -172,7 +173,7 @@ public class Attribute
      * It will return a cached instance if possible.
      */
     public static Attribute getInstance(int id)
-        throws Exception
+        throws TorqueException
     {
         return getInstance((ObjectKey)new NumberKey(id));
     }
@@ -392,7 +393,7 @@ public class Attribute
      * @return an <code>AttributeOption</code> value
      */
     public AttributeOption getAttributeOption(NumberKey pk)
-        throws Exception
+        throws TorqueException
     {
         if (optionsMap == null)
         {
@@ -405,7 +406,7 @@ public class Attribute
      * Get an option by String id
      */
     public AttributeOption getAttributeOption(String optionID)
-        throws Exception
+        throws TorqueException
     {
         return getAttributeOption(new NumberKey(optionID));
     }
@@ -415,7 +416,7 @@ public class Attribute
      * Used internally to get a list of Attribute Options
      */
     private List getAllAttributeOptions()
-        throws Exception
+        throws TorqueException
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ALL_ATTRIBUTE_OPTIONS); 
@@ -453,7 +454,7 @@ public class Attribute
      * @return a List of ParentChildAttributeOption objects
      */
     public List getParentChildAttributeOptions()
-        throws Exception
+        throws TorqueException
     {
         if (parentChildAttributeOptions == null)
         {
@@ -498,7 +499,7 @@ public class Attribute
      * @return a List of ROptionOption's
      */
     public List getOrderedROptionOptionList()
-        throws Exception
+        throws TorqueException
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ORDERED_ROPTIONOPTION_LIST); 
@@ -541,7 +542,7 @@ public class Attribute
      * @return a List of AttributeOption's
      */
     public List getOrderedAttributeOptionList()
-        throws Exception
+        throws TorqueException
     {
         if (orderedAttributeOptionList == null)
         {
@@ -559,7 +560,7 @@ public class Attribute
      * that have not been marked as deleted.
      */
     public List getAttributeOptions(boolean includeDeleted)
-        throws Exception
+        throws TorqueException
     {
         List allOptions = getAllAttributeOptions();
         List nonDeleted = new ArrayList(allOptions.size());
@@ -585,7 +586,7 @@ public class Attribute
      * Build a list of options.
      */
     public synchronized void buildOptionsMap()
-        throws Exception
+        throws TorqueException
     {
         if ( this.getAttributeType().getAttributeClass().getName()
              .equals(SELECT_ONE) ) 
