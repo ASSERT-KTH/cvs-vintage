@@ -3,7 +3,7 @@
 <server>
 
   <depends>JBOSS-SYSTEM:service=Naming</depends>
-  <depends>:service=Jetty</depends>
+  <!--<depends>:service=Jetty</depends>-->
 
   <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->

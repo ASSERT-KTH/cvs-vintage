@@ -17,7 +17,7 @@
    -->
   <mbean code="org.jboss.jetty.JettyService"
 	 name=":service=Jetty">
-    <attribute name="JettyHome">W:/Jetty-3.1.RC8</attribute>
+    <attribute name="JettyHome">your-Jetty-3.1.RC9-home</attribute>
     <attribute name="Configuration">../conf/default/jetty.xml</attribute>
     <attribute name="WebDefault">../conf/default/webdefault.xml</attribute>
     <attribute name="UnpackWars">true</attribute>
