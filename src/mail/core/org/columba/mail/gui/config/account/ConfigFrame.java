@@ -328,8 +328,6 @@ public class ConfigFrame
 			//String value = (String) theList.getSelectedValue();
 			index = theList.getAnchorSelectionIndex();
 
-			System.out.println(MailResourceLoader.getString("dialog", "account", "index") + index); //$NON-NLS-1$
-
 			setSelected(accountList.get(index));
 		}
 	}
@@ -353,7 +351,6 @@ public class ConfigFrame
 			dialog.setVisible(false);
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
-			System.out.println(MailResourceLoader.getString("dialog", "account", "add")); //$NON-NLS-1$
 			try {
 
 				AccountWizard wizard = new AccountWizard(true);
@@ -364,17 +361,14 @@ public class ConfigFrame
 
 		} else if (action.equals("REMOVE")) //$NON-NLS-1$
 			{
-			System.out.println(MailResourceLoader.getString("dialog", "account", "remove")); //$NON-NLS-1$
-
 			AccountItem item = accountList.remove(index);
 
-			if (item.isPopAccount() == true) {
+			if (item.isPopAccount()) {
 				MainInterface.popServerCollection.removePopServer(
 					item.getUid());
 
 			} else {
-				Folder folder =
-					(Folder) MainInterface.treeModel.getImapFolder(
+				Folder folder = (Folder) MainInterface.treeModel.getImapFolder(
 						item.getUid());
 				try {
 
