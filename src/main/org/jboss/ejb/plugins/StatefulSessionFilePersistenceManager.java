@@ -50,11 +50,15 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 
 /**
- *	<description> 
+ *	StatefulSessionFilePersistenceManager
+ *
+ *  This class is one of the passivating plugins for jBoss.  
+ *  It is fairly simple and can work from the file system from wich jBoss is operating
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -81,21 +85,27 @@ public class StatefulSessionFilePersistenceManager
       con = (StatefulSessionContainer)c;
    }
    
-   public void init()
-      throws Exception
-   {
-      // Find methods
-      ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
-      ejbPassivate = SessionBean.class.getMethod("ejbPassivate", new Class[0]);
-      ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
+	public void init()
+    	throws Exception {
+			
+    	// Find methods
+      	ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
+      	
+		ejbPassivate = SessionBean.class.getMethod("ejbPassivate", new Class[0]);
+      	
+		ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
       
-      String ejbName = con.getMetaData().getEjbName();
-      dir = new File(getClass().getResource("db.properties").getFile()).getParentFile();
-      dir = new File(dir, ejbName);
+        // Initialize the dataStore
+	  	String ejbName = con.getMetaData().getEjbName();
+	  
+	  	File database = new File("database");
+	  
+	  	dir = new File(database, ejbName);
+			
+		dir.mkdirs();
 		
-		System.out.println("Storing sessions for "+ejbName+" in:"+dir);
-      dir.mkdirs();
-		
+	  	System.out.println("Storing sessions for "+ejbName+" in:"+dir);
+      
 		// Clear dir of old files
 		File[] sessions = dir.listFiles();
 		for (int i = 0; i < sessions.length; i++)
