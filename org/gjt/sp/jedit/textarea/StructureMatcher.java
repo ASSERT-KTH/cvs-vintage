@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * for matching XML tags.
  *
  * @author Slava Pestov
- * @version $Id: StructureMatcher.java,v 1.4 2003/06/27 20:02:06 spestov Exp $
+ * @version $Id: StructureMatcher.java,v 1.5 2003/09/21 18:51:27 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public interface StructureMatcher
@@ -134,7 +134,6 @@ public interface StructureMatcher
 		Highlight(JEditTextArea textArea)
 		{
 			this.textArea = textArea;
-			returnValue = new Point();
 		}
 
 		public void paintValidLine(Graphics2D gfx, int screenLine,
@@ -151,6 +150,41 @@ public interface StructureMatcher
 			}
 		}
 
+		private int[] getOffsets(int screenLine, Match match)
+		{
+			int x1, x2;
+
+			int matchStartLine = textArea.getScreenLineOfOffset(
+				match.start);
+			int matchEndLine = textArea.getScreenLineOfOffset(
+				match.end);
+
+			if(matchStartLine == screenLine)
+			{
+				x1 = match.start;
+			}
+			else
+			{
+				x1 = textArea.getScreenLineStartOffset(
+					screenLine);
+			}
+
+			if(matchEndLine == screenLine)
+			{
+				x2 = match.end;
+			}
+			else
+			{
+				x2 = textArea.getScreenLineEndOffset(
+					screenLine) - 1;
+			}
+
+			return new int[] {
+				textArea.offsetToXY(x1).x,
+				textArea.offsetToXY(x2).x
+			};
+		}
+	
 		private void paintHighlight(Graphics gfx, int screenLine,
 			int physicalLine, int start, int end, int y,
 			Match match)
@@ -171,29 +205,9 @@ public interface StructureMatcher
 			FontMetrics fm = textArea.getPainter().getFontMetrics();
 			int height = fm.getHeight();
 
-			int x1, x2;
-
-			if(matchStartLine == screenLine)
-			{
-				x1 = match.start - textArea.getLineStartOffset(
-					match.startLine);
-			}
-			else
-				x1 = 0;
-
-			if(matchEndLine == screenLine)
-			{
-				x2 = match.end - textArea.getLineStartOffset(
-					match.endLine);
-			}
-			else
-			{
-				x2 = textArea.getScreenLineEndOffset(screenLine)
-					- textArea.getScreenLineStartOffset(screenLine);
-			}
-
-			x1 = textArea.offsetToXY(physicalLine,x1,returnValue).x;
-			x2 = textArea.offsetToXY(physicalLine,x2,returnValue).x;
+			int[] offsets = getOffsets(screenLine,match);
+			int x1 = offsets[0];
+			int x2 = offsets[1];
 
 			gfx.setColor(textArea.getPainter().getStructureHighlightColor());
 
@@ -204,21 +218,9 @@ public interface StructureMatcher
 				gfx.drawLine(x1,y,x2,y);
 			else
 			{
-				int prevX1, prevX2;
-
-				if(matchStartLine == screenLine - 1)
-				{
-					prevX1 = match.start - textArea.getLineStartOffset(
-						match.startLine);
-				}
-				else
-					prevX1 = 0;
-
-				prevX2 = textArea.getScreenLineEndOffset(screenLine - 1)
-					- textArea.getScreenLineStartOffset(screenLine - 1);
-
-				prevX1 = textArea.offsetToXY(physicalLine - 1,prevX1,returnValue).x;
-				prevX2 = textArea.offsetToXY(physicalLine - 1,prevX2,returnValue).x;
+				offsets = getOffsets(screenLine - 1,match);
+				int prevX1 = offsets[0];
+				int prevX2 = offsets[1];
 
 				gfx.drawLine(Math.min(x1,prevX1),y,
 					Math.max(x1,prevX1),y);
@@ -227,10 +229,12 @@ public interface StructureMatcher
 			}
 
 			if(matchEndLine == screenLine)
-				gfx.drawLine(x1,y + height - 1,x2,y + height - 1);
+			{
+				gfx.drawLine(x1,y + height - 1,
+					x2,y + height - 1);
+			}
 		}
 
 		private JEditTextArea textArea;
-		private Point returnValue;
 	} //}}}
 }
