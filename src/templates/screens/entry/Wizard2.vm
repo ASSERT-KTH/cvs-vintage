@@ -3,25 +3,26 @@ $page.setTitle("Identified as duplicate")
 <div id="wizard2" class="app">
 
 #set ($currentIssue = $scarabR.ReportingIssue)
-#set ($action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "entry,Wizard3.vm").toString())
 
 <h2>$page.Title</h2>
 
 <div class="tabs">
-    <table cellpadding="3" cellspacing="0" border="0">
-    <tr>
-    <td>1: Summary info</td>
-    <th>2: Duplicate check</th>
-    <td>3: Verbose info</td>
-    </tr>
-    </table>
+  <table cellpadding="3" cellspacing="0" border="0">
+  <tr>
+  <td>1: Summary info</td>
+  <th>2: Duplicate check</th>
+  <td>3: Verbose info</td>
+  </tr>
+  </table>
 </div>
 	
 #set ($templateId = $data.Parameters.getString("templateId"))
-<form method="get" name="Report2Form" action="$action">
-<input type="hidden" name="templateId" value="$templateId" />
+<form method="get" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
+<input type="hidden" name="action" value="ReportIssue" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
+<input type="hidden" name="templateId" value="$!templateId" />
 
-<h3>New issue</h3>
+<h3>New $scarabR.CurrentIssueType.Name</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
@@ -53,6 +54,7 @@ $page.setTitle("Identified as duplicate")
 </table>
 
 <h3>Possible duplicates</h3>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>
@@ -137,127 +139,6 @@ Click Bypass Duplicates to continue entering your Issue.
 </table>
 </div>
 
-#*
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr>
-<td width="50%">
-
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-<tr>
-<td colspan="2">POSSIBLE ISSUE MATCHES</td>
-</tr>
-<tr>
-<td>Issue ID#</td>
-<td>Issue Summary</td>
-</tr>
-#set ($currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
-#if ($currentIssueId == $issue.UniqueId)
-#set ($currentIssue = $issue)
-#if ($velocityCount != $issueList.size())
-#set ($nextIssueIndex = $velocityCount)
-#else
-#set ($nextIssueIndex = 0)
-#end
-#set ($nextIssueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issueList.get($nextIssueIndex).UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
-#else
-<a href="$issueLink">$issue.UniqueId</a>
-$issue.ModuleAttributeValuesMap.get("SUMMARY").Value
-#end
-#end
-## The issue details
-Issue ID#: $currentIssue.UniqueId
-#foreach ($attVal in $currentIssue.OrderedModuleAttributeValues)
-<b>$attVal.RModuleAttribute.DisplayValue:</b>
-#if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0)
-<a href="mailto:$attVal.Value">$attVal.Value</a>
-#else
-$!attVal.Value
-#end
-</td></tr>
-#end
-Reported by:<br />
-#set ($email = $currentIssue.CreatedBy.Email)
-<a href="mailto:$email">$email</a>
-Date Entered:<br />
-$currentIssue.CreatedDate
-Last Modified:<br />
-$currentIssue.ModifiedDate
-#set ($comma = "")
-#foreach ($issue in $currentIssue.BlockerIssues)
-#set ($issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate))
-$comma<a href="$issueLink">$issue.UniqueId</a>
-#set ($comma = ", ")
-#end
-</td>
-</tr>
-<tr>
-<td>Dependents:<br />
-#set ($comma = "")
-#foreach ($issue in $currentIssue.BlockerIssues)
-#set ($issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate))
-$comma<a href="$issueLink">$issue.UniqueId</a>
-#set ($comma = ", ")
-#end
-</td>
-</tr>
-#set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
-<tr><td>
-Does this issue match yours?<a href="$link.setPage("links.vm")">Yes</a>(Vote)
-<a href="$nextIssueLink">No</a>(Next issue)
-<p>
-<a href="$link.addPathInfo($data.Parameters).setPathInfo("nexttempate", "entry,wizard3.vm").setpage("entry,wizard3.vm")">None of these Issues Match Mine</a> (Report issue now)
-</p>
-#*
-<input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
-<input type="submit" name="eventSubmit_doNo" value="No">(Next issue)
-<p>
-<input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine" />(New Search)
-<input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
-*#
-</p>
-</td></tr>
-*#
-#*  Comments are not ready, not really sure they belong here.
-<a href="#Comments">Add Comment</a>
-<p>
-<a name="Comments">
-Comments</a>
-</p>
-<td class="TableDataHeader">From: <span class="TableData"><a href="mailto:bob@collab.net">bob@collab.net</a></span></td>
-<td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
-</tr>
-<tr>
-<td height="4" colspan="5"></td>
-</tr>
-<tr>
-<td colspan="2" class="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</td>
-</tr>
-<tr>
-<td height="4" colspan="5"></td>
-</tr>
-<tr>
-<td height="1" colspan="5" bgcolor="#cccccc"></td>
-</tr>
-<tr>
-<td class="TableDataHeader">From: <span class="TableData"><a href="mailto:matt@collab.net">matt@collab.net</a></span></td>
-<td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
-</tr>
-<tr>
-<td height="4" colspan="5"></td>
-</tr>
-<tr>
-<td colspan="2" class="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</td>
-</tr>
-Add a comment
-<p>
-<textarea name="" value="$description" cols="40" rows="3"></textarea><br>
-<input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
-</p>
-*#
-</table>
-</td>
-</tr>
-</table>
 $intake.declareGroups()
 </form>
 </div>

@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.64 2001/11/02 22:50:04 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.65 2001/11/27 01:02:50 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -410,7 +410,7 @@ public class ReportIssue extends RequireLoginFirstAction
             try
             {
                 issue.addVote((ScarabUser)data.getUser());
-                data.setMessage("Your vote for issue #" + issue.getUniqueId() 
+                data.setMessage("Your vote for artifact #" + issue.getUniqueId() 
                                 + " has been accepted.");
                 // if there was only one duplicate issue and the user just
                 // voted for it, assume user is done
