@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaXmlTypeMapping.java,v 1.2 2004/06/09 13:41:40 tdiesler Exp $
+// $Id: JavaXmlTypeMapping.java,v 1.3 2004/06/10 11:04:35 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -24,8 +24,10 @@ public class JavaXmlTypeMapping
 
    // The required <class-type> element
    private String javaType;
-   // The required <root-type-qname> element
+   // The choice <root-type-qname> element
    private QName rootTypeQName;
+   // The choice <anonymous-type-qname> element
+   private String anonymousTypeQName;
    // The required <qname-scope> element
    private String qnameScope;
    // Zero or more <variable-mapping> elements
@@ -69,6 +71,16 @@ public class JavaXmlTypeMapping
    public void setRootTypeQName(QName rootTypeQName)
    {
       this.rootTypeQName = rootTypeQName;
+   }
+
+   public String getAnonymousTypeQName()
+   {
+      return anonymousTypeQName;
+   }
+
+   public void setAnonymousTypeQName(String anonymousTypeQName)
+   {
+      this.anonymousTypeQName = anonymousTypeQName;
    }
 
    public VariableMapping[] getVariableMappings()

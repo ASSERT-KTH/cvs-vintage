@@ -6,9 +6,11 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.2 2004/06/08 17:41:18 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.3 2004/06/10 11:04:33 tdiesler Exp $
 
+import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * XML mapping of the java-wsdl-mapping root element in jaxrpc-mapping.xml
@@ -75,6 +77,22 @@ public class JavaWsdlMapping
             packageStr = mapping.getPackageType();
       }
       return packageStr;
+   }
+
+
+   public JavaXmlTypeMapping getTypeMappingForQName(QName typeQName)
+   {
+      JavaXmlTypeMapping typeMapping = null;
+      
+      Iterator it = javaXmlTypeMappings.iterator();
+      while (it.hasNext())
+      {
+         JavaXmlTypeMapping mapping = (JavaXmlTypeMapping)it.next();
+         if (mapping.getRootTypeQName().equals(typeQName))
+            typeMapping = mapping;
+      }
+
+      return typeMapping;
    }
 
    // factory methods ********************************************************************
