@@ -128,6 +128,11 @@ fi
 ant
 echo "Building Scarab Finish..."
 
+echo "Building Scarab Javadoc Start..."
+cd ${DIR}; cd ${SCARAB}/build
+ant javadocs
+echo "Building Scarab Javadoc Finish..."
+
 echo "Recreating the database..."
 cd ${DIR}; cd ${SCARAB}/src/sql
 ./create-mysql-database.sh
