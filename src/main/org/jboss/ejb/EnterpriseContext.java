@@ -48,7 +48,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -311,12 +311,12 @@ public abstract class EnterpriseContext
       { 
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
          if (con.getBeanMetaData().isBeanManagedTx())
-            throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
+            throw new IllegalStateException("ctx.getRollbackOnly() not allowed for BMT beans.");
 
          try {
             return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK; 
          } catch (SystemException e) {
-            log.warn("failed to set get tx manager status; ignoring", e);
+            log.warn("failed to get tx manager status; ignoring", e);
             return true;
          }
       }
