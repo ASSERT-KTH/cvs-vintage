@@ -46,40 +46,23 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.ArrayList;
-
-public class ActivitySet implements java.io.Serializable
+public class XmlAttachment implements java.io.Serializable
 {
     private String id = null;
+    private String name = null;
     private String type = null;
-    private String createdBy = null;
+    private String data = null;
+    private String filename = null;
+    private String mimetype = null;
     private CreatedDate createdDate = null;
-    private List activities = null;
-    private Attachment attachment = null;
-
-    public ActivitySet()
-    {
-    }
+    private ModifiedDate modifiedDate = null;
+    private String createdBy = null;
+    private String modifiedBy = null;
+    private boolean deleted = false;
+    private boolean reconcilePath = false;
     
-    /**
-     * Looks for the signature that marks this as being a
-     * change user attribute activityset. Not the most pretty
-     * but it works for now.
-     */
-    public boolean isChangeUserAttribute()
+    public XmlAttachment()
     {
-        if ((activities != null && activities.size() == 2))
-        {
-            Activity activityA = (Activity) activities.get(0);
-            Activity activityB = (Activity) activities.get(1);
-            if (activityA.getOldUser() != null &&
-                activityB.getNewUser() != null)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public String getId()
@@ -92,9 +75,14 @@ public class ActivitySet implements java.io.Serializable
         this.id = id;
     }
 
-    public String getType()
+    public void setName(String name)
     {
-        return type;
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public void setType(String type)
@@ -102,9 +90,59 @@ public class ActivitySet implements java.io.Serializable
         this.type = type;
     }
 
-    public String getCreatedBy()
+    public String getType()
     {
-        return createdBy;
+        return this.type;
+    }
+
+    public void setData(String data)
+    {
+        this.data = data;
+    }
+
+    public String getData()
+    {
+        return this.data;
+    }
+
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
+
+    public String getFilename()
+    {
+        return this.filename;
+    }
+
+    public void setMimetype(String mimetype)
+    {
+        this.mimetype = mimetype;
+    }
+
+    public String getMimetype()
+    {
+        return this.mimetype;
+    }
+
+    public void setCreatedDate(CreatedDate createdDate)
+    {
+        this.createdDate = createdDate;
+    }
+
+    public CreatedDate getCreatedDate()
+    {
+        return this.createdDate;
+    }
+
+    public void setModifiedDate(ModifiedDate modifiedDate)
+    {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public ModifiedDate getModifiedDate()
+    {
+        return this.modifiedDate;
     }
 
     public void setCreatedBy(String createdBy)
@@ -112,41 +150,38 @@ public class ActivitySet implements java.io.Serializable
         this.createdBy = createdBy;
     }
 
-    public CreatedDate getCreatedDate()
+    public String getCreatedBy()
     {
-        return createdDate;
-    }
-    
-    public void setCreatedDate(CreatedDate createdDate)
-    {
-        this.createdDate = createdDate;
+        return this.createdBy;
     }
 
-    public List getActivities()
+    public void setModifiedBy(String modifiedBy)
     {
-        if (activities == null)
-        {
-            activities = new ArrayList();
-        }
-        return this.activities;
+        this.modifiedBy = modifiedBy;
     }
 
-    public void addActivity(Activity activity)
+    public String getModifiedBy()
     {
-        if (activities == null)
-        {
-            activities = new ArrayList();
-        }
-        activities.add(activity);
+        return this.modifiedBy;
     }
 
-    public Attachment getAttachment()
+    public void setDeleted(boolean deleted)
     {
-        return this.attachment;
+        this.deleted = deleted;
     }
 
-    public void setAttachment(Attachment attachment)
+    public boolean getDeleted()
     {
-        this.attachment = attachment;
+        return this.deleted;
+    }
+
+    public void setReconcilePath(boolean reconcilePath)
+    {
+        this.reconcilePath = reconcilePath;
+    }
+
+    public boolean getReconcilePath()
+    {
+        return this.reconcilePath;
     }
 }

@@ -56,10 +56,6 @@
     <!-- Check to see what optional dependencies are available              -->
     <!-- ================================================================== -->
     <target name="check_for_optional_packages">
-        <available property="lucene.present"
-                   classname="org.apache.lucene.document.Document">
-            <classpath refid="classpath"/>
-        </available>
         <available property="junit.present"
            classname="junit.framework.TestCase">
             <classpath refid="classpath"/>
@@ -384,18 +380,6 @@
         <!-- express the type of database we are generating -->
         <touch file="${build.sql.scarab}/${scarab.database.type}" />
 
-        <!-- the source code directory -->
-        <filter token="OM" value="org.tigris.scarab.om"/>
-        <copy todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org">
-                <include name="**/*.java"/>
-                <include name="**/*.xml"/>
-                <include name="**/*.properties"/>
-                <include name="**/package.html"/>
-                <exclude name="**/*Lucene*.java"/>
-            </fileset>
-        </copy>
-
         <!-- copy l18n stuff into classpath -->
         <mkdir dir="${build.dest.scarab}"/>
         <copy todir="${build.dest.scarab}" filtering="no">
@@ -442,9 +426,6 @@
             </fileset>
         </copy>
 
-        <!-- add Lucene code to source directory -->
-        <antcall target="copy-lucene"/>
-        
         <mkdir dir="${build.project}/logs"/>
     </target>
 
@@ -454,19 +435,6 @@
     <target name="copy-templates" if="scarab.copy.templates">
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}"/>
-        </copy>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Adds Lucene adaptor code to source directory                       -->
-    <!-- ================================================================== -->
-    <target name="copy-lucene" depends="check_for_optional_packages"
-        if="lucene.present">
-
-        <copy todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org">
-                <include name="**/*Lucene*.java"/>
-            </fileset>
         </copy>
     </target>
 
@@ -580,10 +548,10 @@
     <!-- Generate OM/Peer classes from Torque                               -->
     <!-- ================================================================== -->
     <target name="generated-check" depends="prepare">
-        <echo message="checking: ${torque.dir.scarab}/report.scarab.om.generation"/>
+        <echo message="checking: ${src.java.dir.scarab}/report.scarab.om.generation"/>
         <uptodate property="gen.uptodate"
             targetfile=
-               "${torque.dir.scarab}/report.scarab.om.generation">
+               "${src.java.dir.scarab}/report.scarab.om.generation">
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
         </uptodate>
     </target>
@@ -605,46 +573,8 @@
 
     </target>
 
-    <!-- Working with Scarab inside of an IDE is difficult if the source files are
-         moved.  Setting "copy.peer.classes" inside of build.properties changes
-         this behavior to a copy.  The default (with the property missing)
-         is the traditional move. -->
-
-    <target name="om-peer-copy" if="copy.peer.classes">
-        <copy todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
-                <include name="**/Base*.java"/>
-                <exclude name="**/BaseScarabObject.java"/>
-                <include name="**/map/*MapBuilder.java"/>
-                <include name="report.scarab.om.generation"/>
-            </fileset>
-        </copy>
-
-        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
-              overwrite="true" todir="${torque.dir.scarab}"/>
-    </target>
-
-    <target name="om-peer-move" unless="copy.peer.classes">
-        <move todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
-                <include name="**/Base*.java"/>
-                <exclude name="**/BaseScarabObject.java"/>
-                <include name="**/map/*MapBuilder.java"/>
-                <include name="report.scarab.om.generation"/>
-            </fileset>
-        </move>
-
-        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
-              overwrite="true" todir="${torque.dir.scarab}"/>
-
-        <!-- Do not delete the directory.  Now there is a .cvsignore file there -->
-        <!-- delete dir="${src.java.dir.scarab}/org/tigris/scarab/om/map"/ -->
-    </target>
-
     <target name="om-peer" depends="om-peer-generate" 
             unless="gen.uptodate">
-        <antcall target="om-peer-copy" />
-        <antcall target="om-peer-move" />
     </target>
 
 
@@ -843,25 +773,24 @@
     <!-- ================================================================== -->
     <target name="compile" depends="om-peer,prepare">
         <mkdir dir="${build.dest.scarab}"/>
-        <javac srcdir="${build.src.scarab}"
+
+        <javac srcdir="${src.java.dir.scarab}"
             destdir="${build.dest.scarab}"
-            excludes="**/package.html,torque/**"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}">
-
-        <classpath refid="classpath"/>
-
-        <classpath>
-            <fileset dir="${build.project.webinf.lib}">
-                <include name="**/torque*.jar"/>
-            </fileset>
-        </classpath>
-
+	    <classpath refid="classpath"/>
+            <classpath>
+                <fileset dir="${build.project.webinf.lib}">
+                    <include name="**/torque*.jar"/>
+                </fileset>
+            </classpath>
+	    <exclude name="**/package.html"/>
+	    <exclude name="torque/**"/>
         </javac>
 
         <copy todir="${build.dest.scarab}/org" filtering="no">
-            <fileset dir="${build.src.scarab}/org">
+            <fileset dir="${src.java.dir.scarab}/org">
                 <include name="**/*.xml"/>
                 <include name="**/*.properties"/>
             </fileset>
@@ -917,7 +846,7 @@
     <!-- ================================================================== -->
     <target name="jarsrc" depends="prepare">
         <jar jarfile="${build.dir}/${final.name}.src.jar"
-            basedir="${build.src.scarab}"
+            basedir="${src.java.dir.scarab}"
             excludes="**/package.html"/>
     </target>
 
@@ -1492,7 +1421,7 @@ diff -u -r1.5 project.xml
     <target name="javadocs" depends="om-peer,prepare">
         <mkdir dir="${javadoc.destdir}"/>
         <javadoc
-            sourcepath="${build.src.scarab}"
+            sourcepath="${src.java.dir.scarab}"
             packagenames="org.tigris.scarab.*"
             destdir="${javadoc.destdir}"
             author="true"
@@ -1519,7 +1448,7 @@ diff -u -r1.5 project.xml
     <target name="javadocs141" depends="om-peer,prepare">
         <mkdir dir="${javadoc.destdir}"/>
         <javadoc
-            sourcepath="${build.src.scarab}"
+            sourcepath="${src.java.dir.scarab}"
             packagenames="org.tigris.scarab.*"
             destdir="${javadoc.destdir}"
             author="true"
@@ -1552,10 +1481,12 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
     <!-- ================================================================== -->
-    <target name="clean" depends="prepare-build-dir">
+    <target name="clean" depends="prepare-build-dir, remove-generation">
         <delete dir="${build.dir}" quiet="true"/>
     </target>
-    <target name="clean-all" depends="prepare-build-dir">
+
+    <target name="clean-all" depends="prepare-build-dir, remove-generation">
+        <delete file="${src.sql.dir}/${project}-data.dtd"/>
         <delete file="${scarab.log.file.scarab}" quiet="true"/>
         <delete file="${scarab.log.file.turbine}" quiet="true"/>
         <delete file="${scarab.log.file.torque}" quiet="true"/>
@@ -1705,7 +1636,7 @@ diff -u -r1.5 project.xml
                 </fileset>
             </classpath>
             <property key="checkstyle.cache.file" file="${build.dir}/checkstyle.cache"/>
-            <fileset dir="${build.src.scarab}/org">
+            <fileset dir="${src.java.dir.scarab}/org">
                  <include name="**/*.java"/>
                  <exclude name="**/Base*.java"/>
                  <exclude name="**/*MapBuilder.java"/>
@@ -1852,8 +1783,25 @@ diff -u -r1.5 project.xml
     <!-- Remove any torque *.generation files.  This forces torque to rebuild. -->
     <target name="remove-generation">
         <delete file="${src.sql.dir}/report.scarab.sql.generation"/>
-        <delete file="${src.java.dir}/report.scarab.om.generation"/>
-        <delete file="${torque.dir.scarab}/report.scarab.om.generation"/>
+        <delete file="${src.java.dir.scarab}/report.scarab.om.generation"/>
+        <delete file="${src.html.dir}/docs/report.scarab.doc.generation"/>
+        <delete file="${src.dir}/report.scarab.datadtd.generation"/>
+        <!-- delete file="${torque.dir.scarab}/report.scarab.om.generation"/-->
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Complete buld of all components (for testing changes to build.xml) -->
+    <!-- ================================================================== -->
+    <target name="test-complete-build">
+        <antcall target="clean"/>
+        <antcall target="compile"/>
+        <!-- antcall target="checkstyle"/ -->
+        <antcall target="datadtd"/>
+        <antcall target="datadoc"/>
+        <antcall target="javadocs"/>
+        <antcall target="war"/>
+        <antcall target="dist"/>
+        <antcall target="tests"/>
     </target>
 
     <target name="migrate-b15-b16" depends="prepare">

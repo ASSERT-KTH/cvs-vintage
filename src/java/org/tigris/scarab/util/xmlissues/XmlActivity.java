@@ -46,7 +46,7 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-public class Activity implements java.io.Serializable
+public class XmlActivity implements java.io.Serializable
 {
     private String id = null;
     private String attribute = null;
@@ -61,11 +61,11 @@ public class Activity implements java.io.Serializable
     private Dependency dependency = null;
     private String description = null;
     private EndDate endDate = null;
-    private Attachment attachment = null;
+    private XmlAttachment attachment = null;
 
     private boolean isNewActivity = true;
     
-    public Activity()
+    public XmlActivity()
     {
     }
 
@@ -235,12 +235,12 @@ public class Activity implements java.io.Serializable
         this.endDate = endDate;
     }
 
-    public void setAttachment(Attachment attachment)
+    public void setAttachment(XmlAttachment attachment)
     {
         this.attachment = attachment;
     }
 
-    public Attachment getAttachment()
+    public XmlAttachment getAttachment()
     {
         return this.attachment;
     }

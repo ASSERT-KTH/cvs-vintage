@@ -45,25 +45,22 @@ package org.tigris.scarab.util.xmlissues;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-public class Issue implements java.io.Serializable
+ 
+public class XmlModule implements java.io.Serializable
 {
-    private static final Log LOG = LogFactory.getLog(Issue.class);
-
     private Integer id = null;
-    private String artifactType = null;
-    private List activitySets = null;
+    private Integer parentId = null;
+    private String owner = null;
+    private String name = null;
+    private String description = null;
+    private String url = null;
+    private String domain = null;
+    private String code = null;
 
-    public Issue()
+    public XmlModule()
     {
     }
-    
+
     public Integer getId()
     {
         return id;
@@ -71,35 +68,77 @@ public class Issue implements java.io.Serializable
 
     public void setId(Integer id)
     {
-        LOG.debug("Issue.setId(): " + id);
         this.id = id;
     }
 
-    public String getArtifactType()
+    public Integer getParentId()
     {
-        return artifactType;
-    }
-    
-    public void setArtifactType(String name)
-    {
-        this.artifactType = name;
+        return parentId;
     }
 
-    public List getActivitySets()
+    public void setParentId(Integer id)
     {
-        if (activitySets == null)
-        {
-            activitySets = new ArrayList();
-        }
-        return activitySets;
+        this.parentId = id;
+    }
+
+    public String getOwner()
+    {
+        return owner;
     }
     
-    public void addActivitySet(ActivitySet name)
+    public void setOwner(String name)
     {
-        if (activitySets == null)
-        {
-            activitySets = new ArrayList();
-        }
-        activitySets.add(name);
+        this.owner = name;
     }
+
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+    
+    public void setDescription(String name)
+    {
+        this.description = name;
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
+    
+    public void setUrl(String name)
+    {
+        this.url = name;
+    }
+
+    public String getDomain()
+    {
+        return domain;
+    }
+    
+    public void setDomain(String name)
+    {
+        this.domain = name;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+    
+    public void setCode(String name)
+    {
+        this.code = name;
+    }
+
 }

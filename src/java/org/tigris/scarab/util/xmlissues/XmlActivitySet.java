@@ -45,100 +45,108 @@ package org.tigris.scarab.util.xmlissues;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
- 
-public class Module implements java.io.Serializable
-{
-    private Integer id = null;
-    private Integer parentId = null;
-    private String owner = null;
-    private String name = null;
-    private String description = null;
-    private String url = null;
-    private String domain = null;
-    private String code = null;
 
-    public Module()
+import java.util.List;
+import java.util.ArrayList;
+
+public class XmlActivitySet implements java.io.Serializable
+{
+    private String id = null;
+    private String type = null;
+    private String createdBy = null;
+    private CreatedDate createdDate = null;
+    private List activities = null;
+    private XmlAttachment attachment = null;
+
+    public XmlActivitySet()
     {
     }
+    
+    /**
+     * Looks for the signature that marks this as being a
+     * change user attribute activityset. Not the most pretty
+     * but it works for now.
+     */
+    public boolean isChangeUserAttribute()
+    {
+        if ((activities != null && activities.size() == 2))
+        {
+            XmlActivity activityA = (XmlActivity) activities.get(0);
+            XmlActivity activityB = (XmlActivity) activities.get(1);
+            if (activityA.getOldUser() != null &&
+                activityB.getNewUser() != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public Integer getId()
+    public String getId()
     {
         return id;
     }
 
-    public void setId(Integer id)
+    public void setId(String id)
     {
         this.id = id;
     }
 
-    public Integer getParentId()
+    public String getType()
     {
-        return parentId;
+        return type;
     }
 
-    public void setParentId(Integer id)
+    public void setType(String type)
     {
-        this.parentId = id;
+        this.type = type;
     }
 
-    public String getOwner()
+    public String getCreatedBy()
     {
-        return owner;
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy)
+    {
+        this.createdBy = createdBy;
+    }
+
+    public CreatedDate getCreatedDate()
+    {
+        return createdDate;
     }
     
-    public void setOwner(String name)
+    public void setCreatedDate(CreatedDate createdDate)
     {
-        this.owner = name;
+        this.createdDate = createdDate;
     }
 
-    public String getName()
+    public List getActivities()
     {
-        return name;
-    }
-    
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-    
-    public void setDescription(String name)
-    {
-        this.description = name;
+        if (activities == null)
+        {
+            activities = new ArrayList();
+        }
+        return this.activities;
     }
 
-    public String getUrl()
+    public void addActivity(XmlActivity activity)
     {
-        return url;
-    }
-    
-    public void setUrl(String name)
-    {
-        this.url = name;
-    }
-
-    public String getDomain()
-    {
-        return domain;
-    }
-    
-    public void setDomain(String name)
-    {
-        this.domain = name;
+        if (activities == null)
+        {
+            activities = new ArrayList();
+        }
+        activities.add(activity);
     }
 
-    public String getCode()
+    public XmlAttachment getAttachment()
     {
-        return code;
-    }
-    
-    public void setCode(String name)
-    {
-        this.code = name;
+        return this.attachment;
     }
 
+    public void setAttachment(XmlAttachment attachment)
+    {
+        this.attachment = attachment;
+    }
 }

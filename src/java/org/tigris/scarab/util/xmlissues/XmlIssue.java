@@ -46,142 +46,60 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-public class Attachment implements java.io.Serializable
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public class XmlIssue implements java.io.Serializable
 {
-    private String id = null;
-    private String name = null;
-    private String type = null;
-    private String data = null;
-    private String filename = null;
-    private String mimetype = null;
-    private CreatedDate createdDate = null;
-    private ModifiedDate modifiedDate = null;
-    private String createdBy = null;
-    private String modifiedBy = null;
-    private boolean deleted = false;
-    private boolean reconcilePath = false;
-    
-    public Attachment()
+    private static final Log LOG = LogFactory.getLog(XmlIssue.class);
+
+    private Integer id = null;
+    private String artifactType = null;
+    private List activitySets = null;
+
+    public XmlIssue()
     {
     }
-
-    public String getId()
+    
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(String id)
+    public void setId(Integer id)
     {
+        LOG.debug("Issue.setId(): " + id);
         this.id = id;
     }
 
-    public void setName(String name)
+    public String getArtifactType()
     {
-        this.name = name;
+        return artifactType;
+    }
+    
+    public void setArtifactType(String name)
+    {
+        this.artifactType = name;
     }
 
-    public String getName()
+    public List getActivitySets()
     {
-        return this.name;
+        if (activitySets == null)
+        {
+            activitySets = new ArrayList();
+        }
+        return activitySets;
     }
-
-    public void setType(String type)
+    
+    public void addActivitySet(XmlActivitySet name)
     {
-        this.type = type;
-    }
-
-    public String getType()
-    {
-        return this.type;
-    }
-
-    public void setData(String data)
-    {
-        this.data = data;
-    }
-
-    public String getData()
-    {
-        return this.data;
-    }
-
-    public void setFilename(String filename)
-    {
-        this.filename = filename;
-    }
-
-    public String getFilename()
-    {
-        return this.filename;
-    }
-
-    public void setMimetype(String mimetype)
-    {
-        this.mimetype = mimetype;
-    }
-
-    public String getMimetype()
-    {
-        return this.mimetype;
-    }
-
-    public void setCreatedDate(CreatedDate createdDate)
-    {
-        this.createdDate = createdDate;
-    }
-
-    public CreatedDate getCreatedDate()
-    {
-        return this.createdDate;
-    }
-
-    public void setModifiedDate(ModifiedDate modifiedDate)
-    {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public ModifiedDate getModifiedDate()
-    {
-        return this.modifiedDate;
-    }
-
-    public void setCreatedBy(String createdBy)
-    {
-        this.createdBy = createdBy;
-    }
-
-    public String getCreatedBy()
-    {
-        return this.createdBy;
-    }
-
-    public void setModifiedBy(String modifiedBy)
-    {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public String getModifiedBy()
-    {
-        return this.modifiedBy;
-    }
-
-    public void setDeleted(boolean deleted)
-    {
-        this.deleted = deleted;
-    }
-
-    public boolean getDeleted()
-    {
-        return this.deleted;
-    }
-
-    public void setReconcilePath(boolean reconcilePath)
-    {
-        this.reconcilePath = reconcilePath;
-    }
-
-    public boolean getReconcilePath()
-    {
-        return this.reconcilePath;
+        if (activitySets == null)
+        {
+            activitySets = new ArrayList();
+        }
+        activitySets.add(name);
     }
 }
