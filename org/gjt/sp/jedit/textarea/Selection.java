@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * An interface representing a portion of the current selection.
  * @author Slava Pestov
- * @version $Id: Selection.java,v 1.8 2002/06/06 09:15:52 spestov Exp $
+ * @version $Id: Selection.java,v 1.9 2002/06/14 06:07:18 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -468,6 +468,8 @@ public abstract class Selection implements Cloneable
 			} //}}}
 
 			//{{{ Move the caret down a line
+			if(text == null || text.length() == 0)
+				return end;
 			if(lastLine != buffer.getLineCount() - 1)
 			{
 				int offset = buffer.getOffsetOfVirtualColumn(
