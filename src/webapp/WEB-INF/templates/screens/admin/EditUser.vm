@@ -5,6 +5,38 @@
 
 #set ($state = $data.Parameters.getString("state",""))
 
+
+<script type="text/javascript">
+<!--
+/*
+ * The following script disables/enables the password fields.
+ * As a little gimmick, the function backups the last values
+ * of these fields when checked. So when the checkmark has been
+ * set unintentionally, the user can fully revert.
+ */
+pwdKeyBackup=""
+confirmKeyBackup=""
+function setEditflag(pwdKey,confirmKey,checked)
+{
+    document.EditUserForm[pwdKey].disabled=checked;
+    document.EditUserForm[confirmKey].disabled=checked;
+    if(checked)
+    {
+        pwdKeyBackup=document.EditUserForm[pwdKey].value;
+        confirmKeyBackup=document.EditUserForm[confirmKey].value;
+        document.EditUserForm[pwdKey].value="";
+        document.EditUserForm[confirmKey].value="";
+    }
+    else
+    {
+        document.EditUserForm[pwdKey].value=pwdKeyBackup;
+        document.EditUserForm[confirmKey].value=confirmKeyBackup;
+    }
+}
+// -->
+</script>
+
+
 <div id="edituser" class="app">
 
 <h3>$l10n.EditUser</h3>
@@ -41,7 +73,7 @@
 #end
 
 <div class="axial">
-<table border="1" cellpadding="3" cellspacing="2" border="0">
+<table border="0" cellpadding="3" cellspacing="2">
 <tr>
   ## FIXME: In SCB197, John notes that SecurityService makes user name
   ## change problematic, as it assumes that a user name defines a user.
@@ -51,6 +83,7 @@
   #fieldErrorMsg($regGroup.UserName "") *#
   $userNameData
  </td>
+ <td/>
 </tr>
 <tr>
  <th>*&nbsp;$l10n.FirstName</th>
@@ -58,6 +91,7 @@
   <input name="$regGroup.FirstName.Key" value="$firstNameData" type="text" size="25" />
   #fieldErrorMsg($regGroup.FirstName "")
  </td>
+ <td/>
 </tr>
 <tr>
  <th>*&nbsp;$l10n.LastName</th>
@@ -65,6 +99,7 @@
   <input name="$regGroup.LastName.Key" value="$lastNameData" type="text" size="25" />
   #fieldErrorMsg($regGroup.LastName "")
  </td>
+ <td/>
 </tr>
 <tr>
  <th>*&nbsp;$l10n.Email</th>
@@ -72,6 +107,7 @@
   <input name="$regGroup.Email.Key" value="$emailData" type="text" size="25" />
   #fieldErrorMsg($regGroup.Email "")
  </td>
+ <td/>
 </tr>
 <tr>
  <th>*&nbsp;$l10n.AccountStatus</th>
@@ -81,6 +117,7 @@
    <option #if ($user2.getConfirmed().equals("DELETED")) selected #end>DELETED</option>
   </select>  
  </td>
+ <td/>
 </tr>
 
 #set ($pwdResetAllowed= $scarabG.getTurbineConfiguration().getString("scarab.admin.password.reset.allowed").toLowerCase().equals("true"))
@@ -89,15 +126,18 @@
  <th>$l10n.NewPassword</th>
  <td>
   <input type="password" size="25" name="$regGroup.NPassword.Key" value="$!regGroup.NPassword.value" />
-  #fieldErrorMsg($regGroup.Password "")
+ </td>
+ <td nowrap="nowrap">
+   <input type="checkbox" name="generate-password" onclick="javascript:setEditflag('$regGroup.NPassword.Key','$regGroup.NPasswordConfirm.Key',this.checked)" />
+   $l10n.GeneratePassword
  </td>
 </tr>
 <tr>
  <th>$l10n.ConfirmPassword</th>
  <td>
   <input type="password" size="25" name="$regGroup.NPasswordConfirm.Key" value="$!regGroup.NPasswordConfirm.value" />
-  #fieldErrorMsg($regGroup.PasswordConfirm "")
  </td>
+ <td/>
 </tr>
 #end
 
