@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.46 2002/03/12 04:27:57 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.47 2002/03/15 14:57:53 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -166,6 +166,10 @@ Bug No.  Description
          Ajp13Connector modules.  It can set other types of attributes
          as well.
 
+[F]      Refactored the PasswordPrompter add-on module to be configurable
+         and to be able to perform prompting for context local modules.
+         Added a "readme" file to document its use.
+
 
 Server:
 
@@ -294,6 +298,14 @@ Bug No.  Description
 [F]
 
 
+Jasper:
+
+Bug No.  Description
+
+[F]      Fixed incorrect use of '\' in the servlet mappings written by JspC on
+         Windows systems.
+
+
 Configuration:
 
 Bug No.  Description
@@ -301,6 +313,15 @@ Bug No.  Description
 [b1]     Updated JSSEImplemention to support a separate keystorePass
          attribute as the keystore password.  It will default to the keypass
          attribute if not set.
+
+[F]      The conf/jk/wrapper.properties was improved.  The improvements
+         include putting quotes around the java command portion of the
+         wrapper.cmd_line property.  Also a wrapper.jvm.options property
+         was added to simplify specification of JVM arguments.
+
+[F]      PoolTcpConnector was modified to allow the PasswordPrompter add-on
+         module to successfully set connection attributes for secure
+         connections.
 
 4313     Bug in property substitution for server.xml and apps.xml files was
 [b1]     fixed.
@@ -335,6 +356,11 @@ Bug No.  Description
 Connectors:
 
 Bug No.  Description
+
+[b1]     A bug was fixed in isapi_redirect.dll where the query string would be
+         lost if the URI was shortened during normalization of the URI.  The
+         presence of escaped characters or character sequences such as "/../"
+         would cause this to happen.
 
 [b1]     A bug was fixed in isapi_redirect.dll where it would mistake an
          encoded '?' in the URI path as the query string delimitor.
