@@ -16,20 +16,17 @@ package org.columba.mail.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.ResourceBundle;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.config.WindowItem;
+import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameView;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.gui.composer.HeaderView;
@@ -40,10 +37,10 @@ import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
-public class FrameView extends JFrame {
+public class MailFrameView extends FrameView {
 	private MailToolBar toolbar;
 
-	private StatusBar statusBar;
+	//private StatusBar statusBar;
 	public JSplitPane mainSplitPane;
 	public SplitPane rightSplitPane;
 
@@ -58,26 +55,18 @@ public class FrameView extends JFrame {
 	FilterToolbar filterToolbar;
 	HeaderView header;
 
-	public FrameView() {
+	public MailFrameView( FrameController frameController ) {
+		super( frameController );
+		
 		//MainInterface.mainFrame = this;
-		this.setIconImage(
-			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
+		
 
 		//changeToolbars();
 		//MainInterface.frameModel.register(this);
 
 	}
 
-	public void maximize() {
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize);
-
-		// FIXME: this works only with JDK1.4
-		// has to be added with org.columba.core.util.Compatibility-class
-		//setExtendedState(MAXIMIZED_BOTH);
-
-	}
+	
 
 	public void showAttachmentViewer() {
 		rightSplitPane.showAttachmentViewer();
@@ -101,14 +90,10 @@ public class FrameView extends JFrame {
 
 		this.filterToolbar = filterToolbar;
 
-		this.getContentPane().setLayout(new BorderLayout());
-		JPanel panel = (JPanel) this.getContentPane();
+		
+		
 
-		setTitle("Columba v" + org.columba.core.main.MainInterface.version);
-
-		this.getContentPane().add(statusBar, BorderLayout.SOUTH);
-
-		this.statusBar = statusBar;
+		//this.statusBar = statusBar;
 
 		mainSplitPane = new JSplitPane();
 		//mainSplitPane.setDividerSize(5);
@@ -245,14 +230,7 @@ public class FrameView extends JFrame {
 
 	public void saveWindowPosition(ViewItem viewItem) {
 
-		java.awt.Dimension d = getSize();
-
-		WindowItem item = viewItem.getWindowItem();
-
-		item.set("x", 0);
-		item.set("y", 0);
-		item.set("width", d.width);
-		item.set("height", d.height);
+		super.saveWindowPosition(viewItem);
 
 		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
 		viewItem.set(
@@ -262,13 +240,6 @@ public class FrameView extends JFrame {
 
 	}
 
-	public void loadWindowPosition(ViewItem viewItem) {
-		int x = viewItem.getInteger("window", "width");
-		int y = viewItem.getInteger("window", "height");
-		Dimension dim = new Dimension(x, y);
-		setSize(dim);
-		
-		validate();
-	}
+	
 
 }

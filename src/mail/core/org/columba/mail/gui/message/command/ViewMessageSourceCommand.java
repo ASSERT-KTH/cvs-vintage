@@ -7,6 +7,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.MailFrameView;
 
 /**
  * @author freddy
@@ -42,8 +43,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 					.showMessageSource(
 			source);
 
-		((MailFrameController) frameController)
-			.getView()
+		((MailFrameView)frameController.getView())
 			.hideAttachmentViewer();
 
 	}

@@ -17,14 +17,14 @@ package org.columba.core.gui.util;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import org.columba.mail.gui.frame.FrameView;
+import org.columba.mail.gui.frame.MailFrameView;
 
 public class DialogStore
 {
-    private static FrameView mainFrame;
+    private static MailFrameView mainFrame;
 
 
-    public DialogStore( FrameView mainFrame )
+    public DialogStore( MailFrameView mainFrame )
     {
         DialogStore.mainFrame = mainFrame;
         

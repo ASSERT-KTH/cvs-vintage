@@ -28,11 +28,13 @@ public abstract class FrameController {
 
 	protected StatusBar statusBar;
 	protected MouseAdapter mouseTooltipHandler;
+	protected String id;
 	
 	/**
 	 * Constructor for FrameController.
 	 */
-	public FrameController() {		
+	public FrameController( String id ) {
+		this.id = id;		
 		statusBar = new StatusBar( MainInterface.processor.getTaskManager() );
 		
 		mouseTooltipHandler = new TooltipMouseHandler( statusBar ); 		
@@ -50,6 +52,12 @@ public abstract class FrameController {
 		return mouseTooltipHandler;
 	}
 	
-	abstract public void close();	
+	public void close()
+	{
+		MainInterface.frameModel.unregister(id);
 
+		//getView().setVisible(false);	
+	}
+
+	abstract public FrameView getView();
 }

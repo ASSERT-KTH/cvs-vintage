@@ -27,7 +27,6 @@ import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
@@ -36,6 +35,8 @@ import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.shutdown.SaveConfigPlugin;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
 import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
@@ -47,12 +48,14 @@ import org.columba.mail.coder.QuotedPrintableEncoder;
 import org.columba.mail.composer.MimeTypeLookup;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
-import org.columba.mail.gui.frame.FrameModel;
+import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.LocalFilterPluginHandler;
 import org.columba.mail.plugin.RemoteFilterPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
+import org.columba.mail.shutdown.SaveAllFoldersPlugin;
+import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.util.MailResourceLoader;
 
 public class Main {
@@ -216,12 +219,16 @@ public class Main {
 				MainInterface.treeModel =
 					new TreeModel(MailConfig.getFolderConfig());
 					
-				MainInterface.frameModel = new FrameModel();
+				MainInterface.frameModel = new MailFrameModel(MailConfig.get("mainframeoptions").getElement(
+				"/options/gui/viewlist"));
 
 				frame.advance();
 
+				MainInterface.shutdownManager = new ShutdownManager();
+				MainInterface.shutdownManager.register( new SaveAllFoldersPlugin() );
+				MainInterface.shutdownManager.register( new SaveConfigPlugin() );
+				MainInterface.shutdownManager.register( new SavePOP3CachePlugin() );
 				
-
 				return null;
 			}
 

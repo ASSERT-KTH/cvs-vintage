@@ -1,11 +1,10 @@
 package org.columba.mail.gui.frame;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameView;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
@@ -16,7 +15,8 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
-import org.columba.core.main.MainInterface;
+
+
 
 /**
  * @author freddy
@@ -28,7 +28,7 @@ import org.columba.core.main.MainInterface;
  */
 public class MailFrameController extends FrameController {
 
-	protected FrameView view;
+	protected MailFrameView view;
 	//public SelectionManager selectionManager;
 
 	public TreeController treeController;
@@ -46,12 +46,12 @@ public class MailFrameController extends FrameController {
 
 	public GlobalActionCollection globalActionCollection;
 
-	protected String id;
+	
 	
 	public MailFrameController( String id ) {
-		super();
+		super(id);
 		
-		this.id = id;
+		
 		
 		
 
@@ -69,7 +69,7 @@ public class MailFrameController extends FrameController {
 
 	public void createView() {
 
-		view = new FrameView();
+		view = new MailFrameView(this);
 		treeController = new TreeController(this, MainInterface.treeModel);
 		//treeController.setSelectionManager(selectionManager);
 
@@ -110,18 +110,15 @@ public class MailFrameController extends FrameController {
 		menu = new MailMenu(this);
 		view.setJMenuBar(menu);
 
+		/*
 		view.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				/*
-				ExitWorker worker = new ExitWorker();
-				//worker.register(MainInterface.taskManager);
-				worker.start();
-				*/
-
+				
 				close();
 
 			}
 		});
+		*/
 
 		view.pack();
 
@@ -144,30 +141,7 @@ public class MailFrameController extends FrameController {
 		//view.setVisible(true);
 	}
 
-	public void close() {
-
-		MainInterface.frameModel.unregister(id);
-
-		getView().setVisible(false);
-
-		/*
-		view.saveWindowPosition();
-		
-		tableController.saveColumnConfig();
-		
-		try {
-			Config.save();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		MainInterface.popServerCollection.saveAll();
-		
-		saveAllFolders();
-		
-		System.exit(1);
-		*/
-
-	}
+	
 
 	public MailMenu getMenu() {
 		return menu;
@@ -189,21 +163,21 @@ public class MailFrameController extends FrameController {
 
 		if (toolbar == true) {
 
-			getView().hideToolbar(folderInfo);
+			((MailFrameView)getView()).hideToolbar(folderInfo);
 			item.set("toolbars", "show_main", false);
 		} else {
 
-			getView().showToolbar(folderInfo);
+			((MailFrameView)getView()).showToolbar(folderInfo);
 			item.set("toolbars", "show_main", true);
 		}
 
 		if (folderInfo == true) {
 
-			getView().hideFolderInfo(toolbar);
+			((MailFrameView)getView()).hideFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", false);
 		} else {
 
-			getView().showFolderInfo(toolbar);
+			((MailFrameView)getView()).showFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", true);
 		}
 

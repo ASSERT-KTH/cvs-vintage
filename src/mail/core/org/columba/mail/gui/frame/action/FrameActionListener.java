@@ -23,6 +23,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ThemeSwitcher;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.MailConfig;
@@ -33,12 +34,12 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.config.general.GeneralOptionsDialog;
 import org.columba.mail.gui.config.mailboximport.ImportWizard;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.FetchNewMessagesCommand;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.smtp.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class FrameActionListener implements ActionListener {
 
@@ -217,11 +218,11 @@ public class FrameActionListener implements ActionListener {
 			boolean toolbar = item.getBoolean("toolbars", "show_main");
 			if (toolbar == true) {
 
-				frameController.getView().hideToolbar(folderInfo);
+				((MailFrameView)frameController.getView()).hideToolbar(folderInfo);
 				item.set("toolbars", "show_main", false);
 			} else {
 
-				frameController.getView().showToolbar(folderInfo);
+				((MailFrameView)frameController.getView()).showToolbar(folderInfo);
 				item.set("toolbars", "show_main", true);
 			}
 
@@ -235,11 +236,11 @@ public class FrameActionListener implements ActionListener {
 			boolean filter = item.getBoolean("toolbars", "show_filter");
 			if (filter == true) {
 
-				frameController.getView().hideFilterToolbar();
+				((MailFrameView)frameController.getView()).hideFilterToolbar();
 				item.set("toolbars", "show_filter", false);
 			} else {
 
-				frameController.getView().showFilterToolbar();
+				((MailFrameView)frameController.getView()).showFilterToolbar();
 				item.set("toolbars", "show_filter", true);
 			}
 
@@ -253,11 +254,11 @@ public class FrameActionListener implements ActionListener {
 
 			if (folderInfo == true) {
 
-				frameController.getView().hideFolderInfo(toolbar);
+				((MailFrameView)frameController.getView()).hideFolderInfo(toolbar);
 				item.set("toolbars", "show_folderinfo", false);
 			} else {
 
-				frameController.getView().showFolderInfo(toolbar);
+				((MailFrameView)frameController.getView()).showFolderInfo(toolbar);
 				item.set("toolbars", "show_folderinfo", true);
 			}
 
@@ -353,7 +354,10 @@ public class FrameActionListener implements ActionListener {
 			worker.register(MainInterface.taskManager);
 			worker.start();
 			*/
-			MainInterface.frameModel.close();
+			MainInterface.frameModel.saveAll();
+			MainInterface.shutdownManager.shutdown();
+			
+			
 
 		} else if (action.equals("NEW_MESSAGE")) {
 

@@ -9,6 +9,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
@@ -95,12 +96,10 @@ public class ViewMessageCommand extends FolderCommand {
 						.attachmentController
 						.setMimePartTree(
 				mimePartTree);
-			((MailFrameController) frameController)
-				.getView()
+				((MailFrameView)frameController.getView())
 				.showAttachmentViewer();
 		} else
-			((MailFrameController) frameController)
-				.getView()
+		((MailFrameView)frameController.getView())
 				.hideAttachmentViewer();
 
 		/*

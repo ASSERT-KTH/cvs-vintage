@@ -20,10 +20,10 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MimeTypeLookup;
-import org.columba.mail.gui.frame.FrameModel;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
@@ -47,7 +47,7 @@ public class MainInterface {
 	//public static FocusManager focusManager;
 	
 	public static TreeModel treeModel;
-	public static FrameModel frameModel;
+	public static MailFrameModel frameModel;
 	
 	//public static MailFrameController frameController;
 	
@@ -81,6 +81,8 @@ public class MainInterface {
 	public static CharsetManager charsetManager;
 	
 	public static PluginManager pluginManager;
+	
+	public static ShutdownManager shutdownManager;
 
 	public MainInterface() {
 	}
