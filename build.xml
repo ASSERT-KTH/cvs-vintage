@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Emacs indentation & editting support: 
-     edit XEMACS_HOME/xemacs-pacakges/etc/psgml/CATALOG
-     Add: "DOCTYPE project ant.dtd"
-     copy ant.dtd to .../etc/psgml/
-    ant.dtd is generated with:
-    <antstructure output="ant.dtd"/>
-<!DOCTYPE ant SYSTEM "ant.dtd" >
--->
 <project name="Tomcat" default="main" basedir=".">
 
   <!-- Compilation properties -->
@@ -22,10 +14,15 @@
 
 
   <!-- External packages we depend on -->
+  <!-- Tomcat depends on Ant, Watchdog, Jaxp.
+       You need to have the binaries ( in dist/ format ) 
+       available and set xxx.home to the install directory
+    -->
 
   <property name="ant.home" value="../jakarta-ant"/>
   <property name="watchdog.home" value="../build/watchdog"/>
-  <property name="jaxp" value="../jaxp-1.0.1"/>
+  <property name="jaxp" value="../jaxp1.0.1"/>
+  <property name="jaxp.home" value="${jaxp}"/>
 
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
  
@@ -75,18 +72,17 @@
     <copy todir="${tomcat.build}/bin">
             <fileset dir="${ant.home}/bin"/>
         </copy>
+
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${ant.home}/lib/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
 	  file="${ant.home}/lib/parser.jar"/>
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${jaxp}/jaxp.jar"/>
+	  file="${jaxp.home}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
-	  file="${jaxp}/parser.jar"/>
+	  file="${jaxp.home}/parser.jar"/>
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${jaxp}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/crimson.jar" 
-	  file="${jaxp}/crimson.jar"/>
+	  file="${jaxp.home}/jaxp.jar"/>
     <copy file ="src/build/readme.container"
 	  tofile="${tomcat.build}/lib/container/README" />
 
@@ -422,7 +418,10 @@
   </target>
 
   <!-- ==================== Copy the files to distribution format ======== -->
-  <target name="dist" depends="main,webapps,tomcat-jars-new">
+  <target name="dist" depends="dist.prepare,javadoc,dist.war">
+  </target> 
+
+  <target name="dist.prepare" depends="main,webapps,tomcat-jars-new">
 
     <mkdir dir="${tomcat.dist}"/>
     <mkdir dir="${tomcat.dist}/webapps"/>
@@ -432,13 +431,15 @@
         <exclude name="webapps/**"/>
       </fileset>
     </copy>
-    <copy tofile="${tomcat.dist}/lib/container/jaxp.jar" 
-	  file="${jaxp}/jaxp.jar"/>
-    <copy tofile="${tomcat.dist}/lib/container/parser.jar" 
-	  file="${jaxp}/parser.jar"/>
-    <copy tofile="${tomcat.dist}/lib/common/servlet.jar" 
-	  file="${servlet22.jar}"/>
 
+    <!-- Change permissions for unix -->
+    <chmod perm="+x" file="${tomcat.dist}/bin/tomcat.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/jspc.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/startup.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
+  </target>
+
+  <target name="javadoc" depends="main,webapps,tomcat-jars-new">
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
     <javadoc packagenames="org.apache.tomcat.core" 
@@ -460,8 +461,13 @@
 	     windowtitle="Tomcat modules" 
 	     doctitle="Tomcat modules" 
 	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+  
+  </target>
 
-
+  <target name="dist.war" depends="dist.prepare" >
+    <delete dir="${tomcat.dist}/webapps/examples" />
+    <delete dir="${tomcat.dist}/webapps/admin" />
+    <delete dir="${tomcat.dist}/webapps/ROOT" />
     <!-- create webapp WARS -->
     <jar jarfile="${tomcat.dist}/webapps/examples.war" 
 	 basedir="${tomcat.build}/webapps/examples" 
@@ -475,12 +481,6 @@
     <jar jarfile="${tomcat.dist}/webapps/ROOT.war" 
 	 basedir="${tomcat.build}/webapps/ROOT" 
 	 includes="**"/>
-
-    <!-- Change permissions for unix -->
-    <chmod perm="+x" file="${tomcat.dist}/bin/tomcat.sh"/>
-    <chmod perm="+x" file="${tomcat.dist}/bin/jspc.sh"/>
-    <chmod perm="+x" file="${tomcat.dist}/bin/startup.sh"/>
-    <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
   </target>
 
   <!-- =================================================================== -->
