@@ -23,7 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
-import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;

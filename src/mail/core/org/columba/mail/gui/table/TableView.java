@@ -33,7 +33,6 @@ import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.plugins.DefaultLabelRenderer;
 import org.columba.mail.plugin.TableRendererPluginHandler;
 
-import org.frappucino.treetable.CustomTreeTableCellRenderer;
 import org.frappucino.treetable.TreeTable;
 
 import java.awt.Dimension;

@@ -24,7 +24,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;

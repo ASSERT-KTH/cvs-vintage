@@ -24,7 +24,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;

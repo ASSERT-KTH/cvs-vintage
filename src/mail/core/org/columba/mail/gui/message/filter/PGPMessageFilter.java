@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.MainInterface;

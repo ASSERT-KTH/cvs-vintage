@@ -29,15 +29,11 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.io.IOException;
-
 import java.text.MessageFormat;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 /**
  * @author freddy

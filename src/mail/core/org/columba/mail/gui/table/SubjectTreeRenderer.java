@@ -23,7 +23,6 @@ import org.columba.ristretto.message.Flags;
 import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;

@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.columba.core.externaltools.ExternalToolsNotFoundException;
 import org.columba.core.main.MainInterface;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 import org.columba.mail.config.PGPItem;

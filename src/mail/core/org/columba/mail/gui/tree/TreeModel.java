@@ -27,7 +27,6 @@ import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.util.MailResourceLoader;

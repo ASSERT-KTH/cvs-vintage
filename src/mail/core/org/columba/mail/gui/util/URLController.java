@@ -33,7 +33,6 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.main.MailInterface;
-import org.columba.ristretto.message.Address;
 
 public class URLController implements ActionListener {
     private String address;

@@ -28,7 +28,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
-import org.columba.mail.gui.messageframe.MessageFrameController;
 
 import java.nio.charset.Charset;
 

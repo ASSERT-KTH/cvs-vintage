@@ -19,7 +19,6 @@ package org.columba.mail.gui.tree.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
