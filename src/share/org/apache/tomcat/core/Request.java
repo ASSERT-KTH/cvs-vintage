@@ -949,6 +949,19 @@ public class Request {
 	return notes[pos];
     }
 
+    public Object getNote( String name ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.REQUEST_NOTE,
+				   name );
+	return getNote( id );
+    }
+
+    public void setNote( String name, Object value ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.REQUEST_NOTE,
+				   name );
+	setNote( id, value );
+    }
+
+
     // -------------------- Recycling -------------------- 
     public void recycle() {
 	initRequest();
