@@ -34,6 +34,7 @@ import java.net.URLClassLoader;
 
 import java.util.*;
 
+import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
@@ -73,45 +74,44 @@ public class GlobalResourceLoader {
         }
         
         public static Locale[] getAvailableLocales() {
-                File[] langpacks = new File(".").listFiles(new FileFilter() {
-                        public boolean accept(File file) {
-                                String name = file.getName().toLowerCase();
-                                return file.isFile() && name.startsWith("langpack_") && name.endsWith(".jar");
-                        }
-                });
-                String name, language, country, variant;
-                StringTokenizer tokenizer;
-                LinkedList locales = new LinkedList();
+                Set locales = new HashSet();
                 locales.add(new Locale("en", ""));
+                FileFilter langpackFileFilter = new LangPackFileFilter();
+                File[] langpacks = ConfigPath.getConfigDirectory().listFiles(langpackFileFilter);
                 for (int i=0; i<langpacks.length; i++) {
-                        name = langpacks[i].getName();
-                        name = name.substring(9, name.length() - 4);
-                        tokenizer = new StringTokenizer(name, "_");
-                        if (tokenizer.hasMoreElements()) {
-                                language = tokenizer.nextToken();
-                                if (tokenizer.hasMoreElements()) {
-                                        country = tokenizer.nextToken();
-                                        if (tokenizer.hasMoreElements()) {
-                                                variant = tokenizer.nextToken();
-                                        } else {
-                                                variant = "";
-                                        }
-                                } else {
-                                        country = "";
-                                        variant = "";
-                                }
-                        } else {
-                            language = "";
-                            country = "";
-                            variant = "";
-                        }
-                        locales.add(new Locale(language, country, variant));
+                        locales.add(extractLocaleFromFilename(langpacks[i].getName()));
+                }
+                langpacks = new File(".").listFiles(langpackFileFilter);
+                for (int i=0; i<langpacks.length; i++) {
+                        locales.add(extractLocaleFromFilename(langpacks[i].getName()));
                 }
                 return (Locale[])locales.toArray(new Locale[0]);
         }
         
+        private static Locale extractLocaleFromFilename(String name) {
+                String language = "";
+                String country = "";
+                String variant = "";
+                name = name.substring(9, name.length() - 4);
+                StringTokenizer tokenizer = new StringTokenizer(name, "_");
+                if (tokenizer.hasMoreElements()) {
+                        language = tokenizer.nextToken();
+                        if (tokenizer.hasMoreElements()) {
+                                country = tokenizer.nextToken();
+                                if (tokenizer.hasMoreElements()) {
+                                        variant = tokenizer.nextToken();
+                                }
+                        }
+                }
+                return new Locale(language, country, variant);
+        }
+        
         protected static void initClassLoader() {
-                File langpack = new File("langpack_" + Locale.getDefault().toString() + ".jar");
+                String name = "langpack_" + Locale.getDefault().toString() + ".jar";
+                File langpack = new File(ConfigPath.getConfigDirectory(), name);
+                if (!langpack.exists() || !langpack.isFile()) {
+                        langpack = new File(".", name);
+                }
                 if (langpack.exists() && langpack.isFile()) {
                         if (MainInterface.DEBUG) {
                                 ColumbaLogger.log.info("Creating new i18n class loader for " + langpack.getPath());
@@ -208,6 +208,13 @@ public class GlobalResourceLoader {
                                 //overwrite old bundle
                                 htBundles.put(bundlePath, bundle);
                         } catch (MissingResourceException mre) {} //should not occur, otherwise the bundlePath would not be in the hashtable
+                }
+        }
+        
+        public static class LangPackFileFilter implements FileFilter {
+                public boolean accept(File file) {
+                        String name = file.getName().toLowerCase();
+                        return file.isFile() && name.startsWith("langpack_") && name.endsWith(".jar");
                 }
         }
 }
