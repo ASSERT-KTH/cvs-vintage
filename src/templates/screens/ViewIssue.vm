@@ -4,7 +4,7 @@
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 
 #set ($currentIssueModuleId = $currentIssue.ModuleId)
-#set ($currentModule = $scarabR.CurrentModule)
+#set ($currentModule = $currentIssue.Module)
 #set ($currentModuleId = $currentModule.ModuleId)
 #set ($currentModuleName = $currentModule.Name)
 
