@@ -76,6 +76,29 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
+ * This is a low-level, efficient representation of a server request. Most fields
+ * are GC-free, expensive operations are delayed until the  user code needs the
+ * information.
+ *
+ * Most processing is delegated to modules, using a hook mechanism.
+ * 
+ * This class is not intended for user code - it is used internally by tomcat
+ * for processing the request in the most efficient way. Users ( servlets ) can
+ * access the information using a facade, which provides the high-level view
+ * of the request.
+ *
+ * For lazy evaluation, the request uses the getInfo() hook. The following ids
+ * are defined:
+ * <ul>
+ *  <li>req.encoding - returns the request encoding
+ *  <li>req.attribute - returns a module-specific attribute ( like SSL keys, etc ).
+ * </ul>
+ *
+ * Tomcat defines a number of attributes:
+ * <ul>
+ *   <li>"org.apache.tomcat.request" - allows access to the low-level
+ *       request object in trusted applications 
+ * </ul>
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -83,6 +106,7 @@ import java.util.Hashtable;
  * @author Harish Prabandham
  * @author Alex Cruikshank [alex@epitonic.com]
  * @author Hans Bergsten [hans@gefionsoftware.com]
+ * @author Costin Manolache
  */
 public class Request {
     public static final String SESSIONID_FROM_COOKIE="cookie";
@@ -219,8 +243,13 @@ public class Request {
 	return context;
     }
 
+    int encodingInfo;
+    int attributeInfo;
+    
     public void setContextManager( ContextManager cm ) {
 	contextM=cm;
+	encodingInfo=cm.getNote( ContextManager.REQUEST_NOTE,"req.encoding" );
+	attributeInfo=cm.getNote( ContextManager.REQUEST_NOTE,"req.attribute" );
     }
 
     public ContextManager getContextManager() {
@@ -356,6 +385,22 @@ public class Request {
 
     public String getCharacterEncoding() {
         if(charEncoding!=null) return charEncoding;
+
+	Object result=null;
+	Context ctx=getContext();
+	BaseInterceptor reqI[]= ctx.getContainer().
+	    getInterceptors(Container.H_getInfo);
+	for( int i=0; i< reqI.length; i++ ) {
+	    result=reqI[i].getInfo( ctx, this, encodingInfo, null );
+	    if ( result != null ) {
+		break;
+	    }
+	}
+	if( result != null ) {
+	    charEncoding=(String)result;
+	    return;
+	}
+	
         charEncoding = ContentType.getCharsetFromContentType(getContentType());
 	return charEncoding;
     }
@@ -616,7 +661,23 @@ public class Request {
 	if( value != null )
 	    return value;
 
+	Object result=null;
+	Context ctx=getContext();
+	BaseInterceptor reqI[]= ctx.getContainer().
+	    getInterceptors(Container.H_getInfo);
+	for( int i=0; i< reqI.length; i++ ) {
+	    result=reqI[i].getInfo( ctx, this, attributeInfo, name );
+	    if ( result != null ) {
+		break;
+	    }
+	}
+	if( result != null ) {
+	    return result;
+	}
+
 	// allow access to FacadeManager for servlets
+	// XXX move to module. Don't add any new special case, the hooks should
+	// be used
 	if(name.equals(ATTRIB_REAL_REQUEST)) {
 	    if( ! context.allowAttribute(name) ) return null;
 	    return this;
@@ -626,6 +687,20 @@ public class Request {
     }
 
     public void setAttribute(String name, Object value) {
+	int status=BaseInterceptor.DECLINED;
+	Context ctx=getContext();
+	BaseInterceptor reqI[]= ctx.getContainer().
+	    getInterceptors(Container.H_setInfo);
+	for( int i=0; i< reqI.length; i++ ) {
+	    status=reqI[i].setInfo( ctx, this, attributeInfo, name, value );
+	    if ( status != BaseInterceptor.DECLINED ) {
+		break;
+	    }
+	}
+	if ( status != BaseInterceptor.DECLINED ) {
+	    return; // don't set it, the module will manage it
+	}
+
 	if(name!=null && value!=null)
 	    attributes.put(name, value);
     }

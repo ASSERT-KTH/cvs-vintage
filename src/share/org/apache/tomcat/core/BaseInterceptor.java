@@ -253,11 +253,23 @@ public class BaseInterceptor
 	return 0;
     }
 
-    public Object getNote( Request request, int id ) {
+    /** Hook for lazy evaluation of request info.
+	This provides and uniform mechanism to allow modules to evaluate
+	certain expensive request attributes/parameters when they are
+	needed ( if ever ), and allows specialized modules and
+	better integration with the web server/server modules.
+
+	This replaces a number of hard-coded constructs and should
+	clean up the core for un-needed dependencies, as well as provide
+	flexibility in key areas as encoding, etc.
+    */
+    public Object getInfo( Context ctx, Request request,
+			   int id, String key ) {
 	return null;
     }
 
-    public int setNote( Request request, int id, Object obj ) {
+    public int setInfo( Context ctx, Request request,
+			int id, String key, Object obj ) {
 	return DECLINED;
     }
 
