@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.7 2003/11/08 00:43:51 linus Exp $
+// $Id: TestItemUID.java,v 1.8 2003/12/06 09:31:33 kataka Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,17 @@ import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
-import org.argouml.uml.diagram.state.ui.*;
+import org.argouml.uml.diagram.state.ui.FigBranchState;
+import org.argouml.uml.diagram.state.ui.FigCompositeState;
+import org.argouml.uml.diagram.state.ui.FigDeepHistoryState;
+import org.argouml.uml.diagram.state.ui.FigFinalState;
+import org.argouml.uml.diagram.state.ui.FigForkState;
+import org.argouml.uml.diagram.state.ui.FigHistoryState;
+import org.argouml.uml.diagram.state.ui.FigInitialState;
+import org.argouml.uml.diagram.state.ui.FigJoinState;
+import org.argouml.uml.diagram.state.ui.FigShallowHistoryState;
+import org.argouml.uml.diagram.state.ui.FigTransition;
+import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.static_structure.ui.FigInstance;
