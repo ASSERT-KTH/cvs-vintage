@@ -11,20 +11,35 @@ import org.apache.log4j.Category;
 /** An implementation of Log that routes msgs to a
 log4j Category. This class is used to replace the Log
 instances created via the legacy Log.createLog(Object)
+The Log#log(String, String) method is implemented to send
+pass the message onto the instance log4j Category.
+
+@see #logToCategory(String, String, Category)
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class LogToCategory extends Log
 {
     private Category category;
+    /** Wraps a log4j Category object to expose it as a legacy Log instance.
+    */
     public LogToCategory(Category category)
     {
         super(category.getName());
         this.category = category;
     }
+    /** A compatability contstructor that allows the Log.createLog(Object)
+        to use the LogToCategory as the default type of Log. This
+        ctor create a log4j Category using Category.getInstance(source.toString())
+    */
+    public LogToCategory(Object source)
+    {
+        super(source);
+        this.category = Category.getInstance(source.toString());
+    }
 
-    public synchronized void log(String type, String message)
+    public void log(String type, String message)
     {
         logToCategory(type, message, category);
     }

@@ -17,7 +17,7 @@ import javax.management.*;
  * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
  * @author Rickard Öberg (rickard.oberg@telkel.com)
  * @author Scott_Stark@displayscape.com
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class Log
 {
@@ -93,7 +93,7 @@ public abstract class Log
 	 public static Log createLog( Object pSource ) {
 		 Log lReturn;
 		try {
-            final String logClass = System.getProperty("JBOSS_LOG_CLASS", "org.jboss.logging.DefaultLog");
+            final String logClass = System.getProperty("JBOSS_LOG_CLASS", "org.jboss.logging.LogToCategory");
 
 			Class lLog = Thread.currentThread().getContextClassLoader().loadClass( logClass );
 //AS			Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
