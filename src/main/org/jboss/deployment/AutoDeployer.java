@@ -24,6 +24,10 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
+import javax.management.InstanceNotFoundException;
+import javax.management.NotificationListener;
+import javax.management.Notification;
+import javax.management.MBeanServerNotification;
 import org.jboss.logging.log4j.JBossCategory;
 
 import org.jboss.system.ServiceMBeanSupport;
@@ -40,19 +44,29 @@ import org.jboss.system.ServiceMBeanSupport;
  * that directory will be watched separately. <p>
  *
  * When a file is to be deployed, the AutoDeployer will use the configured
- * deployer to deploy it.
+ * deployer to deploy it. <p>
+ *
+ * If a given deployer mbean does not exist at startup, files for that deployer
+ * will not be deployed until that deployer does exist (is registered with main
+ * MBeanServer).
  *
  * @see org.jboss.deployment.J2eeDeployer
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
+ * @version $Revision: 1.3 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
-       implements AutoDeployerMBean, Runnable
+       implements AutoDeployerMBean, NotificationListener,Runnable
 {
+   // Constants -----------------------------------------------------
+   // Attributes ----------------------------------------------------
 
+   /** Instance logger. */
+   private JBossCategory log = (JBossCategory)
+      JBossCategory.getInstance(this.getClass());
+   
    /**
     * Callback to the JMX agent.
     */
@@ -103,17 +117,6 @@ public class AutoDeployer
     * and which should be ignored.
     */
    FilenameFilter[] deployableFilters;
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-   /**
-    * Instance logger.
-    */
-   private JBossCategory log = (JBossCategory)
-         JBossCategory.getInstance(this.getClass());
-
-   // = null;
 
    // Static --------------------------------------------------------
 
@@ -395,6 +398,12 @@ public class AutoDeployer
                   }
                };
          }
+         catch (InstanceNotFoundException e)
+         {
+            log.info("Deployer '" + deployerNames[i] + "' isn't yet registered " +
+                    "files for this deployer will not be deployed until it is deployed.");
+            deployableFilters[i] = null;
+         }
       }
 
       StringTokenizer urls = new StringTokenizer(urlList, ",");
@@ -475,6 +484,11 @@ public class AutoDeployer
          }
       }
 
+      // listen for the deployers to be deployed or undeployed
+      // has to be done before the pre-deploy below so that deployers deployed 
+      // during the pre-deploy are not missed.
+      server.addNotificationListener(new ObjectName("JMImplementation:type=MBeanServerDelegate"),this,null,null);
+
       // Pre-deploy. This is done so that deployments available
       // on start of container is deployed ASAP
       run();
@@ -482,8 +496,65 @@ public class AutoDeployer
       // Start auto deploy thread
       running = true;
       new Thread(this, "AutoDeployer").start();
+      
    }
 
+   public void handleNotification(Notification notification, Object handback)
+   {
+      String type = notification.getType();
+      if(type.equals(MBeanServerNotification.REGISTRATION_NOTIFICATION))
+      {
+         ObjectName mbean = ((MBeanServerNotification)notification).getMBeanName();
+         
+         log.debug("Received notification of mbean "+mbean+"'s deployment.");
+         
+         for(int i=0; i<deployerNames.length; i++)
+         {
+            if(deployerNames[i].equals(mbean))
+            {
+               log.info("Deployer '" + deployerNames[i] + "' deployed, " +
+                       "now available for deployments.");
+               try
+               {
+                  deployableFilters[i] = (FilenameFilter) server.invoke(
+                     deployerNames[i], "getDeployableFilter", new Object[0],
+                     new String[0]);
+               }
+               catch (ReflectionException re)
+               {
+                  log.info("Deployer '" + deployerNames[i] + "' doesn't provide a " +
+                          "filter - will try to deploy all files");
+                  deployableFilters[i] = new FilenameFilter()
+                     {
+                        public boolean accept(File dir, String filename)
+                        {
+                           return true;
+                        }
+                     };
+               }
+               catch(Exception e)
+               {
+                  log.error("Exception occurred accessing deployer '" + deployerNames[i] + "'.",e);
+               }
+            }
+         }
+      }
+      // if a unregister simply clear filter to signal no more deployments
+      else if(type.equals(MBeanServerNotification.UNREGISTRATION_NOTIFICATION))
+      {
+         ObjectName mbean = ((MBeanServerNotification)notification).getMBeanName();
+         for(int i=0; i<deployerNames.length; i++)
+         {
+            if(deployerNames[i].equals(mbean))
+            {
+               deployableFilters[i] = null;
+               log.info("Deployer '" + deployerNames[i] + "' undeployed, " +
+                       "no longer available for deployments.");
+            }
+         }
+      }
+   }
+   
    // Protected -----------------------------------------------------
 
    /**
@@ -519,12 +590,12 @@ public class AutoDeployer
          // Check if it's a deployable file
          for (int j = 0; j < deployerNames.length; ++j)
          {
-            if (!deployableFilters[j].accept(null, fileUrl.getFile()))
+            if (deployableFilters[j] == null || !deployableFilters[j].accept(null, fileUrl.getFile()))
             {
-               continue;
+               continue; 
             }
             // Was not deployable - skip it...
-
+            
             if (deployedURLs.get(fileUrl) == null)
             {
                // This file has not been seen before
@@ -627,7 +698,7 @@ public class AutoDeployer
          this.url = url;
          for (int i = 0; i < deployableFilters.length; ++i)
          {
-            if (deployableFilters[i].accept(null, url.getFile()))
+            if (deployableFilters[i] != null && deployableFilters[i].accept(null, url.getFile()))
             {
                watch = url;
                deployerName = deployerNames[i];
