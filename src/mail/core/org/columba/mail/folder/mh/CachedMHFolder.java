@@ -18,7 +18,11 @@ package org.columba.mail.folder.mh;
 import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
+import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
@@ -66,7 +70,7 @@ public class CachedMHFolder extends MHFolder {
 
 		return (ColumbaHeader) cache.getHeaderList(worker).get(uid);
 	}
-	
+
 	public AbstractMessage getMessage(
 		Object uid,
 		WorkerStatusController worker)
@@ -82,11 +86,11 @@ public class CachedMHFolder extends MHFolder {
 
 		String source = getMessageSource(uid, worker);
 		ColumbaHeader header = getMessageHeader(uid, worker);
-		
+
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, header, 0);
 		message.setUID(uid);
-		message.setSource( source );
+		message.setSource(source);
 
 		aktMessage = message;
 
@@ -104,6 +108,23 @@ public class CachedMHFolder extends MHFolder {
 
 		ColumbaHeader h =
 			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
+
+		EncodedWordDecoder decoder = new EncodedWordDecoder();
+		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
+		String column;
+		Object o;
+		for (int j = 0; j < v.count(); j++) {
+			HeaderItem headerItem = v.getHeaderItem(j);
+			column = (String) headerItem.get("name");
+			
+			Object item = h.get(column);
+			
+			if ( item instanceof String )
+			{
+				String str = (String) item;
+				h.set(column, decoder.decode( str ) );
+			}
+		}
 
 		h.set("columba.uid", newUid);
 
@@ -238,14 +259,12 @@ public class CachedMHFolder extends MHFolder {
 
 			if (exists(uid, worker)) {
 				AbstractMessage message = getMessage(uid, worker);
-				
+
 				destFolder.addMessage(message, worker);
 			}
 
 			worker.setProgressBarValue(i);
 		}
 	}
-
-	
 
 }

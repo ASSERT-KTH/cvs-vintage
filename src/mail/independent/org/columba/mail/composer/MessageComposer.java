@@ -67,14 +67,14 @@ public class MessageComposer {
 
 		// TODO : Add EncodedWord-Support to TO,CC,FROM -> like Subject!
 		// FIXME : this is responsible for the strange subject line
-		/*
+		
 		try {
 			header.set(
 				"Subject",
 				encoder.encode(model.getSubject(), model.getCharsetName()));
 		} catch (UnsupportedEncodingException e) {
 		}
-		*/
+		
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
