@@ -41,7 +41,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.37 $
+*  @version $Revision: 1.38 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -152,7 +152,8 @@ implements EntityPersistenceManager
             }
             catch (NoSuchMethodException e)
             {
-               log.error("Home Method " + methods[i] + " not implemented in bean class");
+               log.error("Home Method " + methods[i] + " not implemented in bean class " + con.getBeanClass() + " looking for method named: ejb" + nameSuffix);
+                        
                throw e;
             }
             try
@@ -161,7 +162,7 @@ implements EntityPersistenceManager
             }
             catch (NoSuchMethodException e)
             {
-               log.error("Home Method " + methods[i] + " not implemented in bean class");
+               log.error("Home Method " + methods[i] + " not implemented in bean class " + con.getBeanClass() + " looking for method named: ejbPost" + nameSuffix);
                throw e;
             }
          }
@@ -472,6 +473,7 @@ implements EntityPersistenceManager
          }
          else if (e instanceof RuntimeException)
          {
+            log.info("RuntimeException: ", e);
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
