@@ -916,8 +916,8 @@ try{
     }
 
     /**
-     * Get an Issue object. If it is the first time calling,
-     * it will be a new blank issue object.
+     * Get an Issue object from unique id.
+     * If first time calling, returns a new blank issue object.
      *
      * @return a <code>Issue</code> value
      */
@@ -931,11 +931,7 @@ try{
                 .get("Issue", IntakeTool.DEFAULT_KEY, false);
             if ( issueGroup != null ) 
             {            
-                issueId =  issueGroup.get("Id").toString();
-            }
-            else if ( data.getParameters().getString("issue_id") != null ) 
-            {                
-                issueId = data.getParameters().getString("issue_id");
+                issueId =  issueGroup.get("id").toString();
             }
 
             if ( issueId == null || issueId.length() == 0 )

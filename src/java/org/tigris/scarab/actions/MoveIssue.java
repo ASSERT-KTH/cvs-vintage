@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.13 2001/10/23 17:04:04 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.14 2001/11/13 22:57:42 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -105,12 +105,10 @@ public class MoveIssue extends RequireLoginFirstAction
     public void doValidate( RunData data, TemplateContext context )
         throws Exception
     {
-        String template = getCurrentTemplate(data, null);
-        String nextTemplate = getNextTemplate(data, template);
-
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
+            String nextTemplate = getNextTemplate(data);
             setTarget(data, nextTemplate);
         }
     }

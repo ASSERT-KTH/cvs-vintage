@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.48 2001/11/13 01:18:01 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.49 2001/11/13 22:57:42 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -589,7 +589,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             try
             {
-                parentIssue = Issue.getIssueById(observedId.toString());
+                parentIssue =  getScarabRequestTool(context).getIssue(observedId.toString());
                 if (parentIssue.getDependency(issue) != null)
                 {
                     observedId.setMessage("This issue already has a dependency" 
