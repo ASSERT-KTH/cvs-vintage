@@ -221,6 +221,20 @@
 <input type="hidden" name="$booleanField.ValueIfAbsent" value="false" />
 #end
 
+#macro (booleanCheckboxLock $booleanField $locked)
+#if ($locked)
+   #set ($disabled = "disabled=disabled")
+#else
+   #set ($disabled = "")
+#end
+#if ($booleanField.Value)
+<input type="checkbox" name="$booleanField.Key" value="true" checked="checked" $disabled/>
+#else
+<input type="checkbox" name="$booleanField.Key" value="true" $disabled/>
+#end
+<input type="hidden" name="$booleanField.ValueIfAbsent" value="false" $disabled />
+#end
+
 #macro (booleanRadio $booleanField)
 #if ($booleanField.Value)
 <input type="radio" name="$booleanField.Key" value="true" checked="checked" />
