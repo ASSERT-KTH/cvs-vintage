@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2004 Slava Pestov
+ * Copyright (C) 2000, 2005 Slava Pestov
  * Portions copyright (C) 2002 Kris Kopicki
  * Portions copyright (C) 2002 Carmine Lucarelli
  *
@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.21 2005/02/05 20:34:40 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.22 2005/02/10 22:35:17 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {

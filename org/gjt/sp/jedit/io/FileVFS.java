@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.50 2005/02/05 20:34:40 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.51 2005/02/10 22:35:17 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -181,7 +181,9 @@ public class FileVFS extends VFS
 			/* These attributes are fetched relatively
 			quickly. The rest are lazily filled in. */
 			setName(file.getName());
-			setPath(file.getPath());
+			String path = file.getPath();
+			setPath(path);
+			setDeletePath(path);
 			setHidden(file.isHidden());
 			setType(file.isDirectory()
 				? VFSFile.DIRECTORY
@@ -287,7 +289,7 @@ public class FileVFS extends VFS
 		if(path.equals("/") && OperatingSystem.isUnix())
 		{
 			return new VFS.DirectoryEntry(path,path,path,
-				VFS.DirectoryEntry.DIRECTORY,0L,false);
+				VFSFile.DIRECTORY,0L,false);
 		}
 
 		File file = new File(path);

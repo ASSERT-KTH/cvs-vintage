@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.223 2005/02/05 20:34:39 spestov Exp $
+ * @version $Id: Buffer.java,v 1.224 2005/02/10 22:35:14 spestov Exp $
  */
 public class Buffer
 {
@@ -372,9 +372,9 @@ public class Buffer
 
 		setFlag(AUTOSAVE_DIRTY,false);
 
-		VFSManager.runInWorkThread(new BufferIORequest(
-			BufferIORequest.AUTOSAVE,null,this,null,
-			VFSManager.getFileVFS(),autosaveFile.getPath()));
+		VFSManager.runInWorkThread(new BufferAutosaveRequest(
+			null,this,null,VFSManager.getFileVFS(),
+			autosaveFile.getPath()));
 	} //}}}
 
 	//{{{ saveAs() method
