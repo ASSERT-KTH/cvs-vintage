@@ -4,54 +4,37 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
+
 import java.rmi.RemoteException;
 
 import javax.ejb.RemoveException;
 
 
 /**
- *	<description> 
+ * The interface for persisting stateful session beans.
  *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.7 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.8 $
  */
 public interface StatefulSessionPersistenceManager
    extends ContainerPlugin
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-    
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
-   public void createSession(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
+   void createSession(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
       throws Exception;
       
-   public void activateSession(StatefulSessionEnterpriseContext ctx)
+   void activateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException;
    
-   public void passivateSession(StatefulSessionEnterpriseContext ctx)
+   void passivateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException;
 
-   public void removeSession(StatefulSessionEnterpriseContext ctx)
+   void removeSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException, RemoveException;
    
-   public void removePassivated(Object key);
-   // Z implementation ----------------------------------------------
-    
-   // Package protected ---------------------------------------------
-    
-   // Protected -----------------------------------------------------
-    
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
+   void removePassivated(Object key);
 }
 
