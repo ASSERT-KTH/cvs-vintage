@@ -182,8 +182,10 @@ public class RModuleOption
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getScarabModule();
+        ScarabModule module = (ScarabModule)getScarabModule();
 
+System.out.println(user);
+System.out.println(user.hasPermission("Module | Edit", module));
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             Criteria c = new Criteria()

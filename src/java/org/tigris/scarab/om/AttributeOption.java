@@ -85,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.20 2001/09/24 21:29:46 jon Exp $
+  * @version $Id: AttributeOption.java,v 1.21 2001/11/09 18:51:28 elicia Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -454,6 +454,28 @@ public class AttributeOption
         throws Exception
     {
         return getParents().size() > 0 ? true : false;
+    }
+
+    /**
+     * Returns direct parent of this child.
+     */
+    public AttributeOption getParent()
+        throws Exception
+    {
+        AttributeOption parent = null;
+        Criteria crit = new Criteria()
+            .add(ROptionOptionPeer.RELATIONSHIP_ID, 
+                 OptionRelationship.PARENT_CHILD)
+            .add(ROptionOptionPeer.OPTION2_ID,
+                 super.getOptionId());
+       
+        List results = (List)ROptionOptionPeer.doSelect(crit);
+        if (results.size() == 1)
+        {
+           ROptionOption roo = (ROptionOption)results.get(0);
+           parent = roo.getOption1Option();
+        }
+        return parent;
     }
 
     /**
