@@ -104,7 +104,8 @@ public class Ajp13
 
     // Prefix codes for message types from server to container
     public static final byte JK_AJP13_FORWARD_REQUEST   = 2;
-    public static final byte JK_AJP13_SHUTDOWN          = 7;
+	public static final byte JK_AJP13_SHUTDOWN          = 7;
+	public static final byte JK_AJP13_PING_REQUEST      = 8;
 	
     // Error code for Ajp13
     public static final int  JK_AJP13_BAD_HEADER        = -100;
@@ -118,7 +119,8 @@ public class Ajp13
     public static final byte JK_AJP13_SEND_BODY_CHUNK   = 3;
     public static final byte JK_AJP13_SEND_HEADERS      = 4;
     public static final byte JK_AJP13_END_RESPONSE      = 5;
-    public static final byte JK_AJP13_GET_BODY_CHUNK    = 6;
+	public static final byte JK_AJP13_GET_BODY_CHUNK    = 6;
+	public static final byte JK_AJP13_PONG_REPLY    	   = 9;
     
     // Integer codes for common response header strings
     public static final int SC_RESP_CONTENT_TYPE        = 0xA001;
@@ -300,10 +302,38 @@ public class Ajp13
                 secret=hBuf.getString();
             }
 	    return -2;
+
+	case JK_AJP13_PING_REQUEST:
+		return sendPong();
 	}
+	
 	return 200; // XXX This is actually an error condition 
+
     }
 
+	/**
+	 * Send a PONG REPLY to web server to its PING request
+	 * 
+	 * @param ch the Ajp13 channel
+	 * @param outBuf the Ajp13Packet output packet to use
+	 */
+	private int sendPong()
+	{
+		outBuf.reset();
+		outBuf.appendByte(JK_AJP13_PONG_REPLY);
+	    	
+		try
+		{
+			send(outBuf);
+		}
+		catch (IOException ioe)
+		{
+			d("can't send pong reply");
+		}
+	    	
+		return (999);	// success but no need to process farther
+	}
+	
     /**
      * Parse a FORWARD_REQUEST packet from the web server and store its
      * properties in the passed-in request object.
