@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.17 2003/02/18 22:03:19 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.18 2003/03/11 16:09:55 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -326,7 +326,15 @@ public class BrowserCommandsMenu extends JPopupMenu
 			else if(actionCommand.equals("new-directory"))
 				browser.mkdir();
 			else if(actionCommand.equals("search-in-directory"))
-				browser.searchInDirectory();
+			{
+				if(files == null)
+					browser.searchInDirectory();
+				else
+				{
+					browser.searchInDirectory(files[0].path,
+						files[0].type != VFS.DirectoryEntry.FILE);
+				}
+			}
 			else if(actionCommand.equals("show-hidden-files"))
 			{
 				browser.setShowHiddenFiles(!browser.getShowHiddenFiles());

@@ -32,15 +32,17 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.10 2003/03/11 03:50:05 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.11 2003/03/11 16:09:58 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
 {
 	//{{{ FloatingWindowContainer constructor
-	public FloatingWindowContainer(DockableWindowManager dockableWindowManager)
+	public FloatingWindowContainer(DockableWindowManager dockableWindowManager,
+		boolean clone)
 	{
 		this.dockableWindowManager = dockableWindowManager;
+		this.clone = clone;
 		setIconImage(GUIUtilities.getPluginIcon());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -123,6 +125,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 
 	//{{{ Private members
 	private DockableWindowManager dockableWindowManager;
+	private boolean clone;
 	private DockableWindowManager.Entry entry;
 	private JButton menu;
 	//}}}
@@ -139,7 +142,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 			else
 			{
 				popup = dockableWindowManager.createPopupMenu(
-					entry.factory.name);
+					entry.factory.name,clone);
 				GUIUtilities.showPopupMenu(popup,
 					menu,menu.getX(),menu.getY() + menu.getHeight(),
 					false);
