@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/Constants.java,v 1.1 1999/10/18 03:34:03 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/18 03:34:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/Constants.java,v 1.2 1999/10/23 22:30:16 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/23 22:30:16 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ public class Constants {
     /**
      * The name of this Java package.
      */
-    public static final String Package = "org.apache.tomcat.file.security";
+    public static final String Package = "org.apache.tomcat.security.file";
 
 
     /**
@@ -101,6 +101,15 @@ public class Constants {
     public static class Attribute {
 	public static final String NAME = "name";
 	public static final String PASSWORD = "password";
+    }
+
+
+    /**
+     * Initialization parameters from the associated ServletContext.
+     */
+    public static class Parameter {
+	public static final String DATABASE =
+	    Constants.Package + ".database";
     }
 
 

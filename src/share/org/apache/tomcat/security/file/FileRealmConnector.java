@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.1 1999/10/18 03:34:04 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/18 03:34:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.2 1999/10/23 22:30:17 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/23 22:30:17 $
  *
  * ====================================================================
  *
@@ -64,12 +64,18 @@
 
 package org.apache.tomcat.security.file;
 
-
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Enumeration;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.security.RealmConnector;
-
+import org.apache.tomcat.util.StringManager;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Implementation of <code>RealmConnector</code> that uses a
@@ -77,7 +83,7 @@ import org.apache.tomcat.security.RealmConnector;
  * XML-stored database of users and their associated roles.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/18 03:34:04 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/23 22:30:17 $
  */
 
 public final class FileRealmConnector
@@ -94,6 +100,13 @@ public final class FileRealmConnector
      * The cache object containing our database information.
      */
     private FileRealmDatabase database = null;
+
+
+    /**
+     * The internationalized string constants for this package.
+     */
+    private StringManager sm =
+	StringManager.getManager(Constants.Package);
 
 
     /**
@@ -118,11 +131,9 @@ public final class FileRealmConnector
      */
     public Principal authenticate(String username, String credentials) {
 
-	if (context == null) {
-	    // XXX Internationalization
-	    throw new IllegalStateException("FileRealmConnector:  " +
-					    "Not started");
-	}
+	if (context == null)
+	    throw new IllegalStateException(
+                sm.getString("file.authenticate.notstarted"));
 
 	FileRealmUser user = database.getUser(username);
 	if (user == null)
@@ -150,11 +161,9 @@ public final class FileRealmConnector
      */
     public boolean hasRole(Principal principal, String role) {
 
-	if (context == null) {
-	    // XXX Internationalization
-	    throw new IllegalStateException("FileRealmConnector:  " +
-					    "Not started");
-	}
+	if (context == null)
+	    throw new IllegalStateException(
+                sm.getString("file.hasRole.notstarted"));
 
 	FileRealmUser user = database.getUser(principal.getName());
 	if (user == null)
@@ -178,13 +187,62 @@ public final class FileRealmConnector
      *
      * @param context The Context with which this RealmConnector is associated
      *
-     * XXX Should we support some formal exception to report initialization
-     * problems?
+     * @exception IllegalArgumentException if the underlying database
+     *  file cannot be successfully loaded
      */
     public void start(Context context) {
 
+	// Open an input stream to the specified database file
+	String filename =
+	    context.getInitParameter(Constants.Parameter.DATABASE);
+	if (filename == null)
+	    throw new IllegalArgumentException(
+	        sm.getString("file.start.missing",
+			     Constants.Parameter.DATABASE));
+	InputStream stream = null;
+	try {
+	    stream = new BufferedInputStream(new FileInputStream(filename));
+	} catch (FileNotFoundException e) {
+	    throw new IllegalArgumentException(
+		sm.getString("file.start.open", filename));
+	}
+
+	// Configure a local database object based on this file
+	try {
+	    this.database = new FileRealmDatabase(stream);
+	} catch (IOException e) {
+	    try {
+		stream.close();
+	    } catch (IOException f) {
+		;
+	    }
+	    throw new IllegalArgumentException(
+		sm.getString("file.start.read", filename) + ": " + e);
+	} catch (SAXParseException e) {
+	    try {
+		stream.close();
+	    } catch (IOException f) {
+		;
+	    }
+	    throw new IllegalArgumentException(
+		sm.getString("file.start.parse", filename) + ": " + e);
+	} catch (SAXException e) {
+	    try {
+		stream.close();
+	    } catch (IOException f) {
+		;
+	    }
+	    throw new IllegalArgumentException(
+		sm.getString("file.start.process", filename) + ": " + e);
+	}
+	try {
+	    stream.close();
+	} catch (IOException e) {
+	    ;
+	}
+
+	// Store a local reference to our associated context
 	this.context = context;
-	// XXX create and initialize the database object
 
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmDatabase.java,v 1.2 1999/10/22 08:14:16 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 08:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmDatabase.java,v 1.3 1999/10/23 22:30:17 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/23 22:30:17 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@
 
 package org.apache.tomcat.security.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -83,7 +84,7 @@ import org.xml.sax.SAXParseException;
  * <code>tomcat-users.dtd</code> file in this directory.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 1999/10/22 08:14:16 $
+ * @version $Revision: 1.3 $ $Date: 1999/10/23 22:30:17 $
  */
 
 public final class FileRealmDatabase {
@@ -173,6 +174,41 @@ public final class FileRealmDatabase {
     }
 
 
+    /** [Private] Convert the specified byte array representation of an
+     * encrypted password into the corresponding hexadecimal digit
+     * representation.
+     *
+     * @param bytes Byte array representation
+     */
+    private String convert(byte bytes[]) {
+
+	StringBuffer sb = new StringBuffer(bytes.length * 2);
+	for (int i = 0; i < bytes.length; i++) {
+	    sb.append(convertDigit((int) (bytes[i] >> 4)));
+	    sb.append(convertDigit((int) (bytes[i] & 0x0f)));
+	}
+	return (sb.toString());
+
+    }
+
+
+    /**
+     * [Private] Convert the specified value (0 .. 15) to the corresponding
+     * hexadecimal digit.
+     *
+     * @param value Value to be converted
+     */
+    private char convertDigit(int value) {
+
+	value &= 0x0f;
+	if (value >= 10)
+	    return ((char) (value - 10 + 'a'));
+	else
+	    return ((char) (value + '0'));
+
+    }
+
+
     /**
      * [Private] Convert the hexadecimal digit representation of an encrypted
      * password into the corresponding byte array representation.
@@ -181,8 +217,28 @@ public final class FileRealmDatabase {
      */
     private byte[] convert(String digits) {
 
-	// XXX Any good hex->byte converters lying around?
-	return (new byte[0]);
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	for (int i = 0; i < digits.length(); i += 2) {
+	    char c1 = digits.charAt(i);
+	    char c2 = '0';
+	    if (i+1 < digits.length())
+		c2 = digits.charAt(i+1);
+	    byte b = 0;
+	    if ((c1 >= '0') && (c1 <= '9'))
+		b += ((c1 - '0') * 16);
+	    else if ((c1 >= 'a') && (c1 <= 'f'))
+		b += ((c1 - 'a' + 10) * 16);
+	    else if ((c1 >= 'A') && (c1 <= 'F'))
+		b += ((c1 - 'A' + 10) * 16);
+	    if ((c2 >= '0') && (c2 <= '9'))
+		b += (c2 - '0');
+	    else if ((c2 >= 'a') && (c2 <= 'f'))
+		b += (c2 - 'a' + 10);
+	    else if ((c2 >= 'A') && (c2 <= 'F'))
+		b += (c2 - 'A' + 10);
+	    baos.write(b);
+	}
+	return (baos.toByteArray());
 
     }
 
@@ -505,14 +561,15 @@ public final class FileRealmDatabase {
 	while (users.hasMoreElements()) {
 	    FileRealmUser user = (FileRealmUser) users.nextElement();
 	    writer.println("  <user name=\"" + user.getName() +
-			   "\" password=\"" + user.getPassword() + "\" />");
+			   "\" password=\"" + convert(user.getPassword()) +
+			   "\" />");
 	}
 
 	// Render group elements for all defined groups
 	Enumeration groups = getGroups();
 	while (groups.hasMoreElements()) {
 	    FileRealmGroup group = (FileRealmGroup) groups.nextElement();
-	    writer.println("  <group name=\"" + group.getName() + "\" />");
+	    writer.println("  <group name=\"" + group.getName() + "\">");
 	    users = group.getUsers();
 	    while (users.hasMoreElements()) {
 		FileRealmUser user = (FileRealmUser) users.nextElement();
@@ -526,7 +583,7 @@ public final class FileRealmDatabase {
 	Enumeration roles = getRoles();
 	while (roles.hasMoreElements()) {
 	    String role = (String) roles.nextElement();
-	    writer.println("  <role name=\"" + role + "\" />");
+	    writer.println("  <role name=\"" + role + "\">");
 	    users = getUsers();
 	    while (users.hasMoreElements()) {
 		FileRealmUser user = (FileRealmUser) users.nextElement();

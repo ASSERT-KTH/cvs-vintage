@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmUser.java,v 1.1 1999/10/18 03:34:05 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/18 03:34:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmUser.java,v 1.2 1999/10/23 22:30:19 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/23 22:30:19 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ import java.util.Hashtable;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/18 03:34:05 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/23 22:30:19 $
  */
 
 final class FileRealmUser
@@ -283,6 +283,18 @@ final class FileRealmUser
     public Enumeration getRoles() {
 
 	return (roles.keys());
+
+    }
+
+
+    /**
+     * Is this user a member of the specified group?
+     *
+     * @param group The group to be tested
+     */
+    public boolean hasGroup(FileRealmGroup group) {
+
+	return (groups.get(group.getName()) != null);
 
     }
 
