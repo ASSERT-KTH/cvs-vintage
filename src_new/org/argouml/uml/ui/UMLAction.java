@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.14 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLAction.java,v 1.15 2003/09/04 15:14:09 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,6 +84,7 @@ public class UMLAction extends AbstractAction {
         cat.debug("pushed " + getValue(Action.NAME));
         StatusBar sb = ProjectBrowser.getInstance().getStatusBar();
         sb.doFakeProgress(stripJunk(getValue(Action.NAME).toString()), 100);
+		// TODO Replace deprecated History with TargetManager
         History.TheHistory.addItemManipulation(
 					       "pushed " + getValue(Action.NAME),
 					       "",

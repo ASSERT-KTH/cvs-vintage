@@ -1,4 +1,4 @@
-// $Id: TabHistory.java,v 1.7 2003/06/30 18:00:24 linus Exp $
+// $Id: TabHistory.java,v 1.8 2003/09/04 15:12:22 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,6 +64,8 @@ import org.argouml.kernel.HistoryListener;
 public class TabHistory extends TabSpawnable
     implements ListSelectionListener, ListCellRenderer, MouseMotionListener 
 {
+	// TODO Replace deprecated History* with TargetManager
+	
     protected static Category cat = 
         Category.getInstance(TabHistory.class);
 
