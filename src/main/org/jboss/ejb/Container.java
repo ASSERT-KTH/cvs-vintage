@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public abstract class Container
 {
@@ -284,101 +284,110 @@ public abstract class Container
    
    // Private -------------------------------------------------------
    private void setupEnvironment()
-      throws NamingException
+      throws DeploymentException
    {
-      NamingServer root = new NamingServer();
-      ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
-      Context ctx = (Context)new InitialContext().lookup("java:/");
-      ctx.createSubcontext("comp");
-      ctx = ctx.createSubcontext("comp/env");
-      
-      // Bind environment properties
-      {
-         Iterator enum = getMetaData().getEnvironmentEntries();
-         while(enum.hasNext())
-         {
-            EnvironmentEntry entry = (EnvironmentEntry)enum.next();
-            if (entry.getType().equals("java.lang.Integer"))
-            {
-               bind(ctx, entry.getName(), new Integer(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Long"))
-            {
-               bind(ctx, entry.getName(), new Long(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Double"))
-            {
-               bind(ctx, entry.getName(), new Double(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Float"))
-            {
-               bind(ctx, entry.getName(), new Float(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Byte"))
-            {
-               bind(ctx, entry.getName(), new Byte(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Short"))
-            {
-               bind(ctx, entry.getName(), new Short(entry.getValue()));
-            } else if (entry.getType().equals("java.lang.Boolean"))
-            {
-               bind(ctx, entry.getName(), new Boolean(entry.getValue()));
-            } else
-            {
-               // Default is string
-               bind(ctx, entry.getName(), entry.getValue());
-            }
-         }
-      }
-      
-      // Bind EJB references
-      {
-         Iterator enum = getMetaData().getEjbReferences();
-         while(enum.hasNext())
-         {
-            EjbReference ref = (EjbReference)enum.next();
-            
-            Name n = ctx.getNameParser("").parse(ref.getLink());
-            ContainerInvoker ci = getContainerInvoker();
-            
-            if (!ref.getJndiName().equals(""))
-            {
-               // External link
-               Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-               bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
-            }
-            else
-            {
-               // Internal link
-               Logger.debug("Bind "+ref.getName() +" to "+getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
-               bind(ctx, ref.getName(), getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
-            }
-         }
-      }
-      
-      // Bind resource references
-      {
-         Iterator enum = getMetaData().getResourceReferences();
-         ResourceManagers rms = ((EjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
-         while(enum.hasNext())
-         {
-            ResourceReference ref = (ResourceReference)enum.next();
-            
-            ResourceManager rm = rms.getResourceManager(ref.getResourceName());
-            
-            if (rm.getType().equals("javax.sql.DataSource"))
-            {
-               JDBCResource res = (JDBCResource)rm;
-               bind(ctx, res.getName(), new LinkRef(res.getJndiName()));
-            } else if (rm.getType().equals("java.net.URL"))
-            {
-               try
-               {
-                  URLResource res = (URLResource)rm;
-                  bind(ctx, res.getName(), new URL(res.getUrl()));
-               } catch (MalformedURLException e)
-               {
-                  throw new NamingException("Malformed URL:"+e.getMessage());
-               }
-            }
-         }
-      }
+		try
+		{
+	      NamingServer root = new NamingServer();
+	      ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
+	      Context ctx = (Context)new InitialContext().lookup("java:/");
+	      ctx.createSubcontext("comp");
+	      ctx = ctx.createSubcontext("comp/env");
+	      
+	      // Bind environment properties
+	      {
+	         Iterator enum = getMetaData().getEnvironmentEntries();
+	         while(enum.hasNext())
+	         {
+	            EnvironmentEntry entry = (EnvironmentEntry)enum.next();
+	            if (entry.getType().equals("java.lang.Integer"))
+	            {
+	               bind(ctx, entry.getName(), new Integer(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Long"))
+	            {
+	               bind(ctx, entry.getName(), new Long(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Double"))
+	            {
+	               bind(ctx, entry.getName(), new Double(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Float"))
+	            {
+	               bind(ctx, entry.getName(), new Float(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Byte"))
+	            {
+	               bind(ctx, entry.getName(), new Byte(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Short"))
+	            {
+	               bind(ctx, entry.getName(), new Short(entry.getValue()));
+	            } else if (entry.getType().equals("java.lang.Boolean"))
+	            {
+	               bind(ctx, entry.getName(), new Boolean(entry.getValue()));
+	            } else
+	            {
+	               // Default is string
+	               bind(ctx, entry.getName(), entry.getValue());
+	            }
+	         }
+	      }
+	      
+	      // Bind EJB references
+	      {
+	         Iterator enum = getMetaData().getEjbReferences();
+	         while(enum.hasNext())
+	         {
+	            EjbReference ref = (EjbReference)enum.next();
+	            
+	            Name n = ctx.getNameParser("").parse(ref.getLink());
+	            ContainerInvoker ci = getContainerInvoker();
+	            
+	            if (!ref.getJndiName().equals(""))
+	            {
+	               // External link
+	               Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
+	               bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
+	            }
+	            else
+	            {
+	               // Internal link
+	               Logger.debug("Bind "+ref.getName() +" to "+getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
+	               bind(ctx, ref.getName(), getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
+	            }
+	         }
+	      }
+	      
+	      // Bind resource references
+	      {
+	         Iterator enum = getMetaData().getResourceReferences();
+	         ResourceManagers rms = ((EjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
+	         while(enum.hasNext())
+	         {
+	            ResourceReference ref = (ResourceReference)enum.next();
+	            
+	            ResourceManager rm = rms.getResourceManager(ref.getResourceName());
+	            
+					if (rm == null)
+						throw new DeploymentException("No resource manager named "+ref.getResourceName());
+						
+	            if (rm.getType().equals("javax.sql.DataSource"))
+	            {
+	               JDBCResource res = (JDBCResource)rm;
+	               bind(ctx, res.getName(), new LinkRef(res.getJndiName()));
+	            } else if (rm.getType().equals("java.net.URL"))
+	            {
+	               try
+	               {
+	                  URLResource res = (URLResource)rm;
+	                  bind(ctx, res.getName(), new URL(res.getUrl()));
+	               } catch (MalformedURLException e)
+	               {
+	                  throw new NamingException("Malformed URL:"+e.getMessage());
+	               }
+	            }
+	         }
+	      }
+		} catch (NamingException e)
+		{
+			throw new DeploymentException("Could not set up environment", e);
+		}
    }
    
    private void bind(Context ctx, String name, Object val)
