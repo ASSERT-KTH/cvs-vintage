@@ -74,8 +74,8 @@ $renderer.render("navigations", $data, $template, "Default.vm")
    <td nowrap="nowrap">
     <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
         <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
-     #set ($privateQueries = $scarabR.CurrentModule.getPrivateQueries($data.User))
-     #set ($globalQueries = $module.GlobalQueries)
+     #set ($privateQueries = $scarabR.CurrentModule.getPrivateQueries($data.User, $scarabR.CurrentIssueType))
+     #set ($globalQueries = $module.getGlobalQueries($scarabR.CurrentIssueType))
      #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
         <select name="queryId">
        #foreach ($query in $privateQueries)
