@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE server>
+
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!--  JBoss Server Configuration                                           -->
+<!--  JBoss Server Configuration        
+<!--  NOTE: THIS COULD BE CALLED "jboss-service.xml"                       -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.61 2001/08/26 22:50:00 user57 Exp $ -->
+<!-- $Id: jboss.jcml,v 1.62 2001/08/29 22:34:32 mnf999 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -20,14 +21,68 @@
    |  the MBeans it depends on.
   -->
 
+
 <server>
 
+
+<!--
+
+	 The Classpath element is needed for http based installations 
+	 we need to list all the archives that the server needs at boot
+	 if the installation is local and the configuration is from file
+	 then there is no need to list the files and it should commented
+
+  <classpath archives="
+  	 castor.jar,
+	 castor-jdo-plugin.jar,
+	 com.mortbay.ftp.jar,
+	 com.mortbay.jetty.jar,
+	 com.mortbay.jetty.jmx.jar,
+	 com.mortbay.jetty.sasl.jar,
+	 com.mortbay.tools.jar,
+	 concurrent.jar,
+	 crimson.jar,
+	 cryptix-sasl-jetty.jar,
+	 gnu-regexp.jar,
+	 hsql.jar, 
+	 hsql-plugin.jar,
+	 jaas.jar,
+	 JavaGroups.jar,
+	 javax-sasl.jar,
+	 jaxp.jar,
+	 jbosscx.jar,
+	 jbossha.jar,
+	 jboss-j2ee.jar,
+	 jboss.jar,
+	 jbossmq.jar,
+	 jbossmx.jar,
+	 jbosspool.jar,
+	 jbosssx.jar,
+	 jcert.jar,
+	 jetty-plugin.jar,
+	 jmxtools.jar,
+	 jndi.jar,
+	 jnet.jar,
+	 jnpserver.jar,
+	 jpl-pattern.jar,
+	 jpl-util.jar,
+	 jsr77.jar,
+	 jsse.jar,
+	 jts.jar,
+	 mail.jar,
+	 org.apache.jasper.jar,
+	 tyrex.jar,
+	 tyrex-tm-plugin.jar,
+	 xalan.jar"/>
+	 
+	 -->
+	 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.web.WebService"
-	 name="DefaultDomain:service=Webserver">
+	 name="JBOSS-SYSTEM:service=Webserver">
     <attribute name="Port">8083</attribute>
   </mbean>
 
@@ -37,11 +92,11 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.naming.NamingService"
-	 name="DefaultDomain:service=Naming">
+	 name="JBOSS-SYSTEM:service=Naming">
     <attribute name="Port">1099</attribute>
   </mbean>
   <mbean code="org.jboss.naming.JNDIView" 
-	 name="DefaultDomain:service=JNDIView"/>
+	 name="JBOSS-SYSTEM:service=JNDIView"/>
 
 
   <!-- ==================================================================== -->
@@ -49,7 +104,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.tm.TransactionManagerService" 
-	 name="DefaultDomain:service=TransactionManager">
+	 name="JBOSS-SYSTEM:service=TransactionManager">
     <attribute name="TransactionTimeout">300</attribute>
 
     <!-- Use this attribute if you need to use a specific Xid
@@ -64,13 +119,13 @@
      | the TransactionManagerService above.
      |
   <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService"
-         name="DefaultDomain:service=TransactionManager">
+         name="JBOSS-SYSTEM:service=TransactionManager">
         <attribute name="ConfigFileName">../conf/default/domain.xml</attribute>
   </mbean>
   -->
 
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
-	 name="DefaultDomain:service=ClientUserTransaction">
+	 name="JBOSS-SYSTEM:service=ClientUserTransaction">
   </mbean>
 
 
@@ -111,6 +166,26 @@
     <attribute name="PolicyFile">sample_policy.xml</attribute>
   </mbean>
   -->
+
+  <!-- ==================================================================== -->
+  <!-- JDBC - Initialize the databases                                      -->
+  <!-- to ConnectionFactoryLoader                                           -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.jdbc.JdbcProvider" 
+	 name="JBOSS-SYSTEM:service=JdbcProvider">
+     <attribute name="Drivers">
+	  org.hsql.jdbcDriver
+	  </attribute>
+  </mbean>
+
+  <mbean code="org.jboss.jdbc.HypersonicDatabase" 
+	 name="JBOSS-SYSTEM:service=Hypersonic">
+    <attribute name="Port">1476</attribute>
+    <attribute name="Silent">true</attribute>
+    <attribute name="Database">default</attribute>
+    <attribute name="Trace">false</attribute>
+  </mbean>
 
 
   <!-- ==================================================================== -->
@@ -228,28 +303,13 @@
   <!-- to ConnectionFactoryLoader                                           -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.jdbc.JdbcProvider" 
-	 name="DefaultDomain:service=JdbcProvider">
-     <attribute name="Drivers">
-	  org.hsql.jdbcDriver,
-	  org.enhydra.instantdb.jdbc.idbDriver
-     </attribute>
-  </mbean>
-
-  <mbean code="org.jboss.jdbc.HypersonicDatabase" 
-	 name="DefaultDomain:service=Hypersonic">
-    <attribute name="Port">1476</attribute>
-    <attribute name="Silent">true</attribute>
-    <attribute name="Database">default</attribute>
-    <attribute name="Trace">false</attribute>
-  </mbean>
-
   <!-- 
      | XADataSourceLoader is now deprecated.  
      | It now converts to ConnectionFactoryLoader mbeans.  See below for brief
      | instructions.
      |
-  <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=DefaultDS">
+
+  <mbean code="org.jboss.jdbc.XADataSourceLoader" name="JBOSS-SYSTEM:service=XADataSource,name=DefaultDS">
     <attribute name="PoolName">DefaultDS</attribute>
     <attribute name="DataSourceClass">org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties"></attribute>
@@ -269,7 +329,7 @@
     <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
     <attribute name="MinSize">0</attribute>
   </mbean>
-  -->
+--> 
 
   <!-- 
      | This ConnectionFactoryLoader configuration was generated from the 
@@ -298,12 +358,9 @@
      | You can keep running with your XADataSourceLoader mbeans... 
      | but they will go away in a future jboss release.  Why not convert now?
    -->
-  <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
-	 name="DefaultDomain:service=ConnectionFactoryLoader,name=DefaultDS">
-    <attribute name="Properties">#
-      #Wed Aug 15 16:17:29 EDT 2001
-      ConnectionURL=jdbc\:HypersonicSQL\:hsql\://localhost\:1476
-    </attribute>
+	 <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
+	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
+    <attribute name="Properties">ConnectionURL=jdbc\:HypersonicSQL\:hsql\://localhost\:1476</attribute>
     <attribute name="FactoryName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
     <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
@@ -326,39 +383,9 @@
     <attribute name="PrincipalMappingClass">
       org.jboss.resource.security.ManyToOnePrincipalMapping
    </attribute>
-    <attribute name="PrincipalMappingProperties">#
-      #Wed Aug 15 16:17:29 EDT 2001
-      userName=sa
-    </attribute>
+    <attribute name="PrincipalMappingProperties">userName=sa</attribute>
   </mbean>
-
-  <!-- You can experiment with converting this one -->
-  <mbean code="org.jboss.jdbc.XADataSourceLoader"
-	 name="DefaultDomain:service=XADataSource,name=InstantDB">
-    <attribute name="PoolName">InstantDB</attribute>
-    <attribute name="DataSourceClass">
-      org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl
-    </attribute>
-    <attribute name="Properties"></attribute>
-    <attribute name="URL">
-      jdbc:idb:../conf/default/instantdb.properties
-    </attribute>
-    <attribute name="GCMinIdleTime">1200000</attribute>
-    <attribute name="JDBCUser" />
-    <attribute name="MaxSize">10</attribute>
-    <attribute name="Password" />
-    <attribute name="GCEnabled">false</attribute>
-    <attribute name="InvalidateOnError">false</attribute>
-    <attribute name="TimestampUsed">false</attribute>
-    <attribute name="Blocking">true</attribute>
-    <attribute name="GCInterval">120000</attribute>
-    <attribute name="IdleTimeout">1800000</attribute>
-    <attribute name="IdleTimeoutEnabled">false</attribute>
-    <attribute name="LoggingEnabled">false</attribute>
-    <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
-    <attribute name="MinSize">0</attribute>
-  </mbean>
-
+  
 
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
@@ -378,7 +405,7 @@
 
   <!-- Uncomment to add embedded tomcat service
   <mbean code="org.jboss.tomcat.EmbeddedTomcatServiceSX"
-         name="DefaultDomain:service=EmbeddedTomcat">
+         name="JBOSS-SYSTEM:service=EmbeddedTomcat">
   </mbean>
   -->
 
@@ -397,41 +424,6 @@
     <attribute name="PublishMBeans">true</attribute>
   </mbean>
   -->
-
-
-  <!-- ==================================================================== -->
-  <!-- J2EE deployment                                                      -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.ejb.ContainerFactory"
-	 name=":service=ContainerFactory">
-    <attribute name="VerifyDeployments">true</attribute>
-    <attribute name="ValidateDTDs">false</attribute>
-    <attribute name="MetricsEnabled">false</attribute>
-    <attribute name="VerifierVerbose">true</attribute>
-    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
-  </mbean>
-
-  <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
-  <mbean code="org.jboss.deployment.J2eeDeployer"
-	 name="J2EE:service=J2eeDeployer">
-    <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
-  </mbean>
-
-  <!-- 
-     | Uncomment this and disable previous J2eeDeployer 
-     | entry to enable an alternative "scoped" deployment
-     |   
-  <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
-         name="J2EE:service=J2eeDeployer">
-    <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
-  </mbean>
-  -->
-
 
   <!-- ==================================================================== -->
   <!-- JBossMQ                                                              -->
@@ -452,7 +444,7 @@
   <!-- The PersistenceManager is used to store messages to disk. -->
   <mbean code="org.jboss.mq.pm.file.PersistenceManager"
 	 name="JBossMQ:service=PersistenceManager">
-    <attribute name="DataDirectory">../../db/jbossmq/</attribute>
+    <attribute name="DataDirectory">db/jbossmq/</attribute>
   </mbean>
 
   <!-- 
@@ -577,17 +569,50 @@
 
 
   <!-- ==================================================================== -->
+  <!-- J2EE deployment                                                      -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.ejb.ContainerFactory"
+	 name=":service=ContainerFactory">
+    <attribute name="VerifyDeployments">true</attribute>
+    <attribute name="ValidateDTDs">false</attribute>
+    <attribute name="MetricsEnabled">false</attribute>
+    <attribute name="VerifierVerbose">true</attribute>
+    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
+  </mbean>
+
+  <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
+  <mbean code="org.jboss.deployment.J2eeDeployer"
+	 name="J2EE:service=J2eeDeployer">
+    <attribute name="DeployerName">Default</attribute>
+    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
+    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
+  </mbean>
+
+  <!-- 
+     | Uncomment this and disable previous J2eeDeployer 
+     | entry to enable an alternative "scoped" deployment
+     |   
+  <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
+         name="J2EE:service=J2eeDeployer">
+    <attribute name="DeployerName">Default</attribute>
+    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
+    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
+  </mbean>
+  -->
+  <!-- ==================================================================== -->
   <!-- Auto deployment                                                      -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.ejb.AutoDeployer" name="EJB:service=AutoDeployer">
+  <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
     <attribute name="Deployers">
-      J2EE:service=J2eeDeployer;
-      JCA:service=RARDeployer
+      JCA:service=RARDeployer;
+		JBOSS-SYSTEM:service=ServiceDeployer;
+	   J2EE:service=J2eeDeployer
     </attribute>
     <attribute name="URLs">
       ../deploy/lib,
-      ../deploy
+		../deploy
     </attribute>
     <attribute name="Timeout">
       3000
@@ -598,6 +623,7 @@
   <!-- ==================================================================== -->
   <!-- JMX adaptors                                                         -->
   <!-- ==================================================================== -->
+<!-- Moved to a JSR format, look for adaptors.jsr in deploy/lib
 
   <mbean code="org.jboss.jmx.server.JMXAdaptorService"
 	 name="Adaptor:name=RMI"/>
@@ -610,12 +636,12 @@
     <attribute name="Parser" />
     <attribute name="Port">8082</attribute>
   </mbean>
-
+-->
 
   <!-- ==================================================================== -->
   <!-- Mail Connection Factory                                              -->
   <!-- ==================================================================== -->
-
+<!-- moved to a snippet format under deploy/lib
   <mbean code="org.jboss.mail.MailService" name=":service=Mail">
     <attribute name="JNDIName">Mail</attribute>
     <attribute name="ConfigurationFile">mail.properties</attribute>
@@ -623,7 +649,7 @@
     <attribute name="Password">password</attribute>
   </mbean>
 
-
+-->
   <!-- ==================================================================== -->
   <!-- Monitoring and Management                                            -->
   <!-- ==================================================================== -->
@@ -654,7 +680,7 @@
 
   <!-- Uncomment this and set up according to manual to add Castor JDO service
   <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
-         name="DefaultDomain:service=CastorJDO,name=someName">
+         name="JBOSS-SYSTEM:service=CastorJDO,name=someName">
     <attribute name="Configuration">
       file:../conf/default/database.xml
     </attribute>
