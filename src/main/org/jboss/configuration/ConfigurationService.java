@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -216,9 +216,15 @@ public class ConfigurationService
       if (confFile != null)
       {
          // Store to auto-saved JCML file
-         PrintWriter out = new PrintWriter(new FileOutputStream(confFile.getFile()));
-         out.print(xml);
-         out.close();
+         PrintWriter out = null;
+         try {
+         	out = new PrintWriter(new FileOutputStream(confFile.getFile()));
+	     } catch (java.io.FileNotFoundException e) {
+	     	log.error("Configuration file "+confFile.getFile()+" must be available and writable.");
+	     	log.exception(e);
+	     }
+	     out.print(xml);
+	     out.close();
       }
    }
 
