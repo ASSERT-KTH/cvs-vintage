@@ -1,6 +1,6 @@
 /**
  * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004 Bull S.A.
+ * Copyright (C) 2004-2005 Bull S.A.
  * Contact: jonas-team@objectweb.org
  *
  * This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.5 2005/01/28 09:17:23 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.6 2005/03/03 16:09:40 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -30,6 +30,7 @@ import java.net.UnknownHostException;
 
 import org.omg.CSIIOP.TransportAddress;
 
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -41,11 +42,6 @@ public class TransportStruct implements Serializable {
      * Default localhost ip address
      */
     private static final String LOCAL_IP = "127.0.0.1";
-
-    /**
-     * Default ssl port
-     */
-    public static final int DEFAULT_SSL_PORT = 2003;
 
     /**
      * TransportAddress
@@ -68,8 +64,9 @@ public class TransportStruct implements Serializable {
      * @return the ssl port
      */
     public int getSslPort() {
-        // TODO : change return value
-        return DEFAULT_SSL_PORT;
+        // Get system property :
+        String sslPortStr = System.getProperty("OASSLPort", String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT));
+        return Integer.parseInt(sslPortStr);
     }
 
     /**
