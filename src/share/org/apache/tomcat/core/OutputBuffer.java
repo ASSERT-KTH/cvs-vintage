@@ -201,6 +201,8 @@ public final class OutputBuffer extends Writer
 	if( conv!= null ) {
 	    conv.recycle();
 	}
+	gotEnc=false;
+	enc=null;
     }
 
     // -------------------- Adding bytes to the buffer -------------------- 
@@ -338,6 +340,7 @@ public final class OutputBuffer extends Writer
     private void setConverter() {
 	if( resp!=null ) 
 	    enc = resp.getCharacterEncoding();
+	if( debug > 0 ) log("Got encoding: " + enc );
 	gotEnc=true;
 	if(enc==null) enc=DEFAULT_ENCODING;
 	conv=(C2BConverter)encoders.get(enc);
