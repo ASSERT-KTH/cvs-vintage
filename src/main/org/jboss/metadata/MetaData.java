@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -28,7 +28,7 @@ public abstract class MetaData
    // Constants -----------------------------------------------------
 
    // These do not really belong here
-   
+
    public static final byte TX_NOT_SUPPORTED  = 0;
    public static final byte TX_REQUIRED       = 1;
    public static final byte TX_SUPPORTS       = 2;
@@ -36,9 +36,9 @@ public abstract class MetaData
    public static final byte TX_MANDATORY      = 4;
    public static final byte TX_NEVER          = 5;
    public static final byte TX_UNKNOWN        = 6;
-   
+
    // Attributes ----------------------------------------------------
-    
+
    // Static --------------------------------------------------------
 
    /**
@@ -55,7 +55,7 @@ public abstract class MetaData
       if (element == null) return null;
       // getElementsByTagName gives the corresponding elements in the whole 
       // descendance. We want only children
-		
+
       NodeList children = element.getChildNodes();
       ArrayList goodChildren = new ArrayList();
       for (int i=0; i<children.getLength(); i++) {
@@ -83,7 +83,7 @@ public abstract class MetaData
       throws DeploymentException
    {
       Iterator goodChildren = getChildrenByTagName(element, tagName);
-		
+
       if (goodChildren != null && goodChildren.hasNext()) {
          Element child = (Element)goodChildren.next();
          if (goodChildren.hasNext()) {
@@ -96,7 +96,7 @@ public abstract class MetaData
             ("expected one " + tagName + " tag");
       }
    }
-	
+
    /**
     * Gets the child of the specified element having the
     * specified name. If the child with this name doesn't exist
@@ -129,7 +129,7 @@ public abstract class MetaData
       throws DeploymentException
    {
       Iterator goodChildren = getChildrenByTagName(element, tagName);
-		
+
       if (goodChildren != null && goodChildren.hasNext()) {
          Element child = (Element)goodChildren.next();
          if (goodChildren.hasNext()) {
@@ -153,7 +153,7 @@ public abstract class MetaData
    {
       return getElementContent(element, null);
    }
-	
+
    /**
     * Get the content of the given element.
     *
@@ -175,6 +175,10 @@ public abstract class MetaData
              children.item(i).getNodeType() == Node.CDATA_SECTION_NODE)
          {
             result += children.item(i).getNodeValue();
+         }
+         else if( children.item(i).getNodeType() == Node.COMMENT_NODE )
+         {
+            // Ignore comment nodes
          }
          else
          {
@@ -211,7 +215,7 @@ public abstract class MetaData
    {
       return getElementContent(getOptionalChild(element, tagName));
    }
-   
+
    public static boolean getOptionalChildBooleanContent(Element element, String name) throws DeploymentException
    {
       Element child = getOptionalChild(element, name);
@@ -220,12 +224,12 @@ public abstract class MetaData
          String value = getElementContent(child).toLowerCase();
          return value.equals("true") || value.equals("yes");
       }
-      
+
       return false;
    }
 
    // Constructors --------------------------------------------------
-    
+
    // Public --------------------------------------------------------
 
    /** Create a field wise copy of the object.
@@ -253,7 +257,7 @@ public abstract class MetaData
    public void importXml(Element element) throws DeploymentException {
       String rootTag = element.getOwnerDocument().
          getDocumentElement().getTagName();
-		
+
       if (rootTag.equals("jboss")) {
          // import jboss.xml
          importJbossXml(element);
@@ -275,7 +279,7 @@ public abstract class MetaData
    public void importEjbJarXml(Element element) throws DeploymentException {
       // empty
    }
-   
+
    /**
     * Non-operation.
     *
@@ -286,9 +290,9 @@ public abstract class MetaData
    public void importJbossXml(Element element) throws DeploymentException {
       // empty
    }
-	
+
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
 
    /**
@@ -301,8 +305,11 @@ public abstract class MetaData
       String javaVersion = System.getProperty("java.vm.version");
       return javaVersion.compareTo("1.3") >= 0;
    }
-	
+
    // Private -------------------------------------------------------
-    
+
    // Inner classes -------------------------------------------------
 }
+/*
+vim:ts=3:sw=3:et
+*/
