@@ -86,14 +86,15 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
     /** Create a <code>URLStreamHandler</code> for this protocol.
      *  This factory differs from the default in that
      *  <ul>
-     *  <li>If the protocol is <code>jar</code>, we decline</li>
+     *  <li>If the protocol is <code>jar</code> 
+     *      or <code>file</code>, we decline</li>
      *  <li>We load classes from the <code>ContextClassLoader</code></li>
      *  <li>If no handler is defined, we return a connection-less
      *       <code>URLStreamHandler</code> that allows parsing</li>
      *  </ul>
      */
     public  URLStreamHandler createURLStreamHandler(String protoS) {
-	if("jar".equalsIgnoreCase(protoS))
+	if("jar".equalsIgnoreCase(protoS) || "file".equalsIgnoreCase(protoS) )
 	    return null;
 	if(protocolString != System.getProperty(SYS_PROTOCOLS))
 	    loadProtocols();
