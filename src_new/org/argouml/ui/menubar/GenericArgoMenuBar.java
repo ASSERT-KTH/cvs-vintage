@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.46 2004/01/09 18:38:51 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.47 2004/02/12 15:46:17 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ import org.argouml.uml.ui.ActionCopy;
 import org.argouml.uml.ui.ActionCut;
 import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
 import org.argouml.uml.ui.ActionDeploymentDiagram;
-import org.argouml.uml.ui.ActionEmptyTrash;
+//import org.argouml.uml.ui.ActionEmptyTrash;
 import org.argouml.uml.ui.ActionExit;
 import org.argouml.uml.ui.ActionGenerateAll;
 import org.argouml.uml.ui.ActionGenerateOne;
@@ -488,8 +488,10 @@ public class GenericArgoMenuBar extends JMenuBar
         // designed for Erase
         //_editToolbar.add(ActionRemoveFromModel.SINGLETON);
 
-        JMenuItem emptyItem = _edit.add(ActionEmptyTrash.SINGLETON);
-	setMnemonic(emptyItem, "Empty Trash");
+        // TODO: MVW: The trash is not yet implemented. Hence remove for now...
+        // See issue 2471.
+        //JMenuItem emptyItem = _edit.add(ActionEmptyTrash.SINGLETON);
+        //setMnemonic(emptyItem, "Empty Trash");
 
         _edit.addSeparator();
 
