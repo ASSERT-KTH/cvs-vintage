@@ -70,7 +70,8 @@ import org.w3c.dom.Element;
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
-*   @version $Revision: 1.24 $
+*   @author Scott_Stark@displayscape.com
+*   @version $Revision: 1.25 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -461,13 +462,27 @@ implements J2eeDeployerMBean
       String message;
       try
       {
-         // Tomcat
-         Iterator it = _d.webModules.iterator ();
+         // Deploy the ejb modules
+         moduleName = _d.name;
+         Vector tmp = new java.util.Vector();
+         Iterator it = _d.ejbModules.iterator();
+         while( it.hasNext() )
+         {
+             m = (Deployment.Module) it.next();
+             tmp.add( m.localUrls.firstElement().toString() );
+         }
+         String[] jarUrls = new String[ tmp.size() ];
+         tmp.toArray( jarUrls );
+         // Call the ContainerFactory that is loaded in the JMX server
+         server.invoke(jarDeployer, "deploy",
+            new Object[]{ _d.localUrl.toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
+
+         // Deploy the web application modules
+         it = _d.webModules.iterator ();
 		 if (it.hasNext() && !warDeployerAvailable())
 			 throw new J2eeDeploymentException ("application contains war files but no web container available");
-			 
-		 
-         while (it.hasNext ())
+
+         while( it.hasNext() )
          {
             m = (Deployment.Module)it.next ();
             moduleName = m.name;
@@ -481,20 +496,6 @@ implements J2eeDeployerMBean
             Thread.currentThread().setContextClassLoader (appCl);
          }
 
-         // JBoss
-         // gather the ejb module urls and deploy the application
-         moduleName = _d.name;
-         Vector tmp = new java.util.Vector();
-         for( it = _d.ejbModules.iterator(); it.hasNext(); )
-         {
-             m = (Deployment.Module) it.next();
-             tmp.add( m.localUrls.firstElement().toString() );
-         }
-         String[] jarUrls = new String[ tmp.size() ];
-         tmp.toArray( jarUrls );
-         // Call the ContainerFactory that is loaded in the JMX server
-         server.invoke(jarDeployer, "deploy",
-            new Object[]{ _d.localUrl.toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
       }
       catch (MBeanException _mbe)
       {
@@ -537,10 +538,6 @@ implements J2eeDeployerMBean
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
       StringBuffer error = new StringBuffer ();
 
-      // stop the jar modules (the ContainerFactory is responsible for undeploying
-      // all jars associated w/ a given application)
-      stopModule( jarDeployer, _d.name, _d.localUrl.toString(), error );
-
       // stop the web modules
       if( warDeployer != null )
       {
@@ -556,6 +553,10 @@ implements J2eeDeployerMBean
          // should only happen for tomcat (i=1)
          log.warning("Cannot find web container");
       }
+
+      // stop the jar modules (the ContainerFactory is responsible for undeploying
+      // all jars associated w/ a given application)
+      stopModule( jarDeployer, _d.name, _d.localUrl.toString(), error );
 
       if (!error.toString ().equals ("")) // there was at least one error...
         throw new J2eeDeploymentException ("Error(s) on stopping application "+_d.name+":\n"+error.toString ());
