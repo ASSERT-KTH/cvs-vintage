@@ -109,6 +109,8 @@
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
         <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
+        <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
+        <filter token="TOMCAT_PROXY_PORT" value="${scarab.tomcat.proxy.port}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
