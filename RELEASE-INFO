@@ -1,0 +1,73 @@
+Tomcat Repository and Release Structure
+---------------------------------------
+
+We will have the following types of releases (or builds):
+
+   1 Final releases. These will be of the form x.y.
+
+   2 Milestone releases. These are of the form x.yMz. Milestone
+     releases are not supposed to be used in production
+     environments. Before final releases of the form x.y there will be
+     milestone builds. (We will define what the milestones are for
+     Tomcat 3.1.) 
+
+   3 Bug fix releases (after final releases). These will have two '.'s
+     in them. People that care about production use will pick x.y.z
+     where 'y' indicates the last stable release and the greatest
+     value of 'z' that is available. There will be no milestone
+     releases between a final release and subsequent bug fix
+     releases.
+
+   4 Nightly releases. These are volatile "dynamite" builds. These are
+     just for the current branch and not between a final release and
+     subsequent bug fix releases.
+
+Miscellaneous points:
+
+1 Everything except nightly releases are tagged. 
+
+2 Patches should be submitted with a tag, unless it is obvious. 
+
+3 Source drops will be available for the last stable release and the
+  current main branch. 
+
+4 The PMC (with feedback and involvement on tomcat-dev) decides if it
+  is a "go" for a final or bugfix release.
+
+Release names are of the form x.y[.z]:
+
+x: API version changes (x >= 3)
+y: Non-API features (y >= 0)
+z: Bug fixes (z >= 0 and is ommitted if z == 0)
+
+See the following tree for the Tomcat plan. The goal is to meet 3.1 by
+ApacheCon. A proposal for the feature list for 3.1 (and its
+milestones) will come later.
+
+			       	    
+			       	Tomcat
+			       	  |    	
+			       	  |
+			       	 3.0   	  
+       	       	       	       	 / \	   
+			       	/   \	   
+			     3.1M1  3.0.1  
+			      /	      \	   
+			     / 	       .   
+ 			   3.1M2       	.  
+ 			   /   		 \ 
+			  /    		  \
+       	       	       	3.1M3  		   
+			/      
+		       /       
+		     3.1       
+		     /\	       
+		    /  \       
+       	       	   .   	\      
+	       	  .    3.1.1   
+	       	 .	  \    
+	       	 	   \   
+			    .  
+			     . 
+			      .
+			       
