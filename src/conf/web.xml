@@ -20,6 +20,10 @@
                 /WEB-INF/conf/TurbineResources.properties
             </param-value>
         </init-param>
+	
+        <!-- Load this servlet at server startup time -->
+        <load-on-startup>5</load-on-startup>
+
     </servlet>
 <!--
     <servlet>

@@ -85,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.18 2001/09/13 22:37:04 jon Exp $
+  * @version $Id: AttributeOption.java,v 1.19 2001/09/20 10:33:07 jon Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -206,6 +206,11 @@ public class AttributeOption
     public static AttributeOption getInstance(ObjectKey attId) 
         throws Exception
     {
+        if (attId == null)
+        {
+           return getInstance();
+        }
+
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
@@ -230,6 +235,25 @@ public class AttributeOption
             tgcs.addObject(key, new CachedObject(option));
         }
         return option;
+    }
+
+    /**
+     * Get an instance of a particular AttributeOption by
+     * Attribute and Name.
+     */
+    public static AttributeOption getInstance(Attribute attribute, String name) 
+        throws Exception
+    {
+        AttributeOption ao = null;
+        Criteria crit = new Criteria();
+        crit.add (AttributeOptionPeer.OPTION_NAME, name);
+        crit.add (AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
+        List options = AttributeOptionPeer.doSelect(crit);
+        if (options.size() == 1)
+        {
+            ao =  (AttributeOption) options.get(0);
+        }
+        return ao;
     }
     
     public static AttributeOption getInstance(Attribute attribute, int weight)

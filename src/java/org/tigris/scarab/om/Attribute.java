@@ -70,9 +70,14 @@ import org.tigris.scarab.util.ScarabException;
 
 /** 
   * This class represents the SCARAB_R_OPTION_OPTION table.
+  * Please note that this class caches several pieces of data depending
+  * on the methods called. If you would like to clear these caches,
+  * it is a good idea to call the doRemoveCaches() method after making
+  * any modifications to the ROptionOption, ParentChildAttributeOption,
+  * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.27 2001/09/11 03:41:45 jon Exp $
+  * @version $Id: Attribute.java,v 1.28 2001/09/20 10:33:07 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -85,6 +90,10 @@ public class Attribute
     /** should be cloned to use */
     private static Criteria moduleOptionsCriteria;
 
+    private List orderedROptionOptionList = null;
+    private List orderedAttributeOptionList = null;
+    private List parentChildAttributeOptions = null;
+    
     private HashMap optionsMap;
     private List attributeOptionsWithDeleted;
     private List attributeOptionsWithoutDeleted;
@@ -160,6 +169,16 @@ public class Attribute
         throws Exception
     {
         return getInstance((ObjectKey)new NumberKey(id));
+    }
+
+    /**
+     * Clears the internal caches for this object
+     */
+    void doRemoveCaches()
+    {
+        setOrderedROptionOptionList(null);
+        setOrderedAttributeOptionList(null);
+        setParentChildAttributeOptions(null);
     }
 
     /**
@@ -271,36 +290,61 @@ public class Attribute
     }
 
     /**
-     * 
+     * package protected method to set the value of the cached
+     * list. Generally, this is used to set it to null.
+     */
+    void setParentChildAttributeOptions(List value)
+    {
+        parentChildAttributeOptions = value;
+    }
+
+    /**
+     * This returns a list of ParentChildAttributeOption objects
+     * which have been populated with combined join data from 
+     * ROptionOption and the AttributeOption table.
+     *
+     * @return a List of ParentChildAttributeOption objects
      */
     public List getParentChildAttributeOptions()
         throws Exception
     {
-        List rooList = getOrderedROptionOptionList();
-        List aoList = getOrderedAttributeOptionList();
-        List pcaoList = new ArrayList(rooList.size());
-        for (int i=0; i<rooList.size();i++)
+        if (parentChildAttributeOptions == null)
         {
-            ROptionOption roo = (ROptionOption)rooList.get(i);
-            AttributeOption ao = (AttributeOption)aoList.get(i);
-
-            ParentChildAttributeOption pcao = ParentChildAttributeOption
-                    .getInstance(roo.getOption1Id(), roo.getOption2Id());
-            pcao.setParentId(roo.getOption1Id());
-            pcao.setOptionId(roo.getOption2Id());
-            pcao.setPreferredOrder(roo.getPreferredOrder());
-            pcao.setName(ao.getName());
-            pcao.setDeleted(ao.getDeleted());
-            pcao.setWeight(ao.getWeight());
-            pcao.setAttributeId(this.getAttributeId());
-            pcaoList.add(pcao);
+            List rooList = getOrderedROptionOptionList();
+            List aoList = getOrderedAttributeOptionList();
+            parentChildAttributeOptions = new ArrayList(rooList.size());
+            for (int i=0; i<rooList.size();i++)
+            {
+                ROptionOption roo = (ROptionOption)rooList.get(i);
+                AttributeOption ao = (AttributeOption)aoList.get(i);
+    
+                ParentChildAttributeOption pcao = ParentChildAttributeOption
+                        .getInstance(roo.getOption1Id(), roo.getOption2Id());
+                pcao.setParentId(roo.getOption1Id());
+                pcao.setOptionId(roo.getOption2Id());
+                pcao.setPreferredOrder(roo.getPreferredOrder());
+                pcao.setName(ao.getName());
+                pcao.setDeleted(ao.getDeleted());
+                pcao.setWeight(ao.getWeight());
+                pcao.setAttributeId(this.getAttributeId());
+                parentChildAttributeOptions.add(pcao);
+            }
         }
-        return pcaoList;
+        return parentChildAttributeOptions;
+    }
+
+    /**
+     * package protected method to set the value of the cached
+     * list. Generally, this is used to set it to null.
+     */
+    void setOrderedROptionOptionList(List value)
+    {
+        orderedROptionOptionList = value;
     }
 
     /**
      * Creates an ordered List of ROptionOption which are
-     * children within this AO. The list is ordered according 
+     * children within this Attribute. The list is ordered according 
      * to the preferred order.
      *
      * @return a List of ROptionOption's
@@ -308,17 +352,29 @@ public class Attribute
     public List getOrderedROptionOptionList()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
-        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
-        crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
-        List rooList = ROptionOptionPeer.doSelect(crit);
-        return rooList;
+        if (orderedROptionOptionList == null)
+        {
+            Criteria crit = new Criteria();
+            crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
+            crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
+            orderedROptionOptionList = ROptionOptionPeer.doSelect(crit);
+        }
+        return orderedROptionOptionList;
+    }
+
+    /**
+     * package protected method to set the value of the cached
+     * list. Generally, this is used to set it to null.
+     */
+    void setOrderedAttributeOptionList(List value)
+    {
+        orderedAttributeOptionList = value;
     }
 
     /**
      * Creates an ordered List of AttributeOptions which are
-     * children within this AO. The list is ordered according 
+     * children within this Attribute. The list is ordered according 
      * to the preferred order.
      *
      * @return a List of AttributeOption's
@@ -326,11 +382,15 @@ public class Attribute
     public List getOrderedAttributeOptionList()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
-        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
-        crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
-        return AttributeOptionPeer.doSelect(crit);
+        if (orderedAttributeOptionList == null)
+        {
+            Criteria crit = new Criteria();
+            crit.addJoin(AttributeOptionPeer.OPTION_ID, ROptionOptionPeer.OPTION2_ID);
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, this.getAttributeId());
+            crit.addAscendingOrderByColumn(ROptionOptionPeer.PREFERRED_ORDER);
+            orderedAttributeOptionList = AttributeOptionPeer.doSelect(crit);
+        }
+        return orderedAttributeOptionList;
     }
 
     /**

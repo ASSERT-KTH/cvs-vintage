@@ -98,11 +98,10 @@ $intake.declareGroups()
 <tr>
 #if ($maxNum > 0)
  <th>Deleted:</th>
- <th>Id:</th>
 #else
  <th colspan="2">&nbsp;</th>
 #end
- <th>Parent Id:</th>
+ <th>Parent Attribute Option:</th>
  <th>Attribute Option:</th>
  <th>Preferred Order:</th>
  <th>Weight:</th>
@@ -113,10 +112,26 @@ $intake.declareGroups()
     #if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
 
      <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
-     <td>$pcaoGroup.OptionId</td>
      <td>
-        <input type="text" name="$pcaoGroup.ParentId.Key" 
-                value="$pcaoGroup.ParentId" size="5">
+     <select name="$pcaoGroup.ParentId.Key">
+     #if ($pcao.ParentId.toString().equals("0"))
+        #set ($select = 'selected="true"')
+     #else
+        #set ($select = "")
+     #end
+     <option value="0" $select>Root</option>
+     #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
+         #if (! $parentAttrOption.Name.equals($pcao.Name) )
+         #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
+         #if($pcao.ParentId.toString().equals($parentAttrOption.OptionId.toString()))
+            #set ($select = 'selected="true"')
+         #else
+            #set ($select = "")
+         #end
+         <option value="$pcaoGroupTemp.OptionId" $select>$pcaoGroupTemp.Name</option>
+         #end
+     #end
+     </select>
      </td>
      <td><input type="text" size="25" class="text" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name"/></td>
      <td>
@@ -131,10 +146,15 @@ $intake.declareGroups()
 #set ($newPCAO = $scarabR.ParentChildAttributeOption)
 #set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
 #if ( ($maxNum + 1) % 2 > 0 )<tr class="a">#else<tr class="b">#end
-     <td colspan="2">New</td>
+     <td>New</td>
      <td>
-        <input type="text" name="$newPCAOGroup.ParentId.Key" 
-                value="$newPCAOGroup.ParentId" size="5">
+     <select name="$newPCAOGroup.ParentId.Key">
+     <option value="0" $select>Root</option>
+     #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
+         #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
+         <option value="$pcaoGroupTemp.OptionId">$pcaoGroupTemp.Name</option>
+     #end
+     </select>
      </td>
      <td><input type="text" size="25" class="text" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName"/></td>
      <td>
@@ -157,6 +177,12 @@ $intake.declareGroups()
 </tr>
 
 </table>
+
+<strong>Please note: Once created, Attribute Options cannot be deleted
+from the database. They can only be marked as deleted and will always
+show up in the list above (but will not show up in the application
+itself). Therefore, please use caution when creating new Attribute
+Options because you can quickly end up with a mess.</strong>
 
 <p class="functnbar">
   <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 

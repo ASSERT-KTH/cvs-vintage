@@ -56,8 +56,12 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
+import org.apache.torque.util.Criteria;
+import org.tigris.scarab.om.ROptionOptionPeer;
+
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -67,7 +71,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.1 2001/09/11 03:41:45 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.2 2001/09/20 10:33:07 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -152,11 +156,37 @@ public class GlobalAttributes extends RequireLoginFirstAction
 
                 // there could be errors here so catch and re-display
                 // the same screen again.
+                NumberKey currentParentId = null;
                 try
                 {
+                    // store the currentParentId
+                    currentParentId = pcao.getParentId();
                     // map the form data onto the objects
                     pcaoGroup.setProperties(pcao);
+
+                    // the UI prevents this from being true, but check
+                    // anyway just in case.
+                    if (pcao.getOptionId().equals(pcao.getParentId()))
+                    {
+                        data.setMessage("Sorry, a recursive Parent Child " + 
+                            "relationship is not allowed!");
+                        intake.remove(pcaoGroup);
+                        return;
+                    }
+                    
+                    // save the PCAO now..
                     pcao.save();
+
+                    // if we are changing the parent id's, then we want
+                    // to remove the old one after the new one is created
+                    if (!pcao.getParentId().equals(currentParentId))
+                    {
+                        ROptionOption
+                            .doRemove(currentParentId, pcao.getOptionId());
+                    }
+
+                    // also remove the group because we are re-displaying
+                    // the form data and we want it fresh
                     intake.remove(pcaoGroup);
                 }
                 catch (Exception se)
@@ -191,7 +221,14 @@ public class GlobalAttributes extends RequireLoginFirstAction
                 {
                     // save the new PCAO
                     newPCAO.setAttributeId(new NumberKey(attributeID));
-                    newPCAO.save();
+                    try
+                    {
+                        newPCAO.save();
+                    }
+                    catch (Exception e)
+                    {
+                        data.setMessage(e.getMessage());
+                    }
                 }
 
                 // now remove the group to set the page stuff to null

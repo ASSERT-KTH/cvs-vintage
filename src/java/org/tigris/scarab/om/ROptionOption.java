@@ -69,7 +69,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.5 2001/09/11 03:41:45 jon Exp $
+  * @version $Id: ROptionOption.java,v 1.6 2001/09/20 10:33:07 jon Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -147,10 +147,17 @@ public class ROptionOption
      * This will also remove the ROptionOption from the internal cache
      * as well as from the database.
      */
-    public static void remove(ROptionOption roo)
+    public static void doRemove(ROptionOption roo)
         throws Exception
     {
-        ROptionOptionPeer.doDelete(roo);
+        // using Criteria because there is a bug in Torque
+        // where doDelete(roo) doesn't work because it has
+        // multple primary keys
+        Criteria crit = new Criteria();
+        crit.add (ROptionOptionPeer.OPTION1_ID, roo.getOption1Id());
+        crit.add (ROptionOptionPeer.OPTION2_ID, roo.getOption2Id());
+
+        ROptionOptionPeer.doDelete(crit);
 
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
@@ -158,6 +165,19 @@ public class ROptionOption
 
         String key = getCacheKey(roo.getOption1Id(), roo.getOption2Id());
         tgcs.removeObject(key);
+    }
+
+    /**
+     * This will also remove the ROptionOption from the internal cache
+     * as well as from the database.
+     */
+    public static void doRemove(NumberKey parent, NumberKey child)
+        throws Exception
+    {
+        ROptionOption roo = getInstance();
+        roo.setOption1Id(parent);
+        roo.setOption2Id(child);
+        ROptionOption.doRemove(roo);
     }
 
     /**
@@ -223,7 +243,8 @@ public class ROptionOption
      */
     public String toString()
     {
-        return "1: " + getOption1Id() + " 2: " + getOption2Id() + " : Order: " + getPreferredOrder();
+        return "Parent: " + getOption1Id() + " Child: " + 
+                getOption2Id() + " : Order: " + getPreferredOrder();
     }
 }
 

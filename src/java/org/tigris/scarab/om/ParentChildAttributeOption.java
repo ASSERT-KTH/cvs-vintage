@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.2 2001/09/11 03:46:42 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.3 2001/09/20 10:33:07 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable
@@ -92,8 +92,10 @@ public class ParentChildAttributeOption
     {
          String keyStringA = option1.toString();
          String keyStringB = option2.toString();
-         String output = new StringBuffer(className.length() + keyStringA.length() + keyStringB.length())
-             .append(className).append(keyStringA).append(keyStringB).toString();
+         String output = new StringBuffer(className.length() + 
+                                keyStringA.length() + keyStringB.length())
+                                .append(className).append(keyStringA)
+                                .append(keyStringB).toString();
          return output;
     }
 
@@ -108,7 +110,8 @@ public class ParentChildAttributeOption
     /**
      * Gets an instance of a new ROptionOption
      */
-    public static ParentChildAttributeOption getInstance(NumberKey parent, NumberKey child)
+    public static ParentChildAttributeOption getInstance(
+                                NumberKey parent, NumberKey child)
     {
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
@@ -118,7 +121,8 @@ public class ParentChildAttributeOption
         ParentChildAttributeOption pcao = null;
         try
         {
-            pcao = (ParentChildAttributeOption)tgcs.getObject(key).getContents();
+            pcao = (ParentChildAttributeOption)tgcs.getObject(key)
+                        .getContents();
         }
         catch (ObjectExpiredException oee)
         {
@@ -229,7 +233,7 @@ public class ParentChildAttributeOption
     /**
      * Removes the object from the cache
      */
-    public static void remove(NumberKey parent, NumberKey child)
+    public static void doRemoveFromCache(NumberKey parent, NumberKey child)
     {
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
@@ -248,24 +252,70 @@ public class ParentChildAttributeOption
         throws Exception
     {
         AttributeOption ao = null;
-        if (optionId == null)
+        ROptionOption roo = null;
+
+        Attribute tmpAttr = Attribute.getInstance(getAttributeId());
+        
+        // if it is new, it won't already have an optionId
+        if (getOptionId() == null)
         {
-            ao = AttributeOption.getInstance();
+            // if it is new, check for duplicates.
+            AttributeOption duplicate = 
+                AttributeOption.getInstance(tmpAttr, getName());
+            if (duplicate != null)
+            {
+                if (duplicate.getDeleted())
+                {
+                    throw new Exception ("Cannot create a child " + 
+                        "of an Attribute Option that is marked as deleted!");
+                }
+                // if there is a duplicate, then attempt to create a new
+                // ROO instead of creating a new AO and a new ROO. if the
+                // duplicate has the same name and parent as an existing
+                // pcao, then an exception will be thrown which needs to 
+                // be caught and dealt with properly
+                roo = ROptionOption.getInstance();
+                roo.setOption1Id(getParentId());
+                roo.setOption2Id(duplicate.getOptionId());
+                roo.setPreferredOrder(getPreferredOrder());
+                roo.setRelationshipId(OptionRelationship.PARENT_CHILD);
+                try
+                {
+                    roo.save();
+                }
+                catch (Exception sqle)
+                {
+                    throw new Exception ("Cannot have duplicate " + 
+                        "entries with the same parent!");
+                }
+                return;
+            }
         }
-        else
+        // if the pcao is deleted and the parent is not Root, then delete
+        // the option option mapping
+        else if (getDeleted() && ! getParentId().equals(new NumberKey(0)))
         {
-            ao = AttributeOption.getInstance(optionId);
+            ROptionOption
+                .doRemove(getParentId(), getOptionId());
+            return;
         }
+
+        // if getOptionId() is null, then it will just create a new instance
+        ao = AttributeOption.getInstance(getOptionId());
+        
         ao.setName(getName());
         ao.setWeight(getWeight());
         ao.setDeleted(getDeleted());
-        ao.setAttribute(Attribute.getInstance(getAttributeId()));
+        ao.setAttribute(tmpAttr);
         ao.save();
+
+        // clean out the caches for the AO
+        tmpAttr.doRemoveCaches();
 
         // now set our option id from the saved AO
         this.setOptionId(ao.getOptionId());
 
-        ROptionOption roo = null;
+        // now create the ROO mapping
         try
         {
             // look for a cached ROptionOption
@@ -280,16 +330,6 @@ public class ParentChildAttributeOption
         }
         roo.setPreferredOrder(getPreferredOrder());
         roo.setRelationshipId(OptionRelationship.PARENT_CHILD);
-
-        if (getDeleted() && ! roo.getOption1Id().equals(new NumberKey(0)))
-        {
-            ROptionOption.remove(roo);
-            remove(getParentId(), getOptionId());
-
-            // add back in the roo with a parent id of 0
-            roo.setOption1Id(new NumberKey(0));
-            roo.setOption2Id(getOptionId());
-        }
         roo.save();
     }
 }
