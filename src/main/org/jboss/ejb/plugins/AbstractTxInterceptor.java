@@ -16,6 +16,7 @@ import java.rmi.NoSuchObjectException;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
@@ -36,7 +37,7 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -71,9 +72,7 @@ abstract class AbstractTxInterceptor
     * actual exception throw is governed by the rules in the EJB 2.0 
     * specification section 18.3
     */
-   protected Object invokeNext(
-         Invocation invocation,
-         boolean inheritedTx)
+   protected Object invokeNext(Invocation invocation, boolean inheritedTx)
       throws Exception
    {
       InvocationType type = invocation.getType();
@@ -98,11 +97,12 @@ abstract class AbstractTxInterceptor
          }
 
          // attempt to rollback the transaction
-         if(invocation.getTransaction() != null) 
+         Transaction tx = invocation.getTransaction();
+         if(tx != null)
          {
             try 
             {
-               invocation.getTransaction().setRollbackOnly();
+               tx.setRollbackOnly();
             }
             catch (SystemException ex) 
             {
