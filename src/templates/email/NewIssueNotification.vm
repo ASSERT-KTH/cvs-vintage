@@ -1,17 +1,15 @@
-#set ($user = $issue.ModifiedBy )
-#set ($module = $issue.Module )
-#set ($issueType = $issue.IssueType )
-$issue.RModuleIssueType.DisplayName report '$issue.UniqueId' has just been filed by user '$user.UserName'.
-
-#if ($issue.DefaultTextAttributeValue)
-#set ($attVal = $issue.DefaultTextAttributeValue)
-$issue.UniqueId $attVal.RModuleAttribute.DisplayValue:  $attVal.Value 
-#end
-
-You can view the report at the following URL:
+#set ($user = $issue.ModifiedBy)
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
+You can view the issue at the following URL:
 <$link.getIssueIdAbsoluteLink($issue)>
 
-$issue.UniqueId Report 
+Type:        $issue.RModuleIssueType.DisplayName
+Issue Id:    $issue.UniqueId
+Reported by: $user.FirstName $user.LastName
+             $user.UserName - ($user.Email)
+
+Details:
 
 #set ($attrValues = $issue.AttributeValuesMap)
 #foreach ($group in $module.getAttributeGroups($issueType))
@@ -26,4 +24,3 @@ $rma.DisplayValue: $attVal.Value
 #end
 #end
 #end
-
