@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: JNI callbacks implementation for the JNI in process adapter*
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #include "jk_jnicb.h"
@@ -254,8 +254,35 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readEnvironment
                                       (*env)->NewStringUTF(env, ps->server_software));
         jk_log(pl, JK_LOG_DEBUG, "---> server_software: %s\n", ps->server_software);
     }
+    if(ps->is_ssl) {
+        if(ps->ssl_cert) {
+            (*env)->SetObjectArrayElement(env, 
+                                          envbuf, 
+                                          12, 
+                                          (*env)->NewStringUTF(env, ps->ssl_cert));
+            jk_log(pl, JK_LOG_DEBUG, "---> ssl_cert: %s\n", ps->ssl_cert);
+        }
+        
+        if(ps->ssl_cipher) {
+            (*env)->SetObjectArrayElement(env, 
+                                          envbuf, 
+                                          13, 
+                                          (*env)->NewStringUTF(env, ps->ssl_cipher));
+            jk_log(pl, JK_LOG_DEBUG, "---> ssl_cipher: %s\n", ps->ssl_cipher);
+        }
+
+        if(ps->ssl_session) {
+            (*env)->SetObjectArrayElement(env, 
+                                          envbuf, 
+                                          14, 
+                                          (*env)->NewStringUTF(env, ps->ssl_session));
+            jk_log(pl, JK_LOG_DEBUG, "---> ssl_session: %s\n", ps->ssl_session);
+        }
+    }
+
     jk_log(pl, JK_LOG_DEBUG, 
            "Done JNIConnectionHandler::readEnvironment\n");
+
 
     return JK_TRUE;
 }

@@ -112,11 +112,11 @@ SOURCE=..\jk\jk_util.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_ajp12_worker.h
+SOURCE=..\jk\jk_ajp12_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_global.h
+SOURCE=..\jk\jk_global.h
 # End Source File
 # Begin Source File
 
@@ -124,23 +124,23 @@ SOURCE=.\jk_jnicb.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_logger.h
+SOURCE=..\jk\jk_logger.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_map.h
+SOURCE=..\jk\jk_map.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_pool.h
+SOURCE=..\jk\jk_pool.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_service.h
+SOURCE=..\jk\jk_service.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\iis_netscape\jk_util.h
+SOURCE=..\jk\jk_util.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
