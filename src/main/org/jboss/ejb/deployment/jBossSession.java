@@ -22,7 +22,7 @@ import com.dreambean.ejx.xml.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class jBossSession
    extends com.dreambean.ejx.ejb.Session
@@ -54,7 +54,7 @@ public class jBossSession
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.JBossResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()

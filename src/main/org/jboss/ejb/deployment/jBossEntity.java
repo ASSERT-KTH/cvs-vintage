@@ -28,7 +28,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class jBossEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -39,7 +39,7 @@ public class jBossEntity
    // Attributes ----------------------------------------------------
    String jndiName= "";
    String configurationName = "";
-	
+    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -65,7 +65,7 @@ public class jBossEntity
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.JBossResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()
@@ -73,10 +73,10 @@ public class jBossEntity
    {
       return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.jBossEjbReference");
    }
-	
+    
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
-   	throws Exception
+    throws Exception
    {
       Element entity = doc.createElement("entity");
       XMLManager.addElement(entity,"ejb-name",getEjbName());
@@ -100,21 +100,21 @@ public class jBossEntity
    public void importXml(Element elt)
       throws Exception
    {
-   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals("jboss"))
-   	{
-	      NodeList nl = elt.getChildNodes();
-	      for (int i = 0; i < nl.getLength(); i++)
-	      {
-	         Node n = nl.item(i);
-	         String name = n.getNodeName();
-	         
-	         if (name.equals("jndi-name"))
-	         {
-	            setJndiName(n.hasChildNodes() ? XMLManager.getString(n) : "");
+    if (elt.getOwnerDocument().getDocumentElement().getTagName().equals("jboss"))
+    {
+          NodeList nl = elt.getChildNodes();
+          for (int i = 0; i < nl.getLength(); i++)
+          {
+             Node n = nl.item(i);
+             String name = n.getNodeName();
+             
+             if (name.equals("jndi-name"))
+             {
+                setJndiName(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } else if (name.equals("configuration-name"))
             {
                setConfigurationName(n.hasChildNodes() ? XMLManager.getString(n) : "");
-	         } else if (name.equals("resource-ref"))
+             } else if (name.equals("resource-ref"))
             {
                NodeList rnl = ((Element)n).getElementsByTagName("res-ref-name");
                String resName = XMLManager.getString(rnl.item(0));
@@ -143,12 +143,12 @@ public class jBossEntity
                   }
                }
             }
-	      }
-   	} else // EJB-JAR XML
-   	{
+          }
+    } else // EJB-JAR XML
+    {
          super.importXml(elt);
          setJndiName(getEjbName());
-   	}
+    }
    }
    
    public void propertyChange(PropertyChangeEvent evt)
@@ -161,25 +161,25 @@ public class jBossEntity
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
-	class AttributeAggregate
-		extends BeanContextSupport
-		implements BeanContextContainerProxy
-	{
-		Container com = new GenericCustomizer(this);
-	
-		public Container getContainer()
-		{
-			return com;
-		}
-	
-		public Iterator iterator()
-		{
-			return getEjbReferences();
-		}
-		
-		public String toString() 
-		{
-			 return "EJB references";
-		}
-	}
+    class AttributeAggregate
+        extends BeanContextSupport
+        implements BeanContextContainerProxy
+    {
+        Container com = new GenericCustomizer(this);
+    
+        public Container getContainer()
+        {
+            return com;
+        }
+    
+        public Iterator iterator()
+        {
+            return getEjbReferences();
+        }
+        
+        public String toString() 
+        {
+             return "EJB references";
+        }
+    }
 }

@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class jBossEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -43,9 +43,9 @@ public class jBossEnterpriseBeans
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-	
-	Container c;
-	Component com;
+    
+    Container c;
+    Component com;
     
    // Static --------------------------------------------------------
 
@@ -53,7 +53,7 @@ public class jBossEnterpriseBeans
     
    // Public --------------------------------------------------------
 
-	
+    
    public com.dreambean.ejx.ejb.Entity addEntity()
       throws IOException, ClassNotFoundException
    {
@@ -63,18 +63,18 @@ public class jBossEnterpriseBeans
    public com.dreambean.ejx.ejb.Session addSession()
       throws IOException, ClassNotFoundException
    {
-      return (com.dreambean.ejx.ejb.Session)instantiateChild("org.jboss.ejb.deployment.JBossSession");
+      return (com.dreambean.ejx.ejb.Session)instantiateChild("org.jboss.ejb.deployment.jBossSession");
    }
    
-	public void addJndiPrefix(String prefix)
-	{
-		Iterator enum = super.iterator();
-		while(enum.hasNext())
-		{
-			jBossEnterpriseBean bean = (jBossEnterpriseBean)enum.next();
-			bean.setJndiName(prefix + bean.getJndiName());
-		}
-	}
+    public void addJndiPrefix(String prefix)
+    {
+        Iterator enum = super.iterator();
+        while(enum.hasNext())
+        {
+            jBossEnterpriseBean bean = (jBossEnterpriseBean)enum.next();
+            bean.setJndiName(prefix + bean.getJndiName());
+        }
+    }
 
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
@@ -82,8 +82,8 @@ public class jBossEnterpriseBeans
    {
       Element enterprisebeans = super.exportXml(doc);
       
-		// No settings
-		
+        // No settings
+        
       return enterprisebeans;
    }
    
