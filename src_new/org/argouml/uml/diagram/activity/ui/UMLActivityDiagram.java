@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.42 2004/07/17 13:10:28 kataka Exp $
+// $Id: UMLActivityDiagram.java,v 1.43 2004/07/18 07:23:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,14 +102,9 @@ public class UMLActivityDiagram extends UMLDiagram {
 	_actionFinalPseudoState =
             new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState");
 
-	/* TODO: Uncomment this for V0.17.1, and remove the Branch part below.*/
-/*	_actionJunctionPseudoState =
+	_actionJunctionPseudoState =
 	    new ActionCreatePseudostate(ModelFacade.JUNCTION_PSEUDOSTATEKIND,
 					"Junction");
-*/
-	_actionBranchPseudoState =
-	    new ActionCreatePseudostate(ModelFacade.BRANCH_PSEUDOSTATEKIND,
-	                                "Junction");
 
 	_actionForkPseudoState =
 	    new ActionCreatePseudostate(ModelFacade.FORK_PSEUDOSTATEKIND, 
@@ -243,9 +238,7 @@ public class UMLActivityDiagram extends UMLDiagram {
 	    null,
 	    _actionStartPseudoState,
 	    _actionFinalPseudoState,
-	    /* TODO: Replace the Branch with Junction. */
-	    /*_actionJunctionPseudoState,*/
-	    _actionBranchPseudoState,
+	    _actionJunctionPseudoState,
 	    _actionForkPseudoState,
 	    _actionJoinPseudoState,
 	    //_actionNewSwimlane,
