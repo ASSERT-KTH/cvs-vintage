@@ -6,7 +6,6 @@ import org.columba.core.command.Command;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.ColumbaHeader;
 
 /**
  * This Filter Action colors a message with a specified color.
@@ -23,9 +22,9 @@ public class ColorMessageFilterAction extends AbstractFilterAction {
 	/** {@inheritDoc} */
 	public Command getCommand(FilterAction filterAction, Folder srcFolder, Object[] uids) throws Exception {
 		for (int i = 0; i < uids.length; i++) {
-			ColumbaHeader headers = srcFolder.getMessageHeader(uids[i]);
+			
 			int rgb = filterAction.getInteger("rgb", Color.black.getRGB());
-			headers.set("columba.color", ColorFactory.getColor(rgb));
+			srcFolder.setAttribute(uids[i], "columba.color", ColorFactory.getColor(rgb));
 		}
 		return null;
 	}
