@@ -128,18 +128,29 @@ public final class Context implements LogAware {
      */
     public static final String ATTRIB_REAL_CONTEXT="org.apache.tomcat.context";
 
-    /** Context is new, not even added to server. ContextManager is not
-	set, and most of the paths are not fixed
+    /** Context is new, possibly not even added to server.
+	ContextManager is not set, and most of the paths are not fixed
     */
-    public static final int STATE_PRE_ADD=0;
-    /** Context was added to the server. Relative paths are fixed, based
-	on server base, and CM is set.
+    public static final int STATE_NEW=0;
+
+    /** Context was added to the server, but contextInit() is not
+	called. Paths are not set yet, the only valid information is
+	the contextURI.
      */
-    public static final int STATE_ADD=1;
+    public static final int STATE_ADDED=1;
+    
+    /**
+       Relative paths are fixed, based
+       on server base, and CM is set.
+       If a request arives for this context, an error message should be
+       displayed ( "application is temporary disabled" )
+     */
+    public static final int STATE_DISABLED=2;
+
     /** Context is initialized and ready to serve. We have all mappings
 	and configs from web.xml.
     */
-    public static final int STATE_INIT=2;
+    public static final int STATE_READY=3;
     
     // -------------------- internal properties
     // context "id"
@@ -151,7 +162,7 @@ public final class Context implements LogAware {
     // Absolute path to docBase if file-system based
     private String absPath;
 
-    private int state=STATE_PRE_ADD;
+    private int state=STATE_NEW;
     
     // internal state / related objects
     private ContextManager contextM;
@@ -300,7 +311,7 @@ public final class Context implements LogAware {
 	map.setPath( path );
 
 	// Notify interceptors that a new container is added
-	BaseInterceptor cI[]=contextM.getInterceptors(map);
+	BaseInterceptor cI[]=map.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContainer( map );
 	}
@@ -347,7 +358,7 @@ public final class Context implements LogAware {
 	    //contextM.addSecurityConstraint( this, path[i], ct);
 
 	    // Notify interceptors that a new container is added
-	    BaseInterceptor cI[]=contextM.getInterceptors(ct);
+	    BaseInterceptor cI[]=ct.getInterceptors();
 	    for( int j=0; j< cI.length; j++ ) {
 		cI[j].addContainer( ct );
 	    }
@@ -456,6 +467,14 @@ public final class Context implements LogAware {
 
     public final int getState() {
 	return state;
+    }
+
+    /** Move the context in a different state.
+	Can be called only from tomcat.core.ContextManager.
+	( package access )
+    */
+    void setState( int state ) {
+	this.state=state;
     }
     
     // -------------------- Basic properties --------------------
@@ -786,7 +805,7 @@ public final class Context implements LogAware {
 	containers.remove(ct.getPath());
 
 	// notify modules that a container was removed
-	BaseInterceptor cI[]=contextM.getInterceptors(ct);
+	BaseInterceptor cI[]=ct.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContainer( ct );
 	}
@@ -872,7 +891,7 @@ public final class Context implements LogAware {
     */
     public final  URL[] getClassPath() {
 	if( classPath==null ) return new URL[0];
-	URL serverCP[]=contextM.getServerClassPath();
+	URL serverCP[]=new URL[0]; //contextM.getServerClassPath();
 	URL urls[]=new URL[classPath.size() + serverCP.length];
 	int pos=0;
 	for( int i=0; i<serverCP.length; i++ ) {
