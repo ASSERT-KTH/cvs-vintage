@@ -64,6 +64,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.ASTSubstring;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTUCase;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTValueClassComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTWhere;
+import org.jboss.ejb.plugins.cmp.ejbql.Node;
 import org.jboss.ejb.plugins.cmp.ejbql.SimpleNode;
 
 import org.jboss.ejb.plugins.cmp.ejbql.BasicVisitor;
@@ -87,7 +88,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -1152,17 +1153,17 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("locate");
-      String[] args = new String[3];
-      args[0] = node.jjtGetChild(0).jjtAccept(
-            this, new BlockStringBuffer()).toString();
-      args[1] = node.jjtGetChild(1).jjtAccept(
-            this, new BlockStringBuffer()).toString();
+      Object[] args = new Object[3];
+      
+      args[0] = new NodeStringWrapper(node.jjtGetChild(0));
+      args[1] = new NodeStringWrapper(node.jjtGetChild(1));
       if(node.jjtGetNumChildren()==3) {
-         args[2] = node.jjtGetChild(2).jjtAccept(
-               this, new BlockStringBuffer()).toString();
+         args[2] = new NodeStringWrapper(node.jjtGetChild(2));
       } else {
          args[2] = "1";
       }
+
+      // add the sql to the current buffer
       buf.append(function.getFunctionSql(args));
 
       return buf;
@@ -1261,5 +1262,23 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          buf.append(typeMapping.getFalseMapping());
       }
       return data;
+   }
+
+   /**
+    * Wrap a node with a class that when ever toString is called visits the
+    * node.  This is used by the function implmentations, for parameters.
+    *
+    * Be careful with this class because it visits the node for each call of
+    * toString, which could have undesireable result if called multiple times.
+    */
+   private class NodeStringWrapper {
+      Node node;
+      public NodeStringWrapper(Node node) {
+         this.node = node;
+      }
+      public String toString() {
+         return node.jjtAccept(JDBCEJBQLCompiler.this, 
+               new BlockStringBuffer()).toString();
+      }
    }
 }

@@ -2,6 +2,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
 import java.util.ArrayList;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
@@ -96,7 +97,7 @@ public final class JDBCFunctionMappingMetaData {
       return functionName;
    }
    
-   public String getFunctionSql(String[] args) {
+   public String getFunctionSql(Object[] args) {
       StringBuffer buf = new StringBuffer();
       
       for(int i=0; i<sqlChunks.length; i++) {
@@ -106,5 +107,13 @@ public final class JDBCFunctionMappingMetaData {
          }
       }
       return buf.toString();
+   }
+   
+   public List getParameters() {
+      ArrayList list = new ArrayList(parameters.length);
+      for(int i=0; i<parameters.length; i++) {
+         list.add(new Integer(parameters[i]));
+      }
+      return list;
    }
 }
