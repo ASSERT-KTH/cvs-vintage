@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.103 2002/03/08 05:04:29 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.104 2002/03/09 03:03:14 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -595,29 +595,7 @@ public class JEditTextArea extends JComponent
 			int virtualLine = foldVisibilityManager.physicalToVirtual(line);
 			if(virtualLine == firstLine - 1)
 			{
-				firstLine = Math.max(0,firstLine - _electricScroll - 1);
-				physFirstLine = foldVisibilityManager.virtualToPhysical(firstLine);
-			}
-			// This can happen if soft wrap is on and the
-			// line in question is only partially visible
-			else if(line == physLastLine)
-			{
-				System.err.println("fool!");
-				int count = chunkCache.getLineInfosForPhysicalLine(physLastLine).length;
-				while(count > 0)
-				{
-					count -= chunkCache.getLineInfosForPhysicalLine(physFirstLine).length;
-					physFirstLine = foldVisibilityManager.getNextVisibleLine(physFirstLine);
-				}
-				firstLine = foldVisibilityManager.physicalToVirtual(physFirstLine);
-				System.err.println("pfl=" + physFirstLine + ":fl=" + firstLine);
-			}
-			else if(line == physLastLine + 1)
-			{
-				firstLine = Math.max(0,
-					Math.min(
-					foldVisibilityManager.getVirtualLineCount() - visibleLines,
-					firstLine + _electricScroll + 2));
+				firstLine = Math.max(0,firstLine - 1);
 				physFirstLine = foldVisibilityManager.virtualToPhysical(firstLine);
 			}
 			else
@@ -661,17 +639,11 @@ public class JEditTextArea extends JComponent
 				}
 			}
 		}
-		else if(screenLine < _electricScroll)
+		else if(screenLine == visibleLines)
 		{
-			firstLine = Math.max(0,firstLine - _electricScroll + screenLine);
+			firstLine = Math.min((softWrap ? getVirtualLineCount() - 1
+				: getVirtualLineCount() - visibleLines),firstLine + 1);
 			physFirstLine = foldVisibilityManager.virtualToPhysical(firstLine);
-		}
-		else if(screenLine >= visibleLines - _electricScroll)
-		{
-			physFirstLine = getPhysicalLineOfScreenLine(Math.min(
-				visibleLines,
-				screenLine - visibleLines + _electricScroll + 1));
-			firstLine = foldVisibilityManager.physicalToVirtual(physFirstLine);
 		}
 
 		chunkCache.setFirstLine(firstLine);
