@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.50 2004/06/28 16:52:56 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.51 2004/07/02 16:15:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.50 2004/06/28 16:52:56 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.51 2004/07/02 16:15:19 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -85,7 +85,8 @@ public class UMLStateDiagram extends UMLDiagram {
     protected static Action _actionBranchPseudoState =
         new ActionCreatePseudostate(
             ModelFacade.BRANCH_PSEUDOSTATEKIND,
-            "Choice");
+            /* TODO: The next line shall be changed into "Choice" for V0.17.1.*/
+            "Branch");
 
     protected static Action _actionForkPseudoState =
         new ActionCreatePseudostate(ModelFacade.FORK_PSEUDOSTATEKIND, "Fork");
@@ -269,7 +270,8 @@ public class UMLStateDiagram extends UMLDiagram {
 	    null,
 	    _actionStartPseudoState,
 	    _actionFinalPseudoState,
-	    _actionJunctionPseudoState,
+	    /* TODO: The next line shall be uncommented in V0.17.1. */
+	    /*_actionJunctionPseudoState,*/
 	    _actionBranchPseudoState,
 	    _actionForkPseudoState,
 	    _actionJoinPseudoState,
