@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.185 2002/08/21 23:09:16 jon Exp $
+ * @version $Id: Issue.java,v 1.186 2002/08/21 23:17:37 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2473,7 +2473,7 @@ public class Issue
                 .append(" was changed from '")
                 .append(oldName)
                 .append("' to '")
-                .append(newName)
+                .append(newName + '\'')
                 .toString();
 
             if (activitySet == null)
