@@ -80,7 +80,7 @@
 <group class="Login" key="login" mapToObject="om.ScarabUser">
     <field name="Username" key="u" type="String" mapToProperty="Username">
         <rule minLength="1">Please enter an email address</rule>
-        <rule mask=".+@.+\..+">Please enter an email address as your username</rule>
+        <rule mask=".+@.+\..+">Please enter a valid email address</rule>
     </field>
     <field name="Password" key="p" type="String">
         <rule minLength="1">Please enter a password</rule>

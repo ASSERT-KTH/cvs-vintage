@@ -51,7 +51,6 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.om.*;
 // Scarab
 import org.tigris.scarab.om.*;
-// import org.tigris.scarab.intake.IntakeSystem;
 
 /**
  * This class is used by the Scarab API
@@ -62,19 +61,24 @@ public class ScarabRequestTool implements ScarabRequestScope
      * A User object for use within the Scarab API.
      */
     private User user = null;
+
+    /**
+     * A Issue object for use within the Scarab API.
+     */
+    private Issue issue = null;
     
     public void init(Object data)
     {
     }
 
+    /**
+     * nulls out the issue and user objects
+     */
     public void refresh()
     {
+        this.user = null;
+        this.issue = null;
     }
-
-    /**
-     * provides access to the intake field objects
-     */
-    //    private IntakeSystem intake;
 
     /**
      * Constructor does initialization stuff
@@ -91,6 +95,7 @@ public class ScarabRequestTool implements ScarabRequestScope
     {
         this.user = user;
     }
+
     /**
      * A User object for use within the Scarab API.
      */
@@ -102,14 +107,24 @@ public class ScarabRequestTool implements ScarabRequestScope
     }
 
     /**
-     * Get a specific module by key value.
-     *
-     * @param key a <code>String</code> value
-     * @return a <code>Module</code> value
+     * A Issue object for use within the Scarab API.
      */
-    public Module getModule(String key) throws Exception
+    public void setIssue(Issue issue)
     {
-        return ModulePeer.retrieveByPK(new NumberKey(key));
+        this.issue = issue;
+    }
+
+    /**
+     * Get an Issue object. If it is the first time calling,
+     * it will be a new blank issue object.
+     *
+     * @return a <code>Issue</code> value
+     */
+    public Issue getIssue()
+    {
+        if (issue == null)
+            this.issue = new Issue();
+        return this.issue;
     }
 
     /**
@@ -124,13 +139,15 @@ public class ScarabRequestTool implements ScarabRequestScope
     }
 
     /**
-     * provides access to the intake field objects
-     * /
-    public IntakeSystem getIntake()
+     * Get a specific module by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
+     */
+    public Module getModule(String key) throws Exception
     {
-        return intake; 
+        return ModulePeer.retrieveByPK(new NumberKey(key));
     }
-    */
 }
 
 
