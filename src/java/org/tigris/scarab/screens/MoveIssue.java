@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MoveIssue.java,v 1.2 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.3 2003/07/23 17:48:31 dlr Exp $
  */
 public class MoveIssue extends Default
 {
@@ -90,7 +90,8 @@ public class MoveIssue extends Default
             }
             else 
             {
-                title = "Error; Copy or Move?";
+                scarabR.setAlertMessage(l10n.get("NoActionSpecified"));
+                setTarget(data, "ViewIssue.vm");
             }
         }
         catch (Exception e)

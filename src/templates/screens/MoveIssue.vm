@@ -11,7 +11,7 @@
 
   <p class="infomark"><em>$l10n.CouldNotFindIssue</em></p>
 
-elseif ($copyToModules.isEmpty())
+#elseif ($copyToModules.isEmpty())
   <p class="infomark"><em>$l10n.NoDestinationModuleAvailable</em></p>
 
 #else
