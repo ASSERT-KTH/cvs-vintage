@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class SQLUtil {
    // =======================================================================
@@ -58,6 +58,7 @@ public class SQLUtil {
    public static String getCreateTableColumnsClause(JDBCType type) {
       String[] columnNames = type.getColumnNames();
       String[] sqlTypes = type.getSQLTypes();
+      boolean[] notNull = type.getNotNull();
 
       StringBuffer buf = new StringBuffer();
       for(int i=0; i<columnNames.length; i++) {
@@ -65,6 +66,9 @@ public class SQLUtil {
             buf.append(", ");
          }
          buf.append(columnNames[i]).append(" ").append(sqlTypes[i]);
+         if(notNull[i]) {
+            buf.append(" NOT NULL");
+         }
       }
       return buf.toString();
    }

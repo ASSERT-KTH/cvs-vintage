@@ -12,19 +12,27 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * This class provides a simple mapping of a Java type type to a single column.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCTypeSimple implements JDBCType {
    private String[] columnNames;   
    private Class[] javaTypes;   
    private int[] jdbcTypes;   
    private String[] sqlTypes;
+   private boolean[] notNull;
 
-   public JDBCTypeSimple(String columnName, Class javaType, int jdbcType, String sqlType) {
+   public JDBCTypeSimple(
+         String columnName,
+         Class javaType,
+         int jdbcType,
+         String sqlType,
+         boolean notNull) {
+      
       columnNames = new String[] { columnName };
       javaTypes = new Class[] { javaType };
       jdbcTypes = new int[] { jdbcType };
       sqlTypes = new String[] { sqlType };
+      this.notNull = new boolean[] { notNull };
    }
 
    public String[] getColumnNames() {
@@ -43,16 +51,22 @@ public class JDBCTypeSimple implements JDBCType {
       return sqlTypes;
    }
    
+   public boolean[] getNotNull() {
+      return notNull;
+   }
+
    public Object getColumnValue(int index, Object value) {
       if(index != 0) {
-         throw new IndexOutOfBoundsException("JDBCSimpleType does not support an index>0.");
+         throw new IndexOutOfBoundsException("JDBCSimpleType does not " +
+               "support an index>0.");
       }
       return value;
    }
 
    public Object setColumnValue(int index, Object value, Object columnValue) {
       if(index != 0) {
-         throw new IndexOutOfBoundsException("JDBCSimpleType does not support an index>0.");
+         throw new IndexOutOfBoundsException("JDBCSimpleType does not " +
+               "support an index>0.");
       }
       return columnValue;
    }

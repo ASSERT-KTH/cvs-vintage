@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -319,6 +319,7 @@ public final class JDBCRelationshipRoleMetaData {
                cmpField,
                columnName,
                false,
+               relationMetaData.isTableMappingStyle(),
                relationMetaData.isReadOnly(),
                relationMetaData.getReadTimeOut());
          fields.put(cmpField.getFieldName(), cmpField);
@@ -374,6 +375,7 @@ public final class JDBCRelationshipRoleMetaData {
                keyElement,
                cmpField,
                false,
+               relationMetaData.isTableMappingStyle(),
                relationMetaData.isReadOnly(),
                relationMetaData.getReadTimeOut());
          fields.put(cmpField.getFieldName(), cmpField);

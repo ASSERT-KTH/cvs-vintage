@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -77,6 +77,11 @@ public final class JDBCCMPFieldMetaData {
     * or the sole prim-key-field.
     */
    private final boolean primaryKeyMember;
+   
+   /**
+    * Should null values not be allowed for this field.
+    */
+   private final boolean notNull;
    
    /**
     * The Field object in the primary key class for this
@@ -153,6 +158,7 @@ public final class JDBCCMPFieldMetaData {
          primaryKeyMember = pkMember;
          primaryKeyField = pkField;
       }
+      notNull = fieldType.isPrimitive() || primaryKeyMember;
    }
 
    /**
@@ -225,6 +231,13 @@ public final class JDBCCMPFieldMetaData {
       // field object of the primary key
       primaryKeyField = defaultValues.getPrimaryKeyField();
 
+      // not-null
+      Element notNullElement = MetaData.getOptionalChild(element, "not-null");
+      notNull = 
+            fieldType.isPrimitive() || 
+            primaryKeyMember || 
+            (notNullElement != null);
+
       // property overrides
       Iterator iterator = MetaData.getChildrenByTagName(element, "property");
       while(iterator.hasNext()) {
@@ -259,6 +272,7 @@ public final class JDBCCMPFieldMetaData {
          Element element,
          JDBCCMPFieldMetaData defaultValues,
          boolean primaryKeyMember,
+         boolean notNull,
          boolean readOnly,
          int readTimeOut) throws DeploymentException {
 
@@ -300,6 +314,9 @@ public final class JDBCCMPFieldMetaData {
       // primary key member?
       this.primaryKeyMember = primaryKeyMember;
       
+      // not-null
+      this.notNull = notNull;
+
       // field object of the primary key
       primaryKeyField = defaultValues.getPrimaryKeyField();
 
@@ -340,6 +357,7 @@ public final class JDBCCMPFieldMetaData {
          JDBCCMPFieldMetaData defaultValues,
          String columnName,
          boolean primaryKeyMember,
+         boolean notNull,
          boolean readOnly,
          int readTimeOut) {
 
@@ -370,12 +388,14 @@ public final class JDBCCMPFieldMetaData {
       // field object of the primary key
       primaryKeyField = defaultValues.getPrimaryKeyField();
 
+      // not-null
+      this.notNull = notNull;
+
       // property overrides
       for(Iterator i=defaultValues.propertyOverrides.iterator(); i.hasNext();) {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
                   this, (JDBCCMPFieldPropertyMetaData)i.next()));
       }
-
    }
 
    /**
@@ -465,6 +485,14 @@ public final class JDBCCMPFieldMetaData {
     */
    public boolean isPrimaryKeyMember() {
       return primaryKeyMember;
+   }
+
+   /**
+    * Should this field allow null values?
+    * @return true if this field will not allow a null value.
+    */
+   public boolean isNotNull() {
+      return notNull;
    }
 
    /**

@@ -53,7 +53,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    // ------ Invocation messages ------
@@ -1104,12 +1104,14 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       private final Class[] javaTypes;
       private final int[] jdbcTypes;
       private final String[] sqlTypes;
+      private final boolean[] notNull;
       
       private CMRJDBCType(List fields) {
          List columnNamesList = new ArrayList();
          List javaTypesList = new ArrayList();
          List jdbcTypesList = new ArrayList();
          List sqlTypesList = new ArrayList();
+         List notNullList = new ArrayList(); 
 
          for(Iterator iter = fields.iterator(); iter.hasNext(); ) {
             JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
@@ -1119,6 +1121,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
                javaTypesList.add(type.getJavaTypes()[i]);
                jdbcTypesList.add(new Integer(type.getJDBCTypes()[i]));
                sqlTypesList.add(type.getSQLTypes()[i]);
+               notNullList.add(new Boolean(type.getNotNull()[i]));
             }
          }
          columnNames = (String[])columnNamesList.toArray(
@@ -1132,6 +1135,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
          for(int i=0; i<jdbcTypes.length; i++) {
             jdbcTypes[i] = ((Integer)jdbcTypesList.get(i)).intValue();
          }
+
+         notNull = new boolean[notNullList.size()];
+         for(int i=0; i<notNull.length; i++) {
+            notNull[i] = ((Boolean)notNullList.get(i)).booleanValue();
+         }
       }   
       public String[] getColumnNames() {
          return columnNames;
@@ -1144,6 +1152,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       }
       public String[] getSQLTypes() {
          return sqlTypes;
+      }
+      public boolean[] getNotNull() {
+         return notNull;
       }
       public Object getColumnValue(int index, Object value) {
          throw new UnsupportedOperationException();

@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database
@@ -63,7 +63,8 @@ public class JDBCTypeFactory {
       } else {
          String sqlType = typeMapping.getSqlTypeForJavaType(javaType);
          int jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
-         return new JDBCTypeSimple(null, javaType, jdbcType, sqlType);
+         boolean notNull = javaType.isPrimitive();
+         return new JDBCTypeSimple(null, javaType, jdbcType, sqlType, notNull);
       }
    }
 
@@ -108,7 +109,15 @@ public class JDBCTypeFactory {
          sqlType = typeMapping.getSqlTypeForJavaType(javaType);
          jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
       }
-      return new JDBCTypeSimple(columnName, javaType, jdbcType, sqlType);
+
+      boolean notNull = cmpField.isNotNull();
+
+      return new JDBCTypeSimple(
+            columnName,
+            javaType,
+            jdbcType,
+            sqlType,
+            notNull);
    }      
 
    private JDBCTypeComplex createTypeComplex(JDBCCMPFieldMetaData cmpField) {
@@ -158,11 +167,14 @@ public class JDBCTypeFactory {
                jdbcType = defaultProperties[i].getJDBCType();
             }
 
+            boolean notNull = cmpField.isNotNull();
+
             finalProperties[i] = new JDBCTypeComplexProperty(
                   defaultProperties[i],
                   columnName,
                   jdbcType,
-                  sqlType);
+                  sqlType,
+                  notNull);
          }   
       }
       
@@ -223,7 +235,7 @@ public class JDBCTypeFactory {
             sqlType = typeMapping.getSqlTypeForJavaType(javaType);
             jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
          }
-      
+
          Method[] getters = propertyStack.getGetters();
          Method[] setters = propertyStack.getSetters();
 

@@ -24,7 +24,7 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCTypeComplex implements JDBCType {
    private JDBCTypeComplexProperty[] properties;
@@ -32,6 +32,7 @@ public class JDBCTypeComplex implements JDBCType {
    private Class[] javaTypes;   
    private int[] jdbcTypes;   
    private String[] sqlTypes;
+   private boolean[] notNull;
    private Class fieldType;
    private HashMap propertiesByName = new HashMap();
 
@@ -62,6 +63,11 @@ public class JDBCTypeComplex implements JDBCType {
          sqlTypes[i] = properties[i].getSQLType();
       }
       
+      notNull = new boolean[properties.length];
+      for(int i=0; i<notNull.length; i++) {
+         notNull[i] = properties[i].isNotNull();
+      }
+      
       for(int i=0; i<properties.length; i++) {
          propertiesByName.put(properties[i].getPropertyName(), properties[i]);
       }
@@ -82,6 +88,10 @@ public class JDBCTypeComplex implements JDBCType {
    
    public String[] getSQLTypes() {
       return sqlTypes;
+   }
+   
+   public boolean[] getNotNull() {
+      return notNull;
    }
    
    public JDBCTypeComplexProperty[] getProperties() {
