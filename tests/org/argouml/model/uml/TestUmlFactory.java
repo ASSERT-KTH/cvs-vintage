@@ -1,4 +1,4 @@
-// $Id: TestUmlFactory.java,v 1.5 2005/01/08 20:46:36 linus Exp $
+// $Id: TestUmlFactory.java,v 1.6 2005/01/30 09:17:25 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,9 +68,6 @@ public class TestUmlFactory extends TestCase {
      */
     public void testDeleteCore() {
 	//	fy.delete(nsmodel.getCoreFactory().
-	fy.delete(nsmodel.getCoreFactory().createAbstraction());
-	fy.delete(nsmodel.getCoreFactory().createAssociation());
-	fy.delete(nsmodel.getCoreFactory().createAssociationClass());
 	fy.delete(nsmodel.getCoreFactory().createAssociationEnd());
 	fy.delete(nsmodel.getCoreFactory().createAttribute());
 	fy.delete(nsmodel.getCoreFactory().createBinding());
@@ -80,10 +77,8 @@ public class TestUmlFactory extends TestCase {
 	fy.delete(nsmodel.getCoreFactory().createComponent());
 	fy.delete(nsmodel.getCoreFactory().createConstraint());
 	fy.delete(nsmodel.getCoreFactory().createDataType());
-	fy.delete(nsmodel.getCoreFactory().createDependency());
 	fy.delete(nsmodel.getCoreFactory().createElementResidence());
 	fy.delete(nsmodel.getCoreFactory().createFlow());
-	fy.delete(nsmodel.getCoreFactory().createGeneralization());
 	fy.delete(nsmodel.getCoreFactory().createInterface());
 	fy.delete(nsmodel.getCoreFactory().createMethod());
 	fy.delete(nsmodel.getCoreFactory().createNamespace());
