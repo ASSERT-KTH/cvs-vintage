@@ -72,7 +72,8 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.30 $
+ *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
+ *      @version $Revision: 1.31 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -451,23 +452,16 @@ public class JRMPContainerInvoker
       String opt = MetaData.getElementContent(MetaData.getUniqueChild(element, "Optimized"));
       optimize = Boolean.valueOf(opt).booleanValue();
       
-      String jdk = "122"; //MetaData.getElementContent(MetaData.getUniqueChild(element, "JDK"));
-      if (jdk.equals("122"))
-         jdk122 = true;
-      else if (jdk.equals("auto"))
-      {
-         if (!(System.getProperty("java.vm.version").compareTo("1.3") >= 0))
-            jdk122 = true;
-      }
+      if ((System.getProperty("java.vm.version").compareTo("1.3") >= 0)) jdk122 = false;
+	  else  jdk122 = true;
       
       // Create delegate depending on JDK version
       if (jdk122)
       {
          ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
       } else
-      {/*
+      {
          ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
-         */
       }
       
       try
