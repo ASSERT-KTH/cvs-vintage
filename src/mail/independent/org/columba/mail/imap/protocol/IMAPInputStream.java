@@ -54,25 +54,7 @@ public class IMAPInputStream extends BufferedInputStream {
 		return new String(buffer, 0, idx, "ISO8859_1");
 	}
 
-	/**
-	 * Method toString.
-	 * 
-	 * convert byte[] to String
-	 * 
-	 * @param b			byte[] array
-	 * @param start		start index
-	 * @param end		end index
-	 * @return String   String 
-	 */
-	public static String toString(byte[] b, int start, int end) {
-		int size = end - start;
-		char[] chars = new char[size];
-
-		for (int i = 0, j = start; i < size;)
-			chars[i++] = (char) b[j++];
-
-		return new String(chars);
-	}
+	
 
 	/**
 	 * Method read.
@@ -101,17 +83,7 @@ public class IMAPInputStream extends BufferedInputStream {
 				growBuffer(increment);
 			buffer[idx++] = (byte) b;
 
-			/*
-			switch (b) {
-				case '\n' :
-					if ((idx > 0) && buffer[idx - 1] == '\r')
-						lineHasCRLF = true;
-				default :
-					if (idx >= sz)
-						growBuffer(increment);
-					buffer[idx++] = (byte) b;
-			}
-			*/
+			
 
 		}
 
@@ -160,11 +132,7 @@ public class IMAPInputStream extends BufferedInputStream {
 						growBuffer(count - avail);
 				}
 
-				/*
-				growBuffer(
-					increment > count - avail ? increment : count - avail);
-				*/
-
+				
 				// read all pending bytes from inputstream
 				int actual;
 				while (count > 0) {

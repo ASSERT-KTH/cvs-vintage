@@ -196,20 +196,23 @@ public class IMAPStore {
 			answer = false;
 		}
 
-		System.out.println("login successful");
+		//System.out.println("login successful");
 	}
 
 	public boolean isSelected(WorkerStatusController worker, String path)
 		throws Exception {
-		System.out.println("isSelected");
+		//System.out.println("isSelected");
 
 		if (getState() == STATE_SELECTED) {
+			return true;
+			/*
 			if (getSelectedFolderPath().equals(path))
 				return true;
 			else {
 				select(worker, path);
 				return false;
 			}
+			*/
 		} else if (getState() == STATE_AUTHENTICATE) {
 			select(worker, path);
 			return false;
@@ -220,7 +223,7 @@ public class IMAPStore {
 			getImapRootFolder().lsub(worker);
 			*/
 
-			isLogin(worker);
+			//isLogin(worker);
 
 			select(worker, path);
 
@@ -778,7 +781,7 @@ public class IMAPStore {
 	}
 
 	public boolean isLogin(WorkerStatusController worker) throws Exception {
-		if (getState() == STATE_AUTHENTICATE)
+		if ( (getState() == STATE_AUTHENTICATE) || (getState() == STATE_SELECTED) )
 			return true;
 		else {
 			// we are in Imap4.STATE_NONAUTHENTICATE

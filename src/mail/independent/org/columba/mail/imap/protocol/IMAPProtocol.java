@@ -22,22 +22,11 @@ import java.net.Socket;
 import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.Lock;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
 
 public class IMAPProtocol {
 	public static final int DEFAULT_PORT = 143;
-
-	/*
-	public static final int ANSWER_OK = 0;
-	public static final int ANSWER_MORE = 1;
-	public static final int ANSWER_CONTINUATION = 2;
-	public static final int ANSWER_NO = 10;
-	public static final int ANSWER_BAD = 11;
-	public static final int UNKNOWN_ANSWER = 12;
-	public static final int ANSWER_BYE = 13;
-	*/
 
 	private static final byte[] CRLF = {(byte) '\r', (byte) '\n' };
 
@@ -66,6 +55,7 @@ public class IMAPProtocol {
 	public boolean openPort(String host, int port) throws IOException {
 
 		socket = new Socket(host, port);
+
 		in = new IMAPInputStream(socket.getInputStream());
 		out =
 			new DataOutputStream(
@@ -144,7 +134,7 @@ public class IMAPProtocol {
 			} catch (IOException ex) {
 				// disconnect exception	
 				ex.printStackTrace();
-				
+
 				imapResponse = IMAPResponse.BYEResponse;
 			}
 
@@ -483,7 +473,8 @@ public class IMAPProtocol {
 
 	public IMAPResponse[] search(String searchString) throws Exception {
 
-		IMAPResponse[] responses = sendCommand("UID SEARCH " + searchString, null);
+		IMAPResponse[] responses =
+			sendCommand("UID SEARCH " + searchString, null);
 
 		notifyResponseHandler(responses);
 
