@@ -8,7 +8,6 @@ package org.jboss.ejb;
 
 
 
-//import org.jboss.management.j2ee.EjbModule;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -27,6 +26,7 @@ import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.EJB;
+import org.jboss.management.j2ee.EJBModule;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -73,7 +73,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -266,7 +266,7 @@ public class EjbModule
       int sepPos = getName().lastIndexOf( "/" );
       String lName = getName().substring(sepPos >= 0 ? sepPos + 1 : 0);
       ObjectName lModule = 
-         org.jboss.management.j2ee.EjbModule.create(
+         EJBModule.create(
             server,
             ( deploymentInfo.parent == null ? lName : deploymentInfo.parent.shortName ),
             lName,
@@ -311,11 +311,17 @@ public class EjbModule
             serviceController.create(jmxName);
             // Create JSR-77 EJB-Wrapper
             log.debug( "Application.create(), create JSR-77 EJB-Component" );
+            BeanMetaData lMetaData = con.getBeanMetaData();
+            int lType =
+               lMetaData.isSession() ?
+                  ( ( (SessionMetaData) lMetaData ).isStateless() ? 2 : 1 ) :
+               ( lMetaData.isMessageDriven() ? 3 : 0 );
             ObjectName lEJB = EJB.create(
                server,
                getModuleName().toString(),
-               con.getBeanMetaData()
-               );
+               lType,
+               lMetaData.getJndiName()
+            );
             if (debug) {
                log.debug( "Application.start(), EJB: " + lEJB );
             }
@@ -403,7 +409,7 @@ public class EjbModule
       log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
       {  
-         org.jboss.management.j2ee.EjbModule.destroy(server, getModuleName().toString() );
+         EJBModule.destroy(server, getModuleName().toString() );
       }
    }
 	
