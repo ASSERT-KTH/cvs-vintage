@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.90 2003/12/09 14:39:15 mkl Exp $
+// $Id: FigNodeModelElement.java,v 1.91 2003/12/12 15:41:24 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1055,20 +1055,19 @@ public abstract class FigNodeModelElement
     
     
 
-	/**
-	 * Adds a fig to this FigNodeModelElement and removes it from the group it belonged to if any. 
-	 * Correction to the GEF implementation that does not handle the double association correctly.
-	 * @see org.tigris.gef.presentation.FigGroup#addFig(org.tigris.gef.presentation.Fig)
-	 */
-	public void addFig(Fig f) {
-		Fig group = f.getGroup();
-		if (group != null) {
-		  ((FigGroup)group).removeFig(f);
-		}
-		getFigs().addElement(f);
-		f.setGroup(this);
-		calcBounds();
-	}
+    /**
+     * Adds a fig to this FigNodeModelElement and removes it from the group it belonged to if any. 
+     * Correction to the GEF implementation that does not handle the double association correctly.
+     * @see org.tigris.gef.presentation.FigGroup#addFig(org.tigris.gef.presentation.Fig)
+     * TODO remove this once GEF0.10 is in place and tested
+     */
+    public void addFig(Fig f) {
+        Fig group = f.getGroup();
+        if (group != null) {
+            ((FigGroup)group).removeFig(f);
+        }
+        super.addFig(f);
+    }
 
 } /* end class FigNodeModelElement */
 
