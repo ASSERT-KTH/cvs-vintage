@@ -99,7 +99,7 @@
 
       <!-- ==================== Interceptors ==================== -->
         <ContextInterceptor 
-            className="org.apache.tomcat.context.DefaultCMSetter" >
+            className="org.apache.tomcat.context.DefaultCMSetter" />
 
         <!-- 
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
