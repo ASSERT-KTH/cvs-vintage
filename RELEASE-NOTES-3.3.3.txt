@@ -1,0 +1,52 @@
+                              Apache Tomcat 3.3.3
+                              ===================
+                                 Release Notes
+                                 =============
+
+$Id: RELEASE-NOTES-3.3.3.txt,v 1.1 2004/09/17 05:57:52 billbarker Exp $
+
+
+This document describes the changes that have been made since the
+release of Tomcat 3.3.2 Final.
+
+=========
+Bug Fixes
+=========
+
+The release in which the fix appears is indicated in brackets.
+
+Feature Additions:
+
+Bug No.  Description
+
+         Added the CoyoteMapper which uses the j-t-c mapper to map requests.
+         Potential replacement for SimpleMapper1.
+
+Server:
+
+Bug No.  Description
+
+
+Jasper:
+
+Bug No.  Description
+
+
+Configuration:
+
+Bug No.  Description
+
+
+Connectors:
+
+Bug No.  Description
+
+         Disable the use of AJP/1.3 shutdown in the CoyoteConnector by default 
+         (at least until it is supported).
+
+
+
+Documentation:
+
+Bug No.  Description
+
