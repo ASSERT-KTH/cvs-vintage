@@ -58,7 +58,7 @@
  *              It provides a common entry point for protocols and runs      * 
  *              configuration, initialization and request tasks.             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                                 *
+ * Version:     $Revision: 1.2 $                                                 *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -377,7 +377,7 @@ static void *jserv_server_config_merge(pool *p, void *vbase, void *voverride) {
     /* ApJServLogFile merging */
     if (override->logfile!=NULL) {
         cfg->logfile=override->logfile;
-        cfg->logfile=override->logfile;
+        cfg->logfilefd=override->logfilefd;
     } else {
         cfg->logfile=base->logfile;
         cfg->logfilefd=base->logfilefd;
@@ -410,6 +410,10 @@ static void *jserv_server_config_merge(pool *p, void *vbase, void *voverride) {
     }
     /* Copy mounts if nedeed */
     cfg->mount=override->mount;
+    cfg->balancers=override->balancers;
+    cfg->hosturls=override->hosturls;
+    cfg->shmfile=override->shmfile;
+
     if (copy==JSERV_TRUE) {
         if (cfg->mount==NULL) cfg->mount=base->mount;
         else {
@@ -426,6 +430,9 @@ static void *jserv_server_config_merge(pool *p, void *vbase, void *voverride) {
             while (cur->next!=NULL) cur=cur->next;
             cur->next=base->hosturls;
         }
+
+        if (cfg->shmfile==NULL) cfg->shmfile=base->shmfile;
+
         if (cfg->balancers==NULL) cfg->balancers=base->balancers;
         else {
             jserv_balance *cur=cfg->balancers;
@@ -512,7 +519,6 @@ static const char *jserv_cfg_shmfile(cmd_parms *cmd, void *dummy,
     cfg->shmfile=ap_server_root_relative(cmd->pool,value);
     return NULL;
 }
-
 /* ========================================================================= */
 /* Handle ApJServProperties directive (TAKE1) */
 static const char *jserv_cfg_properties(cmd_parms *cmd, void *dummy,
@@ -804,7 +810,6 @@ static const char *jserv_cfg_route(cmd_parms *cmd, void *dummy,
     if (hst == NULL) {
       hst=(jserv_host *) ap_pcalloc(p,sizeof(jserv_host));
       hst->name=value2;
-      hst->name=NULL;
 
       /* Check if we have already some defined hosts. If we already have a host
          we insert current mount into the host list */
@@ -1411,6 +1416,9 @@ static int jserv_translate_handler(request_rec *r) {
 
     /* If we didn't define any mounts we'll decline the request*/
     if (cfg->mount==NULL) return DECLINED;
+
+    /* Is it an empty virtual server and is mountcopy off ?  */
+    if ( (cfg->server != s) && (cfg->mountcopy!=JSERV_TRUE)) return DECLINED ;
 
     /* We are sure we have at least one mount point */
     cur=cfg->mount;

@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: jserv_utils.c provides a subset of functions used by jserv   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                            *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -258,7 +258,7 @@ void jserv_error(const char *file, int line, int level, jserv_config *cfg,
 /* Log something to JServ log file thru argument list */
 void jserv_error_var(const char *file, int line, int level, jserv_config *cfg,
                  const char *fmt, va_list ap) {
-    pool *p;
+    pool *p = NULL;
     char *buf;
     int buflen;
 #ifdef JSERV_DEBUG
@@ -269,7 +269,6 @@ void jserv_error_var(const char *file, int line, int level, jserv_config *cfg,
     /* If it's a debug level return */
     if (level==APLOG_DEBUG) return;
 #endif /* ifndef JSERV_DEBUG */
-    p=ap_make_sub_pool(NULL);
 
     /* Check if we have a valid configuration element */
     if (cfg!=NULL) {
@@ -279,6 +278,10 @@ void jserv_error_var(const char *file, int line, int level, jserv_config *cfg,
 	if (level > cfg->loglevel)
 #endif
 	    return;
+	/* don't create the pool unless we're actually going to use it.     *
+	 * this should be replaced by passing in a pool, sine pool creation *
+	 * isn't cheap. */
+        p=ap_make_sub_pool(NULL);
         /* Check if jserv log file was opened */
         if (cfg->logfilefd>=0) {
             /* Prepare timestamp */
@@ -315,6 +318,9 @@ void jserv_error_var(const char *file, int line, int level, jserv_config *cfg,
             ap_destroy_pool(p);
             return;
         }
+    } else {
+        /* we're going to need a pool ... so we have to create it. */
+        p=ap_make_sub_pool(NULL);
     }
 
     /* We didn't get a JServ logfile or an Apache Server, log to stderr */

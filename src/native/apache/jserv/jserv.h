@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: Apache JServ global include file                             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                            *
  *****************************************************************************/
 #ifndef __JSERV_H__
 #define __JSERV_H__
@@ -113,7 +113,7 @@
 #define JSERV_DEFAULT_PROPERTIES    "./conf/jserv.properties"
 #define JSERV_DEFAULT_PROTOCOL      "ajpv12"
 #define JSERV_DEFAULT_HOST          "localhost"
-#define JSERV_DEFAULT_MOUNTCOPY     JSERV_FALSE
+#define JSERV_DEFAULT_MOUNTCOPY     JSERV_TRUE
 #define JSERV_DEFAULT_LOGFILE       "./logs/mod_jserv.log"
 #define JSERV_DEFAULT_SECRETFILE    "./conf/jserv.secret.key"
 #define JSERV_DEFAULT_VMTIMEOUT     10

@@ -215,6 +215,11 @@ class AJP12RequestAdapter extends RequestAdapterImpl {
 		dummy = ajpin.readString("");                     //server signature
 		dummy = ajpin.readString("");                     //server software
 		dummy = ajpin.readString("");                     //JSERV ROUTE
+		dummy = ajpin.readString("");                     //SSL_CLIENT_DN
+		dummy = ajpin.readString("");                     //SSL_CLIENT_IDN
+		// XXX all dummy fields will be used after core is changed to make use
+		// of them!
+		
 		break;
 
 	    case 3: // Header
