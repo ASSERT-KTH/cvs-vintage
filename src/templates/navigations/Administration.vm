@@ -18,61 +18,61 @@
 
 #if ($allowGATS || $allowGAS)
   #if ($adminMenu.equals("1"))
-    <div><small><strong>Global data</strong></small>
+    <div><strong>Global data</strong>
     $renderer.render("navigations", "GlobalAdmin.vm")
     </div>
   #else
-    <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Global data")</small></div>
+    <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Global data")</div>
   #end
 #end
 
 #if ($allowA)
-  <div><small>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</small></div>
+  <div>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</div>
 #end
 
 #if ($allowMAT || $allowMM || $link.isAllowed("admin,XMLExportSelect.vm"))
   #if ($adminMenu.equals("3"))
-    <div><small><strong>Modules</strong></small>
+    <div><strong>Modules</strong>
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
     #if ($allowMM && ! $allowMAT)
-      <div><small>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
+      <div>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
     #else
-      <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
+      <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
     #end
   #end
 #end
 
 #if ($allowMR || $allowAR)
   #if ($adminMenu.equals("4"))
-    <div><small><strong>Roles</strong></small>
-    <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</small></div>
-    <div><small>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</small></div>
+    <div><strong>Roles</strong>
+    <div>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</div>
+    <div>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</div>
     </div>
   #else
-    <div><small>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Roles")</small></div>
+    <div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Roles")</div>
   #end
 #end
 
 #if ($allowMUS || $allowAU || $allowCP)
   #if ($adminMenu.equals("5"))
-    <div><small><strong>Users</strong></small>
+    <div><strong>Users</strong>
     #if ($allowMUS)
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</small></div>
+    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</div>
     #end
     #if ($allowAU)
-    <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
+    <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</div>
     #end
     #if ($allowCP)
-    <div><small>$link.setPage("ChangePassword.vm").setLabel("Change password")</small></div>
+    <div>$link.setPage("ChangePassword.vm").setLabel("Change password")</div>
     #end
     </div>
   #else
     #if (!$allowMUS && $allowCP)
-    <div><small>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
+    <div>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</div>
     #else
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
+    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</div>
     #end
   #end
 #end
