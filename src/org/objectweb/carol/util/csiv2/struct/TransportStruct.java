@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.3 2005/01/10 09:31:06 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.4 2005/01/28 09:13:30 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -30,9 +30,6 @@ import java.net.UnknownHostException;
 
 import org.omg.CSIIOP.TransportAddress;
 
-import org.objectweb.carol.util.configuration.CarolConfiguration;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.RMIConfigurationException;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -48,7 +45,7 @@ public class TransportStruct implements Serializable {
     /**
      * Default ssl port
      */
-    private static final int DEFAULT_SSL_PORT = 2002;
+    private static final int DEFAULT_SSL_PORT = 2003;
 
     /**
      * TransportAddress
@@ -65,23 +62,14 @@ public class TransportStruct implements Serializable {
      */
     private short targetRequires = 0;
 
+
     /**
      * Gets current SSL port
      * @return the ssl port
      */
     public int getSslPort() {
-        // SSL port is iiop port + 1 for now
-        // TODO : change it ?
-        RMIConfiguration rmiConfig = null;
-        int sslPort = 0;
-        try {
-            rmiConfig = CarolConfiguration.getDefaultProtocol();
-            sslPort = rmiConfig.getPort() + 1;
-        } catch (RMIConfigurationException rce) {
-            TraceCarol.error("Cannot find current rmiconfiguration", rce);
-            return DEFAULT_SSL_PORT;
-        }
-        return sslPort;
+        // TODO : change return value
+        return DEFAULT_SSL_PORT;
     }
 
     /**
