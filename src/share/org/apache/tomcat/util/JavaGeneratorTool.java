@@ -78,7 +78,7 @@ public class JavaGeneratorTool {
 		    continue;
 		}
 		    
-		if( (s.length()>=endIdx) && s.charAt( endIdx ) != '/' ) {
+		if( (s.length()>endIdx) && s.charAt( endIdx ) != '/' ) {
 		    index = s.indexOf(keywords[i],index+3);
 		    continue;
 		}
