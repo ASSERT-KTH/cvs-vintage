@@ -507,7 +507,7 @@
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>1.7.2-rc1</version>
+      <version>20040212-140922</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -548,12 +548,19 @@
   <!-- End Database Dependencies -->    
   
     <dependency> 
- 		<groupId>maven</groupId> 
- 		<artifactId>maven-tasks-plugin</artifactId> 
- 		<version>1.1.0</version> 
- 		<url>http://maven-plugins.sourceforge.net/maven-tasks-plugin/</url> 
- 		<type>plugin</type>
- 	</dependency> 
+      <groupId>maven</groupId> 
+      <artifactId>maven-tasks-plugin</artifactId> 
+      <version>1.1.0</version> 
+      <url>http://maven-plugins.sourceforge.net/maven-tasks-plugin/</url> 
+      <type>plugin</type>
+    </dependency> 
+    <dependency> 
+      <groupId>maven</groupId> 
+      <artifactId>maven-findbugs-plugin</artifactId> 
+      <version>0.7.1</version> 
+      <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url> 
+      <type>plugin</type>
+    </dependency> 
   </dependencies>
 
   <build>
@@ -588,6 +595,7 @@
     <report>maven-simian-plugin</report>
     <report>maven-junit-report-plugin</report>
     <report>maven-tasklist-plugin</report>
-	<report>maven-tasks-plugin</report>
+    <report>maven-tasks-plugin</report>
+    <report>maven-findbugs-plugin</report>
   </reports>  
 </project>
