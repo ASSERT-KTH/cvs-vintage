@@ -8,7 +8,6 @@ package org.columba.mail.gui.composer.html;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -26,6 +25,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -45,7 +45,14 @@ public class HtmlToolbar implements ActionListener, Observer {
 
 	JComboBox paragraphComboBox;
 	JComboBox sizeComboBox;
-
+	
+	/** 
+	 * Flag indicating whether we are programatically changing the 
+	 * paragraph combobox, and therefore shall do nothing
+	 * in actionPerformed. 
+	 */
+	private boolean ignoreFormatAction = false;
+	
 	/**
 	 * 
 	 */
@@ -79,15 +86,17 @@ public class HtmlToolbar implements ActionListener, Observer {
 
 		// init components
 
-		// TODO: localize
-		JLabel paraLabel = new JLabel("Style:");
+		JLabel paraLabel = new JLabel(
+				MailResourceLoader.getString(
+						"dialog", "composer", "style"));
 		paragraphComboBox = new JComboBox(ParagraphMenu.STYLES);
 		paragraphComboBox.setActionCommand("PARA");
 		paragraphComboBox.addActionListener(this);
 		paragraphComboBox.setFocusable(false);
 		
-		// TODO: localize
-		JLabel sizeLabel = new JLabel("Size:");
+		JLabel sizeLabel = new JLabel(
+				MailResourceLoader.getString(
+						"dialog", "composer", "size"));
 		sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
 		sizeComboBox.setActionCommand("SIZE");
 		sizeComboBox.addActionListener(this);
@@ -170,11 +179,8 @@ public class HtmlToolbar implements ActionListener, Observer {
 	
 		// Handling of paragraph combo box
 	
-		// check if text is selected - if not the combo box is disabled
-		FormatInfo info = (FormatInfo) arg1;
-		paragraphComboBox.setEnabled(info.isTextSelected());
-				
 		// select the item in the combo box corresponding to present format
+		FormatInfo info = (FormatInfo) arg1;
 		if        (info.isHeading1()) {
 			selectInParagraphComboBox(HTML.Tag.H1);
 		} else if (info.isHeading2()) {
@@ -210,26 +216,15 @@ public class HtmlToolbar implements ActionListener, Observer {
 				if (paragraphComboBox.getSelectedIndex() != i) {
 					// need to change selection
 					
-					// TODO: Find solution for selection without firing action events
-					//       being fired. The present solution is a quick hack!
-					//       (which does not handle ItemListeners)
+					// Set ignore flag
+					ignoreFormatAction = true;
 
-					// remove action listeners - to avoid actionPerformed being called
-					ColumbaLogger.log.debug("Temporarily removing action listeners");
-					ActionListener[] al = paragraphComboBox.getActionListeners();
-					for (int j=0; j<al.length; j++) {
-						paragraphComboBox.removeActionListener(al[j]);
-					}
-					// set new selected item
 					paragraphComboBox.setSelectedIndex(i);
-					// re-add action listeners
-					for (int j=0; j<al.length; j++) {
-						paragraphComboBox.addActionListener(al[j]);
-					}
-					ColumbaLogger.log.debug("Action listeners readded");
+
+					// clear ignore flag
+					ignoreFormatAction = false;
 				}
 				return;
-				
 			}
 		}
 	}
@@ -242,53 +237,29 @@ public class HtmlToolbar implements ActionListener, Observer {
 
 		if (action.equals("PARA")) {
 			// selection in the paragraph combo box
-			int selectedIndex = paragraphComboBox.getSelectedIndex();
 
-			HtmlEditorController ctrl =
-				(HtmlEditorController) getFrameController()
-					.getEditorController();
-
-			switch (selectedIndex) {
-				case 0 :
-					// normal <p>
-					ctrl.setFormatNormal();
-					break;
-
-				case 1 :
-					// preformatted <pre>
-					break;
-
-					// TODO: Implement <pre>
-
-				case 2 :
-					// <h1>
-					ctrl.setFormatHeading(1);
-					break;
-				case 3 :
-					// <h2>
-					ctrl.setFormatHeading(2);
-					break;
-					
-				case 4 :
-					// <h3>
-					ctrl.setFormatHeading(3);
-					break;
-
-				case 5 :
-					// address
-					break;
-
-					// TODO: Implement <address>
-
-				default:
-					ColumbaLogger.log.error("Unsupported format");
-					break;
+			if (!ignoreFormatAction) {
+				// only do something if ignore flag is not set
+				
+				HtmlEditorController ctrl =
+					(HtmlEditorController) getFrameController()
+						.getEditorController();
+	
+				// set paragraph formatting according to the selection
+				int selectedIndex = paragraphComboBox.getSelectedIndex();
+				HTML.Tag tag = ParagraphMenu.STYLE_TAGS[selectedIndex];
+				
+				ColumbaLogger.log.info(
+						"Setting paragraph format to: " + 
+						tag.toString());
+				
+				ctrl.setParagraphFormat(tag);
 			}
-
+			
 		} else if (action.equals("SIZE")) {
 			int selectedIndex = sizeComboBox.getSelectedIndex();
 
-			// TODO: implement action!
+			// TODO: implement action for font size combo box!
 		}
 
 	}

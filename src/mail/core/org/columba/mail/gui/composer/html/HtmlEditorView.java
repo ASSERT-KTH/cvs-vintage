@@ -29,7 +29,9 @@ import java.util.List;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
+import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTML;
 
@@ -114,6 +116,8 @@ public class HtmlEditorView extends JTextPane
 		supportedFormats.add(HTML.Tag.H1);
 		supportedFormats.add(HTML.Tag.H2);
 		supportedFormats.add(HTML.Tag.H3);
+		supportedFormats.add(HTML.Tag.PRE);
+		supportedFormats.add(HTML.Tag.ADDRESS);
 		
 		// For testing we use another background color
 		setBackground(new Color(192, 192, 255));
@@ -169,50 +173,37 @@ public class HtmlEditorView extends JTextPane
 	}
 
 	/**
-	 * Sets format of selected text
+	 * Sets format of selected paragraphs or current paragraph
+	 * when no text is selected.
 	 * <br>
 	 * Formats (tags) supported are defined by the list supportedFormats.
 	 *
 	 * @param	formatTag	Defines which format to set (H1, P etc.) 
 	 */
-	public void setFormatOfSelectedText(HTML.Tag formatTag) {
+	public void setParagraphFormat(HTML.Tag formatTag) {
 
 		// Is the requested format supported?
+		if (formatTag == null) {
+			ColumbaLogger.log.error("Format not set - formatTag = null");
+			return;
+		}
 		if (!supportedFormats.contains(formatTag)) {
 			ColumbaLogger.log.error("Format not set - <" + formatTag + 
 					"> not supported");
 			return;
 		}
-
-		// get information on selected text
-		String selText = getSelectedText();
-		int textLength = -1;
-		if (selText != null)
-			textLength = selText.length();
-		if ((selText == null) || (textLength < 1)) {
-			// format can only be set if some text is selected
-			ColumbaLogger.log.error("Format not set - no text was selected");
-			return;
-		}
+		
+		// define attribute set corresponding to the requested format
+		MutableAttributeSet attr = new SimpleAttributeSet();
+		attr.addAttribute(StyleConstants.NameAttribute, formatTag);
+		
+		// get information on current selection
+		int selStart  = getSelectionStart();
+		int selEnd    = getSelectionEnd();
+		int selLength = selEnd - selStart;
 
 		// set the format
-		SimpleAttributeSet sasText = 
-				new SimpleAttributeSet(getCharacterAttributes());
-		sasText.addAttribute(formatTag, new SimpleAttributeSet());
-		int caretOffset = getSelectionStart();
-		select(caretOffset, caretOffset + textLength);
-		setCharacterAttributes(sasText, false);
-
-		/*
-		 * This hack forces the content to refresh properly.
-		 * Without it, paragraph formats are applied nested,
-		 * e.g. <p><h1><h3>abc</h3></h1></p>, which is not
-		 * what we want.
-		 */
-		this.setText(this.getText());
-		
-		// reselect text
-		select(caretOffset, caretOffset + textLength);
+		htmlDoc.setParagraphAttributes(selStart, selLength, attr, false);		
 
 	}
 

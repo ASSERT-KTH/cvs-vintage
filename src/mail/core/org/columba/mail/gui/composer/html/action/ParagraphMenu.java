@@ -74,6 +74,15 @@ public class ParagraphMenu extends IMenu
 			HTML.Tag.H3,
 			HTML.Tag.ADDRESS };
 	
+	/** String representation of html tags */
+	public final static String[] STYLE_STRINGS = {
+		HTML.Tag.P.toString(),
+		HTML.Tag.PRE.toString(),
+		HTML.Tag.H1.toString(),
+		HTML.Tag.H2.toString(),
+		HTML.Tag.H3.toString(),
+		HTML.Tag.ADDRESS.toString() };
+	
 	/**
 	 * @param controller
 	 * @param caption
@@ -94,9 +103,6 @@ public class ParagraphMenu extends IMenu
 			.addObserver(
 			this);
 		
-		// default is disabled, since no text is selected on startup
-		// ... will be enabled by the code in update
-		setEnabled(false);		
 	}
 
 	/** 
@@ -109,7 +115,7 @@ public class ParagraphMenu extends IMenu
 
 		for (int i = 0; i < STYLES.length; i++) {
 			JRadioButtonMenuItem m = new JRadioButtonMenuItem(STYLES[i]);
-			m.setActionCommand(STYLE_TAGS[i].toString());
+			m.setActionCommand(STYLE_STRINGS[i]);
 			m.addActionListener(this);
 			add(m);
 
@@ -131,13 +137,8 @@ public class ParagraphMenu extends IMenu
 			return; 
 		}
 	
-		// check if text is selected
-		// If not, paragraph formatting can not be set
-		FormatInfo info = (FormatInfo) arg1;
-		setEnabled(info.isTextSelected());
-		
 		// select the menu item corresponding to present format
-		
+		FormatInfo info = (FormatInfo) arg1;
 		if        (info.isHeading1()) {
 			selectMenuItem(HTML.Tag.H1);
 		} else if (info.isHeading2()) {
@@ -173,43 +174,40 @@ public class ParagraphMenu extends IMenu
 		}
 	}
 	
+	/**
+	 * Private utility to return the html tag corresponding to
+	 * a given string, e.g. p -> HTML.Tag.P
+	 * <br>
+	 * Strings / Tags are searched within STYLE_STRINGS 
+	 * and STYLE_TAGS respectively. The search is case insensitive.
+	 *  
+	 * @param	tagStr	String representation of tag, e.g. p or h1
+	 * @return	The corresponding Tag object or null if not found	
+	 */
+	public HTML.Tag getTagFromString(String tagStr) {
+		for (int i=0; i<STYLE_STRINGS.length; i++) {
+			if (STYLE_STRINGS[i].equalsIgnoreCase(tagStr)) {
+				// found
+				return STYLE_TAGS[i];
+			}
+		}
+		// not found
+		return null;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		String action = arg0.getActionCommand();
 
 		HtmlEditorController ctrl =	(HtmlEditorController)
 				((ComposerController) controller).getEditorController();
-
+		
 		// set paragraph formatting according to the given action
-		if 		  (action.equals(HTML.Tag.P.toString())) {
-			// <p>
-			ctrl.setFormatNormal();
-			
-		} else if (action.equals(HTML.Tag.PRE.toString())) {
-			// <pre>
-
-			// TODO: Implement <pre>
-
-		} else if (action.equals(HTML.Tag.H1.toString())) {
-			// <h1>
-			ctrl.setFormatHeading(1);
-			
-		} else if (action.equals(HTML.Tag.H2.toString())) {
-			// <h2>
-			ctrl.setFormatHeading(2);
-			
-		} else if (action.equals(HTML.Tag.H3.toString())) {
-			// <h3>
-			ctrl.setFormatHeading(3);
-			
-		} else if (action.equals(HTML.Tag.ADDRESS.toString())) {
-			// <address>
-			
-			// TODO: Implement <address>
-		}
+		String action = arg0.getActionCommand();
+		HTML.Tag tag = getTagFromString(action);
+		ctrl.setParagraphFormat(tag);
 
 	}
 

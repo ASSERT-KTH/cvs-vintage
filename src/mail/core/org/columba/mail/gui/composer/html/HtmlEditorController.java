@@ -106,37 +106,14 @@ public class HtmlEditorController
 	}
 
 	/**
-	 * Sets format of selected text to normal paragraph (p tag) 
+	 * Sets paragraph format for selected paragraphs or current
+	 * paragraph if no text is selected
+	 * @param	tag		Html tag specifying the format to set
 	 */
-	public void setFormatNormal() {
-		view.setFormatOfSelectedText(HTML.Tag.P);
+	public void setParagraphFormat(HTML.Tag tag) {
+		view.setParagraphFormat(tag);	
 	}
-
-	/**
-	 * Sets format of selected text to a heading
-	 *  
-	 * @param	level	Legal value are 1, 2 and 3 corresponding to h1, h2
-	 * 					and h3 headings respectively (this is the headings
-	 * 					supported by the view)
-	 */
-	public void setFormatHeading(int level) {
-		switch (level) {
-			case 1 :
-				view.setFormatOfSelectedText(HTML.Tag.H1);
-				break;
-			case 2 :
-				view.setFormatOfSelectedText(HTML.Tag.H2);
-				break;
-			case 3 :
-				view.setFormatOfSelectedText(HTML.Tag.H3);
-				break;
-			default :
-				// unsupported
-				ColumbaLogger.log.error(
-					"Heading level " + level + " not supported");
-				break;
-		}
-	}
+	
 
 	/** 
 	 * Method for inserting a break (BR) element
