@@ -19,9 +19,11 @@ package org.columba.addressbook.gui.tree;
 import java.util.Enumeration;
 
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Root;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
@@ -29,7 +31,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
-public class AddressbookTreeModel extends DefaultTreeModel {
+public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel{
 	//private AddressbookTreeNode rootNode;
 
 	protected DefaultXmlConfig folderXmlConfig;
@@ -45,6 +47,15 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 		createDirectories(
 			((AddressbookTreeNode) getRoot()).getNode(),
 			(AddressbookTreeNode) getRoot());
+	}
+
+	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
+		
+
+		SelectAddressbookFolderDialog dialog =
+			new SelectAddressbookFolderDialog(this);
+
+		return dialog;
 	}
 
 	public void createDirectories(

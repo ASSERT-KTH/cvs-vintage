@@ -16,13 +16,16 @@
 package org.columba.mail.folder.command;
 
 import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -64,12 +67,9 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 		Object[] uids = r[0].getUids();
 		Folder folder = (Folder) r[0].getFolder();
 
-		// TODO dont' use addressbookInterface - use MainInterface.addressbookTreeModel instead
-		/*
 		SelectAddressbookFolderDialog dialog =
 			MainInterface
-				.addressbookInterface
-				.tree
+				.addressbookTreeModel
 				.getSelectAddressbookFolderDialog();
 
 		selectedFolder = dialog.getSelectedFolder();
@@ -85,7 +85,7 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 			addSender(sender);
 
 		}
-		*/
+
 	}
 
 	public void addSender(String sender) {
@@ -93,7 +93,6 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 			return;
 
 		if (sender.length() > 0) {
-			
 
 			String address = AddressParser.getAddress(sender);
 			System.out.println("address:" + address);

@@ -8,7 +8,7 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.mail.action.ComposerAction;
+import org.columba.core.action.CheckBoxAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -18,7 +18,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SignMessageAction extends ComposerAction {
+public class SignMessageAction extends CheckBoxAction {
 
 	/**
 	 * @param composerController

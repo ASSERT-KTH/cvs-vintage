@@ -8,8 +8,10 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -64,22 +66,20 @@ public class AddressbookAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO dont' use addressbookInterface - use MainInterface.addressbookTreeModel instead
-		/*
-		ComposerController composerController = ((ComposerController)getFrameController());
-		
+
+		ComposerController composerController =
+			((ComposerController) getFrameController());
+
 		composerController.getHeaderController().cleanupHeaderItemList();
 
 		SelectAddressDialog dialog =
 			new SelectAddressDialog(
-				MainInterface.addressbookInterface,
 				composerController.getView(),
-		composerController.getHeaderController().getHeaderItemLists());
+				composerController.getHeaderController().getHeaderItemLists());
 
 		org.columba.addressbook.folder.Folder folder =
 			(org.columba.addressbook.folder.Folder) MainInterface
-				.addressbookInterface
-				.treeModel
+				.addressbookTreeModel
 				.getFolder(101);
 		dialog.setHeaderList(folder.getHeaderItemList());
 
@@ -87,7 +87,7 @@ public class AddressbookAction extends FrameAction {
 
 		composerController.getHeaderController().setHeaderItemLists(
 			dialog.getHeaderItemLists());
-		*/
+
 	}
 
 }

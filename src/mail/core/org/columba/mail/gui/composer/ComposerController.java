@@ -22,17 +22,22 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.gui.frame.DefaultFrameModel;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.frame.FrameView;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.message.Message;
+import org.columba.mail.util.AddressCollector;
 
 /**
  * @author frd
@@ -61,22 +66,22 @@ public class ComposerController
 	AccountItem accountItem;
 	String bodytext;
 	String charsetName;
-
+	
 	Vector attachments;
-
+	
 	Vector toList;
 	Vector ccList;
 	Vector bccList;
-
+	
 	boolean signMessage;
 	boolean encryptMessage;
 	*/
-	
+
 	public ComposerController(String id, DefaultFrameModel model) {
 		this(id, model, new Message());
-		
+
 		getView().addWindowListener(this);
-		
+
 		//composerModel = new ComposerModel();
 	}
 
@@ -85,8 +90,8 @@ public class ComposerController
 		DefaultFrameModel model,
 		Message message) {
 		super(id, model);
-		
-		((ComposerModel)model).setMessage(message);
+
+		((ComposerModel) model).setMessage(message);
 
 		getView().addWindowListener(this);
 		//this.message = message;
@@ -94,26 +99,22 @@ public class ComposerController
 		//composerModel = new ComposerModel();
 	}
 
-	
-
 	public void charsetChanged(CharsetEvent e) {
 		//((ComposerModel)getModel()).setCharsetName(e.getValue());
 	}
 
-	
-	
 	public boolean checkState() {
 		// update ComposerModel based on user-changes in ComposerView
 		updateComponents(false);
-	
+
 		boolean b = subjectController.checkState();
 		if (b == false)
 			return false;
-	
+
 		b = headerController.checkState();
 		if (b == false)
 			return false;
-	
+
 		return true;
 	}
 	/*
@@ -163,19 +164,22 @@ public class ComposerController
 		return model;
 	}
 	*/
-	
+
 	public void updateComponents(boolean b) {
 		subjectController.updateComponents(b);
-	
+
 		editorController.updateComponents(b);
 		priorityController.updateComponents(b);
 		accountController.updateComponents(b);
 		attachmentController.updateComponents(b);
-	
+
 		headerController.updateComponents(b);
-	
+
+		headerController.view.getTable().initFocus(subjectController.view);
+		initAddressCompletion();
+		headerController.appendRow();
 	}
-	
+
 	/*
 	
 	public void showComposerWindow() {
@@ -204,31 +208,39 @@ public class ComposerController
 		
 		composerInterface.headerController.appendRow();
 	}
-	
+	*/
+
 	protected void initAddressCompletion() {
 		AddressCollector.clear();
-		
-		HeaderItemList list = ((Folder) MainInterface.addressbookInterface.treeModel.getFolder(101)).getHeaderItemList();
-		
-		for ( int i=0; i<list.count(); i++ )
-		{
+
+		HeaderItemList list =
+			((Folder) MainInterface.addressbookTreeModel.getFolder(101))
+				.getHeaderItemList();
+
+		for (int i = 0; i < list.count(); i++) {
 			HeaderItem item = list.get(i);
-			
-			if ( item.contains("displayname") ) AddressCollector.addAddress( (String) item.get("displayname"), item ); //$NON-NLS-1$ //$NON-NLS-2$
-			if ( item.contains("email;internet") ) AddressCollector.addAddress( (String) item.get("email;internet"), item ); //$NON-NLS-1$ //$NON-NLS-2$
+
+			if (item.contains("displayname"))
+				AddressCollector.addAddress((String) item.get("displayname"), item); //$NON-NLS-1$ //$NON-NLS-2$
+			if (item.contains("email;internet"))
+				AddressCollector.addAddress((String) item.get("email;internet"), item); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
-		list = ((Folder)MainInterface.addressbookInterface.treeModel.getFolder(102)).getHeaderItemList();
-		
-		for ( int i=0; i<list.count(); i++ )
-		{
+
+		list =
+			((Folder) MainInterface.addressbookTreeModel.getFolder(102))
+				.getHeaderItemList();
+
+		for (int i = 0; i < list.count(); i++) {
 			HeaderItem item = list.get(i);
-			
-			if ( item.contains("displayname") ) AddressCollector.addAddress( (String) item.get("displayname"), item ); //$NON-NLS-1$ //$NON-NLS-2$
-			if ( item.contains("email;internet") ) AddressCollector.addAddress( (String) item.get("email;internet"), item ); //$NON-NLS-1$ //$NON-NLS-2$
+
+			if (item.contains("displayname"))
+				AddressCollector.addAddress((String) item.get("displayname"), item); //$NON-NLS-1$ //$NON-NLS-2$
+			if (item.contains("email;internet"))
+				AddressCollector.addAddress((String) item.get("email;internet"), item); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
+
+	/*
 	public void hideComposerWindow() {
 	
 		saveWindowPosition();
@@ -249,23 +261,23 @@ public class ComposerController
 		composerInterface.addressbookFrame.setVisible(false);
 	}
 	*/
-	
+
 	public Vector getRCPTVector() {
 		Vector output = new Vector();
 		Enumeration aktEnum;
 		Object aktAdress;
-	
-		Vector v = ListParser.parseVector(((ComposerModel)getModel()).getToList());
+
+		Vector v =
+			ListParser.parseVector(((ComposerModel) getModel()).getToList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(((ComposerModel)getModel()).getCcList());
+		v = ListParser.parseVector(((ComposerModel) getModel()).getCcList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(((ComposerModel)getModel()).getBccList());
+		v = ListParser.parseVector(((ComposerModel) getModel()).getBccList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-	
-		
+
 		return output;
 	}
-	
+
 	/*
 	protected void updateAddressbookFrame() {
 	
@@ -449,11 +461,9 @@ public class ComposerController
 		charsetManager = new CharsetManager();
 		charsetManager.addCharsetListener(this);
 
+		composerSpellCheck = new ComposerSpellCheck(this);
+
 		/*
-		composerSpellCheck =
-			new ComposerSpellCheck();
-		
-		
 		composerInterface.addressbookFrame =
 			AddressBookIC.createAddressbookListFrame(composerInterface);
 		
@@ -471,7 +481,5 @@ public class ComposerController
 		if ( count != 0 ) loadWindowPosition();*/
 
 	}
-
-	
 
 }

@@ -26,12 +26,9 @@ import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
-import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.main.MainInterface;
 
-public class TreeView implements TreeSelectionListener
-{
+public class TreeView implements TreeSelectionListener {
 	private AddressbookTreeNode root;
 	private JTree tree;
 	//private AddressbookInterface addressbookInterface;
@@ -40,24 +37,20 @@ public class TreeView implements TreeSelectionListener
 	public JScrollPane scrollPane;
 
 	protected AddressbookFrameController frameController;
-	
-	public TreeView(AddressbookFrameController frameController)
-	{
+
+	public TreeView(AddressbookFrameController frameController) {
 		//this.addressbookInterface = i;
 		this.frameController = frameController;
-		
 
 		//root = new AddressbookTreeNode("Root");
 
 		root = generateTree();
 
-		
-		
 		//model = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
-		
+
 		model = MainInterface.addressbookTreeModel;
-		
-		tree = new JTree( model );
+
+		tree = new JTree(model);
 		//tree.setPreferredSize( new Dimension( 200,300 ) );
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
@@ -65,10 +58,9 @@ public class TreeView implements TreeSelectionListener
 		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		tree.addTreeSelectionListener(this);
 
-		AddressbookTreeCellRenderer renderer = new AddressbookTreeCellRenderer(true);
+		AddressbookTreeCellRenderer renderer =
+			new AddressbookTreeCellRenderer(true);
 
-		
-		
 		tree.setCellRenderer(renderer);
 
 		update();
@@ -77,54 +69,35 @@ public class TreeView implements TreeSelectionListener
 
 	}
 
-	public EditAddressbookFolderDialog getEditAddressbookFolderDialog(String name)
-	{
-		EditAddressbookFolderDialog dialog =
-			new EditAddressbookFolderDialog(frameController.getView(), name);
-
-		return dialog;
-	}
-
-	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog()
-	{
-		SelectAddressbookFolderDialog dialog =
-			new SelectAddressbookFolderDialog(frameController.getView(), model);
-
-		return dialog;
-	}
-
-	public Folder getFolder(int uid)
-	{
+	public Folder getFolder(int uid) {
 		/*
 		Folder root = getRootFolder();
-
+		
 		for (Enumeration e = root.depthFirstEnumeration(); e.hasMoreElements();)
 		{
 			Folder node = (Folder) e.nextElement();
-
+		
 			FolderItem item = node.getFolderItem();
 			if (item == null)
 				continue;
-
+		
 			int id = item.getUid();
-
+		
 			if (uid == id)
 			{
 				return node;
 			}
-
+		
 		}
 		*/
 		return null;
 	}
 
-	public Folder getRootFolder()
-	{
+	public Folder getRootFolder() {
 		return (Folder) model.getRoot();
 	}
 
-	protected Folder generateTree()
-	{
+	protected Folder generateTree() {
 		/*
 		Folder root = new Folder("root");
 		Folder child1 = new Folder("child1");
@@ -132,29 +105,25 @@ public class TreeView implements TreeSelectionListener
 		Folder child2 = new Folder("child2");
 		root.add( child2 );
 		*/
-		
-		
-/*
-		TreeXmlConfig config = AddressbookConfig.getTreeConfig();
 
-		return config.generateTree(addressbookInterface);
-		*/
+		/*
+				TreeXmlConfig config = AddressbookConfig.getTreeConfig();
 		
+				return config.generateTree(addressbookInterface);
+				*/
+
 		return null;
 	}
 
-	public JTree getTree()
-	{
+	public JTree getTree() {
 		return tree;
 	}
 
-	public void removeAll()
-	{
+	public void removeAll() {
 		root.removeAllChildren();
 	}
 
-	public void update()
-	{
+	public void update() {
 		/*
 		removeAll();
 		tree.setRootVisible( true );
@@ -192,13 +161,12 @@ public class TreeView implements TreeSelectionListener
 
 	}
 
-	public AddressbookTreeNode add(AdapterNode node)
-	{
+	public AddressbookTreeNode add(AdapterNode node) {
 		/*
 		String name = node.getChild("name").getValue();
-
+		
 		AddressbookTreeNode child = new AddressbookTreeNode(name);
-
+		
 		if (root.getChildCount() == 0)
 		{
 			tree.setRootVisible(true);
@@ -210,22 +178,19 @@ public class TreeView implements TreeSelectionListener
 		{
 			root.add(child);
 		}
-
+		
 		return child;
 		*/
-		
+
 		return null;
 	}
 
-	public Folder getSelectedFolder()
-	{
+	public Folder getSelectedFolder() {
 		return (Folder) tree.getLastSelectedPathComponent();
 	}
 
-	public void valueChanged(TreeSelectionEvent e)
-	{
+	public void valueChanged(TreeSelectionEvent e) {
 
-		
 		Folder folder = (Folder) tree.getLastSelectedPathComponent();
 		if (folder == null)
 			return;
@@ -235,23 +200,23 @@ public class TreeView implements TreeSelectionListener
 		FolderItem item = folder.getFolderItem();
 		String type = item.getType();
 		int uid = item.getUid();
-
+		
 		if (type.equals("addressbook") || type.equals("ldap"))
 		{
-
+		
 			addressbookInterface.table.setFolder(folder);
-
+		
 			addressbookInterface.actionListener.changeActions();
-
+		
 		}
 		else
 		{
 			addressbookInterface.table.setFolder(null);
-
+		
 			addressbookInterface.actionListener.changeActions();
 		}
 		*/
-		
+
 	}
 
 	/**

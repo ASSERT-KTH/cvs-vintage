@@ -32,6 +32,7 @@ import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.composer.menu.ComposerMenu;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -208,7 +209,7 @@ public class ComposerView extends FrameView {
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
 	protected Menu createMenu(FrameController controller) {
-		return new Menu("org/columba/mail/action/composer_menu.xml", controller);
+		return new ComposerMenu("org/columba/mail/action/composer_menu.xml", controller);
 	}
 
 	/* (non-Javadoc)

@@ -32,7 +32,6 @@ import org.columba.core.gui.frame.FrameController;
 public class CheckBoxAction extends FrameAction {
 
 	private JCheckBoxMenuItem checkBoxMenuItem;
-	
 
 	/**
 	 * @param frameController
@@ -101,29 +100,29 @@ public class CheckBoxAction extends FrameAction {
 		 * Returns the checkBoxMenuItem.
 		 * @return JCheckBoxMenuItem
 		 */
-		public JCheckBoxMenuItem getCheckBoxMenuItem() {
-			return checkBoxMenuItem;
-		}
+	public JCheckBoxMenuItem getCheckBoxMenuItem() {
+		return checkBoxMenuItem;
+	}
 
-		/**
-		 * Sets the checkBoxMenuItem.
-		 * @param checkBoxMenuItem The checkBoxMenuItem to set
-		 */
-		public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
-			this.checkBoxMenuItem = checkBoxMenuItem;
-			checkBoxMenuItem.setState(getInitState());
-		}
-		
-		public boolean getState() {
-			return checkBoxMenuItem.getState();
-		}
-		
-		public void setState(boolean value) {
-			checkBoxMenuItem.setState(value);
-		}
+	/**
+	 * Sets the checkBoxMenuItem.
+	 * @param checkBoxMenuItem The checkBoxMenuItem to set
+	 */
+	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
+		this.checkBoxMenuItem = checkBoxMenuItem;
+		checkBoxMenuItem.setState(getInitState());
+	}
 
-		protected boolean getInitState() {
-			return false;
-		}
+	public boolean getState() {
+		return checkBoxMenuItem.getState();
+	}
+
+	public void setState(boolean value) {
+		checkBoxMenuItem.setState(value);
+	}
+
+	protected boolean getInitState() {
+		return false;
+	}
 
 }

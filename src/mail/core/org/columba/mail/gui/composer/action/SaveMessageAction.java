@@ -11,8 +11,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -22,7 +22,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SaveMessageAction extends ComposerAction {
+public class SaveMessageAction extends FrameAction {
 
 	/**
 	 * @param composerController

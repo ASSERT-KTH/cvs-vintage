@@ -51,6 +51,7 @@ import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.gui.util.AddressbookListRenderer;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.core.main.MainInterface;
 
 public class EditGroupDialog extends JDialog implements ActionListener {
 	//private AddressbookXmlConfig config;
@@ -261,9 +262,7 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 			setVisible(false);
 		} else if (command.equals("CHOOSE")) {
 			SelectAddressbookFolderDialog dialog =
-				frameController
-					.getTree()
-					.getView()
+				MainInterface.addressbookTreeModel
 					.getSelectAddressbookFolderDialog();
 
 			Folder selectedFolder = dialog.getSelectedFolder();

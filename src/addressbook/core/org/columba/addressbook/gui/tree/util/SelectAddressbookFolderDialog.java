@@ -20,7 +20,15 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
@@ -28,9 +36,10 @@ import javax.swing.tree.TreeModel;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.DialogStore;
 
 public class SelectAddressbookFolderDialog
-	extends JDialog
+	
 	implements ActionListener, TreeSelectionListener
 {
 	private String name;
@@ -50,10 +59,13 @@ public class SelectAddressbookFolderDialog
 	private Folder selectedFolder;
 
 	private TreeModel model;
+	
+	private JDialog dialog;
 
-	public SelectAddressbookFolderDialog(JFrame frame, TreeModel model)
+	public SelectAddressbookFolderDialog(TreeModel model)
 	{
-		super(frame, AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"), true);
+		dialog = DialogStore.getDialog(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"));
+		//super(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"), true);
 
 		this.model = model;
 
@@ -81,7 +93,7 @@ public class SelectAddressbookFolderDialog
 		buttons[2].setActionCommand("NEW");
 		buttons[2].setEnabled(false);
 
-		getRootPane().setDefaultButton(buttons[1]);
+		dialog.getRootPane().setDefaultButton(buttons[1]);
 
 		//tree = new SelectFolderTree( mainInterface, mainInterface.config.getFolderConfig().getRootNode()  );
 		//tree.getTree().addTreeSelectionListener( this );
@@ -90,7 +102,7 @@ public class SelectAddressbookFolderDialog
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panel.setLayout(new BorderLayout());
 
-		getContentPane().setLayout(new BorderLayout());
+		dialog.getContentPane().setLayout(new BorderLayout());
 
 		//getContentPane().setLayout( new BoxLayout( getContentPane() , BoxLayout.Y_AXIS ) );
 
@@ -142,7 +154,7 @@ public class SelectAddressbookFolderDialog
 
 		panel.add(lowerpanel, BorderLayout.SOUTH);
 
-		getContentPane().add(panel, BorderLayout.CENTER);
+		dialog.getContentPane().add(panel, BorderLayout.CENTER);
 
 		//getContentPane().add(  Box.createRigidArea( new java.awt.Dimension(0,10) )  );
 
@@ -151,9 +163,9 @@ public class SelectAddressbookFolderDialog
 			buttons[i].addActionListener(this);
 		}
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
 
 	public boolean success()
@@ -187,12 +199,12 @@ public class SelectAddressbookFolderDialog
 			//name = textField.getText();
 
 			bool = true;
-			dispose();
+			dialog.dispose();
 		}
 		else if (action.equals("CANCEL"))
 		{
 			bool = false;
-			dispose();
+			dialog.dispose();
 		}
 		else if (action.equals("NEW"))
 		{

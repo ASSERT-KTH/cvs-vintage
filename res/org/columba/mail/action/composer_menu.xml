@@ -4,7 +4,7 @@
 	<menu name="menu_file">
 		<menuitem action="NewMessage"/>	
 		<separator/>
-		<menuitem action="SaveMessage"/>	
+		<!--<menuitem action="SaveMessage"/>-->
 		<menuitem action="SaveAsDraft"/>	
 		<menuitem action="SaveAsTemplate"/>	
 		<separator/>

@@ -31,6 +31,7 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
+import org.columba.core.main.MainInterface;
 
 public class ImportWizard implements ActionListener
 {
@@ -129,7 +130,7 @@ public class ImportWizard implements ActionListener
 		}
 		else if (action.equals("DESTINATION"))
 		{
-			SelectAddressbookFolderDialog d = addressbookInterface.tree.getSelectAddressbookFolderDialog();
+			SelectAddressbookFolderDialog d = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 			if (d.success())
 			{
 				destFolder = d.getSelectedFolder();
