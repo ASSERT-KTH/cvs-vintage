@@ -482,7 +482,8 @@ This includes both type mapping and function mapping.
 -->
 <!ELEMENT type-mapping (name, row-locking-template, pk-constraint-template, 
       fk-constraint-template, alias-header-prefix, alias-header-suffix,
-      alias-max-length, subquery-supported, function-mapping*, mapping+)>
+      alias-max-length, subquery-supported, true-mapping, false-mapping,
+      function-mapping*, mapping+)>
 
 <!--
 Name of the type-mapping.
@@ -557,6 +558,13 @@ The subquery-supported element must be one of the two following:
          <create-table>false</create-table>
 -->
 <!ELEMENT subquery-supported (#PCDATA)>
+
+<!--
+The true and false mappings are the mappings for true and false in EJB-QL
+queries.
+-->
+<!ELEMENT true-mapping (#PCDATA)>
+<!ELEMENT false-mapping (#PCDATA)>
 
 <!--
 Specifies the mapping from a java type to a jdbc and a sql type.
