@@ -3,8 +3,8 @@
 <project>
   <pomVersion>3</pomVersion>
   <id>scarab</id>
-  <name>scarab</name>
-  <currentVersion>1.0-b19-dev</currentVersion>
+  <name>Scarab</name>
+  <currentVersion>1.0-b19g</currentVersion>
   <organization>
     <name>Tigris.org</name>
     <url>http://www.tigris.org/</url>
@@ -349,24 +349,6 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>mm.mysql</groupId>
-      <artifactId>mm.mysql</artifactId>
-      <version>2.0.14-bin</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>7.4.1-jdbc3</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>saaj</groupId>
       <artifactId>saaj</artifactId>
       <version>1.1</version>
@@ -475,6 +457,63 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
+    
+	<!-- Begin Database Dependencies -->
+	<!-- MySQL -->
+	<dependency>
+      <groupId>mm.mysql</groupId>
+      <artifactId>mm.mysql</artifactId>
+      <version>2.0.14-bin</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <!-- Postgre SQL -->
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>7.4.1-jdbc3</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>	
+    
+    <!-- Microsoft SQL Server -->
+    <!-- -->
+	 <dependency>
+      <groupId>mssqlserver</groupId>
+      <artifactId>msbase</artifactId>
+      <jar>msbase.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>	    
+
+	 <dependency>
+      <groupId>mssqlserver</groupId>
+      <artifactId>mssqlserver</artifactId>
+      <jar>mssqlserver.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>	
+       
+	 <dependency>
+      <groupId>mssqlserver</groupId>
+      <artifactId>msutil</artifactId>
+      <jar>msutil.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>	     
+	<!-- -->
+	
+	<!-- End Database Dependencies -->    
   </dependencies>
 
   <build>
@@ -482,25 +521,21 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
-        <exclude>**/AllTest.java</exclude>
+      	<include>**/ActivityTest.java</include>
+        <exclude>**/*Test.java</exclude>
       </includes>
     </unitTest>
-    <resources>
+    <resources>      
       <resource>
-        <directory>src/conf</directory>
-        <targetPath></targetPath>
-        <includes>
-          <include>cache.ccf</include>
-        </includes>
-        <filtering>true</filtering>
+        <directory>src/conf/classes</directory>
+        <targetPath>/</targetPath>
       </resource>
     </resources>
   </build>
   
   <reports>    
-  	<report>maven-faq-plugin</report>
-  	<report>maven-changes-plugin</report>
+    <report>maven-faq-plugin</report>
+    <report>maven-changes-plugin</report>
     <report>maven-jdepend-plugin</report>    
     <!--report>maven-checkstyle-plugin</report-->
     <report>maven-changelog-plugin</report>
@@ -508,12 +543,11 @@
     <report>maven-file-activity-plugin</report>
     <report>maven-javadoc-plugin</report>
     <report>maven-jxr-plugin</report>
-	<report>maven-pmd-plugin</report>
-	
-	<report>maven-jcoverage-plugin</report>
-	<report>maven-simian-plugin</report>
-	<report>maven-multiproject-plugin</report>
-	<report>maven-junit-report-plugin</report>
+    <report>maven-pmd-plugin</report>
+  
+    <report>maven-jcoverage-plugin</report>
+    <report>maven-simian-plugin</report>
+    <report>maven-junit-report-plugin</report>
     <!--
     <report>maven-linkcheck-plugin</report>
     -->

@@ -1,9 +1,54 @@
+
 <project default="war:war"
     xmlns:j="jelly:core"
     xmlns:u="jelly:util"
     xmlns:ant="jelly:ant">
 
+  <!-- ================================================================== -->
+  <!-- W A R : W E B A P P   P O S T - G O A L                            -->
+  <!-- ================================================================== -->
+  <!-- executed after the building of the war:webapp, it copies all the   -->
+  <!-- various resource files into the webapp build directory             -->
+  <!-- ================================================================== -->
+  <postGoal name="war:webapp"> 
+    <j:set var="warWebappBuildDir"
+        value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
+  	<ant:echo message="maven.src.dir=${maven.src.dir}"/>
+  	<ant:echo message="warWebappBuildDir=${warWebappBuildDir}"/>
+    <ant:copy todir="${warWebappBuildDir}/WEB-INF/conf">
+    	<ant:fileset dir="${maven.src.dir}/conf/conf"
+          includes="**/*.*"/>
+    </ant:copy>
+    <ant:copy todir="${warWebappBuildDir}/WEB-INF/sql">
+    	<ant:fileset dir="${maven.src.dir}/sql"
+          includes="**/*.*"/>
+    </ant:copy>    
+    <!--ant:copy todir="${warWebappBuildDir}/WEB-INF/classes">
+    	<ant:fileset dir="${maven.src.dir}/conf/classes"
+          includes="**/*.*"/>
+    </ant:copy-->    
+  </postGoal>
   
+  <postGoal name="clean"> 
+	 <ant:delete>
+        <ant:fileset dir="${basedir}"
+             includes="junit*.properties">
+        </ant:fileset>
+     </ant:delete>     
+     <ant:delete>
+        <ant:fileset dir="../tomcat/logs">
+            <ant:include name="*log*.txt"/>
+        </ant:fileset>
+        <ant:fileset dir="${basedir}">
+            <ant:include name="*.ser"/>
+        </ant:fileset>
+        <ant:fileset dir="build/">
+            <ant:include name="*.log"/>
+        </ant:fileset>        
+     </ant:delete>  
+  </postGoal>
+  
+    
   <goal name="scarab:deploy_docs_head" description="Copy documentation to scarab-gen head">
     <ant:echo message="Copying Site Documentation to ${scarab.docs.head}"/>
         
@@ -31,11 +76,58 @@
     </ant:replaceregexp>       
     
     <ant:copy todir="${scarab.docs.head}">
-          <ant:fileset dir="${maven.docs.dest}"
-            includes="**/*.*">
-          </ant:fileset>
-      </ant:copy>
+        <ant:fileset dir="${maven.docs.dest}"
+          includes="**/*.*">
+        </ant:fileset>
+    </ant:copy>
   </goal>
 
+  <goal name="scarab:inplace" description="Builds an inplace exploded WAR webapp">
+
+     <j:set var="warWebappBuildDir"
+        value="${maven.src.dir}/webapp"/>    
+     <echo message="war dir:${warBuildDir}"/>
+     <j:set var="maven.war.webapp.dir" value="${warWebappBuildDir}"/>
+     <j:set var="maven.war.build.dir" value="${warWebappBuildDir}"/>
+
+     <ant:property name="maven.test.skip" value="true"/>
+     <ant:property name="maven.war.webapp.dir" value="${warWebappBuildDir}"/>
+     <ant:property name="maven.war.build.dir" value="${warWebappBuildDir}"/>
+     <attainGoal name="eclipse"/>
+     <attainGoal name="war:webapp"/>
+     
+   </goal>
+
+	<!-- 
+  	Delegate a call to the scarab:inplace-clean goal without
+  	starting to loop! 
+  	-->
+	<goal name="scarab:clean">
+		<j:if test="${firstclean == null}">
+			<ant:echo message="About to clean inplace war files"/>
+			<ant:property name="firstclean" value="false"/>
+			<attainGoal name="scarab:inplace-clean"/>
+		</j:if>
+    </goal>
+	   
+   <goal name="scarab:inplace-clean" description="Cleans an inplace exploded WAR webapp">
+
+     <j:set var="warWebappBuildDir"
+        value="${maven.src.dir}/webapp"/>    
+     <echo message="war dir:${warBuildDir}"/>
+     <j:set var="maven.war.webapp.dir" value="${warWebappBuildDir}"/>
+     <j:set var="maven.war.build.dir" value="${warWebappBuildDir}"/>
+
+     <ant:property name="maven.test.skip" value="true"/>
+     <ant:property name="maven.war.webapp.dir" value="${warWebappBuildDir}"/>
+     <ant:property name="maven.war.build.dir" value="${warWebappBuildDir}"/>
+     
+     <ant:delete dir="${warWebappBuildDir}/WEB-INF/lib"/>
+     <ant:delete dir="${warWebappBuildDir}/WEB-INF/classes"/>
+     <ant:delete dir="${warWebappBuildDir}/WEB-INF/conf"/>
+
+     <attainGoal name="clean"/>
+          
+   </goal>   
  
 </project>
