@@ -55,21 +55,15 @@ import org.apache.turbine.RunData;
 
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.Group;
-import org.apache.turbine.tool.IntakeTool;
-//import org.apache.fulcrum.intake.model.Group;
-//import org.apache.fulcrum.security.util.PasswordMismatchException;
 
 // Scarab Stuff
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.tools.SecurityAdminTool;
-import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for moderated self-serve role assignments

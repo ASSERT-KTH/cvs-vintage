@@ -47,7 +47,6 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.torque.om.NumberKey;
@@ -57,7 +56,6 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
@@ -69,7 +67,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * not in the templates.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: SelectIssueType.java,v 1.12 2002/10/17 20:06:27 jmcnally Exp $
+ * @version $Id: SelectIssueType.java,v 1.13 2002/10/23 21:33:50 jon Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {

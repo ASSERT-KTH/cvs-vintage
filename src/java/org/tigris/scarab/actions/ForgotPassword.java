@@ -64,7 +64,6 @@ import org.apache.commons.util.GenerateUniqueId;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 

@@ -77,7 +77,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.26 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ModifyModule.java,v 1.27 2002/10/23 21:27:45 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {

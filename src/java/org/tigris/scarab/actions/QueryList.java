@@ -49,7 +49,6 @@ package org.tigris.scarab.actions;
 import java.util.List;
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
@@ -64,10 +63,8 @@ import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryManager;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImpl;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -76,7 +73,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.17 2002/09/15 15:37:18 jmcnally Exp $
+    @version $Id: QueryList.java,v 1.18 2002/10/23 21:30:32 jon Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
