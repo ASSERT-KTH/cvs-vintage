@@ -804,6 +804,9 @@
             <arg line="-f build-legacy.xml clean"/>
         </exec>
         <exec executable="ant" dir="${torque.dir}">
+            <arg line="-f build-legacy.xml update-jars"/>
+        </exec>
+        <exec executable="ant" dir="${torque.dir}">
             <arg line="-f build-legacy.xml dist-lite"/>
         </exec>
         <exec executable="ant" dir="${torque.dir}">
