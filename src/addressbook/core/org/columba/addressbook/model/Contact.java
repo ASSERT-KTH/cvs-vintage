@@ -246,4 +246,40 @@ public class Contact {
 	public Object getUid() {
 		return uid;
 	}
+	
+	public void fillFullName(String fullName)
+	{
+			String[] names = tryBreakName(fullName);
+			set(VCARD.N_GIVEN,names[0]);
+			set(VCARD.N_MIDDLE,names[1]);
+			set(VCARD.N_FAMILY,names[2]);
+	}
+
+
+	/*
+	 * this method tries to break the display name into something meaningful
+	 * to put under Given Name, Family Name and Middle Name.
+	 * It'll miss prefix and suffix!
+	 * */
+	private static String[] tryBreakName(String displayName)
+	{
+	  String[] names = new String[]{"","",""};
+	  int firstName = -1;
+	  if ((firstName = displayName.indexOf(' ')) > 0)
+	  	names[0] = displayName.substring(0,firstName);  
+		else
+		  return names; //exit immediately, nothing more to do
+	  
+	  int lastName = -1;
+	  if ((lastName = displayName.lastIndexOf(' ')) >= firstName)
+	    names[2] = displayName.substring(lastName+1);
+		else
+		  return names; //exit immediately, nothing more to do
+	  
+	  if (lastName > firstName)
+	    names[1] = displayName.substring(firstName,lastName).trim();
+	  
+	  return names;
+	}
+	
 }
