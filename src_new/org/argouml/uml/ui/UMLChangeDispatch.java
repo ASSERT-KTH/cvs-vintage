@@ -25,15 +25,19 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.4 2002/04/25 15:04:15 jeremybennett Exp $
+// $Id: UMLChangeDispatch.java,v 1.5 2002/06/10 05:26:37 mkl Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 // for the various event types.
 
 
 package org.argouml.uml.ui;
+
+import org.argouml.uml.ui.behavior.common_behavior.*;
+
 import javax.swing.event.*;
 import java.awt.*;
+
 import ru.novosoft.uml.*;
 
 /**
@@ -211,7 +215,8 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
         //   if we were doing an object change then
         //      add a listener to our new target
         //
-        if(_eventType == -1 && _container instanceof PropPanel) {
+        if(_eventType == -1 && _container instanceof PropPanel &&
+           !(_container instanceof PropPanelObject)) {
             PropPanel propPanel = (PropPanel) _container;
             Object target = propPanel.getTarget();
             if(target instanceof MBase) {
