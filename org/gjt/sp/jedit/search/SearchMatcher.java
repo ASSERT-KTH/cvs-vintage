@@ -27,7 +27,7 @@ import gnu.regexp.CharIndexed;
 /**
  * An abstract interface for matching strings.
  * @author Slava Pestov
- * @version $Id: SearchMatcher.java,v 1.9 2003/07/08 01:16:19 spestov Exp $
+ * @version $Id: SearchMatcher.java,v 1.10 2003/07/10 19:05:13 spestov Exp $
  */
 public interface SearchMatcher
 {
@@ -49,14 +49,6 @@ public interface SearchMatcher
 	 */
 	Match nextMatch(CharIndexed text, boolean start, boolean end,
 		boolean firstTime, boolean reverse);
-
-	/**
-	 * Returns the specified text, with any substitution specified
-	 * within this matcher performed.
-	 * @param text The text
-	 * @return The changed string
-	 */
-	String substitute(String text) throws Exception;
 
 	//{{{ Match class
 	public static class Match
