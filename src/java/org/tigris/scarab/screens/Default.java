@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.14 2001/08/30 20:33:27 jon Exp $
+    @version $Id: Default.java,v 1.15 2001/09/07 22:10:11 elicia Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -97,21 +97,16 @@ public class Default extends TemplateSecureScreen
                     (ScarabRequestTool)getTemplateContext(data)
                     .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-                if (!data.getUser().hasLoggedIn())
-                {
-                    data.setMessage("You must be logged in to " + 
-                                    "access this page.");
-                    setTargetLogin(data);
-                    return false;
-                }
-                if (security.hasPermission(perm, scarabR.getCurrentModule()))
-                {
-                    data.setMessage(
-                        "You do not have enough base permissions "+ 
-                        "to see the requested page.");
-                    setTargetLogin(data);
-                    return false;
-                }
+                if ( !(data.getUser().hasLoggedIn()
+                   && security.hasPermission(perm, 
+                                             scarabR.getCurrentModule())))
+                    {
+                        data.setMessage("Please log in with an account " +
+                                        " that has permissions to " +
+                                        "access this page.");
+                        setTargetLogin(data);
+                        return false;
+                    }
             }
 	}
         return true;
