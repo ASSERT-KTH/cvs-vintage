@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.2 2001/09/10 08:46:22 spestov Exp $
+ * @version $Id: Buffer.java,v 1.3 2001/09/10 12:12:50 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -181,8 +181,7 @@ public class Buffer extends PlainDocument implements EBComponent
 
 		Graphics gfx = null;
 
-		Font font = jEdit.getFontProperty("print.font",
-			new Font("Monospaced",Font.PLAIN,10));
+		Font font = jEdit.getFontProperty("print.font");
 
 		SyntaxStyle[] styles = GUIUtilities.loadStyles(
 			jEdit.getProperty("print.font"),

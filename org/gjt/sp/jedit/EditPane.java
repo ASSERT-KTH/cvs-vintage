@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.2 2001/09/10 08:46:22 spestov Exp $
+ * @version $Id: EditPane.java,v 1.3 2001/09/10 12:12:50 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -371,8 +371,7 @@ public class EditPane extends JPanel implements EBComponent
 			gutter.setLineNumberAlignment(Gutter.LEFT);
 		}
 
-		gutter.setFont(jEdit.getFontProperty("view.gutter.font",
-			new Font("Monospaced",Font.PLAIN,12)));
+		gutter.setFont(jEdit.getFontProperty("view.gutter.font"));
 
 		int width = jEdit.getIntegerProperty(
 			"view.gutter.borderWidth",3);
