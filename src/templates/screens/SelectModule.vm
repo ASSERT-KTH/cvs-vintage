@@ -38,7 +38,7 @@ $page.setTitle("Select Module")
 
 #end
 
-<h3>Select new module</h3>
+<h3>Select module</h3>
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
