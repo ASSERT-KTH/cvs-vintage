@@ -219,25 +219,29 @@
       <td>$scarabR.getAttribute($attVal.AttributeId).Name </td>
       </tr>
    #end
+#* Commenting out to implement simple-assign, later
   #if ($userAttVals.size() % 2 > 0)
    <tr class="a">
   #else
    <tr class="b">
   #end
-<td>&nbsp;</td>
-<td><input type="text" name="" value="" /></td>
-<td><input type="text" name="" value="" /></td>
-<td><select name="#"
-   size=""><option value="">Assign to</option>
-<option value=
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><input type="text" name="add_user" value="" /></td>
+    <td><select name="user_attr_id" size="">
+    #foreach ($selectUserAttr in $module.getUserAttributes($issueType))
+      <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
+    #end
+   </select>
    </tr>
+*#
 
 </table>
 
 #if ($canEdit)
 <div class="functnbar3">
-<input type="submit" value="Add new" name="eventSubmit_doAssign" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doUnassign" />&#160;
+##<input type="submit" value="Add new" name="eventSubmit_doAssign" />&#160;
+##<input type="submit" value="Delete selected" name="eventSubmit_doUnassign" />&#160;
 <input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
 </div>
 #end
