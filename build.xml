@@ -138,6 +138,7 @@
             <fileset dir="src/native"/>
         </copy>
     <copy tofile="${tomcat.build}/LICENSE" file="LICENSE"/>
+    <copy tofile="${tomcat.build}/KEYS" file="KEYS"/>
 
     <!-- include ant, it is used for testing and will be used for
     configuration and few other tasks
