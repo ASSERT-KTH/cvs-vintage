@@ -21,7 +21,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
+ *   @deprecate use the log4j api instead
  */
 public class ConsoleLogging
    implements ConsoleLoggingMBean, NotificationListener, MBeanRegistration

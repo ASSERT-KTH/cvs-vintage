@@ -22,7 +22,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.13 $
+ *   @deprecated Use the log4j api instead
+ *   @version $Revision: 1.14 $
  */
 public class FileLogging
    implements FileLoggingMBean, NotificationListener, MBeanRegistration
