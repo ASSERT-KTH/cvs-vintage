@@ -64,7 +64,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.40 2002/12/17 21:39:49 elicia Exp $
+ * @version $Id: Activity.java,v 1.41 2002/12/24 12:31:31 jon Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -160,15 +160,16 @@ public class Activity
                 {
                    crit.add(ActivityPeer.NEW_OPTION_ID, this.getOldOptionId());
                 }
-            }
-            List result = ActivityPeer.doSelect(crit);
-            if (result.size() > 0)
-            {
-                for (int i=0; i<result.size();i++)
+                List result = ActivityPeer.doSelect(crit);
+                int resultSize = result.size();
+                if (resultSize > 0)
                 {
-                    Activity a = (Activity)result.get(i);
-                    a.setEndDate(getActivitySet().getCreatedDate());
-                    a.save(dbCon);
+                    for (int i=0; i<resultSize;i++)
+                    {
+                        Activity a = (Activity)result.get(i);
+                        a.setEndDate(getActivitySet().getCreatedDate());
+                        a.save(dbCon);
+                    }
                 }
             }
         }
