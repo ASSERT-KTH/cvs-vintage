@@ -80,8 +80,6 @@ public class AccountList extends DefaultItem {
      *
      */
     public PGPItem getPGPItem(String to) {
-        System.out.println("------>to: " + to);
-
         int result = -1;
 
         for (int i = 0; i < count(); i++) {
