@@ -86,6 +86,30 @@ public class IssueManager
 
     /**
      * If the id is not specified, return null otherwise return the 
+     * issue object.  if the id does not have a character prefix
+     * the default code is prepended
+     */
+    public static Issue getIssueById(String id, String defaultCode)
+    {
+        Issue issue = null;
+        if (id != null)
+        {
+            id = id.trim();
+            if (id.length() != 0 && defaultCode != null) 
+            {
+                char firstChar = id.charAt(0);
+                if ('0' <= firstChar && firstChar <= '9') 
+                {
+                    id = defaultCode + id;
+                }
+            }
+            issue = IssueManager.getIssueById(id);
+        }
+        return issue;
+    }
+
+    /**
+     * If the id is not specified, return null otherwise return the 
      * issue object.
      */
     public static Issue getIssueById(String id)

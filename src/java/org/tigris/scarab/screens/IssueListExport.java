@@ -62,6 +62,7 @@ import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -193,7 +194,9 @@ public class IssueListExport extends Default
             for (Iterator i = issueIdList.iterator();i.hasNext(); )
             {
                 String issueId = ((QueryResult)i.next()).getUniqueId();
-                Issue issue = scarabR.getIssue(issueId);
+                // FIXME! don't do this QueryResult should already have
+                // the info pcn#16558
+                Issue issue = IssueManager.getIssueById(issueId);
                 printer.println();
                 writeRow(printer, mitlist, l10n, rmuas, issue);
             }

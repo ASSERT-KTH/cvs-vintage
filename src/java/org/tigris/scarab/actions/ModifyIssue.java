@@ -67,6 +67,8 @@ import org.apache.turbine.ParameterParser;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
@@ -93,7 +95,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.152 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.153 2003/04/09 22:55:30 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -872,10 +874,11 @@ public class ModifyIssue extends BaseModifyIssue
         // The id might not have the prefix appended so use the current
         // module prefix as the thing to try.
         Issue childIssue = null;
+        Module currentModule = scarabR.getCurrentModule();
         try
         {
-            childIssue = scarabR.getCurrentModule()
-                                .getIssueById(childIdStr);
+            childIssue = IssueManager
+                .getIssueById(childIdStr, currentModule.getCode());
         }
         catch(Exception e)
         {
@@ -895,7 +898,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (intake.isAllValid())
         {
             Depend depend = DependManager.getInstance();
-            depend.setDefaultModule(scarabR.getCurrentModule());
+            depend.setDefaultModule(currentModule);
             group.setProperties(depend);
             ActivitySet activitySet = null;
             try

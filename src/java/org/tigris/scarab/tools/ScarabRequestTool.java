@@ -1398,7 +1398,8 @@ e.printStackTrace();
         {
             try
             {
-                issue = getCurrentModule().getIssueById(id);
+                issue = IssueManager
+                    .getIssueById(id, getCurrentModule().getCode());
                 if (issue == null || issue.getDeleted())
                 {
                     setAlertMessage(l10n.get("InvalidId"));

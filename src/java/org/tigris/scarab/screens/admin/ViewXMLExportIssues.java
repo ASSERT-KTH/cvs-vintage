@@ -61,12 +61,13 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
 
 /**
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.13 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.14 2003/04/09 22:55:31 jmcnally Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -91,6 +92,7 @@ public class ViewXMLExportIssues extends Default
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        org.tigris.scarab.om.Module currentModule = scarabR.getCurrentModule();
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         String ids = data.getParameters().getString("exportissues");
         context.put("exportissues", ids);
@@ -105,7 +107,9 @@ public class ViewXMLExportIssues extends Default
             List allIdList = null;
             try
             {
-                allIdList = Issue.parseIssueList(scarabR.getCurrentModule(), ids);
+                // FIXME! we need this method to return valid ids, if the range
+                // is thousands of issues, we cannot post verify the issues.
+               allIdList = Issue.parseIssueList(currentModule, ids);
             }
             catch (Exception e)
             {
@@ -115,11 +119,16 @@ public class ViewXMLExportIssues extends Default
             }
             List issueIdList = new ArrayList();
             List badIdList = new ArrayList();
+            Integer currentModuleId = currentModule.getModuleId();
+            String defaultCode = currentModule.getCode();
             for (Iterator itr = allIdList.iterator(); itr.hasNext();)
             {
                 String tmp = (String) itr.next();
-                Issue issue = scarabR.getIssue(tmp);
-                if (issue != null)
+                Issue issue = IssueManager.getIssueById(tmp, defaultCode);
+                // check that the issue is in the current module, don't allow
+                // exporting of issues other than those in the current
+                // module for security reasons
+                if (issue != null && issue.getModuleId().equals(currentModuleId))
                 {
                     issueIdList.add(tmp);
                 }
