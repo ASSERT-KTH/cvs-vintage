@@ -26,133 +26,69 @@ import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 
-
 /**
- *
- * @author  freddy
+ * 
+ * @author freddy
  * @version
  */
 public class ImapAttributPanel extends JPanel {
-    private ImapItem item;
-    private JCheckBox secureCheckBox;
-    private JCheckBox storePasswordCheckBox;
-    private JCheckBox automaticallyApplyFilterCheckBox;
-    private JCheckBox intervalCheckingCheckBox;
-    private JPanel jPanel1;
-    private JLabel intervalCheckingLabel;
-    private JLabel intervalCheckingLabel2;
-    private JTextField intervalCheckingTextField;
-    private JCheckBox cleanupCheckBox;
-    private JPanel cleanupPanel;
+	private ImapItem item;
 
-    //private ConfigFrame frame;
-    public ImapAttributPanel(ImapItem item) {
-        //super( " Imap4 Settings " );
-        this.item = item;
-        initComponents();
-    }
+	private JCheckBox secureCheckBox;
 
-    public void updateComponents(boolean b) {
-        if (b) {
-            /*
-if ( item.isSavePassword() )
-    storePasswordCheckBox.setSelected(true);
-    */
-            automaticallyApplyFilterCheckBox.setSelected(item.getBoolean(
-                    "automatically_apply_filter"));
-        } else {
-            /*
-if ( storePasswordCheckBox.isSelected() == true )
-    item.setSavePassword("true");
-else
-    item.setSavePassword("false");
-    */
-            item.setBoolean("automatically_apply_filter",
-                automaticallyApplyFilterCheckBox.isSelected());
-        }
-    }
+	private JCheckBox storePasswordCheckBox;
 
-    public void createPanel(DefaultFormBuilder builder) {
-        builder.appendSeparator(MailResourceLoader.getString("dialog",
-                "account", "options"));
+	private JCheckBox automaticallyApplyFilterCheckBox;
 
-        builder.append(automaticallyApplyFilterCheckBox, 4);
-        builder.nextLine();
+	private JCheckBox intervalCheckingCheckBox;
 
-        /*
-builder.append(cleanupCheckBox, 3);
-builder.nextLine();
-*/
-    }
+	private JPanel jPanel1;
 
-    protected void initComponents() {
-        cleanupCheckBox = new JCheckBox();
-        cleanupCheckBox.setEnabled(false);
-        cleanupCheckBox.setText(MailResourceLoader.getString("dialog",
-                "account", "Expunge_Inbox_on_Exit"));
+	private JLabel intervalCheckingLabel;
 
-        automaticallyApplyFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "apply_filter"));
-    }
+	private JLabel intervalCheckingLabel2;
 
-    /*
-private void initComponents() {
+	private JTextField intervalCheckingTextField;
 
+	private JCheckBox cleanupCheckBox;
 
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
-        setLayout(layout);
+	private JPanel cleanupPanel;
 
-        JPanel intervalCheckingPanel = new JPanel();
-        //intervalCheckingPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
-        intervalCheckingPanel.setLayout(
-                new BoxLayout(intervalCheckingPanel, BoxLayout.X_AXIS));
-        intervalCheckingCheckBox = new JCheckBox();
-        intervalCheckingCheckBox.setEnabled(false);
-        intervalCheckingCheckBox.setText(
-                MailResourceLoader.getString(
-                        "dialog/account",
-                        "imapattributpanel",
-                        "enable_interval_message_checking"));
-        intervalCheckingCheckBox.setMnemonic(
-                MailResourceLoader.getMnemonic(
-                        "dialog/account",
-                        "imapattributpanel",
-                        "enable_interval_message_checking"));
-        //$NON-NLS-1$
-        intervalCheckingCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        intervalCheckingPanel.add(intervalCheckingCheckBox);
-        intervalCheckingPanel.add(Box.createHorizontalGlue());
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        layout.setConstraints(intervalCheckingPanel, c);
-        add(intervalCheckingPanel);
+	public ImapAttributPanel(ImapItem item) {
+		this.item = item;
+		initComponents();
+	}
 
+	public void updateComponents(boolean b) {
+		if (b) {
 
+			automaticallyApplyFilterCheckBox.setSelected(item
+					.getBoolean(ImapItem.AUTOMATICALLY_APPLY_FILTER));
+		} else {
 
-        JPanel cleanupPanel = new JPanel();
-        //cleanupPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
-        cleanupPanel.setLayout(new BoxLayout(cleanupPanel, BoxLayout.X_AXIS));
-        cleanupCheckBox = new JCheckBox();
-        cleanupCheckBox.setEnabled(false);
-        cleanupCheckBox.setText(
-                MailResourceLoader.getString(
-                        "dialog",
-                        "account",
-                        "Expunge_Inbox_on_Exit"));
-        //$NON-NLS-1$
-        cleanupCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        cleanupPanel.add(cleanupCheckBox);
-        cleanupPanel.add(Box.createHorizontalGlue());
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        layout.setConstraints(cleanupPanel, c);
-        add(cleanupPanel);
+			item.setBoolean(ImapItem.AUTOMATICALLY_APPLY_FILTER,
+					automaticallyApplyFilterCheckBox.isSelected());
+		}
+	}
 
-}
-*/
+	public void createPanel(DefaultFormBuilder builder) {
+		builder.appendSeparator(MailResourceLoader.getString("dialog",
+				"account", "options"));
+
+		builder.append(automaticallyApplyFilterCheckBox, 4);
+		builder.nextLine();
+
+	}
+
+	protected void initComponents() {
+		cleanupCheckBox = new JCheckBox();
+		cleanupCheckBox.setEnabled(false);
+		cleanupCheckBox.setText(MailResourceLoader.getString("dialog",
+				"account", "Expunge_Inbox_on_Exit"));
+
+		automaticallyApplyFilterCheckBox = new CheckBoxWithMnemonic(
+				MailResourceLoader.getString("dialog", "account",
+						"apply_filter"));
+	}
+
 }

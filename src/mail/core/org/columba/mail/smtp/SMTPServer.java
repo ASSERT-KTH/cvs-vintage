@@ -38,7 +38,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.config.SmtpItem;
+import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.AuthenticationManager;
@@ -104,7 +104,7 @@ public class SMTPServer  {
 	private void ensureConnected() throws IOException, SMTPException {
 		if (state < CONNECTED) {
 			// initialise protocol layer
-			SmtpItem smtpItem = accountItem.getSmtpItem();
+			OutgoingItem smtpItem = accountItem.getSmtpItem();
 			String host = smtpItem.get("host");
 
 			protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
@@ -134,7 +134,7 @@ public class SMTPServer  {
 		fromAddress = identity.getAddress().getMailAddress();
 
 		// POP3 server host name
-		SmtpItem smtpItem = accountItem.getSmtpItem();
+		OutgoingItem smtpItem = accountItem.getSmtpItem();
 
 		// Sent Folder
 		SpecialFoldersItem specialFoldersItem = accountItem
@@ -480,7 +480,7 @@ public class SMTPServer  {
 	}
 
 	public String getName() {
-		SmtpItem smtpItem = accountItem.getSmtpItem();
+		OutgoingItem smtpItem = accountItem.getSmtpItem();
 		String host = smtpItem.get("host");
 
 		return host;

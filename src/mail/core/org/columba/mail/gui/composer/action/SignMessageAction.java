@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.AccountView;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
@@ -59,7 +59,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
         composerController.getAccountController().getView().addItemListener(
                 this);
 
-        PGPItem item = this.composerController.getModel().getAccountItem()
+        SecurityItem item = this.composerController.getModel().getAccountItem()
                 .getPGPItem();
         setState(item.getBooleanWithDefault("always_sign", false));
         System.out.println("always_sign=" + item.get("always_sign"));
@@ -85,7 +85,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             AccountItem item = (AccountItem) ((AccountView)e.getSource()).getSelectedItem();
-            PGPItem pgp = item.getPGPItem();
+            SecurityItem pgp = item.getPGPItem();
             setState(pgp.getBooleanWithDefault("always_sign", false));
         }
     }

@@ -27,7 +27,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFException;
@@ -87,7 +87,7 @@ public class JSCFController
   /**
    * Creates a new Connection to the gpg driver, if the connection for the given
    * <code>userID</code> are not exists. Properties for the connection are
-   * created by using the PGPItem from the <code>AccountItem</code>.
+   * created by using the SecurityItem from the <code>AccountItem</code>.
    * Properties like PATH and the GPG USERID are stored for the connection, if
    * the connection are not exists.
    * 
@@ -100,7 +100,7 @@ public class JSCFController
    */
   public JSCFConnection getConnection (String userID) throws JSCFException
   {
-    PGPItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
+    SecurityItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
         .getPGPItem();
     JSCFConnection con = (JSCFConnection) connectionMap.get(userID);
 
@@ -158,7 +158,7 @@ public class JSCFController
   /**
    * Creates a new JSCFConnection for the current used Account. The current used
    * Account is determind from the AccountItem. This method calls only
-   * {@link #getConnection(String)}with the <code>id</code> from the PGPItem.
+   * {@link #getConnection(String)}with the <code>id</code> from the SecurityItem.
    * 
    * @return a alrady etablished connection for the current account or a newly
    *         created connection for the current account, if no connection exists
@@ -168,7 +168,7 @@ public class JSCFController
    */
   public JSCFConnection getConnection () throws JSCFException
   {
-    PGPItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
+    SecurityItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
         .getPGPItem();
 
     return getConnection(pgpItem.get("id"));

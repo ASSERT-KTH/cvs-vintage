@@ -48,13 +48,13 @@ import javax.swing.SwingUtilities;
 
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.config.Config;
-import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.imap.IMAPServer;
@@ -78,9 +78,6 @@ public class IncomingServerPanel extends DefaultPanel implements
     
     private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern
             .compile("(\\d+);?");
-    
-    public static final int IMAPS_POP3S = 0;
-    public static final int TLS = 1;
     
     private JLabel loginLabel;
     private JTextField loginTextField;
@@ -140,30 +137,30 @@ public class IncomingServerPanel extends DefaultPanel implements
     }
     
     public boolean isPopAccount() {
-        return accountItem.getElement("popserver") != null;
+        return accountItem.getElement(IncomingItem.POPSERVER) != null;
     }
     
     public boolean isSmtpAccount() {
-        return accountItem.getElement("smtpserver") != null;
+        return accountItem.getElement(IncomingItem.SMTPSERVER) != null;
     }
     
     protected void updateComponents(boolean b) {
         if (b) {
-            loginTextField.setText(serverItem.get("user"));
-            passwordTextField.setText(serverItem.get("password"));
-            hostTextField.setText(serverItem.get("host"));
-            String port = serverItem.get("port");
+            loginTextField.setText(serverItem.get(IncomingItem.USER));
+            passwordTextField.setText(serverItem.get(IncomingItem.PASSWORD));
+            hostTextField.setText(serverItem.get(IncomingItem.HOST));
+            String port = serverItem.get(IncomingItem.PORT);
             portSpinner.setValue(new Integer(port));
             
             storePasswordCheckBox.setSelected(serverItem
-                    .getBoolean("save_password"));
+                    .getBoolean(IncomingItem.SAVE_PASSWORD));
             
             defaultAccountCheckBox.setSelected(serverItem
-                    .getBoolean("use_default_account"));
+                    .getBoolean(IncomingItem.USE_DEFAULT_ACCOUNT));
             
             try {
                 authenticationComboBox.setSelectedItem(new Integer(serverItem
-                        .get("login_method")));
+                        .get(IncomingItem.LOGIN_METHOD)));
             } catch (NumberFormatException e) {
             }
             
@@ -172,10 +169,10 @@ public class IncomingServerPanel extends DefaultPanel implements
             secureCheckBox.removeActionListener(this);
             sslComboBox.removeActionListener(this);
             
-            secureCheckBox.setSelected(serverItem.getBooleanWithDefault("enable_ssl",
+            secureCheckBox.setSelected(serverItem.getBooleanWithDefault(IncomingItem.ENABLE_SSL,
                     false));
             
-            sslComboBox.setSelectedIndex(serverItem.getIntegerWithDefault("ssl_type", 1));
+            sslComboBox.setSelectedIndex(serverItem.getIntegerWithDefault(IncomingItem.SSL_TYPE, 1));
             sslComboBox.setEnabled(secureCheckBox.isSelected());
             // reactivate
             secureCheckBox.addActionListener(this);
@@ -183,7 +180,7 @@ public class IncomingServerPanel extends DefaultPanel implements
             
             defaultAccountCheckBox.setEnabled(
                 MailConfig.getInstance().getAccountList().getDefaultAccountUid() !=
-                    accountItem.getInteger("uid"));
+                    accountItem.getInteger(IncomingItem.UID));
             
             if (defaultAccountCheckBox.isEnabled() && defaultAccountCheckBox.isSelected()) {
                 showDefaultAccountWarning();
@@ -191,21 +188,21 @@ public class IncomingServerPanel extends DefaultPanel implements
                 layoutComponents();
             }
         } else {
-            serverItem.setString("user", loginTextField.getText());
-            serverItem.setString("host", hostTextField.getText());
-            serverItem.setString("password", passwordTextField.getText());
-            serverItem.setString("port", ((Integer) portSpinner.getValue()).toString());
+            serverItem.setString(IncomingItem.USER, loginTextField.getText());
+            serverItem.setString(IncomingItem.HOST, hostTextField.getText());
+            serverItem.setString(IncomingItem.PASSWORD, passwordTextField.getText());
+            serverItem.setString(IncomingItem.PORT, ((Integer) portSpinner.getValue()).toString());
             
-            serverItem.setBoolean("save_password", storePasswordCheckBox.isSelected());
+            serverItem.setBoolean(IncomingItem.SAVE_PASSWORD, storePasswordCheckBox.isSelected());
             
-            serverItem.setBoolean("enable_ssl", secureCheckBox.isSelected());
-            serverItem.setInteger("ssl_type", sslComboBox.getSelectedIndex());
+            serverItem.setBoolean(IncomingItem.ENABLE_SSL, secureCheckBox.isSelected());
+            serverItem.setInteger(IncomingItem.SSL_TYPE, sslComboBox.getSelectedIndex());
             
             // if securest write DEFAULT
-            serverItem.setString("login_method",
+            serverItem.setString(IncomingItem.LOGIN_METHOD,
                     authenticationComboBox.getSelectedItem().toString());
             
-            serverItem.setBoolean("use_default_account", defaultAccountCheckBox
+            serverItem.setBoolean(IncomingItem.USE_DEFAULT_ACCOUNT, defaultAccountCheckBox
                     .isSelected());
         }
     }
@@ -367,18 +364,18 @@ public class IncomingServerPanel extends DefaultPanel implements
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
         passwordLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                "dialog", "account", "password"));
+                "dialog", "account", IncomingItem.PASSWORD));
         
         passwordTextField = new JTextField();
         
         hostLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                "dialog", "account", "host"));
+                "dialog", "account", IncomingItem.HOST));
         
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
         
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                "dialog", "account", "port"));
+                "dialog", "account", IncomingItem.PORT));
         
         portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 65535, 1));
         portSpinner.setEditor(new JSpinner.NumberEditor(portSpinner,"#####"));
@@ -432,7 +429,7 @@ public class IncomingServerPanel extends DefaultPanel implements
         
         String authMethods;
         if (isPopAccount()) {
-            authMethods = accountItem.getString("popserver",
+            authMethods = accountItem.getString(IncomingItem.POPSERVER,
                     "authentication_methods");
         } else {
             authMethods = accountItem.getString("imapserver",
@@ -474,7 +471,7 @@ public class IncomingServerPanel extends DefaultPanel implements
             
             if (secureCheckBox.isSelected()) {
                 // Update the Port
-                if (sslComboBox.getSelectedIndex() == TLS) {
+                if (sslComboBox.getSelectedIndex() == IncomingItem.TLS) {
                     // Default Port
                     if (isPopAccount()) {
                         if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
@@ -524,14 +521,14 @@ public class IncomingServerPanel extends DefaultPanel implements
                 return;
             } else {
                 File configPath = Config.getInstance().getConfigDirectory();
-                File defaultConfigPath = Config.getInstance().getDefaultConfigPath();
+                File defaultConfigPath = Config.getDefaultConfigPath();
                 while (!configPath.equals(defaultConfigPath)) {
                     configPath = configPath.getParentFile();
                     if (configPath == null) {
                         JOptionPane.showMessageDialog(dialog, MailResourceLoader.getString(
-                                "dialog","password", "warn_save_msg"),
+                                "dialog",IncomingItem.PASSWORD, "warn_save_msg"),
                                 MailResourceLoader.getString(
-                                "dialog", "password", "warn_save_title"),
+                                "dialog", IncomingItem.PASSWORD, "warn_save_title"),
                                 JOptionPane.WARNING_MESSAGE);
                         return;
                     }
@@ -565,13 +562,13 @@ public class IncomingServerPanel extends DefaultPanel implements
             server = (IDefaultItem)accountItem.getImapItem().clone();
         }
         
-        server.setString("user", loginTextField.getText());
-        server.setString("host", hostTextField.getText());
-        server.setString("password", passwordTextField.getText());
-        server.setString("port", ((Integer) portSpinner.getValue()).toString());
+        server.setString(IncomingItem.USER, loginTextField.getText());
+        server.setString(IncomingItem.HOST, hostTextField.getText());
+        server.setString(IncomingItem.PASSWORD, passwordTextField.getText());
+        server.setString(IncomingItem.PORT, ((Integer) portSpinner.getValue()).toString());
         
-        server.setBoolean("enable_ssl", secureCheckBox.isSelected());
-        server.setInteger("ssl_type", sslComboBox.getSelectedIndex());
+        server.setBoolean(IncomingItem.ENABLE_SSL, secureCheckBox.isSelected());
+        server.setInteger(IncomingItem.SSL_TYPE, sslComboBox.getSelectedIndex());
         
         return server;
     }
@@ -616,7 +613,7 @@ public class IncomingServerPanel extends DefaultPanel implements
             }
 
             if (isPopAccount()) {
-                accountItem.setString("popserver", "authentication_methods", 
+                accountItem.setString(IncomingItem.POPSERVER, "authentication_methods", 
                         authMethods.toString());
             } else {
                 accountItem.setString("imapserver", "authentication_methods", 

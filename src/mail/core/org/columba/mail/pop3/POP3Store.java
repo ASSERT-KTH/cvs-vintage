@@ -39,6 +39,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -426,11 +427,11 @@ public class POP3Store {
      */
     private void openConnection() throws IOException, POP3Exception,
     CommandCancelledException {
-        int sslType = popItem.getIntegerWithDefault("ssl_type", IncomingServerPanel.TLS);
+        int sslType = popItem.getIntegerWithDefault("ssl_type", IncomingItem.TLS);
         boolean sslEnabled = popItem.getBoolean("enable_ssl");
         
         // open a port to the server
-        if (sslEnabled && sslType == IncomingServerPanel.IMAPS_POP3S) {
+        if (sslEnabled && sslType == IncomingItem.IMAPS_POP3S) {
             try {
                 protocol.openSSLPort();
                 usingSSL = true;
@@ -457,7 +458,7 @@ public class POP3Store {
         }
         
         // shall we switch to SSL?
-        if (!usingSSL && sslEnabled && sslType == IncomingServerPanel.TLS) {
+        if (!usingSSL && sslEnabled && sslType == IncomingItem.TLS) {
             // if CAPA was not support just give it a try...
             if (isSupported("STLS") || capas.length == 0) {
                 try {

@@ -35,7 +35,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SmtpItem;
+import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
@@ -129,7 +129,7 @@ public class AccountDialog extends JDialog implements ActionListener {
         tp.add(MailResourceLoader.getString("dialog", "account",
                 "receiveoptions"), receiveOptionsPanel);
 
-        SmtpItem smtpItem = accountItem.getSmtpItem();
+        OutgoingItem smtpItem = accountItem.getSmtpItem();
 
         tp.add(MailResourceLoader.getString("dialog", "account",
                 "outgoingserver"), outgoingServerPanel);

@@ -20,7 +20,10 @@ import org.columba.core.xml.XmlElement;
 
 
 public class ImapItem extends DefaultItem {
-    public ImapItem(XmlElement e) {
+	
+    public static final String AUTOMATICALLY_APPLY_FILTER = "automatically_apply_filter";
+
+	public ImapItem(XmlElement e) {
         super(e);
     }
 }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
@@ -53,7 +53,7 @@ public class EncryptMessageAction extends AbstractSelectableAction {
 
         ComposerModel model = composerController.getModel();
         AccountItem account = model.getAccountItem();
-        PGPItem pgp = account.getPGPItem();
+        SecurityItem pgp = account.getPGPItem();
    
         setState(pgp.getBooleanWithDefault("always_encrypt", false));
         

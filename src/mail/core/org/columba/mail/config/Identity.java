@@ -26,18 +26,25 @@ import org.columba.ristretto.parser.ParserException;
  * Encapsulates an identity used with an account.
  */
 public class Identity {
-    protected XmlElement e;
+	
+    private static final String SIGNATURE_FILE = "signature_file";
+	private static final String ORGANISATION = "organisation";
+	private static final String REPLY_ADDRESS = "reply_address";
+	private static final String NAME = "name";
+	private static final String ADDRESS = "address";
+	
+	protected XmlElement e;
     protected Address address;
     protected Address replyToAddress;
     
     public Identity(XmlElement e) throws ParserException {
         this.e = e;
-        String value = e.getAttribute("address");
+        String value = e.getAttribute(Identity.ADDRESS);
         if (value != null && value.length() > 0) {
-            address = Address.parse(e.getAttribute("address"));
-            address.setDisplayName(e.getAttribute("name"));
+            address = Address.parse(e.getAttribute(Identity.ADDRESS));
+            address.setDisplayName(e.getAttribute(Identity.NAME));
         }
-        value = e.getAttribute("reply_address");
+        value = e.getAttribute(Identity.REPLY_ADDRESS);
         if (value != null && value.length() > 0) {
             replyToAddress = Address.parse(value);
         }
@@ -49,8 +56,8 @@ public class Identity {
     
     public void setAddress(Address address) {
         this.address = address;
-        e.addAttribute("name", address.getDisplayName());
-        e.addAttribute("address", address.getMailAddress());
+        e.addAttribute(Identity.NAME, address.getDisplayName());
+        e.addAttribute(Identity.ADDRESS, address.getMailAddress());
     }
     
     public Address getReplyToAddress() {
@@ -60,21 +67,21 @@ public class Identity {
     public void setReplyToAddress(Address address) {
         replyToAddress = address;
         if (address != null) {
-            e.addAttribute("reply_address", address.getMailAddress());
+            e.addAttribute(Identity.REPLY_ADDRESS, address.getMailAddress());
         } else {
-            e.getAttributes().remove("reply_address");
+            e.getAttributes().remove(Identity.REPLY_ADDRESS);
         }
     }
     
     public String getOrganisation() {
-        return e.getAttribute("organisation");
+        return e.getAttribute(Identity.ORGANISATION);
     }
     
     public void setOrganisation(String organisation) {
         if (organisation != null) {
-            e.addAttribute("organisation", organisation);
+            e.addAttribute(Identity.ORGANISATION, organisation);
         } else {
-            e.getAttributes().remove("organisation");
+            e.getAttributes().remove(Identity.ORGANISATION);
         }
     }
     
@@ -82,7 +89,7 @@ public class Identity {
      * Returns the signature that should be attached to outgoing mails.
      */
     public File getSignature() {
-        String path = e.getAttribute("signature_file");
+        String path = e.getAttribute(Identity.SIGNATURE_FILE);
         if (path != null) {
             File signature = new File(path);
             if (signature.exists() && signature.isFile()) {
@@ -97,9 +104,9 @@ public class Identity {
      */
     public void setSignature(File signature) {
         if (signature != null && signature.exists() && signature.isFile()) {
-            e.addAttribute("signature_file", signature.getPath());
+            e.addAttribute(Identity.SIGNATURE_FILE, signature.getPath());
         } else {
-            e.getAttributes().remove("signature_file");
+            e.getAttributes().remove(Identity.SIGNATURE_FILE);
         }
     }
 }

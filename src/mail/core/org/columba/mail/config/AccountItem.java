@@ -35,8 +35,8 @@ public class AccountItem extends DefaultItem {
     private Identity identity;
     private PopItem pop;
     private ImapItem imap;
-    private SmtpItem smtp;
-    private PGPItem pgp;
+    private OutgoingItem smtp;
+    private SecurityItem pgp;
     private SpecialFoldersItem folder;
     private SpamItem spam;
     
@@ -130,9 +130,9 @@ public class AccountItem extends DefaultItem {
         return pop;
     }
 
-    public SmtpItem getSmtpItem() {
+    public OutgoingItem getSmtpItem() {
         if (smtp == null) {
-            smtp = new SmtpItem(getRoot().getElement("smtpserver"));
+            smtp = new OutgoingItem(getRoot().getElement("smtpserver"));
         }
 
         if (smtp.getBoolean("use_default_account")) {
@@ -160,14 +160,14 @@ public class AccountItem extends DefaultItem {
         return spam;
     }
 
-    public PGPItem getPGPItem() {
+    public SecurityItem getPGPItem() {
         if (pgp == null) {
-            pgp = new PGPItem(getRoot().getElement("pgp"));
+            pgp = new SecurityItem(getRoot().getElement("pgp"));
         }
 
         if (pgp.getBoolean("use_default_account")) {
             // return default-account ImapItem instead 
-            PGPItem item = MailConfig.getInstance().getAccountList()
+            SecurityItem item = MailConfig.getInstance().getAccountList()
                                                .getDefaultAccount().getPGPItem();
 
             return item;

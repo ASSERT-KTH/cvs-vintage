@@ -45,6 +45,7 @@ import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.ListTools;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.IncomingItem;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -239,11 +240,11 @@ public class IMAPServer implements IMAPListener {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"connecting"));
 
-		int sslType = item.getIntegerWithDefault("ssl_type", IncomingServerPanel.TLS);
+		int sslType = item.getIntegerWithDefault("ssl_type", IncomingItem.TLS);
 		boolean sslEnabled = item.getBoolean("enable_ssl");
 
 		// open a port to the server
-		if (sslEnabled && sslType == IncomingServerPanel.IMAPS_POP3S) {
+		if (sslEnabled && sslType == IncomingItem.IMAPS_POP3S) {
 			try {
 				protocol.openSSLPort();
 				usingSSL = true;
@@ -272,7 +273,7 @@ public class IMAPServer implements IMAPListener {
 		}
 
 		// shall we switch to SSL?
-		if (!usingSSL && sslEnabled && sslType == IncomingServerPanel.TLS) {
+		if (!usingSSL && sslEnabled && sslType == IncomingItem.TLS) {
 			// if CAPA was not support just give it a try...
 			if (isSupported("STLS") || (capabilities.length == 0)) {
 				try {

@@ -1,6 +1,6 @@
 package org.columba.mail.message;
 
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 
@@ -21,12 +21,12 @@ import org.columba.ristretto.message.MimePart;
 //
 //All Rights Reserved.
 public class PGPMimePart extends MimePart {
-    private PGPItem pgpItem;
+    private SecurityItem pgpItem;
 
     /**
  * @param header
  */
-    public PGPMimePart(MimeHeader header, PGPItem pgpItem) {
+    public PGPMimePart(MimeHeader header, SecurityItem pgpItem) {
         super(header);
         this.pgpItem = pgpItem;
     }
@@ -34,7 +34,7 @@ public class PGPMimePart extends MimePart {
     /**
  * @return
  */
-    public PGPItem getPgpItem() {
+    public SecurityItem getPgpItem() {
         return pgpItem;
     }
 }

@@ -68,7 +68,7 @@ public class AccountController implements ItemListener {
 
             AccountItem item = (AccountItem) view.getSelectedItem();
 
-            PGPItem pgpItem = item.getPGPItem();
+            SecurityItem pgpItem = item.getPGPItem();
             if( pgpItem.getBoolean("enabled") ) {
                     signMenuItem.setEnabled(true);
                     encryptMenuItem.setEnabled(true);
@@ -89,7 +89,7 @@ public class AccountController implements ItemListener {
             AccountItem item = (AccountItem) view.getSelectedItem();
             composerInterface.identityInfoPanel.set(item);
 
-            PGPItem pgpItem = item.getPGPItem();
+            SecurityItem pgpItem = item.getPGPItem();
             signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
             signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
 

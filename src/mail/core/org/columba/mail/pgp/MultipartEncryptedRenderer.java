@@ -22,7 +22,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
@@ -79,7 +79,7 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
         // Create the header of the multipart
         streams.add(header.getHeader().getInputStream());
 
-        PGPItem pgpItem = ((PGPMimePart) part).getPgpItem();
+        SecurityItem pgpItem = ((PGPMimePart) part).getPgpItem();
 
         // Add the ControlMimePart 		
         streams.add(new ByteArrayInputStream(startBoundary));

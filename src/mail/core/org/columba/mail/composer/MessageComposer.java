@@ -37,7 +37,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
@@ -496,7 +496,7 @@ public class MessageComposer {
 		}
 
 		if (model.isSignMessage()) {
-			PGPItem item = model.getAccountItem().getPGPItem();
+			SecurityItem item = model.getAccountItem().getPGPItem();
 			String idStr = item.get("id");
 
 			// if the id not currently set (for example in the security panel in
@@ -515,7 +515,7 @@ public class MessageComposer {
 		}
 
 		if (model.isEncryptMessage()) {
-			PGPItem item = model.getAccountItem().getPGPItem();
+			SecurityItem item = model.getAccountItem().getPGPItem();
 
 			// Set recipients from the recipients vector
 			List recipientList = model.getRCPTVector();

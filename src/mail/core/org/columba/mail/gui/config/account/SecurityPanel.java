@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -40,185 +40,186 @@ import com.jgoodies.forms.layout.FormLayout;
  * Shows PGP-related options.
  */
 public class SecurityPanel extends DefaultPanel implements ActionListener {
-    private JLabel idLabel;
-    private JTextField idTextField;
-    private JLabel typeLabel;
-    private JComboBox typeComboBox;
-    private JLabel pathLabel;
-    private JButton pathButton;
-    private JCheckBox enableCheckBox;
-    private JCheckBox alwaysSignCheckBox;
-    private JCheckBox alwaysEncryptCheckBox;
-    private PGPItem item;
+	private JLabel idLabel;
 
-    public SecurityPanel(PGPItem item) {
-        super();
-        this.item = item;
+	private JTextField idTextField;
 
-        initComponents();
-        updateComponents(true);
-        layoutComponents();
+	private JLabel typeLabel;
 
-        //enableCheckBox.setEnabled(false);
-    }
+	private JComboBox typeComboBox;
 
-    protected void updateComponents(boolean b) {
-        if (b) {
-            idTextField.setText(item.get("id"));
-            pathButton.setText(item.get("path"));
+	private JLabel pathLabel;
 
-            enableCheckBox.setSelected(item.getBoolean("enabled"));
+	private JButton pathButton;
 
-            alwaysSignCheckBox.setSelected(item.getBoolean("always_sign"));
-            alwaysEncryptCheckBox.setSelected(item.getBoolean("always_encrypt"));
+	private JCheckBox enableCheckBox;
 
-            enablePGP(enableCheckBox.isSelected());
-        } else {
-            item.setString("id", idTextField.getText());
-            item.setString("path", pathButton.getText());
+	private JCheckBox alwaysSignCheckBox;
 
-            item.setBoolean("enabled", enableCheckBox.isSelected());
+	private JCheckBox alwaysEncryptCheckBox;
 
-            item.setBoolean("always_sign", alwaysSignCheckBox.isSelected());
-            item.setBoolean("always_encrypt", alwaysEncryptCheckBox.isSelected());
-        }
-    }
+	private SecurityItem item;
 
-    protected void layoutComponents() {
-        // Create a FormLayout instance. 
-        FormLayout layout = new FormLayout("10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow ",
-                
-            // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+	public SecurityPanel(SecurityItem item) {
+		super();
+		this.item = item;
 
-        // create a form builder
-        DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
+		initComponents();
+		updateComponents(true);
+		layoutComponents();
 
-        // create EmptyBorder between components and dialog-frame 
-        builder.setDefaultDialogBorder();
+		//enableCheckBox.setEnabled(false);
+	}
 
-        // skip the first column
-        builder.setLeadingColumnOffset(1);
+	protected void updateComponents(boolean b) {
+		if (b) {
+			idTextField.setText(item.get(SecurityItem.ID));
+			pathButton.setText(item.get(SecurityItem.PATH));
 
-        // Add components to the panel:
-        builder.appendSeparator(MailResourceLoader.getString("dialog",
-                "account", "pgp_options"));
-        builder.nextLine();
+			enableCheckBox.setSelected(item.getBoolean(SecurityItem.ENABLED));
 
-        builder.append(enableCheckBox, 3);
-        builder.nextLine();
+			alwaysSignCheckBox.setSelected(item
+					.getBoolean(SecurityItem.ALWAYS_SIGN));
+			alwaysEncryptCheckBox.setSelected(item
+					.getBoolean(SecurityItem.ALWAYS_ENCRYPT));
 
-        builder.append(idLabel, 1);
-        builder.append(idTextField);
-        builder.nextLine();
+			enablePGP(enableCheckBox.isSelected());
+		} else {
+			item.setString(SecurityItem.ID, idTextField.getText());
+			item.setString(SecurityItem.PATH, pathButton.getText());
 
-        builder.append(alwaysSignCheckBox, 3);
-        builder.nextLine();
+			item.setBoolean(SecurityItem.ENABLED, enableCheckBox.isSelected());
 
-        //      TODO: reactivate when feature is supported
-        /*
-        builder.append(alwaysEncryptCheckBox, 3);
-        builder.nextLine();
-        */
-    }
+			item.setBoolean(SecurityItem.ALWAYS_SIGN, alwaysSignCheckBox
+					.isSelected());
+			item.setBoolean(SecurityItem.ALWAYS_ENCRYPT, alwaysEncryptCheckBox
+					.isSelected());
+		}
+	}
 
-    protected void initComponents() {
-        enableCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "enable_PGP_Support"));
-        enableCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        enableCheckBox.setActionCommand("ENABLE");
-        enableCheckBox.addActionListener(this);
+	protected void layoutComponents() {
+		// Create a FormLayout instance.
+		FormLayout layout = new FormLayout(
+				"10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow ",
 
-        idLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "User_ID"));
+				// 2 columns
+				""); // rows are added dynamically (no need to define them here)
 
-        typeLabel = new JLabel(MailResourceLoader.getString("dialog",
-                    "account", "PGP_Version")); //$NON-NLS-1$
+		// create a form builder
+		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
 
-        pathLabel = new JLabel(MailResourceLoader.getString("dialog",
-                    "account", "Path_to_Binary")); //$NON-NLS-1$
+		// create EmptyBorder between components and dialog-frame
+		builder.setDefaultDialogBorder();
 
-        idTextField = new JTextField();
+		// skip the first column
+		builder.setLeadingColumnOffset(1);
 
-        typeComboBox = new JComboBox();
+		// Add components to the panel:
+		builder.appendSeparator(MailResourceLoader.getString("dialog",
+				"account", "pgp_options"));
+		builder.nextLine();
 
-        //typeComboBox.setMargin( new Insets( 0,0,0,0 ) );
-        typeComboBox.insertItemAt("GnuPG", 0);
-        typeComboBox.insertItemAt("PGP2", 1);
-        typeComboBox.insertItemAt("PGP5", 2);
-        typeComboBox.insertItemAt("PGP6", 3);
-        typeComboBox.setSelectedIndex(0);
-        typeComboBox.setEnabled(false);
+		builder.append(enableCheckBox, 3);
+		builder.nextLine();
 
-        pathButton = new JButton();
+		builder.append(idLabel, 1);
+		builder.append(idTextField);
+		builder.nextLine();
 
-        //pathButton.setMargin( new Insets( 0,0,0,0 ) );
-        pathButton.setActionCommand("PATH");
-        pathButton.addActionListener(this);
+		builder.append(alwaysSignCheckBox, 3);
+		builder.nextLine();
 
-        alwaysSignCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "Always_sign_when_sending_messages"));
-        alwaysSignCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        alwaysSignCheckBox.setEnabled(false);
+		//      TODO: reactivate when feature is supported
+		/*
+		 * builder.append(alwaysEncryptCheckBox, 3); builder.nextLine();
+		 */
+	}
 
-        alwaysEncryptCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "Always_encrypt_when_sending_messages")); //$NON-NLS-1$
-        alwaysEncryptCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-        alwaysEncryptCheckBox.setEnabled(false);
-    }
+	protected void initComponents() {
+		enableCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+				"dialog", "account", "enable_PGP_Support"));
+		enableCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		enableCheckBox.setActionCommand("ENABLE");
+		enableCheckBox.addActionListener(this);
 
-    public void enablePGP(boolean b) {
-        //typeComboBox.setEnabled(b);
-        idTextField.setEnabled(b);
-        idLabel.setEnabled(b);
-        typeLabel.setEnabled(b);
-        pathLabel.setEnabled(b);
-        pathButton.setEnabled(b);
-        alwaysSignCheckBox.setEnabled(b);
-        alwaysEncryptCheckBox.setEnabled(b);
-    }
+		idLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog",
+				"account", "User_ID"));
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		typeLabel = new JLabel(MailResourceLoader.getString("dialog",
+				"account", "PGP_Version")); //$NON-NLS-1$
 
-        if (action.equals("ENABLE")) {
-            enablePGP(enableCheckBox.isSelected());
-        } else if (action.equals("PATH")) {
-            JFileChooser fileChooser = new JFileChooser();
-            File aktFile;
+		pathLabel = new JLabel(MailResourceLoader.getString("dialog",
+				"account", "Path_to_Binary")); //$NON-NLS-1$
 
-            fileChooser.setDialogTitle(MailResourceLoader.getString("dialog",
-                    "account", "PGP_Binary")); //$NON-NLS-1$
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		idTextField = new JTextField();
 
-            int returnVal = fileChooser.showDialog(null,
-                    MailResourceLoader.getString("dialog", "account",
-                        "Select_File")); //$NON-NLS-1$
+		typeComboBox = new JComboBox();
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                pathButton.setText(file.getPath());
-            }
-        }
-    }
+		//typeComboBox.setMargin( new Insets( 0,0,0,0 ) );
+		typeComboBox.insertItemAt("GnuPG", 0);
+		typeComboBox.insertItemAt("PGP2", 1);
+		typeComboBox.insertItemAt("PGP5", 2);
+		typeComboBox.insertItemAt("PGP6", 3);
+		typeComboBox.setSelectedIndex(0);
+		typeComboBox.setEnabled(false);
 
-    public boolean isFinished() {
-        boolean result = true;
+		pathButton = new JButton();
 
-        /*
-        String name = getAccountName();
-        String address = getAddress();
+		//pathButton.setMargin( new Insets( 0,0,0,0 ) );
+		pathButton.setActionCommand("PATH");
+		pathButton.addActionListener(this);
 
-        if (name.length() == 0) {
-            result = false;
-            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
-                                           "You have to enter a name for this account!");
-        } else if (address.length() == 0) {
-            result = false;
-            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
-                                           "You have to enter your address!");
-        }
-        */
-        return result;
-    }
+		alwaysSignCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
+				.getString("dialog", "account",
+						"Always_sign_when_sending_messages"));
+		alwaysSignCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		alwaysSignCheckBox.setEnabled(false);
+
+		alwaysEncryptCheckBox = new CheckBoxWithMnemonic(
+				MailResourceLoader
+						.getString(
+								"dialog", "account", "Always_encrypt_when_sending_messages")); //$NON-NLS-1$
+		alwaysEncryptCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+		alwaysEncryptCheckBox.setEnabled(false);
+	}
+
+	public void enablePGP(boolean b) {
+		//typeComboBox.setEnabled(b);
+		idTextField.setEnabled(b);
+		idLabel.setEnabled(b);
+		typeLabel.setEnabled(b);
+		pathLabel.setEnabled(b);
+		pathButton.setEnabled(b);
+		alwaysSignCheckBox.setEnabled(b);
+		alwaysEncryptCheckBox.setEnabled(b);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+
+		if (action.equals("ENABLE")) {
+			enablePGP(enableCheckBox.isSelected());
+		} else if (action.equals("PATH")) {
+			JFileChooser fileChooser = new JFileChooser();
+			File aktFile;
+
+			fileChooser.setDialogTitle(MailResourceLoader.getString("dialog",
+					"account", "PGP_Binary")); //$NON-NLS-1$
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+			int returnVal = fileChooser.showDialog(null, MailResourceLoader
+					.getString("dialog", "account", "Select_File")); //$NON-NLS-1$
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fileChooser.getSelectedFile();
+				pathButton.setText(file.getPath());
+			}
+		}
+	}
+
+	public boolean isFinished() {
+		boolean result = true;
+
+		return result;
+	}
 }

@@ -29,7 +29,7 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.viewer.EncryptionStatusViewer;
@@ -135,7 +135,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		boolean pgpActive = false;
 
 		if (defAccount != null) {
-			PGPItem pgpItem = defAccount.getPGPItem();
+			SecurityItem pgpItem = defAccount.getPGPItem();
 			LOG.fine("pgp activated: " + pgpItem.get("enabled"));
 			pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
 		}
@@ -178,7 +178,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			pgpMessage = "";
 			pgpMode = EncryptionStatusViewer.NO_KEY;
 		} else {
-			PGPItem pgpItem = null;
+			SecurityItem pgpItem = null;
 			// we need the pgpItem, to extract the path to gpg
 			pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
 					.getPGPItem();

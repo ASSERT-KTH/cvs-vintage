@@ -81,15 +81,15 @@ public class AccountList extends DefaultItem {
     }
 
     /*
-     * search for PGPItem based on To headerfield
+     * search for SecurityItem based on To headerfield
      *  
      */
-    public PGPItem getPGPItem(String to) {
+    public SecurityItem getPGPItem(String to) {
         int result = -1;
 
         for (int i = 0; i < count(); i++) {
             AccountItem item = (AccountItem) get(i);
-            PGPItem pgpItem = item.getPGPItem();
+            SecurityItem pgpItem = item.getPGPItem();
             String id = pgpItem.get("id");
 
             to = to.toLowerCase();

@@ -19,11 +19,16 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class PGPItem extends DefaultItem {
+public class SecurityItem extends DefaultItem {
     private String passphrase = "";
     private String digestAlgorithm;
+	public static final String ALWAYS_ENCRYPT = "always_encrypt";
+	public static final String ALWAYS_SIGN = "always_sign";
+	public static final String ENABLED = "enabled";
+	public static final String PATH = "path";
+	public static final String ID = "id";
 
-    public PGPItem(XmlElement e) {
+    public SecurityItem(XmlElement e) {
         super(e);
 
         passphrase = "";

@@ -19,8 +19,18 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class SmtpItem extends DefaultItem {
-    public SmtpItem(XmlElement e) {
+public class OutgoingItem extends DefaultItem {
+    public static final String USE_DEFAULT_ACCOUNT = "use_default_account";
+	public static final String UID = "uid";
+	public static final String NONE = "NONE";
+	public static final String LOGIN_METHOD = "login_method";
+	public static final String ENABLE_SSL = "enable_ssl";
+	public static final String SAVE_PASSWORD = "save_password";
+	public static final String USER = "user";
+	public static final String PORT = "port";
+	public static final String HOST = "host";
+
+	public OutgoingItem(XmlElement e) {
         super(e);
     }
 }

@@ -20,7 +20,15 @@ import org.columba.core.xml.XmlElement;
 
 
 public class SpecialFoldersItem extends DefaultItem {
-    public SpecialFoldersItem(XmlElement e) {
+    public static final String UID = "uid";
+	public static final String USE_DEFAULT_ACCOUNT = "use_default_account";
+	public static final String INBOX = "inbox";
+	public static final String SENT = "sent";
+	public static final String TEMPLATES = "templates";
+	public static final String DRAFTS = "drafts";
+	public static final String TRASH = "trash";
+
+	public SpecialFoldersItem(XmlElement e) {
         super(e);
     }
 }

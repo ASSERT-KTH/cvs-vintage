@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.Vector;
 
 import org.columba.core.io.CloneStreamMaster;
-import org.columba.mail.config.PGPItem;
+import org.columba.mail.config.SecurityItem;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
@@ -71,7 +71,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
         // Create the header and body of the multipart
         streams.add(header.getHeader().getInputStream());
 
-        PGPItem pgpItem = ((PGPMimePart) part).getPgpItem();
+        SecurityItem pgpItem = ((PGPMimePart) part).getPgpItem();
 
         // Add the MimePart that will be signed
         streams.add(new ByteArrayInputStream(startBoundary));
