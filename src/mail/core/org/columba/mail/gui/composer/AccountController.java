@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import java.awt.event.ItemEvent;
@@ -79,11 +80,9 @@ public class AccountController implements ItemListener {
 			model.setEncryptMessage(pgpItem.getBoolean("always_encrypt"));
 		}
 	}
-*/
+        */
 
 	public void itemStateChanged(ItemEvent e) {
-		
-		
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			updateComponents(false);
 			
@@ -106,9 +105,7 @@ public class AccountController implements ItemListener {
 	}
 
 	public void updateComponents(boolean b) {
-		
-					
-		if (b == true) {
+		if (b) {
 			view.setSelectedItem(((ComposerModel)controller.getModel()).getAccountItem());
 			
 			/*
@@ -124,5 +121,4 @@ public class AccountController implements ItemListener {
 			*/
 		}
 	}
-
 }

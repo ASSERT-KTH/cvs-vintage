@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import java.awt.event.ComponentEvent;
@@ -74,9 +75,7 @@ public class ComposerController
 	*/
 
 	public ComposerController() {
-		super(
-			"Composer",
-			new ViewItem(
+		super("Composer", new ViewItem(
 				MailConfig.get("composer_options").getElement(
 					"/options/gui/view")));
 
@@ -113,15 +112,8 @@ public class ComposerController
 		// update ComposerModel based on user-changes in ComposerView
 		updateComponents(false);
 
-		boolean b = subjectController.checkState();
-		if (b == false)
-			return false;
-
-		b = headerController.checkState();
-		if (b == false)
-			return false;
-
-		return true;
+		if (!subjectController.checkState()) return false;
+		return !headerController.checkState();
 	}
 	/*
 	public void saveWindowPosition() {

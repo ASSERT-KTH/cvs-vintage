@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import javax.swing.event.DocumentEvent;
@@ -45,7 +46,7 @@ public class SubjectController implements DocumentListener {
 	}
 
 	public void updateComponents(boolean b) {
-		if (b == true) {
+		if (b) {
 			view.setText(controller.getModel().getHeaderField("Subject"));
 		} else {
 			controller.getModel().setHeaderField("Subject", view.getText());
@@ -60,7 +61,7 @@ public class SubjectController implements DocumentListener {
 			//SubjectDialog dialog = new SubjectDialog(composerInterface.composerFrame);
 			SubjectDialog dialog = new SubjectDialog();
 			dialog.showDialog(subject);
-			if (dialog.success() == true)
+			if (dialog.success())
 				subject = dialog.getSubject();
 
 			controller.getModel().setHeaderField("Subject", subject);
@@ -71,14 +72,7 @@ public class SubjectController implements DocumentListener {
 
 	/**************** DocumentListener implementation ***************/
 
-	public void insertUpdate(DocumentEvent e) {
-
-	}
-	public void removeUpdate(DocumentEvent e) {
-
-	}
-	public void changedUpdate(DocumentEvent e) {
-
-	}
-
+	public void insertUpdate(DocumentEvent e) {}
+	public void removeUpdate(DocumentEvent e) {}
+	public void changedUpdate(DocumentEvent e) {}
 }

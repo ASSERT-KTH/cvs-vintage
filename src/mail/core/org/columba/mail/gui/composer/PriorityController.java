@@ -26,44 +26,35 @@ import java.awt.event.ItemListener;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class PriorityController implements ItemListener{
+public class PriorityController implements ItemListener {
 	
 	PriorityView view;
 	ComposerController controller;
 		
-	public PriorityController(ComposerController controller)
-	{
+	public PriorityController(ComposerController controller) {
 		this.controller = controller;
 		
 		view = new PriorityView( this );
-		
-	
 	}
 	
-	public void installListener()
-	{
+	public void installListener() {
 		view.installListener(this);
 	}
 	
 	
-	public void updateComponents( boolean b )
-	{
-		if ( b == true )
-		{
+	public void updateComponents( boolean b ) {
+		if (b) {
 			//view.setSelectedItem( model.getHeaderField("X-Priority") );
-		}
-		else
-		{
+		} else {
 			controller.getModel().setPriority( (String) view.getSelectedItem() );
 			//model.setHeaderField("X-Priority",(String) view.getSelectedItem());
 		}
 	}
 	
 	public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
 			controller.getModel().setPriority( (String) view.getSelectedItem() );
 
-        } 
-    }
-	
+                } 
+        }
 }

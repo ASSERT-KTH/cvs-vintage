@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import java.awt.event.ActionListener;
@@ -64,7 +65,6 @@ public class AttachmentController implements KeyListener {
 
 	public ActionListener getActionListener() {
 		return actionListener;
-
 	}
 
 	public void installListener() {
@@ -72,18 +72,15 @@ public class AttachmentController implements KeyListener {
 	}
 
 	public void updateComponents(boolean b) {
-		if (b == true) {
+		if (b) {
 			for (int i = 0; i < controller.getModel().getAttachments().size(); i++) {
 				MimePart p = (MimePart) controller.getModel().getAttachments().get(i);
 				view.add( p);
 			}
-		}
-		else
-		{
+		} else {
 			controller.getModel().getAttachments().clear();
 			
-			for ( int i=0; i<view.count(); i++ )
-			{
+			for ( int i=0; i<view.count(); i++ ) {
 				MimePart mp = view.get(i);
 				controller.getModel().getAttachments().add(mp);
 			}
@@ -96,17 +93,14 @@ public class AttachmentController implements KeyListener {
 	}
 
 	public void removeSelected() {
-
 		Object[] mp = view.getSelectedValues();
-		for ( int i=0; i<mp.length; i++ )
-		{
+		for ( int i=0; i<mp.length; i++ ) {
 			view.remove( (MimePart) mp[i] );
 		}
 		
 	}
 
 	public void addFileAttachment() {
-
 		int returnValue;
 		File[] files;
 
@@ -133,7 +127,6 @@ public class AttachmentController implements KeyListener {
 
 				view.add(mimePart);
 			}
-
 		}
 	}
 
@@ -142,19 +135,15 @@ public class AttachmentController implements KeyListener {
 	public void keyPressed(KeyEvent k) {
 		switch (k.getKeyCode()) {
 			case (KeyEvent.VK_DELETE) :
-				{
-					if (view.count() > 0)
-						removeSelected();
-					break;
-				}
+				if (view.count() > 0)
+					removeSelected();
+				break;
 		}
 	}
 
-	public void keyReleased(KeyEvent k) {
-	}
+	public void keyReleased(KeyEvent k) {}
 
-	public void keyTyped(KeyEvent k) {
-	}
+	public void keyTyped(KeyEvent k) {}
 
 	/********************** MouseListener *****************************/
 
@@ -178,5 +167,4 @@ public class AttachmentController implements KeyListener {
 			}
 		}
 	}
-
 }

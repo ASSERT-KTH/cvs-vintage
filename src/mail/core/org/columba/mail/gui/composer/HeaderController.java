@@ -13,9 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
-import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
@@ -148,7 +148,7 @@ public class HeaderController
 	}
 
 	public void updateComponents(boolean b) {
-		if (b == true) {
+		if (b) {
 
 			view.getAddressbookTableModel().setHeaderList(null);
 
@@ -274,11 +274,8 @@ public class HeaderController
 		}
 	}
 
-	public void keyReleased(KeyEvent k) {
-	}
-
-	public void keyTyped(KeyEvent k) {
-	}
+	public void keyReleased(KeyEvent k) {}
+	public void keyTyped(KeyEvent k) {}
 
 	/***************************** DND *****************************/
 
@@ -286,7 +283,7 @@ public class HeaderController
 
 		// debug messages for diagnostics
 
-		if (acceptDrop == true)
+		if (acceptDrop)
 			event.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
 		else
 			event.acceptDrag(DnDConstants.ACTION_COPY);
@@ -345,7 +342,5 @@ public class HeaderController
 		view.getTable().appendRow();
 	}
 
-	public void dropActionChanged(DropTargetDragEvent event) {
-	}
-
+	public void dropActionChanged(DropTargetDragEvent event) {}
 }

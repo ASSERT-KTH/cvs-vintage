@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import javax.swing.event.DocumentEvent;
@@ -34,35 +35,27 @@ public class EditorController implements DocumentListener {
 	
 	private UndoDocument document;
 	
-	public EditorController(ComposerController controller)
-	{
+	public EditorController(ComposerController controller) {
 		this.controller = controller;
 	
 		document = new UndoDocument();
 		
 		view = new EditorView(this, document);
-		
 	}
 	
-	public EditorView getView()
-	{
+	public EditorView getView() {
 		return view;
 	}
 	
-	public void installListener()
-	{
+	public void installListener() {
 		view.installListener(this);
 	}
 	
-	public void updateComponents( boolean b )
-	{
-		if ( b == true )
-		{
+	public void updateComponents( boolean b ) {
+		if (b) {
 			if ( controller.getModel().getBodyText() != null )
 				view.setText( controller.getModel().getBodyText() );
-		}
-		else
-		{
+		} else {
 			if ( view.getText() != null )
 			controller.getModel().setBodyText( view.getText() );
 		}
@@ -81,14 +74,7 @@ public class EditorController implements DocumentListener {
 	/************* DocumentListener implementation *******************/
 	
 	
-	public void insertUpdate(DocumentEvent e) {
-		
-	}
-	public void removeUpdate(DocumentEvent e) {
-		
-	}
-	public void changedUpdate(DocumentEvent e) {
-		
-	}
-
+	public void insertUpdate(DocumentEvent e) {}
+	public void removeUpdate(DocumentEvent e) {}
+	public void changedUpdate(DocumentEvent e) {}
 }
