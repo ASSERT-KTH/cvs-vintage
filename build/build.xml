@@ -445,7 +445,7 @@
     <!-- ================================================================== -->
     <!-- Test to make sure the database connection works                    -->
     <!-- ================================================================== -->
-    <target name="test-db-connection" depends="sql-all">
+    <target name="test-db-connection" depends="sql-current-db">
         <echo message="Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
         <sql
             driver="${scarab.database.jdbc.driver}"
@@ -565,7 +565,7 @@
     <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
-    <target name="create-test-db-schema" depends="db-type-check,sql-all,prepare" 
+    <target name="create-test-db-schema" depends="db-type-check,sql-current-db,prepare" 
             if="auto.create.db">
 
         <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
@@ -881,7 +881,7 @@
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
     <!-- ================================================================== -->
-    <target name="datadoc" depends="torque-copy-all-schema,sql-all">
+    <target name="datadoc" depends="torque-copy-all-schema,sql-current-db">
         <mkdir dir="${torquedoc.destdir}"/>
         <ant antfile="build-torque.xml"
            target="doc">
@@ -898,7 +898,7 @@
     <!-- ================================================================== -->
     <!-- Dump data from DB into xml                                         -->
     <!-- ================================================================== -->
-    <target name="datadump" depends="sql-all,compile">
+    <target name="datadump" depends="sql-current-db,compile">
         <ant antfile="build-torque.xml"
             target="datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
