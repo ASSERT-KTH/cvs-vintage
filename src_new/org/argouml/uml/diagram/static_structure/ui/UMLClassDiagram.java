@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.20 2003/02/15 02:36:50 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.21 2003/02/16 19:31:03 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -39,8 +39,10 @@ import java.awt.GridLayout;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.swingext.Toolbox;
+import org.argouml.swingext.UglyToolBox;
+import org.argouml.swingext.PopupToolBoxButton;
 import org.argouml.ui.CmdCreateNode;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
@@ -154,7 +156,15 @@ public class UMLClassDiagram extends UMLDiagram {
         _toolBar.add(_actionPackage);
         _toolBar.add(_actionClass);
 
-        _toolBar.add(buildAssociationToolbox(_toolBar.add(_actionAssociation)));
+        // TODO
+        // Bobs nasty hack. The PopupToolBoxButton class can only be trusted for
+        // now on metal. Use old style popup for oth plafs.
+        if (LookAndFeelMgr.SINGLETON.determineLookAndFeel().equals(LookAndFeelMgr.METAL_PLAF)) {
+            _toolBar.add(buildAssociationPopup());
+        } else {
+            JButton associationButton = _toolBar.add(_actionAssociation);
+            _toolBar.add(buildUglyAssociationPopup(associationButton));
+        }
         
         _toolBar.add(_actionDepend);
         _toolBar.add(_actionPermission);
@@ -191,11 +201,22 @@ public class UMLClassDiagram extends UMLDiagram {
         _toolBar.add(_diagramName.getJComponent());
     }
 
-    private Toolbox buildAssociationToolbox(JButton associationButton) {
+    private PopupToolBoxButton buildAssociationPopup() {
+        PopupToolBoxButton toolBox = new PopupToolBoxButton(_actionAssociation, 0, 2);
+        toolBox.add(_actionAssociation);
+        toolBox.add(_actionUniAssociation);
+        toolBox.add(_actionAggregation);
+        toolBox.add(_actionUniAggregation);
+        toolBox.add(_actionComposition);
+        toolBox.add(_actionUniComposition);
+        return toolBox;
+    }
+    
+    private UglyToolBox buildUglyAssociationPopup(JButton associationButton) {
         ImageIcon dropDownIcon =
             ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("DropDown", "DropDown");
 
-        Toolbox dropDownToolBox = new Toolbox(dropDownIcon, associationButton, 0, 2);
+        UglyToolBox dropDownToolBox = new UglyToolBox(dropDownIcon, associationButton, 0, 2);
         dropDownToolBox.add(_actionAssociation);
         dropDownToolBox.add(_actionUniAssociation);
         dropDownToolBox.add(_actionAggregation);
@@ -204,4 +225,6 @@ public class UMLClassDiagram extends UMLDiagram {
         dropDownToolBox.add(_actionUniComposition);
         return dropDownToolBox;
     }
+
+    
 } /* end class UMLClassDiagram */
