@@ -12,7 +12,8 @@ $page.setTitle("Login to Scarab")
 #else
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
 #end
-#set ( $loginGroup = $intake.Login.Default )
+
+#set ($loginGroup = $intake.Login.Default)
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
