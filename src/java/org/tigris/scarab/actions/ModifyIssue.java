@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.24 2001/08/21 00:25:39 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.25 2001/08/23 21:21:15 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -174,7 +174,7 @@ public class ModifyIssue extends TemplateAction
 
             // Save transaction record
             Transaction transaction = new Transaction();
-            transaction.create(user);
+            transaction.create(user, attachment);
 
             while (iter2.hasNext())
             {
@@ -183,6 +183,8 @@ public class ModifyIssue extends TemplateAction
 
                 if ( group != null ) 
                 {            
+                    NumberKey newOptionId = null;
+                    NumberKey oldOptionId = null;
                     String newValue = "";
                     String oldValue = "";
                     if ( aval instanceof OptionAttribute ) 
@@ -192,6 +194,7 @@ public class ModifyIssue extends TemplateAction
                     
                         if ( !newValue.equals("") )
                         {
+                            newOptionId = new NumberKey(newValue);
                             AttributeOption newAttributeOption = 
                               AttributeOptionPeer
                               .retrieveByPK(new NumberKey(newValue));
@@ -199,9 +202,10 @@ public class ModifyIssue extends TemplateAction
                         }
                         if ( !oldValue.equals("") )
                         {
+                            oldOptionId = aval.getOptionId();
                             AttributeOption oldAttributeOption = 
                               AttributeOptionPeer
-                              .retrieveByPK(aval.getOptionId());
+                              .retrieveByPK(oldOptionId);
                             oldValue = oldAttributeOption.getName();
                         }
                         
@@ -214,13 +218,23 @@ public class ModifyIssue extends TemplateAction
 
                     if (!newValue.equals("") && !oldValue.equals(newValue))
                     {
-                        aval.startTransaction(transaction, attachment);
+                        aval.startTransaction(transaction);
                         group.setProperties(aval);
+                        issue.setModifiedBy(user.getUserId());
+                        issue.save();
                         aval.save();
+                        // Save activity record
+                        Activity activity = new Activity();
+                        String desc = aval.getActivityDescription();
+                        activity.create(issue, aval.getAttribute(),
+                                        desc, transaction, 
+                                        oldOptionId, newOptionId,
+                                        oldValue, newValue);
                     }
                 } 
             }
             intake.removeAll();
+            transaction.sendEmail(context, issue);
         } 
         else
         {
@@ -266,6 +280,7 @@ public class ModifyIssue extends TemplateAction
         NumberKey typeId = null;
         Group group = null;
         ScarabUser user = (ScarabUser)data.getUser();
+        Transaction transaction = new Transaction();
 
         if (type.equals("url"))
         {
@@ -302,20 +317,23 @@ public class ModifyIssue extends TemplateAction
                 if (type.equals("url"))
                 {
                     // Save transaction record
-                    Transaction transaction = new Transaction();
-                    transaction.create(user);
+                    transaction.create(user, attachment);
 
                     // Save activity record
                     Activity activity = new Activity();
 
                     // Generate description of modification
                     StringBuffer descBuf = new StringBuffer("added URL '");
-                    descBuf.append(dataField.toString()).append("'");
+                    descBuf.append(nameField.toString()).append("'");
                     String desc = descBuf.toString();
                     activity.create(issue, null, desc, transaction,
-                                    attachment, null, null, "", "");
+                                    null, null, "", "");
                 }
                 intake.remove(group);
+                issue.setModifiedBy(user.getUserId());
+                issue.save();
+                transaction.sendEmail(context, issue);
+
                 String template = data.getParameters()
                                  .getString(ScarabConstants.NEXT_TEMPLATE);
                 setTarget(data, template);            
@@ -353,20 +371,24 @@ public class ModifyIssue extends TemplateAction
                Attachment attachment = (Attachment) AttachmentPeer
                                      .retrieveByPK(new NumberKey(attachmentId));
                attachment.setDeleted(true);
+               attachment.save();
 
                // Save transaction record
                Transaction transaction = new Transaction();
-               transaction.create(user);
+               transaction.create(user, null);
 
                // Save activity record
                Activity activity = new Activity();
 
                // Generate description of modification
                StringBuffer descBuf = new StringBuffer("deleted URL '");
-               descBuf.append(attachment.getDataAsString()).append("'");
+               descBuf.append(attachment.getName()).append("'");
                String desc = descBuf.toString();
                activity.create(issue, null, desc, transaction,
-                               attachment, null, null, "", "");
+                               null, null, "", "");
+               issue.setModifiedBy(user.getUserId());
+               issue.save();
+               transaction.sendEmail(context, issue);
             } 
         }
         String template = data.getParameters()
@@ -386,6 +408,7 @@ public class ModifyIssue extends TemplateAction
         Object[] keys = params.getKeys();
         Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
                              new NumberKey(id));
+        ScarabUser user = (ScarabUser)data.getUser();
         String key;
         String childId;
         Depend depend;
@@ -401,19 +424,44 @@ public class ModifyIssue extends TemplateAction
                Issue child = (Issue) IssuePeer.retrieveByPK(
                               new NumberKey(childId));
                depend = currentIssue.getDependency(child);
+               String oldValue = depend.getDependType().getName();
+               String newValue = null;
 
                // User selected to remove the dependency
                if (dependTypeId.equals("none"))
                {
                    depend.delete();
+                   newValue = "none";
                } 
                else
                {
                    DependType dependType = (DependType) DependTypePeer
                               .retrieveByPK(new NumberKey(dependTypeId));
                    depend.setDependType(dependType);
+                   newValue = dependType.getName();
                }
+
                depend.save();
+               currentIssue.setModifiedBy(user.getUserId());
+               currentIssue.save();
+
+               // Save transaction record
+               Transaction transaction = new Transaction();
+               transaction.create(user, null);
+
+               // Save activity record
+               Activity activity = new Activity();
+               StringBuffer descBuf = new StringBuffer("changed dependency " + 
+                                                       "type on Issue ");
+               descBuf.append(child.getUniqueId());
+               descBuf.append(" from ").append(oldValue);
+               descBuf.append(" to ").append(newValue);
+               String desc = descBuf.toString();
+               activity.create(currentIssue, null, desc,
+                               transaction, null, null,
+                               oldValue, newValue);
+               transaction.sendEmail(context, currentIssue);
+  
                break;
             }
          }
@@ -465,18 +513,23 @@ public class ModifyIssue extends TemplateAction
 
                // Save transaction record
                Transaction transaction = new Transaction();
-               transaction.create(user);
+               transaction.create(user, null);
 
                // Save activity record
                Activity activity = new Activity();
-               StringBuffer descBuf = new StringBuffer("changed dependency" + 
+               StringBuffer descBuf = new StringBuffer("changed dependency " + 
                                                        "type on Issue  ");
                descBuf.append(issue.getUniqueId());
-               //descBuf.append(" from ").append(oldValue);
-               //descBuf.append(" to ").append(newValue);
+               descBuf.append(" from ").append(oldValue);
+               descBuf.append(" to ").append(newValue);
                String desc = descBuf.toString();
                activity.create(issue, null, desc,
-                               transaction, null, null, null, "", "");
+                               transaction, null, null,
+                               oldValue, newValue);
+               issue.setModifiedBy(user.getUserId());
+               issue.save();
+               transaction.sendEmail(context, issue);
+
             }
         }
     }
@@ -547,16 +600,20 @@ public class ModifyIssue extends TemplateAction
 
             // Save transaction record
             Transaction transaction = new Transaction();
-            transaction.create(user);
+            transaction.create(user, null);
 
             // Save activity record
             Activity activity = new Activity();
-            StringBuffer descBuf = new StringBuffer("added dependency" + 
-                                                    " on Issue  ");
-            descBuf.append(issue.getUniqueId());
+            StringBuffer descBuf = new StringBuffer("added ");
+            descBuf.append(depend.getDependType().getName());
+            descBuf.append(" dependency on Issue  ");
+            descBuf.append(parentIssue.getUniqueId());
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
-                            transaction, null, null, null, "", "");
+                            transaction, null, null, "", "");
+            issue.setModifiedBy(user.getUserId());
+            issue.save();
+            transaction.sendEmail(context, issue);
         }
         else
         {

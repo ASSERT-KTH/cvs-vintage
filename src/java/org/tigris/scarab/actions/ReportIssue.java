@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.37 2001/08/17 22:03:11 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.38 2001/08/23 21:21:15 elicia Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -239,6 +239,7 @@ public class ReportIssue extends TemplateAction
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = user.getReportingIssue();
         AttributeValue aval = null;
+        String summary = getSummaryField(intake, issue).toString();
 
         // set any other required flags
         Criteria crit = new Criteria(3)
@@ -301,17 +302,18 @@ public class ReportIssue extends TemplateAction
             {
                 // Save transaction record
                 Transaction transaction = new Transaction();
-                transaction.create(user);
+                transaction.create(user, null);
 
                 // enter the values into the transaction
                 i = avMap.iterator();
                 while (i.hasNext()) 
                 {
                     aval = (AttributeValue)avMap.get(i.next());
-                    aval.startTransaction(transaction, null);
+                    aval.startTransaction(transaction);
                 }
 
                 issue.setCreatedBy(user.getUserId());
+                issue.setModifiedBy(user.getUserId());
                 issue.save();
                 user.setReportingIssue(null);
 
@@ -342,6 +344,10 @@ public class ReportIssue extends TemplateAction
                     data.getParameters().add("issue_0id", 
                                              issue.getIssueId().toString());
                 }
+                StringBuffer subj = new StringBuffer("Issue ");
+                subj.append(issue.getIssueId()).append(" - ").append(summary);
+                transaction.sendEmail(context, issue, subj.toString(),
+                                      "email/NewIssueNotification.vm"); 
                 setTarget(data, template);
                 // !FIXME! this should be uncommented to allow jumping 
                 // directly back to entering another issue, but an easy

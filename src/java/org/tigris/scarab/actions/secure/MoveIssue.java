@@ -84,7 +84,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
     This class is responsible for moving/copying an issue from one module to another.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.3 2001/08/17 22:03:12 jmcnally Exp $
+    @version $Id: MoveIssue.java,v 1.4 2001/08/23 21:21:15 elicia Exp $
 */
 public class MoveIssue extends TemplateAction
 {
@@ -123,16 +123,24 @@ public class MoveIssue extends TemplateAction
         NumberKey newIssueId;
         Issue newIssue;
         StringBuffer descBuf = null;
+        ModuleEntity newModule;
+        Attachment attachment = new Attachment();
 
         List matchingAttributes = getList(issue, newModuleId, "matching");
         List orphanAttributes = getList(issue, newModuleId, "orphan");
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(user, null);
 
         // Move issue to other module
         if (selectAction.equals("move"))
         {
             newIssue = issue;
             newIssue.setModuleId(new NumberKey(newModuleId)); 
+            newIssue.setModifiedBy(user.getUserId());
             newIssue.save();
+            newModule = newIssue.getScarabModule();
  
             // Delete non-matching attributes.
             for (int i=0;i<orphanAttributes.size();i++)
@@ -141,8 +149,9 @@ public class MoveIssue extends TemplateAction
                attVal.setDeleted(true);
                attVal.save();
             }
-            descBuf = new StringBuffer("moved ");
-
+            descBuf = new StringBuffer(" moved from ");
+            descBuf.append(oldModule.getName()).append(" to ");
+            descBuf.append(newModule.getName());
         } 
 
         // Copy issue to other module
@@ -150,8 +159,10 @@ public class MoveIssue extends TemplateAction
         {
             newIssue = new Issue();
             newIssue.setCreatedBy(user.getUserId());
+            newIssue.setModifiedBy(user.getUserId());
             newIssue.setModuleId(new NumberKey(newModuleId));
             newIssue.save();
+            newModule = newIssue.getScarabModule();
 
             // Copy over attributes
             for (int i=0;i<matchingAttributes.size();i++)
@@ -160,44 +171,60 @@ public class MoveIssue extends TemplateAction
                                                         .get(i);
                AttributeValue newAttVal = attVal.copy();
                newAttVal.setIssueId(newIssue.getIssueId());
+               //newAttVal.startTransaction(transaction);
                newAttVal.save();
             }
-            descBuf = new StringBuffer("copied ");
+            descBuf = new StringBuffer(" copied from issue ");
+            descBuf.append(issue.getUniqueId());
+            descBuf.append(" in module ").append(oldModule.getName());
         }
 
-        ModuleEntity newModule = newIssue.getScarabModule();
 
-        // Save comment
-        Attachment attachment = new Attachment();
-        StringBuffer dataBuf = new StringBuffer("removed " + 
-                                                "irrelevant attribute(s): ");
-        for (int i=0;i<orphanAttributes.size();i++)
+        if (!orphanAttributes.isEmpty())
         {
-           AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
-           dataBuf.append(attVal.getAttribute().getName());
-           dataBuf.append("=").append(attVal.getAttributeOption().getName());
-           if (i < orphanAttributes.size()-1 )
-           {
-              dataBuf.append(",");
-           } 
+            // Save comment
+            StringBuffer dataBuf = new StringBuffer("removed " + 
+                                                    "irrelevant attribute(s): ");
+            for (int i=0;i<orphanAttributes.size();i++)
+            {
+               AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
+               dataBuf.append(attVal.getAttribute().getName());
+               dataBuf.append("=").append(attVal.getAttributeOption().getName());
+               if (i < orphanAttributes.size()-1 )
+               {
+                  dataBuf.append(",");
+               } 
+            }
+            attachment.setDataAsString(dataBuf.toString());
+            context.put("deletedAttributes", dataBuf.toString());
         }
+        else
+        {
+            attachment.setDataAsString("all attributes were copied.");
+        }
+            
         attachment.setName("Moved Issue Note");
-        attachment.setDataAsString(dataBuf.toString());
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
 
-        // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(user);
+        // Update transaction
+        transaction.setAttachment(attachment);
+        transaction.save();
 
         // Save activity record
-        descBuf.append("issue ").append(issue.getUniqueId());
         String desc = descBuf.toString();
         Activity activity = new Activity();
         Attribute zeroAttribute = (Attribute) AttributePeer
                                   .retrieveByPK(new NumberKey("0"));
-        activity.create(newIssue, zeroAttribute, desc, transaction, attachment,
+        activity.create(newIssue, zeroAttribute, desc, transaction, 
                         null, null, oldModule.getName(), newModule.getName());
+
+        context.put("action", selectAction);
+        context.put("oldModule", oldModule.getName());
+        context.put("newModule", newModule.getName());
+        transaction.sendEmail(context, newIssue, 
+                              "issue " +  newIssue.getIssueId() + desc,
+                              "email/MoveIssue.vm");
 
         data.getParameters().add("id", newIssue.getIssueId().toString()); 
         setTarget(data, "ViewIssue.vm");            
@@ -212,7 +239,8 @@ public class MoveIssue extends TemplateAction
         List matchingAttributes = new ArrayList();
         List orphanAttributes = new ArrayList();
         List returnList = null;
-        ScarabModule module = (ScarabModule)ScarabModulePeer.retrieveByPK(new NumberKey(moduleId));
+        ScarabModule module = (ScarabModule)ScarabModulePeer
+                              .retrieveByPK(new NumberKey(moduleId));
 
         HashMap setMap = issue.getAttributeValuesMap();
         Iterator iter = setMap.keySet().iterator();
