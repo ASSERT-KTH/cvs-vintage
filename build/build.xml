@@ -154,9 +154,6 @@
     <target name="check-for-turbine">
         <available property="turbine.cvs.available" 
             file="${turbine.dir}/build/build.xml"/>
-        <echo>
-        ${turbine.cvs.available}
-        </echo>
     </target>
 
     <target name="prepare-turbine" depends="check-for-turbine" 
