@@ -120,9 +120,6 @@ public class ColumbaHeader implements HeaderInterface {
 			if( flag.equals("answered")) {
 				return new Boolean( flags.get(Flags.ANSWERED) ); 
 			}
-			if( flag.equals("deleted")) {
-				return new Boolean( flags.get(Flags.DELETED) ); 
-			}
 			if( flag.equals("draft")) {
 				return new Boolean( flags.get(Flags.DRAFT) ); 
 			}
@@ -130,7 +127,7 @@ public class ColumbaHeader implements HeaderInterface {
 				return new Boolean( flags.get(Flags.FLAGGED) ); 
 			}
 			if( flag.equals("expunged")) {
-				return new Boolean( flags.get(Flags.RECENT) ); 
+				return new Boolean( flags.get(Flags.EXPUNGED) ); 
 			}
 		}
 		
@@ -160,8 +157,8 @@ public class ColumbaHeader implements HeaderInterface {
 				flags.set(Flags.ANSWERED, value );
 				return; 
 			}
-			if( flag.equals("deleted")) {
-				flags.set(Flags.DELETED, value);
+			if( flag.equals("expunged")) {
+				flags.set(Flags.EXPUNGED, value);
 				return; 
 			}
 			if( flag.equals("draft")) {

@@ -300,8 +300,16 @@ public class IMAPFolder extends RemoteFolder {
 
 		for (int i = 0; i < flagsList.length; i++) {
 			IMAPFlags flags = (IMAPFlags) flagsList[i];
+			ColumbaHeader header = ((ColumbaHeader) headerList.get(flags.getUid()));
+			if ( header == null ) 
+				{
+					System.out.println("header == null "+flags.getUid());
+					
+					continue;
+				}
+			
 			Flags localFlags =
-				((ColumbaHeader) headerList.get(flags.getUid())).getFlags();
+				header.getFlags();
 
 			localFlags.setFlags(flags.getFlags());
 

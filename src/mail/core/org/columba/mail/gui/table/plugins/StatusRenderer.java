@@ -81,7 +81,7 @@ public class StatusRenderer extends DefaultLabelRenderer {
 
 		Flags flags = ((ColumbaHeader) ((MessageNode)value).getHeader()).getFlags();
 
-		if (flags.getDeleted()) {
+		if (flags.getExpunged()) {
 
 			setIcon(image3);
 

@@ -160,7 +160,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator{
 				result = false;
 		}
 		if (getExpungedFlag()) {
-			if (!flags.getDeleted())
+			if (!flags.getExpunged())
 				result = false;
 
 		}
