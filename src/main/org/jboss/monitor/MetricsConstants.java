@@ -22,7 +22,7 @@ package org.jboss.monitor;
  * identifiers for the metrics messages.
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */     
 public interface MetricsConstants {
     
@@ -31,7 +31,9 @@ public interface MetricsConstants {
     final static String INVOCATION_METRICS = "Invocation";
     /** Bean cache metrics producer. */
     final static String BEANCACHE_METRICS  = "BeanCache";
-
+    /** System resource metrics producer. */
+    final static String SYSTEM_METRICS     = "System";
+    
 
     /** Message property 'TIME' */
     final static String TIME        = "TIME";
@@ -49,6 +51,12 @@ public interface MetricsConstants {
     final static String CHECKPOINT  = "CHECKPOINT";
     /** Message property 'METHOD' */
     final static String METHOD      = "METHOD";
+   
+   
+    /** System Monitor TYPE */
+    final static String THREAD_MONITOR = "ThreadMonitor";
+    /** System Monitor TYPE */
+    final static String MEMORY_MONITOR = "MemoryMonitor";
     
 }
 
