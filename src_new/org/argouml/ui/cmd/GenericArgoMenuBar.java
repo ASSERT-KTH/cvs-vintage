@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.2 2004/10/13 19:42:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,8 @@ import org.tigris.toolbar.ToolBar;
 public class GenericArgoMenuBar extends JMenuBar
     implements ArgoModuleEventListener {
 
-    /** Name and prepareKey-Strings of/for the PropertyResourceBundle 
+    /** 
+     * Name and prepareKey-Strings of/for the i18n 
      * menu.properties.
      * MENU     = Prefix for menu-keys
      * MENUITEM = Prefix for menuitem-keys
@@ -116,6 +117,7 @@ public class GenericArgoMenuBar extends JMenuBar
     private static final String MENU = "menu.";
     private static final String MENUITEM = "menu.item.";
 
+    /** The toolbars. */
     private JToolBar fileToolbar;
     private JToolBar editToolbar;
     private JToolBar viewToolbar;
@@ -124,38 +126,36 @@ public class GenericArgoMenuBar extends JMenuBar
     /** lru project list */
     private LastRecentlyUsedMenuList lruList = null;
 
-    /** Edit menu
-     */
+    /** Edit menu */
     private JMenu edit = null;
-    /** unknown where this appears in the UI
-     */
+    
+    /** The Select menu is a submenu of Edit. */
     private JMenu select = null;
-    /** toolbar: view under which is the goto diagram/ find
-     * zoom!!! this should be activated as a right click command.
-     * editor tabs/details tabs/ adjust grid etc.
-     */
+    
+    /** View under which is the Goto Diagram, Find, Zoom, Adjust grid etc. */
     private ArgoJMenu view = null;
-    /** Toolbar:create diagram
-     */
+    
+    /** Toolbar:create diagram */
     private JMenu createDiagrams = null;
-    /** currently disactivated
-     */
+    
+    /** currently disactivated */
     private JMenu tools = null;
-    /** currently supports rudimentary java generation,
-     * new modules for php and html/javadocs are planned
-     * feel free to contribute here!
-     */
+    
+    /** 
+     * Supports java generation,
+     * modules for php and html/javadocs are planned
+     * feel free to contribute here! */
     private JMenu generate = null;
-    /** this should be invoked automatically when
-     * importing sources.
-     */
+    
+    /** This should be invoked automatically when importing sources. */
     private ArgoJMenu arrange = null;
-    /** currently undergoing significant testing
-     */
+    
+    /** The critique menu. */
     private ArgoJMenu critique = null;
-    /** It needs it. Currently there is only an
-     * about text. hyperlinking to online docs at
-     * argouml.org considered basic improvement.
+    
+    /** It needs it. Currently there is only system information and an
+     * about text. Hyperlinking to online docs at
+     * argouml.org is considered to be a basic improvement.
      */
     private JMenu help = null;
 
