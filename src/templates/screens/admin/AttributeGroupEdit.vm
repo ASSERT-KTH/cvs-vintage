@@ -134,7 +134,7 @@
   ##<input type="submit" value="$l10n.CopySelected" />&#160;
   #if (!$group.Attributes.isEmpty())
      <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
-     <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveattributes" />
+  ##   <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveattributes" />
   #end
 </div>
 #end
