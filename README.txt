@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.25 2002/01/18 16:50:32 dlr Exp $
+$Id: README.txt,v 1.26 2002/01/24 21:11:42 jon Exp $
 
 Welcome to Scarab!
 
@@ -34,19 +34,20 @@ well as ANT_HOME/bin in your PATH.
 
 MySQL is assumed to be installed and running with appropriately
 configured access control setup (see below for more detail). You must
-have the MySQL binaries in your PATH. We will be supporting a wide range
-of databases in the released version of Scarab, however, we are
-currently doing development primarily on MySQL.
+have the MySQL binaries in your PATH (ie: $MYSQL_HOME/bin). We will be
+supporting a wide range of databases in the released version of Scarab,
+however, we are currently doing development primarily on MySQL.
 
 All of the necessary .jar files for building and running Scarab are included 
 in the /lib directory and the build system is setup to include these into 
 your classpath for you.
 
-If you already have an existing webserver running on port 8080, and you
-are using Scarab's version of Tomcat, you will need to change the port
-number to another unused port number by editing the
-src/tomcat-4.0/conf/server.xml and changing the 8080 to something else.
-Once you have done this, you will need to rebuild the sandbox.
+If you already have an existing webserver or service running on ports
+8080 and 8005, and you are using Scarab's version of Tomcat, you will
+need to change the port number to another unused port number by editing
+the src/tomcat-4.0/conf/server.xml and changing the 8080 and 8005 to
+something else. Once you have done this, you will need to rebuild the
+sandbox.
 
 
 -------------------------------------------------------------------------
@@ -72,27 +73,54 @@ Within the /src directory are a number of sub directories...
                     live here.
     /dtd        <-- Intake and Torque DTD's.
     /html       <-- Files which show up within the webapp directory.
+    /i18n       <-- Location of internationalized files. Not much there yet.
     /images     <-- Copied to the webapp/images directory.
     /java       <-- The Java source code for Scarab.
     /resources  <-- Resources for the UI Tool. Not currently used.
     /sql        <-- SQL files for defining the database.
     /templates  <-- Velocity templates for the HTML and Email.
+    /test       <-- Test suite code. Not much there yet.
     /tomcat-4.0 <-- A minimal copy of Tomcat 4.0 for use with the Scarab
                     sandbox.
-    /usecases   <-- Old usecase documentation. Currently out of date.
+
+
+-------------------------------------------------------------------------
+| S E T T I N G S                                                       |
+-------------------------------------------------------------------------
+
+The Scarab build process depends on having a few properties which are
+defined in the build/default.properties. These properties should be set
+accordingly *before* you build Scarab. If you would like to customize
+these settings, then you should not edit the build/default.properties.
+
+The settings in the build/default.properties are fairly well documented.
+
+Instead, one should create a ~/build.properties and/or a
+build/build.properties file and place the properties in those files
+which override the properties in the build/default.properties. The build
+system will take the first property it can find and use that. It will
+first look for the ~/build.properties and then look for the
+build/default.properties.
 
 
 -------------------------------------------------------------------------
 | S E T T I N G  T H E  M A I L S E R V E R                             |
 -------------------------------------------------------------------------
 
-In order to test/use the functionality of the Login and Registration
-process, you need to first set the outgoing mail server so that email
-can be sent. By default, it is defined as "localhost". That means that
-you need to have an email server running on the same box as Scarab. It
-is possible to modify this value by changing the "mail.server" property
-in the src/conf/TurbineResources.properties file to name of a mail
-server that allows you to relay email through it.
+In order to use Scarab, you need to first set the relay outgoing mail
+server so that email can be sent from Scarab. This is important for many
+different aspects of Scarab, such as the confirmation email sent when a
+user registers with the system. By default, the mail server is defined
+as "localhost". That means that you need to have an SMTP server running
+on the same box as Scarab. It is possible to modify this value by
+following the directions above and setting the property
+"scarab.system.mail.host" in either your ~/build.properties or
+build/build.properties and then rebuilding Scarab.
+
+Behind the scenes, in the build system, the "system.mail.host" property
+is located in the src/conf/TurbineResources.properties file and gets
+replaced with setting for "scarab.system.mail.host" in your local
+properties file.
 
 NOTE: If you modify this value after you have build the sandbox
       (instructions below), then you will need to re-run the ant
@@ -104,18 +132,22 @@ NOTE: If you modify this value after you have build the sandbox
 | B U I L D I N G  T H E  S A N D B O X                                 |
 -------------------------------------------------------------------------
 
-To build the sandbox on your machine, you simply need to do the following:
+The Scarab sandbox contains everything you need in order to get started
+with Scarab. It includes a stripped down version of the Java Servlet
+Engine (Tomcat) pre-configured to run Scarab.
 
-cd build
-ant
+To build the sandbox on your machine, you simply need to type the
+following:
+
+        cd build
+        ant
 
 This will create a directory in the scarab directory called "target".
-Within there will be pretty much everything that you need to get started
-with running Scarab. You can safely remove this directory at any point
-as the source files for creating this directory are in the /lib and /src
-directory. If you edit any of the files in the /lib or /src directory,
-then you should simply re-run the ant script and it will deal with
-copying and compiling the changed files.
+You can safely remove this directory at any point as the source files
+for creating this directory are in the /lib and /src directory. If you
+edit any of the files in the /lib or /src directory, then you should
+simply re-run the ant script and it will deal with copying and compiling
+the changed files.
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are
       using the Tomcat that comes with Scarab, you can safely undefine
@@ -154,8 +186,8 @@ cd src/sql
 create-mysql-database.bat    <-- Win32
 
 NOTE: This will attempt to first drop a database called "scarab" and 
-      then re-create it. If you execute this script, all of your previous data 
-      will be lost without warning!
+      then re-create it. If you execute this script, all of your
+      previous data will be lost without warning!
 
 NOTE: If you need to specify a host/username/password, you will need to 
       edit the create-mysql-database.sh/.bat script to specify these to
@@ -196,9 +228,12 @@ Then, in your web browser, go to:
 
     <http://localhost:8080/scarab/servlet/scarab>
 
-NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
-      the Tomcat that comes with Scarab, you can safely undefine it.
+NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
+      using the Tomcat that comes with Scarab, you can safely undefine
+      it.
 
+NOTE: Substitute 'localhost' for the DNS name that the server is running
+      on.
 
 -------------------------------------------------------------------------
 | Q U E S T I O N S  /  P R O B L E M S                                 |

@@ -167,6 +167,7 @@
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
+        <filter token="SYSTEM_MAIL_HOST" value="${scarab.system.mail.host}"/>
         <filter token="TURBINE_MODE" value="${scarab.mode}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
@@ -925,28 +926,29 @@
     <!-- ================================================================== -->
     <!-- Creates the Binary distribution directory                          -->
     <!-- ================================================================== -->
-    <target name="dist" depends="clean-all,compile,javadocs">
-        <delete dir="${build.src.scarab}"/>
-
-        <jar 
-          jarfile="${build.project.webinf.lib}/${final.name}.jar"
-          basedir="${build.dest.scarab}"
-          excludes="**/package.html"/>
-
-        <delete dir="${build.dest.scarab}"/>
-
+    <target name="dist">
+        <delete dir="${final.dir}"/>
         <mkdir dir="${final.dir}"/>
-        <copy todir="${final.dir}">
-            <fileset dir="${build.dir}">
-                <exclude name="**/appData.ser"/>
-            </fileset>
-        </copy>
 
-        <copy todir="${final.dir}">
+        <copy todir="${final.dir}" preservelastmodified="true"
+              includeEmptyDirs="false">
             <fileset dir="../">
-                <include name="LICENSE.txt"/>
-                <include name="README.txt"/>
-                <include name="WIN32.txt"/>
+                <exclude name="**/build/nightly.sh"/>
+                <exclude name="**/build/run-tests*"/>
+                <exclude name="**/build/velocity.log*"/>
+                <exclude name="**/src/sql/mysql-scarab.sql"/>
+                <exclude name="**/src/sql/report.scarab.sql.generation"/>
+                <exclude name="**/src/sql/project-schema.sql"/>
+                <exclude name="**/src/sql/sqldb.map"/>
+                <exclude name="**/src/sql/id-table-schema.sql"/>
+                <exclude name="**/src/sql/*.DM1"/>
+                <exclude name="**/src/sql/*.jpg"/>
+                <exclude name="**/src/sql/schema-design-notes.txt"/>
+                <exclude name="**/src/sql/sql_questions.txt"/>
+                <exclude name="**/src/test/**"/>
+                <exclude name="**/src/usecases/**"/>
+                <exclude name="**/target/**"/>
+                <exclude name="**/www/**"/>
             </fileset>
         </copy>
 
