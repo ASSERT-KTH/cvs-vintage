@@ -42,7 +42,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -274,37 +274,41 @@ public class ServiceConfigurator
       }
       // Set lists of mbean references (object names)
 
-      NodeList mbeanRefLists = mbeanElement.getElementsByTagName("mbean-ref-list");
-      for (int j = 0; j < mbeanRefLists.getLength(); j++) {
-         Element mbeanRefListElement = (Element)mbeanRefLists.item(j);
-         String mbeanRefListName = mbeanRefListElement.getAttribute("name");
+      NodeList mBeanRefLists = mbeanElement.getElementsByTagName("mbean-ref-list");
+      for (int j = 0; j < mBeanRefLists.getLength(); j++) {
+         Element mBeanRefListElement = (Element)mBeanRefLists.item(j);
+         String mBeanRefListName = mBeanRefListElement.getAttribute("name");
 
          MBeanAttributeInfo[] attributes = info.getAttributes();
          for (int k = 0; k < attributes.length; k++) {
-            if (mbeanRefListName.equals(attributes[k].getName())) {
+            if (mBeanRefListName.equals(attributes[k].getName())) {
 
-               NodeList mbeanRefList = mbeanRefListElement.getElementsByTagName("mbean-ref-list-element");
-               ArrayList mbeanRefs = new ArrayList();
-               for (int l = 0; l < mbeanRefList.getLength(); l++) 
+               NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("mbean-ref-list-element");
+               ArrayList mBeanRefListNames = new ArrayList();
+               for (int l = 0; l < mBeanRefList.getLength(); l++) 
                {
-                  Element mbeanRefElement = (Element)mbeanRefList.item(l);
-                  if (!mbeanRefElement.hasChildNodes()) 
+                  Element mBeanRefElement = (Element)mBeanRefList.item(l);
+                  if (!mBeanRefElement.hasChildNodes()) 
                   {
                      throw new DeploymentException("Empty mbean-ref-list-element!");    
                   } // end of if ()
 
                   // Get the mbeanRef value
-                  String mbeanRefValue = ((Text)mbeanRefElement.getFirstChild()).getData().trim();
-                  ObjectName mbeanRefObjectName = new ObjectName(mbeanRefValue);
-                  if (!mBeanRefs.contains(mbeanRefObjectName)) 
+                  String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
+                  ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
+                  if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
                   {
-                     mBeanRefs.add(mbeanRefObjectName);
+                     mBeanRefListNames.add(mBeanRefObjectName);
+                  } // end of if ()
+                  if (!mBeanRefs.contains(mBeanRefObjectName)) 
+                  {
+                     mBeanRefs.add(mBeanRefObjectName);
                   } // end of if ()
                   
                } // end of for ()
 
-               log.debug(mbeanRefListName + " set to " + mbeanRefs + " in " + objectName);
-               server.setAttribute(objectName, new Attribute(mbeanRefListName, mbeanRefs));
+               log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
+               server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
 
                break;
             }
