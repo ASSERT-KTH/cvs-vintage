@@ -32,6 +32,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
+import org.jboss.metadata.ConfigurationMetaData;
 
 /**
 *   <description>
@@ -40,7 +41,7 @@ import org.jboss.management.j2ee.TimeStatistic;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.36 $
+*  @version $Revision: 1.37 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -76,6 +77,7 @@ implements EntityPersistenceManager
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
    HashMap finderMethods = new HashMap();
+   private int commitOption;
 
    private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
    private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
@@ -84,7 +86,6 @@ implements EntityPersistenceManager
    private TimeStatistic mPassivate = new TimeStatistic( "Passivation", "ms", "Passivation Time" );
    private TimeStatistic mLoad = new TimeStatistic( "Load", "ms", "Load Time" );
    private TimeStatistic mStore = new TimeStatistic( "Store", "ms", "Load Time" );
-
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -93,6 +94,8 @@ implements EntityPersistenceManager
    public void setContainer(Container c)
    {
       con = (EntityContainer)c;
+      ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
+      commitOption = configuration.getCommitOption();
    }
 
    public void create()
@@ -588,7 +591,9 @@ implements EntityPersistenceManager
    {
       // Check if findByPrimaryKey
       // If so we check if the entity is in cache first
-      if (finderMethod.getName().equals("findByPrimaryKey"))
+      if (finderMethod.getName().equals("findByPrimaryKey")
+          && commitOption != ConfigurationMetaData.B_COMMIT_OPTION
+          && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
       {
          Object key = ctx.getCacheKey();
          if (key == null)

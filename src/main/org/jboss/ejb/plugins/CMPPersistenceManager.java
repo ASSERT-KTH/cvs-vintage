@@ -33,6 +33,7 @@ import org.jboss.util.Sync;
 
 import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
+import org.jboss.metadata.ConfigurationMetaData;
 
 /**
  * The CMP Persistence Manager implements the semantics of the CMP
@@ -45,7 +46,7 @@ import org.jboss.management.j2ee.TimeStatistic;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  * Revisions:
  * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -73,6 +74,7 @@ public class CMPPersistenceManager
 
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
+   private int commitOption;
 
    private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
    private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
@@ -92,6 +94,8 @@ public class CMPPersistenceManager
       con = (EntityContainer)c;
       if (store != null)
          store.setContainer(c);
+      ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
+      commitOption = configuration.getCommitOption();
    }
 
    /**
@@ -291,7 +295,9 @@ public class CMPPersistenceManager
       throws Exception
    {
       // For now only optimize fBPK
-      if (finderMethod.getName().equals("findByPrimaryKey"))
+      if (finderMethod.getName().equals("findByPrimaryKey")
+          && commitOption != ConfigurationMetaData.B_COMMIT_OPTION
+          && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
       {
          Object key = ctx.getCacheKey();
          if (key == null)
