@@ -3,27 +3,27 @@
  */
 package org.objectweb.carol.cmi.compiler;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Iterator;
-import java.util.Vector;
 
 public class ClusterConf {
     private String uri;
+
+    //  Maps Class names to maps of MethodProto to ClusterMethodInfo
     private HashMap classInfos = new HashMap();
 
     public ClusterMethodInfo getMethodInfo(MethodContext m, String className) {
-        Vector mthInfos = (Vector) classInfos.get(className);
+        HashMap mthInfos = (HashMap) classInfos.get(className);
         if (mthInfos == null) {
             return null;
         }
-        for (Enumeration e = mthInfos.elements(); e.hasMoreElements();) {
-            ClusterMethodInfo cmi = (ClusterMethodInfo) e.nextElement();
-            if (cmi.match(m))
-                return cmi;
+        MethodProto mp = new MethodProto(m);
+        ClusterMethodInfo cmi = (ClusterMethodInfo) mthInfos.get(mp);
+        if (cmi == null) {
+            return null;
         }
-        return null;
+        return cmi;
     }
 
     public void loadConfig(String uri) throws Exception {
@@ -58,7 +58,7 @@ public class ClusterConf {
 
     private void checkClass(LinkedList l) throws Exception {
         String clName = null;
-        Vector mthInfos = new Vector();
+        HashMap mthInfos = new HashMap();
         Iterator i = l.iterator();
 
         if (i.hasNext()) {
@@ -83,9 +83,9 @@ public class ClusterConf {
             Object o = i.next();
             if (o instanceof XMLElement) {
                 XMLElement e = (XMLElement) o;
-                if (e.name.equals("method"))
-                    mthInfos.addElement(checkMethod(clName, e.childs));
-                else if (e.name.equals("lookup-choice")) {
+                if (e.name.equals("method")) {
+                    checkMethod(mthInfos, e.childs);
+                } else if (e.name.equals("lookup-choice")) {
                     checkEmpty(e);
                     ClusterClassInfo cci = new ClusterClassInfo();
                     cci.lookupChoice = true;
@@ -96,9 +96,9 @@ public class ClusterConf {
         }
     }
 
-    private ClusterMethodInfo checkMethod(String className, LinkedList l)
+    private ClusterMethodInfo checkMethod(HashMap mthInfos, LinkedList l)
         throws Exception {
-        ClusterMethodInfo methinfo = new ClusterMethodInfo(className);
+        ClusterMethodInfo methinfo = new ClusterMethodInfo();
         Iterator i = l.iterator();
 
         while (i.hasNext()) {
@@ -106,7 +106,12 @@ public class ClusterConf {
             if (o instanceof XMLElement) {
                 XMLElement e = (XMLElement) o;
                 if (e.name.equals("signature")) {
-                    methinfo.setSignature(checkString(e));
+                    String sign = checkString(e);
+                    MethodProto mp = methinfo.setSignature(sign);
+                    if (mthInfos.containsKey(mp)) {
+                        throw new Exception(uri + ": method already defined: " + sign);
+                    }
+                    mthInfos.put(mp, methinfo);
                 } else if (e.name.equals("one-choice")) {
                     checkEmpty(e);
                     methinfo.setOneChoice();
