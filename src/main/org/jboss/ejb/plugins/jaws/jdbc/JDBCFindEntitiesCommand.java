@@ -14,10 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import java.rmi.RemoteException;
-
-import javax.ejb.FinderException;
-
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
@@ -33,7 +29,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -135,7 +131,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
    public FinderResults execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws Exception
    {
       String finderName = finderMethod.getName();
       

@@ -10,7 +10,6 @@ package org.jboss.ejb.plugins.cmp;
 import java.util.Collection;
 import java.lang.reflect.Method;
 import org.jboss.ejb.EntityEnterpriseContext;
-import java.rmi.RemoteException;
 import javax.ejb.FinderException;
 import org.jboss.util.FinderResults;
 
@@ -25,7 +24,7 @@ import org.jboss.util.FinderResults;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface FindEntitiesCommand
 {
@@ -34,5 +33,5 @@ public interface FindEntitiesCommand
    public FinderResults execute(Method finderMethod, 
                              Object[] args, 
                              EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException;
+      throws Exception;
 }

@@ -31,7 +31,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class CustomFindByEntitiesCommand implements FindEntitiesCommand {
 	// Attributes ----------------------------------------------------
@@ -59,7 +59,7 @@ public class CustomFindByEntitiesCommand implements FindEntitiesCommand {
 	public FinderResults execute(Method finderMethod,
 			Object[] args,
 			EntityEnterpriseContext ctx)
-		throws java.rmi.RemoteException, FinderException
+		throws Exception
 	{
 		try {
 			// invoke implementation method on ejb instance
@@ -71,13 +71,15 @@ public class CustomFindByEntitiesCommand implements FindEntitiesCommand {
 				result = Collections.singleton(result);
 			}
 			return new FinderResults((Collection)result, null, null, null);
-		} catch (IllegalAccessException e1) {
+		} catch (IllegalAccessException e) {
 			throw new FinderException("Unable to access finder implementation: " + finderImplMethod.getName());
-		} catch (IllegalArgumentException e2) {
+		} catch (IllegalArgumentException e) {
 			throw new FinderException("Illegal arguments for finder implementation: " + finderImplMethod.getName());
-		} catch (InvocationTargetException e3) {
-			throw new FinderException("Exception in finder implementation: " + finderImplMethod.getName());
-		} catch (ExceptionInInitializerError e5) {
+		} catch (InvocationTargetException e) {
+			Throwable target  = e.getTargetException();
+			if(target instanceof Exception) {
+				throw (Exception)target;
+			}
 			throw new FinderException("Unable to initialize finder implementation: " + finderImplMethod.getName());
 		}
 	}

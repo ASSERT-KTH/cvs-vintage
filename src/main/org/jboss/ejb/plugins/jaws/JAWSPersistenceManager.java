@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -132,7 +132,7 @@ public class JAWSPersistenceManager
    public Object findEntity(Method finderMethod,
                             Object[] args,
                             EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws Exception
    {
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
@@ -140,7 +140,7 @@ public class JAWSPersistenceManager
    public FinderResults findEntities(Method finderMethod,
                                   Object[] args,
                                   EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws Exception
    {
       return findEntitiesCommand.execute(finderMethod, args, ctx);
    }

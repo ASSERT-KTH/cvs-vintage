@@ -61,7 +61,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2
@@ -172,7 +172,7 @@ public abstract class CMPStoreManager
    public Object findEntity(Method finderMethod,
                             Object[] args,
                             EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws Exception
    {
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
@@ -180,7 +180,7 @@ public abstract class CMPStoreManager
    public FinderResults findEntities(Method finderMethod,
                                   Object[] args,
                                   EntityEnterpriseContext ctx)
-      throws RemoteException, FinderException
+      throws Exception
    {
       return findEntitiesCommand.execute(finderMethod, args, ctx);
    }
