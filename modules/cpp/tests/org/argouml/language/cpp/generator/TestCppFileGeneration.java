@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.11 2005/02/04 19:28:57 mvw Exp $
+// $Id: TestCppFileGeneration.java,v 1.12 2005/02/07 03:03:20 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,12 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
     /** The Logger for this class */
     private static final Logger LOG = Logger.getLogger(
         TestCppFileGeneration.class);
+
+    /**
+     * System newline separator.
+     */
+    private static final String LINE_SEPARATOR =
+	System.getProperty("line.separator");
 
     /**
      * Creates a new instance of TestCppFileGeneration.
@@ -160,7 +166,7 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
         assertTrue(fooImplIndex != -1);
         // insert some dummy content
         modified.append(originalGenerated.substring(0, ++fooImplIndex));
-        String dummyContent = "\n\tint i = 0; // dummy content";
+        String dummyContent = LINE_SEPARATOR + "\tint i = 0; // dummy content";
         modified.append(dummyContent);
         modified.append(originalGenerated.substring(fooImplIndex));
         genFile.delete();
