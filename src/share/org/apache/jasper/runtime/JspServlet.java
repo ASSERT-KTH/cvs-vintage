@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.4 1999/10/18 17:40:56 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/18 17:40:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.5 1999/10/21 01:48:43 akv Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/21 01:48:43 $
  *
  * ====================================================================
  * 
@@ -116,7 +116,7 @@ public class JspServlet extends HttpServlet {
 	    }
 	}
 	
-	private void loadIfNecessary() 
+	private void loadIfNecessary(HttpServletRequest req, HttpServletResponse res) 
             throws JasperException, ServletException, FileNotFoundException 
         {
             // First try context attribute; if that fails then use the 
@@ -139,7 +139,7 @@ public class JspServlet extends HttpServlet {
                               new Object[] { accordingto, cp }, 
                               Constants.MED_VERBOSITY);
 
-	    if (loader.loadJSP(jspUri, cp, isErrorPage) || theServlet == null) {
+	    if (loader.loadJSP(jspUri, cp, isErrorPage, req, res) || theServlet == null) {
                 load();
             }
 	}
@@ -150,7 +150,7 @@ public class JspServlet extends HttpServlet {
 	    throws ServletException, IOException, FileNotFoundException 
 	{
             try {
-                loadIfNecessary();
+                loadIfNecessary(request, response);
 
 		// If a page is to only to be precompiled return.
 		if (precompile)

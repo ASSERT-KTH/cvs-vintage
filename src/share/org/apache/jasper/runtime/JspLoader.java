@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.1 1999/10/09 00:20:39 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.2 1999/10/21 01:48:42 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/21 01:48:42 $
  *
  * ====================================================================
  * 
@@ -74,6 +74,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
@@ -205,7 +207,8 @@ public class JspLoader extends ClassLoader {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    public boolean loadJSP(String name, String classpath, boolean isErrorPage) 
+    public boolean loadJSP(String name, String classpath, boolean isErrorPage, 
+                           HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
 	Class jspClass = (Class) loadedJSPs.get(name);
@@ -213,7 +216,8 @@ public class JspLoader extends ClassLoader {
 
         JspEngineContext ctxt = new JspEngineContext(this, classpath,
                                                      context, name, 
-                                                     isErrorPage, options);
+                                                     isErrorPage, options,
+                                                     req, res);
 	boolean outDated = false; 
 
         Compiler compiler = ctxt.createCompiler();

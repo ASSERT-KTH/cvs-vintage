@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.2 1999/10/21 01:48:40 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/21 01:48:40 $
  *
  * ====================================================================
  * 
@@ -66,6 +66,8 @@
 package org.apache.jasper;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
@@ -100,10 +102,14 @@ public class JspEngineContext {
     String servletJavaFileName;
     String contentType;
     Options options;
+    HttpServletRequest req;
+    HttpServletResponse res;
+    
 
     public JspEngineContext(JspLoader loader, String classpath, 
                             ServletContext context, String jspFile, 
-                            boolean isErrPage, Options options) 
+                            boolean isErrPage, Options options, 
+                            HttpServletRequest req, HttpServletResponse res) 
     {
         this.loader = loader;
         this.classpath = classpath;
@@ -111,6 +117,23 @@ public class JspEngineContext {
         this.jspFile = jspFile;
         this.isErrPage = isErrPage;
         this.options = options;
+        this.req = req;
+        this.res = res;
+    }
+
+    /**
+     * Get the http request we are servicing now...
+     */
+    public HttpServletRequest getRequest() {
+        return req;
+    }
+    
+
+    /**
+     * Get the http response we are using now...
+     */
+    public HttpServletResponse getResponse() {
+        return res;
     }
 
     /**
