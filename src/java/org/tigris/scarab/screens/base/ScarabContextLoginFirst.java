@@ -65,7 +65,7 @@ import org.tigris.scarab.util.*;
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.3 2001/03/03 00:07:12 jmcnally Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.4 2001/04/04 18:01:25 jmcnally Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {
@@ -85,7 +85,6 @@ public abstract class ScarabContextLoginFirst extends RequireLoginFirst
         cur_project_id = data.getParameters().getInt(ModuleManager.CURRENT_PROJECT, 1);
         Context context = getContext(data);
         context.put ("ModuleManager", new ModuleManager());
-        context.put ("link", new ScarabLink(data));
         super.doBuildTemplate(data);
     }
 }
