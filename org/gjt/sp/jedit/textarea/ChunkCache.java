@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.32 2002/03/03 07:37:10 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.33 2002/03/06 05:10:27 spestov Exp $
  */
 public class ChunkCache
 {
@@ -738,10 +738,12 @@ public class ChunkCache
 				{
 					lastScreenLine++;
 					needFullRepaint = true;
+					textArea.updateScrollBars();
 				}
 				else if(out.size() != 0)
 				{
 					lastScreenLine++;
+					textArea.updateScrollBars();
 				}
 			}
 
@@ -753,17 +755,6 @@ public class ChunkCache
 			info.chunksValid = true;
 		}
 	} //}}}
-
-	public void dump(int line)
-	{
-		LineInfo info = getLineInfo(line);
-		Chunk chunk = info.chunks;
-		while(chunk != null)
-		{
-			System.err.println(chunk.offset + "::" + chunk.length);
-			chunk = chunk.next;
-		}
-	}
 
 	//{{{ getLineInfo() method
 	LineInfo getLineInfo(int screenLine)

@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * A history list. One history list can be used by several history text
  * fields.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.4 2002/03/06 05:10:27 spestov Exp $
  */
 public class HistoryModel
 {
@@ -62,8 +62,8 @@ public class HistoryModel
 
 		data.insertElementAt(text,0);
 
-		if(getSize() > max)
-			data.removeElementAt(getSize() - 1);
+		while(getSize() > max)
+			data.removeElementAt(data.size() - 1);
 	}
 
 	/**

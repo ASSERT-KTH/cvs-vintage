@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.100 2002/03/03 07:37:11 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.101 2002/03/06 05:10:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2924,7 +2924,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 
 		ChunkCache.LineInfo[] lineInfos = chunkCache.getLineInfosForPhysicalLine(line);
 		int subregion = getSubregionOfOffset(offset,lineInfos);
-		if(subregion == lineInfos.length)
+		if(subregion == lineInfos.length - 1)
 		{
 			lastIndent = getLineLength(line) - MiscUtilities.getTrailingWhiteSpace(getLineText(line));
 			if(lastIndent == 0)
@@ -4840,7 +4840,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ Instance variables
 	Segment lineSegment;
 	MouseHandler mouseHandler;
-	public ChunkCache chunkCache;
+	ChunkCache chunkCache;
 
 	int maxHorizontalScrollWidth;
 
