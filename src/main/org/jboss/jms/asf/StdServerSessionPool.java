@@ -15,12 +15,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
+import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.ServerSession;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
+import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.XAQueueConnection;
 import javax.jms.XAQueueSession;
@@ -38,16 +41,11 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.25 $
+ * @version   $Revision: 1.26 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
 {
-   /**
-    * The default size of the pool.
-    */
-   private final static int DEFAULT_POOL_SIZE = 15;
-
    /**
     * The thread group which session workers will run.
     */
@@ -86,6 +84,11 @@ public class StdServerSessionPool
    private boolean transacted;
 
    /**
+    * The destination.
+    */
+   private Destination destination;
+
+   /**
     * The session connection.
     */
    private Connection con;
@@ -121,6 +124,7 @@ public class StdServerSessionPool
    /**
     * Construct a <tt>StdServerSessionPool</tt> using the default pool size.
     *
+    * @param destination the destination
     * @param con connection to get sessions from
     * @param transacted transaction mode when not XA (
     * @param ack ackmode when not XA
@@ -128,10 +132,11 @@ public class StdServerSessionPool
     * @param minSession minumum number of sessions in the pool
     * @param maxSession maximum number of sessions in the pool
     * @param keepAlive the time to keep sessions alive
-    * @param isuseLocalTX  Description of Parameter
+    * @param xidFactory  Description of Parameter
     * @exception JMSException    Description of Exception
     */
-   public StdServerSessionPool(final Connection con,
+   public StdServerSessionPool(final Destination destination,
+                               final Connection con,
                                final boolean transacted,
                                final int ack,
                                final boolean useLocalTX,
@@ -142,6 +147,7 @@ public class StdServerSessionPool
                                final XidFactoryMBean xidFactory)
       throws JMSException
    {
+      this.destination = destination;
       this.con = con;
       this.ack = ack;
       this.listener = listener;
@@ -335,23 +341,23 @@ public class StdServerSessionPool
          if (debug)
             log.debug("initializing with connection: " + con);
 
-         if (con instanceof XATopicConnection)
+         if (destination instanceof Topic && con instanceof XATopicConnection)
          {
             xaSes = ((XATopicConnection)con).createXATopicSession();
             ses = ((XATopicSession)xaSes).getTopicSession();
          }
-         else if (con instanceof XAQueueConnection)
+         else if (destination instanceof Queue && con instanceof XAQueueConnection)
          {
             xaSes = ((XAQueueConnection)con).createXAQueueSession();
             ses = ((XAQueueSession)xaSes).getQueueSession();
          }
-         else if (con instanceof TopicConnection)
+         else if (destination instanceof Topic && con instanceof TopicConnection)
          {
             ses = ((TopicConnection)con).createTopicSession(transacted, ack);
             log.warn("Using a non-XA TopicConnection.  " +
                   "It will not be able to participate in a Global UOW");
          }
-         else if (con instanceof QueueConnection)
+         else if (destination instanceof Queue && con instanceof QueueConnection)
          {
             ses = ((QueueConnection)con).createQueueSession(transacted, ack);
             log.warn("Using a non-XA QueueConnection.  " +
@@ -359,9 +365,7 @@ public class StdServerSessionPool
          }
          else
          {
-            // should never happen really
-            log.error("Connection was not reconizable: " + con);
-            throw new JMSException("Connection was not reconizable: " + con);
+            throw new JMSException("Connection was not reconizable: " + con + " for destination " + destination);
          }
 
          // create the server session and add it to the pool - it is up to the
@@ -425,7 +429,7 @@ public class StdServerSessionPool
        */
       public Thread newThread(final Runnable command)
       {
-         String name = this + " Thread Pool Worker-" + nextCount();
+         String name = "JMS SessionPool Worker-" + nextCount();
          return new Thread(threadGroup, command, name);
       }
    }

@@ -27,6 +27,7 @@ import javax.jms.ServerSessionPool;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.management.MBeanServer;
+import javax.management.Notification;
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -46,6 +47,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ActivationConfigPropertyMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
+import org.jboss.metadata.MessageDestinationMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.system.ServiceMBeanSupport;
@@ -58,16 +60,32 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.67 $</tt>
+ * @version <tt>$Revision: 1.68 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JMSContainerInvoker
    extends ServiceMBeanSupport
    implements EJBProxyFactory, JMSContainerInvokerMBean
 {
-   private static final Logger log = Logger.getLogger(JMSContainerInvoker.class);
-   
    // Constants -----------------------------------------------------
+   
+   /** The logger */
+   private static final Logger log = Logger.getLogger(JMSContainerInvoker.class);
+
+   /** Notification sent before connectioning */
+   private static final String CONNECTING_NOTIFICATION = "org.jboss.ejb.plugins.jms.CONNECTING";
+
+   /** Notification sent after connection */
+   private static final String CONNECTED_NOTIFICATION = "org.jboss.ejb.plugins.jms.CONNECTED";
+
+   /** Notification sent before disconnection */
+   private static final String DISCONNECTING_NOTIFICATION = "org.jboss.ejb.plugins.jms.DISCONNECTING";
+
+   /** Notification sent before disconnected */
+   private static final String DISCONNECTED_NOTIFICATION = "org.jboss.ejb.plugins.jms.DISCONNECTED";
+
+   /** Notification sent at connection failure */
+   private static final String FAILURE_NOTIFICATION = "org.jboss.ejb.plugins.jms.FAILURE";
    
    /**
     * {@link MessageListener#onMessage} reference.
@@ -597,6 +615,29 @@ public class JMSContainerInvoker
       activationConfig = getActivationConfigProperty("destination");
       if (activationConfig != null)
          destinationJNDI = activationConfig;
+      // Try any EJB21 destination link
+      if (destinationJNDI == null)
+      {
+         String link = config.getDestinationLink();
+         if (link != null)
+         {
+            link = link.trim();
+            if (link.length() > 0)
+            {
+               MessageDestinationMetaData destinationMetaData = container.getMessageDestination(link);
+               if (destinationMetaData == null)
+                  log.warn("Unresolved message-destination-link '" + link + "' no message-destination in ejb-jar.xml");
+               else
+               {
+                  String jndiName = destinationMetaData.getJNDIName();
+                  if (jndiName == null)
+                     log.warn("The message-destination '" + link + "' has no jndi-name in jboss.xml");
+                  else
+                     destinationJNDI = jndiName;
+               }
+            }
+         }
+      }
       
       String user = config.getUser();
       String password = config.getPasswd();
@@ -679,7 +720,9 @@ public class JMSContainerInvoker
                jndiSuffix);
          
          // set up the server session pool
-         pool = createSessionPool(tConnection,
+         pool = createSessionPool(
+            topic,
+            tConnection,
             minPoolSize,
             maxPoolSize,
             keepAlive,
@@ -688,7 +731,7 @@ public class JMSContainerInvoker
             new MessageListenerImpl(this));
 
          int subscriptionDurablity = config.getSubscriptionDurability();
-         activationConfig = getActivationConfigProperty("subscriptionDurablity");
+         activationConfig = getActivationConfigProperty("subscriptionDurability");
          if (activationConfig != null)
          {
             if (activationConfig.equals("Durable"))
@@ -776,7 +819,9 @@ public class JMSContainerInvoker
                jndiSuffix);
          
          // set up the server session pool
-         pool = createSessionPool(qConnection,
+         pool = createSessionPool(
+            queue,
+            qConnection,
             minPoolSize,
             maxPoolSize,
             keepAlive,
@@ -808,16 +853,20 @@ public class JMSContainerInvoker
          log.debug("Delivery is disabled");
          return;
       }
+      
+
+      sendNotification(CONNECTING_NOTIFICATION, null);
+
       try
       {
          innerCreate();
       }
-      catch (final JMSException e)
+      catch (final Throwable t)
       {
          //
          // start a thread up to handle recovering the connection. so we can
          // attach to the jms resources once they become available
-         exListener.onException(e);
+         exListener.handleFailure(t);
          return;
       }
       finally
@@ -826,15 +875,22 @@ public class JMSContainerInvoker
          SecurityActions.clear();
       }
 
-      if (dlqHandler != null)
+      try
       {
-         dlqHandler.start();
-      }
+         if (dlqHandler != null)
+            dlqHandler.start();
 
-      if (connection != null)
+         if (connection != null)
+         {
+            connection.setExceptionListener(exListener);
+            connection.start();
+         }
+
+         sendNotification(CONNECTED_NOTIFICATION, null);
+      }
+      catch (Throwable t)
       {
-         connection.setExceptionListener(exListener);
-         connection.start();
+         exListener.handleFailure(t);
       }
    }
 
@@ -860,6 +916,10 @@ public class JMSContainerInvoker
     */
    protected void innerStop()
    {
+      log.debug("innerStop");
+
+      sendNotification(DISCONNECTING_NOTIFICATION, null);
+      
       try
       {
          if (connection != null)
@@ -868,9 +928,9 @@ public class JMSContainerInvoker
             log.debug("unset exception listener");
          }
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
-         log.error("Could not set ExceptionListener to null", e);
+         log.error("Could not set ExceptionListener to null", t);
       }
       
       // Stop the connection
@@ -882,15 +942,15 @@ public class JMSContainerInvoker
             log.debug("connection stopped");
          }
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
-         log.error("Could not stop JMS connection", e);
+         log.error("Could not stop JMS connection", t);
       }
    }
 
    protected void destroyService() throws Exception
    {
-
+      log.debug("destroyService");
       // close the connection consumer
       try
       {
@@ -899,10 +959,11 @@ public class JMSContainerInvoker
             connectionConsumer.close();
          }
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
-         log.error("Failed to close connection consumer", e);
+         log.error("Failed to close connection consumer", t);
       }
+      connectionConsumer = null;
       
       // clear the server session pool (if it is clearable)
       try
@@ -913,9 +974,9 @@ public class JMSContainerInvoker
             p.clear();
          }
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
-         log.error("Failed to clear session pool", e);
+         log.error("Failed to clear session pool", t);
       }
       
       // close the connection
@@ -924,13 +985,13 @@ public class JMSContainerInvoker
          try
          {
             connection.close();
-            connection = null;
          }
-         catch (Exception e)
+         catch (Throwable t)
          {
-            log.error("Failed to close connection", e);
+            log.error("Failed to close connection", t);
          }
       }
+      connection = null;
 
       // Take down DLQ
       try
@@ -938,15 +999,17 @@ public class JMSContainerInvoker
          if (dlqHandler != null)
          {
             dlqHandler.destroy();
-            dlqHandler = null;
          }
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
-         log.error("Failed to close the dlq handler", e);
+         log.error("Failed to close the dlq handler", t);
       }
+      dlqHandler = null;
+      
+      sendNotification(DISCONNECTED_NOTIFICATION, null);
    }
-
+   
    public Object invoke(Object id,
       Method m,
       Object[] args,
@@ -1110,6 +1173,8 @@ public class JMSContainerInvoker
    
    /**
     * Create a server session pool for the given connection.
+    * 
+    * @param destination the destination
     * @param connection The connection to use.
     * @param minSession The minumum number of sessions
     * @param maxSession The maximum number of sessions.
@@ -1121,8 +1186,9 @@ public class JMSContainerInvoker
     * @throws JMSException
     * @throws NamingException Description of Exception
     */
-   protected ServerSessionPool
-      createSessionPool(final Connection connection,
+   protected ServerSessionPool createSessionPool(
+      final Destination destination,
+      final Connection connection,
       final int minSession,
       final int maxSession,
       final long keepAlive,
@@ -1143,7 +1209,7 @@ public class JMSContainerInvoker
             context.lookup(serverSessionPoolFactoryJNDI);
          
          // the create the pool
-         pool = factory.getServerSessionPool(connection, minSession, maxSession, keepAlive, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
+         pool = factory.getServerSessionPool(destination, connection, minSession, maxSession, keepAlive, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
       }
       finally
       {
@@ -1153,6 +1219,19 @@ public class JMSContainerInvoker
       return pool;
    }
 
+   /**
+    * Notify of an event
+    * 
+    * @param event the event
+    * @param userData any user data, e.g. the exception on a failure
+    */
+   protected void sendNotification(String event, Object userData)
+   {
+      Notification notif = new Notification(event, getServiceName(), getNextNotificationSequenceNumber());
+      notif.setUserData(userData);
+      sendNotification(notif);
+   }
+   
    /**
     * Parse the JNDI suffix from the given JNDI name.
     * @param jndiname The JNDI name used to lookup the destination.
@@ -1274,6 +1353,7 @@ public class JMSContainerInvoker
       JMSContainerInvoker invoker;
       Thread currentThread;
       boolean notStoped = true;
+      Throwable failure = null;
 
       ExceptionListenerImpl(final JMSContainerInvoker invoker)
       {
@@ -1286,7 +1366,18 @@ public class JMSContainerInvoker
        */
       public void onException(JMSException ex)
       {
-         log.warn("JMS provider failure detected: ", ex);
+         handleFailure(ex);
+      }
+
+      /**
+       * Handle a failure
+       * 
+       * @param t the failure
+       */
+      public void handleFailure(Throwable t)
+      {
+         log.warn("JMS provider failure detected: ", t);
+         failure = t;
          // Run the reconnection in the background
          MessageDrivenMetaData metaData = invoker.getMetaData();
          String name = "JMSContainerInvoker("+metaData.getEjbName()+") Reconnect";
@@ -1304,9 +1395,28 @@ public class JMSContainerInvoker
          boolean tryIt = true;
          while (tryIt && notStoped)
          {
-            log.info("Trying to reconnect to JMS provider");
             try
             {
+               invoker.innerStop();
+            }
+            catch (Throwable t)
+            {
+               log.error("Unhandled error stopping connection", t);
+            }
+            try
+            {
+               invoker.destroyService();
+            }
+            catch (Throwable t)
+            {
+               log.error("Unhandled error closing connection", t);
+            }
+
+            sendNotification(FAILURE_NOTIFICATION, failure);
+            
+            try
+            {
+               log.debug("Waiting for reconnect internal " + reconnectInterval + " ms");
                try
                {
                   Thread.sleep(reconnectInterval);
@@ -1318,8 +1428,7 @@ public class JMSContainerInvoker
                }
                
                // Reboot container
-               invoker.innerStop();
-               invoker.destroyService();
+               log.info("Trying to reconnect to JMS provider");
                invoker.startService();
                tryIt = false;
 

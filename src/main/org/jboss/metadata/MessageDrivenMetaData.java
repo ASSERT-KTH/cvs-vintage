@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -319,6 +319,11 @@ public class MessageDrivenMetaData
             }
          }
       }
+
+      // look for an EJB21 destination type
+      String ejb21DestinationType = getOptionalChildContent(element, "message-destination-type");
+      if (ejb21DestinationType != null)
+         destinationType = ejb21DestinationType;
 
       // destination link is optional
       destinationLink = getOptionalChildContent(element, "message-destination-link");

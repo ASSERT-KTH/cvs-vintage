@@ -8,6 +8,7 @@ package org.jboss.jms.asf;
 
 import java.io.Serializable;
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 
@@ -21,7 +22,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.13 $
  */
 public class StdServerSessionPoolFactory
        implements ServerSessionPoolFactory, Serializable
@@ -56,9 +57,9 @@ public class StdServerSessionPoolFactory
       return xidFactory;
    }
 
-   public javax.jms.ServerSessionPool getServerSessionPool(Connection con, int minSession, int maxSession, long keepAlive, boolean isTransacted, int ack, boolean useLocalTX, javax.jms.MessageListener listener) throws javax.jms.JMSException
+   public javax.jms.ServerSessionPool getServerSessionPool(Destination destination, Connection con, int minSession, int maxSession, long keepAlive, boolean isTransacted, int ack, boolean useLocalTX, javax.jms.MessageListener listener) throws javax.jms.JMSException
    {
-      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(con, isTransacted, ack, useLocalTX, listener, minSession, maxSession, keepAlive, xidFactory);
+      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(destination, con, isTransacted, ack, useLocalTX, listener, minSession, maxSession, keepAlive, xidFactory);
       return pool;
    }
 }

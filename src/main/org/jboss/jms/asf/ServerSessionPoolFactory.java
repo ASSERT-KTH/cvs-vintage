@@ -7,6 +7,7 @@
 package org.jboss.jms.asf;
 
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ServerSessionPool;
@@ -19,7 +20,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.9 $
+ * @version   $Revision: 1.10 $
  */
 public interface ServerSessionPoolFactory
 {
@@ -55,6 +56,8 @@ public interface ServerSessionPoolFactory
 
    /**
     * Create a new <tt>ServerSessionPool</tt>.
+    * 
+    * @param destination the destination
     * @param con the jms connection
     * @param minSession the minimum number of sessions
     * @param maxSession the maximum number of sessions
@@ -66,6 +69,6 @@ public interface ServerSessionPoolFactory
     * @return A new pool.
     * @throws JMSException for any error
     */
-   ServerSessionPool getServerSessionPool(Connection con, int minSession, int maxSession, long keepAlive, boolean isTransacted, int ack,
+   ServerSessionPool getServerSessionPool(Destination destination, Connection con, int minSession, int maxSession, long keepAlive, boolean isTransacted, int ack,
          boolean useLocalTX, MessageListener listener) throws JMSException;
 }
