@@ -133,6 +133,17 @@ value="false" />
 </select>
 #end
 
+#macro (queryTypeSelectBox $query)
+         <select name="$queryGroup.TypeId.Key">
+          #foreach ($type in $query.getAllQueryTypes() )
+          <option value = "$type.QueryTypeId" #if( $type.QueryTypeId.equals("$query.TypeId")) selected="selected" #end >
+           $type.Name
+          </option>
+           #end
+         </select>
+#end
+
+
 #macro ( datatitle $title )
 <h3>$title</h3>
 #end
