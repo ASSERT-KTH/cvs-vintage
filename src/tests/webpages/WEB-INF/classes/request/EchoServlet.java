@@ -7,9 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- * The simplest possible servlet.
  *
- * @author 
  */
 
 public class EchoServlet extends HttpServlet {
