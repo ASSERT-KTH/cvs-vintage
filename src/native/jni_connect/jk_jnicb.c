@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: JNI callbacks implementation for the JNI in process adapter*
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_jnicb.h"
@@ -118,7 +118,6 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_read
         jk_log(pl, JK_LOG_ERROR, 
                "In JNIConnectionHandler::read, NULL ws service object\n");
     }
-
     return rc;
 }
 
@@ -133,7 +132,6 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readEnvironment
 {
     jk_ws_service_t *ps = (jk_ws_service_t *)s;
     jk_logger_t *pl = (jk_logger_t *)l;
-
 
     if(ps) {
         char port[10];
@@ -257,7 +255,7 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readHeaders
                                           (*env)->NewStringUTF(env, ps->headers_values[i]));
         }
 
-        return JK_TRUE;
+	return JK_TRUE;
     } else {
         jk_log(pl, JK_LOG_ERROR, 
                "In JNIConnectionHandler::readHeaders, NULL ws service object\n");

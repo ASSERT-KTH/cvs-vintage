@@ -445,6 +445,14 @@ static const command_rec jk_cmds[] =
 /* ========================================================================= */
 /* The JK module handlers                                                    */
 /* ========================================================================= */
+
+ap_status_t jk_cleanup_endpoint( void *data ) {
+    jk_endpoint_t *end = (jk_endpoint_t *)data;    
+    /*     printf("XXX jk_cleanup1 %ld\n", data); */
+    end->done(&end, NULL);  
+    return 0;
+}
+
 static int jk_handler(request_rec *r)
 {   
     const char *worker_name = ap_table_get(r->notes, JK_WORKER_ID);
@@ -477,14 +485,33 @@ static int jk_handler(request_rec *r)
             
             if(init_ws_service(&private_data, &s)) {
                 jk_endpoint_t *end = NULL;
-                if(worker->get_endpoint(worker, &end, l)) {
-                    int is_recoverable_error = JK_FALSE;
+
+		/* Use per/thread pool ( or "context" ) to reuse the 
+		   endpoint. It's a bit faster, but I don't know 
+		   how to deal with load balancing - but it's usefull for JNI
+		*/
+
+#ifdef REUSE_WORKER
+		ap_pool_t *rpool=r->pool;
+		ap_pool_t *tpool=rpool->parent->parent;
+		
+		ap_get_userdata( &end, "jk_thread_endpoint", tpool );
+                if(end==NULL ) {
+		    worker->get_endpoint(worker, &end, l);
+		    ap_set_userdata( end , "jk_thread_endpoint", &jk_cleanup_endpoint,  tpool );
+		}
+#else
+		end=worker->get_endpoint(worker, &end, l);
+#endif
+		{   
+		    int is_recoverable_error = JK_FALSE;
                     rc = end->service(end, 
                                       &s, 
                                       l, 
                                       &is_recoverable_error);
-                
-                    end->done(&end, l);
+#ifndef REUSE_WORKER		    
+		    end->done(&end, l); 
+#endif
                 }
             }
 

@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -563,16 +563,18 @@ static int open_jvm(jni_worker_t *p,
                     JNIEnv **env,
                     jk_logger_t *l)
 {
+    JDK1_1InitArgs vm_args;  
     JNIEnv *penv;
     int err;
     *env = NULL;
+
+    vm_args.version = 0x00010001;
 
     if(0 != jni_get_default_java_vm_init_args(&vm_args)) {
 	jk_log(l, JK_LOG_EMERG, "Fail-> can't get default vm init args\n"); 
         return JK_FALSE;
     }
 
-    vm_args.version = 0x00010001;
 
     if(vm_args.classpath) {
         unsigned len = strlen(vm_args.classpath) + 
