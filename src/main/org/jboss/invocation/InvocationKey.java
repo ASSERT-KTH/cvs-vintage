@@ -16,7 +16,7 @@ import java.io.ObjectStreamException;
  * update the MAX_KEY_ID value.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class InvocationKey implements Serializable
 {
@@ -27,7 +27,7 @@ public final class InvocationKey implements Serializable
     * new key enum value you must assign it an ordinal value of the current
     * MAX_KEY_ID+1 and update the MAX_KEY_ID value.
     */
-   private static final int MAX_KEY_ID = 16;
+   private static final int MAX_KEY_ID = 17;
 
    /** The array of InvocationKey indexed by ordinal value of the key */
    private static final InvocationKey[] values = new InvocationKey[MAX_KEY_ID+1];
@@ -124,6 +124,10 @@ public final class InvocationKey implements Serializable
    /** The SOAP Message Context that is available to the SLSB during a service endpoint invocation */
    public final static InvocationKey SOAP_MESSAGE_CONTEXT =
          new InvocationKey("SOAP_MESSAGE_CONTEXT", 15);
+
+   /** The JAAC context id associated with the invocatio */
+   public final static InvocationKey JACC_CONTEXT_ID =
+         new InvocationKey("JACC_CONTEXT_ID", 16);
 
    /** The key enum symbolic value */
    private final transient String name;
