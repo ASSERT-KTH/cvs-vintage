@@ -30,7 +30,6 @@ import org.columba.mail.folder.headercache.ObjectWriter;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Header caching facility very similar to the ones used by folders.
@@ -51,7 +50,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 	public POP3HeaderCache(POP3Server server) {
 		super(server.getConfigFile());
 
-		this.server = server;
+		this.server= server;
 	}
 
 	public StatusObservable getObservable() {
@@ -60,17 +59,17 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 	public void load() throws Exception {
 		ColumbaLogger.log.info("loading header-cache=" + headerFile);
-		headerList = new HeaderList();
+		headerList= new HeaderList();
 
 		try {
 
-			reader = new ObjectReader(headerFile);
+			reader= new ObjectReader(headerFile);
 		} catch (Exception e) {
 			if (MainInterface.DEBUG)
 				e.printStackTrace();
 		}
 
-		int capacity = ((Integer) reader.readObject()).intValue();
+		int capacity= ((Integer) reader.readObject()).intValue();
 		ColumbaLogger.log.info("capacity=" + capacity);
 
 		if (getObservable() != null)
@@ -83,11 +82,11 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		if (getObservable() != null)
 			getObservable().setMax(capacity);
 
-		for (int i = 1; i <= capacity; i++) {
+		for (int i= 1; i <= capacity; i++) {
 			if (getObservable() != null)
 				getObservable().setCurrent(i);
 
-			ColumbaHeader h = new ColumbaHeader();
+			ColumbaHeader h= new ColumbaHeader();
 
 			loadHeader(h);
 
@@ -107,14 +106,14 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		ColumbaLogger.log.info("saving header-cache=" + headerFile);
 
 		try {
-			writer = new ObjectWriter(headerFile);
+			writer= new ObjectWriter(headerFile);
 
 		} catch (Exception e) {
 			if (MainInterface.DEBUG)
 				e.printStackTrace();
 		}
 
-		int count = headerList.count();
+		int count= headerList.count();
 		if (count == 0)
 			return;
 
@@ -122,10 +121,10 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 		ColumbaHeader h;
 
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			String str = (String) e.nextElement();
+		for (Enumeration e= headerList.keys(); e.hasMoreElements();) {
+			String str= (String) e.nextElement();
 
-			h = (ColumbaHeader) headerList.get(str);
+			h= (ColumbaHeader) headerList.get(str);
 
 			saveHeader(h);
 		}
@@ -133,21 +132,21 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		writer.close();
 	}
 
-	protected void loadHeader(HeaderInterface h) throws Exception {
-		
-		String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
+	protected void loadHeader(ColumbaHeader h) throws Exception {
 
-		for (int j = 0; j < columnNames.length; j++) {			
+		String[] columnNames= CachedHeaderfields.POP3_HEADERFIELDS;
+
+		for (int j= 0; j < columnNames.length; j++) {
 			h.set(columnNames[j], reader.readObject());
 		}
 
 	}
 
-	protected void saveHeader(HeaderInterface h) throws Exception {
-		
-		String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
+	protected void saveHeader(ColumbaHeader h) throws Exception {
+
+		String[] columnNames= CachedHeaderfields.POP3_HEADERFIELDS;
 		Object o;
-		for (int j = 0; j < columnNames.length; j++) {			
+		for (int j= 0; j < columnNames.length; j++) {
 			writer.writeObject(h.get(columnNames[j]));
 		}
 
