@@ -24,7 +24,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.3 2002/10/10 13:31:24 kataka Exp $
+// $Id: FigComment.java,v 1.4 2002/10/10 14:16:02 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -132,7 +132,7 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
 	_text.setTextColor(Color.black);
 	_text.setMultiLine(true);
 	_text.setAllowsTab(false);
-	_text.setText(placeString());        
+	// _text.setText(placeString());        
 	_text.setJustification(FigText.JUSTIFY_LEFT);
 	_text.setFilled(false);
 	_text.setLineWidth(0);
@@ -198,7 +198,11 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
      *   
      * @return The default text for this figure.
      */
-    public String placeString() { return "new note"; }
+    public String placeString() { 
+        String placeString = retrieveNote();
+        if (placeString == null) placeString = "new note"; 
+        return placeString;
+    }
 
     /**
      * Clone this figure.
@@ -442,11 +446,13 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
      * changed. This method automatically updates the note FigText. 
      */
     protected final void modelChanged() {
-	if (_readyToEdit) {
+        super.modelChanged();
+	
 	    String noteStr = retrieveNote();
 	    if(noteStr != null)
 		_text.setText(noteStr);
-	}
+	
     }
-     
+    
+
 } /* end class FigComment */
