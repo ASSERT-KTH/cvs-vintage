@@ -73,7 +73,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -1005,7 +1005,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
          if(cmrField.getRelationMetaData().isTableMappingStyle())
          {
-            existsClause(path, buf, true);
+            existsClause(path, buf, !node.not);
             return buf;
          }
       }
@@ -1019,7 +1019,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       // relationship is handled
       if(field.getJDBCType() == null)
       {
-         existsClause(path, buf, true);
+         existsClause(path, buf, !node.not);
          return buf;
       }
 
