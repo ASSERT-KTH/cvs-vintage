@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @see EnterpriseInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable
@@ -29,7 +29,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 
 	// Attributes ----------------------------------------------------
 	/* The EnterpriseInstanceCache that uses this cache policy */
-	private EnterpriseInstanceCache m_cache;
+	private AbstractInstanceCache m_cache;
 	/* The period of the resizer's runs */
 	private long m_resizerPeriod;
 	/* The period of the overager's runs */
@@ -56,7 +56,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	 * Creates a LRU cache policy object given the instance cache that use
 	 * this policy object. 
 	 */
-	public LRUEnterpriseContextCachePolicy(EnterpriseInstanceCache eic) 
+	public LRUEnterpriseContextCachePolicy(AbstractInstanceCache eic) 
 	{	
 		if (eic == null) throw new IllegalArgumentException("Instance cache argument cannot be null");
 		m_cache = eic;
@@ -78,6 +78,9 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 			m_overager = new OveragerTask(m_overagerPeriod);
 			scheduler.schedule(m_overager, (long)(Math.random() * m_overagerPeriod));
 		}
+		
+		// TimerTask used only to debug
+//		scheduler.schedule(new CacheDumper(), 3000L);
 	}
 	
 	public void stop() 
@@ -176,19 +179,26 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	protected void ageOut(LRUCacheEntry entry) 
 	{
 		if (entry == null) {throw new IllegalArgumentException("Cannot remove a null cache entry");}
+
+		// Logger is very time expensive. Turn on only for debug
+//		log.debug("Aging out from cache bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ", id = " + entry.m_key + "; cache size = " + getList().m_count);
+		// Debug code
+//		new Exception().printStackTrace();
+//		new CacheDumper().execute();
+
+		// This will schedule the passivation
 		m_cache.release((EnterpriseContext)entry.m_object);
 	}
 	protected void cacheMiss() 
 	{
 		ContextLRUList list = getList();
-		synchronized (list) 
-		{
-			++list.m_cacheMiss;
-		}
+		++list.m_cacheMiss;
 	}
 
 	// Private -------------------------------------------------------
 	private ContextLRUList getList() {return (ContextLRUList)m_list;}
+	// For debug purposes
+//	private java.util.Map getMap() {return m_map;}
 
 	// Inner classes -------------------------------------------------
 	/**
@@ -200,16 +210,23 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	 */
 	protected class ResizerTask extends TimerTask
 	{
+		private String m_message;
+		private StringBuffer m_buffer;
+
 		protected ResizerTask(long resizerPeriod) 
 		{
 			super(resizerPeriod);
+			m_message = "Resized cache for bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ": old size = ";
+			m_buffer = new StringBuffer();
 		}
 		public void execute() 
 		{
 			// For now implemented as a Cache Miss Frequency algorithm
-			// Sync the list, since it is accessed also by another thread
+
 			ContextLRUList list = getList();
-			synchronized (list) 
+
+			// Sync with the cache, since it is accessed also by another thread
+			synchronized (m_cache.getCacheLock())
 			{
 				int period = list.m_cacheMiss == 0 ? Integer.MAX_VALUE : (int)(getPeriod() / list.m_cacheMiss);
 				int cap = list.m_capacity;
@@ -220,7 +237,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 					double factor = 1.0 + ((double)m_minPeriod / period) * (1.0 - m_factor);
 					int newCap = (int)(cap * factor);
 					list.m_capacity = newCap < list.m_maxCapacity ? newCap : list.m_maxCapacity;
-					log.log("Resized cache for bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ": old size = " + cap + ", new size = " + list.m_capacity);
+					log(cap, list.m_capacity);
 				}
 				else if (period >= m_maxPeriod && 
 						 cap > list.m_minCapacity && 
@@ -229,10 +246,19 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 					// Shrink cache capacity
 					int newCap = (int)(list.m_count / m_factor);
 					list.m_capacity = newCap > list.m_minCapacity ? newCap : list.m_minCapacity;
-					log.log("Resized cache for bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ": old size = " + cap + ", new size = " + list.m_capacity);
+					log(cap, list.m_capacity);
 				}
 				list.m_cacheMiss = 0;
 			}
+		}
+		private void log(int oldSize, int newSize) 
+		{
+			m_buffer.setLength(0);
+			m_buffer.append(m_message);
+			m_buffer.append(oldSize);
+			m_buffer.append(", new size = ");
+			m_buffer.append(newSize);
+			log.debug(m_buffer.toString());
 		}
 	}
 	/**
@@ -240,27 +266,54 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	 */
 	protected class OveragerTask extends TimerTask
 	{
+		private String m_message;
+		private StringBuffer m_buffer;
+
 		protected OveragerTask(long period) 
 		{
 			super(period);
+			m_message = "Scheduling for passivation overaged bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + " with id = ";
+			m_buffer = new StringBuffer();
 		}
 		public void execute() 
 		{
-			ContextLRUEntry entry = null;
-			long now = System.currentTimeMillis();
 			ContextLRUList list = getList();
-			synchronized (list) 
+			long now = System.currentTimeMillis();
+
+			synchronized (m_cache.getCacheLock())
 			{
-				while ((entry = (ContextLRUEntry)list.m_tail) != null)
+				for (ContextLRUEntry entry = (ContextLRUEntry)list.m_tail; entry != null; entry = (ContextLRUEntry)list.m_tail)
 				{
 					if (now - entry.m_time >= m_maxBeanAge)
 					{
-						log.log("Passivated overaged bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + " with id = " + entry.m_key);
+						int initialSize = list.m_count;
+						
+						// Log informations
+						log(entry.m_key, initialSize);
+						
+						// Kick off the cache this entry
 						ageOut(entry);
+						
+						int finalSize = list.m_count;
+						
+						if (initialSize == finalSize) 
+						{
+							// Here is a bug.
+							throw new IllegalStateException("Cache synchronization bug");
+						}
 					}
 					else {break;}
 				}
 			}
+		}
+		private void log(Object key, int count) 
+		{
+			m_buffer.setLength(0);
+			m_buffer.append(m_message);
+			m_buffer.append(key);
+			m_buffer.append(" - Cache size = ");
+			m_buffer.append(count);
+			log.debug(m_buffer.toString());
 		}
 	}
 	/* Dummy subclass to give visibility to the inner classes */
@@ -270,4 +323,41 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	{
 		protected ContextLRUEntry(Object key, Object value) {super(key, value);}
 	}
+	
+	/**
+	 * Class used only for debug purposes.
+	 */
+/*
+	private class CacheDumper extends TimerTask
+	{
+		private java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
+		private CacheDumper() {super(5000L);}
+		public void execute() 
+		{
+			synchronized (m_cache.getCacheLock())
+			{
+				if (getMap().size() > 0 && getList().m_count > 0) 
+				{
+					System.err.println();
+					System.err.println("DUMPING CACHE FOR BEAN " + m_cache.getContainer().getBeanMetaData().getEjbName());
+					System.err.println("THE MAP:");
+					System.err.println(Integer.toHexString(getMap().hashCode()) + " size: " + getMap().size());
+					for (java.util.Iterator i = getMap().values().iterator(); i.hasNext();) 
+					{
+						System.err.println(i.next());
+					}
+					System.err.println("THE LIST:");
+					System.err.println(getList());
+//					readLine();
+				}
+			}
+		}
+		private void readLine() 
+		{
+			System.err.println("Hit a key...");
+			try {reader.readLine();}
+			catch (java.io.IOException x) {}
+		}
+	}
+*/
 }
