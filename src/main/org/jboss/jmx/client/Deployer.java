@@ -29,7 +29,8 @@ import org.jboss.jmx.interfaces.JMXAdaptor;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
+ * @version $Revision: 1.9 $
  */
 public class Deployer
 {
@@ -88,10 +89,7 @@ public class Deployer
    
    /**
     * Create a url from the given application url spec.
-    *
     * <p>Will attempt to create a file:// url first.
-    * 
-    * @author cgjung
     */
    protected URL createURL(final String url) throws MalformedURLException {
       if (new File(url).exists()) {
@@ -104,8 +102,6 @@ public class Deployer
 
    /**
     * Lookup of JMXadaptor factored out.
-    *  
-    * @author cgjung
     */
    protected JMXAdaptor lookupAdaptor() throws NamingException {
       JMXAdaptor adapter;
@@ -133,17 +129,8 @@ public class Deployer
       throws Exception
    {
       URL _url = createURL(url);
-      JMXAdaptor server = lookupAdaptor();
-
       // lookup the adapter to use
-      JMXAdaptor adapter;
-      InitialContext ctx = new InitialContext();
-      try {
-         adapter = (JMXAdaptor)ctx.lookup("jmx");
-      }
-      finally {
-         ctx.close();
-      }
+      JMXAdaptor server = lookupAdaptor();
 
       // get the deployer name to use
       ObjectName name = getFactoryName();
