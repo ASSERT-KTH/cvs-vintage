@@ -69,7 +69,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.31 2003/02/01 22:46:42 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.32 2003/02/02 23:35:42 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -115,12 +115,12 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             }
             else if (saved)
             {
-                scarabR.setAlertMessage(
+                scarabR.setConfirmMessage(
                     l10n.get("YourChangesWereSaved"));
             }
             else
             {
-                scarabR.setAlertMessage(
+                scarabR.setInfoMessage(
                     l10n.get("NoChangesMade"));
             }
         }
@@ -152,11 +152,11 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (didCopy)
         {
-            scarabR.setAlertMessage(l10n.get("GlobalArtifactTypeCopied"));
+            scarabR.setConfirmMessage(l10n.get("GlobalArtifactTypeCopied"));
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get("NoChangesMade"));
+            scarabR.setInfoMessage(l10n.get("NoChangesMade"));
         }
     }
 
@@ -208,7 +208,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         }
         else
         {
-            scarabR.setConfirmMessage(l10n.get("NoChangesMade"));
+            scarabR.setInfoMessage(l10n.get("NoChangesMade"));
         }
     }
 
