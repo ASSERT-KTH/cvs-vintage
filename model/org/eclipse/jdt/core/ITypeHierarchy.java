@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2001, 2002 International Business Machines Corp. and others.
+ * Copyright (c) 2000-2003 International Business Machines Corp. and others.
  * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v0.5 
+ * are made available under the terms of the Common Public License v1.0 
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v05.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     IBM Corporation - added support to persist type hierarchies
  ******************************************************************************/
 package org.eclipse.jdt.core;
 
@@ -277,11 +278,12 @@ void refresh(IProgressMonitor monitor) throws JavaModelException;
  */
 void removeTypeHierarchyChangedListener(ITypeHierarchyChangedListener listener);
 /**
- * Store the type hierachy in an output stream.
+ * Store the type hierachy in an output stream. This stored hierarchy can be load by
+ * IType#loadTypeHierachy(IJavaProject, InputStream, IProgressMonitor).
  * 
  * @param outputStream output stream where the hierarchy will be stored
  * @param monitor the given progress monitor
- * @exception JavaModelException if unable to write in the ouput stream
+ * @exception JavaModelException if unable to store the hierarchy in the ouput stream
  * @see IType#loadTypeHierachy(IJavaProject, InputStream, IProgressMonitor)
  * @since 2.1
  */
