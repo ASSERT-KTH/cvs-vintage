@@ -281,6 +281,10 @@ public class EmbededTomcat {
 	}
     }
 
+    /** Add all the default modules, needed for a fully functional container.
+     *  This does not need any XML parser or server.xml. Use this method or
+     *  addServerXmlModules().
+     */ 
     public void addDefaultModules()
 	throws TomcatException
     {
@@ -298,6 +302,10 @@ public class EmbededTomcat {
 	}
     }
 
+    /** Add modules needed for auto-deploy function. 
+     * By default you need to explicitely add ( using addContext() ) any
+     * 	webapp. Use this with addDefaultModules(). 
+     */
     public void addAutoDeploy()
 	throws TomcatException
     {
@@ -622,7 +630,9 @@ public class EmbededTomcat {
     ClassLoader appsCL;
     ClassLoader commonCL;
     ClassLoader containerCL;
-    URL commonCP[];
+    ClassLoader modulesCL;
+    URL[] commonCP;
+    URL[] modulesCP;
     URL[] appsCP;
     URL[] containerCP;
 	
@@ -700,6 +710,16 @@ public class EmbededTomcat {
 	    debug( "Default commonCL ");
 	    commonCL=this.getClass().getClassLoader();
 	}
+	
+	// Intermediary class loader - add modules/xxx/WEB-INF/common/*
+	modulesCP=getModulesCommonCP();
+	if( modulesCP == null ) {
+	    modulesCL=commonCL;
+	} else {
+	    if( dL > 0 )
+		IntrospectionUtils.displayClassPath( "Modules-common", modulesCP );
+	    modulesCL=jdk11Compat.newClassLoaderInstance( modulesCP, commonCL );
+	}
 
 	if( containerCL == null ) {
 	    if( dL > 0 )
@@ -710,8 +730,9 @@ public class EmbededTomcat {
 						 null,
 						 PROPERTY_CONTAINER_LOADER,
 						 true );
+	    containerCP=addModulesContainerCP( containerCP );
 	    containerCL=
-		jdk11Compat.newClassLoaderInstance(containerCP , commonCL);
+		jdk11Compat.newClassLoaderInstance(containerCP , modulesCL);
 	    if( dL > 0 ) IntrospectionUtils.displayClassPath( "ContainerCP",
 							      containerCP );
 	}
@@ -720,21 +741,61 @@ public class EmbededTomcat {
 		IntrospectionUtils.getClassPath( prefix + "apps",
 						 null,
 						 PROPERTY_APPS_LOADER, false );
-	    appsCL=jdk11Compat.newClassLoaderInstance(appsCP , commonCL);
+	    appsCL=jdk11Compat.newClassLoaderInstance(appsCP , modulesCL);
 	}
 	// Tomcat initialization 
 	// Set the env. variable with the classpath
 	String cp=System.getProperty("tc_path_add");
 	cp=IntrospectionUtils.classPathAdd(commonCP,cp);
+	if( modulesCP!= null )
+	    cp=IntrospectionUtils.classPathAdd(modulesCP,cp);
 	cp=IntrospectionUtils.classPathAdd(appsCP,cp);
 	System.getProperties().put("tc_path_add",cp);
 	
 	contextM.setParentLoader(parentCL);
-	contextM.setCommonLoader(commonCL);
+	contextM.setCommonLoader(modulesCL);
 	contextM.setContainerLoader(containerCL);
 	contextM.setAppsLoader(appsCL);
     }
 
+    /** Allow modules to add libs in the common CP. This reduce the
+     *	setup overhead when installing modules.
+     */
+    protected URL[] getModulesCommonCP() {
+	return findModulesCP( "/WEB-INF/lib/common");
+    }
+
+    protected URL[] findModulesCP(String dir) {
+	String prefix= installDir + File.separator + "modules" + File.separator;
+	File f=new File( prefix );
+	if( ! f.exists() ) return null;
+	Vector jarsV = new Vector();
+	String[] list = f.list();
+	for (int i = 0; i < list.length; i++) {
+	    File commonF=new File( f, list[i] + dir );
+	    if( commonF.exists() ) {
+		// Add all the jars
+		IntrospectionUtils.addToClassPath(jarsV, commonF.getAbsolutePath());
+		File classes=new File( commonF, "classes" );
+		if( classes.exists() ) {
+		    URL url=IntrospectionUtils.getURL( commonF.getAbsolutePath(),"classes" );
+		    if( url!=null )
+			jarsV.addElement( url );
+		}
+	    }
+	}
+	if(jarsV.size() == 0 ) return null;
+	return IntrospectionUtils.getClassPath( jarsV );
+    }
+
+    protected URL[] addModulesContainerCP(URL orig[] ) {
+	URL mCP[]=findModulesCP( "/WEB-INF/lib/container" );
+	if( mCP == null || mCP.length==0 ) return orig;
+	URL result[]=new URL[ orig.length + mCP.length ];
+	System.arraycopy( mCP, 0, result, 0, mCP.length );
+	System.arraycopy( orig, 0, result, 0, orig.length );
+	return result;
+    }
     
     // -------------------- Utils --------------------
 
