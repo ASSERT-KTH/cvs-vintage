@@ -39,6 +39,7 @@ public class FindAgainAction extends FrameAction {
 			null,
 			'0',
 			null);
+		setEnabled(false);
 	}
 
 }

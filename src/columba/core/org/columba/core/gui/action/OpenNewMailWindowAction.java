@@ -26,8 +26,8 @@ public class OpenNewMailWindowAction extends FrameAction {
 	public OpenNewMailWindowAction(AbstractFrameController controller) {
 		super(
 			controller,
-			"Mail",
-			"Mail",
+			"Mail Window",
+			"Mail Window",
 			"OPEN_NEW_MAIL_WINDOW",
 			null,
 			null,

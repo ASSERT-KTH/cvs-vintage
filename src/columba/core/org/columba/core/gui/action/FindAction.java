@@ -42,7 +42,7 @@ public class FindAction extends FrameAction {
 			ImageLoader.getImageIcon("stock_search.png"),
 			'0',
 		KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-
+		setEnabled(false);
 	}
 
 }

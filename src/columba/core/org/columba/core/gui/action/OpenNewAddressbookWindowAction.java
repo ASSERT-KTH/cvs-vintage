@@ -23,8 +23,8 @@ public class OpenNewAddressbookWindowAction extends FrameAction {
 	public OpenNewAddressbookWindowAction(AbstractFrameController controller) {
 			super(
 				controller,
-				"Addressbook",
-				"Addressbook",
+				"Addressbook Window",
+				"Addressbook Window",
 				"OPEN_NEW_ADDRESSBOOK_WINDOW",
 				null,
 				null,
