@@ -11,12 +11,13 @@ package org.jboss.cmp.ejb;
 
 import org.jboss.persistence.schema.AbstractAssociationEnd;
 import org.jboss.persistence.schema.AbstractAttribute;
+import org.jboss.persistence.schema.AbstractType;
 
 public class BMPEntity extends Entity
 {
-   public BMPEntity(String ejbName)
+   public BMPEntity(String ejbName, AbstractType pkClass)
    {
-      super(ejbName);
+      super(ejbName, pkClass);
    }
 
    public AbstractAttribute getAttributeByName(String name)

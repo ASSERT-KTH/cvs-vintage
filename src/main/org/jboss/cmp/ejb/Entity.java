@@ -9,16 +9,20 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.persistence.schema.AbstractClass;
+import org.jboss.persistence.schema.AbstractClassWithIdentity;
 import org.jboss.persistence.schema.AbstractType;
 
-public abstract class Entity implements AbstractClass
+public abstract class Entity implements AbstractClassWithIdentity
 {
-   protected String ejbName;
+   protected final String ejbName;
+   protected final AbstractType pkClass;
+   protected boolean unknownPk = false;
+   protected boolean identityGenerated = false;
 
-   protected Entity(String ejbName)
+   protected Entity(String ejbName, AbstractType pkClass)
    {
       this.ejbName = ejbName;
+      this.pkClass = pkClass;
    }
 
    public String getName()
@@ -29,5 +33,20 @@ public abstract class Entity implements AbstractClass
    public int getFamily()
    {
       return AbstractType.OBJECT;
+   }
+
+   public AbstractType getIdentityType()
+   {
+      return pkClass;
+   }
+
+   public boolean isSystemIdentity()
+   {
+      return false;
+   }
+
+   public boolean isIdentityGenerated()
+   {
+      return false;
    }
 }

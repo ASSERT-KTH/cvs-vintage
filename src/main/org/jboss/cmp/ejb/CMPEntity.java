@@ -14,16 +14,18 @@ import java.util.Map;
 
 import org.jboss.persistence.schema.AbstractAssociationEnd;
 import org.jboss.persistence.schema.AbstractAttribute;
+import org.jboss.persistence.schema.AbstractType;
 
 public class CMPEntity extends Entity
 {
    protected String schemaName;
    private Map cmpFields = new HashMap();
    private Map cmrFields = new HashMap();
+   private boolean systemIdentity = true;
 
-   public CMPEntity(String ejbName, String schemaName)
+   public CMPEntity(String ejbName, String schemaName, AbstractType pkClass)
    {
-      super(ejbName);
+      super(ejbName, pkClass);
       this.schemaName = schemaName;
    }
 
@@ -47,6 +49,11 @@ public class CMPEntity extends Entity
       return (AbstractAssociationEnd) cmrFields.get(name);
    }
 
+   public boolean isSystemIdentity()
+   {
+      return systemIdentity;
+   }
+
    public String getSchemaName()
    {
       return schemaName;
@@ -54,6 +61,8 @@ public class CMPEntity extends Entity
 
    public void setPkFields(String[] pkFields)
    {
+      systemIdentity = false;
+      identityGenerated = false;
    }
 
    public String toString()
