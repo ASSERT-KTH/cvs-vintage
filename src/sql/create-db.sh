@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.18 2003/02/14 16:55:27 tenersen Exp $
+# $Id: create-db.sh,v 1.19 2003/02/14 17:13:25 dlr Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -96,13 +96,13 @@ if [ "${usage}" ] ; then
         echo "  $CMDNAME -h localhost -u scarab"
         echo        
     echo "Options:"
-    echo "  -n, --name=DBNAME          Database name          (${DB_NAME})"
-    echo "  -h, --host=HOSTNAME        Database server host   (${DB_HOST})"
-    echo "  -P, --port=PORT            Database server port   (3306 M | 5432 P)"
-    echo "  -u, --username=USERNAME    Username to connect as (${DB_USER})"
+    echo "  -n, --name DBNAME          Database name          (${DB_NAME})"
+    echo "  -h, --host HOSTNAME        Database server host   (${DB_HOST})"
+    echo "  -P, --port PORT            Database server port   (3306 M | 5432 P)"
+    echo "  -u, --username USERNAME    Username to connect as (${DB_USER})"
     echo "  -p, --password             Prompt for password"
-    echo "  -l, --loadorder=FILE       SQL file load order    (${LOAD_ORDER})"
-    echo "  -s, --scripts=DIR          SQL file directory"
+    echo "  -l, --loadorder FILE       SQL file load order    (${LOAD_ORDER})"
+    echo "  -s, --scripts DIR          SQL file directory"
     echo "                               (${POPULATION_SCRIPT_DIR})"
     echo "  -e, --empty                Create an empty database with only required data"
     echo "  -q, --quiet                Don't write any messages"
