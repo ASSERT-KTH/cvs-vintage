@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.24 2003/11/18 08:56:59 linus Exp $
+// $Id: TargetManager.java,v 1.25 2003/12/09 14:35:21 mkl Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -521,6 +521,15 @@ public final class TargetManager {
      */
     public synchronized Collection getTargets() {
         return new ArrayList(_targets);
+    }
+    
+    public synchronized Collection getModelTargets() {
+        ArrayList targets = new ArrayList();
+        Iterator iter = getTargets().iterator();
+        while (iter.hasNext()) {
+            targets.add(determineModelTarget(iter.next()));
+        }
+        return targets;
     }
 
     /**
