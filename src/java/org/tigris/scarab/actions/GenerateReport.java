@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -90,7 +91,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.4 2001/10/01 06:15:46 jon Exp $
+    @version $Id: GenerateReport.java,v 1.5 2001/10/04 01:21:07 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -99,58 +100,69 @@ public class GenerateReport
         throws Exception
     {
         ReportGenerator report = populateReportGenerator(data, context);
-        if ( report == null) 
+        Intake intake = getIntakeTool(context);
+        if ( !intake.isAllValid() ) 
         {
+            data.setMessage("Invalid data");
             setTarget(data, "reports,Step1.vm");            
+        }
+        else if (report.getType() == 1)
+        {
+            // this should go to Step3_2a but that screen currently only
+            // presents one valid option in the select so skip it.
+            setTarget(data, "reports,Step3_2b.vm");
+        }
+        else if (report.getType() == 0)
+        {
+            setTarget(data, "reports,Step2.vm");
         }
         else 
         {
-            setTarget(data, "reports,Step2.vm");
+            data.setMessage("Invalid data");
+            setTarget(data, "reports,Step1.vm");            
         }
     }
 
     public void doStep2agoto2b( RunData data, TemplateContext context )
         throws Exception
     {
-        if ( populateReportGenerator(data, context) == null) 
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Step2.vm");            
+            setTarget(data, "reports,Step2b.vm");
         }
         else 
         {
-            step2a(data, context);
-            setTarget(data, "reports,Step2b.vm");
+            setTarget(data, "reports,Step2.vm");            
         }
     }
 
     public void doStep2agoto3( RunData data, TemplateContext context )
         throws Exception
     {
-        if ( populateReportGenerator(data, context) == null) 
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Step2.vm");            
+            setTarget(data, "reports,Step3_1a.vm");
         }
         else 
         {
-            step2a(data, context);
-            setTarget(data, "reports,Step3_1a.vm");
+            setTarget(data, "reports,Step2.vm");            
         }
-    }
-
-    public void step2a( RunData data, TemplateContext context )
-    {
     }
 
     public void doStep2baddgroup( RunData data, TemplateContext context )
         throws Exception
     {
         ReportGenerator report = populateReportGenerator(data, context);
-        if ( report != null) 
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
             // add new option group
             List groups = report.getOptionGroups();
             ReportGenerator.OptionGroup group = report.getNewOptionGroup();
-            IntakeTool intake = getIntakeTool(context);
             Group intakeGroup = intake.get("OptionGroup", 
                                            group.getQueryKey(), false);
             if ( intakeGroup != null ) 
@@ -171,7 +183,8 @@ public class GenerateReport
         throws Exception
     {
         ReportGenerator report = populateReportGenerator(data, context);
-        if ( report != null) 
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
             // remove any selected option groups
             List groups = report.getOptionGroups();
@@ -190,7 +203,8 @@ public class GenerateReport
         throws Exception
     {
         ReportGenerator report = populateReportGenerator(data, context);
-        if ( report != null) 
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
             setTarget(data, "reports,Step3_1a.vm");
         }
@@ -203,26 +217,106 @@ public class GenerateReport
     public void doStep3_1a( RunData data, TemplateContext context )
         throws Exception
     {
-        if ( populateReportGenerator(data, context) == null) 
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Step3_1a.vm"); 
+            setTarget(data, "reports,Step3_1b.vm");
         }
         else 
         {
-            setTarget(data, "reports,Step3_1b.vm");
+            setTarget(data, "reports,Step3_1a.vm"); 
         }
     }
 
     public void doStep3_1b( RunData data, TemplateContext context )
         throws Exception
     {
-        if ( populateReportGenerator(data, context) == null) 
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Step3_1b.vm"); 
+            setTarget(data, "reports,Report_1.vm");
         }
         else 
         {
-            setTarget(data, "reports,Report_1.vm");
+            setTarget(data, "reports,Step3_1b.vm"); 
+        }
+    }
+
+    public void doStep3_2a( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
+        {
+            setTarget(data, "reports,Step3_2b.vm");
+        }
+        else 
+        {
+            setTarget(data, "reports,Step3_2a.vm"); 
+        }
+    }
+
+
+    public void doStep3_2badddate( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
+        {
+            // add new option group
+            List dates = report.getReportDates();
+            ReportGenerator.ReportDate newDate = report.getNewReportDate();
+            Group intakeDate = intake.get("ReportDate", 
+                                           newDate.getQueryKey(), false);
+            if ( intakeDate != null ) 
+            {                
+                intakeDate.setProperties(newDate);
+                newDate.setQueryKey(String.valueOf(dates.size()));
+                dates.add(newDate);
+            }
+        }
+        setTarget(data, "reports,Step3_2b.vm");
+    }
+
+    public void doStep3_2bdeletedate( RunData data, TemplateContext context )
+        throws Exception
+    {
+                    System.out.println("Entered delete date");
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
+        {
+            // remove any selected option groups
+            List dates = report.getReportDates();
+            for ( int i=dates.size()-1; i>=0; i-- ) 
+            {
+                if (((ReportGenerator.ReportDate)dates.get(i)).isSelected())
+                {
+                    dates.remove(i);
+                    System.out.println("Removing date, size now = " + dates.size());
+                }
+            }
+        }
+        setTarget(data, "reports,Step3_2b.vm");
+    }
+
+
+    public void doStep3_2b( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ReportGenerator report = populateReportGenerator(data, context);
+        Intake intake = getIntakeTool(context);
+        if ( intake.isAllValid() ) 
+        {
+            setTarget(data, "reports,Report_2.vm");
+        }
+        else 
+        {
+            setTarget(data, "reports,Step3_2b.vm"); 
         }
     }
 
@@ -253,13 +347,13 @@ public class GenerateReport
         ReportGenerator report = null;
         IntakeTool intake = getIntakeTool(context);
 
-        if ( intake.isAllValid() ) 
+        if ( !intake.isAllValid() ) 
         {
-            ScarabRequestTool scarabR = getScarabRequestTool(context); 
-            report = scarabR.getReport();
-            populateReportGenerator(report, data.getParameters());
-
+            data.setMessage("Please check data");
         }
+        ScarabRequestTool scarabR = getScarabRequestTool(context); 
+        report = scarabR.getReport();
+        populateReportGenerator(report, data.getParameters());
         return report;
     }
 
@@ -269,11 +363,9 @@ public class GenerateReport
     {
         Intake intake = new Intake();
         intake.init(parameters);
-        
-        // System.out.println("Parameters: "+ 
-        //    ((RunData)context.get("data")).getParameters() );
-        intake.get("Report", report.getQueryKey(), false)
-            .setProperties(report);
+
+        Group intakeReport = intake.get("Report", report.getQueryKey(), false);
+        intakeReport.setValidProperties(report);
 
         // set up option groups
         int i = 0;
@@ -284,7 +376,7 @@ public class GenerateReport
                                        group.getQueryKey(), false);
         while ( intakeGroup != null ) 
         {
-            intakeGroup.setProperties(group);
+            intakeGroup.setValidProperties(group);
             groups.add(group);
 
             group = report.getNewOptionGroup();
@@ -305,6 +397,44 @@ public class GenerateReport
                 ((ReportGenerator.OptionGroup)groups.get(groupIndex))
                     .addOption(rmo);
             }
+        }
+
+        // set up dates
+        i = 0;
+        List dates = new ArrayList();
+        ReportGenerator.ReportDate date = report.getNewReportDate();
+        date.setQueryKey(String.valueOf(i++));
+        Group intakeDate = intake.get("ReportDate", 
+                                       date.getQueryKey(), false);
+        while ( intakeDate != null ) 
+        {
+            if ( intakeDate.get("Date").isSet()) 
+            {
+                intakeDate.setValidProperties(date);
+                dates.add(date);                
+            }
+            
+            date = report.getNewReportDate();
+            date.setQueryKey(String.valueOf(i++));
+            intakeDate = intake.get("ReportDate", 
+                                     date.getQueryKey(), false);
+        }
+        if ( dates.size() > 0 ) 
+        {
+            // the intakeReport.setProperties call above may have added a date
+            // so we do not want to lose it. 
+            List reportDates = report.getReportDates();
+            if ( reportDates != null ) 
+            {
+                for ( int j=0; j<reportDates.size(); j++ ) 
+                {
+                    ReportGenerator.ReportDate reportDate = 
+                        (ReportGenerator.ReportDate)reportDates.get(j);
+                    date.setQueryKey(String.valueOf(i++));
+                    dates.add(reportDate);
+                }
+            }
+            report.setReportDates(dates);            
         }
     }
 }

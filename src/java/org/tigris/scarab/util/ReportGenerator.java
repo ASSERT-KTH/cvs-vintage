@@ -510,20 +510,25 @@ public class ReportGenerator
             d = new Date[max];
             for ( int i=0; i<max; i++ ) 
             {
-                d[i] = (Date)dates.get(i);
+                d[i] = (Date)((ReportDate)dates.get(i)).getDate();
             }
+        System.out.println("getting dates: " + d + " size="+d.length);
         }
+        System.out.println("getting dates: " + d);
         
         return d;
     }
 
+    /*
     public void setDates(List v)
     {
         this.dates = v;
     }
+    */
 
     public void setDates(Date[] v)
     {
+        System.out.println("setting dates: " + v);
         if ( v == null ) 
         {
             dates = null;
@@ -534,7 +539,7 @@ public class ReportGenerator
             dates = new ArrayList(max);
             for ( int i=0; i<max; i++ ) 
             {
-                dates.add(v[i]);
+                dates.add(new ReportDate(v[i]));
             }
         }
     }
@@ -548,16 +553,11 @@ public class ReportGenerator
         Date date = null;
         if ( dates != null && dates.size() != 0 ) 
         {
-            date = (Date)dates.get(dates.size()-1);
+            date = (Date)((ReportDate)dates.get(dates.size()-1)).getDate();
         }
-        else 
-        {
-            System.out.println("NO DATES");
-        }
-        
-
         return date;
     }
+
 
     /**
      * Set the value of newDate.
@@ -571,9 +571,28 @@ public class ReportGenerator
             {
                 dates = new ArrayList();
             }
-            dates.add(date);
+            ReportDate reportDate = new ReportDate(date);
+            reportDate.setQueryKey(String.valueOf(dates.size()));
+            dates.add(reportDate);
         }
     }
+
+
+    public void setReportDates(List v)
+    {
+        this.dates = v;
+    }
+
+    public List getReportDates()
+    {
+        return dates;
+    }
+
+    public ReportDate getNewReportDate()
+    {
+        return new ReportDate();
+    }
+
 
     public List getOptionsMinusGroupedOptions()
         throws Exception
@@ -736,6 +755,16 @@ public class ReportGenerator
         return runQuery(o1, o2, rmo, date);
     }
 
+    public int getIssueCount(AttributeOption o1, Date date)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.addSelectColumn("count(a1.ISSUE_ID)");
+        addOptionOrGroup(1, o1, date, crit);
+        // need to add in module criteria !FIXME!
+        return getCountAndCleanUp(crit);
+    }
+
     private int[] aliases = new int[5];
 
     private void registerAlias(int alias, Criteria crit)
@@ -773,13 +802,22 @@ public class ReportGenerator
         if ( optionOrGroup instanceof OptionGroup ) 
         {
             List options = ((OptionGroup)optionOrGroup).getOptions();
-            NumberKey[] nks = new NumberKey[options.size()];
-            for ( int i=0; i<nks.length; i++) 
+            if ( options != null && options.size() > 0 ) 
+            {            
+                NumberKey[] nks = new NumberKey[options.size()];
+                for ( int i=0; i<nks.length; i++) 
+                {
+                    nks[i] = ((RModuleOption)options.get(i)).getOptionId();
+                }
+                
+                crit.addIn(a+'.'+ACT_NEW_OPTION_ID, nks);
+            }
+            else 
             {
-                nks[i] = ((RModuleOption)options.get(i)).getOptionId();
+                // group is empty make sure there are no results
+                crit.add(a+'.'+ACT_NEW_OPTION_ID, -1);
             }
             
-            crit.addIn(a+'.'+ACT_NEW_OPTION_ID, nks);
         }
         else if (optionOrGroup instanceof RModuleOption)
         {
@@ -811,7 +849,6 @@ public class ReportGenerator
         addOptionOrGroup(2, o2, date, crit);
         addOptionOrGroup(3, ogOrRmo, date, crit);
         // need to add in module criteria !FIXME!
-        System.out.println("5:  " + crit);
         return getCountAndCleanUp(crit);
     }
 
@@ -929,6 +966,107 @@ public class ReportGenerator
             }
             return options;
         }
+
+        // *********************************************************
+        // Retrievable implementation
+        // *********************************************************
+        
+        /**
+         * Get the value of queryKey.
+         * @return value of queryKey.
+         */    
+        public String getQueryKey() 
+        {
+            /*
+            List groups = getOptionGroups();
+            int index = -1;
+            for ( int i=0; i<groups.size(); i++ ) 
+            {
+                if ( ((OptionGroup)groups.get(i)).getDisplayValue()
+                     .equals(displayValue)) 
+                {
+                    index = i;
+                    break;
+                }
+            }
+            
+            return String.valueOf(index);
+            */
+            if ( queryKey == null ) 
+            {
+                return "";
+            }
+            return queryKey;
+        }
+
+        
+        /**
+         * Set the value of queryKey.
+         * @param v  Value to assign to queryKey.
+         */
+        public void setQueryKey(String  v) 
+        {
+            this.queryKey = v;
+        }
+    }
+
+
+    // *********************************************************
+
+    public static class ReportDate
+        implements Retrievable
+    {
+        private Date date;
+        private boolean selected;
+        private String queryKey;
+        
+        public ReportDate()
+        {
+        }
+
+        public ReportDate(Date date)
+        {
+            this.date = date;
+        }
+
+        
+        /**
+         * Get the value of date.
+         * @return value of date.
+         */
+        public Date getDate() 
+        {
+            return date;
+        }
+        
+        /**
+         * Set the value of date.
+         * @param v  Value to assign to date.
+         */
+        public void setDate(Date  v) 
+        {
+            this.date = v;
+        }
+        
+        
+        /**
+         * Get the value of selected.
+         * @return value of selected.
+         */
+        public boolean isSelected() 
+        {
+            return selected;
+        }
+        
+        /**
+         * Set the value of selected.
+         * @param v  Value to assign to selected.
+         */
+        public void setSelected(boolean  v) 
+        {
+            this.selected = v;
+        }
+        
 
         // *********************************************************
         // Retrievable implementation

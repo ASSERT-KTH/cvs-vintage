@@ -82,6 +82,7 @@ If so,  enter the following information (it can be edited later).
     <input type="submit" value="continue" name="eventSubmit_doStep1" />
 </p>
 
+#addReportHiddenInputs($report "reports,Step1.vm")
 $intake.declareGroups()
 </form>
 

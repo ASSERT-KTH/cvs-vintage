@@ -125,7 +125,7 @@ column.</p>
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
 
-#addReportHiddenInputs($report)
+#addReportHiddenInputs($report "reports,Step2b.vm")
 $intake.declareGroups()
 </form>
 	

@@ -48,7 +48,7 @@ seperate column (i.e. side-by-side comparison).</p>
 			<select name="$intakeReport.AttributesAndOptionsForGrouping.Key" 
                 multiple="multiple" size="20">
 
-                #attributeOptionOptionList( $report.AllOptionsForGrouping )
+                #attributeOptionOptionList( $report.AllOptionsForGrouping $report.AttributesAndOptionsForGrouping)
 			</select>
 		
 			</td>
@@ -65,7 +65,7 @@ seperate column (i.e. side-by-side comparison).</p>
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
 
-#addReportHiddenInputs($report)
+#addReportHiddenInputs($report "reports,Step2.vm")
 $intake.declareGroups()
 </form>
 

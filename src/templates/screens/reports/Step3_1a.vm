@@ -35,6 +35,9 @@
                     value="$intakeReport.NewDate" />
             </td>
         </tr>
+#* commenting out until user attributes are sorted out, otherwise there is
+   only one valid option
+
 		<tr>
 			<th>rows: criteria</th>
 
@@ -61,16 +64,17 @@
 			    </select>
 			</td>
 		</tr>
+*#
 	</table>
 </div>
 
 <p class="functnbar">
     <input type="submit" value="continue" name="eventSubmit_doStep3_1a" />
     &nbsp;
-    <input type="submit" value="back" />
+    <!-- <input type="submit" value="back" /> -->
 </p>
 
-#addReportHiddenInputs($report)
+#addReportHiddenInputs($report "reports,Step3_1a.vm")
 $intake.declareGroups()
 </form>
 

@@ -1,147 +1,10 @@
-<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
-<html>
+#set ( $report = $scarabR.Report )
+#set ( $intakeReport = $intake.Report.mapTo($report) )
+#set ( $action = $link.setPage("reports,Step3_2a.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Step3_2b.vm") )
 
-<head>
-	<title>Define report (2.4.1)</title>
-	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
-</head>
+<div class="app" id="div2-4-1-step4b">
 
-<body>
-<form action="#" method="get">
-
-	<!-- SourceCast -->
-	<div id="banner">
-		<table border="0" cellspacing="12" cellpadding="0" width="100%">
-		<tr>
-		
-		<td>
-		<div align="right" id="loginstatus">
-			<div>
-				Logged in as: <strong class="username">User XX</strong>
-			</div>
-			<div>
-				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
-			</div>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr>
-<td id="leftcol" nowrap="nowrap" width="20%">
-<!-- Structural Elements -->
-	
-	<!-- SourceCast -->
-	<div id="navcol">
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-			<th>
-			<a href="#">Start page</a>
-			</th>
-			</tr>
-			<tr>
-			<th>
-			<a href="#">Projects</a>/<a href="#">Categories</a>
-			</th>
-			</tr>
-			<tr>
-			<td>&nbsp;</td>
-			</tr>
-			<tr>
-			<th>
-			Project tools
-			</th>
-			</tr>
-			<tr>
-			<td>
-			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
-			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="queries, saved and custom">Queries</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Mailing lists</a></div> 
-			<div>&nbsp;&nbsp;+ <a href="#">Members</a></div>  
-			<div>&nbsp;&nbsp;+ <a href="#">News</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Source code</a></div>
-			</td>
-			</tr>
-			<tr>
-			<td>&nbsp;</td>
-			</tr>
-			<tr>
-			<th>
-			&nbsp;<a href="#">Admin Functions</a>
-			</th>
-			</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- SourceCast -->
-	<div id="helptext">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-		<th>How do I...?</th>
-		</tr>
-		<tr>
-		<td>
-			<div> 
-				<a href="#">[Go to help index]</a>
-			</div>
-			<div> 
-				<a href="#">Use this page</a>...
-			</div>
-			<div>
-				<a href="#">Learn about a project</a>...
-			</div>
-			<div>
-				<a href="#">Join a project</a>...
-			</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-<!-- Structural Elements -->
-</td>
-<td id="bodycol">
-<!-- Structural Elements -->
-
-	<!-- Scarab - App -->
-	<div id="topmodule">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-			<td nowrap="nowrap">
-			<select>
-			<option>saved queries</option>
-			<option>query one</option>
-			<option>query two</option>
-			</select> 
-			<input type="submit" name="query" value="Go" class="bttn" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<input type="text" size="15" name="" />
-			<input type="submit" name="query" value="Query" class="bttn" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
-			</td>			
-		</tr>
-		</table>
-	</div>
-	<!-- Scarab - App -->
-	
-	<!-- Scarab - App -->
-	<div class="app" id="div2-4-1-step4b">
-		<h2>Define report (2.4.1)</h2>
+<h2>Define report (2.4.1)</h2>
 		
 		<div id="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
@@ -153,54 +16,47 @@
 			</table>
 		</div>
 		
-		<p class="functnbar"><strong>3a: Define row/column criteria</strong> | 3b: Select row/column content</p>
+<p class="functnbar">
+    <strong>3a: Define row/column criteria</strong> | 
+    3b: Select row/column content
+</p>
 		
-		<h3>Report content: Rate of change analysis</h3>	  
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">			
+<h3>Report content: Rate of change analysis</h3>	  
 
-			<tr>
+<form method="get" action="$action">
+		
+<div class="axial">
+	<table width="100%" cellpadding="3" cellspacing="2" border="1">
+	    <tr>
 			<th width="120">rows: criteria</th>
+
 			<td>
-			<select>
-			<option>select criteria</option>		  
-			<option>attributes/options</option>			 	
-			<option>build versions</option>			 	
-			<option>users</option>			 	
-			</select>
+			    <select name="$intakeReport.Axis1Category.Key">
+			        <option value="">select criteria</option>
+#set ($options = $scarabR.Report.AxisCategories)
+#foreach ( $option in $options )
+		  	        <option value="$option.Value">$option.Name</option>
+#end		  
+			    </select>
 			</td>
-			</tr>
+		</tr>
 			
-			<tr>
+		<tr>
 			<th width="120">columns: date(s)</th>
 			<td>Added during next step</td>
-			</tr>
-			</table>
-		</div>
-		
-		<p class="functnbar"><input type="submit" value="continue" />&nbsp;<input type="submit" value="back" /></p>
-	</div>
-	<!-- Scarab - App -->
+		</tr>
+	</table>
+</div>
 
-<!-- Structural Elements -->
-</td>
-</tr>
-</table>
-<!-- Structural Elements -->
+<p class="functnbar">
+    <input type="submit" value="continue" name="eventSubmit_doStep3_2a" />
+    &nbsp;
+    <!-- <input type="submit" value="back" /> -->
+</p>
 
-	<!-- SourceCast -->
-	<div id="footer">
-		<p>
-		<a href="#">Domain Home</a> |
-		<a href="#">Help</a> | 
-		<a href="#">Site FAQ</a> |
-		<a href="#">Feedback</a>
-		</p>
-	</div>
-	<!-- SourceCast -->
-
+#addReportHiddenInputs($report $link.CurrentView)
+$intake.declareGroups()
 </form>
-</body>
-</html>
+
+</div>
 

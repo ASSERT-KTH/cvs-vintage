@@ -377,4 +377,13 @@
     <field name="Selected" key="sel" type="boolean"/>
 </group>
 
+<group name="ReportDate" key="repdt" mapToObject="util.ReportGenerator$ReportDate">
+    <field name="Date" key="d" type="DateString">
+        <rule name="format1" value="MM/dd/yy HH:mm"/>
+        <rule name="format2" value="MM/dd/yy"/>
+        <rule name="flexible" value="true"/>
+    </field>
+    <field name="Selected" key="sel" type="boolean"/>
+</group>
+
 </input-data>

@@ -1,5 +1,6 @@
-#macro ( attributeOptionOptionList $optionList )
+#macro ( attributeOptionOptionList $optionList $selectOptions )
 
+#set ($showSeparator = false)
 #foreach ( $option in $optionList )
     #if ($showSeparator && $option.isAttribute())
 			    <option value="">----------------------------------</option>
@@ -10,16 +11,24 @@
     #else
         #set ($spaces = "&nbsp;&nbsp;&nbsp;")
     #end
-    			<option value="$option.Value">$spaces$option.Name</option>
+    #set ($selected = "")
+    #set ($quote = '"')
+    #foreach ($value in $selectOptions )
+        #if ($option.Value == $value)
+            #set ($selected = ' selected="selected"')
+        #end
+    #end
+    	    <option value="$option.Value"$selected>$spaces$option.Name</option>
 #end
 
 #end
 
 
 
-#macro ( addReportHiddenInputs $report )
+#macro ( addReportHiddenInputs $report $template)
 
 #set ( $ir = $intake.Report.mapTo($report) )
+#if ($template != "reports,Step1.vm")
 #if ($report.Name)
     <input type="hidden" name="$ir.Name.Key" value="$ir.Name" />
 #end
@@ -29,12 +38,18 @@
 #if ($report.Type != 0)
     <input type="hidden" name="$ir.Type.Key" value="$ir.Type" />
 #end
+#end
+
+#if ($template != "reports,Step2.vm")
 #if ($report.AttributesAndOptionsForGrouping)
     #foreach ($ao in $report.AttributesAndOptionsForGrouping)
     <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key" 
         value="$ao" />
     #end
 #end
+#end
+
+#if ($template != "reports,Step2b.vm")
 #if ($report.OptionGroups)
     #foreach ($group in $report.OptionGroups)
         #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($group))
@@ -48,6 +63,9 @@
         #end
     #end
 #end
+#end
+
+#if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
 #if ($report.Axis1Category != 0)
     <input type="hidden" name="$ir.Axis1Category.Key" 
         value="$ir.Axis1Category" />
@@ -56,6 +74,9 @@
     <input type="hidden" name="$ir.Axis2Category.Key" 
         value="$ir.Axis2Category" />
 #end
+#end
+
+#if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
 #if ($report.Axis1AttributesAndOptions)
     #foreach ($ao in $report.Axis1AttributesAndOptions)
     <input type="hidden" name="$ir.Axis1AttributesAndOptions.Key" 
@@ -68,11 +89,27 @@
         value="$ao" />
     #end
 #end
+#end
+
+#*
 #if ($report.Dates)
     #foreach ($date in $report.Dates)
+$date
         <input type="hidden" name="$ir.Dates.Key" 
             value="$format.getDate("MM/dd/yy HH:mm", $date)" />
     #end
+#end
+*#
+
+
+#if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2b")
+#if ($report.ReportDates)
+    #foreach ($date in $report.ReportDates)
+        #set ($intakeDate = $intake.ReportDate.mapTo($date))
+        <input type="hidden" name="$intakeDate.Date.Key" 
+            value="$format.getDate("MM/dd/yy HH:mm", $date.Date)" />
+    #end
+#end
 #end
 
 #end

@@ -35,7 +35,7 @@
 			<select name="$intakeReport.Axis1AttributesAndOptions.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions )
+                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions $report.Axis1AttributesAndOptions)
 			</select>
 			</td>
 		</tr>
@@ -46,7 +46,7 @@
 			<select name="$intakeReport.Axis2AttributesAndOptions.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions )
+                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions $report.Axis2AttributesAndOptions)
 			</select>
 			</td>
 		</tr>
@@ -60,7 +60,7 @@
     <input type="submit" value="cancel" name="eventSubmit_doCancel" />
 </p>
 
-#addReportHiddenInputs($report)
+#addReportHiddenInputs($report "reports,Step3_1b.vm")
 $intake.declareGroups()
 </form>
 	
