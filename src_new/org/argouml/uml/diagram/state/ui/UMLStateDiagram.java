@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.6 2002/01/24 19:28:27 psager Exp $
+// $Id: UMLStateDiagram.java,v 1.7 2002/01/25 15:14:37 psager Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -134,18 +134,28 @@ public class UMLStateDiagram extends UMLDiagram {
 			System.out.println("Statemachine without context not yet possible :-(");
 	}
 
+    /** method to perform a number of important initializations of a StateDiagram. 
+     * 
+     * @see      each diagram type has a similar <I>UMLxxxDiagram</I> class.
+     *
+     * @param m  MClass from the model in NSUML...connects the class to the State diagram.
+     *
+     * @param sm MStateMachine from the model in NSUML...
+     *
+     * @modified changed <I>lay</I> from <I>LayerPerspective</I> to <I>LayerPerspectiveMutable</I>. 
+     *           This class is a child of <I>LayerPerspective</I> and was implemented 
+     *           to correct some difficulties in changing the model. <I>lay</I> is used 
+     *           mainly in <I>LayerManager</I>(GEF) to control the adding, changing and 
+     *           deleting layers on the diagram...
+     *           psager@tigris.org   Jan. 24, 2oo2
+     */        
   public void setup(MClass m, MStateMachine sm) {
-// 	  MNamespace namespace = null;
-// 	  if (m.getNamespace() != null) namespace = m.getNamespace();
-// 	  else namespace = m;
-	  
 	  setNamespace(m);
 	  StateDiagramGraphModel gm = new StateDiagramGraphModel();
 	  gm.setNamespace(m);
 	  if (sm != null) gm.setMachine(sm);
 	  setGraphModel(gm);
 	  LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
-//          LayerPerspective lay = new LayerPerspective(m.getName(), gm);
 	  setLayer(lay);
 	  StateDiagramRenderer rend = new StateDiagramRenderer(); // singleton
 	  lay.setGraphNodeRenderer(rend);
@@ -156,6 +166,10 @@ public MStateMachine getStateMachine() {
     return ((StateDiagramGraphModel)getGraphModel()).getMachine();
   }
 
+/**
+ * @param sm
+ * @param m
+ */
   public void setStateMachine(MStateMachine sm) {
     ((StateDiagramGraphModel)getGraphModel()).setMachine(sm);
   }
