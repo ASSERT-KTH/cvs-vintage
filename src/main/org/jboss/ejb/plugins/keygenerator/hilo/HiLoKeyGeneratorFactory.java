@@ -12,6 +12,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.naming.Util;
 
+import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -26,7 +27,7 @@ import java.sql.ResultSet;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @jmx.mbean name="jboss.system:service=KeyGeneratorFactory,type=HiLo"
  * extends="org.jboss.system.ServiceMBean"
  */
@@ -34,7 +35,7 @@ public class HiLoKeyGeneratorFactory
    extends ServiceMBeanSupport
    implements KeyGeneratorFactory, HiLoKeyGeneratorFactoryMBean, Serializable
 {
-   private String dataSource;
+   private ObjectName dataSource;
    private DataSource ds;
 
    private String jndiName;
@@ -66,7 +67,7 @@ public class HiLoKeyGeneratorFactory
    /**
     * @jmx.managed-attribute
     */
-   public void setDataSource(String dataSource) throws Exception
+   public void setDataSource(ObjectName dataSource) throws Exception
    {
       if(getState() == STARTED && !dataSource.equals(this.dataSource))
       {
@@ -78,7 +79,7 @@ public class HiLoKeyGeneratorFactory
    /**
     * @jmx.managed-attribute
     */
-   public String getDataSource()
+   public ObjectName getDataSource()
    {
       return dataSource;
    }
@@ -326,12 +327,13 @@ public class HiLoKeyGeneratorFactory
       }
    }
 
-   private DataSource lookupDataSource(String dataSource)
+   private DataSource lookupDataSource(ObjectName dataSource)
       throws Exception
    {
       try
       {
-         return (DataSource)new InitialContext().lookup(dataSource);
+         String dsJndi = (String) server.getAttribute(dataSource, "BindName");
+         return (DataSource)new InitialContext().lookup(dsJndi);
       }
       catch(NamingException e)
       {

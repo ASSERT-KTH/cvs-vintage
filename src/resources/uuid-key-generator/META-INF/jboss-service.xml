@@ -26,14 +26,13 @@
          name="jboss:service=KeyGeneratorFactory,type=HiLo">
 
      <depends>jboss:service=TransactionManager</depends>
-     <depends>jboss.jca:name=DefaultDS,service=LocalTxCM</depends>
 
      <!--
         | Attributes common to HiLo factory instances
      -->
 
      <!-- DataSource JNDI name -->
-     <attribute name="DataSource">java:/DefaultDS</attribute>
+     <depends optional-attribute-name="DataSource">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
 
      <!-- table name -->
      <attribute name="TableName">HILOSEQUENCES</attribute>
