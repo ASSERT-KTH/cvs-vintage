@@ -203,7 +203,7 @@ public class Transaction
         {
             ScarabUser toUser = (ScarabUser)iter.next();
             te.setTo(toUser.getFirstName() + " " + toUser.getLastName(), 
-                     toUser.getUserName());
+                     toUser.getEmail());
             te.send();
         }
     }

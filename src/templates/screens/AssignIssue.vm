@@ -98,7 +98,7 @@ $page.setTitle("Assign users to artifact")
 		<tr class="a">
 		<td><input type="checkbox" name="newremoveusers" value="$assignedUser.UserName" /></td>
 		<td><strong>$assignedUser.FirstName $assignedUser.LastName</strong></td>
-		<td><a href="mailto:$assignedUser.UserName">$assignedUser.UserName</a></td>
+		<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
 		</tr>
     #end
   #else
@@ -108,7 +108,7 @@ $page.setTitle("Assign users to artifact")
 		<tr class="a">
 		<td><input type="checkbox" name="newremoveusers" value="$addedUser.UserName"/></td>
 		<td><strong>$addedUser.FirstName $addedUser.LastName</strong></td>
-		<td><a href="mailto:$addedUser.UserName">$addedUser.UserName</a></td>
+		<td><a href="mailto:$addedUser.Email">$addedUser.UserName</a></td>
 		</tr>
    #end
   #end
