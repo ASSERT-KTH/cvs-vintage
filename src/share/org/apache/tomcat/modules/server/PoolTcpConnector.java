@@ -90,7 +90,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     protected ServerSocketFactory socketFactory;
     // socket factory attriubtes ( XXX replace with normal setters ) 
     protected Hashtable attributes = new Hashtable();
-    protected boolean enabled=true;
+    protected String socketFactoryName=null;
     protected boolean secure=false;
 
     public PoolTcpConnector() {
@@ -103,6 +103,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
      */
     public void engineInit(ContextManager cm) throws TomcatException {
 	super.engineInit( cm );
+	checkSocketFactory();
 
 	try {
 	    localInit();
@@ -179,13 +180,39 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	// vhost=name;
     }
 
-    public void setSocketFactory( String valueS ) {
-	try {
-	    socketFactory= string2SocketFactory( valueS );
-	    ep.setServerSocketFactory( socketFactory );
-	}catch (Exception ex ) {
-	    ex.printStackTrace();
+    /** Sanity check and socketFactory setup.
+     *  IMHO it is better to stop the show on a broken connector,
+     *  then leave Tomcat running and broken.
+     *  @exception TomcatException Unable to resolve classes
+     */
+    private void checkSocketFactory() throws TomcatException {
+	if(secure) {
+	    if(socketFactoryName == null)
+		socketFactoryName = SSL_FACT;
+	    /* backwards compatibility */
+	    if(SSL_FACT.equals(socketFactoryName)) {
+		try {
+		    Class c1=Class.forName( SSL_CHECK );		    
+		} catch (Exception sslex) {
+		    throw new TomcatException("JSSE not installed.",sslex);
+		}
+		System.getProperties().put("java.protocol.handler.pkgs",
+                        "com.sun.net.ssl.internal.www.protocol");
+	    }
 	}
+	if(socketFactoryName != null) {
+	    try {
+		socketFactory = string2SocketFactory(socketFactoryName);
+		ep.setServerSocketFactory(socketFactory);
+	    } catch(Exception sfex) {
+		throw new TomcatException("Error Loading Socket Factory " +
+					  socketFactoryName,
+					  sfex);
+	    }
+	}
+    }
+    public void setSocketFactory( String valueS ) {
+	socketFactoryName = valueS;
     }
 
     // -------------------- Socket options --------------------
@@ -252,34 +279,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 
 
     public void setSecure( boolean b ) {
-	enabled=false;
-	secure=false;
-	if( b == true ) {
-	    // 	    if( keystore!=null && ! new File( keystore ).exists() ) {
-	    // 		log("Can't find keystore " + keystore );
-	    // 		return;
-	    // 	    }
-	    try {
-		Class c1=Class.forName( SSL_CHECK );
-	    } catch( Exception ex ) {
-		log( "Can't find JSSE, HTTPS will not be enabled");
-		return;
-	    }
-	    try {
-		Class chC=Class.forName( SSL_FACT );
-		socketFactory=(ServerSocketFactory)chC.newInstance();
-		ep.setServerSocketFactory( socketFactory );
-		log( "Setting ssl socket factory ");
-	    } catch(Exception ex ) {
-		log( "Error loading SSL socket factory ", ex);
-		return;
-	    }
-
-            System.getProperties().put("java.protocol.handler.pkgs",
-                        "com.sun.net.ssl.internal.www.protocol");
-	}
     	secure=b;
-	enabled=true;
     }
 
     public boolean isSecure() {
