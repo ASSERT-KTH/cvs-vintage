@@ -20,6 +20,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
@@ -59,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -189,7 +190,11 @@ public class JDBCStoreManager implements EntityPersistenceStore {
             Map txDataMap = (Map)txMap.get(tx);
 
             // do we have an existing map
-            if(txDataMap == null) {
+            int status = tx.getStatus();
+            if(txDataMap == null && 
+                  (status == Status.STATUS_ACTIVE ||
+                  status == Status.STATUS_PREPARING)) {
+
                // We want to be notified when the transaction commits
                ApplicationTxDataSynchronization synch = 
                      new ApplicationTxDataSynchronization(tx);
@@ -209,15 +214,25 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    }
 
    public Object getApplicationTxData(Object key) {
-      return getApplicationTxDataMap().get(key);
+      Map map = getApplicationTxDataMap();
+      if(map != null) {
+         return map.get(key);
+      }
+      return null;
    }
 
    public void putApplicationTxData(Object key, Object value) {
-      getApplicationTxDataMap().put(key, value);
+      Map map = getApplicationTxDataMap();
+      if(map != null) {
+         map.put(key, value);
+      }
    }
 
    public void removeApplicationTxData(Object key) {
-      getApplicationTxDataMap().remove(key);
+      Map map = getApplicationTxDataMap();
+      if(map != null) {
+         map.remove(key);
+      }
    }
 
    public Map getEntityTxDataMap() {
@@ -432,6 +447,10 @@ public class JDBCStoreManager implements EntityPersistenceStore {
 
    private void synchronizeRelationData() {
       Map txData = getApplicationTxDataMap();
+      if(txData == null) {
+         return;
+      }
+
       Iterator iterator = txData.values().iterator();
       while(iterator.hasNext()) {
          Object obj = iterator.next();
