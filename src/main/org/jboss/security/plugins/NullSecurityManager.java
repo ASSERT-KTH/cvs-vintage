@@ -26,7 +26,7 @@ as a pass-through security manager when you want noop security.
 @see #doesUserHaveRole(Principal, Set)
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class NullSecurityManager
     implements SubjectSecurityManager, RealmMapping, Serializable
@@ -57,11 +57,21 @@ public class NullSecurityManager
     }
 
     /** Validate that the given credential is correct for principal.
-    @return true if the principal was authenticated, false otherwise.
+    @return always returns true.
      */
     public boolean isValid(Principal principal, Object credential)
     {
         return true;
+    }
+    /** Validate that the given credential is correct for principal. This does
+     not populate the activeSubject with any state since no authentication
+     is performed.
+    @return always returns true.
+     */
+    public boolean isValid(Principal principal, Object credential,
+      Subject activeSubject)
+    {
+       return true;
     }
 
     /** Always returns the argument principal.
@@ -105,5 +115,4 @@ public class NullSecurityManager
         boolean authenticated = true;
         return authenticated;
     }
-
 }

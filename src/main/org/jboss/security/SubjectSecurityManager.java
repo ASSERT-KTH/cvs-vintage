@@ -7,6 +7,7 @@
  
 package org.jboss.security;
 
+import java.security.Principal;
 import javax.security.auth.Subject;
 
 
@@ -14,7 +15,7 @@ import javax.security.auth.Subject;
 Subject and security domain.
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public interface SubjectSecurityManager extends AuthenticationManager
 {
@@ -29,10 +30,27 @@ public interface SubjectSecurityManager extends AuthenticationManager
     /** Get the currently authenticated subject. After a successful isValid()
         call, a SubjectSecurityManager has a Subject associated with the current
         thread. This Subject will typically contain the Principal passed to isValid
-        as well as any number of additional Principals, and credentials.
+        as well as any number of additional Principals, and credentials. Note
+        that although the Subject is local to the thread, its internal state
+        may not be if there are multiple threads for the same principal active.
     @see AuthenticationManager#isValid(Principal, Object)
+    @see #isValid(Principal, Object, Subject)
     @return The previously authenticated Subject if isValid succeeded, null if
         isValid failed or has not been called for the active thread.
     */
     public Subject getActiveSubject();
+
+   /** The isValid method is invoked to see if a user identity and associated
+       credentials as known in the operational environment are valid proof of the
+       user identity. This extends AuthenticationManager version to provide a
+       copy of the resulting authenticated Subject. This allows a caller to
+       authenticate a user and obtain a Subject whose state cannot be modified
+       by other threads associated with the same principal.
+    @param principal, the user identity in the operation environment 
+    @param credential, the proof of user identity as known in the
+    operation environment 
+    @return true if the principal, credential pair is valid, false otherwise.
+   */
+   public boolean isValid(Principal principal, Object credential,
+      Subject activeSubject);
 }
