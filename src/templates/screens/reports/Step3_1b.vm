@@ -4,9 +4,9 @@
 <div class="app" id="div2-4-1-step3_1b">
 
 #wizardLinks("reports,Step3_1b.vm" $reportParameters $link)
-#subWizardLinks("reports,Step3_1b.vm" $reportParameters $link "3a: Define row/column content type" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
+#subWizardLinks("reports,Step3_1b.vm" $reportParameters $link "$l10n.Step3ALink" "reports,Step3_1a.vm" "$l10n.Step3BLink" "reports,Step3_1b.vm")
 
-<h3>Select row/column content</h3>
+<h3>$l10n.SelectRowContent</h3>
 
 <form method="get" action="$link.setPage("reports,Step3_1b.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
@@ -15,7 +15,7 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>Row content</th>
+   <th>$l10n.RowContent</th>
    <td>
 #set ($options = $report.Axis1OptionList)
 #if ($report.Axis1Category == 0 || $report.Axis1Category == 1 || $report.Axis1Category == 2)
@@ -25,14 +25,13 @@
    </select>
     #fieldErrorMsg($intakeReport.Axis1Keys "")
 #else
-    No category was chosen, did you hack the url,
-    or is this an application error?
+    $l10n.NoCategoryChosen
 #end
    </td>
   </tr>
 
   <tr>
-   <th>Column content</th>
+   <th>$l10n.ColumnContent</th>
    <td>
 #set ($options = $report.Axis2OptionList)
 #if ($report.Axis2Category == 0 || $report.Axis2Category == 1 || $report.Axis2Category == 2)
@@ -42,8 +41,7 @@
    </select>
     #fieldErrorMsg($intakeReport.Axis2Keys "")
 #else
-    No category was chosen, did you hack the url,
-    or is this an application error?
+    $l10n.NoCategoryChosen
 #end
    </td>
   </tr>
@@ -51,7 +49,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Generate report" name="eventSubmit_doStep3_1b" />
+  <input type="submit" value="$l10n.GenerateReport" name="eventSubmit_doStep3_1b" />
 </div>
 
 $intake.declareGroups()

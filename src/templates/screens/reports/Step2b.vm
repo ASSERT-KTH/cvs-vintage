@@ -3,20 +3,20 @@
 <div class="app" id="div2-4-1-step3">
 
 #wizardLinks("reports,Step2b.vm" $reportParameters $link)
-#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
+#subWizardLinks("reports,Step2b.vm" $reportParameters $link "$l10n.Step2ALink" "reports,Step2.vm" "$l10n.Step2BLink" "reports,Step2b.vm")
 
-<h3>Group related data</h3>
+<h3>$l10n.GroupRelatedData</h3>
 
-<p>After selecting to confine the data-set of this report, Scarab gives you the option of grouping related attributes and options together.</p>
+<p>$l10n.Grouping</p>
 
-<p>e.g. If options "State; Open new, State; Open started" have both been selected as part of a confined data-set, these options could be grouped together as just "Open issues"</p>
+<p>$l10n.GroupingEg</p>
 
 <form method="get" action="$link.setPage("reports,Step2b.vm")">
 <input type="hidden" name="action" value="GenerateReport"/>
 
 <div class="functnbar">
-  <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />&#160;
-  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
+  <input type="submit" name="eventSubmit_doStep2baddgroup" value="$l10n.AddNew" />&#160;
+  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="$l10n.DeleteSelected" />
 </div>
 
 #set ($reportOptionGroupsSize = $report.OptionGroups.size())
@@ -25,8 +25,8 @@
  #if ($reportOptionGroupsSize > 0)
   <th nowrap="nowrap">&#160;</th>
  #end
-  <th>Group number</th>
-  <th>Group name</th>
+  <th>$l10n.GroupNumber</th>
+  <th>$l10n.GroupName</th>
  </tr>
 
 #set ($finalCount = 1)
@@ -61,17 +61,17 @@
 </table>
 
 <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />&#160;
-  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
+  <input type="submit" name="eventSubmit_doStep2baddgroup" value="$l10n.AddNew" />&#160;
+  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="$l10n.DeleteSelected" />
 </div>
 
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)
-<h3>Grouping report data-set attributes/options</h3>
+<h3>$l10n.GroupingOptions</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>Group name</th>
-  <th>Attribute</th>
-  <th>Option</th>
+  <th>$l10n.GroupName</th>
+  <th>$l10n.Attribute</th>
+  <th>$l10n.Option</th>
  </tr>
     #foreach ($attOption in $report.SelectedOptionsForGrouping)
       #set ($intakeOptionForGrouping = $intake.OptionForGrouping.mapTo($attOption))
@@ -100,7 +100,7 @@
 #end
 
 <div class="functnbar2">
-  <input type="submit" value="Continue"  name="eventSubmit_doStep2b" />&#160;
+  <input type="submit" value="$l10n.Continue"  name="eventSubmit_doStep2b" />&#160;
 </div>
 
 $intake.declareGroups()

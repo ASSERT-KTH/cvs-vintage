@@ -9,22 +9,20 @@
 <input type="hidden" name="action" value="GenerateReport"/>
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Step2.vm"/>
 
-<h3>Summary information</h3>
-<p><strong>Considering saving this report?</strong> If so,
-enter the following information (it can be edited
-later).</p>
+<h3>$l10n.SummaryInfo</h3>
+<p><strong>$l10n.Saving</strong> $l10n.EditInfo</p>
 
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">Report name</th>
+   <th width="120">$l10n.ReportName</th>
    <td>
    <input type="text" size="30" maxlength="255"
                 name="$intakeReport.Name.Key" value="$intakeReport.Name" />
    </td>
   </tr>
   <tr>
-   <th width="120">Report description (optional)</th>
+   <th width="120">$l10n.ReportDescription</th>
    <td>
      #textAreaMedium("$intakeReport.Description.Key" $intakeReport.Description)
    </td>
@@ -32,12 +30,12 @@ later).</p>
  </table>
 </div>
 
-<h3>Type of report</h3>
+<h3>$l10n.ReportType</h3>
 
 <div class="axial">
  <table border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Type of report</th>
+   <th width="120">$l10n.ReportType</th>
    <td>
     #if ($data.Parameters.getString($intakeReport.Type.Key))
       #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
@@ -50,7 +48,7 @@ later).</p>
    </td>
   </tr>
   <tr>
-   <th width="120">Availability</th>
+   <th width="120">$l10n.Availability</th>
    <td>#reportScopeSelectBox ($intakeReport)</td>
   </tr>
  </table>
@@ -58,7 +56,7 @@ later).</p>
 
 
 <div class="functnbar2">
-  <input type="submit" value="Continue" name="eventSubmit_doStep1" />
+  <input type="submit" value="$l10n.Continue" name="eventSubmit_doStep1" />
 </div>
 
 $intake.declareGroups()

@@ -4,22 +4,22 @@
 <input type="hidden" name="action" value="GenerateReport" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Step1.vm" />
 
-##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+##<p class="paginate">&#171; $l10n.Previous | 1 of 1 | $l10n.Next &#187;</p>
 
-<h3>Saved reports</h3>
+<h3>$l10n.SavedReports</h3>
 
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
 #if ($reports.size() > 0 )
 <div>
-Click on "Availability" to execute report.
+$l10n.ClickToExecute
 </div>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">Select</th>
-<th>Name</th>
-<th>Description</a></th>
-<th>Availability</a></th>
-<th>Author</a></th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Description</a></th>
+<th>$l10n.Availability</a></th>
+<th>$l10n.Author</a></th>
 </tr>
 
 #foreach ($report in $reports)
@@ -47,17 +47,17 @@ $report.Name
 
 </table>
 #else
- <p class="alert">There are no saved reports.</p>
+ <p class="alert">$l10n.NoSavedReports</p>
 #end
 
 <div class="functnbar3">
-  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #if ($reports.size() >0)
-  <input type="submit" value="Delete selected" name="eventSubmit_doDeletestoredreport" />
+  <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletestoredreport" />
 #end
 </div> 
 
-##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+##<p class="paginate">&#171; $l10n.Previous | 1 of 1 | $l10n.Next &#187;</p>
 
 $intake.declareGroups()
 </form>

@@ -3,14 +3,13 @@
 
 <div class="app" id="div2-4-1-step2">
 #wizardLinks("reports,Step2.vm" $reportParameters $link)
-#subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Select report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
+#subWizardLinks("reports,Step2.vm" $reportParameters $link "$l10n.Step2ALink" "reports,Step2.vm" "$l10n.Step2BLink" "reports,Step2b.vm")
 
-<h3>Select report data-set</h3>
-<p>Selecting attribute(s) and option(s) from the following list defines a sub-set of data that will be used to generate this report.</p>
-<p>e.g. Selecting "Operating system;LINUX, Operating system;OSX" will limit the output of a report to only these options.</p>
+<h3>$l10n.SelectReportDataSet</h3>
+<p>$l10n.DefiningSubset</p>
+<p>$l10n.DefiningSubsetEg</p>
 
-<p><strong>Note:</strong> Selecting an attribute's name will select all
-options within that attribute.</p>
+<p><strong>$l10n.Note</strong> $l10n.DefiningSubsetNote</p>
 
 <form method="get" action="$link.setPage("reports,Step2.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
@@ -18,7 +17,7 @@ options within that attribute.</p>
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Attributes</th>
+   <th width="120">$l10n.Attributes</th>
    <td>
    <select name="$intakeReport.AttributesAndOptionsForGrouping.Key"
                 multiple="multiple" size="20">
@@ -30,8 +29,8 @@ options within that attribute.</p>
 </div>
 
 <div class="functnbar2">
-## <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />&#160;
-  <input type="submit" value="Next" name="eventSubmit_doStep2agoto2b" />
+## <input type="submit" value="$l10n.Continue"  name="eventSubmit_doStep2agoto3" />&#160;
+  <input type="submit" value="$l10n.Next" name="eventSubmit_doStep2agoto2b" />
 </div>
 
 $intake.declareGroups()
