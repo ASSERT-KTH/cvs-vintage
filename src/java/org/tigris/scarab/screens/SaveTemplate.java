@@ -53,12 +53,13 @@ import org.apache.turbine.TemplateContext;
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.Log;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SaveTemplate.java,v 1.2 2002/10/24 22:59:28 jon Exp $
+ * @version $Id: SaveTemplate.java,v 1.3 2003/07/19 22:57:53 elicia Exp $
  */
 public class SaveTemplate extends Default
 {
@@ -68,18 +69,26 @@ public class SaveTemplate extends Default
         throws Exception
     {
         String title = null;
-        if (scarabR.getIssueTemplate().getIssueId() == null)
+        try
+        {
+            if (scarabR.getIssueTemplate().getIssueId() == null)
+            {
+                title = l10n.get("SaveTemplate");
+            }
+            else 
+            {
+                String name = scarabR.getIssueTemplateInfo().getName();
+                String editTemplate = l10n.get("EditTemplate");
+                StringBuffer sb = new StringBuffer(name.length() + 
+                                                   editTemplate.length() + 4);
+                sb.append(editTemplate).append(" '").append(name).append('\'');
+                title = sb.toString();
+            }
+        }
+        catch (Exception e)
         {
             title = l10n.get("SaveTemplate");
-        }
-        else 
-        {
-            String name = scarabR.getIssueTemplateInfo().getName();
-            String editTemplate = l10n.get("EditTemplate");
-            StringBuffer sb = new StringBuffer(name.length() + 
-                                               editTemplate.length() + 4);
-            sb.append(editTemplate).append(" '").append(name).append('\'');
-            title = sb.toString();
+            Log.get().debug("", e);
         }
         return title;
     }

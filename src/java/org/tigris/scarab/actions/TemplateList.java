@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.49 2003/06/25 17:46:01 mpoeschl Exp $
+ * @version $Id: TemplateList.java,v 1.50 2003/07/19 22:57:53 elicia Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -103,6 +103,11 @@ public class TemplateList extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
+        if (issue == null)
+        {
+            scarabR.setAlertMessage(l10n.get("IssueTypeNotAvailable"));
+            return;
+        }
 
         SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;

@@ -6,6 +6,7 @@
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($currentTemplate ))
 
+#if ($issueType)
 
 <div class="app" id="savetemplate">
 
@@ -33,7 +34,7 @@
 #end
 
 #if (!$module.hasAttributes($issueType))
-<p class="warningmark"><strong>$l10n.NoAttributesForTemplate</strong></p>
+<p class="warningmark"><strong>$l10n.NoAttributesDefinedForTemplate</strong></p>
 #else
 
 #if ($templateId)
@@ -144,4 +145,8 @@ $intake.declareGroups()
 #end
 
 </form>
+
+#else
+ <p class="warningmark"><strong>$l10n.IssueTypeUnavailable</strong></p>
+#end
 </div>

@@ -4,6 +4,7 @@
 #set ($canDeleteAtLeastOne = false)
 
 <div class="app" id="templateList">
+#if ($issueType)
 
 <form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
@@ -114,4 +115,7 @@ $l10n.NoTemplates
 </div>
 
 </form>
+#else
+ <p class="warningmark"><strong>$l10n.IssueTypeUnavailable</strong></p>
+#end
 </div>
