@@ -47,6 +47,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.entity.EntityInvocationKey;
 import org.jboss.ejb.entity.EntityInvocationType;
+import org.jboss.ejb.entity.EntityInvocationRegistry;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
@@ -76,15 +77,13 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.90 $
+ * @version $Revision: 1.91 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer,
    InstancePoolContainer, StatisticsProvider
 {
    private Interceptor rootEntityInterceptor;
-
-   private TxEntityMap txEntityMap = new TxEntityMap();
 
    private Class primaryKeyClass;
 
@@ -99,35 +98,21 @@ public class EntityContainer
    private boolean readOnly = false;
 
    /**
+    * Does this container support multiple instances with the same id?
+    */
+   private boolean multiInstance = false;
+
+   /**
     * This provides a way to find the entities that are part of a given
     * transaction EntitySynchronizationInterceptor and InstanceSynchronization
     * manage this instance.
     */
-   private static GlobalTxEntityMap globalTxEntityMap =
-         new GlobalTxEntityMap();
-
-   public static GlobalTxEntityMap getGlobalTxEntityMap()
+   private static EntityInvocationRegistry entityInvocationRegistry = 
+         new EntityInvocationRegistry();
+   
+   public static EntityInvocationRegistry getEntityInvocationRegistry()
    {
-      return globalTxEntityMap;
-   }
-
-   /**
-    * Stores all of the entities associated with the specified transaction.
-    * As per the spec 9.6.4, entities must be synchronized with the datastore
-    * when an ejbFind<METHOD> is called.
-    * Also, all entities within entire transaction should be synchronized before
-    * a remove, otherwise there may be problems with 'cascade delete'.
-    *
-    * @param tx the transaction that associated entites will be stored
-    * @throws Exception if an problem occures while storing the entities
-    */
-   public static void synchronizeEntitiesWithinTransaction(Transaction tx)
-   {
-      // If there is no transaction, there is nothing to synchronize.
-      if(tx != null)
-      {
-         getGlobalTxEntityMap().synchronizeEntities(tx);
-      }
+      return entityInvocationRegistry;
    }
 
    /**
@@ -138,14 +123,29 @@ public class EntityContainer
      return primaryKeyClass;
    }
 
+   /**
+    * Is this entity read only?
+    */
    public boolean isReadOnly()
    {
       return readOnly;
    }
 
-   public TxEntityMap getTxEntityMap()
+   /**
+    * Does this container user multiple instances with the same id?
+    */
+   public boolean isMultiInstance()
    {
-      return txEntityMap;
+      return multiInstance;
+   }
+
+   /**
+    * Set the container to use or not user multiple instances with the
+    * same id?
+    */
+   public void setMultiInstance(boolean multiInstance)
+   {
+      this.multiInstance = multiInstance;
    }
 
    public Interceptor getRootEntityInterceptor()
@@ -172,11 +172,13 @@ public class EntityContainer
 
          // Acquire classes from CL
          if(metaData.getHome() != null)
+         {
             homeInterface = classLoader.loadClass(metaData.getHome());
+         }
          if(metaData.getRemote() != null)
+         {
             remoteInterface = classLoader.loadClass(metaData.getRemote());
-
-
+         }
          EntityMetaData entityMetaData = (EntityMetaData)metaData;
          if(entityMetaData.getPrimaryKeyClass() != null) {
             primaryKeyClass = classLoader.loadClass(
@@ -188,7 +190,7 @@ public class EntityContainer
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
-         while (in != null)
+         while(in != null)
          {
             in.setContainer(this);
             in.create();
@@ -200,12 +202,12 @@ public class EntityContainer
          // Initialize pool
          getInstancePool().create();
 
-         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         for(Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci =
+            EJBProxyFactory proxyFactory = 
                   (EJBProxyFactory) proxyFactories.get(invokerBinding);
-            ci.create();
+            proxyFactory.create();
          }
 
          // Init instance cache
