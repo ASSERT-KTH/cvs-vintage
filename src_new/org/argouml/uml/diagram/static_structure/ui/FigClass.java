@@ -1,7 +1,7 @@
 
 
 
-// $Id: FigClass.java,v 1.69 2003/08/30 10:51:53 bobtarling Exp $
+// $Id: FigClass.java,v 1.70 2003/09/03 14:31:05 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.69 2003/08/30 10:51:53 bobtarling Exp $
+// $Id: FigClass.java,v 1.70 2003/09/03 14:31:05 thierrylach Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -1271,7 +1271,7 @@ public class FigClass extends FigNodeModelElement {
     public void postLoad() {      
         super.postLoad();
         Object owner = getOwner();
-        if (ModelFacade.isAbstract(owner)) {
+        if (owner != null && ModelFacade.isAbstract(owner)) {
             Font font = _name.getFont();              
             _name.setFont(font.deriveFont(Font.ITALIC));
         }
