@@ -47,6 +47,7 @@ package org.tigris.scarab.util.word;
  */ 
 
 // JDK classes
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
@@ -59,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import com.workingdogs.village.Record;
+import org.apache.torque.Torque;
+import org.apache.torque.adapter.DB;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.ObjectKey;
@@ -69,6 +72,7 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.collections.LRUMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.log4j.Logger;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
@@ -95,9 +99,9 @@ import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.RModuleUserAttribute;
 
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
+import org.tigris.scarab.util.Log;
 
 
 /** 
@@ -132,10 +136,17 @@ public class IssueSearch
     private static final String ACTIVITYALIAS = "srchcobyact";
 
     private static final String CREATED_BY = "CREATED_BY";
+    private static final String CREATED_DATE = "CREATED_DATE";
     private static final String TYPE_ID = "TYPE_ID";
     private static final String ATTRIBUTE_ID = "ATTRIBUTE_ID";
     private static final String USER_ID = "USER_ID";
     private static final String DELETED = "DELETED";
+    private static final String AND = " AND ";
+    private static final String OR = " OR ";
+    private static final String INNER_JOIN = " INNER JOIN ";
+    private static final String ON = " ON (";
+    private static final String IN = " IN (";
+    private static final String IS_NULL = " IS NULL";
 
     private static final String ACT_TRAN_ID = 
         ActivityPeer.TRANSACTION_ID.substring(
@@ -157,6 +168,9 @@ public class IssueSearch
     private static final String 
         ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
         ACTIVITYALIAS_ISSUE_ID + "=" + IssuePeer.ISSUE_ID;
+    private static final String END_DATE = 
+        ActivityPeer.END_DATE.substring(
+        ActivityPeer.END_DATE.indexOf('.')+1);
 
     private static final String ACT_ATTR_ID = 
         ActivityPeer.ATTRIBUTE_ID.substring(
@@ -328,7 +342,6 @@ public class IssueSearch
         return result;
     }
 
-
     /**
      * AttributeValues that are relevant to the issue's current module.
      * Empty AttributeValues that are relevant for the module, but have 
@@ -342,7 +355,6 @@ public class IssueSearch
 
         List attributes = mitList.getCommonAttributes();
         HashMap siaValuesMap = getAttributeValuesMap();
-
         if (attributes != null) 
         {
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
@@ -1069,7 +1081,15 @@ public class IssueSearch
         }
     }
 
-    private void addIssueIdRange(Criteria crit)
+    private void addAnd(StringBuffer sb)
+    {
+        if (sb.length() > 0) 
+        {
+            sb.append(AND);
+        }
+    }
+
+    private void addIssueIdRange(StringBuffer where)
         throws ScarabException, Exception
     {
         // check limits to see which ones are present
@@ -1077,37 +1097,30 @@ public class IssueSearch
         if ( (minId != null && minId.length() != 0)
               || (maxId != null && maxId.length() != 0) ) 
         {
+            StringBuffer sb = new StringBuffer();
+            String domain = null;
+            String prefix = null;
             Issue.FederatedId minFid = null;
             Issue.FederatedId maxFid = null;
             if ( minId == null || minId.length() == 0 ) 
             {
                 maxFid = new Issue.FederatedId(maxId);
                 setDefaults(null, maxFid);
-                if (maxFid.getDomain() != null) 
-                {
-                    crit.add(IssuePeer.ID_DOMAIN, maxFid.getDomain());
-                }
-                if (maxFid.getPrefix() != null) 
-                {
-                    crit.add(IssuePeer.ID_PREFIX, maxFid.getPrefix());
-                }
-                crit.add(IssuePeer.ID_COUNT, maxFid.getCount(), 
-                         Criteria.LESS_EQUAL);
+                addAnd(sb);
+                sb.append(IssuePeer.ID_COUNT).append("<=")
+                    .append(maxFid.getCount());
+                domain = maxFid.getDomain();
+                prefix = maxFid.getPrefix();
             }
             else if ( maxId == null || maxId.length() == 0 ) 
             {
                 minFid = new Issue.FederatedId(minId);
                 setDefaults(minFid, null);
-                if (minFid.getDomain() != null) 
-                {
-                    crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
-                }
-                if (minFid.getPrefix() != null) 
-                {
-                    crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
-                }
-                crit.add(IssuePeer.ID_COUNT, minFid.getCount(), 
-                         Criteria.GREATER_EQUAL);
+                addAnd(sb);
+                sb.append(IssuePeer.ID_COUNT).append(">=")
+                    .append(minFid.getCount());
+                domain = minFid.getDomain();
+                prefix = minFid.getPrefix();
             }
             else 
             {
@@ -1123,21 +1136,13 @@ public class IssueSearch
                      && StringUtils
                      .equals( minFid.getDomain(), maxFid.getDomain() ))
                 {
-                    Criteria.Criterion c1 = crit.getNewCriterion(
-                        IssuePeer.ID_COUNT, new Integer(minFid.getCount()), 
-                        Criteria.GREATER_EQUAL);
-                    c1.and(crit.getNewCriterion(
-                        IssuePeer.ID_COUNT, new Integer(maxFid.getCount()), 
-                        Criteria.LESS_EQUAL) );
-                    crit.add(c1);
-                    if (minFid.getDomain() != null) 
-                    {
-                        crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
-                    }
-                    if (minFid.getPrefix() != null) 
-                    {
-                        crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
-                    }
+                    addAnd(sb);
+                    sb.append(IssuePeer.ID_COUNT).append(">=")
+                        .append(minFid.getCount()).append(AND)
+                        .append(IssuePeer.ID_COUNT).append("<=")
+                        .append(maxFid.getCount());
+                    domain = minFid.getDomain();
+                    prefix = minFid.getPrefix();
                 }
                 else 
                 {
@@ -1145,6 +1150,17 @@ public class IssueSearch
                                               minId + " and " + maxId);
                 }
             }
+            if (domain != null) 
+            {
+                sb.append(AND).append(IssuePeer.ID_DOMAIN).append("='")
+                    .append(domain).append('\'');
+            }
+            if (prefix != null) 
+            {
+                sb.append(AND).append(IssuePeer.ID_PREFIX).append("='")
+                    .append(prefix).append('\'');
+            }
+            where.append(AND).append(sb);
         }
     }
 
@@ -1184,28 +1200,6 @@ public class IssueSearch
             }
         }
     }
-
-    private void addCreatedDateRange(Criteria crit)
-        throws ScarabException, Exception
-    {
-        Date minUtilDate = parseDate(getMinDate(), false);
-        Date maxUtilDate = parseDate(getMaxDate(), true);
-        if ( minUtilDate != null || maxUtilDate != null ) 
-        {
-            addDateRange(ActivitySetPeer.CREATED_DATE, 
-                         minUtilDate, maxUtilDate, crit);
-            crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                         ActivityPeer.TRANSACTION_ID);
-            crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
-            crit.add(ActivitySetPeer.TYPE_ID, 
-                     ActivitySetTypePeer.CREATE_ISSUE__PK);
-            // there could be multiple attributes modified during the creation
-            // which will lead to duplicate issue selection, so we need to 
-            // specify only unique issues
-            crit.setDistinct();
-        }
-    }
-
 
     /**
      * Attempts to parse a String as a Date given in MM/DD/YYYY form or a
@@ -1306,20 +1300,23 @@ public class IssueSearch
 
 
     private void addDateRange(String column, Date minUtilDate,
-                              Date maxUtilDate, Criteria crit)
-        throws ScarabException
+                              Date maxUtilDate, StringBuffer sb)
+        throws Exception
     {
         // check limits to see which ones are present
         // if neither are present, do nothing
         if ( minUtilDate != null || maxUtilDate != null ) 
         {
+            DB adapter = Torque.getDB(Torque.getDefaultDB());
             if ( minUtilDate == null ) 
             {
-                crit.add(column, maxUtilDate, Criteria.LESS_THAN);
+                sb.append(column).append('<')
+                    .append(adapter.getDateString(maxUtilDate));
             }
             else if ( maxUtilDate == null ) 
             {
-                crit.add(column, minUtilDate, Criteria.GREATER_EQUAL);
+                sb.append(column).append(">=")
+                    .append(adapter.getDateString(minUtilDate));
             }
             else 
             {
@@ -1328,11 +1325,11 @@ public class IssueSearch
                 // matches
                 if ( minUtilDate.before(maxUtilDate) )
                 {
-                    Criteria.Criterion c1 = crit.getNewCriterion(
-                        column, minUtilDate,  Criteria.GREATER_EQUAL);
-                    c1.and(crit.getNewCriterion(
-                        column, maxUtilDate,  Criteria.LESS_EQUAL) );
-                    crit.add(c1);
+                    sb.append(column).append(">=")
+                        .append(adapter.getDateString(minUtilDate));
+                    sb.append(AND);
+                    sb.append(column).append('<')
+                        .append(adapter.getDateString(maxUtilDate));
                 }
                 else 
                 {
@@ -1350,66 +1347,63 @@ public class IssueSearch
      *
      * @param attValues a <code>List</code> value
      */
-    private void addSelectedAttributes(Criteria crit, List attValues)
+    private void addSelectedAttributes(StringBuffer fromClause,  
+                                       List attValues)
         throws Exception
     {
-        Criteria.Criterion c = null;
-        boolean atLeastOne = false;
-        HashMap aliasIndices = new HashMap((int)(attValues.size()*1.25));
+        Map attrMap = new HashMap((int)(attValues.size()*1.25));
         for ( int j=0; j<attValues.size(); j++ ) 
         {
-            List chainedValues = ((AttributeValue)attValues.get(j))
-                .getValueList();
-        for ( int i=0; i<chainedValues.size(); i++ ) 
-        {
-            //pull any chained values out to create a flat list
-            AttributeValue aval = (AttributeValue)chainedValues.get(i);
-            if ( aval instanceof OptionAttribute )
+            AttributeValue multiAV = (AttributeValue)attValues.get(j);
+            if ( multiAV instanceof OptionAttribute )
             {
-                // we will add at least one option attribute to the criteria
-                atLeastOne = true;
-                Criteria.Criterion c2 = null;
-                // check if this is a new attribute or another possible value
-                String index = aval.getAttributeId().toString();
-                if ( aliasIndices.containsKey(index) ) 
+                NumberKey index = multiAV.getAttributeId();
+                List options = (List)attrMap.get(index);
+                if (options == null) 
                 {
-                    // this represents another possible value for an attribute
-                    // OR it to the other possibilities
-                    Criteria.Criterion prevCrit = 
-                        (Criteria.Criterion )aliasIndices.get(index);
-                    c2 = buildOptionCriterion(aval);
-                    prevCrit.or(c2);
+                    options = new ArrayList();
+                    attrMap.put(index, options);
                 }
-                else
+                
+                //pull any chained values out to create a flat list
+                List chainedValues = multiAV.getValueList();
+                for ( int i=0; i<chainedValues.size(); i++ ) 
                 {
-                    Criteria.Criterion c1 = crit.getNewCriterion("av"+index,
-                        AV_ISSUE_ID, "av" + index + '.' + AV_ISSUE_ID + '=' + 
-                        IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
-                    crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
-                    c2 = buildOptionCriterion(aval);
-                    aliasIndices.put(index, c2);
-                    Criteria.Criterion c3 = crit.getNewCriterion("av"+index,
-                        "DELETED", Boolean.FALSE, Criteria.EQUAL);
-                    c1.and(c2).and(c3);
-                    if ( c == null ) 
-                    {
-                        c = c1;
-                    }
-                    else 
-                    {
-                        c.and(c1);
-                    }
+                    AttributeValue aval = (AttributeValue)chainedValues.get(i);
+                    buildOptionList(options, aval);
                 }
             }
         }
-        }
-        if ( atLeastOne ) 
+
+        for (Iterator i=attrMap.entrySet().iterator(); i.hasNext();) 
         {
-            crit.add(c);            
+            Map.Entry entry = (Map.Entry)i.next();
+            String alias = "av" + entry.getKey();
+            List options = (List)entry.getValue();
+            String c2 = null;
+            if ( options.size() == 1 ) 
+            {
+                c2 = alias + '.' + AV_OPTION_ID + '=' 
+                    + options.get(0);
+            }
+            else
+            { 
+                c2 = alias + '.' + AV_OPTION_ID + " IN ("
+                    + StringUtils.join(options.iterator(), ",") + ')';
+            }
+        
+            String joinClause = " INNER JOIN " + AttributeValuePeer.TABLE_NAME
+                + ' ' + alias + " ON (" + 
+                alias + '.' + AV_ISSUE_ID + '=' + IssuePeer.ISSUE_ID + 
+                AND + c2 + AND + 
+                alias + '.' + "DELETED=0" + ')';
+            // might want to add redundant av2.ISSUE_ID=av5.ISSUE_ID. might
+            // not be necessary with sql92 join format?
+            fromClause.append(joinClause);
         }
     }
 
-    
+
     /**
      * This method builds a Criterion for a single attribute value.
      * It is used in the addOptionAttributes method
@@ -1417,12 +1411,9 @@ public class IssueSearch
      * @param aval an <code>AttributeValue</code> value
      * @return a <code>Criteria.Criterion</code> value
      */
-    private Criteria.Criterion buildOptionCriterion(AttributeValue aval)
+    private void buildOptionList(List options, AttributeValue aval)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        Criteria.Criterion criterion = null;        
-        String index = aval.getAttributeId().toString();
         List descendants = null;
         // it would be a more correct query to separate the descendant
         // options by module and do something like
@@ -1445,177 +1436,237 @@ public class IssueSearch
         
         if ( descendants.size() == 0 ) 
         {
-            criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
-                aval.getOptionId(), Criteria.EQUAL);
+            options.add(aval.getOptionId());
         }
         else
         { 
-            NumberKey[] ids = new NumberKey[descendants.size()];
-            for ( int j=ids.length-1; j>=0; j-- ) 
+            for (Iterator i=descendants.iterator(); i.hasNext();) 
             {
-                ids[j] = ((RModuleOption)descendants.get(j))
-                    .getOptionId();
+                options.add( ((RModuleOption)i.next())
+                    .getOptionId() );
             }
-            criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
-                                              ids, Criteria.IN);
         }
+    }
+
+    private void addUserAndCreatedDateCriteria(StringBuffer from, 
+                                               StringBuffer where)
+        throws Exception
+    {
+        String dateRangeSql = null;
+        if (getMinDate() != null || getMaxDate() != null) 
+        {
+            StringBuffer sbdate = new StringBuffer();
+            Date minUtilDate = parseDate(getMinDate(), false);
+            Date maxUtilDate = parseDate(getMaxDate(), true);
+            addDateRange(ACTIVITYSETALIAS + '.' + CREATED_DATE, 
+                         minUtilDate, maxUtilDate, sbdate);
+            dateRangeSql = sbdate.toString(); 
+        }                
         
-        return criterion;
-    }
-
-
-    private void addUserCriteria(Criteria crit)
-    {
-        if (userIdList != null) 
+        if (userIdList == null)
         {
-            boolean isAnyUserAV = false;
-            boolean isAnyCreatedBy = false;
-            Iterator iter = userSearchCriteriaList.iterator();
-            while (iter.hasNext())
+            if (dateRangeSql != null) 
             {
-                String userCriteria = (String)iter.next();
-               if (CREATED_BY_KEY.equals(userCriteria)) 
-               {
-                   isAnyCreatedBy = true;
-               }
-               else if (ANY_KEY.equals(userCriteria)) 
-               {
-                   isAnyCreatedBy = true;
-                   isAnyUserAV = true;
-               }               
-               else 
-               {
-                   isAnyUserAV = true;
-               }
+                // just dates
+                from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ' ' +
+                    ACTIVITYALIAS + " ON ("
+                    + ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID)
+                    .append(')' + INNER_JOIN + ActivitySetPeer.TABLE_NAME + 
+                    ' ' + ACTIVITYSETALIAS + " ON (" +
+                    ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID
+                    + AND + ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
+                    ActivitySetTypePeer.CREATE_ISSUE__PK)
+                    .append(AND).append(dateRangeSql)
+                    .append(')');
             }
-
-            for (int i =0; i<userIdList.size(); i++)
-            {
-               String userId = (String)userIdList.get(i);
-               String attrId = (String)userSearchCriteriaList.get(i);
-
-               addUserCriteria(userId, attrId, isAnyCreatedBy, isAnyUserAV, crit);
-            }
-        }
-    }
-
-
-    public void addUserCriteria(String userId, String attrId, 
-        boolean isAnyCreatedBy, boolean isAnyUserAttr, Criteria crit)
-    {
-        if (attrId == null)
-        {
-            attrId = ANY_KEY;
-        }
-
-        Criteria.Criterion newCrit = null;
-        if (attrId.equals(CREATED_BY_KEY) || attrId.equals(ANY_KEY))
-        {
-            // Build Criteria for created by
-            newCrit = crit.getNewCriterion(
-                ACTIVITYSETALIAS, CREATED_BY, userId, Criteria.EQUAL);
-            newCrit.and( crit.getNewCriterion(
-                ACTIVITYSETALIAS, TYPE_ID, 
-                ActivitySetTypePeer.CREATE_ISSUE__PK, Criteria.EQUAL) );
-            //addJoin(ActivitySetPeer.TRANSACTION_ID, 
-            //        ActivityPeer.TRANSACTION_ID)
-            newCrit.and( crit.getNewCriterion(
-                ACTIVITYALIAS_TRANSACTION_ID,
-                ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID, 
-                Criteria.CUSTOM) );
-            //addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-            newCrit.and( crit.getNewCriterion(
-                ACTIVITYALIAS_ISSUE_ID,
-                ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID,
-                Criteria.CUSTOM) );
-
-            if (isAnyUserAttr) 
-            {
-                // this addition improves timing and reduces dupes
-                // AND srchact0.ISSUE_ID=srchuav0.ISSUE_ID
-                // AND srchact0.ATTRIBUTE_ID=srchuav0.ATTRIBUTE_ID
-                newCrit.and( crit.getNewCriterion(
-                    ACTIVITYALIAS_ISSUE_ID,
-                    ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID,
-                    Criteria.CUSTOM) );                
-                newCrit.and( crit.getNewCriterion(
-                    ACTIVITYALIAS_ATTRIBUTE_ID,
-                    ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID, 
-                        Criteria.CUSTOM) );  
-            }
-
-            crit.addAlias(ACTIVITYALIAS, ActivityPeer.TABLE_NAME);
-            crit.addAlias(ACTIVITYSETALIAS, ActivitySetPeer.TABLE_NAME);
-
-            if (attrId.equals(ANY_KEY))
-            {
-                newCrit.or(getUserCriterion(crit, userId, isAnyCreatedBy));
-            }   
         }
         else
         {
-            // A user attribute was selected to search on 
-            newCrit = getUserCriterion(crit, userId, isAnyCreatedBy);
-            newCrit.and( crit.getNewCriterion(
-                USERAVALIAS, ATTRIBUTE_ID, attrId, Criteria.EQUAL) );
-        }
+            List anyUsers = null;
+            List creatorUsers = null;
+            Map attrUsers = null;
+            List attrUserAttrs = null;
+            int maxUsers = userIdList.size();
+            for (int i =0; i<maxUsers; i++)
+            {
+                String userId = (String)userIdList.get(i);
+                String attrId = (String)userSearchCriteriaList.get(i);
+                if (attrId == null || ANY_KEY.equals(attrId)) 
+                {
+                    if (anyUsers == null) 
+                    {
+                        anyUsers = new ArrayList(maxUsers);
+                    }
+                    anyUsers.add(userId);
+                }               
+                else if (CREATED_BY_KEY.equals(attrId)) 
+                {
+                    if (creatorUsers == null) 
+                    {
+                        creatorUsers = new ArrayList(maxUsers);
+                    }
+                    creatorUsers.add(userId);
+                }
+                else 
+                {
+                    // using a map here seems like overkill, but it
+                    // makes the logic easier
+                    if (attrUsers == null) 
+                    {
+                        attrUsers = new HashMap(maxUsers);
+                    }
+                    List userIds = (List)attrUsers.get(attrId);
+                    if (userIds == null) 
+                    {
+                        userIds = new ArrayList(maxUsers);
+                        attrUsers.put(attrId, userIds);
+                    }
+                    userIds.add(userId);
+                }
+            }
 
-        Criteria.Criterion firstCrit = crit.getCriterion(
-            ACTIVITYSETALIAS, CREATED_BY);
-        if (firstCrit == null) 
-        {
-            firstCrit = 
-                crit.getCriterion(USERAVALIAS, USER_ID);
+            String fromClause = INNER_JOIN + ActivityPeer.TABLE_NAME + ' ' +
+                ACTIVITYALIAS + " ON ("
+                + ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID;
+
+            StringBuffer attrCrit = null;
+            if (anyUsers != null) 
+            {
+                attrCrit = new StringBuffer();
+                attrCrit.append('(');
+                addUserActivityFragment(attrCrit, anyUsers);
+                attrCrit.append(')');
+            }
+            
+            if (attrUsers != null) 
+            {
+                for (Iterator i = attrUsers.entrySet().iterator(); i.hasNext();)
+                {
+                    if (attrCrit == null) 
+                    {
+                        attrCrit = new StringBuffer();
+                    }
+                    else 
+                    {
+                        attrCrit.append(OR);
+                    }
+                
+                    Map.Entry entry = (Map.Entry)i.next();
+                    String attrId = (String)entry.getKey();
+                    List userIds = (List)entry.getValue();
+                    attrCrit.append('(');
+                    addUserActivityFragment(attrCrit, userIds);
+                    attrCrit.append( AND +
+                        ACTIVITYALIAS + '.' + ATTRIBUTE_ID + '=' + attrId );
+                    attrCrit.append(')');
+                }
+            }
+
+            boolean isAddActivitySet = anyUsers != null || creatorUsers != null
+                || dateRangeSql != null;
+            String whereClause = null;
+            if (isAddActivitySet)
+            {
+                if (attrCrit != null) 
+                {
+                    whereClause = '(' + attrCrit.toString() + ')';
+                }
+
+                fromClause += ')' + INNER_JOIN + ActivitySetPeer.TABLE_NAME + 
+                    ' ' + ACTIVITYSETALIAS + " ON (" +
+                    ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID;
+ 
+                if (anyUsers != null || creatorUsers != null)
+                {
+                    List anyAndCreators = new ArrayList(maxUsers);
+                    if (anyUsers != null) 
+                    {
+                        anyAndCreators.addAll(anyUsers);
+                    }
+                    if (creatorUsers != null) 
+                    {
+                        anyAndCreators.addAll(creatorUsers);
+                    }
+                
+                    // we can add this to the join condition, if created-only
+                    // query otherwise it needs to go in the where clause
+                    String createdBySqlFragment = 
+                        ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
+                        ActivitySetTypePeer.CREATE_ISSUE__PK + AND +
+                        ACTIVITYSETALIAS + '.' + CREATED_BY;
+                    if (anyAndCreators.size() == 1) 
+                    {
+                        createdBySqlFragment += 
+                            '=' + anyAndCreators.get(0).toString();
+                    }
+                    else 
+                    {
+                        createdBySqlFragment += IN + 
+                            StringUtils.join(anyAndCreators.iterator(), ",") 
+                            + ')';
+                    }
+                
+                    if (anyUsers != null || attrUsers != null) 
+                    {
+                        fromClause += ')'; 
+                        whereClause = '(' + whereClause + OR + 
+                            createdBySqlFragment + ')';
+                        if (dateRangeSql != null) 
+                        {
+                            System.out.println("Date range: " + dateRangeSql);
+                            whereClause += AND + dateRangeSql;
+                        }
+                    }
+                    else 
+                    {
+                        fromClause += AND + createdBySqlFragment;
+                        if (dateRangeSql != null) 
+                        {
+                            fromClause += AND + dateRangeSql;
+                        }
+                        fromClause += ')'; 
+                    }
+                }
+                else // dateRangeSql will not be null
+                {
+                    fromClause += ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
+                        ActivitySetTypePeer.CREATE_ISSUE__PK
+                        + AND + dateRangeSql + ')'; 
+                }                
+            }
+            else
+            {
+                if (attrCrit == null) 
+                {
+                    fromClause += ')';
+                }
+                else 
+                {
+                    fromClause += AND + '(' + attrCrit + "))";
+                }
+            }
+
+            from.append(fromClause);
+            if (whereClause != null) 
+            {
+                where.append(AND).append(whereClause);
+            }
         }
-        if (firstCrit == null) 
-        {            
-                crit.and(newCrit);
+    }
+
+    private void addUserActivityFragment(StringBuffer sb, List userIds)
+    {
+        sb.append(ACTIVITYALIAS + '.' + END_DATE + 
+                  IS_NULL + AND + ACTIVITYALIAS_NEW_USER_ID );
+        if (userIds.size() == 1) 
+        {
+            sb.append('=').append(userIds.get(0));
         }
         else 
         {
-            firstCrit.or(newCrit);
-        }            
-    }
-
-
-    private Criteria.Criterion getUserCriterion(Criteria crit, String userId, 
-                                               boolean isAnyCreatedBy)
-    {
-        crit.addAlias(USERAVALIAS, AttributeValuePeer.TABLE_NAME);
-        
-        // Get results of searching across user attributes
-        Criteria.Criterion attrCrit = crit.getNewCriterion(
-            USERAVALIAS, USER_ID, userId, Criteria.EQUAL);
-        attrCrit.and( crit.getNewCriterion(
-            USERAVALIAS, DELETED, Boolean.FALSE, Criteria.EQUAL) );
-        //addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-        attrCrit.and( crit.getNewCriterion(
-            USERAVALIAS_ISSUE_ID,
-            USERAVALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID,
-            Criteria.CUSTOM) );
-        if (isAnyCreatedBy) 
-        {
-            // the addition of the following improves timing and reduces dupes
-            // AND srchuav0.USER_ID = srchact0.NEW_USER_ID
-            // AND srchact0.ISSUE_ID=srchuav0.ISSUE_ID
-            // AND srchact0.ATTRIBUTE_ID=srchuav0.ATTRIBUTE_ID
-            // AND srchact0.TRANSACTION_ID=srchactset0.TRANSACTION_ID
-            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_NEW_USER_ID,
-                ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID, 
-                Criteria.CUSTOM) );
-            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_ISSUE_ID,
-                ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID,
-                Criteria.CUSTOM) );                
-            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_ATTRIBUTE_ID,
-                ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID,
-                Criteria.CUSTOM) );                
-            attrCrit.and( crit.getNewCriterion( 
-                ACTIVITYALIAS_TRANSACTION_ID,
-                ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID, 
-                Criteria.CUSTOM) );
+            sb.append( IN + 
+                       StringUtils.join(userIds.iterator(), ",") + ')' );
         }
-
-        return attrCrit;
     }
 
 
@@ -1669,103 +1720,113 @@ public class IssueSearch
         return matchingIssueIds;
     }
 
-    private void addStateChangeQuery(Criteria crit)
+    private void addStateChangeQuery(StringBuffer from)
         throws Exception
     {
         NumberKey oldOptionId = getStateChangeFromOptionId();
         NumberKey newOptionId = getStateChangeToOptionId();
         if ( oldOptionId != null || newOptionId != null )
         {
+            from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
+                        ActivityPeer.ISSUE_ID + '=' + IssuePeer.ISSUE_ID);
+
             if ( oldOptionId == null ) 
             {
-                crit.add(ActivityPeer.NEW_OPTION_ID, newOptionId);
+                from.append(AND).append(ActivityPeer.NEW_OPTION_ID).append('=')
+                    .append(newOptionId);
             }
             else if ( newOptionId == null ) 
             {
-                crit.add(ActivityPeer.OLD_OPTION_ID, oldOptionId);
+                from.append(AND).append(ActivityPeer.OLD_OPTION_ID).append('=')
+                    .append(oldOptionId);
+            }
+            // make sure the old and new options are different, otherwise
+            // do not add to criteria.
+            else if ( !oldOptionId.equals(newOptionId) )
+            {
+                from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
+                    .append('=').append(newOptionId);
+                from.append(AND).append(ActivityPeer.OLD_OPTION_ID)
+                    .append('=').append(oldOptionId);
             }
             else 
             {
-                // make sure the old and new options are different, otherwise
-                // do not add to criteria.
-                if ( !oldOptionId.equals(newOptionId) )
-                {
-                    Criteria.Criterion c1 = crit.getNewCriterion(
-                        ActivityPeer.OLD_OPTION_ID, oldOptionId,  
-                        Criteria.EQUAL);
-                    c1.and(crit.getNewCriterion(
-                        ActivityPeer.NEW_OPTION_ID, newOptionId, 
-                        Criteria.EQUAL) );
-                    crit.add(c1);
-                }
-                else 
-                {
-                    // might want to log user error here
-                }
+                // might want to log user error here
             }
-            //crit.add(ActivityPeer.ATTRIBUTE_ID, getStateChangeAttributeId());
-            crit.addJoin(IssuePeer.ISSUE_ID, ActivityPeer.ISSUE_ID);
+            from.append(')');
 
             // add dates, if given
             Date minUtilDate = parseDate(getStateChangeFromDate(), false);
             Date maxUtilDate = parseDate(getStateChangeToDate(), true);
             if ( minUtilDate != null || maxUtilDate != null ) 
             {
-                addDateRange(ActivitySetPeer.CREATED_DATE, 
-                             minUtilDate, maxUtilDate, crit);
-                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
+                from.append( INNER_JOIN + ActivitySetPeer.TABLE_NAME + ON +
+                             ActivitySetPeer.TRANSACTION_ID + '=' +
                              ActivityPeer.TRANSACTION_ID);
+                from.append(AND);
+
+                addDateRange(ActivitySetPeer.CREATED_DATE, 
+                             minUtilDate, maxUtilDate, from);
+                
+                from.append(')');
             }
         }
     }
 
-    private NumberKey[] addCoreSearchCriteria(Criteria crit)
+    private NumberKey[] addCoreSearchCriteria(StringBuffer fromClause, 
+                                              StringBuffer whereClause)
         throws Exception
     {
         if (isXMITSearch()) 
         {
+            Criteria crit = new Criteria();
             mitList.addToCriteria(crit);
+            String sql = crit.toString();
+            int wherePos = sql.indexOf(" WHERE ");
+            whereClause.append(sql.substring(wherePos + 7));
         }
         else 
         {
-            crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
-            crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
+            whereClause.append(IssuePeer.MODULE_ID).append('=')
+                .append(getModule().getModuleId());
+            whereClause.append(AND).append(IssuePeer.TYPE_ID).append('=')
+                .append(getIssueType().getIssueTypeId());
         }
-        crit.add(IssuePeer.DELETED, false);
+        whereClause.append(AND).append(IssuePeer.DELETED).append("=0");
 
         // add option values
         lastUsedAVList = getAttributeValues();
 
         // remove unset AttributeValues before searching
         List setAttValues = removeUnsetValues(lastUsedAVList);        
-        addSelectedAttributes(crit, setAttValues);
+        addSelectedAttributes(fromClause, setAttValues);
 
         // search for issues based on text
         NumberKey[] matchingIssueIds = getTextMatches(setAttValues);
 
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 )
-        {            
-            addIssueIdRange(crit);
-            addCreatedDateRange(crit);
-            addMinimumVotes(crit);
+        {
+            addIssueIdRange(whereClause);
+            //addMinimumVotes(whereClause);
 
             // add user values
-            addUserCriteria(crit);
+            addUserAndCreatedDateCriteria(fromClause, whereClause);
 
             // add text search matches
-            addIssuePKsCriteria(crit, matchingIssueIds);
+            addIssuePKsCriteria(whereClause, matchingIssueIds);
 
             // state change query
-            addStateChangeQuery(crit);
+            addStateChangeQuery(fromClause);
         }
         return matchingIssueIds;
     }
 
-    private void addIssuePKsCriteria(Criteria crit, NumberKey[] ids)
+    private void addIssuePKsCriteria(StringBuffer sb, NumberKey[] ids)
     {
        if (ids != null && ids.length > 0)
        {
-           crit.add(IssuePeer.ISSUE_ID, ids, Criteria.IN);
+           sb.append(AND).append(IssuePeer.ISSUE_ID).append(IN)
+               .append(StringUtils.join(ids, ",")).append(')');
        }     
     }
 
@@ -1783,16 +1844,24 @@ public class IssueSearch
         if (lastQueryResults == null) 
         {
             List rows = null;
-            Criteria crit = new Criteria();
-            crit.setDistinct();
-            NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+            StringBuffer from = new StringBuffer();
+            StringBuffer where = new StringBuffer();
+            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
             // text to search, so continue the search process.
             if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
             {            
                 // Get matching issues, with sort criteria
-                lastQueryResults = sortResults(crit);
+                StringBuffer sql = new StringBuffer(255);
+                sql.append("select DISTINCT ")
+                    .append(IssuePeer.ISSUE_ID).append(',')
+                    .append(IssuePeer.MODULE_ID).append(',')
+                    .append(IssuePeer.TYPE_ID).append(',')
+                    .append(IssuePeer.ID_PREFIX).append(',')
+                    .append(IssuePeer.ID_COUNT);
+
+                lastQueryResults = sortResults(sql, from, where);
             }
             else 
             {
@@ -1816,12 +1885,24 @@ public class IssueSearch
         else 
         {
             Criteria crit = new Criteria();
-            NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+            StringBuffer from = new StringBuffer();
+            StringBuffer where = new StringBuffer();
+            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
             if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
             {
-                crit.addSelectColumn(
-                    "count(DISTINCT " + IssuePeer.ISSUE_ID + ')');
-                List records = IssuePeer.doSelectVillageRecords(crit);
+                String sql = 
+                    "SELECT count(DISTINCT " + IssuePeer.ISSUE_ID + ") FROM " +
+                    IssuePeer.TABLE_NAME;
+                if (from.length() > 0) 
+                {
+                    sql += ' ' + from.toString();
+                }
+                if (where.length() > 0) 
+                {
+                    sql += WHERE + where.toString();
+                }
+
+                List records = BasePeer.executeQuery(sql);
                 count = ((Record)records.get(0)).getValue(1).asInt();
             }
             lastTotalIssueCount = count;
@@ -1830,33 +1911,12 @@ public class IssueSearch
         return count;
     }
 
-    private List sortResults(Criteria crit)
+    private List sortResults(StringBuffer select, 
+                             StringBuffer from, StringBuffer where)
         throws Exception
     {
         List matchingIssues = null;
-        if (getSortAttributeId() == null)
-        {
-            //sort by unique id
-            matchingIssues = sortByUniqueId(crit);
-        }
-        else
-        {
-            //sort by unique id
-            matchingIssues = sortByAttribute(crit);
-        }
-        return matchingIssues;
-    }
-
-    private List sortByAttribute(Criteria crit) throws Exception
-    {
         NumberKey sortAttrId = getSortAttributeId();
-        Attribute att = AttributeManager.getInstance(sortAttrId);
-
-        crit.addSelectColumn(IssuePeer.ISSUE_ID);
-        crit.addSelectColumn(IssuePeer.MODULE_ID);
-        crit.addSelectColumn(IssuePeer.TYPE_ID);
-        crit.addSelectColumn(IssuePeer.ID_PREFIX);
-        crit.addSelectColumn(IssuePeer.ID_COUNT);
 
         // add the attribute value columns that will be shown in the list.
         // these are joined using a left outer join, so the additional
@@ -1864,135 +1924,40 @@ public class IssueSearch
         // criteria are added to the where clause.)  Criteria object does
         // not provide support for outer joins, so we will need to manipulate
         // the query manually
-        String baseSql = BasePeer.createQueryString(crit);
-        StringBuffer sb = new StringBuffer(baseSql.length() + 500);
-        sb.append(baseSql);
+        StringBuffer sb = new StringBuffer(select.length() + 500);
+        sb.append(select);
+        // use this to track already added aliases, need to use a better method
+        String fromString = from.toString();
 
-        List rmuas = getIssueListAttributeColumns();
-        int valueListSize = rmuas.size();
-        StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
-        StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
-
-        int sortAttrPos = -1;
-        int count = 0;
-        for (Iterator i = rmuas.iterator(); i.hasNext(); count++) 
-        {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-            // locate the sort attribute position so we can move any 
-            // unset results to the end of the list.
-            NumberKey attrPK = rmua.getAttributeId();
-            if (attrPK.equals(sortAttrId)) 
-            {
-                sortAttrPos = count;
-            }
-            String id = attrPK.toString();
-            String alias = "av" + id;
-            // add column to SELECT column clause
-            selectColumns.append(',').append(alias).append(".VALUE");
-            // if no criteria was specified for a displayed attribute
-            // add it as an outer join
-            if (crit.getTableForAlias(alias) == null) 
-            {
-                outerJoin.append(
-                    " LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE ")
-                    .append(alias).append(" ON (SCARAB_ISSUE.ISSUE_ID=")
-                    .append(alias).append(".ISSUE_ID AND ").append(alias)
-                    .append(".DELETED=0 AND ").append(alias)
-                    .append(".ATTRIBUTE_ID=").append(id).append(')');
-            }
-        }
-
-        // a VALUE sort column will be handled by the above 
-        // but we need add more sql for option sorting
         String sortColumn = null;
-        String sortId = sortAttrId.toString();
-        if ( att.isOptionAttribute())
-        {
-            // add the sort column
-            sortColumn = "sortRMO.PREFERRED_ORDER";
-            selectColumns.append(',').append(sortColumn);
-            // join the RMO table to the AttributeValue alias we are sorting
-            outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
-                .append(sortId).append(".OPTION_ID)");
-        }
-        else 
-        {
-            sortColumn = "av" + sortId + ".VALUE";
-        }
-
-        // add left outer join
-        sb.insert(baseSql.indexOf(WHERE), outerJoin.toString());
-        // add attribute columns for the table
-        sb.insert(baseSql.indexOf(FROM), selectColumns.toString());
-        // add order by clause
-        sb.append(ORDER_BY).append(sortColumn);
-        if (getSortPolarity().equals("desc"))
-        {
-            sb.append(" DESC");
-        }
-        else
-        {
-            sb.append(" ASC");
-        }
-        // add pk sort so that rows can be combined easily
-        sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
-        String sql = sb.toString();
-        Log.get("org.apache.torque").debug(sql);
-        // return a List of QueryResult objects
-        return buildQueryResults(BasePeer.executeQuery(sql), 
-                                 sortAttrPos, valueListSize);
-    }
-
-    /**
-     * Sorts on issue unique id (default)
-     */
-    private List sortByUniqueId(Criteria crit) 
-        throws Exception
-    {
-        crit.addSelectColumn(IssuePeer.ISSUE_ID);
-        crit.addSelectColumn(IssuePeer.MODULE_ID);
-        crit.addSelectColumn(IssuePeer.TYPE_ID);
-        crit.addSelectColumn(IssuePeer.ID_PREFIX);
-        crit.addSelectColumn(IssuePeer.ID_COUNT);
-
-        if (getSortPolarity().equals("desc"))
-        {
-            crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
-        } 
-        else
-        {
-            crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
-        }
-        // add pk sort so that rows can be combined easily
-        crit.addAscendingOrderByColumn(IssuePeer.ISSUE_ID);
-        
-        // add the attribute value columns that will be shown in the list.
-        // these are joined using a left outer join, so the additional
-        // columns do not affect the results of the search (no additional
-        // criteria are added to the where clause.)  Criteria object does
-        // not provide support for outer joins, so we will need to manipulate
-        // the query manually
-        String sql = BasePeer.createQueryString(crit);
+        int sortAttrPos = NO_ATTRIBUTE_SORT;
+        StringBuffer outerJoin = null;
         int valueListSize = -1;
         List rmuas = getIssueListAttributeColumns();
         if (rmuas != null) 
         {
-            StringBuffer sb = new StringBuffer(sql.length() + 500);
-            sb.append(sql);
             valueListSize = rmuas.size();
-            StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
+            outerJoin = new StringBuffer(10 * valueListSize + 20);
             StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
-            
-            for (Iterator i = rmuas.iterator(); i.hasNext();) 
+
+            int count = 0;
+            for (Iterator i = rmuas.iterator(); i.hasNext(); count++) 
             {
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                String id = rmua.getAttributeId().toString();
+                // locate the sort attribute position so we can move any 
+                // unset results to the end of the list.
+                NumberKey attrPK = rmua.getAttributeId();
+                if (attrPK.equals(sortAttrId)) 
+                {
+                    sortAttrPos = count;
+                }
+                String id = attrPK.toString();
                 String alias = "av" + id;
                 // add column to SELECT column clause
                 selectColumns.append(',').append(alias).append(".VALUE");
                 // if no criteria was specified for a displayed attribute
                 // add it as an outer join
-                if (crit.getTableForAlias(alias) == null) 
+                if (fromString.indexOf(alias) < 0)
                 {
                     outerJoin.append(
                         " LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE ")
@@ -2002,18 +1967,93 @@ public class IssueSearch
                         .append(".ATTRIBUTE_ID=").append(id).append(')');
                 }
             }
-        
-            // add left outer join
-            sb.insert(sql.indexOf(WHERE), outerJoin.toString());
+
+            // we need add more sql for attribute/option sorting
+            if (sortAttrId != null) 
+            {
+                String sortId = sortAttrId.toString();
+                Attribute att = AttributeManager.getInstance(sortAttrId);
+                if ( att.isOptionAttribute())
+                {
+                    // add the sort column
+                    sortColumn = "sortRMO.PREFERRED_ORDER";
+                    selectColumns.append(',').append(sortColumn);
+                    // join the RMO table to the AttributeValue alias we are sorting
+                    outerJoin.append(BASE_OPTION_SORT_LEFT_JOIN).append("av")
+                        .append(sortId).append(".OPTION_ID)");
+                }
+                else 
+                {
+                    sortColumn = "av" + sortId + ".VALUE";
+                }
+            }
             // add attribute columns for the table
-            sb.insert(sql.indexOf(FROM), selectColumns.toString());
-            sql = sb.toString();
+            sb.append(selectColumns);
         }
-        Log.get("org.apache.torque").debug(sql);
+
+        sb.append(FROM).append(IssuePeer.TABLE_NAME);
+        if (from.length() > 0) 
+        {
+            sb.append(' ').append(fromString);
+        }
+        if (outerJoin != null) 
+        {
+            // add left outer join
+            sb.append(outerJoin);    
+        }
+        if (where.length() > 0) 
+        {
+            sb.append(WHERE).append(where);
+        }
+
+        // add order by clause
+        if (sortColumn == null) 
+        {
+            sb.append(ORDER_BY).append(IssuePeer.ID_PREFIX);
+            if (getSortPolarity().equals("desc"))
+            {
+                sb.append(" DESC");
+            }
+            else
+            {
+                sb.append(" ASC");
+            }
+            sb.append(',').append(IssuePeer.ID_COUNT);
+            if (getSortPolarity().equals("desc"))
+            {
+                sb.append(" DESC");
+            }
+            else
+            {
+                sb.append(" ASC");
+            }
+        }
+        else 
+        {
+            sb.append(ORDER_BY).append(sortColumn);
+            if (getSortPolarity().equals("desc"))
+            {
+                sb.append(" DESC");
+            }
+            else
+            {
+                sb.append(" ASC");
+            }
+            // add pk sort so that rows can be combined easily
+            sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
+        }
+        
+        Logger torqueLog = Log.get("org.apache.torque");
+        if (torqueLog.isDebugEnabled()) 
+        {
+            torqueLog.debug("Search sql: " + sb.toString());
+        }
+                
         // return a List of QueryResult objects
-        return buildQueryResults(BasePeer.executeQuery(sql), 
-                                 NO_ATTRIBUTE_SORT, valueListSize);
+        return buildQueryResults(BasePeer.executeQuery(sb.toString()),
+                                 sortAttrPos, valueListSize);
     }
+
     
     /**
      * provides common code for use by the sortByUniqueId and sortByAttribute
@@ -2129,7 +2169,7 @@ public class IssueSearch
         {
             queryResults.addAll(heldRows);
         }
-        
+
         return queryResults;
     }
 
