@@ -300,17 +300,12 @@ public class FilterToolbar extends JPanel implements ActionListener {
 	}
 
 	public void update() throws Exception {
-		/*
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE );
-		 
-		tableController.tableChanged(ev);
-		*/
-		
+	
 		tableController
 			.getTableModelFilteredView()
 			.setDataFiltering(true);
+		tableController.updateManager.update();
 		
-		tableController.getTableModelFilteredView().update();
 		
 	}
 
