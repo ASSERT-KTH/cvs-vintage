@@ -8,6 +8,7 @@ package org.jboss.deployment;
 
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URLClassLoader;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
@@ -31,8 +33,6 @@ import org.jboss.metadata.XmlFileLoader;
 
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.ContainerFactoryMBean;
-
-import org.jboss.tomcat.EmbededTomcatServiceMBean;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *  or crash.
  *
  *   @author Daniel Schulze (daniel.schulze@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class J2eeDeployer 
    extends ServiceMBeanSupport
@@ -67,8 +67,11 @@ public class J2eeDeployer
    MBeanServer server;
 
    // names of the specials deployers
-   ObjectName jBossDeployer;
-   ObjectName tomcatDeployer;
+   ObjectName jarDeployer;
+   ObjectName warDeployer;
+
+   String jarDeployerName;
+   String warDeployerName;
 
    // The logger for this service
    Log log = new Log(getName());
@@ -81,14 +84,18 @@ public class J2eeDeployer
    /** only for testing...*/
    public static void main (String[] _args) throws Exception
    {
-   	new J2eeDeployer ("").deploy (_args[0]);
+   	new J2eeDeployer ("", "EJB:service=ContainerFactory", ":service=EmbeddedTomcat").deploy (_args[0]);
    }
    
    // Constructors --------------------------------------------------
    /** */
-   public J2eeDeployer (String _deployDir)
+   public J2eeDeployer (String _deployDir, String jarDeployerName, String warDeployerName)
    {
-   	DEPLOYMENT_DIR = _deployDir;
+   	  DEPLOYMENT_DIR = _deployDir;
+      
+	  this.jarDeployerName = jarDeployerName;
+	  this.warDeployerName = warDeployerName;
+	  
    }
    
    
@@ -174,20 +181,20 @@ public class J2eeDeployer
    	   	{
    	   		Deployment.Module m = (Deployment.Module)i.next ();
    	   		// Call the ContainerFactory that is loaded in the JMX server
-               Object result = server.invoke(jBossDeployer, "isDeployed",
+               Object result = server.invoke(jarDeployer, "isDeployed",
                                              new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
                deployed = ((Boolean)result).booleanValue ();
             }
    
    	   	// Tomcat
    	   	i = d.webModules.iterator ();
-   	   	if (i.hasNext () && !withTomcat ())
+   	   	if (i.hasNext () && !warDeployerAvailable ())
    	   	   throw new J2eeDeploymentException ("the application containes web modules but the tomcat service isn't running?!");
    	   	
    	   	while (i.hasNext () && deployed)
    	   	{
    	   		Deployment.Module m = (Deployment.Module)i.next ();
-               Object result = server.invoke(tomcatDeployer, "isDeployed",
+               Object result = server.invoke(warDeployer, "isDeployed",
                                              new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
                deployed = ((Boolean)result).booleanValue ();
             }
@@ -222,15 +229,16 @@ public class J2eeDeployer
    protected void initService()
       throws Exception
    {
-      // Save JMX name of the deployers
-      jBossDeployer = new ObjectName(ContainerFactoryMBean.OBJECT_NAME);
-      tomcatDeployer= new ObjectName(EmbededTomcatServiceMBean.OBJECT_NAME);
-
+      
       //set the deployment directory
-   	DEPLOYMENT_DIR = new File (DEPLOYMENT_DIR).getCanonicalPath ();
+   	  DEPLOYMENT_DIR = new File (DEPLOYMENT_DIR).getCanonicalPath ();
+
+	  // Save JMX name of the deployers
+      jarDeployer = new ObjectName(jarDeployerName);
+      warDeployer= new ObjectName(warDeployerName);
    	
-   	// load the configuration
-   	loadConfig ();
+   	  // load the configuration
+   	  loadConfig ();
 
    }
 
@@ -238,8 +246,8 @@ public class J2eeDeployer
    protected void startService()
       throws Exception
    {
-      if (!withTomcat ())
-         log.log ("No EmbededTomcat found - only EJB deployment available...");
+      if (!warDeployerAvailable ())
+         log.log ("No war deployer found - only EJB deployment available...");
 
 
       log.log ("trying to redeploy all applications that were running before shutdown...");
@@ -340,8 +348,8 @@ public class J2eeDeployer
            	else if ("web-app".equals (root.getTagName ()))
            	{
            		// its a WAR.jar... just take the package
-           		if (!withTomcat ())
-           		   throw new J2eeDeploymentException ("Tomcat is not available!");
+           		if (!warDeployerAvailable ())
+           		   throw new J2eeDeploymentException ("No war deployer available!");
            		
            		Deployment.Module m = d.newModule ();
                m.downloadUrl = d.downloadUrl;
@@ -384,8 +392,8 @@ public class J2eeDeployer
                      
                      if (mod.isWeb ())
                      {
-                  		if (!withTomcat ())
-                  		   throw new J2eeDeploymentException ("Tomcat is not available!");
+                  		if (!warDeployerAvailable ())
+                  		   throw new J2eeDeploymentException ("No war deployer available!");
 
                         m.webContext = mod.getWebContext ();
                         if (m.webContext == null)
@@ -409,9 +417,13 @@ public class J2eeDeployer
                   // other packages we dont care about (currently)
            	}
       	
-         	// redirict all modules to the responsible deployer
-          	Deployment.Module m = null;
-            try
+			// set the context classloader for this application
+			createContextClassLoader(d);
+			
+			// redirect all modules to the responsible deployer
+			Deployment.Module m = null;
+				
+			try
             {
           		// jBoss
                Iterator it = d.ejbModules.iterator ();
@@ -420,7 +432,7 @@ public class J2eeDeployer
                	m = (Deployment.Module)it.next ();
                 	log.log ("deploying module " + m.name);
             		// Call the ContainerFactory that is loaded in the JMX server
-                  server.invoke(jBossDeployer, "deploy",
+                  server.invoke(jarDeployer, "deploy",
                                   new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
                }
       
@@ -432,7 +444,7 @@ public class J2eeDeployer
                	m = (Deployment.Module)it.next ();
                 	log.log ("deploying module " + m.name);
             		// Call the TomcatDeployer that is loaded in the JMX server
-                  server.invoke(tomcatDeployer, "deploy",
+                  server.invoke(warDeployer, "deploy",
                                   new Object[] { m.webContext, m.localUrl.toString ()}, new String[] { "java.lang.String", "java.lang.String" });
          		
             	}
@@ -479,7 +491,7 @@ public class J2eeDeployer
          try
          {
       		// Call the ContainerFactory that is loaded in the JMX server
-            server.invoke(jBossDeployer, "undeploy",
+            server.invoke(jarDeployer, "undeploy",
                             new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
          }
          catch (MBeanException _mbe) {
@@ -495,11 +507,11 @@ public class J2eeDeployer
       	log.log ("uninstalling module " + m.name);
 
     		// tomcat
-     		if (withTomcat ())
+     		if (warDeployerAvailable ())
      		{
             try
             {
-               server.invoke(tomcatDeployer, "undeploy",
+               server.invoke(warDeployer, "undeploy",
                                new Object[] { m.localUrl.toString () }, new String[] { "java.lang.String" });
             }
             catch (MBeanException _mbe) {
@@ -548,9 +560,39 @@ public class J2eeDeployer
       }
    }
 
-   private boolean withTomcat ()
+   private boolean warDeployerAvailable ()
    {
-      return server.isRegistered (tomcatDeployer);
+      return server.isRegistered (warDeployer);
    }
 
+
+	/**
+	 * creates an application class loader for this deployment
+	 * this class loader will be shared between jboss and tomcat via the contextclassloader
+	 */
+	private void createContextClassLoader(Deployment deployment) {
+		
+		// find all the urls to add
+		ArrayList urls = new ArrayList();
+		
+		// ejb applications
+		Iterator iterator = deployment.ejbModules.iterator();
+		while (iterator.hasNext()) {
+			// add the local url to the classloader
+			urls.add(((Deployment.Module)iterator.next()).localUrl);
+		}
+		
+		// TODO? web applications
+		// add WEB-INF/classes and WEB-INF/lib/* from webModules.localUrl
+		
+		// actually create the class loader. 
+		// Keep the current context class loader as a parent (jboss and tomcat classes are in it)
+		URL[] urlArray = (URL[])urls.toArray(new URL[urls.size()]);
+		ClassLoader parent = Thread.currentThread().getContextClassLoader();
+		
+		URLClassLoader appCl = new URLClassLoader(urlArray, parent);
+		
+		// set it as the context class loader for the deployment thread
+		Thread.currentThread().setContextClassLoader(appCl);
+	}
 }
