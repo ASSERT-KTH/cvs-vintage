@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.25 2003/02/15 02:36:50 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.26 2003/02/15 02:55:17 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -377,7 +377,7 @@ implements VetoableChangeListener  {
               MAssociation asc;
               if (aggregation != null) {
                   boolean unidirectional = ((Boolean)args.get("unidirectional")).booleanValue();
-                  asc = UmlFactory.getFactory().getCore().buildAssociation(fromCls, false, aggregation, toCls, unidirectional, MAggregationKind.NONE);
+                  asc = UmlFactory.getFactory().getCore().buildAssociation(fromCls, !unidirectional, aggregation, toCls, true, MAggregationKind.NONE);
               } else {
                   asc = UmlFactory.getFactory().getCore().buildAssociation(fromCls, toCls);
               }
