@@ -119,9 +119,6 @@ public class HtmlEditorView extends JTextPane
 		supportedFormats.add(HTML.Tag.PRE);
 		supportedFormats.add(HTML.Tag.ADDRESS);
 		
-		// For testing we use another background color
-		setBackground(new Color(192, 192, 255));
-		
 	}
 
 	/** 

@@ -46,10 +46,10 @@ import com.jgoodies.forms.layout.FormLayout;
 public class HtmlToolbar
 		implements ActionListener, Observer, ContainerListener {
 
-	ComposerController controller;
+	private ComposerController controller;
 
-	JComboBox paragraphComboBox;
-	JComboBox sizeComboBox;
+	private JComboBox paragraphComboBox;
+	private JComboBox sizeComboBox;
 	
 	/** 
 	 * Flag indicating whether we are programatically changing the 
@@ -125,9 +125,9 @@ public class HtmlToolbar
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
-		String enableHtml = htmlElement.getAttribute("enable", "false");
-		paragraphComboBox.setEnabled(
-				(new Boolean(enableHtml)).booleanValue());
+		String s = htmlElement.getAttribute("enable", "false");
+		boolean enableHtml = (new Boolean(s)).booleanValue();
+		paragraphComboBox.setEnabled(enableHtml);
 
 		// TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
 		sizeComboBox.setEnabled(false);
@@ -158,14 +158,17 @@ public class HtmlToolbar
 		ToggleToolbarButton rightJustifyButton =
 			new ToggleToolbarButton(
 				handler.getAction("RightJustifyAction", getFrameController()));
-
+				
 		builder.add(paraLabel, cc.xy(1, 7));
 
 		// nested panel
 		JPanel panel = new JPanel();
 		FormLayout layout =
 			new FormLayout(
-				"default, 3dlu,default, 3dlu,default, 3dlu,default, 3dlu, default, 3dlu, default, 3dlu, default, 6dlu, default, 3dlu, default, 3dlu, default, 3dlu,",
+				"default, 3dlu, default, 3dlu, default, 3dlu, " + 
+				"default, 3dlu, default, 3dlu, default, 3dlu, " +
+				"default, 6dlu, default, 3dlu, default, 3dlu, " +
+				"default, 3dlu",
 				"fill:default");
 		PanelBuilder b = new PanelBuilder(panel, layout);
 
@@ -183,6 +186,7 @@ public class HtmlToolbar
 		b.add(rightJustifyButton, cc.xy(19, 1));
 
 		builder.add(panel, cc.xy(3, 7));
+
 	}
 
 	/**
