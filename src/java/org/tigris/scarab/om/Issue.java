@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.259 2003/02/01 01:54:13 jon Exp $
+ * @version $Id: Issue.java,v 1.260 2003/02/01 21:17:48 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2673,10 +2673,9 @@ public class Issue
          throws Exception, ScarabException
     {                
         Module module = getModule();
-
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
-          || (user.equals(getCreatedBy()) 
-             && getTypeId().equals(IssueType.USER_TEMPLATE__PK)))
+            || (user.equals(getCreatedBy()) 
+            && getTypeId().equals(IssueType.USER_TEMPLATE__PK)))
         {
             setDeleted(true);
             save();
