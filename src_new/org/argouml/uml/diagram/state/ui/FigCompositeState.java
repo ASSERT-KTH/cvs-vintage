@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.20 2004/08/08 20:42:27 mvw Exp $
+// $Id: FigCompositeState.java,v 1.21 2004/11/07 20:31:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
+import java.text.ParseException;
 import java.util.Iterator;
 
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigLine;
@@ -266,7 +268,13 @@ public class FigCompositeState extends FigState {
             if (st == null)
                 return;
             String s = ft.getText();
-            ParserDisplay.SINGLETON.parseStateBody(st, s);
+            try {
+                ParserDisplay.SINGLETON.parseStateBody(st, s);
+            } catch (ParseException pe) {
+                ProjectBrowser.getInstance().getStatusBar().showStatus(
+                        "Error: " + pe + " at " + pe.getErrorOffset());
+                // TODO: i18n
+            } 
         }
     }
 

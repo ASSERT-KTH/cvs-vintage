@@ -1,4 +1,4 @@
-// $Id: Parser.java,v 1.22 2004/08/09 16:52:02 mvw Exp $
+// $Id: Parser.java,v 1.23 2004/11/07 20:31:39 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,11 @@ public abstract class Parser {
      * @param trans the transition
      * @param s  the input string to be parsed
      * @return the transition
+     * @throws ParseException when there is a syntax error in the input text 
+     *                        so that it should be rejected
      */
-    public abstract Object parseTransition(Object trans, String s);
+    public abstract Object parseTransition(Object trans, String s)
+        throws ParseException;
     
     /**
      * Parse a given string s with the information given from 
