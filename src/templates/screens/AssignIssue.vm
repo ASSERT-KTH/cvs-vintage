@@ -97,11 +97,11 @@
     <td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
     <td><select name="temp_user_attr_$userId">
      #foreach ($selectUserAttr in $userAttrs)
-        #set ($selected = "")
+        #set ($selected = false)
         #if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
-            #set ($selected = 'selected')
+            #set ($selected = true)
         #end
-        <option value="$selectUserAttr.AttributeId" $selected >$selectUserAttr.Name</option>
+        <option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
      #end
        </select></td>
     </tr>
@@ -123,11 +123,11 @@
 			<td>$assignedUser.UserName</td>
 			<td><select name="temp_user_attr_$userId">
 			 #foreach ($selectUserAttr in $userAttrs)
-                #set ($selected = "")
+                #set ($selected = false)
 				#if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
-                    #set ($selected = 'selected')
+                    #set ($selected = true)
                 #end
-				<option value="$selectUserAttr.AttributeId" $selected >$selectUserAttr.Name</option>
+				<option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
 			 #end
 			   </select></td>
 			</tr>
