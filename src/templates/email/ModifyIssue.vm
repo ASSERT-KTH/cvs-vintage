@@ -1,4 +1,4 @@
-#set ($user = $issue.ModifiedBy)
+#set ($user = $data.User)
 
 Issue '$issue.UniqueId' has just been modified by user '$user.UserName'
 
