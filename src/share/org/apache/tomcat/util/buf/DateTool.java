@@ -137,17 +137,19 @@ public class DateTool {
             date = DateTool.rfc1123Format.parse(dateString);
 	    return date.getTime();
 	} catch (ParseException e) { }
+          catch (StringIndexOutOfBoundsException e) { }
 	
         try {
 	    date = DateTool.rfc1036Format.parse(dateString);
 	    return date.getTime();
 	} catch (ParseException e) { }
+          catch (StringIndexOutOfBoundsException e) { }
 	
         try {
             date = DateTool.asctimeFormat.parse(dateString);
 	    return date.getTime();
-        } catch (ParseException pe) {
-        }
+        } catch (ParseException pe) { }
+          catch (StringIndexOutOfBoundsException e) { }
 	String msg = sm.getString("httpDate.pe", dateString);
 	throw new IllegalArgumentException(msg);
     }
