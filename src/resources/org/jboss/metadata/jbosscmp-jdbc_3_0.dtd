@@ -393,7 +393,7 @@ The ejb-relation element contains the configuration of an
 ejb-relation.
 -->
 <!ELEMENT ejb-relation (ejb-relation-name, read-only?, read-time-out?,
-         (foreign-key-mapping | relation-table-mapping),
+         (foreign-key-mapping | relation-table-mapping)?,
          (ejb-relationship-role, ejb-relationship-role)?)>
 
 
