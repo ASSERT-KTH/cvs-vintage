@@ -20,6 +20,9 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
+import org.jboss.invocation.Invocation;
+import org.jboss.ejb.EnterpriseContext;
+
 /**
  * MessageDrivenContainer, based on the StatelessSessionContainer.
  *
@@ -31,7 +34,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -144,7 +147,7 @@ public class MessageDrivenContainer
 
     // Container implementation - overridden here ----------------------
 
-    public void init() throws Exception
+    public void create() throws Exception
     {
         try {
             // Associate thread with classloader
@@ -152,22 +155,22 @@ public class MessageDrivenContainer
             Thread.currentThread().setContextClassLoader(getClassLoader());
 
             // Call default init
-            super.init();
+            super.create();
 
             // Map the bean methods
             setupBeanMapping();
 
             // Initialize pool
-            instancePool.init();
+            instancePool.create();
 
             // Init container invoker
-            containerInvoker.init();
+            containerInvoker.create();
 
             // Initialize the interceptor by calling the chain
             Interceptor in = interceptor;
             while (in != null) {
                 in.setContainer(this);
-                in.init();
+                in.create();
                 in = in.getNext();
             }
 
@@ -262,7 +265,7 @@ public class MessageDrivenContainer
     }
 
 
-    public Object invokeHome(MethodInvocation mi)
+    public Object invokeHome(Invocation mi)
         throws Exception
     {
         throw new Error("invokeHome not valid for MessageDriven beans");
@@ -274,7 +277,7 @@ public class MessageDrivenContainer
      * retrieves the instance from an object table, and invokes the method
      * on the particular instance
      */
-    public Object invoke(MethodInvocation mi)
+    public Object invoke(Invocation mi)
         throws Exception
     {
         // Invoke through interceptors
@@ -370,12 +373,12 @@ public class MessageDrivenContainer
         public void setNext(Interceptor interceptor) {}
         public Interceptor getNext() { return null; }
 
-        public void init() {}
+        public void create() {}
         public void start() {}
         public void stop() {}
         public void destroy() {}
 
-        public Object invokeHome(MethodInvocation mi)
+        public Object invokeHome(Invocation mi)
             throws Exception
         {
             throw new Error("invokeHome not valid for MessageDriven beans");
@@ -386,13 +389,13 @@ public class MessageDrivenContainer
          * beans with bean managed transaction?? Probably best done in the
          * listener "proxys"
          */
-        public Object invoke(MethodInvocation mi)
+        public Object invoke(Invocation mi)
             throws Exception
         {
             // wire the transaction on the context,
             // this is how the instance remember the tx
-            if (mi.getEnterpriseContext().getTransaction() == null) {
-                mi.getEnterpriseContext().setTransaction(mi.getTransaction());
+            if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null) {
+                ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
             }
 
             // Get method and instance to invoke upon
@@ -403,7 +406,7 @@ public class MessageDrivenContainer
             {
                 // Invoke and handle exceptions
                 try {
-                    return m.invoke(mi.getEnterpriseContext().getInstance(),
+                    return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(),
                                     mi.getArguments());
                 }
                 catch (IllegalAccessException e) {
