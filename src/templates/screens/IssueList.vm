@@ -1,4 +1,4 @@
-##set ( $action = $link.setPage("IssueList.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm") )
+##set ( $action = $link.setPage("IssueList.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "IssueList.vm") )
 
 	<h3>Search Results</h3>
 	
@@ -30,7 +30,6 @@
 		
 #foreach ($issue in $issueList)
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
-$issue.IssueId
          #if( $velocityCount % 2 > 0 )
             <tr class="a">
          #else 
@@ -47,8 +46,7 @@ $issue.IssueId
 #end
 		</table>
 	</div>
-	<div class="misc">issues per page:&#160; <input type="radio" name="foo" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100</div>
-	
+	<div class="misc">issues per page:&#160; <input type="radio" name="issue_limit" value="25"/> 25 <input type="radio" name="issue_limit" value="50"/> 50 <input type="radio" name="issue_limit" value="50"/> 75 <input type="radio" name="issue_limit" value="100"/> 100>&nbsp; <input type="submit" name="eventSubmit_doSearch" value="Refresh"></div>
 	<div class="functnbar">
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>

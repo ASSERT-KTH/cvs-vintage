@@ -60,7 +60,6 @@
     #else
          #attrValueErrorMsg( $attVal "Value" )
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
-
             <textarea name="$attrInput.Value.Key" cols="40" 
                rows="5">$!attrInput.Value</textarea>
         #else
@@ -158,7 +157,7 @@
   <td>
      <font color="red">$dependGroup.TypeId.Message</font><BR>
   <select name="$dependGroup.TypeId.Key" class="select">
-    <option >Choose dependency type</option>
+    <option value="0">Choose dependency type</option>
     #foreach ($dependType in $currentIssue.getAllDependencyTypes())
       <option value="$dependType.DependTypeId">
           $dependType.Name</option>
@@ -341,7 +340,7 @@
               $activity.Transaction.CreatedDate
             #end
           </td>
-      #if ($activity.Attribute.AttributeType.Name == "long-string" )
+      #if ($activity.Attribute.AttributeType.Name == "string" )
           <td width="120">changed $activity.Attribute.Name</td>
       #else
           <td width="120">changed $activity.Attribute.Name from $activity.OldAttributeOption.Name to $activity.NewAttributeOption.Name</td>
