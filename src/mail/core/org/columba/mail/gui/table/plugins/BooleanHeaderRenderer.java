@@ -13,10 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -26,17 +27,19 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
+import org.columba.mail.gui.table.util.TableModelSorter;
 
-public class CommonHeaderRenderer extends JButton implements TableCellRenderer
+
+public class BooleanHeaderRenderer extends JButton implements TableCellRenderer
     {
         Border unselectedBorder = null;
         Border selectedBorder = null;
         boolean isBordered = true;
-        String str,name;
-        //private String fontName;
-        //private int fontSize;
+        String str;
+	boolean bool;
+        TableModelSorter tableModelSorter;
+        ImageIcon image;
 
-        private TableModelSorter tableModelSorter;
 
         public void updateUI()
         {
@@ -45,28 +48,22 @@ public class CommonHeaderRenderer extends JButton implements TableCellRenderer
             setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
         }
 
-
-
-        public CommonHeaderRenderer( String str, String name,
-                                     TableModelSorter tableModelSorter)
+        public BooleanHeaderRenderer(boolean bool, String str, TableModelSorter tableModelSorter)
             {
                 super();
                 this.str = str;
-                this.name = name;
-
+		this.bool = bool;
 
                 this.tableModelSorter = tableModelSorter;
 
-
+                    //this.image = image;
 		setHorizontalAlignment( SwingConstants.LEFT );
-                setHorizontalTextPosition( SwingConstants.LEFT );
-                    //setIconTextGap( 5 );
+                //setHorizontalTextPosition( SwingConstants.CENTER );
+                    //setHorizontalAlignment( SwingConstants.CENTER );
                 setOpaque(true); //MUST do this for background to show up.
 
                 setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-
                   //setMargin( new Insets(0,0,0,0) );
-
             }
 
 
@@ -78,32 +75,21 @@ public class CommonHeaderRenderer extends JButton implements TableCellRenderer
                                 int row, int column)
         {
 
-
-
               //setBorder( new CTableBorder(true) );
-                //super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
 
-            setText( this.name );
-
+	    //FIXME
 
             if ( tableModelSorter.getSortingColumn().equals( this.str ) )
             {
-
-
                 if ( tableModelSorter.getSortingOrder() == true )
                     setIcon( new AscendingIcon() );
                 else
                     setIcon( new DescendingIcon() );
-
             } else
             {
-
                 setIcon( null );
             }
-
 
             return this;
         }
     }
-
-

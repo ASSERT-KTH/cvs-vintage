@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
@@ -26,18 +26,11 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
- */
+import org.columba.mail.gui.table.util.TableModelSorter;
 
-public class DateHeaderRenderer extends JButton implements TableCellRenderer
-{
-     Border unselectedBorder = null;
+public class CommonHeaderRenderer extends JButton implements TableCellRenderer
+    {
+        Border unselectedBorder = null;
         Border selectedBorder = null;
         boolean isBordered = true;
         String str,name;
@@ -55,10 +48,10 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
 
 
-    public DateHeaderRenderer(String str, String name,
+        public CommonHeaderRenderer( String str, String name,
                                      TableModelSorter tableModelSorter)
-    {
-        super();
+            {
+                super();
                 this.str = str;
                 this.name = name;
 
@@ -74,10 +67,13 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
                 setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
 
                   //setMargin( new Insets(0,0,0,0) );
-    }
+
+            }
 
 
-     public Component getTableCellRendererComponent(
+
+
+        public Component getTableCellRendererComponent(
                                 JTable table, Object str,
                                 boolean isSelected, boolean hasFocus,
                                 int row, int column)
@@ -93,17 +89,14 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
             if ( tableModelSorter.getSortingColumn().equals( this.str ) )
             {
+
+
                 if ( tableModelSorter.getSortingOrder() == true )
                     setIcon( new AscendingIcon() );
                 else
                     setIcon( new DescendingIcon() );
 
-            } else if ( tableModelSorter.getSortingColumn().equals("In Order Received") )
-            {
-                setText( this.name+" (In Order Received)" );
-                setIcon( null );
-            }
-            else
+            } else
             {
 
                 setIcon( null );
@@ -112,5 +105,6 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
             return this;
         }
+    }
 
-}
+

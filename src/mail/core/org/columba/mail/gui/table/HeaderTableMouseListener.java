@@ -13,12 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.action;
+package org.columba.mail.gui.table;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.util.MessageNode;
 
 /**

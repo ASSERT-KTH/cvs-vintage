@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.action;
+package org.columba.mail.gui.table;
 
 
 import java.awt.event.ActionEvent;
@@ -21,7 +21,6 @@ import java.awt.event.ActionListener;
 
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
-import org.columba.mail.gui.table.TableController;
 
 
 public class HeaderItemActionListener implements ActionListener

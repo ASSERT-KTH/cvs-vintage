@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
@@ -23,31 +23,22 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.table.DefaultLabelRenderer;
-import org.columba.mail.message.Flags;
+import org.columba.mail.gui.table.util.MessageNode;
 
-public class StatusRenderer extends DefaultLabelRenderer {
+public class FlaggedRenderer extends DefaultLabelRenderer {
+
 	boolean bool;
-
 	ImageIcon image1;
-	ImageIcon image2;
-	ImageIcon image4;
-	ImageIcon image3;
-	ImageIcon image5;
-	ImageIcon image6;
 
-	public StatusRenderer(JTree tree) {
+	public FlaggedRenderer(JTree tree) {
 		super(tree);
 
+		//this.str = str;
+		//this.image = image;
 		setHorizontalAlignment(SwingConstants.CENTER);
-		//setOpaque(true);
+		//setOpaque(true); //MUST do this for background to show up.
 
-		image1 = ImageLoader.getSmallImageIcon("reply_small.png");
-		image2 = ImageLoader.getSmallImageIcon("mail-new.png");
-		image3 = ImageLoader.getSmallImageIcon("stock_delete-16.png");
-		image4 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
-		image5 = ImageLoader.getSmallImageIcon("mail-read.png");
-		image6 = ImageLoader.getSmallImageIcon("mail-new.png");
+		image1 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
 
 	}
 
@@ -72,30 +63,12 @@ public class StatusRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		if (value instanceof String) {
-			System.out.println(
-				"statusrenderer-> instanceof String not expected");
-
-			return this;
-		}
-
-		Flags flags = (Flags) ((MessageNode)value).getHeader().getFlags();
-
-		if (flags.getDeleted()) {
-
-			setIcon(image3);
-
-			//setToolTipText("Marked as expunged");
-		} else if (flags.getAnswered()) {
+		boolean flagged = ((MessageNode)value).getHeader().getFlags().getFlagged();
+		
+		
+		
+		if (flagged) {
 			setIcon(image1);
-			//setToolTipText("Marked as answered");
-		} else if (!flags.getSeen()) {
-			setIcon(image6);
-			//setToolTipText("Marked as unread");
-		} else if (flags.getSeen()) {
-			//setIcon( image5 );
-			setIcon(image5);
-			//setToolTipText("Marked as read");
 		} else {
 			setIcon(null);
 

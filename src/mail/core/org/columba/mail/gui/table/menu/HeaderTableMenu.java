@@ -25,9 +25,9 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
+import org.columba.mail.gui.table.HeaderTableMouseListener;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
-import org.columba.mail.gui.table.action.HeaderTableMouseListener;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

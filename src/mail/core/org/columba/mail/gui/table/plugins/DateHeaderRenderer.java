@@ -13,11 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.util;
+package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -27,18 +26,26 @@ import javax.swing.table.TableCellRenderer;
 
 import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
+import org.columba.mail.gui.table.util.TableModelSorter;
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2001
+ * Company:
+ * @author
+ * @version 1.0
+ */
 
-
-public class BooleanHeaderRenderer extends JButton implements TableCellRenderer
-    {
-        Border unselectedBorder = null;
+public class DateHeaderRenderer extends JButton implements TableCellRenderer
+{
+     Border unselectedBorder = null;
         Border selectedBorder = null;
         boolean isBordered = true;
-        String str;
-	boolean bool;
-        TableModelSorter tableModelSorter;
-        ImageIcon image;
+        String str,name;
+        //private String fontName;
+        //private int fontSize;
 
+        private TableModelSorter tableModelSorter;
 
         public void updateUI()
         {
@@ -47,36 +54,43 @@ public class BooleanHeaderRenderer extends JButton implements TableCellRenderer
             setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
         }
 
-        public BooleanHeaderRenderer(boolean bool, String str, TableModelSorter tableModelSorter)
-            {
-                super();
+
+
+    public DateHeaderRenderer(String str, String name,
+                                     TableModelSorter tableModelSorter)
+    {
+        super();
                 this.str = str;
-		this.bool = bool;
+                this.name = name;
+
 
                 this.tableModelSorter = tableModelSorter;
 
-                    //this.image = image;
+
 		setHorizontalAlignment( SwingConstants.LEFT );
-                //setHorizontalTextPosition( SwingConstants.CENTER );
-                    //setHorizontalAlignment( SwingConstants.CENTER );
+                setHorizontalTextPosition( SwingConstants.LEFT );
+                    //setIconTextGap( 5 );
                 setOpaque(true); //MUST do this for background to show up.
 
                 setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
+
                   //setMargin( new Insets(0,0,0,0) );
-            }
+    }
 
 
-
-
-        public Component getTableCellRendererComponent(
+     public Component getTableCellRendererComponent(
                                 JTable table, Object str,
                                 boolean isSelected, boolean hasFocus,
                                 int row, int column)
         {
 
-              //setBorder( new CTableBorder(true) );
 
-	    //FIXME
+
+              //setBorder( new CTableBorder(true) );
+                //super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
+
+            setText( this.name );
+
 
             if ( tableModelSorter.getSortingColumn().equals( this.str ) )
             {
@@ -84,11 +98,20 @@ public class BooleanHeaderRenderer extends JButton implements TableCellRenderer
                     setIcon( new AscendingIcon() );
                 else
                     setIcon( new DescendingIcon() );
-            } else
+
+            } else if ( tableModelSorter.getSortingColumn().equals("In Order Received") )
             {
+                setText( this.name+" (In Order Received)" );
+                setIcon( null );
+            }
+            else
+            {
+
                 setIcon( null );
             }
 
+
             return this;
         }
-    }
+
+}

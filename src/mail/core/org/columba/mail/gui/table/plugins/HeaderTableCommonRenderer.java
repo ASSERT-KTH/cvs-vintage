@@ -13,44 +13,30 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table;
+package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.JTable;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 
 import org.columba.mail.gui.table.util.MessageNode;
 
-public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
+public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 
 	private JTree tree;
-	private Font plainFont, boldFont;
+	private String key;
 
-	public HeaderTableSizeRenderer(JTree tree) {
+	public HeaderTableCommonRenderer(JTree tree, String key) {
 		super(tree);
 		this.tree = tree;
+		this.key = key;
 
-		setHorizontalAlignment(SwingConstants.RIGHT);
-
-		//setOpaque(true); //MUST do this for background to show up.
-
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
-
-		plainFont = UIManager.getFont("Tree.font");
 	}
 
 	public void updateUI() {
 		super.updateUI();
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
-
-		plainFont = UIManager.getFont("Tree.font");
 	}
 
 	public Component getTableCellRendererComponent(
@@ -61,21 +47,28 @@ public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		
-
 		if (value == null) {
 			setText("");
 			return this;
 		}
 
-		setText( ((MessageNode)value).getHeader().get("columba.size")  + "KB");
+		String str = null;
+		try {
+			str = (String) ((MessageNode)value).getHeader().get(key);
+		} catch (ClassCastException ex) {
+			System.out.println("headertablecommonrenderer: " + ex.getMessage());
+			str = new String();
+		}
 
+		setText(str);
+		//return this;
 		return super.getTableCellRendererComponent(
-		table,
-		value,
-		isSelected,
-		hasFocus,
-		row,
-		column);
+			table,
+			value,
+			isSelected,
+			hasFocus,
+			row,
+			column);
 	}
+
 }

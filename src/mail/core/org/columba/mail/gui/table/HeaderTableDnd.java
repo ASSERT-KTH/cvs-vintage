@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table.action;
+package org.columba.mail.gui.table;
 
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.DnDConstants;
@@ -28,7 +28,6 @@ import java.awt.event.InputEvent;
 
 import javax.swing.JTable;
 
-import org.columba.mail.gui.table.HeaderTableSelectionModel;
 
 /**
  * Title:
