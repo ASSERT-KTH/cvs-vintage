@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.63 2001/10/31 21:07:56 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.64 2001/11/02 22:50:04 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -321,9 +321,13 @@ public class ReportIssue extends RequireLoginFirstAction
                 if (template != null && template.equals("AssignIssue.vm"))
                 {
                     data.getParameters().add("intake-grp", "issue"); 
+                    /*
                     data.getParameters().add("issue", "_0"); 
                     data.getParameters().add("issue_0id", 
                                              issue.getIssueId().toString());
+                    */
+                    data.getParameters().add("id", 
+                                             issue.getUniqueId().toString());
                 }
                 setTarget(data, template);
 
@@ -340,8 +344,8 @@ public class ReportIssue extends RequireLoginFirstAction
                                       "email/NewIssueNotification.vm"); 
 
                 cleanup(data, context);
-                data.getParameters().add("issue_id", 
-                                         issue.getIssueId().toString());
+                data.getParameters().add("id", 
+                                         issue.getUniqueId().toString());
             }
             else 
             {
