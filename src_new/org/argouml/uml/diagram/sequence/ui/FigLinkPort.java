@@ -1,4 +1,4 @@
-// $Id: FigLinkPort.java,v 1.4 2004/09/09 18:07:17 mvw Exp $
+// $Id: FigLinkPort.java,v 1.5 2004/12/31 00:53:12 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,8 @@
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.awt.Point;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.tigris.gef.presentation.FigLine;
 
@@ -90,8 +91,8 @@ public class FigLinkPort extends FigLine {
     /**
      * @see org.tigris.gef.presentation.Fig#getGravityPoints()
      */
-    public Vector getGravityPoints() {
-        Vector ret = new Vector();
+    public List getGravityPoints() {
+        ArrayList ret = new ArrayList();
         Point p1 = new Point(getX(), getY());
         Point p2 = new Point(getX() + getWidth(), getY() + getHeight());
         ret.add(p1);

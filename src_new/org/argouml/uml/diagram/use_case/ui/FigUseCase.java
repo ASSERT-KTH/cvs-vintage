@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.50 2004/12/09 19:09:13 mvw Exp $
+// $Id: FigUseCase.java,v 1.51 2004/12/31 00:53:12 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -1393,20 +1395,20 @@ public class FigUseCase extends FigNodeModelElement {
      * Makes sure that the edges stick to the elipse fig of the usecase.
      * @see org.tigris.gef.presentation.Fig#getGravityPoints()
      */
-    public Vector getGravityPoints() {
-        Vector ret = new Vector();
+    public List getGravityPoints() {
+        final int maxPoints = 20;
+        List ret = new ArrayList(maxPoints);
         int cx = bigPort.center().x;
         int cy = bigPort.center().y;
         int radiusx = Math.round(bigPort.getWidth() / 2) + 1;
         int radiusy = Math.round(bigPort.getHeight() / 2) + 1;
-        final int maxPoints = 20;
         Point point = null;
         for (int i = 0; i < maxPoints; i++) {
             point =
-		new Point((int) (cx
+                new Point((int) (cx
 				 + (Math.cos(2 * Math.PI / maxPoints * i)
 				    * radiusx)),
-			  (int) (cy
+                    (int) (cy
 				 + (Math.sin(2 * Math.PI / maxPoints * i)
 				    * radiusy)));
             ret.add(point);

@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.23 2004/12/09 19:09:13 mvw Exp $
+// $Id: FigActor.java,v 1.24 2004/12/31 00:53:12 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.argouml.model.ModelFacade;
@@ -221,16 +223,16 @@ public class FigActor extends FigNodeModelElement {
      * Makes sure that the edges stick to the outline of the fig.
      * @see org.tigris.gef.presentation.Fig#getGravityPoints()
      */
-    public Vector getGravityPoints() {
-        Vector ret = new Vector();
+    public List getGravityPoints() {
+        final int maxPoints = 20;
+        List ret = new ArrayList(maxPoints + 8);
         int cx = getFigAt(HEAD_POSN).center().x;
         int cy = getFigAt(HEAD_POSN).center().y;
         int radiusx = Math.round(getFigAt(HEAD_POSN).getWidth() / 2) + 1;
         int radiusy = Math.round(getFigAt(HEAD_POSN).getHeight() / 2) + 1;
-        final int maxPoints = 20;
         Point point = null;
         for (int i = 0; i < maxPoints; i++) {
-	    double angle = 2 * Math.PI / maxPoints * i;
+            double angle = 2 * Math.PI / maxPoints * i;
             point = new Point((int) (cx + Math.cos(angle) * radiusx),
 			      (int) (cy + Math.sin(angle) * radiusy));
             ret.add(point);
