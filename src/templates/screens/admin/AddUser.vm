@@ -60,7 +60,7 @@
 <tr>
  <th>* Password</th>
  <td>
-  <input name="$regGroup.Password.Key" value="$passwordData" type="text" size="25" />
+  <input name="$regGroup.Password.Key" value="$passwordData" type="password" size="25" />
   #fieldErrorMsg($regGroup.Password "")
  </td>
 </tr>
