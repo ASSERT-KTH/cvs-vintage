@@ -22,6 +22,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
 
@@ -37,7 +38,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCCreateEntityCommand
 {
@@ -96,7 +97,12 @@ public class JDBCCreateEntityCommand
       for(Iterator iter = fields.iterator(); iter.hasNext(); ) {
          JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
          if(!field.isReadOnly()) {
-            insertFields.add(field);
+
+            // if this field is not a foreign key that is a part of primary key
+            if( !(field instanceof JDBCCMRFieldBridge
+               && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) ) {
+               insertFields.add(field);
+            }
          } 
       }
       return insertFields;
@@ -114,14 +120,14 @@ public class JDBCCreateEntityCommand
 
    protected String createInsertEntitySQL() {
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO ").append(entity.getTableName());      
+      sql.append("INSERT INTO ").append(entity.getTableName());
       sql.append(" (");
             sql.append(SQLUtil.getColumnNamesClause(insertFields));
       sql.append(")");
 
       sql.append(" VALUES (");
             sql.append(SQLUtil.getValuesClause(insertFields));
-      sql.append(")");      
+      sql.append(")");
       return sql.toString();
    }
 
@@ -171,7 +177,7 @@ public class JDBCCreateEntityCommand
                   "result set contains no rows");
          }
       
-         // did any rows mathch
+         // did any rows match
          return rs.getInt(1) > 0;
       } catch(CreateException e) {
          throw e;
