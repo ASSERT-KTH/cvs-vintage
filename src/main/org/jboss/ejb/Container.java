@@ -7,38 +7,23 @@
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
+
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.security.Principal;
-import java.util.Map;
 import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.Enumeration;
 
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.CreateException;
-import javax.ejb.RemoveException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
 import javax.naming.Reference;
-import javax.naming.NamingEnumeration;
-import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 import javax.naming.StringRefAddr;
 import javax.naming.RefAddr;
 import javax.naming.NameNotFoundException;
-import javax.naming.spi.ObjectFactory;
 import javax.transaction.TransactionManager;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Category;
 
@@ -76,7 +61,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public abstract class Container
 {
@@ -156,7 +141,7 @@ public abstract class Container
     *
     * @see javax.transaction.TransactionManager
     *
-    * @param    tm
+    * @param tm
     */
    public void setTransactionManager(TransactionManager tm)
    {
@@ -166,7 +151,7 @@ public abstract class Container
    /**
     * Returns this container's transaction manager.
     *
-    * @return  a concrete instance of javax.transaction.TransactionManager
+    * @return    A concrete instance of javax.transaction.TransactionManager
     */
    public TransactionManager getTransactionManager()
    {
@@ -274,7 +259,7 @@ public abstract class Container
     * Sets the meta data for this container. The meta data consists of the
     * properties found in the XML descriptors.
     *
-    * @param   metaData
+    * @param metaData
     */
    public void setBeanMetaData(BeanMetaData metaData)
    {
@@ -303,17 +288,17 @@ public abstract class Container
       if (methodPermissionsCache.containsKey(m)) {
          permissions = (Set) methodPermissionsCache.get( m );
       } else {
-         permissions = getBeanMetaData().getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
+         permissions = getBeanMetaData().
+            getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
          methodPermissionsCache.put(m, permissions);
       }
       return permissions;
-
    }
 
    /**
     * Returns the bean class instance of this container.
     *
-    * @return  instance of the Enterprise bean class
+    * @return    instance of the Enterprise bean class.
     */
    public Class getBeanClass()
    {
@@ -323,12 +308,13 @@ public abstract class Container
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
     * This factory style method is speciffically used by a container to supply
-    * an implementation of the abstract accessors in EJB2.0, but could be usefull
-    * in other situations. This method should ALWAYS be used instead of 
-    * getBeanClass().newInstance();
+    * an implementation of the abstract accessors in EJB2.0, but could be 
+    * usefull in other situations. This method should ALWAYS be used instead 
+    * of getBeanClass().newInstance();
+    * 
+    * @return    the new instance
     * 
     * @see java.lang.Class#newInstance 
-    * @return the new instance
     */
    public Object createBeanClassInstance() throws Exception {
       return getBeanClass().newInstance();
@@ -339,15 +325,14 @@ public abstract class Container
     * all the plugins and interceptors that this bean requires and now proceeds
     * to initialize the chain.  The method looks for the standard classes in 
     * the URL, sets up the naming environment of the bean. The concrete 
-    * container classes should override this method to introduce implementation 
-    * specific initialization behaviour.
+    * container classes should override this method to introduce
+    * implementation specific initialization behaviour.
     *
-    * @exception Exception     if loading the bean class failed
-    *                          (ClassNotFoundException) or setting up "java:"
-    *                          naming environment failed (DeploymentException)
+    * @throws Exception    if loading the bean class failed
+    *                      (ClassNotFoundException) or setting up "java:"
+    *                      naming environment failed (DeploymentException)
     */
-   public void init()
-      throws Exception
+   public void init() throws Exception
    {
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
@@ -366,11 +351,11 @@ public abstract class Container
    }
 
    /**
-    * A default implementation of starting the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * start behaviour.
+    * A default implementation of starting the container service (no-op).
+    * The concrete container classes should override this method to introduce
+    * implementation specific start behaviour.
     *
-    * @exception    Exception   an exception that occured during start
+    * @throws Exception    An exception that occured during start
     */
    public void start()
       throws Exception
@@ -379,9 +364,9 @@ public abstract class Container
    }
 
    /**
-    * A default implementation of stopping the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * stop behaviour.
+    * A default implementation of stopping the container service (no-op). The
+    * concrete container classes should override this method to introduce
+    * implementation specific stop behaviour.
     */
    public void stop()
    {
@@ -389,9 +374,9 @@ public abstract class Container
    }
 
    /**
-    * A default implementation of destroying the container service (no-op). The concrete
-    * container classes should override this method to introduce implementation specific
-    * destroy behaviour.
+    * A default implementation of destroying the container service (no-op).
+    * The concrete container classes should override this method to introduce
+    * implementation specific destroy behaviour.
     */
    public void destroy()
    {
@@ -400,27 +385,30 @@ public abstract class Container
    }
 
    /**
-    *  This method is called by the ContainerInvoker when a method call comes in on the Home object.
+    * This method is called by the ContainerInvoker when a method call comes
+    * in on the Home object.  The Container forwards this call to the
+    * interceptor chain for further processing.
     *
-    *  The Container forwards this call to the interceptor chain for further processing.
-    *
-    * @param       mi  the object holding all info about this invocation
-    * @return      the result of the home invocation
-    * @exception   Exception
+    * @param mi   the object holding all info about this invocation
+    * @return     the result of the home invocation
+    * 
+    * @throws Exception
     */
    public abstract Object invokeHome(MethodInvocation mi)
       throws Exception;
 
    /**
-    *  This method is called by the ContainerInvoker when a method call comes in on an EJBObject.
+    * This method is called by the ContainerInvoker when a method call comes
+    * in on an EJBObject.  The Container forwards this call to the interceptor
+    * chain for further processing.
     *
-    *  The Container forwards this call to the interceptor chain for further processing.
-    *
-    * @param       id      the id of the object being invoked. May be null if stateless
-    * @param       method  the method being invoked
-    * @param       args    the parameters
-    * @return      the     result of the invocation
-    * @exception   Exception
+    * @param id        the id of the object being invoked. May be null
+    *                  if stateless
+    * @param method    the method being invoked
+    * @param args      the parameters
+    * @return          the result of the invocation
+    * 
+    * @throws Exception
     */
    public abstract Object invoke(MethodInvocation mi)
       throws Exception;
@@ -428,17 +416,15 @@ public abstract class Container
    // Protected -----------------------------------------------------
 
    abstract Interceptor createContainerInterceptor();
+   
    public abstract void addInterceptor(Interceptor in);
 
    // Private -------------------------------------------------------
 
-   /*
-    * setupEnvironment
-    *
+   /**
     * This method sets up the naming environment of the bean.
-    * We create the java:comp/env namespace with properties, EJB-References, and
-    * DataSource ressources.
-    *
+    * We create the java:comp/env namespace with properties, EJB-References,
+    * and DataSource ressources.
     */
    private void setupEnvironment()
       throws DeploymentException
@@ -645,17 +631,20 @@ public abstract class Container
 
 
    /**
-    *  Bind a value to a name in a JNDI-context, and create any missing subcontexts
+    * Bind a value to a name in a JNDI-context, and create any missing
+    * subcontexts.
     *
-    * @param   ctx
-    * @param   name
-    * @param   val
-    * @exception   NamingException
+    * @param ctx
+    * @param name
+    * @param val
+    * 
+    * @throws NamingException
     */
    private void bind(Context ctx, String name, Object val)
       throws NamingException
    {
-      // Bind val to name in ctx, and make sure that all intermediate contexts exist
+      // Bind val to name in ctx, and make sure that all
+      // intermediate contexts exist
       Name n = ctx.getNameParser("").parse(name);
       while (n.size() > 1)
       {
