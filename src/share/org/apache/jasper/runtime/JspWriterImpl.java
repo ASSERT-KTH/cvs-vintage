@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.4 2000/06/30 20:21:03 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/30 20:21:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.5 2001/02/11 19:27:32 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/02/11 19:27:32 $
  *
  * ====================================================================
  * 
@@ -72,6 +72,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.jasper.Constants;
+import org.apache.tomcat.util.compat.*;
 
 /**
  * Write text to a character-output stream, buffering characters so as
@@ -382,7 +383,19 @@ public class JspWriterImpl extends JspWriter {
     }
 
 
-    static String lineSeparator = System.getProperty("line.separator");
+    static String lineSeparator;
+    static {
+	Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+	try {
+	    lineSeparator = (String)jdk11Compat.doPrivileged( new Action() {
+		    public Object run() throws Exception {
+			return System.getProperty("line.separator");
+		    }
+		});
+	} catch( Exception ex ) {
+	    lineSeparator="\r\r";
+	}
+    }
 
     /**
      * Write a line separator.  The line separator string is defined by the
