@@ -18,13 +18,18 @@
 
 package org.columba.addressbook.gui.frame;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionListener;
 
+import org.columba.addressbook.gui.table.FilterToolbar;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.main.AddressbookInterface;
@@ -50,6 +55,8 @@ public class AddressbookFrameController extends DefaultFrameController
 	protected TreeController tree;
 
 	protected TableController table;
+	
+	protected FilterToolbar filterToolbar;
 
 	/**
 	 * Constructor for AddressbookController.
@@ -59,6 +66,7 @@ public class AddressbookFrameController extends DefaultFrameController
 
 		tree = new TreeController(this);
 		table = new TableController(this);
+		filterToolbar = new FilterToolbar(table);
 
 		// table should be updated when tree selection changes
 		tree.getView().addTreeSelectionListener(table);
@@ -100,12 +108,17 @@ public class AddressbookFrameController extends DefaultFrameController
 	 */
 	public JComponent getComponent() {
 		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
+		JPanel panel = new JPanel();
+		panel.setLayout( new BorderLayout());
+		panel.add(filterToolbar, BorderLayout.NORTH);
 		JScrollPane tableScrollPane = new JScrollPane(table.getView());
-
+		tableScrollPane.getViewport().setBackground(Color.white);
+		panel.add(tableScrollPane, BorderLayout.CENTER);
+		
 		JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				treeScrollPane, tableScrollPane);
+				treeScrollPane, panel);
 		splitPane.setBorder(null);
 
 		getContainer().extendMenuFromFile(this,

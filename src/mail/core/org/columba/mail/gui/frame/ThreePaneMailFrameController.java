@@ -194,10 +194,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		JPanel panel = new JPanel();
 
 		mainSplitPane = new UIFSplitPane();
-
+		mainSplitPane.setBorder(null);
+		
 		panel.setLayout(new BorderLayout());
-
-		//mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		
 		panel.add(mainSplitPane, BorderLayout.CENTER);
 
 		mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -232,6 +232,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		if (viewItem.getBoolean("splitpanes", "header_enabled", true)) {
 
 			rightSplitPane = new UIFSplitPane();
+			rightSplitPane.setBorder(null);
 			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			rightSplitPane.add(tablePanel, JSplitPane.LEFT);
 			rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
