@@ -34,7 +34,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * This interceptor delegates calls to an EntiyPersistenceStore.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class CMPInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -92,6 +92,16 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             invocation.getMethod(), 
             invocation.getArguments(), 
             ctx);
+   }
+
+   public Object postCreateEntity(Invocation invocation) throws Exception
+   {
+      store.postCreateEntity(
+         invocation.getMethod(),
+         invocation.getArguments(),
+         (EntityEnterpriseContext)invocation.getEnterpriseContext());
+
+      return super.getNext().invoke(invocation);
    }
 
    public Object removeEntity(Invocation invocation) throws Exception
