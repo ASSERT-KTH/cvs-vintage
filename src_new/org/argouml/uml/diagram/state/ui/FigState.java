@@ -24,7 +24,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
+// $Id: FigState.java,v 1.3 2001/10/12 20:20:30 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -40,6 +40,7 @@ import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
+import org.argouml.application.api.*;
 import org.argouml.uml.generator.*;
 
 /** Class to display graphics for a UML MState in a diagram. */
@@ -196,7 +197,7 @@ public class FigState extends FigStateVertex {
     //System.out.println("FigState modelChanged");
     MState s = (MState) getOwner();
     if (s == null) return;
-    String newText = GeneratorDisplay.SINGLETON.generateStateBody(s);
+    String newText = Notation.generateStateBody(this, s);
     _internal.setText(newText);
 
     calcBounds();

@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.4 2001/04/02 14:28:40 5heyden Exp $
+// $Id: FigSeqObject.java,v 1.5 2001/10/12 20:20:30 thierrylach Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -54,6 +54,7 @@ import org.tigris.gef.base.SelectionManager;
 
 import org.tigris.gef.base.ModeSelect;
 
+import org.argouml.application.api.*;
 import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.uml.generator.*;
@@ -513,7 +514,7 @@ public class FigSeqObject extends FigNodeModelElement
     super.modelChanged();
     MObject obj = (MObject) getOwner();
     if (obj == null) return;
-    String nameStr = GeneratorDisplay.Generate(obj.getName()).trim();
+    String nameStr = Notation.generate(this, obj.getName()).trim();
 	String baseString = "";
 	Vector bases = new Vector(obj.getClassifiers());
 	if (bases.size() == 1)
