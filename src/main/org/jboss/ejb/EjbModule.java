@@ -73,7 +73,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -574,13 +574,10 @@ public class EjbModule
       ClassLoader localCl )
    throws NamingException, DeploymentException
    {
-      // Create classloader for this container
-      // Only used to unique the bean ENC and does not augment class loading
-      container.setClassLoader( new URLClassLoader( new URL[ 0 ], cl ) );
       // Create local classloader for this container
       // For loading resources that must come from the local jar.  Not for loading classes!
       container.setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
-      // Set metadata
+      // Set metadata (do it *before* creating the container's WebClassLoader)
       container.setBeanMetaData( bean );
 
       // Create the container's WebClassLoader 
@@ -614,6 +611,10 @@ public class EjbModule
          }
       }
       container.setCodebase(sb.toString());
+
+      // Create classloader for this container
+      // Only used to unique the bean ENC and does not augment class loading
+      container.setClassLoader( new URLClassLoader( new URL[ 0 ], wcl ) );
 
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
