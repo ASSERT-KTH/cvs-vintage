@@ -45,7 +45,7 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -105,7 +105,6 @@ public class ConfigurationService
                 // get the name of the mbean 
                 ObjectName objectName = parseObjectName(mbeanElement);
                 MBeanInfo info;
-
                 try
                 {
                     info = server.getMBeanInfo(objectName);
@@ -427,7 +426,6 @@ public class ConfigurationService
                                               loader, 
                                               constructor.params, 
                                               constructor.signature);
-                        
                         info = server.getMBeanInfo(instance.getObjectName());
                      } catch (Throwable ex)
                      {
@@ -573,6 +571,7 @@ public class ConfigurationService
         ServiceProxy(ObjectName objectName, MBeanOperationInfo[] opInfo)
         {
             this.objectName = objectName;
+            int opCount = 0;
             for(int op = 0; op < opInfo.length; op ++)
             {
                 MBeanOperationInfo info = opInfo[op];
@@ -587,7 +586,11 @@ public class ConfigurationService
                 if( info.getSignature().length != 0 )
                     continue;
                 hasOp[opID.intValue()] = true;
+                opCount ++;
             }
+            // Log a warning if the mbean does not implement any Service methods
+            if( opCount == 0 )
+                log.warning(objectName+" does not implement any Service methods");
         }
 
         /** Map the method name to a Service interface method index and
