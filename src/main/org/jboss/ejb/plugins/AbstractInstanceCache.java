@@ -13,8 +13,22 @@ import java.rmi.NoSuchObjectException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
+
 import javax.ejb.EJBException;
+import javax.jms.Topic;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.Message;
+import javax.jms.Session;
+import javax.jms.JMSException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.rmi.PortableRemoteObject;
+
 import org.w3c.dom.Element;
+
 import org.jboss.util.CachePolicy;
 import org.jboss.util.Executable;
 import org.jboss.util.WorkerQueue;
@@ -27,6 +41,8 @@ import org.jboss.ejb.Container;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
+import org.jboss.monitor.Monitorable;
+import org.jboss.monitor.client.BeanCacheSnapshot;
 
 /**
  * Base class for caches of entity and stateful beans. <p>
@@ -39,10 +55,10 @@ import org.jboss.logging.Logger;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class AbstractInstanceCache 
-	implements InstanceCache, XmlLoadable
+	implements InstanceCache, XmlLoadable, Monitorable
 {
 	// Constants -----------------------------------------------------
 
@@ -57,12 +73,72 @@ public abstract class AbstractInstanceCache
 	private PassivationHelper m_passivationHelper;
 	/* Map that holds mutexes used to sync the passivation with other activities */
 	private Map m_lockMap = new HashMap();
+	/* Flag for JMS monitoring of the cache */
+	private boolean m_jmsMonitoring;
+	/* Useful for log messages */
+	private StringBuffer m_buffer = new StringBuffer();
+	/* JMS log members */
+	private TopicConnection m_jmsConnection;
+	private Topic m_jmsTopic;
+	private TopicSession m_jmsSession;
+	private TopicPublisher m_jmsPublisher;
 
 	// Static --------------------------------------------------------
 
 	// Constructors --------------------------------------------------
 
+	// Monitorable implementation ------------------------------------
+	public void sample(Object s)
+	{
+		synchronized (getCacheLock()) 
+		{
+			BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
+			snapshot.m_passivatingBeans = m_passivationHelper.m_passivationJobs.size();
+			CachePolicy policy = getCache();
+			if (policy instanceof Monitorable) 
+			{
+				((Monitorable)policy).sample(s);
+			}
+		}
+	}
+
 	// Public --------------------------------------------------------
+	public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
+	public boolean isJMSMonitoringEnabled() {return m_jmsMonitoring;}
+	
+	public void sendMessage(Message message) 
+	{
+		try 
+		{
+			message.setJMSExpiration(5000);
+			message.setLongProperty("TIME", System.currentTimeMillis());
+			m_jmsPublisher.publish(m_jmsTopic, message);
+		}
+		catch (JMSException x) 
+		{
+			Logger.exception(x);
+		}
+	}
+	public Message createMessage(Object id) 
+	{
+		Message message = null; 
+		try 
+		{
+			message = m_jmsSession.createMessage();
+			message.setStringProperty("APPLICATION", getContainer().getApplication().getName());
+			message.setStringProperty("BEAN", getContainer().getBeanMetaData().getEjbName());
+			if (id != null)
+			{
+				message.setStringProperty("PRIMARY_KEY", id.toString());
+			}
+		}
+		catch (JMSException x) 
+		{
+			Logger.exception(x);
+		}
+		return message;
+	}
+	
 	/* From InstanceCache interface */
 	public EnterpriseContext get(Object id) 
 		throws RemoteException, NoSuchObjectException 
@@ -86,10 +162,8 @@ public abstract class AbstractInstanceCache
 						ctx = acquireContext();
 						setKey(id, ctx);
 						activate(ctx);
+						logActivation(id);
 						insert(ctx);
-
-						// Logger is very time expensive. Turn on only for debug
-						// Logger.debug("Activated bean " + getContainer().getBeanMetaData().getEjbName() + " with id = " + id);
 					}
 					catch (Exception x)
 					{
@@ -246,12 +320,26 @@ public abstract class AbstractInstanceCache
 		String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
 		ClassLoader cl = getContainer().getClassLoader();
 		m_passivator = new PassivatorQueue(threadName, cl);
+		
+		// Setup JMS for cache monitoring
+		Context namingContext = new InitialContext();
+		Object factoryRef = namingContext.lookup("TopicConnectionFactory");
+		TopicConnectionFactory factory = (TopicConnectionFactory)PortableRemoteObject.narrow(factoryRef, TopicConnectionFactory.class);
+
+		m_jmsConnection = factory.createTopicConnection();
+
+		Object topicRef = namingContext.lookup("topic/beancache");
+		m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
+		m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
+		m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);     
 	}
 	/* From Service interface*/
 	public void start() throws Exception 
 	{
 		getCache().start();
 		m_passivator.start();
+
+		m_jmsConnection.start();
 	}
 	/* From Service interface*/
 	public void stop() 
@@ -262,11 +350,23 @@ public abstract class AbstractInstanceCache
 			getCache().stop();
 		}
 		m_passivator.stop();
+		
+		try 
+		{
+			m_jmsConnection.stop();
+		}
+		catch (JMSException ignored) {}
 	}
 	/* From Service interface*/
 	public void destroy() 
 	{
 		getCache().destroy();
+
+		try 
+		{
+			m_jmsConnection.close();
+		}
+		catch (JMSException ignored) {}
 	}
 
 	// Y overrides ---------------------------------------------------
@@ -281,6 +381,7 @@ public abstract class AbstractInstanceCache
 	protected void schedulePassivation(EnterpriseContext ctx) 
 	{
 		m_passivationHelper.schedule(ctx);
+		logPassivationScheduled(getKey(ctx));
 	}
 	/**
 	 * Tries to unschedule the given EnterpriseContext for passivation; returns
@@ -292,6 +393,118 @@ public abstract class AbstractInstanceCache
 	{
 		return m_passivationHelper.unschedule(id);
 	}
+
+	protected void logActivation(Object id) 
+	{
+		m_buffer.setLength(0);
+		m_buffer.append("Activated bean ");
+		m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+		m_buffer.append(" with id = ");
+		m_buffer.append(id);
+		Logger.debug(m_buffer.toString());
+		
+		if (isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = createMessage(id);
+			try 
+			{
+				message.setStringProperty("TYPE", "ACTIVATION");
+			}
+			catch (JMSException x) 
+			{
+				Logger.exception(x);
+			}
+			
+			// Send JMS Message
+			sendMessage(message);
+		}
+	}
+	
+	protected void logPassivationScheduled(Object id) 
+	{
+		m_buffer.setLength(0);
+		m_buffer.append("Scheduled passivation of bean ");
+		m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+		m_buffer.append(" with id = ");
+		m_buffer.append(id);
+		Logger.debug(m_buffer.toString());
+		
+		if (isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = createMessage(id);
+			try 
+			{
+				message.setStringProperty("TYPE", "PASSIVATION");
+				message.setStringProperty("ACTIVITY", "SCHEDULED");
+			}
+			catch (JMSException x) 
+			{
+				Logger.exception(x);
+			}
+			
+			// Send JMS Message
+			sendMessage(message);
+		}
+	}
+	
+	protected void logPassivation(Object id) 
+	{
+		m_buffer.setLength(0);
+		m_buffer.append("Passivated bean ");
+		m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+		m_buffer.append(" with id = ");
+		m_buffer.append(id);
+		Logger.debug(m_buffer.toString());
+		
+		if (isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = createMessage(id);
+			try 
+			{
+				message.setStringProperty("TYPE", "PASSIVATION");
+				message.setStringProperty("ACTIVITY", "PASSIVATED");
+			}
+			catch (JMSException x) 
+			{
+				Logger.exception(x);
+			}
+			
+			// Send JMS Message
+			sendMessage(message);
+		}
+	}
+	
+	protected void logPassivationPostponed(Object id) 
+	{
+		m_buffer.setLength(0);
+		m_buffer.append("Postponed passivation of bean ");
+		m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+		m_buffer.append(" with id = ");
+		m_buffer.append(id);
+		Logger.debug(m_buffer.toString());
+		
+		if (isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = createMessage(id);
+			try 
+			{
+				message.setStringProperty("TYPE", "PASSIVATION");
+				message.setStringProperty("ACTIVITY", "POSTPONED");
+			}
+			catch (JMSException x) 
+			{
+				Logger.exception(x);
+			}
+			
+			// Send JMS Message
+			sendMessage(message);
+		}
+	}
+	
 	/**
 	 * Returns the container for this cache.
 	 */
@@ -364,8 +577,6 @@ public abstract class AbstractInstanceCache
 				// Create the passivation job
 				PassivationJob job = new PassivationJob(bean)
 				{
-					private StringBuffer m_buffer = new StringBuffer();
-					
 					public void execute() throws Exception
 					{
 						EnterpriseContext ctx = getEnterpriseContext();
@@ -423,8 +634,7 @@ public abstract class AbstractInstanceCache
 											getCache().insert(id, ctx);
 										}
 										
-										// Logger is very time expensive.
-										log("Postponed passivation of bean ", id);
+										logPassivationPostponed(id);
 										
 										return;
 									}
@@ -441,8 +651,7 @@ public abstract class AbstractInstanceCache
 												removeLock(id);
 												freeContext(ctx);
 		
-												// Logger is very time expensive.
-												log("Passivated bean ", id);
+												logPassivation(id);
 											} 
 											catch (RemoteException x)
 											{
@@ -461,15 +670,6 @@ public abstract class AbstractInstanceCache
 						{
 							mutex.release();
 						}
-					}
-					private void log(String msg, Object id) 
-					{
-						m_buffer.setLength(0);
-						m_buffer.append(msg);
-						m_buffer.append(getContainer().getBeanMetaData().getEjbName());
-						m_buffer.append(" with id = ");
-						m_buffer.append(id);
-						Logger.debug(m_buffer.toString());
 					}
 				};
 

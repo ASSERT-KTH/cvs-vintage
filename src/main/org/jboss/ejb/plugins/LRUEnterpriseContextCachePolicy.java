@@ -7,6 +7,9 @@
 package org.jboss.ejb.plugins;
 
 import java.util.HashMap;
+import javax.jms.Message;
+import javax.jms.JMSException;
+
 import org.jboss.util.LRUCachePolicy;
 import org.jboss.util.TimerTask;
 import org.jboss.ejb.DeploymentException;
@@ -15,15 +18,18 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
+import org.jboss.monitor.Monitorable;
+import org.jboss.monitor.client.BeanCacheSnapshot;
+
 /**
  * Least Recently Used cache policy for EnterpriseContexts.
  *
  * @see EnterpriseInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
-	implements EnterpriseContextCachePolicy, XmlLoadable
+	implements EnterpriseContextCachePolicy, XmlLoadable, Monitorable
 {
 	// Constants -----------------------------------------------------
 
@@ -47,6 +53,8 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	private TimerTask m_overager;
 	/* The resizer timer task */
 	private TimerTask m_resizer;
+	/* Useful for log messages */
+	private StringBuffer m_buffer = new StringBuffer();
 
 
 	// Static --------------------------------------------------------
@@ -63,6 +71,20 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	}
 
 	// Public --------------------------------------------------------
+
+	// Monitorable implementation ------------------------------------
+	public void sample(Object s)
+	{
+		BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
+		LRUList list = getList();
+		synchronized (m_cache.getCacheLock())
+		{
+			snapshot.m_cacheMinCapacity = list.m_minCapacity;
+			snapshot.m_cacheMaxCapacity = list.m_maxCapacity;
+			snapshot.m_cacheCapacity = list.m_capacity;
+			snapshot.m_cacheSize = list.m_count;
+		}
+	}
 
 	// Z implementation ----------------------------------------------
 	public void start() throws Exception 
@@ -172,16 +194,38 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 
 	// Protected -----------------------------------------------------
 	protected LRUList createList() {return new ContextLRUList();}
-	protected LRUCacheEntry createCacheEntry(Object key, Object value) 
-	{
-		return new ContextLRUEntry(key, value);
-	}
+
 	protected void ageOut(LRUCacheEntry entry) 
 	{
 		if (entry == null) {throw new IllegalArgumentException("Cannot remove a null cache entry");}
 
-		// Logger is very time expensive. Turn on only for debug
-//		log.debug("Aging out from cache bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ", id = " + entry.m_key + "; cache size = " + getList().m_count);
+		m_buffer.setLength(0);
+		m_buffer.append("Aging out from cache bean ");
+		m_buffer.append(m_cache.getContainer().getBeanMetaData().getEjbName());
+		m_buffer.append("with id = ");
+		m_buffer.append(entry.m_key);
+		m_buffer.append("; cache size = ");
+		m_buffer.append(getList().m_count);
+		log.debug(m_buffer.toString());
+		
+		if (m_cache.isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = m_cache.createMessage(entry.m_key);
+			try 
+			{
+				message.setStringProperty("TYPE", "CACHE");
+				message.setStringProperty("ACTIVITY", "AGE-OUT");
+			}
+			catch (JMSException x) 
+			{
+				log.exception(x);
+			}
+			
+			// Send JMS Message
+			m_cache.sendMessage(message);
+		}
+
 		// Debug code
 //		new Exception().printStackTrace();
 //		new CacheDumper().execute();
@@ -191,12 +235,30 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	}
 	protected void cacheMiss() 
 	{
-		ContextLRUList list = getList();
+		LRUList list = getList();
 		++list.m_cacheMiss;
+
+		if (m_cache.isJMSMonitoringEnabled()) 
+		{
+			// Prepare JMS message
+			Message message = m_cache.createMessage(null);
+			try 
+			{
+				message.setStringProperty("TYPE", "CACHE");
+				message.setStringProperty("ACTIVITY", "CACHE-MISS");
+			}
+			catch (JMSException x) 
+			{
+				log.exception(x);
+			}
+			
+			// Send JMS Message
+			m_cache.sendMessage(message);
+		}
 	}
 
 	// Private -------------------------------------------------------
-	private ContextLRUList getList() {return (ContextLRUList)m_list;}
+	private LRUList getList() {return m_list;}
 	// For debug purposes
 //	private java.util.Map getMap() {return m_map;}
 
@@ -216,14 +278,14 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 		protected ResizerTask(long resizerPeriod) 
 		{
 			super(resizerPeriod);
-			m_message = "Resized cache for bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ": old size = ";
+			m_message = "Resized cache for bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + ": old capacity = ";
 			m_buffer = new StringBuffer();
 		}
 		public void execute() 
 		{
 			// For now implemented as a Cache Miss Frequency algorithm
 
-			ContextLRUList list = getList();
+			LRUList list = getList();
 
 			// Sync with the cache, since it is accessed also by another thread
 			synchronized (m_cache.getCacheLock())
@@ -251,14 +313,34 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 				list.m_cacheMiss = 0;
 			}
 		}
-		private void log(int oldSize, int newSize) 
+		private void log(int oldCapacity, int newCapacity) 
 		{
 			m_buffer.setLength(0);
 			m_buffer.append(m_message);
-			m_buffer.append(oldSize);
-			m_buffer.append(", new size = ");
-			m_buffer.append(newSize);
+			m_buffer.append(oldCapacity);
+			m_buffer.append(", new capacity = ");
+			m_buffer.append(newCapacity);
 			log.debug(m_buffer.toString());
+
+			if (m_cache.isJMSMonitoringEnabled()) 
+			{
+				// Prepare JMS message
+				Message message = m_cache.createMessage(null);
+				try 
+				{
+					message.setStringProperty("TYPE", "RESIZER");
+					message.setIntProperty("OLD_CAPACITY", oldCapacity);
+					message.setIntProperty("NEW_CAPACITY", newCapacity);
+					message.setIntProperty("SIZE", getList().m_count);
+				}
+				catch (JMSException x) 
+				{
+					log.exception(x);
+				}
+			
+				// Send JMS Message
+				m_cache.sendMessage(message);
+			}
 		}
 	}
 	/**
@@ -277,12 +359,12 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 		}
 		public void execute() 
 		{
-			ContextLRUList list = getList();
+			LRUList list = getList();
 			long now = System.currentTimeMillis();
 
 			synchronized (m_cache.getCacheLock())
 			{
-				for (ContextLRUEntry entry = (ContextLRUEntry)list.m_tail; entry != null; entry = (ContextLRUEntry)list.m_tail)
+				for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
 				{
 					if (now - entry.m_time >= m_maxBeanAge)
 					{
@@ -314,14 +396,99 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 			m_buffer.append(" - Cache size = ");
 			m_buffer.append(count);
 			log.debug(m_buffer.toString());
+			
+			if (m_cache.isJMSMonitoringEnabled()) 
+			{
+				// Prepare JMS message
+				Message message = m_cache.createMessage(key);
+				try 
+				{
+					message.setStringProperty("TYPE", "OVERAGER");
+					message.setIntProperty("SIZE", count);
+				}
+				catch (JMSException x) 
+				{
+					log.exception(x);
+				}
+			
+				// Send JMS Message
+				m_cache.sendMessage(message);
+			}
 		}
 	}
-	/* Dummy subclass to give visibility to the inner classes */
-	protected class ContextLRUList extends LRUList {}
-	/* Dummy subclass to give visibility to the inner classes */
-	protected class ContextLRUEntry extends LRUCacheEntry 
+
+	/**
+	 * Subclass that send JMS messages on list activity events.
+	 */
+	protected class ContextLRUList extends LRUList 
 	{
-		protected ContextLRUEntry(Object key, Object value) {super(key, value);}
+		protected void entryAdded(LRUCacheEntry entry) 
+		{
+			if (m_cache.isJMSMonitoringEnabled()) 
+			{
+				// Prepare JMS message
+				Message message = m_cache.createMessage(entry.m_key);
+				try 
+				{
+					message.setStringProperty("TYPE", "CACHE");
+					message.setStringProperty("ACTIVITY", "ADD");
+					message.setIntProperty("CAPACITY", m_capacity);
+					message.setIntProperty("SIZE", m_count);
+				}
+				catch (JMSException x) 
+				{
+					log.exception(x);
+				}
+			
+				// Send JMS Message
+				m_cache.sendMessage(message);
+			}
+		}
+		protected void entryRemoved(LRUCacheEntry entry) 
+		{
+			if (m_cache.isJMSMonitoringEnabled()) 
+			{
+				// Prepare JMS message
+				Message message = m_cache.createMessage(entry.m_key);
+				try 
+				{
+					message.setStringProperty("TYPE", "CACHE");
+					message.setStringProperty("ACTIVITY", "REMOVE");
+					message.setIntProperty("CAPACITY", m_capacity);
+					message.setIntProperty("SIZE", m_count);
+				}
+				catch (JMSException x) 
+				{
+					log.exception(x);
+				}
+			
+				// Send JMS Message
+				m_cache.sendMessage(message);
+			}
+		}
+		protected void capacityChanged(int oldCapacity) 
+		{
+			if (m_cache.isJMSMonitoringEnabled()) 
+			{
+				// Prepare JMS message
+				Message message = m_cache.createMessage(null);
+				try 
+				{
+					message.setStringProperty("TYPE", "CACHE");
+					message.setStringProperty("ACTIVITY", "CAPACITY");
+					message.setIntProperty("OLD_CAPACITY", oldCapacity);
+					message.setIntProperty("NEW_CAPACITY", m_capacity);
+					message.setIntProperty("SIZE", m_count);
+				}
+				catch (JMSException x) 
+				{
+					log.exception(x);
+				}
+			
+				// Send JMS Message
+				m_cache.sendMessage(message);
+			}
+		}
 	}
 	
 	/**
