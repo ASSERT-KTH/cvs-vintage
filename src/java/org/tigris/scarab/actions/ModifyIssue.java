@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.176 2003/08/01 18:40:25 venkatesh Exp $
+ * @version $Id: ModifyIssue.java,v 1.177 2003/08/19 17:18:04 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -108,7 +108,7 @@ public class ModifyIssue extends BaseModifyIssue
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -270,7 +270,7 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -363,7 +363,7 @@ public class ModifyIssue extends BaseModifyIssue
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -420,7 +420,7 @@ public class ModifyIssue extends BaseModifyIssue
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -591,7 +591,7 @@ public class ModifyIssue extends BaseModifyIssue
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -652,7 +652,7 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -707,7 +707,7 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -784,7 +784,7 @@ public class ModifyIssue extends BaseModifyIssue
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as
@@ -1029,7 +1029,7 @@ public class ModifyIssue extends BaseModifyIssue
         intake.removeAll();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = scarabR.getIssue(false);
+        Issue issue = scarabR.getIssue();
         if (issue == null)
         {
             // no need to set the message here as

@@ -2,8 +2,9 @@
 #macro (attrValueLeafSelect $attrValue $optionFieldName $size $multiple)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
-  #set ($module = $attrValue.Issue.Module)
-  #set ($issueType = $attrValue.Issue.IssueType)
+  #set ($issue = $attrValue.Issue)
+  #set ($module = $issue.Module)
+  #set ($issueType = $issue.IssueType)
   #if ($issueType.ParentId > 0)
      #set ($issueType = $issueType.IssueTypeForTemplateType)
   #end
@@ -33,13 +34,13 @@
          #else
            #set ($values = $newValues)
          #end
-         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $scarabR.Issue))
+         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
          #if ($newValues.equals($option.OptionId))
            #set ($selected=true)
           #end
        #end
     #else
-         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $scarabR.Issue))
+         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
     #end
     #if ($canMakeTransition)
     <option value="$option.OptionId"#selected($selected)>

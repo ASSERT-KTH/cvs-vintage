@@ -534,7 +534,8 @@ public class ScarabRequestTool
         ScarabUser su = null;
         try
         {
-            su = ScarabUserManager.getInstance(username, getIssue().getModule().getDomain());
+            su = ScarabUserManager
+                .getInstance(username, getCurrentModule().getDomain());
         }
         catch (Exception e)
         {
@@ -1352,18 +1353,6 @@ e.printStackTrace();
     public Issue getIssue()
         throws Exception
     {
-        return getIssue(true);
-    }
-    
-    /**
-     * Get an Issue object from unique id.
-     * If first time calling && createNew, returns a new blank issue object.
-     *
-     * @return a <code>Issue</code> value
-     */
-    public Issue getIssue(boolean createNew)
-        throws Exception
-    {
         if (issue == null)
         {
             String issueId = null;
@@ -1377,12 +1366,7 @@ e.printStackTrace();
             {
                 issueId = data.getParameters().getString("id");
             }
-            if (createNew && (issueId == null || issueId.length() == 0))
-            {
-                issue = getCurrentModule()
-                    .getNewIssue(getCurrentIssueType());
-            }
-            else 
+            if (issueId != null && issueId.length() > 0)
             {
                 issue = getIssue(issueId);
             }
