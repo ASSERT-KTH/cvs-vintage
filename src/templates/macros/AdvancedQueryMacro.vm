@@ -3,6 +3,9 @@
 ##set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($query = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.ModuleAttributeValuesMap)
+#set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.CurrentIssueType)
+
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
@@ -32,42 +35,59 @@ from:&#160;<input type="text" size="20"
 (e.g. MM/DD/YYYY hh:mm)
 </td>
 </tr>
-#foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attVal = $attrValues.get($attKey) )
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-  #if ( $attVal.Attribute.AttributeType.ValidationKey )
-        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-        #set ( $field = "OptionIds" )
-  #else
-        #set ( $field = "Value" )
-  #end
-  ## showing user attributes in separate section
-  #if (!$attVal.Attribute.isUserAttribute())
+</table>
+
+## ATTRIBUTES
+<div class="axial">
+#foreach ($group in $issueType.getAttributeGroups($module))
+  #if (!$group.Attributes.isEmpty())
+    <h3>$group.Name</h3>
+    <table cellpadding="3" cellspacing="2" border="0">
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+    #if ($rma.Active)
+        #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
+        #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+        #if ( $attVal.Attribute.AttributeType.ValidationKey )
+              #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+              #set ( $field = "OptionIds" )
+        #else
+              #set ( $field = "Value" )
+        #end
         <tr>
          <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
             <td>
                 #attrValueErrorMsg ( $attVal $field )
-    #if ($attVal.Attribute.isOptionAttribute() )
+      #if ($attVal.Attribute.isOptionAttribute() )
           #attrValueHierarchySelect ($attVal $field "4" true)
-    #else
+      #else
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
              #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
            <input name= "$attrInput.Value.Key"
                 value="$!attrInput.Value" size="25" type="text" />
         #end
-    #end
+      #end
             </td>
         </tr>
+    #end
+  #end
+</table>
   #end
 #end
+</div>
+
+
+#*
  <tr>
   <th width="120">URL</th>
   <td><input type="text" size="25" value="http://" /></td>
  </tr>
-</table>
-</div>
+*#
+
+
+##PERSONNEL
 <h3>Personnel search</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -101,6 +121,8 @@ from:&#160;<input type="text" size="20"
 #end
  </table>
 </div>
+
+## STATE CHANGE QUERY
 <h3>State change query</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
