@@ -75,7 +75,7 @@ class Ajp12 {
     Socket socket;
     InputStream sin;
     BufferedInputStream ajpin;
-    private boolean tomcatAuthentication=true;
+    private boolean tomcatAuthentication=false;
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;

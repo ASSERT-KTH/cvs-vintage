@@ -77,7 +77,7 @@ import org.apache.tomcat.util.io.FileUtil;
  */
 public class Ajp12Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler{
-    private boolean tomcatAuthentication=true;
+    private boolean tomcatAuthentication=false;
     String secret;
     File ajpidFile=null;
     
