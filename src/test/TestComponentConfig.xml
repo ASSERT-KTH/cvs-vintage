@@ -24,5 +24,6 @@
        <capacity default="128"/>
      </configuration>
    </pool>
-   <factory/>    
+   <factory/>   
+   <scarabCache/> 
 </componentConfig>

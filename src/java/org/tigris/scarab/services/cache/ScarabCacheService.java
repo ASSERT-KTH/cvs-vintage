@@ -46,42 +46,47 @@ package org.tigris.scarab.services.cache;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.fulcrum.InitializationException;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
- * This class does not cache any results.  Calls to ScarabCache's put and 
- * clear are ignored and ScarabCache.get always returns null.
- *
- * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: NoOpScarabCache.java,v 1.1 2002/02/19 20:00:46 jmcnally Exp $
+ * This class provides a simple Map cache that is available to the current
+ * thread.
+ * 
+ * @author <a href="mailto:jmcnally@collab.net">John McNally </a>
+ * @version $Id: ScarabCacheService.java,v 1.1 2004/11/15 09:23:59 dep4b Exp $
  */
-public class NoOpScarabCache 
-    extends ScarabCache
+public interface ScarabCacheService 
+
 {
+    public Map getMapImpl();
 
-    public NoOpScarabCache()
-    {
-    }
+    public void clearImpl();
+    
+    public Object getImpl(Serializable instanceOrClass, String method);
+    public Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1);
+    public Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2);
 
-    public void init()
-        throws InitializationException
-    {
-        setInit(true);
-    }
+    public Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2,
+                             Serializable arg3);
+    
+    public Object getImpl(Serializable[] keys);
+    public void putImpl(Object value, Serializable instanceOrClass, 
+                           String method);
 
-    protected void clearImpl()
-    {
-    }
+    public void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1);
 
-    protected Object getImpl(int numArgs, Object o1, Object o2, Object o3,  
-                             Object o4, Object o5, Object o6, Object o7)
-    {
-        return null;
-    }
+    public void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2);
+    public void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2,
+                           Serializable arg3);
 
-    protected void putImpl(Object value, int numArgs, Object o1, Object o2,  
-                           Object o3, Object o4, Object o5, Object o6, 
-                           Object o7)
-    {
-    }
+    public void putImpl(Object value, Serializable[] keys);
+    
+
 }

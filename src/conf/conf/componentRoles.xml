@@ -53,4 +53,10 @@
         name="org.apache.fulcrum.factory.FactoryService"
         shorthand="factory"
         default-class="org.apache.fulcrum.factory.DefaultFactoryService"/>                
+    <role
+        name="org.tigris.scarab.services.cache.ScarabCacheService"
+        shorthand="scarabCache"
+        default-class="org.tigris.scarab.services.cache.DefaultScarabCacheService"
+        early-init="true"
+    />        
 </role-list>

@@ -48,12 +48,14 @@ package org.tigris.scarab.om;
 
 import org.apache.fulcrum.testcontainer.BaseUnitTest;
 import org.apache.torque.om.NumberKey;
+import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.services.cache.ScarabCacheService;
 
 /**
  * A Testing Suite for the om.ActivitySet class.
  * 
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney </a>
- * @version $Id: ActivitySet2Test.java,v 1.1 2004/11/14 21:07:02 dep4b Exp $
+ * @version $Id: ActivitySet2Test.java,v 1.2 2004/11/15 09:23:59 dep4b Exp $
  */
 public class ActivitySet2Test extends BaseUnitTest {
     private ActivitySet trans = null;
@@ -69,6 +71,7 @@ public class ActivitySet2Test extends BaseUnitTest {
     public void setUp() throws Exception{        
         super.setUp();
         lookup(org.apache.torque.avalon.Torque.class.getName());
+        ScarabCache.setScarabCacheService((ScarabCacheService)lookup(ScarabCacheService.class.getName()));
     }
 
     protected ScarabUser getUser1() throws Exception {
@@ -87,6 +90,9 @@ public class ActivitySet2Test extends BaseUnitTest {
     }
 
     public void testCreate() throws Exception {
+        
+        Issue issue2 =  BaseIssuePeer.retrieveByPK(new NumberKey("1"));
+        assertNotNull(issue2);
         System.out.println("\ntestCreate()");
         Issue issue = IssueManager.getInstance(new NumberKey("1"));
         Attachment attachment = AttachmentManager.getInstance();

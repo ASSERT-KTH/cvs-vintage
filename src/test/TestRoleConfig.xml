@@ -33,6 +33,14 @@
         default-class="org.apache.fulcrum.upload.DefaultUploadService"
         early-init="true"
     />    
+
+    <role
+        name="org.tigris.scarab.services.cache.ScarabCacheService"
+        shorthand="scarabCache"
+        default-class="org.tigris.scarab.services.cache.NoOpScarabCacheService"
+        early-init="true"
+    />        
+    
     <role
         name="org.apache.fulcrum.parser.ParameterParser"
         shorthand="parser"

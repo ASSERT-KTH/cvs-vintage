@@ -44,351 +44,97 @@ package org.tigris.scarab.services.cache;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.WeakHashMap;
 
-import org.apache.fulcrum.BaseService;
-import org.apache.fulcrum.InitializationException;
-import org.apache.fulcrum.Service;
 import org.apache.fulcrum.TurbineServices;
-import org.apache.fulcrum.pool.PoolService;
 import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
-import org.tigris.scarab.util.Log;
 
 /**
- * This class provides a simple Map cache that is available to the
- * current thread.
- *
- * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.11 2004/11/14 21:06:56 dep4b Exp $
+ * This class provides a simple Map cache that is available to the current
+ * thread.
+ * 
+ * @author <a href="mailto:jmcnally@collab.net">John McNally </a>
+ * @version $Id: ScarabCache.java,v 1.12 2004/11/15 09:23:58 dep4b Exp $
  */
-public class ScarabCache 
-    extends BaseService
-    implements Service
-{
-    /** The name of the service */
-    public static final String SERVICE_NAME = "ScarabCache";
+public class ScarabCache {
 
-    //private Configuration props;
-    private Map maps;
-    private Class keyClass;
+    private static ScarabCacheService scarabCacheService;
 
-    public ScarabCache()
-    {
-    }
-
-    public void init()
-        throws InitializationException
-    {
-        //props = getConfiguration();
-        maps = new WeakHashMap();
-        try
-        {
-            keyClass = Class
-                .forName("org.tigris.scarab.services.cache.ScarabCacheKey");
-        }
-        catch (Exception x)
-        {
-            throw new InitializationException(
-                "Failed to initialize ScarabCache",x); //EXCEPTION
-        }
-        setInit(true);
-    }
-
-    protected Map getMapImpl()
-    {
-        Thread t = Thread.currentThread();
-        Map map = (Map)maps.get(t);
-        if (map == null) 
-        {
-            map = new HashMap();
-            maps.put(t, map);
-        }
-        
-        return map;
-    }
-
-    protected void clearImpl()
-    {
-        Map map = (Map)maps.get(Thread.currentThread());
-        if (map != null) 
-        {
-            Iterator i = map.keySet().iterator();
-            while (i.hasNext()) 
-            {
-                getPoolService().putInstance(i.next());
-            }
-            map.clear();
-        }
-    }
-
-    protected Object getImpl(Serializable instanceOrClass, String method)
-    {
-        Object result = null;
-        try
-        {
-            ScarabCacheKey key = 
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method);
-            result = getMapImpl().get(key);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-        return result;
-    }
-
-    protected Object getImpl(Serializable instanceOrClass, String method,
-                             Serializable arg1)
-    {
-        Object result = null;
-        try
-        {
-            ScarabCacheKey key = 
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1);
-            result = getMapImpl().get(key);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-        return result;
-    }
-
-    protected Object getImpl(Serializable instanceOrClass, String method,
-                             Serializable arg1, Serializable arg2)
-    {
-        Object result = null;
-        try
-        {
-            ScarabCacheKey key = 
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1, arg2);
-            result = getMapImpl().get(key);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-        return result;
-    }
-
-    protected Object getImpl(Serializable instanceOrClass, String method,
-                             Serializable arg1, Serializable arg2,
-                             Serializable arg3)
-    {
-        Object result = null;
-        try
-        {
-            ScarabCacheKey key = 
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1, arg2, arg3);
-            result = getMapImpl().get(key);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-        return result;
-    }
-
-    protected Object getImpl(Serializable[] keys)
-    {
-        Object result = null;
-        try
-        {
-            ScarabCacheKey key = 
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(keys);
-            result = getMapImpl().get(key);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-        return result;
-    }
-
-    protected void putImpl(Object value, Serializable instanceOrClass, 
-                           String method)
-    {
-        try
-        {
-            ScarabCacheKey key =  
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method);
-            getMapImpl().put(key, value);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-    }
-
-    protected void putImpl(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1)
-    {
-        try
-        {
-            ScarabCacheKey key =  
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1);
-            getMapImpl().put(key, value);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-    }
-
-    protected void putImpl(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1, Serializable arg2)
-    {
-        try
-        {
-            ScarabCacheKey key =  
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1, arg2);
-            getMapImpl().put(key, value);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-    }
-
-    protected void putImpl(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1, Serializable arg2,
-                           Serializable arg3)
-    {
-        try
-        {
-            ScarabCacheKey key =  
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(instanceOrClass, method, arg1, arg2, arg3);
-            getMapImpl().put(key, value);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-    }
-
-    protected void putImpl(Object value, Serializable[] keys)
-    {
-        try
-        {
-            ScarabCacheKey key =  
-                (ScarabCacheKey)getPoolService().getInstance(keyClass);
-            key.init(keys);
-            getMapImpl().put(key, value);
-        }
-        catch (Exception e)
-        {
-            Log.get().error(e);
-        }
-    }
-
-
-    // *******************************************************************
-    // static accessors
-    // *******************************************************************
-
-    public static Map getMap()
-    {
+    public static Map getMap() {
         return getService().getMapImpl();
     }
 
-    public static void clear()
-    {
+    public static void clear() {
         getService().clearImpl();
     }
 
-    public static Object get(Serializable instanceOrClass, String method)
-    {
-        
+    public static Object get(Serializable instanceOrClass, String method) {
+
         return getService().getImpl(instanceOrClass, method);
     }
-    public static Object get(Serializable instanceOrClass, String method,
-                             Serializable arg1)
-    {
-     
+
+    public static Object get(Serializable instanceOrClass, String method, Serializable arg1) {
+
         return getService().getImpl(instanceOrClass, method, arg1);
     }
-    public static Object get(Serializable instanceOrClass, String method,
-                             Serializable arg1, Serializable arg2)
-    {
+
+    public static Object get(Serializable instanceOrClass, String method, Serializable arg1, Serializable arg2) {
         return getService().getImpl(instanceOrClass, method, arg1, arg2);
     }
-    public static Object get(Serializable instanceOrClass, String method,
-                             Serializable arg1, Serializable arg2,
-                             Serializable arg3)
-    {
+
+    public static Object get(Serializable instanceOrClass, String method, Serializable arg1, Serializable arg2,
+            Serializable arg3) {
         return getService().getImpl(instanceOrClass, method, arg1, arg2, arg3);
     }
-    public static Object get(Serializable[] keys)
-    {
+
+    public static Object get(Serializable[] keys) {
         return getService().getImpl(keys);
     }
 
-    public static void put(Object value, Serializable instanceOrClass, 
-                           String method)
-    {
+    public static void put(Object value, Serializable instanceOrClass, String method) {
         getService().putImpl(value, instanceOrClass, method);
     }
-    public static void put(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1)
-    {
+
+    public static void put(Object value, Serializable instanceOrClass, String method, Serializable arg1) {
         getService().putImpl(value, instanceOrClass, method, arg1);
     }
-    public static void put(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1, Serializable arg2)
-    {
+
+    public static void put(Object value, Serializable instanceOrClass, String method, Serializable arg1,
+            Serializable arg2) {
         getService().putImpl(value, instanceOrClass, method, arg1, arg2);
     }
-    public static void put(Object value, Serializable instanceOrClass, 
-                           String method, Serializable arg1, Serializable arg2,
-                           Serializable arg3)
-    {
+
+    public static void put(Object value, Serializable instanceOrClass, String method, Serializable arg1,
+            Serializable arg2, Serializable arg3) {
         getService().putImpl(value, instanceOrClass, method, arg1, arg2, arg3);
     }
-    public static void put(Object value, Serializable[] keys)
-    {
+
+    public static void put(Object value, Serializable[] keys) {
         getService().putImpl(value, keys);
     }
 
-
     /**
      * Gets the <code>ScarabCache</code> implementation.
-     *
+     * 
      * @return the ScarabCache implementation.
      */
-    protected static final ScarabCache getService()
-    {
-        return (ScarabCache) TurbineServices.getInstance()
-                .getService(ScarabCache.SERVICE_NAME);
-    }
-    
-    /**
-     * Utility method for accessing the service implementation
-     * 
-     * @return a PoolService implementation instance
-     */
-    protected static PoolService getPoolService() {
-        try {
-        YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
-                YaafiComponentService.SERVICE_NAME);
-        return (PoolService) yaafi.lookup(PoolService.class.getName());
-        } catch (Exception e) {
-            throw new RuntimeException("Problem looking up PoolService service", e);
+    public static final ScarabCacheService getService() {
+        if (scarabCacheService == null) {
+            try {
+                YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                        YaafiComponentService.SERVICE_NAME);
+                scarabCacheService = (ScarabCacheService) yaafi.lookup(ScarabCacheService.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException("Problem looking up ScarabCacheService service", e);
+            }
         }
-    }    
+        return scarabCacheService;
+    }
 
+    public static void setScarabCacheService(ScarabCacheService scarabCacheService) {
+        ScarabCache.scarabCacheService = scarabCacheService;
+    }
 }
