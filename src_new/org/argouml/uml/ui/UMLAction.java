@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.29 2004/09/27 19:49:41 mvw Exp $
+// $Id: UMLAction.java,v 1.30 2004/10/28 14:19:14 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,10 @@ public class UMLAction extends AbstractAction {
             if (icon != null) {
                 putValue(Action.SMALL_ICON, icon);
             } else {
-                LOG.debug("icon not found: " + iconName);
+                LOG.warn("Requested icon for: " + getClass() + 
+                        ". \nIcon not found: " + iconName +
+                        "\nImagebinding:" + Translator.getImageBinding(iconName) +
+                        "\nLocalization:" + Translator.localize(iconName));
             }
             iconName = null;
         }
