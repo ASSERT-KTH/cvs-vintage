@@ -24,6 +24,10 @@ $page.setTitle("Save Query")
  </table>
 </div>
 
+<p>
+Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
+</p>
+
 <h3>Save Your Query</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
