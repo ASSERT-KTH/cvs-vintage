@@ -93,8 +93,12 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
             CommandlineJava cmd = setupJasperCommand();
             String source = (String) enum.nextElement();
             String base = getBase(source);
-            addArg(cmd, "-c", base + "_1");
+            String classname = base + "_1";
+            addArg(cmd, "-c", classname);
             cmd.createArgument().setValue(source);
+            getJspc().log(
+                  "Compiling file [" + source + "] to class [" + classname + "]",
+                  Project.MSG_VERBOSE);
             compile(cmd);
         }
         return true;
@@ -139,7 +143,7 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
      * Returns filename sans extension and prefix
      */
     private String getBase(String filename) {
-        int lastslash = filename.lastIndexOf('/');
+        int lastslash = filename.lastIndexOf(File.separator);
         if (lastslash == -1) {
             lastslash = 0;
         }
@@ -161,7 +165,6 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
         addArg(cmd, "-p", jspc.getPackage());
         addArg(cmd, "-v" + jspc.getVerbose());
         addArg(cmd, "-uriroot", jspc.getUriroot());
-        addArg(cmd, "-uribase", jspc.getUribase());
         addArg(cmd, "-ieplugin", jspc.getIeplugin());
         addArg(cmd, "-die9");
 
