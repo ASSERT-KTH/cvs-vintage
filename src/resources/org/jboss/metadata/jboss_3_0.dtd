@@ -6,8 +6,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.1 2002/02/08 15:23:10 mikesr Exp $
-$Revision: 1.1 $
+$Id: jboss_3_0.dtd,v 1.2 2002/02/08 17:47:05 mikesr Exp $
+$Revision: 1.2 $
 
 Overview of the architecture of jboss.xml
 
@@ -175,7 +175,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name, jndi-name?, read-only, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
+<!ELEMENT entity (ejb-name, jndi-name?, read-only?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
