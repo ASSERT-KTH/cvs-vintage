@@ -23,27 +23,9 @@ import org.columba.mail.gui.composer.ComposerView;
  */
 public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ViewAccountInfoPanelAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"AccountInfoPanel",
-			"AccountInfoPanel",
-			"SHOW_ACCOUNTINFOPANEL",
-			null,
-			null,
-			0,
-			null);
-
+		super(frameController, "AccountInfoPanel");
+		setActionCommand("SHOW_ACCOUNTINFOPANEL");
 	}
 
 	public void actionPerformed(ActionEvent evt) {

@@ -21,43 +21,31 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class AttachFileAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public AttachFileAction(
-		ComposerController composerController
-		) {
+	public AttachFileAction(ComposerController composerController) {
 		super(
-			composerController,
-			MailResourceLoader.getString(
-					"menu",
-					"composer",
-					"menu_message_attachFile"),
+				composerController,
 				MailResourceLoader.getString(
-					"menu",
-					"composer",
-					"menu_message_attachFile"),
-				MailResourceLoader.getString(
-					"menu",
-					"composer",
-					"menu_message_attachFile_tooltip"),
-				"ATTACH",
-				ImageLoader.getSmallImageIcon("stock_attach-16.png"),
-				ImageLoader.getImageIcon("stock_attach.png"),
-				MailResourceLoader.getMnemonic(
-					"menu",
-					"composer",
-					"menu_message_attachFile"),
-				null);
+					"menu", "composer", "menu_message_attachFile"));
 		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_message_attachFile_tooltip"));
+		
+		// action command
+		setActionCommand("ATTACH");
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_attach.png"));
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getImageIcon("stock_attach-16.png"));
+
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_message_attachFile"));
+
 	}
 
 	

@@ -23,40 +23,24 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ExternalEditorAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public ExternalEditorAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_edit_extern_edit"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_edit_extern_edit"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_edit_extern_edit"),
-			"EXTERNEDIT",
-			null,
-			null,
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"composer",
-				"menu_edit_extern_edit"),
-			null);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_edit_extern_edit"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_edit_extern_edit"));
+		
+		// action command
+		setActionCommand("EXTERNEDIT");
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_edit_extern_edit"));
 
 	}
 

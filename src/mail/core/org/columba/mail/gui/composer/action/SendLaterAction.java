@@ -29,41 +29,27 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SendLaterAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public SendLaterAction(AbstractFrameController FrameController) {
 		super(
-			FrameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_file_sendlater"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_file_sendlater"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_file_sendlater"),
-			"SENDLATER",
-			ImageLoader.getSmallImageIcon("send-later-16.png"),
-			null,
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"composer",
-				"menu_file_sendlater"),
-			null);
-
+				FrameController,
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_file_sendlater"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_file_sendlater"));
+		
+		// action command
+		setActionCommand("SENDLATER");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("send-later-16.png"));
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_file_sendlater"));
 	}
 
 	/* (non-Javadoc)

@@ -24,31 +24,29 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SaveMessageAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public SaveMessageAction(ComposerController composerController) {
 		super(
-			composerController,
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_save"),
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_save"),
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_save"),
-			"SAVE",
-			ImageLoader.getSmallImageIcon("stock_save-16.png"),
-			ImageLoader.getImageIcon("stock_save.png"),
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"mainframe",
-				"menu_file_save"),
-			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+				composerController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_save"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_save"));
+		
+		// action command
+		setActionCommand("SAVE");
+
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_W, ActionEvent.CTRL_MASK));		
+
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu",	"mainframe", "menu_file_save"));
 
 	}
 

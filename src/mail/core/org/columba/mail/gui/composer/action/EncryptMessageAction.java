@@ -23,40 +23,29 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class EncryptMessageAction extends CheckBoxAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public EncryptMessageAction(ComposerController composerController) {
+		
 		super(
-			composerController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_encrypt"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_encrypt"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_encrypt"),
-			"ENCRYPT",
-			ImageLoader.getSmallImageIcon("encrypt_small.png"),
-			null,
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"composer",
-				"menu_message_encrypt"),
-			null);
+				composerController,
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_message_encrypt"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_message_encrypt"));
+		
+		// action command
+		setActionCommand("ENCRYPT");
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("encrypt_small.png"));
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_message_encrypt"));
+
 		setEnabled(false);
 	}
 

@@ -22,42 +22,33 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SpellcheckAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
 	public SpellcheckAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_spellCheck"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_spellCheck"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_spellCheck"),
-			"SPELLCHECK",
-			ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"),
-			ImageLoader.getImageIcon("stock_spellcheck_24.png"),
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"composer",
-				"menu_message_spellCheck"),
-			null,
-			false);
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "composer",	"menu_message_spellCheck"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer",	"menu_message_spellCheck"));
+		
+		// action command
+		setActionCommand("SPELLCHECK");
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_spellcheck_24.png"));
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
+		
+		// disable text in toolbar
+		enableToolBarText(false);
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_message_spellCheck"));
 
 	}
 

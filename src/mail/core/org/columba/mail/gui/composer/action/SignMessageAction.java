@@ -22,40 +22,25 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SignMessageAction extends CheckBoxAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public SignMessageAction(ComposerController composerController) {
 		super(
-			composerController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_sign"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_sign"),
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_message_sign"),
-			"SIGN",
-			null,
-			null,
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"composer",
-				"menu_message_sign"),
-			null);
+				composerController,
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_message_sign"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "composer", "menu_message_sign"));
+					
+		// action command
+		setActionCommand("SIGN");
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_message_sign"));
+
 		setEnabled(false);
 	}
 

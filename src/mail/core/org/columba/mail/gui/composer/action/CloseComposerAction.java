@@ -24,40 +24,36 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class CloseComposerAction extends FrameAction {
 
-	/**
-	 * @param composerController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public CloseComposerAction(ComposerController composerController) {
+		
 		super(
-			composerController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_close"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_close"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_close"),
-			"EXIT",
-			ImageLoader.getSmallImageIcon("stock_exit-16.png"),
-			ImageLoader.getImageIcon("stock_exit.png"),
-			MailResourceLoader.getMnemonic(
-				"menu",
-				"mainframe",
-				"menu_file_close"),
-			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+				composerController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_close"));
+		
+		// tooltip text
+		setTooltipText(
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_file_close"));
+		
+		// action command
+		setActionCommand("EXIT");
+		
+		// large icon for toolbar
+		setLargeIcon(ImageLoader.getImageIcon("stock_exit.png"));
+		
+		// small icon for menu
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_exit-16.png"));
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+		
+		// TODO: Use & to define mnemonic instead
+		setMnemonic(
+				MailResourceLoader.getMnemonic(
+					"menu", "composer", "menu_file_close"));
 
 	}
 
