@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.15 2000/11/02 21:44:56 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/11/02 21:44:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.16 2000/11/15 11:40:03 hgomez Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/11/15 11:40:03 $
  *
  * ====================================================================
  *
@@ -246,7 +246,7 @@ public class Ajp13ConnectorRequest extends Request
     
     public int doRead() throws IOException 
     {
-        if(pos > blen) {
+        if(pos >= blen) {
             refeelReadBuffer();
         }
         return bodyBuff[pos++];
