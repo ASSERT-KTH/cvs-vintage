@@ -3,7 +3,7 @@ Tomcat+Apache HOWTO
    Costin Manolache <costin@eng.sun.com>
    Anil Vijendran <akv@eng.sun.com>
 
-$Revision: 1.1 $ $Date: 1999/12/17 00:18:01 $
+$Revision: 1.2 $ $Date: 2000/01/06 20:23:30 $
 
 This document describes how to setup Tomcat to run with Apache. For
 now this document describes how to run Tomcat 3.0 with Apache
@@ -52,6 +52,12 @@ Table of Contents
        * Make sure ServerName in /path/to/apache-1.3.9/conf/httpd.conf
          contains the name of your host.
 
+       * If you are using a version of Apache that you have compiled
+         yourself and you are using a precompiled version of mod_jserv.so, 
+         make sure that you compiled support for loadable 
+         modules.  Do this my compiling mod_so.so using --enable-module=so 
+         with configure. 
+
    2.2 Tomcat 3.0
 
        * Download and install Tomcat 3.0 for your OS/platform from
@@ -62,18 +68,33 @@ Table of Contents
 
 	   http://jakarta.apache.org/builds/tomcat/release/v3.0/<os>/<platform>/modules
   
-         and copy it into /path/to/apache-1.3.9/modules.
+         and copy it into /path/to/apache-1.3.9/libexec for a Unix
+         install and /path/to/apache-1.3.9/libexec for a Win32
+         install. 
+
+         mod_jserv is the software that allows Apache and Tomcat to
+         communicate. The port used to communicate is set in the
+         server.xml file for Tomcat, and tomcat.conf for Apache, and
+         they must agree. Currently this port defaults to 8007 and
+         uses the AJP12 protocol. 
 
        * Edit /path/to/apache-1.3.9/conf/httpd.conf and add the
          following line at the end:
 
            Include /path/to/tomcat3.0/etc/tomcat.conf
 
+       * It is also important to note that because Tomcat has a
+         standalone HTTP server built in, it must be run on a
+         different port than Apache. 
+
    2.3 Testing Your Configuration
 
        * Restart Apache (apachectl restart or Apache -k restart on Win32)
 
        * Make sure http://<hostname> is working
+
+       * Start Tomcat (Use startup.sh for Unix or startup.bat for
+         Win32 from /path/to/tomcat3.0)
 
        * Try http://<hostname>/examples -- you should see the Tomcat
          examples. 
@@ -114,8 +135,13 @@ Table of Contents
    Apache 1.3.9 + Tomcat 3.0 has been tested on the following OSes: 
 
     * Linux (RedHat 6.1) on SPARC and Intel
+       - IBM JDK 1.1.8
     * Solaris 2.6 on SPARC
+       - Sun JDK 1.1.8
+       - Sun JDK 1.2.2
     * Windows NT SP 4
+       - Sun JDK 1.1.8
+       - Sun JDK 1.2.2
 
 4. More information, feedback and bugs
 
