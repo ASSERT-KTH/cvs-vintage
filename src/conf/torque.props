@@ -73,6 +73,7 @@ torque.initialID = 101
 # -------------------------------------------------------------------
 
 torque.targetPackage=org.tigris.scarab.om
+torque.retrievableInterface = org.apache.fulcrum.intake.Retrievable
 torque.basePrefix=Base
 torque.addSaveMethod=true
 torque.addGetByNameMethod=true
@@ -134,7 +135,7 @@ torque.basezip.dir = ${torque.output.dir}
 #######################################
 
 torque.templatePath = templates
-torque.useClasspath = false
+torque.useClasspath = true
 
 
 # -------------------------------------------------------------------

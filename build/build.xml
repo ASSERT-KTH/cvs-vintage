@@ -505,34 +505,9 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Prepare Torque for action                                          -->
-    <!-- ================================================================== -->
-    <target name="torque-expanded-check">
-        <!-- we can check that torque.zip is upToDate in order to know if
-             the archive has already been expanded because it is expanded
-             in the same target as it is copied to the directory -->
-        <uptodate property="torque.is.expanded"
-            targetfile="${build.src.scarab}/${torque.zip}">
-            <srcfiles dir="${lib.dir}" includes="${torque.zip}"/>
-        </uptodate>    
-    </target>
-
-    <target name="torque-init" depends="prepare,torque-expanded-check"
-            unless="torque.is.expanded">
-        <copy file="${lib.dir}/${torque.zip}" todir="${build.src.scarab}"/>
-        <unzip  src="${build.src.scarab}/${torque.zip}"
-               dest="${build.src.scarab}" />
-        <copy todir="${build.project.webinf.lib}">
-            <fileset dir="${torque.dir.scarab}/lib">
-                <include name="torque*.jar"/>
-            </fileset>
-        </copy>
-    </target>
-
-    <!-- ================================================================== -->
     <!-- Copy all of the xml schema files into the torque directory         -->
     <!-- ================================================================== -->
-    <target name="torque-copy-all-schema" depends="torque-init" 
+    <target name="torque-copy-all-schema"
             unless="schema.uptodate">
         <!-- copy the schema's to the torque directory -->
         <copy file="${src.sql.dir}/${project}-schema.xml" 
@@ -569,11 +544,9 @@
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
-    <target name="sql" depends="prepare-build-dir,schema-check,torque-init,torque-copy-all-schema" 
+    <target name="sql" depends="prepare-build-dir,schema-check,torque-copy-all-schema" 
             unless="schema.uptodate">
 
-        <!-- removing sample schema that comes packaged with torque -->
-        <delete file="${torque.dir.scarab}/schema/project-schema.xml"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
@@ -589,11 +562,11 @@
 
         <!-- move the generated .sql files into the target directory -->
         <ant antfile="build-torque.xml"
-             dir="${torque.dir.scarab}" target="sql"
+             target="sql"
              inheritAll="false">
             <!-- See the Torque tasks' build.properties for options -->
             <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf.lib}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
             <property name="torque.output.dir" value="${src.dir}"/>
             <property name="build.properties"
                       value="${torque.dir.scarab}/build.properties"/>
@@ -622,7 +595,7 @@
         </uptodate>
     </target>
 
-    <target name="om-peer-generate" depends="generated-check,torque-init,sql" 
+    <target name="om-peer-generate" depends="generated-check,sql" 
             unless="gen.uptodate">
 
         <!-- we don't want to generate the OM objects for Turbine 
@@ -630,7 +603,7 @@
         <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
         <delete file="${torque.dir.scarab}/schema/scheduler-schema.xml"/>
 
-        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}" 
+        <ant antfile="build-torque.xml"
                 target="om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -791,14 +764,14 @@
         </uptodate>
     </target>
 
-    <target name="datadtd" depends="datadtd-check,torque-init,compile"
+    <target name="datadtd" depends="datadtd-check,compile"
             unless="datadtd.uptodate">
         <copy file="${src.sql.dir}/${project}-schema.xml"
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props"
               overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build-torque.xml"
-                dir="${torque.dir.scarab}" target="datadtd" inheritAll="false">
+             target="datadtd" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="databaseName" value="default"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -825,7 +798,7 @@
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             tofile="${torque.dir.scarab}/build.properties"
 	    filtering="true"/>
-        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
+        <ant antfile="build-torque.xml"
             target="datasql" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -1244,10 +1217,10 @@
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
     <!-- ================================================================== -->
-    <target name="datadoc" depends="torque-init,torque-copy-all-schema,sql">
+    <target name="datadoc" depends="torque-copy-all-schema,sql">
         <mkdir dir="${torquedoc.destdir}"/>
-        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
-	     target="doc">
+        <ant antfile="build-torque.xml"
+	         target="doc">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf}/lib"/>
             <property name="build.properties"
@@ -1262,7 +1235,7 @@
     <!-- Dump data from DB into xml                                         -->
     <!-- ================================================================== -->
     <target name="datadump" depends="sql,compile">
-        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
+        <ant antfile="build-torque.xml"
             target="datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf}/lib"/>
