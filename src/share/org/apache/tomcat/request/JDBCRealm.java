@@ -1,7 +1,7 @@
 /* 
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.21 2000/09/29 21:10:02 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/09/29 21:10:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.22 2000/10/23 15:17:57 nacho Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/10/23 15:17:57 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -292,7 +292,7 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param algorithm the Encode type
      */
 
-    public void setEncode(String algorithm) {
+    public void setDigest(String algorithm) {
         digest = algorithm;
     }
 
@@ -535,7 +535,10 @@ public final class JDBCRealm extends BaseInterceptor {
 
 	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
-	    req.setRemoteUser( user );
+            Context ctx = req.getContext();
+            if (ctx != null)
+                req.setAuthType(ctx.getAuthMethod());
+            req.setRemoteUser( user );
             req.setNote(reqRealmSignNote,this);
 	}
 	return 0;
@@ -579,6 +582,7 @@ public final class JDBCRealm extends BaseInterceptor {
 	return 401; //HttpServletResponse.SC_UNAUTHORIZED
         // XXX check transport
     }
+
     /**
      * Digest password using the algorithm especificied and
      * convert the result to a corresponding hex string.

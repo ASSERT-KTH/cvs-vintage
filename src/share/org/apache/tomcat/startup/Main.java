@@ -379,13 +379,12 @@ public class Main {
 	File dir = new File(ld);
 	String[] names = dir.list( new FilenameFilter(){
             public boolean accept(File dir, String name) {
-                if (name.endsWith(".jar"))
-                {
+                if (name.endsWith(".jar")){
                     return true;
                 }
                 return false;
             }
-        } );
+        });
 	return names;
     }
 
