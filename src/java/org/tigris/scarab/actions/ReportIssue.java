@@ -97,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.131 2002/07/10 23:52:23 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.132 2002/07/11 21:35:51 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -432,7 +432,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         summary = summary.substring(0,60) + "...";
                     }                
                     summary = (summary.length() == 0) ? summary : " - " + summary;
-                    StringBuffer subj = new StringBuffer('[');
+                    StringBuffer subj = new StringBuffer("[");
                     subj.append(issue.getModule().getRealName().toUpperCase());
                     subj.append("] Issue #").append(issue.getUniqueId());
                     subj.append(summary);

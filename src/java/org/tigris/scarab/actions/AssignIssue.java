@@ -102,7 +102,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.52 2002/07/11 20:33:21 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.53 2002/07/11 21:35:51 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -258,6 +258,15 @@ public class AssignIssue extends BaseModifyIssue
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
                     String[] results = issue.deleteUser(assignee, assigner, 
                                                         oldAttVal, reason);
+                    String attrDisplayName = issue.getModule()
+                       .getRModuleAttribute(oldAttVal.getAttribute(), issue.getIssueType())
+                       .getDisplayValue();
+                    othersAction = ("User " + assigner.getUserName() 
+                              + " has removed user " 
+                              + assignee.getUserName() + " from " 
+                              + attrDisplayName + ".");
+                    userAction = ("You have been removed from " 
+                                   + attrDisplayName + ".");
                     if (!notify(context, oldAttVal.getIssue(), assignee, 
                                 userAction, othersAction))
                     {
@@ -329,10 +338,12 @@ public class AssignIssue extends BaseModifyIssue
         String template = Turbine.getConfiguration().
            getString("scarab.email.assignissue.template",
                      "email/AssignIssue.vm");
+        String subject = "[" + issue.getModule().getRealName()
+                         .toUpperCase() + "] Issue #" 
+                         + issue.getUniqueId() + " assigned";
 
         // First notify user
         context.put("action", userAction);
-        String subject = "Assign Issue " + "[" + issue.getUniqueId() + "]";
         if (!Email.sendEmail(new ContextAdapter(context), module, fromUser, 
                             assignee, subject, template))
         {
@@ -341,14 +352,25 @@ public class AssignIssue extends BaseModifyIssue
 
         // Then notify others associated with issue
         context.put("action", othersAction);
-        subject = "[" + issue.getModule().getRealName()
-                         .toUpperCase() + "] Issue #" 
-                         + issue.getUniqueId() + " modified";
         List toUsers = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         List ccUsers = issue.getUsersToEmail(AttributePeer.CC_TO);
-        toUsers.remove(assignee);
-        ccUsers.remove(assignee);
-            
+        // do not send emails to assignee
+        for (int i=0; i<toUsers.size(); i++)
+        {
+            ScarabUser su = (ScarabUser)toUsers.get(i);
+            if (su.equals(assignee) && toUsers.size() > 1)
+            {
+                toUsers.remove(su);  
+            }
+        }
+        for (int i=0; i<ccUsers.size(); i++)
+        {
+            ScarabUser su = (ScarabUser)ccUsers.get(i);
+            if (su.equals(assignee))
+            {
+                ccUsers.remove(su);  
+            }
+        }
         if (!Email.sendEmail(new ContextAdapter(context), module, fromUser, 
                             toUsers, ccUsers, subject, template))
         {
