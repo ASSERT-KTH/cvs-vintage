@@ -1,4 +1,4 @@
-/* $Id: CookieExample1.java,v 1.1 2000/12/01 06:00:23 costin Exp $
+/* $Id: CookieExample1.java,v 1.2 2000/12/26 22:46:39 costin Exp $
  *
  */
 
@@ -93,7 +93,7 @@ public class CookieExample1 extends HttpServlet {
 		} catch(Exception ex ) {
 		}
 	    }
-	    
+
             response.addCookie(cookie);
             out.println("<P>");
             out.println(rb.getString("cookies.set") + "<br>");
@@ -105,7 +105,7 @@ public class CookieExample1 extends HttpServlet {
         out.println("<P>");
         out.println(rb.getString("cookies.make-cookie") + "<br>");
         out.print("<form action=\"");
-        out.println("CookieExample\" method=POST>");
+        out.println("CookieExample1\" method=POST>");
         out.print(rb.getString("cookies.name") + "  ");
         out.println("<input type=text length=20 name=cookiename><br>");
         out.print(rb.getString("cookies.value") + "  ");
