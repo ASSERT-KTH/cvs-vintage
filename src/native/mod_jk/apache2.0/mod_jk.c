@@ -56,6 +56,7 @@
 /***************************************************************************
  * Description: Apache 2 plugin for Jakarta/Tomcat                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
+ * 		        Henri Gomez <hgomez@slib.fr>                               *
  * Version:     $ $                                                        *
  ***************************************************************************/
 
@@ -91,7 +92,9 @@
 #define JK_MAGIC_TYPE       ("application/x-jakarta-servlet")
 #define NULL_FOR_EMPTY(x)   ((x && !strlen(x)) ? NULL : x) 
 
-module MODULE_VAR_EXPORT jk_module;
+/* module MODULE_VAR_EXPORT jk_module; */
+AP_DECLARE_DATA module jk_module;
+
 
 typedef struct {
     char *log_file;
@@ -328,10 +331,48 @@ static int init_ws_service(apache_private_data_t *private_data,
 										         REMOTE_HOST);
 
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
-
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
-    s->server_name  = (r->hostname ? r->server->server_hostname : r->hostname);
-    s->server_port  = r->server->port;
+
+	jk_log(main_log, JK_LOG_DEBUG, 
+		 		"agsp=%u agsn=%s hostn=%s shostn=%s cbsport=%d sport=%d \n",
+				ap_get_server_port( r ),
+				ap_get_server_name( r ),
+				r->hostname,
+				r->server->server_hostname,
+				r->connection->base_server->port,
+				r->server->port
+				);
+
+#ifdef NOTNEEDEDFORNOW
+    /* Wrong:    s->server_name  = (char *)ap_get_server_name( r ); */
+    s->server_name= (char *)(r->hostname ? r->hostname :
+                 r->server->server_hostname);
+
+
+    s->server_port= htons( r->connection->local_addr.sin_port );
+    /* Wrong: s->server_port  = r->server->port; */
+
+   
+    /*    Winners:  htons( r->connection->local_addr.sin_port )
+                      (r->hostname ? r->hostname :
+                             r->server->server_hostname),
+    */
+    /* printf( "Port %u %u %u %s %s %s %d %d \n",
+        ap_get_server_port( r ),
+        htons( r->connection->local_addr.sin_port ),
+        ntohs( r->connection->local_addr.sin_port ),
+        ap_get_server_name( r ),
+        (r->hostname ? r->hostname : r->server->server_hostname),
+        r->hostname,
+        r->connection->base_server->port,
+        r->server->port
+        );
+    */
+#else
+	s->server_name  = (char *)ap_get_server_name( r );
+	s->server_port  = r->server->port;
+#endif
+
     s->server_software = ap_get_server_version();
 
     s->method       = (char *)r->method;
@@ -403,7 +444,7 @@ static const char *jk_mount_context(cmd_parms *cmd,
      * Add the new worker to the alias map.
      */
     char *old;
-    map_put(conf->uri_to_context, context, worker, &old);
+    map_put(conf->uri_to_context, context, worker, (void **)&old);
     return NULL;
 }
 
@@ -474,7 +515,20 @@ apr_status_t jk_cleanup_endpoint( void *data ) {
 
 static int jk_handler(request_rec *r)
 {   
-    const char *worker_name = apr_table_get(r->notes, JK_WORKER_ID);
+    const char *worker_name;
+
+    if(strcmp(r->handler,JK_HANDLER))	/* not for me, try next handler */
+    return DECLINED;
+
+	if (1)
+	{
+	jk_server_conf_t *xconf =
+			(jk_server_conf_t *)ap_get_module_config(r->server->module_config, &jk_module);
+	jk_logger_t *xl = xconf->log ? xconf->log : main_log;
+	jk_log(xl, JK_LOG_DEBUG, "Into handler r->proxyreq=%d r->handler=%s r->notes=%d\n", r->proxyreq, r->handler, r->notes); 
+	}
+
+	worker_name = apr_table_get(r->notes, JK_WORKER_ID);
 
     /* If this is a proxy request, we'll notify an error */
     if(r->proxyreq) {
@@ -530,6 +584,18 @@ static int jk_handler(request_rec *r)
                                       &s, 
                                       l, 
                                       &is_recoverable_error);
+
+			if (s.content_read < s.content_length) {
+			/* Toss all further characters left to read fm client */
+				char *buff = apr_palloc(r->pool, 2048);
+				if (buff != NULL) {
+					int rd;
+					while ((rd = ap_get_client_block(r, buff, 2048)) > 0) {
+						s.content_read += rd;
+					}
+ 				}
+			}
+                                                                            
 #ifndef REUSE_WORKER		    
 		    end->done(&end, l); 
 #endif
@@ -542,7 +608,7 @@ static int jk_handler(request_rec *r)
         }
     }
 
-    return HTTP_INTERNAL_SERVER_ERROR;
+	return DECLINED;
 }
 
 static void *create_jk_config(apr_pool_t *p, server_rec *s)
@@ -607,13 +673,10 @@ static void *merge_jk_config(apr_pool_t *p,
 static void jk_child_init(apr_pool_t *pconf, 
 			  server_rec *s)
 {
-    char *p = getenv("WAS_BORN_BY_APACHE");
     jk_map_t *init_map = NULL;
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    fprintf(stdout, "jk_child_init %s\n", p ? p : "NULL"); fflush(stdout);
-        
     if(conf->log_file && conf->log_level >= 0) {
         if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
             conf->log = NULL;
@@ -623,7 +686,6 @@ static void jk_child_init(apr_pool_t *pconf,
     }
     
     if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
-	printf( "Memory error - uri worker alloc \n");
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
     }
 
@@ -644,18 +706,10 @@ static void jk_post_config(apr_pool_t *pconf,
                            server_rec *s)
 {
     if(!s->is_virtual) {
-        char *p = getenv("WAS_BORN_BY_APACHE");
         jk_map_t *init_map = NULL;
         jk_server_conf_t *conf =
             (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
         if(!conf->was_initialized) {
-            fprintf(stdout, "jk_post_config %s %s %d %d %s\n", 
-                    s->server_hostname, 
-                    s->server_admin,
-                    s,
-                    conf,
-                    p ? p : "NULL"); fflush(stdout);
-            
             conf->was_initialized = JK_TRUE;        
             if(conf->log_file && conf->log_level >= 0) {
                 if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
@@ -671,14 +725,10 @@ static void jk_post_config(apr_pool_t *pconf,
 
             if(map_alloc(&init_map)) {
                 if(map_read_properties(init_map, conf->worker_file)) {
-                    if(!p) {
-                        putenv("WAS_BORN_BY_APACHE=true");
-                        return;
-                    } else {                        
+						ap_add_version_component(pconf, "mod_jk");
                         if(wc_open(init_map, conf->log)) {
                             return;
                         }            
-                    }
                 }
             }
 
@@ -711,32 +761,14 @@ static int jk_translate(request_rec *r)
 
 static void jk_register_hooks(void)
 {
-#ifdef WIN32
-    ap_hook_post_config(jk_post_config,
-                        NULL,
-                        NULL,
-                        AP_HOOK_MIDDLE);    
+    ap_hook_handler(jk_handler, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_post_config(jk_post_config,NULL,NULL,APR_HOOK_MIDDLE);
+    ap_hook_child_init(jk_child_init,NULL,NULL,APR_HOOK_MIDDLE);
+    ap_hook_translate_name(jk_translate,NULL,NULL,APR_HOOK_FIRST);
 
-#else
-    ap_hook_child_init(jk_child_init,
-                       NULL,
-                       NULL,
-                       AP_HOOK_MIDDLE);    
-#endif
-    ap_hook_translate_name(jk_translate,
-                           NULL,
-                           NULL,
-                           AP_HOOK_FIRST);    
 }
 
-static const handler_rec jk_handlers[] =
-{
-    { JK_MAGIC_TYPE, jk_handler },
-    { JK_HANDLER, jk_handler },    
-    { NULL }
-};
-
-module MODULE_VAR_EXPORT jk_module =
+module AP_MODULE_DECLARE_DATA jk_module =
 {
     STANDARD20_MODULE_STUFF,
     NULL,	            /* dir config creater */
@@ -744,6 +776,6 @@ module MODULE_VAR_EXPORT jk_module =
     create_jk_config,	/* server config */
     merge_jk_config,	/* merge server config */
     jk_cmds,			/* command ap_table_t */
-    jk_handlers,		/* handlers */
     jk_register_hooks	/* register hooks */
 };
+
