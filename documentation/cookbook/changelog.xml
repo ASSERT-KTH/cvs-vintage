@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.4 2004/08/17 05:59:02 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.5 2004/09/15 06:12:14 linus Exp $ -->
 
 <preface id="changelog">
   <title>Change Log</title>
@@ -30,6 +30,17 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+      <tbody valign="top">
+        <row>
+          <entry>2004-09-15</entry>
+          <entry>
+Change to design of new module loader.
+(See <xref linkend="design-module-loader"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
 
       <tbody valign="top">
         <row>
