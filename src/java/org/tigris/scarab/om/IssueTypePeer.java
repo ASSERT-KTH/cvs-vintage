@@ -89,6 +89,12 @@ public class IssueTypePeer
         return result;
     }
 
+    public static List getAllIssueTypes(boolean includeDeleted)
+        throws Exception
+    {
+        return getAllIssueTypes(includeDeleted, "name", "asc");
+    } 
+
     private static Criteria addSortOrder(Criteria crit, 
                     String sortColumn, String sortPolarity)
     {
