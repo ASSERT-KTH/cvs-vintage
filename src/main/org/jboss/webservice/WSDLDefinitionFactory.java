@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.5 2004/06/08 14:09:58 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.6 2004/06/09 00:25:16 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -91,6 +91,9 @@ public final class WSDLDefinitionFactory
 
       public WSDLLocatorImpl(URL wsdlFile)
       {
+         if (wsdlFile == null)
+            throw new IllegalArgumentException("WSDL file argument cannot be null");
+
          this.wsdlURL = wsdlFile;
       }
 
