@@ -49,9 +49,6 @@
             <rule name="minLength" value="1">Option name is not allowed to be empty</rule>
             <rule name="maxLength" value="255">Option name must be less than 255 characters long</rule>
         </field>
-        <field name="Weight" key="weight" type="int">
-           <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
-        </field>
         <field name="NewName" key="newname" type="String"
                mapToProperty="Name">
             <rule name="maxLength" value="255"/>
@@ -238,6 +235,32 @@
     </field>
 </group>
 
+<group name="Register" key="register" mapToObject="om.ScarabUserImpl">
+    <field name="FirstName" key="fn" type="String">
+        <rule name="required" value="true">Please enter a first name</rule>
+    </field>
+    <field name="LastName" key="ln" type="String">
+        <rule name="required" value="true">Please enter a last name</rule>
+    </field>
+    <field name="Email" key="e" type="String">
+        <rule name="required" value="true">Please enter an email address</rule>
+        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+    </field>
+    <field name="UserName" key="u" type="String" mapToProperty="Email">
+        <rule name="required" value="true">Please enter an email address</rule>
+        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+    </field>
+    <field name="Password" key="p" type="String">
+        <rule name="required" value="true">Please enter a password</rule>
+    </field>
+    <field name="PasswordConfirm" key="pc" type="String" mapToProperty="">
+        <rule name="required" value="true">Please enter a confirmation password</rule>
+    </field>
+    <field name="Confirm" key="c" type="String" mapToProperty="">
+        <rule name="required" value="true">Please enter a valid confirmation code</rule>
+    </field>
+</group>
+
 <group name="Attachment" key="atch" mapToObject="om.Attachment">
         <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
@@ -306,16 +329,15 @@
     <field name="Description" key="d" type="String">
         <rule name="maxLength" value="255">Please keep the description to less than 256 characters</rule>
     </field>
-    <field name="TypeId" key="tti" type="NumberKey" >
+    <field name="TypeId" key="tti" type="NumberKey" mapToProperty="">
         <required-message>Please select an option.</required-message>
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
-    <field name="ModuleId" key="mi" type="NumberKey" >
+    <field name="ModuleId" key="mi" type="NumberKey" mapToProperty="">
         <required-message>If you have selected a project-level query, you must select a project.</required-message>
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
 </group>
-
 
 <group name="Report" key="rep" mapToObject="util.ReportGenerator">
         <field name="Type" key="type" type="int">
@@ -345,7 +367,7 @@
                type="String" multiValued="true"/>
         <field name="Axis2AttributesAndOptions" key="a2ao" 
                type="String" multiValued="true"/>
- </group>
+</group>
 
 <group name="OptionGroup" key="repog" mapToObject="util.ReportGenerator$OptionGroup">
     <field name="DisplayValue" key="dv" type="String">

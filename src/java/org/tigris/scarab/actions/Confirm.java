@@ -52,11 +52,12 @@ import java.util.Iterator;
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.tool.IntakeTool;
+
+import org.apache.fulcrum.intake.model.Group;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
-import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 
 // Scarab Stuff
@@ -69,90 +70,97 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
-    This class is responsible for dealing with the Confirm
-    Action.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.19 2001/09/30 18:31:38 jon Exp $
-*/
+ * This class is responsible for dealing with the Confirm
+ * Action.
+ *   
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Confirm.java,v 1.20 2001/10/02 23:51:40 jon Exp $
+ */
 public class Confirm extends ScarabTemplateAction
 {
     /**
-        This manages clicking the Register button which will end up sending
-        the user to the RegisterConfirm screen.
-    */
+     * This manages clicking the Register button which will end up sending
+     * the user to the RegisterConfirm screen.
+     */
     public void doConfirm( RunData data, TemplateContext context ) throws Exception
     {
-        String template = data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters()
-                            .getString(
-                            ScarabConstants.NEXT_TEMPLATE, template );
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
 
-        String username = data.getParameters().getString ( "Email", "" );
-        String confirm = data.getParameters().getString ( "Confirm", "" );
-
-        // check to see if the user's confirmation code is valid.
-        if (ScarabUserImpl.checkConfirmationCode(username, confirm))
+        IntakeTool intake = getIntakeTool(context);
+        if (intake.isAllValid())
         {
-            // update the database to confirm the user
-            if(ScarabUserImpl.confirmUser(username))
+            Object user = data
+                            .getUser()
+                            .getTemp(ScarabConstants.SESSION_REGISTER);
+            Group register = null;
+            if (user != null && user instanceof ScarabUser)
             {
-                // NO PROBLEMS! :-)
-                data.setMessage("Your account has been confirmed. Welcome to Scarab!");
-                setTarget(data, nextTemplate);
-
-                ScarabUser confirmedUser = (ScarabUserImpl) 
-                                           TurbineSecurity.getUser(username);
-                confirmedUser.setHasLoggedIn(Boolean.TRUE);
-                data.setUser(confirmedUser);
-                data.save();
-                
-                // FIXME: Hack to give every new account a Developer Role
-                // within every Group (ie: Module). This is a major major
-                // major major major hole. The point however is to allow people
-                // using the runbox or downloading scarab a chance to be able
-                // to enter an issue without having to muck with Flux to get
-                // the right roles. Hopefully someone from the community will
-                // contribute code to clean this up. For more information, 
-                // please read this thread:
-                // http://scarab.tigris.org/servlets/ReadMsg?msgId=38339&listName=dev
-                List allModules = ScarabModulePeer.getAllModules();
-                Iterator itr = allModules.iterator();
-                Role role = TurbineSecurity.getRole("Developer");
-                while (itr.hasNext())
-                {
-                    Group group = (Group) itr.next();
-                    group.grant((User)confirmedUser, role);
-                    ((ModuleEntity)group).save();
-                }
+                register = intake.get("Register", 
+                    ((ScarabUser)user).getQueryKey(), false);
             }
             else
             {
-                data.setMessage("Your account has not been confirmed. " + 
-                                "There has been an error.");
+                register = intake.get("Register",
+                    IntakeTool.DEFAULT_KEY, false);
+            }
+
+            String username = register.get("Email").toString();
+            String confirm = register.get("Confirm").toString();
+
+            if (ScarabUserImpl.checkConfirmationCode(username, confirm))
+            {
+                // update the database to confirm the user
+                if(ScarabUserImpl.confirmUser(username))
+                {
+                    // NO PROBLEMS! :-)
+                    ScarabUser confirmedUser = (ScarabUserImpl) 
+                                               TurbineSecurity.getUser(username);
+                    confirmedUser.setHasLoggedIn(Boolean.TRUE);
+                    data.setUser(confirmedUser);
+                    data.save();
+    
+                    data.setMessage("Your account has been confirmed. Welcome to Scarab!");
+                    setTarget(data, nextTemplate);
+                    
+                    // FIXME: Hack to give every new account a Developer Role
+                    // within every Group (ie: Module). This is a major major
+                    // major major major hole. The point however is to allow people
+                    // using the runbox or downloading scarab a chance to be able
+                    // to enter an issue without having to muck with Flux to get
+                    // the right roles. Hopefully someone from the community will
+                    // contribute code to clean this up. For more information, 
+                    // please read this thread:
+                    // http://scarab.tigris.org/servlets/ReadMsg?msgId=38339&listName=dev
+                    List allModules = ScarabModulePeer.getAllModules();
+                    Iterator itr = allModules.iterator();
+                    Role role = TurbineSecurity.getRole("Developer");
+                    while (itr.hasNext())
+                    {
+                        // have to use the full Group because of conflicts with
+                        // Intake Group
+                        org.apache.fulcrum.security.entity.Group group = 
+                            (org.apache.fulcrum.security.entity.Group) itr.next();
+                        group.grant((User)confirmedUser, role);
+                        ((ModuleEntity)group).save();
+                    }
+                }
+                else
+                {
+                    data.setMessage("Your account has not been confirmed. " + 
+                                    "There has been an error.");
+                    setTarget(data, template);
+                }
+            }
+            else // we don't have confirmation! :-(
+            {
+                data.setMessage("Sorry, that email address and/or confirmation " + 
+                                "code is invalid.");
                 setTarget(data, template);
             }
         }
-        else // we don't have confirmation! :-(
-        {
-            // grab the ScarabRequestTool object so that we can populate 
-            // the internal User object for redisplay of the form data 
-            // on the screen
-            ApplicationTool srt = 
-                getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
-            if (srt != null)
-            {
-                ((ScarabRequestTool)srt)
-                    .setUser((ScarabUser)data.getUser()
-                    .getTemp(ScarabConstants.SESSION_REGISTER));
-            }
-        
-            data.setMessage("Sorry, that email address and/or confirmation " + 
-                            "code is invalid.");
-            setTarget(data, template);
-        }
     }
+
     /**
         This manages clicking the Cancel button
     */
@@ -161,6 +169,7 @@ public class Confirm extends ScarabTemplateAction
         setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
     }
+
     /**
         calls doCancel()
     */

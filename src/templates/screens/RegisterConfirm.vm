@@ -1,109 +1,53 @@
-$page.setTitle("Registration Confirmation")
+$page.setTitle("Confirm New Account Information")
 
-<!-- top nav bar -->
-  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD>
-        <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
-          <TR>
-            <TD nowrap class="NavHeader">SCARAB:</TD>
-            <TD nowrap class="NavHeaderOn" BGCOLOR="#cccccc"><A HREF="$link.setPage("Login.vm")">Return to Login</A></TD>
-          </TR>
-        </TABLE>
-      </TD>
-    </TR>
-    <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"></TD>
-    </TR>
-</TABLE>
-<!-- end top nav bar -->
-<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-	</TR>
-		<TD class="PlainTextHeader">Scarab: Registration</TD>
-	</TR>
-	<TR>
-		<TD CLASS="Header" BGCOLOR="#999999">&nbsp;USER REGISTRATION: CONFIRMATION</TD>
-	</TR>
-	<TR>
-	&nbsp;
-	</TR>
-</TABLE>
+<div id="registerconfirm" class="app">
 
-<ul>
-    <li class="PlainText">Please confirm that the information below is accurate and then click the Confirm Registration
-        button to continue.</li>
-</ul>
-
-#if ($data.getMessage())
-    <p>
-    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-            <TR>
-                <TD class="MessageText">$data.getMessage()</TD>
-            </TR>
-    </TABLE>
-#end
-
-<P>
-<FORM name="RegisterConfirmForm" action="$link.setPage("RegisterConfirm.vm")" method="post">
-    <input type="hidden" name="action" value="RegisterConfirm">
-    <input type="hidden" name="cancelTemplate" value="Register.vm">
-    <input type="hidden" name="nextTemplate" value="Confirm.vm">
+<h3>$page.Title</h3>
 
 ## get the user out of the temp hashtable
-#set ( $user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER) )
+#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if (!$user.FirstName)
 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Email Address:</TD>
-		<TD class="PlainText">$user.Email</TD>
-		<TD class="PlainText">To be verified via email</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Full Name:</TD>
-		<TD class="PlainText">$user.FirstName $user.LastName</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD>&nbsp;</TD>
-		<TD>
-            <INPUT TYPE="submit" NAME="eventSubmit_doBack" VALUE="Back">
-    		<INPUT TYPE="submit" NAME="eventSubmit_doConfirmRegistration" VALUE="Confirm Registration">
-		</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"></TD>
-	</TR>
-</TABLE>
-</FORM>
+<p class="alert">
+There has been an error locating the required information. Please go
+back to the <a href="$link.setPage("Register.vm")">Registration</a> page
+and try again.
+</p>
 
+#else
 
+<p>
+Please confirm that the information below is accurate, then click the
+Confirm Registration button. This will send an email to your account with
+instructions for the next step. Otherwise click the Back button to go
+back to the Registration page.
+</p>
 
+<form action="$link.setPage("RegisterConfirm.vm")" method="post">
+    <input type="hidden" name="action" value="RegisterConfirm">
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm">
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm">
 
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="1">
+	<tr>
+		<th>Email Address:</th>
+		<td>$user.Email</td>
+	</tr>
+	<tr>
+		<th>Full Name:</th>
+		<td>$user.FirstName $user.LastName</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+            <input type="submit" name="eventSubmit_doBack" value="Back">
+    		<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm Registration">
+		</td>
+	</tr>
+</table>
+</div>
+</form>
 
+#end
 
-
-
+</div>

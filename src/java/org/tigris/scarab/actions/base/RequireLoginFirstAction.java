@@ -50,12 +50,10 @@ package org.tigris.scarab.actions.base;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.screens.Default;
 
@@ -64,7 +62,7 @@ import org.tigris.scarab.screens.Default;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.9 2001/09/30 19:28:05 jon Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.10 2001/10/02 23:51:40 jon Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -81,7 +79,8 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public IntakeTool getIntakeTool(TemplateContext context)
     {
-        return (IntakeTool)context.get(ScarabConstants.INTAKE_TOOL);
+        return (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
     }
 
     /**
@@ -89,7 +88,46 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public ScarabRequestTool getScarabRequestTool(TemplateContext context)
     {
-        return (ScarabRequestTool)context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        return (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+    }
+
+    /**
+     * Returns the current template that is being executed, otherwisse
+     * it returns null
+     */
+    public String getCurrentTemplate(RunData data)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.TEMPLATE, null);
+    }
+
+    /**
+     * Returns the current template that is being executed, otherwisse
+     * it returns defaultValue.
+     */
+    public String getCurrentTemplate(RunData data, String defaultValue)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.TEMPLATE, defaultValue);
+    }
+
+    /**
+     * Returns the nextTemplate to be executed. Otherwise returns null.
+     */
+    public String getNextTemplate(RunData data)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.NEXT_TEMPLATE, null);
+    }
+
+    /**
+     * Returns the nextTemplate to be executed. Otherwise returns defaultValue.
+     */
+    public String getNextTemplate(RunData data, String defaultValue)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
     }
 
     /**

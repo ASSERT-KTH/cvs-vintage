@@ -73,10 +73,12 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.18 2001/09/28 21:55:45 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.19 2001/10/02 23:51:40 jon Exp $
 */
-public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
-{    
+public class ScarabUserImpl 
+    extends BaseScarabUserImpl 
+    implements ScarabUser
+{
     private static final String CURRENT_MODULE = "CURRENT_MODULE";
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
     private static final String REPORTING_ISSUE_START_POINT = "RISP";

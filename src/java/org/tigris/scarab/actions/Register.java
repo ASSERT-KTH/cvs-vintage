@@ -50,6 +50,8 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Log;
+import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 
 // Scarab Stuff
@@ -59,78 +61,90 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
-    This class is responsible for dealing with the Register
-    Action.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.13 2001/09/30 18:31:38 jon Exp $
-*/
+ * This class is responsible for dealing with the Register
+ * Action.
+ *   
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Register.java,v 1.14 2001/10/02 23:51:40 jon Exp $
+ */
 public class Register extends ScarabTemplateAction
 {
     /**
-        This manages clicking the Register button which will end up sending
-        the user to the RegisterConfirm screen.
-    */
+     * This manages clicking the Register button which will end up sending
+     * the user to the RegisterConfirm screen.
+     */
     public void doRegister( RunData data, TemplateContext context ) 
         throws Exception
     {
-        String template = data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters()
-                            .getString(ScarabConstants.NEXT_TEMPLATE, template);
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
 
-        // create an empty user object
-        ScarabUser su = (ScarabUser) TurbineSecurity.getAnonymousUser();
-        try
+        IntakeTool intake = getIntakeTool(context);
+        if (intake.isAllValid())
         {
-            // populate it with form data and do validation
-            // FIXME: this should use intake 
-            data.getParameters().setProperties(su);
+            Object user = data
+                            .getUser()
+                            .getTemp(ScarabConstants.SESSION_REGISTER);
+            Group register = null;
+            if (user != null && user instanceof ScarabUser)
+            {
+                register = intake.get("Register", 
+                    ((ScarabUser)user).getQueryKey(), false);
+            }
+            else
+            {
+                register = intake.get("Register",
+                    IntakeTool.DEFAULT_KEY, false);
+            }
 
-            String password_confirm = data.getParameters()
-                .getString("password_confirm", null);
-            su.setUserName(data.getParameters().getString("Email"));
-            
-            // FIXME: add better email address checking to catch stupid 
-            // mistakes up front
-            // FIXME: add better form validation all around, make sure we 
-            // don't have bad data as well as the right length.
-            if (su.getFirstName() == null || su.getFirstName().length() == 0)
-                throw new Exception("The first name you entered is empty!");
-            if (su.getLastName() == null || su.getLastName().length() == 0)
-                throw new Exception("The last name you entered is empty!");
-            if (su.getUserName() == null || su.getUserName().length() == 0)
-                throw new Exception("The email address you entered is empty!");
-            if (su.getPassword() == null || su.getPassword().length() == 0)
-                throw new Exception("The password you entered is empty!");
-            if (password_confirm == null)
-                throw new Exception( 
-                    "The password confirm you entered is empty!");
-            if (!su.getPassword().equals(password_confirm))
-                throw new Exception("The password's you entered do not match!");
-            
+            String password = register.get("Password").toString();
+            String passwordConfirm = register.get("PasswordConfirm").toString();
+
+            // check to make sure the passwords match
+            if (!password.equals(passwordConfirm))
+            {
+                setTarget(data, template);
+                data.setMessage("The password's you entered do not match!");
+                return;
+            }
+
+            // get an anonymous user
+            ScarabUser su = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            try
+            {
+                register.setProperties(su);
+                // need to set this specially
+                su.setUserName(register.get("Email").toString());
+            }
+            catch (Exception e)
+            {
+                setTarget(data, template);
+                data.setMessage (e.getMessage());
+                return;
+            }
+
             // check to see if the user already exists
             if(ScarabUserImplPeer.checkExists(su))
             {
-                throw new Exception(
-                    "Sorry, a user with that loginid already exists!" );
+                setTarget(data, template);
+                data.setMessage(
+                    "Sorry, a user with that email address already exists!");
+                return;
             }
 
-            // stick the user object into the session so that it can
-            // be retrieved on the next invocation in action.RegisterConfirm
-            // we don't actually create the user in the system until the next page.
+            // put the user object into the context so that it can be
+            // used on the nextTemplate
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, su);
-
             setTarget(data, nextTemplate);
         }
-        catch (Exception e)
+        else
         {
-            setTarget(data, template );
-            data.setMessage (e.getMessage());
-            Log.debug ("Register Error: ", e);
-            return;
-        }        
+            // if the intake information is invalid, then null out the user
+            // that is stored in the session just to be careful
+            data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, null);
+        }
     }
+
     /**
         This manages clicking the Cancel button
     */
@@ -139,6 +153,7 @@ public class Register extends ScarabTemplateAction
         setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
     }
+
     /**
         calls doCancel()
     */

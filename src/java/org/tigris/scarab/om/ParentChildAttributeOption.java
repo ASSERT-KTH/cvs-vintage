@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.4 2001/09/24 21:29:46 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.5 2001/10/02 23:51:40 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable
@@ -134,6 +134,10 @@ public class ParentChildAttributeOption
         return pcao;
     }
 
+    /**
+     * Implementation of the Retrievable interface because this object
+     * is used with Intake
+     */
     public String getQueryKey()
     {
         if (parentId == null || optionId == null)
@@ -143,6 +147,10 @@ public class ParentChildAttributeOption
         return getParentId().toString() + ":" + getOptionId().toString();
     }
 
+    /**
+     * Implementation of the Retrievable interface because this object
+     * is used with Intake
+     */
     public void setQueryKey(String key)
     {
         int index = key.indexOf(":");

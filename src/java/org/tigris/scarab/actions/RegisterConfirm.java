@@ -69,7 +69,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.22 2001/09/30 18:31:38 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.23 2001/10/02 23:51:40 jon Exp $
 */
 public class RegisterConfirm extends ScarabTemplateAction
 {
@@ -144,18 +144,11 @@ public class RegisterConfirm extends ScarabTemplateAction
     */
     public void doBack( RunData data, TemplateContext context ) throws Exception
     {
-        // grab the ScarabRequestTool object so that we can populate the 
-        // internal User object for redisplay of the form data on the screen
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (scarabR != null)
-        {
-            scarabR.setUser((ScarabUser)data.getUser()
-                .getTemp(ScarabConstants.SESSION_REGISTER));
-        }
         // set the template to the template that we should be going back to
         setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Register.vm"));
     }
+
     /**
         calls doRegisterConfirm()
     */

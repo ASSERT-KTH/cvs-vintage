@@ -1,108 +1,60 @@
 $page.setTitle("Confirm Your Email Address")
 
-<!-- top nav bar -->
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td>
-        <table border="0" cellpadding="2" cellspacing="0">
-          <tr>
-            <td nowrap class="NavHeader">SCARAB:</td>
-            <td class="NavHeaderOn" nowrap bgcolor="#cccccc"><a href="$link.setPage("login.vm")">Return to Login</a></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td height="1" bgcolor="#000000"></td>
-    </tr>
-</table>
-<!-- end top nav bar -->
-<p>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
- <tr>
-  <td class="Header" bgcolor="#999999" nowrap> USER REGISTRATION: CONFIRM EMAIL ADDRESS</td>
- </tr>
-</table>
+<div id="registerconfirm" class="app">
 
-<table border="0" cellpadding="3" cellspacing="0" width="100%">
- <tr>
-  <td class="PlainText">
-  <ul>
-  <li>Thanks for registering!</li>
-  <li>We are now sending you a confirmation message via email to verify that the email address you supplied is working properly.</li>
-  <li>To complete your registration click on the link in the email or type in the confirmation code below!</li>
-  <li>If you do not choose to confirm your account now, you will be asked to confirm it the next time you try to login.</li>
-  </ul>
-  </span>
-  </td>
- </tr>
-</table>
+<h3>$page.Title</h3>
 
-#if ($data.getMessage())
-    <p>
-    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-            <TR>
-                <TD class="MessageText">$data.getMessage()</TD>
-            </TR>
-    </TABLE>
+## attempt to get the user out of the temp hashtable
+#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if ($user)
+    #set ($regGroup = $intake.Register.mapTo($user))
+    #set ($emailValue = $user.Email)
+#else
+    #set ($regGroup = $intake.Register.Default)
+    #set ($emailValue = $data.Parameters.Email)
 #end
+#set ($confirmValue = $data.Parameters.Confirm)
+
+<p>
+Thanks for registering!
+</p>
+
+<p>
+We have now sent you a confirmation message via email to verify that
+the email address you supplied is working properly. To complete your
+registration click on the link in the email or type in the confirmation
+code below. If you do not choose to confirm your account now, you will
+be asked to confirm it the next time you try to login.
+</p>
 
 <form method="post" action="$link.setPage("Confirm.vm")">
     <input type="hidden" name="action" value="Confirm">
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
     <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
 
-#set ($user = $data.User)
-#set ($email = $data.Parameters.Email)
-#if ($email.length() > 0)
-    $user.setEmail($email)
-#end
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="1">
  <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- <tr>
-  <td nowrap class="InputHeader">Email Address:</td>
-  <td width="80%"><input type="text" size="25" name="Email" value="$!user.Email"></td>
- </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"></td>
- </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- <tr>
-  <td nowrap class="InputHeader">Confirmation Code:</td>
-  <td><input type="text" size="25" name="Confirm" value="$!data.Parameters.Confirm"></td>
- </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"></td>
- </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- </tr>
-  <td>&nbsp;</td>
+  <th>Email Address:</th>
   <td>
+    <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue">
+    #fieldErrorMsg($regGroup.Email "")
+  </td>
+ </tr>
+ <tr>
+  <th>Confirmation Code:</th>
+  <td>
+    <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue">
+    #fieldErrorMsg($regGroup.Confirm "")
+  </td>
+ </tr>
+ <tr>
+  <td colspan="2">
       <input type="submit" name="eventSubmit_doCancel" value="Cancel">
       <input type="submit" name="eventSubmit_doConfirm" value="Confirm">
   </td>
  </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="2" bgcolor="#cccccc"></td>
- </tr>
- <tr>
-  <td height="4" colspan="2"></td>
- </tr>
 </table>
+</div>
+$intake.declareGroups()
 </form>
