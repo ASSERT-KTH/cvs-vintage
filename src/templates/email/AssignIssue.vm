@@ -1,5 +1,5 @@
 $action
 
-
+You can view the issue detail at the following URL:
 <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>
 
