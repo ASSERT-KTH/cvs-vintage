@@ -22,10 +22,12 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.search.*;
+import org.columba.mail.folder.headercache.AbstractHeaderCache;
+import org.columba.mail.folder.headercache.LocalHeaderCache;
+import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.LuceneSearchEngine;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
@@ -37,6 +39,7 @@ public abstract class LocalFolder extends Folder {
 	protected AbstractMessage aktMessage;
 	protected DataStorageInterface dataStorage;
 	protected AbstractSearchEngine searchEngine;
+	protected AbstractHeaderCache headerCache;
 
 	public LocalFolder(FolderItem item) {
 		super(item);
@@ -259,6 +262,13 @@ public abstract class LocalFolder extends Folder {
 	 */
 	public String getDefaultChild() {
 		return null;
+	}
+	
+	public AbstractHeaderCache getHeaderCacheInstance() {
+		if( headerCache == null) {
+			headerCache =  new LocalHeaderCache(this);
+		}
+		return headerCache;
 	}
 
 }

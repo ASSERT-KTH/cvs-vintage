@@ -28,10 +28,16 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.Mutex;
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.Message;
+import org.columba.mail.parser.Rfc822Parser;
 
 /**
  * @author freddy
@@ -133,87 +139,58 @@ public abstract class AbstractHeaderCache {
 		// if there exists a ".header" cache-file
 		//  try to load the cache	
 		if (!headerCacheLoaded) {
-			try {
-				// prevent multiple workers from creating or modifying a header cache and its disk file
-				needToRelease = takeMutex();
-				if (headerCacheLoaded) { // if another thread already loaded it
-					return headerList;
-				}
-				if (headerFile.exists()) {
-					load(worker);
-					headerCacheLoaded = true;
-				} else {
-					headerList =
-						folder.getDataStorageInstance().recreateHeaderList(
-							worker);
-					headerCacheLoaded = true;
-				}
-			} catch (Exception ex) { // Infinite Loop Danger if we retry -> shouldn't happen here
-				/*
-				System.out.println(
-					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)");
-				//ex.printStackTrace();
-				throw new RuntimeException(
-					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)",
-					ex);*/
-				headerList =
-				folder.getDataStorageInstance().recreateHeaderList(worker);
-
-				headerCacheLoaded = true;
-
-			} finally {
-				if (needToRelease) {
-					releaseMutex();
-				}
+			// prevent multiple workers from creating or modifying a header cache and its disk file
+			// needToRelease = takeMutex();
+			// Only one operation is allowed on a folder -> dont need that
+			if (headerCacheLoaded) { // if another thread already loaded it
+				return headerList;
 			}
 
+			if (headerFile.exists()) {
+				try {
+					load(worker);
+				} catch (Exception e) {
+					sync(worker);
+				}
+			} else {
+				sync(worker);
+			}
+			headerCacheLoaded = true;
 		}
-
-		//System.out.println("headerList=" + headerList);
 
 		return headerList;
 	}
 
 	public void load(WorkerStatusController worker) throws Exception {
-		
+
 		if (MainInterface.DEBUG) {
 			ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		}
 
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
-		ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(istream));
+		ObjectInputStream ois =
+			new ObjectInputStream(new BufferedInputStream(istream));
 
 		int capacity = ois.readInt();
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("capacity=" + capacity);
-                }
+			ColumbaLogger.log.info("capacity=" + capacity);
+		}
 		boolean needToRelease = false;
 		int mcount = folder.getDataStorageInstance().getMessageCount();
 		if (capacity != mcount) {
 			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info(
-				"need to recreateHeaderList() because capacity="
-					+ capacity + " and getMessageCount()=" + mcount);
-                        }
-			try {
-				// prevent multiple workers from creating or modifying a header cache and its disk file
-				needToRelease = takeMutex();
-				// recheck condition in case another thread did the work
-				if (!headerCacheLoaded) {
-					headerList =
-						folder.getDataStorageInstance().recreateHeaderList(
-							worker);
-				}
-			} finally {
-				if (needToRelease) {
-					releaseMutex();
-				}
+				ColumbaLogger.log.info(
+					"need to recreateHeaderList() because capacity="
+						+ capacity
+						+ " and getMessageCount()="
+						+ mcount);
 			}
-			return;
+
+			throw new FolderInconsistentException();
 		}
 
 		headerList = new HeaderList(capacity);
-		
+
 		//System.out.println("Number of Messages : " + capacity);
 
 		if (worker != null)
@@ -227,8 +204,8 @@ public abstract class AbstractHeaderCache {
 		int nextUid = -1;
 
 		for (int i = 0; i < capacity; i++) {
-			
-			if ( (worker != null) && (i % 500 == 0) )
+
+			if ((worker != null) && (i % 500 == 0))
 				worker.setProgressBarValue(i);
 
 			//ColumbaHeader h = message.getHeader();
@@ -262,7 +239,7 @@ public abstract class AbstractHeaderCache {
 			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
 		}
 		folder.setNextMessageUid(nextUid);
-                //worker.setDisplayText(null);
+		//worker.setDisplayText(null);
 		// close stream
 		ois.close();
 		worker.setProgressBarValue(capacity);
@@ -312,5 +289,68 @@ public abstract class AbstractHeaderCache {
 
 	protected abstract void saveHeader(ObjectOutputStream p, HeaderInterface h)
 		throws Exception;
+
+	/**
+	 * @param list
+	 */
+	public void setHeaderList(HeaderList list) {
+		headerList = list;
+	}
+
+	public void sync(WorkerStatusController worker) throws Exception {
+		if (worker != null) {
+			worker.setDisplayText("Syncing Header-Cache");
+		}
+		DataStorageInterface ds = folder.getDataStorageInstance();
+
+		Object[] uids = ds.getMessageUids();
+
+		headerList = new HeaderList(uids.length);
+
+		// parse all message files to recreate the header cache
+		Rfc822Parser parser = new Rfc822Parser();
+		ColumbaHeader header;
+		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
+
+		if (worker != null)
+			worker.setProgressBarMaximum(uids.length);
+
+		for (int i = 0; i < uids.length; i++) {
+			try {
+				String source = ds.loadMessage(uids[i]);
+
+				header = parser.parseHeader(source);
+
+				AbstractMessage m = new Message(header);
+				ColumbaHeader h = (ColumbaHeader) m.getHeader();
+
+				parser.addColumbaHeaderFields(h);
+
+				int size = source.length() >> 10; // Size in KB
+				h.set("columba.size", new Integer(size));
+
+				h.set("columba.uid", uids[i]);
+
+				if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+					messageFolderInfo.incRecent();
+				if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+					messageFolderInfo.incUnseen();
+
+				messageFolderInfo.incExists();
+
+				headerList.add(header, uids[i]);
+
+				m.freeMemory();
+
+				if (worker != null && i % 500 == 0) {
+					worker.setProgressBarValue(i);
+				}
+			} catch (Exception ex) {
+				ColumbaLogger.log.error(
+					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
+			}
+
+		}
+	}
 
 }

@@ -408,4 +408,11 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 			.search(generateSearchString( filter) , ((IMAPFolder) folder).getImapPath(), worker);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.core.command.WorkerStatusController)
+	 */
+	public void sync(WorkerStatusController wc)  throws Exception{
+
+	}
+
 }

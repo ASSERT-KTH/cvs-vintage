@@ -49,12 +49,13 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownPluginInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
-import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.parser.Rfc822Parser;
 
@@ -91,6 +92,8 @@ public class LuceneSearchEngine
 
 	Mutex indexMutex;
 
+	private Rfc822Parser rfcParser;
+
 	private final static String[] caps =
 		{ "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield" };
 
@@ -101,6 +104,8 @@ public class LuceneSearchEngine
 		super(folder);
 
 		MainInterface.shutdownManager.register(this);
+
+		rfcParser = new Rfc822Parser();
 
 		analyzer = new CAnalyzer();
 
@@ -215,7 +220,7 @@ public class LuceneSearchEngine
 			// FIXME
 			//field = criteria.getHeaderItemString().toLowerCase();
 			field = criteria.getHeaderItemString();
-			
+
 			TokenStream tokenStream =
 				analyzer.tokenStream(
 					field,
@@ -267,54 +272,57 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected LinkedList queryEngine(FilterRule filter,
+	protected LinkedList queryEngine(
+		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
-                
+
 		Query query = getLuceneQuery(filter, analyzer);
 
 		LinkedList result = search(query);
 
 		ListTools.substract(result, deleted);
 
-		//DEBUG
-		if( MainInterface.DEBUG) {
-			checkResult(result, worker);
+		if( checkResult(result, worker) == false ) {
+			// Search again
+			result = search(query);
+			ListTools.substract(result, deleted);
 		}
 
 		return result;
 	}
 
 	protected LinkedList search(Query query) throws IOException {
-        boolean needToRelease = false;
+		boolean needToRelease = false;
 		LinkedList result = new LinkedList();
-        try {
-		    needToRelease = indexMutex.getMutex();
+		try {
+			needToRelease = indexMutex.getMutex();
 
-		if (getFileReader().numDocs() > 0) {
-			Hits hitsFile =
-				new IndexSearcher(getFileReader()).search(query);
+			if (getFileReader().numDocs() > 0) {
+				Hits hitsFile =
+					new IndexSearcher(getFileReader()).search(query);
 
-			for (int i = 0; i < hitsFile.length(); i++) {
-				result.add(
-					new Integer(hitsFile.doc(i).getField("uid").stringValue()));
+				for (int i = 0; i < hitsFile.length(); i++) {
+					result.add(
+						new Integer(
+							hitsFile.doc(i).getField("uid").stringValue()));
+				}
+			}
+
+			if (getRAMReader().numDocs() > 0) {
+				Hits hitsRAM = new IndexSearcher(getRAMReader()).search(query);
+
+				for (int i = 0; i < hitsRAM.length(); i++) {
+					result.add(
+						new Integer(
+							hitsRAM.doc(i).getField("uid").stringValue()));
+				}
+			}
+		} finally {
+			if (needToRelease) {
+				indexMutex.releaseMutex();
 			}
 		}
-
-		if (getRAMReader().numDocs() > 0) {
-			Hits hitsRAM =
-				new IndexSearcher(getRAMReader()).search(query);
-
-			for (int i = 0; i < hitsRAM.length(); i++) {
-				result.add(
-					new Integer(hitsRAM.doc(i).getField("uid").stringValue()));
-			}
-		}
-        } finally {
-            if (needToRelease) {
-		indexMutex.releaseMutex();
-            }
-        }
 		return result;
 	}
 
@@ -333,6 +341,23 @@ public class LuceneSearchEngine
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
 	 */
 	public void messageAdded(AbstractMessage message) throws Exception {
+		Document messageDoc = getDocument(message);
+
+		boolean needToRelease = false;
+		try {
+			needToRelease = indexMutex.getMutex();
+			IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, false);
+			writer.addDocument(messageDoc);
+			writer.close();
+			incOperationCounter();
+		} finally {
+			if (needToRelease) {
+				indexMutex.releaseMutex();
+			}
+		}
+	}
+
+	private Document getDocument(AbstractMessage message) {
 		Document messageDoc = new Document();
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
@@ -341,7 +366,7 @@ public class LuceneSearchEngine
 		if (message.getMimePartTree() == null) {
 			String source = message.getSource();
 
-			message = new Rfc822Parser().parse(source, true, header, 0);
+			message = rfcParser.parse(source, true, header, 0);
 			message.setSource(source);
 		}
 
@@ -358,19 +383,7 @@ public class LuceneSearchEngine
 		MimePart body = message.getMimePartTree().getFirstTextPart("plain");
 		if (body != null)
 			messageDoc.add(Field.UnStored("body", body.getBody()));
-
-        boolean needToRelease = false;
-        try {
-            needToRelease = indexMutex.getMutex();
-		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, false);
-		writer.addDocument(messageDoc);
-		writer.close();
-		incOperationCounter();
-        } finally {
-            if (needToRelease) {
-		indexMutex.releaseMutex();
-            }
-        }
+		return messageDoc;
 	}
 
 	/**
@@ -412,7 +425,7 @@ public class LuceneSearchEngine
 
 		while (it.hasNext()) {
 			String uid = it.next().toString();
-			if( ramReader.delete(new Term("uid", uid)) == 0) {
+			if (ramReader.delete(new Term("uid", uid)) == 0) {
 				fileReader.delete(new Term("uid", uid));
 			}
 		}
@@ -435,7 +448,7 @@ public class LuceneSearchEngine
 
 	private void initRAMDir() throws IOException {
 		ramIndexDir = new RAMDirectory();
-		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, true);		
+		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, true);
 		writer.close();
 		ramLastModified = -1;
 	}
@@ -468,50 +481,77 @@ public class LuceneSearchEngine
 		return caps;
 	}
 
-	private void checkResult(List result, WorkerStatusController wc) {
+	private boolean checkResult(List result, WorkerStatusController wc) {
 		ListIterator it = result.listIterator();
 		try {
 			while (it.hasNext()) {
-				if (!folder.exists(it.next(), wc))
-					throw new Exception("Mail found in index but doesn't exist in mailbox");
+				if (!folder.exists(it.next(), wc)) {
+					result.clear();
+					sync(wc);
+					return false;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.clear();
-			recreateIndex(wc);
 		}
-
+		return true;
 	}
 
 	/**
 	 * @see org.columba.mail.folder.AbstractSearchEngine#reset()
 	 */
-	public void reset() throws Exception {
+	public void reset(WorkerStatusController wc) throws Exception {
 		createIndex();
 	}
 
-	public void recreateIndex(WorkerStatusController wc) {
-		ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
-		
-		wc.setDisplayText("Lucene Index inconsistent - recreation forced");
-		
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.mail.folder.DataStorageInterface, org.columba.core.command.WorkerStatusController)
+	 */
+	public void sync(WorkerStatusController wc) throws Exception {
+		//ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
+
+		DataStorageInterface ds = ((LocalFolder)folder).getDataStorageInstance();
+		HeaderList hl = ((LocalFolder)folder).getHeaderList(wc);
+
+		wc.setDisplayText("Syncing Lucene Index");
+		wc.setProgressBarValue(0);
+
 		try {
 			createIndex();
-			Object[] uids =
-				folder.getUids(NullWorkerStatusController.getInstance());
+			IndexWriter writer =
+				new IndexWriter(luceneIndexDir, analyzer, false);
 
-			wc.setProgressBarMaximum(uids.length);
+			int count = hl.count();
+			wc.setProgressBarMaximum(count);
+			
+			Object uid;
+			int i=0;
+					
+			for (Enumeration e = hl.keys(); e.hasMoreElements();) {
+				uid = e.nextElement();
 
-			for (int i = 0; i < uids.length; i++) {
-				messageAdded(
-					((LocalFolder) folder).getMessage(
-						uids[i],
-						NullWorkerStatusController.getInstance()));
-				if( i % 500 == 0 )
+				String source = ds.loadMessage(uid );
+
+				AbstractMessage message =
+					rfcParser.parse(source, true, (ColumbaHeader) hl.getHeader(uid), 0);
+				message.setSource(source);
+				
+				Document doc = getDocument(message);
+
+				writer.addDocument(doc);
+				
+				if (++i % 50 == 0)
 					wc.setProgressBarValue(i);
 			}
-			wc.setProgressBarValue(uids.length);
+
+			wc.setProgressBarValue(count);
+
+			writer.optimize();
+			writer.close();
+
 		} catch (Exception e) {
+			ColumbaLogger.log.error(
+				"Creation of Lucene Index failed :" + e.getLocalizedMessage());
 		}
 	}
 

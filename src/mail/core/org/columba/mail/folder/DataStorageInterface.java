@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author freddy
@@ -27,15 +25,16 @@ import org.columba.mail.message.HeaderList;
  * Window>Preferences>Java>Code Generation.
  */
 public interface DataStorageInterface {
-	public abstract void saveMessage( String source, Object uid ) throws Exception;
+	public void saveMessage( String source, Object uid ) throws Exception;
 	
 	
-	public abstract String loadMessage( Object uid ) throws Exception ;
-	public abstract void removeMessage( Object uid );
+	public String loadMessage( Object uid ) throws Exception ;
+	public void removeMessage( Object uid );
 	
-	public abstract int getMessageCount();
+	public int getMessageCount();
 	
-	public abstract boolean exists( Object uid ) throws Exception ;
+	public boolean exists( Object uid ) throws Exception ;
 	
-	public abstract HeaderList recreateHeaderList( WorkerStatusController worker ) throws Exception ;
+	public Object[] getMessageUids();
+	
 }

@@ -45,10 +45,17 @@ import org.columba.mail.plugin.AbstractFilterPluginHandler;
  */
 public abstract class AbstractSearchEngine {
 
+	public static final int INIT = 0;
+	public static final int RANDOM = 1;
+
+	private int mode;
+
 	public AbstractSearchEngine(Folder folder) {
 		this.folder = folder;
 
 		filterCache = new Hashtable();
+		
+		mode = RANDOM;
 	}
 
 	public void messageAdded(AbstractMessage message) throws Exception {
@@ -57,7 +64,7 @@ public abstract class AbstractSearchEngine {
 	public void messageRemoved(Object uid) throws Exception {
 	};
 
-	public void reset() throws Exception {
+	public void reset(WorkerStatusController wc) throws Exception {
 	};
 
 	protected synchronized AbstractFilter getFilter(String type) {
@@ -380,5 +387,7 @@ public abstract class AbstractSearchEngine {
 
 		return searchMessages(filter, null, worker);
 	}
+	
+	public abstract void sync(WorkerStatusController wc) throws Exception;
 
 }

@@ -79,4 +79,11 @@ public class DefaultSearchEngine extends AbstractSearchEngine {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.core.command.WorkerStatusController)
+	 */
+	public void sync(WorkerStatusController wc)  throws Exception{
+
+	}
+
 }
