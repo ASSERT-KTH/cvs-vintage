@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.101 2002/03/28 00:27:18 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.102 2002/03/28 03:56:04 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -127,7 +127,6 @@ public class ScarabModule
         perms.add(permission);
         return getUsers(perms);
     }
-
 
     /**
      * @see org.tigris.scarab.om.Module#getUsers(List)
