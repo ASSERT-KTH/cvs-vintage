@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -160,10 +161,13 @@ public class CharsetManager implements ActionListener {
 	private int getCharsetId(String name) {
 		// default should be 0
 		// -> charsets[0] == "auto"
+		if ( name == null ) return -1;
 		int charsetId = 0;
+		String charsetCanonicalName = Charset.forName( name ).name();
+		//System.out.println( name + " -> " + charsetCanonicalName);
 
 		for (int i = 0; i < charsets.length; i++) {
-			if (charsets[i].equalsIgnoreCase(name)) {
+			if (charsets[i].equals(charsetCanonicalName)) {
 				charsetId = i;
 			}
 		}
