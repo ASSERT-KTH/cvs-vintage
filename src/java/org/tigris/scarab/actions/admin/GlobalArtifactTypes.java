@@ -69,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.22 2002/09/24 02:28:56 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.23 2002/10/14 21:37:38 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -142,6 +142,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             .hasPermission(ScarabSecurity.DOMAIN__ADMIN,
                            scarabR.getCurrentModule()))
         {
+            boolean atLeastOne = false;
             IssueType issueType;
             List issueTypes = IssueTypePeer.getAllIssueTypes(true);
             for (int i =0; i<issueTypes.size(); i++)
@@ -149,17 +150,29 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                issueType = (IssueType)issueTypes.get(i);
                Group group = intake.get("IssueType", 
                              issueType.getQueryKey(), false);
-               Field deleted = group.get("Deleted");
-               boolean oldValue = issueType.getDeleted();
-               deleted.setProperty(issueType);
-               issueType.save();
-               if (deleted.toString().equals("true") && !oldValue)
+               if (group != null) 
                {
-                   issueType.deleteModuleMappings(user);
-                   //issueType.deleteIssueTypeMappings(user);
-               }
+                   Field deleted = group.get("Deleted");
+                   boolean oldValue = issueType.getDeleted();
+                   deleted.setProperty(issueType);
+                   issueType.save();
+                   if (deleted.toString().equals("true") && !oldValue)
+                   {
+                       atLeastOne = true;
+                       issueType.deleteModuleMappings(user);
+                       //issueType.deleteIssueTypeMappings(user);
+                   }
+               }               
             }
-            scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
+            if (atLeastOne) 
+            {
+                scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
+            }
+            else 
+            {
+                scarabR.setAlertMessage(l10n.get("NoIssueTypesSelected"));
+            }
+            
          }
          else
          {
