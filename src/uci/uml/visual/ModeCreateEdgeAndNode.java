@@ -26,7 +26,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.2 1999/04/22 20:24:36 jrobbins Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.3 1999/04/27 02:16:25 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -236,6 +236,11 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
       // If its a FigNode, then check within the  
       // FigNode to see if a port exists 
       Object foundPort = destFigNode.deepHitPort(x, y);
+      if (foundPort == null) {
+	Vector portFigs = destFigNode.getPortFigs();
+	if (portFigs.size() > 0)
+	  foundPort = ((Fig)portFigs.elementAt(0)).getOwner();
+      }
 
       FigPoly p = (FigPoly) _newItem;
       _editor.damaged(p);
