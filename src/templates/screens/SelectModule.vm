@@ -36,8 +36,8 @@
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
-    <th>Module name</th>
-    <th>Module description</th>
+    <th>Name</th>
+    <th>Description</th>
 </tr>
 
 #set ($template = $data.Parameters.getString("template", ""))
