@@ -10,6 +10,8 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -20,8 +22,6 @@ import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
 
 import org.jboss.logging.Logger;
 
-import org.jboss.ejb.FinderResults;
-
 /**
  * Keeps a map from finder name to specific finder command, and
  * delegates to the relevant specific finder command.
@@ -31,7 +31,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -39,6 +39,10 @@ import org.jboss.ejb.FinderResults;
  *   <ul>
  *   <li> Get Rid of debug flag, use log4j instead
  *   <li> Make load of automated finder method work with local home interfaces
+ *   </ul>
+ *   <p><b>20020525 Dain Sundstrom:</b>
+ *   <ul>
+ *   <li> Replaced FinderResults with Collection
  *   </ul>
  *
  */
@@ -174,7 +178,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 
    // JPMFindEntitiesCommand implementation -------------------------
 
-   public FinderResults execute(Method finderMethod,
+   public Collection execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
       throws Exception
@@ -191,7 +195,13 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 
       // JF: Shouldn't tolerate the "not found" case!
 
-      return (finderCommand != null) ?
-         finderCommand.execute(finderMethod, args, ctx) : new FinderResults(new ArrayList(),null,null,null);
+      if(finderCommand != null) 
+      {
+         return finderCommand.execute(finderMethod, args, ctx);
+      }
+      else 
+      {
+         return Collections.EMPTY_LIST;
+      }
    }
 }

@@ -10,7 +10,7 @@ package org.jboss.ejb.plugins.jaws;
  * Interface for JAWSPersistenceManager Command Factories 
  *    
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface JPMCommandFactory
 {
@@ -41,8 +41,6 @@ public interface JPMCommandFactory
    public JPMRemoveEntityCommand createRemoveEntityCommand();
    
    public JPMLoadEntityCommand createLoadEntityCommand();
-   
-   public JPMLoadEntitiesCommand createLoadEntitiesCommand();
    
    public JPMStoreEntityCommand createStoreEntityCommand();
    

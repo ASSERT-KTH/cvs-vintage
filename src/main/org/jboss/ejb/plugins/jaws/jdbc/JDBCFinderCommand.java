@@ -26,7 +26,6 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -37,7 +36,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -49,6 +48,11 @@ import org.jboss.ejb.FinderResults;
  *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
  *   <ul>
  *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *   
+ *   <p><b>20020525 Dain Sundstrom:</b>
+ *   <ul>
+ *   <li> Replaced FinderResults with collection
  *   </ul>
  *
  */
@@ -102,24 +106,19 @@ public abstract class JDBCFinderCommand
    
    // JPMFindEntitiesCommand implementation -------------------------
 
-   public FinderResults execute(Method finderMethod,
+   public Collection execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
-      FinderResults result = null;
-
       try
       {
-         Collection keys = (Collection)jdbcExecute(args);
-         result = new FinderResults(keys, null, null, null);
+         return (Collection)jdbcExecute(args);
       } catch (Exception e)
       {
          log.error("Failed to create finder results", e);
          throw new FinderException("Find failed: " + e);
       }
-
-      return result;
    }
 
    // JDBCQueryCommand overrides ------------------------------------

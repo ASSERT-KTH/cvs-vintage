@@ -28,7 +28,6 @@ import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMFindEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
-import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
@@ -60,7 +59,7 @@ import org.jboss.util.TimerTask;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -290,11 +289,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public JPMLoadEntityCommand createLoadEntityCommand()
    {
       return new JDBCLoadEntityCommand(this);
-   }
-   
-   public JPMLoadEntitiesCommand createLoadEntitiesCommand()
-   {
-      return new JDBCLoadEntitiesCommand(this);
    }
    
    public JPMStoreEntityCommand createStoreEntityCommand()
