@@ -1,73 +1,39 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
     "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
-
 <html>
  <head>
   <title>$page.Title</title>
-  <link rel="stylesheet" type="text/css" href="/scarab/main0.css"/>
+  <link rel="stylesheet" type="text/css" href="/scarab/csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="/scarab/csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="/scarab/csi/style/compact.css" />
  </head>
-
-<body>
-   <table border="0" cellspacing="0" cellpadding="0" width="100%">
+ <body>
+  <form action="#" method="get">
+   <div id="globalnav">
+    <p><a href="#">globalnav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
+   </div>
+   <table border="0" cellspacing="0" cellpadding="0" width="95%">
     <tr>
-     <!-- Top -->
-
-     <td class="globalnav" colspan="2"><a href="#">globalfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a> </td>
-     <!-- Top -->
-    </tr>
-
-    <tr>
-     <!-- Left -->
-
-     <td id="leftprojnav" width="100">
-
-     <form action="$link.setPage("IssueView.vm")" method="GET">
-     Issue# <input type="text" name="id" size="8" maxlength="255">
-            <input type="submit" name="Submit" value="Find">
-     </form>
-
-      <a href="#">projectnav</a> 
-
-      <ul>
-       <li><a href="#">item1</a></li>
-
-       <li><a href="#">item2</a></li>
-      </ul>
-
-      <div class="leftprojnav">
-       <a href="http://collabnet.cleverchimp.com/dtds/validator.html" class="validate">validate me</a>
+     <td width="100" id="leftcol">
+      <div id="projnav">
+       <a href="#">projectnav</a> 
+       <ul>
+        <li><a href="#">item1</a></li>
+        <li><a href="#">item2</a></li>
+       </ul>
+       <p><a href="http://collabnet.cleverchimp.com/dtds/validator.html">validate me</a></p>
       </div>
      </td>
-     <!-- Left --><!-- Right -->
-
-     <td>
+     <td id="bodycol">
       <div id="featurenav">
-       <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr>
-         <td width="65" rowspan="2"><img src="/scarab/images/bug.gif" width="55" height="43" alt="track this pal" border="0" /></td>
-
-         <td><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></td>
-        </tr>
-
-        <tr>
-         <td>
-          <div class="crumbing">
-           <a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2
-          </div>
-         </td>
-        </tr>
-       </table>
+       <p class="crumbing"><a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2</p>
+       <p><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
       </div>
-
-<p>#actionErrorMsg()</p>
 $screen_placeholder
-
-    </td>
-    <!-- Right -->
+     </td>
     </tr>
    </table>
-
+  </form>
 $navigation.setTemplate("/ScarabBottom.vm")
-
-</body>
+ </body>
 </html>
