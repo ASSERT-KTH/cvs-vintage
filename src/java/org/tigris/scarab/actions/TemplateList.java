@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.8 2001/10/09 19:51:39 elicia Exp $
+    @version $Id: TemplateList.java,v 1.9 2001/10/16 18:50:47 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -177,7 +177,8 @@ public class TemplateList extends RequireLoginFirstAction
             if (key.startsWith("delete_"))
             {
                templateId = key.substring(7);
-               Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(templateId));
+               Issue issue = (Issue) IssuePeer
+                  .retrieveByPK(new NumberKey(templateId));
                try
                {
                    issue.delete(user);
@@ -188,7 +189,7 @@ public class TemplateList extends RequireLoginFirstAction
                }
             }
         } 
-     } 
+    } 
 
     public void doCreatenew( RunData data, TemplateContext context )
         throws Exception

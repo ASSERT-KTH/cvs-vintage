@@ -160,6 +160,12 @@ public class ScarabRequestTool
     private ModuleEntity currentModule = null;
 
     /**
+     * A IssueType object which represents the current issue type
+     * selected by the user within a request.
+     */
+    private IssueType currentIssueType = null;
+
+    /**
      * The issue that is currently being entered.
      */
     private Issue reportingIssue = null;
@@ -573,6 +579,27 @@ try{
     }
 
     /**
+     * Get a specific issue type by key value. Returns null if
+     * the Issue Type could not be found
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>IssueType</code> value
+     */
+    public IssueType getIssueType(String key)
+    {
+        IssueType issueType = null;
+        try
+        {
+            issueType = (IssueType) 
+                IssueTypePeer.retrieveByPK(new NumberKey(key));
+        }
+        catch (Exception e)
+        {
+        }
+        return issueType;
+    }
+
+    /**
      * Get an issue type object.
      */
     public IssueType getIssueType()
@@ -718,6 +745,24 @@ try{
     }
 
     /**
+     * Gets the IssueType associated with the information
+     * passed around in the query string. Returns null if
+     * the Module could not be found.
+     */
+    public IssueType getCurrentIssueType() throws Exception
+    {
+        if (currentIssueType == null)
+        {
+            currentIssueType = getIssueType(
+                data.getParameters()
+                .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
+        }
+        // temp work around
+        currentIssueType = (IssueType)IssueTypePeer.retrieveByPK(new NumberKey("1"));
+        return currentIssueType;
+    }
+
+    /**
      * The issue that is currently being entered.
      *
      * @return an <code>Issue</code> value
@@ -757,6 +802,14 @@ try{
     public void setCurrentModule(ModuleEntity me)
     {
         currentModule = me;
+    }
+
+    /**
+     * Sets the current ArtifactType
+     */
+    public void setCurrentIssueType(IssueType issueType)
+    {
+        currentIssueType = issueType;
     }
 
     /**
