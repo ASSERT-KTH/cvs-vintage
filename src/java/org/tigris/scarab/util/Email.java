@@ -53,13 +53,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.io.StringWriter;
 import javax.mail.SendFailedException;
 
 import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
+import org.apache.fulcrum.velocity.ContextAdapter;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.fulcrum.ServiceException;
+import org.apache.fulcrum.TurbineServices;
 
 import org.apache.turbine.Turbine;
 
@@ -70,6 +73,7 @@ import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.email.VelocityEmail;
 
 /**
  * Sends a notification email.
@@ -77,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.27 2003/04/22 01:36:08 jon Exp $
+ * @version $Id: Email.java,v 1.28 2003/04/24 23:02:57 jon Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -237,13 +241,29 @@ public class Email extends TemplateEmail
     }
 
     /**
-     * FIXME: Need to override this method and make it so that 
-     * we create our own velocity engine which renders the template
+     * Override the super.handleRequest() and process the template
+     * our own way.
+     * This could have been handled in a more simple way, which was
+     * to create a new service and associate the emails with a different
+     * file extension which would have prevented the need to override
+     * this method, however, that was discovered after the fact and it
+     * also seemed to be a bit more work to change the file extension. 
      */
     protected String handleRequest()
         throws ServiceException
     {
-        return super.handleRequest();
+        String result = null;
+        try
+        {
+            result = VelocityEmail
+                     .handleRequest(new ContextAdapter(getContext()),
+                                    getTemplate());
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(e);
+        }
+        return result;
     }
 
     private static Email getEmail(EmailContext context,
@@ -334,14 +354,22 @@ public class Email extends TemplateEmail
     {
         template = prependDir(template);
         String result = null;
-        try 
-        {            
-            result = TurbineTemplate
-                .handleRequest(context, template).trim();
+        try
+        {
+            // render the template
+            result = VelocityEmail
+                .handleRequest(new ContextAdapter(context), template);
+            if (result != null)
+            {
+                result.trim();
+            }
+            // in some of the more complicated templates, we set a context
+            // variable so that there is not a whole bunch of whitespace
+            // that can make it into the subject...
             String subject = (String)context.get("emailSubject");
             if (subject != null) 
             {
-                result = subject;
+                result = subject.trim();
             }
         }
         catch (Exception e)
