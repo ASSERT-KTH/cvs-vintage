@@ -1,7 +1,7 @@
 ; Inno Setup installer script for jEdit
 ; Ollie Rutherfurd <oliver@jedit.org>
 ;
-; $Id: win32installer.iss,v 1.2 2004/07/21 21:31:58 orutherfurd Exp $
+; $Id: win32installer.iss,v 1.3 2004/07/21 21:38:18 orutherfurd Exp $
 ;
 ; For each release:
 ;
@@ -159,4 +159,4 @@ begin
 	end;
 end;
 
-// :noTabs=false:lineSeparator=\r\n:tabSize=4:
+// :noTabs=false:tabSize=4:
