@@ -13,10 +13,10 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
 
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.menu.MailMenu;
 import org.columba.mail.gui.message.MessageView;
+import org.columba.mail.main.MailInterface;
 
 import java.awt.BorderLayout;
 
@@ -51,7 +51,8 @@ public class MessageFrameView extends AbstractFrameView {
      * @see org.columba.core.gui.frame.AbstractFrameView#createToolbar(org.columba.core.gui.frame.FrameMediator)
      */
     protected ToolBar createToolbar(FrameMediator controller) {
-        return new ToolBar(MailInterface.config.get("messageframe_toolbar").getElement("toolbar"),
+        return new ToolBar(MailInterface.config.get("messageframe_toolbar")
+                                               .getElement("toolbar"),
             controller);
     }
 

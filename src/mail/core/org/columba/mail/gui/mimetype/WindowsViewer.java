@@ -48,7 +48,10 @@ public class WindowsViewer extends AbstractViewer {
             Process proc = null;
 
             try {
-                String[] cmd = new String[] {"rundll32", "url.dll,FileProtocolHandler", url.toString()};
+                String[] cmd = new String[] {
+                        "rundll32", "url.dll,FileProtocolHandler",
+                        url.toString()
+                    };
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
                     " " + cmd[2]);
@@ -89,28 +92,28 @@ public class WindowsViewer extends AbstractViewer {
             Process proc = null;
 
             if (OSInfo.isWinNT()) {
-                String[] cmd = new String[] {"cmd.exe", "/C", filename};
+                String[] cmd = new String[] { "cmd.exe", "/C", filename };
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
                     " " + cmd[2]);
                 proc = rt.exec(cmd);
             } else if (OSInfo.isWin95() || OSInfo.isWin98() ||
                     OSInfo.isWinME()) {
-                String[] cmd = new String[] {"start", filename};
+                String[] cmd = new String[] { "start", filename };
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1]);
                 proc = rt.exec(cmd);
             } else if (OSInfo.isWin2K() || OSInfo.isWinXP()) {
                 /*
-                 * *20030526, karlpeder* fixing bug #739277 by:
-                 * Changing cmd line from "cmd.exe /C ..." to "cmd.exe /C start ..."
-                 * So program execution is not blocked until viewer terminates.
-                 * NB: WinNT, Win95, Win98, WinME not considered (not able to try it out)
-                 *
-                 * *20030713, karlpeder* fixing bug #763211 by moving first " in filename
-                 * and adding extra parameter to the "start" command = title of
-                 * dos window (which is not shown here - but is necessary).
-                 */
+ * *20030526, karlpeder* fixing bug #739277 by:
+ * Changing cmd line from "cmd.exe /C ..." to "cmd.exe /C start ..."
+ * So program execution is not blocked until viewer terminates.
+ * NB: WinNT, Win95, Win98, WinME not considered (not able to try it out)
+ *
+ * *20030713, karlpeder* fixing bug #763211 by moving first " in filename
+ * and adding extra parameter to the "start" command = title of
+ * dos window (which is not shown here - but is necessary).
+ */
                 String[] cmd = new String[] {
                         "cmd.exe", "/C", "start", "\"dummy\"",
                         "\"" + filename + "\""
@@ -148,11 +151,11 @@ public class WindowsViewer extends AbstractViewer {
     }
 
     /**
-     * Used to open a file with an application specified by the user
-     * using the standard Windows Open With dialog.
-     * @param        filename        Name of file to open
-     * @author         Karl Peder Olesen (karlpeder) 20030714
-     */
+ * Used to open a file with an application specified by the user
+ * using the standard Windows Open With dialog.
+ * @param        filename        Name of file to open
+ * @author         Karl Peder Olesen (karlpeder) 20030714
+ */
     protected void openDocumentWith(String filename) {
         // TODO: Test with other platforms than Win2000
         try {

@@ -11,7 +11,6 @@ import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;

@@ -120,24 +120,24 @@ public class VCardParser {
                         card.formatSet(key0.toLowerCase(), valuebuf.toString());
                     }
                     /*
-                    else if ( key0.toLowerCase().equalsIgnoreCase("adr") )
-                    {
+else if ( key0.toLowerCase().equalsIgnoreCase("adr") )
+{
 
-                            String s = (String) values.get(0);
-                            card.set( "adr","street", s );
-                            s = (String) values.get(1);
-                            card.set( "adr","locality", s );
-                            s = (String) values.get(2);
-                            card.set( "adr","region", s );
-                            s = (String) values.get(3);
-                            card.set( "adr","pcode", s );
-                            s = (String) values.get(4);
-                            card.set( "adr","country", s );
+        String s = (String) values.get(0);
+        card.set( "adr","street", s );
+        s = (String) values.get(1);
+        card.set( "adr","locality", s );
+        s = (String) values.get(2);
+        card.set( "adr","region", s );
+        s = (String) values.get(3);
+        card.set( "adr","pcode", s );
+        s = (String) values.get(4);
+        card.set( "adr","country", s );
 
 
 
-                    }
-                    */
+}
+*/
                     else {
                         card.set(key0.toLowerCase(), valuebuf.toString());
 

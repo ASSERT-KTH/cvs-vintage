@@ -161,17 +161,17 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.tree.selection.TreeSelectionListener#folderSelectionChanged(org.columba.mail.folder.FolderTreeNode)
-     */
+ * @see org.columba.mail.gui.tree.selection.TreeSelectionListener#folderSelectionChanged(org.columba.mail.folder.FolderTreeNode)
+ */
     /*
-    public void folderSelectionChanged(FolderTreeNode newFolder) {
-            if (newFolder == null)
-                    return;
+public void folderSelectionChanged(FolderTreeNode newFolder) {
+        if (newFolder == null)
+                return;
 
-            setFolder((Folder) newFolder);
+        setFolder((Folder) newFolder);
 
-    }
-    */
+}
+*/
     public void selectionChanged(SelectionChangedEvent e) {
         TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
 

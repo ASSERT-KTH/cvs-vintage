@@ -19,16 +19,16 @@ import org.columba.core.gui.menu.PopupMenuGenerator;
  */
 public class MailContextMenu extends ContextMenu {
     /**
-     * @param frameMediator
-     * @param path
-     */
+ * @param frameMediator
+ * @param path
+ */
     public MailContextMenu(FrameMediator frameController, String path) {
         super(frameController, path);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.menu.ContextMenu#createPopupMenuGeneratorInstance(java.lang.String, org.columba.core.gui.frame.FrameController)
-     */
+ * @see org.columba.core.gui.menu.ContextMenu#createPopupMenuGeneratorInstance(java.lang.String, org.columba.core.gui.frame.FrameController)
+ */
     public PopupMenuGenerator createPopupMenuGeneratorInstance(String xmlRoot,
         FrameMediator frameController) {
         if (menuGenerator == null) {

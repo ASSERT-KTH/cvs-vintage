@@ -159,17 +159,17 @@ public class AddressParser {
     }
 
     /**
-     * to normalize Mail-addresses given in an Vector in
-     *
-     * for example there ar mails as strings in thelist with following formats:
-     * Frederik Dietz <fdietz@gmx.de>
-     * fdietz@gmx.de
-     * <fdietz@gmx.de>
-     * this formats must be normalized to <fdietz@gmx.de>. Formats in the form "name <name@de>"
-     * never exists, while the " character alrady removed
-     * @param in List of Strings with mailaddresses in any format
-     * @return List of Strings with mailaddress in format <fdietz@gmx.de>
-    */
+ * to normalize Mail-addresses given in an Vector in
+ *
+ * for example there ar mails as strings in thelist with following formats:
+ * Frederik Dietz <fdietz@gmx.de>
+ * fdietz@gmx.de
+ * <fdietz@gmx.de>
+ * this formats must be normalized to <fdietz@gmx.de>. Formats in the form "name <name@de>"
+ * never exists, while the " character alrady removed
+ * @param in List of Strings with mailaddresses in any format
+ * @return List of Strings with mailaddress in format <fdietz@gmx.de>
+*/
     public static List normalizeRCPTVector(List in) {
         int v_size = in.size();
         String mailaddress = "";

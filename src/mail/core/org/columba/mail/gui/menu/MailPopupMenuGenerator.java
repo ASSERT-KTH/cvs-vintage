@@ -20,16 +20,16 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class MailPopupMenuGenerator extends PopupMenuGenerator {
     /**
-     * @param frameMediator
-     * @param path
-     */
+ * @param frameMediator
+ * @param path
+ */
     public MailPopupMenuGenerator(FrameMediator frameController, String path) {
         super(frameController, path);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.menu.AbstractMenuGenerator#getString(java.lang.String, java.lang.String, java.lang.String)
-     */
+ * @see org.columba.core.gui.menu.AbstractMenuGenerator#getString(java.lang.String, java.lang.String, java.lang.String)
+ */
     public String getString(String sPath, String sName, String sID) {
         return MailResourceLoader.getString(sPath, sName, sID);
     }

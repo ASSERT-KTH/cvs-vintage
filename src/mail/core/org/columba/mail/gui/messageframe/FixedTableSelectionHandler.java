@@ -24,23 +24,23 @@ public class FixedTableSelectionHandler extends SelectionHandler {
     FolderCommandReference[] tableReference;
 
     /**
-     * @param id
-     */
+ * @param id
+ */
     public FixedTableSelectionHandler(FolderCommandReference[] tableReference) {
         super("mail.table");
         this.tableReference = tableReference;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
-     */
+ * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
+ */
     public DefaultCommandReference[] getSelection() {
         return tableReference;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
-     */
+ * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+ */
     public void setSelection(DefaultCommandReference[] selection) {
         this.tableReference = (FolderCommandReference[]) selection;
 

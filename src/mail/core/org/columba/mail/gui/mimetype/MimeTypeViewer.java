@@ -77,34 +77,34 @@ public class MimeTypeViewer {
     }
 
     /*
-    public void openWithBrowserURL( URL url )
-    {
-    boolean b = MainInterface.frameMediator.messageController.getView().enableViewer( MessageView.HTML );
-    //MainInterface.frameMediator.messageController.getView().update(b);
+public void openWithBrowserURL( URL url )
+{
+boolean b = MainInterface.frameMediator.messageController.getView().enableViewer( MessageView.HTML );
+//MainInterface.frameMediator.messageController.getView().update(b);
 
-    HtmlViewer viewer = (HtmlViewer) MainInterface.frameMediator.messageController.getView().getViewer( MessageView.HTML );
+HtmlViewer viewer = (HtmlViewer) MainInterface.frameMediator.messageController.getView().getViewer( MessageView.HTML );
 
-    if ( viewer != null )
+if ( viewer != null )
+{
+    try
     {
-        try
+        viewer.setPage( url );
+    }
+    catch ( Exception ex )
+    {
+        ex.printStackTrace();
+        if ( ex instanceof java.net.UnknownHostException )
         {
-            viewer.setPage( url );
+            JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
+                                                   "Unknown host exception: "+ex.getMessage() );
         }
-        catch ( Exception ex )
+        else
         {
-            ex.printStackTrace();
-            if ( ex instanceof java.net.UnknownHostException )
-            {
-                JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
-                                                       "Unknown host exception: "+ex.getMessage() );
-            }
-            else
-            {
-                JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
-                                                       "Browser exception: "+ex.getMessage() );
-            }
+            JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
+                                                   "Browser exception: "+ex.getMessage() );
         }
     }
-    }
-    */
+}
+}
+*/
 }
