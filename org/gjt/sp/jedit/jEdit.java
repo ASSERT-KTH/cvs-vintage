@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.176 2003/06/07 21:22:18 spestov Exp $
+ * @version $Id: jEdit.java,v 1.177 2003/06/08 22:23:40 spestov Exp $
  */
 public class jEdit
 {
@@ -2502,7 +2502,11 @@ public class jEdit
 
 			public TokenMarker getTokenMarker(String modeName)
 			{
-				return getMode(modeName).getTokenMarker();
+				Mode mode = getMode(modeName);
+				if(mode == null)
+					return null;
+				else
+					return mode.getTokenMarker();
 			}
 		};
 

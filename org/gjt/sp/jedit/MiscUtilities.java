@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.53 2003/06/04 01:44:16 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.54 2003/06/08 22:23:40 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -656,12 +656,16 @@ loop:		for(int i = 0; i < str.length(); i++)
 			while(len-- > 0)
 				buf.append(' ');
 		}
+		else if(len == 1)
+			buf.append(' ');
 		else
 		{
 			int count = (len + start % tabSize) / tabSize;
+			if(count != 0)
+				len += start;
 			while(count-- > 0)
 				buf.append('\t');
-			count = (len + start) % tabSize;
+			count = len % tabSize;
 			while(count-- > 0)
 				buf.append(' ');
 		}
