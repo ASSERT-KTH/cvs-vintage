@@ -85,45 +85,70 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     }
 
     public int requestMap(Request request ) {
-	    // look for session id -- cookies only right now
-	    String sessionId = null;
-
-	    Cookie cookies[]=request.getCookies(); // assert !=null
-
-	    for( int i=0; i<cookies.length; i++ ) {
-	        Cookie cookie = cookies[i];
-
-	        if (cookie.getName().equals(
-					org.apache.tomcat.core.Constants.SESSION_COOKIE_NAME)) {
-		        sessionId = cookie.getValue();
-			// GS, We piggyback the JVM id on top of the session cookie
-			// Separate them ...
-			if(null != sessionId) {
-			    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
-			    if(idex > 0) {
-				sessionId = sessionId.substring(0, idex);
-			    }
-			}
-
-		        if (sessionId != null) {
-			    // GS, We are in a problem here, we may actually get
-			    // multiple Session cookies (one for the root
-			    // context and one for the real context... or old session
-			    // cookie. We must check for validity in the current context.
-			    Context ctx = request.getContext();
-			    SessionManager sM = ctx.getSessionManager();
-			    
-			    if(null != sM.findSession(ctx, sessionId)) {
-				sM.accessed(ctx, request, sessionId );
-				
-				request.setRequestedSessionId(sessionId);
-			    }
-			}
-		    }
+	String sessionId = null;
+	
+	Cookie cookies[]=request.getCookies(); // assert !=null
+	
+	for( int i=0; i<cookies.length; i++ ) {
+	    Cookie cookie = cookies[i];
+	    
+	    if (cookie.getName().equals("JSESSIONID")) {
+		sessionId = cookie.getValue();
+		sessionId=validateSessionId(request, sessionId);
+		if (sessionId!=null){
+		    request.setRequestedSessionIdFromCookie(true);
+		}
 	    }
-
-	    return 0;
+	}
+	
+	String sig=";jsessionid=";
+	int foundAt=-1;
+	if ((foundAt=request.getRequestURI().indexOf(sig))!=-1){
+	    sessionId=request.getRequestURI().substring(foundAt+sig.length());
+	    // rewrite URL, do I need to do anything more?
+	    request.setRequestURI(request.getRequestURI().substring(0, foundAt));
+	    sessionId=validateSessionId(request, sessionId);
+	    if (sessionId!=null){
+		request.setRequestedSessionIdFromURL(true);
+	    }
+	}
+	return 0;
     }
+
+    // XXX what is the correct behavior if the session is invalid ?
+    // We may still set it and just return session invalid.
+    
+    /** Validate and fix the session id. If the session is not valid return null.
+     *  It will also clean up the session from load-balancing strings.
+     * @return sessionId, or null if not valid
+     */
+    private String validateSessionId(Request request, String sessionId){
+      // GS, We piggyback the JVM id on top of the session cookie
+      // Separate them ...
+      if (null != sessionId) {
+        int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
+        if(idex > 0) {
+         sessionId = sessionId.substring(0, idex);
+       }
+      }
+      
+      if (sessionId != null && sessionId.length()!=0) {
+       // GS, We are in a problem here, we may actually get
+       // multiple Session cookies (one for the root
+       // context and one for the real context... or old session
+       // cookie. We must check for validity in the current context.
+       Context ctx=request.getContext();
+       SessionManager sM = ctx.getSessionManager();    
+       if(null != sM.findSession(ctx, sessionId)) {
+         sM.accessed(ctx, request, sessionId );
+         request.setRequestedSessionId(sessionId);
+         return sessionId;
+       }
+      }
+      return null;
+    }
+  
+
 
     public int beforeBody( Request rrequest, Response response ) {
     	String reqSessionId = response.getSessionId();

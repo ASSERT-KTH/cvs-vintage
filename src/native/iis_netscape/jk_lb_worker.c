@@ -58,7 +58,7 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -115,6 +115,9 @@ typedef struct lb_endpoint lb_endpoint_t;
 static char *get_param(jk_ws_service_t *s,
                        const char *name)
 {
+
+    /* XXX XXX XXX need to fix - jsession id is path param, not query string.
+       Gal, please take a look ! */
     if(s->query_string) {
         char *id_start = NULL;
         for(id_start = strstr(s->query_string, name) ; 

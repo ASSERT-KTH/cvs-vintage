@@ -54,7 +54,7 @@
  * Author:      Bernard Bernstein <bernard@corp.talkcity.com>                *
  * Updated:     March 1999 Jean-Luc Rochat <jlrochat@jnix.com>               *
  * Description: solved part of fail-over problems & LB improvments           *
- * Version:     $Revision: 1.2 $
+ * Version:     $Revision: 1.3 $
  *****************************************************************************/
 
 #include "jserv.h"
@@ -71,6 +71,7 @@
 /* or parameter set by the java code                                       */
 
 #define SESSION_IDENTIFIER "JSESSIONID"
+#define SESSION_IDENTIFIER_PARAM "jsessionid"
 #define ROUTING_IDENTIFIER "JSERV_ROUTE"
 
 /* ========================================================================= */
@@ -85,14 +86,17 @@ get_param(char *name, request_rec *r)
 
   pname = ap_pstrcat(r->pool, pname, "=", NULL);
 
-  if (!r->args) {
-    return NULL;
-  }
+  /*   if (!r->args) { */
+  /*     return NULL; */
+  /*   } */
 
-  value = strstr(r->args, pname);
+  /* XXX Will not work if ;jsessionid is not a path param for the last 
+     path component */
+  value = strstr(r->uri, pname);
   if (value) {
     value += strlen(pname);
     varg = value;
+    /* end of string or & */
     while (*varg && *varg != '&') {
       varg++;
       len++;
@@ -140,7 +144,9 @@ get_jserv_sessionid(request_rec *r, char *zone)
 {
   char *val;
   char sessionid[256];
+  char sessionid_p[256];
   strcpy(sessionid, SESSION_IDENTIFIER);
+  strcpy(sessionid_p, SESSION_IDENTIFIER_PARAM);
 
   /* 
    * Not needed anymore... the route is based on the cookie's 
@@ -148,7 +154,7 @@ get_jserv_sessionid(request_rec *r, char *zone)
    * strcat(sessionid, zone); 
    */
 
-  val = get_param(sessionid, r);
+  val = get_param(sessionid_p, r);
   if (val == NULL)
     val = get_cookie(sessionid, r);
   return val;

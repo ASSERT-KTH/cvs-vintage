@@ -195,9 +195,15 @@ public interface Request  {
 
     public void setRequestedSessionId(String reqSessionId) ;
 
+    // XXX It's better to use set/getSessionIdSource, with URL, Cookie, SSL, etc as
+    // source. Next 4 methods will probably be deprecated.
     boolean isRequestedSessionIdFromCookie() ;
 
+    void setRequestedSessionIdFromCookie(boolean newState);
+
     boolean isRequestedSessionIdFromURL() ;
+
+    void setRequestedSessionIdFromURL(boolean newState) ;
 
     public void setSession(HttpSession serverSession) ;
 

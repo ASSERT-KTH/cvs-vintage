@@ -1,4 +1,4 @@
-/* $Id: SessionExample.java,v 1.1 1999/10/09 00:20:00 duncan Exp $
+/* $Id: SessionExample.java,v 1.2 2000/03/21 00:32:38 costin Exp $
  *
  */
 
@@ -77,7 +77,8 @@ public class SessionExample extends HttpServlet {
 
         out.println("<P>");
         out.print("<form action=\"");
-        out.print("SessionExample\" ");
+	out.print(response.encodeURL("SessionExample"));
+        out.print("\" ");
         out.println("method=POST>");
         out.println(rb.getString("sessions.dataname"));
         out.println("<input type=text size=20 name=dataname>");
@@ -88,6 +89,24 @@ public class SessionExample extends HttpServlet {
         out.println("<input type=submit>");
         out.println("</form>");
 
+        out.println("<P>GET based form:<br>");
+        out.print("<form action=\"");
+	out.print(response.encodeURL("SessionExample"));
+        out.print("\" ");
+        out.println("method=GET>");
+        out.println(rb.getString("sessions.dataname"));
+        out.println("<input type=text size=20 name=dataname>");
+        out.println("<br>");
+        out.println(rb.getString("sessions.datavalue"));
+        out.println("<input type=text size=20 name=datavalue>");
+        out.println("<br>");
+        out.println("<input type=submit>");
+        out.println("</form>");
+
+        out.print("<p><a href=\"");
+	out.print(response.encodeURL("SessionExample?dataname=foo&datavalue=bar"));
+	out.println("\" >URL encoded </a>");
+	
         out.println("</body>");
         out.println("</html>");
         

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.4 2000/02/17 07:52:19 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/17 07:52:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.5 2000/03/21 00:32:39 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/03/21 00:32:39 $
  *
  * ====================================================================
  *
@@ -102,32 +102,47 @@ implements HttpServletResponse {
 	return response.containsHeader(name);
     }
 
-    public String encodeRedirectURL(String url) {
-        // XXX
-        // we don't support url rewriting yet!
-        return url;
+    public String encodeRedirectURL(String location) {
+	// rewrite for the same host
+	// this is really simplistic matching here, any helper functions?
+	if (location.indexOf(response.getRequest().getServerName())!=-1){
+	    location=encodeURL(location);
+	}
+	return location;
     }
     
     /**
      * @deprecated
      */
-    
     public String encodeRedirectUrl(String location) {
-	//try {
-	//    URL url = new URL(location);
-	//} catch (MalformedURLException e) {
-	//    String msg = sm.getString("hsrf.redirect.iae")
-        //
-	//    throw new IllegalArgumentException(msg);
-	//}
-	
 	return encodeRedirectURL(location);
     }
 
     public String encodeURL(String url) {
-        // XXX
-        // we don't support url rewriting yet!        
-        return url;
+      Request request=response.getRequest();
+      // if I have a session
+      //      System.out.println("XXX " + request.isRequestedSessionIdValid() +" " + request.isRequestedSessionIdFromCookie());
+      
+      if (request.isRequestedSessionIdValid()){
+	  // if first time or cookie not returned
+	  // XXX need to add support for SSL or other schemas
+	  if (!request.isRequestedSessionIdFromCookie()) {
+	      int qidx=url.indexOf( "?" );
+	      String path=url;
+	      String qry=null;
+	      if( qidx >= 0 ) {
+		  path=url.substring( 0, qidx );
+		  qry=url.substring( qidx+1 );
+	      }
+	      StringBuffer sb=new StringBuffer(path);
+	      sb.append(";jsessionid=").append(request.getRequestedSessionId());
+	      if( qry != null ) 
+		  sb.append("?").append( qry);
+	      //      System.out.println("RW " + url + " " + sb.toString());
+	      return sb.toString();              
+	  }
+      }
+      return url;
     }
     
     /**

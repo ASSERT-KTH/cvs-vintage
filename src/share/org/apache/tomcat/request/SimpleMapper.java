@@ -131,6 +131,15 @@ public class SimpleMapper extends  BaseInterceptor  {
 	
 	// resolve the server that we are for
 	String path = rrequest.getRequestURI();
+
+	// strip session URL rewrite part which interferes processing
+	// XXX works only if ;jsessionid= is path param for the last component
+	// of the path! 
+	String sig=";jsessionid=";
+	int foundAt=-1;
+	if ((foundAt=path.indexOf(sig))!=-1){
+	    path=path.substring(0, foundAt);  
+	}
 	
 	Context ctx= this.getContextByPath(path);
 	rrequest.setContext(ctx);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.22 2000/03/20 19:34:09 costin Exp $
- * $Revision: 1.22 $
- * $Date: 2000/03/20 19:34:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.23 2000/03/21 00:32:39 costin Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/03/21 00:32:39 $
  *
  * ====================================================================
  *
@@ -124,7 +124,7 @@ public class RequestImpl  implements Request {
     // Session
     // set by interceptors - the session id
     protected String reqSessionId;
-    protected boolean sessionIdFromCookie=true;
+    protected boolean sessionIdFromCookie=false;
     protected boolean sessionIdFromURL=false;
     // cache- avoid calling SessionManager for each getSession()
     protected HttpSession serverSession;
@@ -351,6 +351,13 @@ public class RequestImpl  implements Request {
 	return sessionIdFromURL;
     }
 
+    public void setRequestedSessionIdFromCookie(boolean newState){
+	sessionIdFromCookie=true;
+    }
+ 
+    public void setRequestedSessionIdFromURL(boolean newState) {
+	sessionIdFromURL=newState;
+    }
 
     public void setContext(Context context) {
 	this.context = context;
