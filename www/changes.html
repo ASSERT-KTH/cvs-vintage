@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.345 2003/02/01 02:17:04 jon Exp $ -->
+<!-- $Id: changes.html,v 1.346 2003/02/03 07:40:12 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.345 2003/02/01 02:17:04 jon Exp $
+Last updated: $Id: changes.html,v 1.346 2003/02/03 07:40:12 jon Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -25,6 +25,9 @@ Last updated: $Id: changes.html,v 1.345 2003/02/01 02:17:04 jon Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>Nightly <a href="http://checkstyle.sf.net/">Checkstyle</a> 
+                    reports are now sent to the dev@scarab mailing list. 1.0 will not be released
+                    until we hit zero errors. Please contribute patches to fix the errors.
                 <li>The build system now only copies the appropriate database
                     .jar file into WEB-INF/lib and also separates out the definition
                     of the various databases into their own .properties files which
@@ -133,6 +136,8 @@ Last updated: $Id: changes.html,v 1.345 2003/02/01 02:17:04 jon Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b13</h3>
             <ul>
+                <li>Added Postgresql upgrade scripts for b13 to b14.
+                    See #<a href="http://issues.whichever.com/issues/id/SCB563">SCB563</a>. (JSS)</li>
                 <li>SQL script directory couldn't be found if context was different.
                     See #<a href="http://issues.whichever.com/issues/id/SCB560">SCB560</a>. (JSS)</li>
                 <li>Wrong username variable used in build.xml:datadump
