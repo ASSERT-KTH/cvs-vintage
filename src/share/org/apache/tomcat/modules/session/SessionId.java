@@ -97,6 +97,7 @@ public class SessionId extends  BaseInterceptor
     boolean cookiesFirst=true;
     boolean checkSSLSessionId=false;
     boolean ignoreCase=false;
+    boolean secureCookie=true;
     
     public SessionId() {
 	ignoreCase= (File.separatorChar  == '\\');
@@ -124,6 +125,15 @@ public class SessionId extends  BaseInterceptor
 	return ignoreCase;
     }
 
+    /** Use secure cookies for SSL connections.
+     */
+    public void setSecureCookie(boolean sc) {
+	secureCookie = sc;
+    }
+
+    public boolean getSecureCookie() {
+	return secureCookie;
+    }
     
     /** Extract the session id from the request.
      * SessionInterceptor will have to be called _before_ mapper,
@@ -358,6 +368,9 @@ public class SessionId extends  BaseInterceptor
 	StringBuffer buf = new StringBuffer();
 	buf.append( "JSESSIONID=" ).append( reqSessionId );
 	buf.append( ";Path=" ).append(  sessionPath  );
+	if( secureCookie && rrequest.isSecure() ) {
+	    buf.append(";Secure");
+	}
 	response.addHeader( "Set-Cookie",
 			    buf.toString());
 	if( debug>0) log( "Setting cookie " + buf );
