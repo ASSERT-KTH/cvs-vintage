@@ -1,7 +1,7 @@
-
 ------------------------------------------------------------------------------
 | D E V E L O P E M E N T  N O T E S                                         |
 ------------------------------------------------------------------------------
+$Id: DEVELOPMENT.txt,v 1.3 2000/12/27 23:09:20 jon Exp $
 
             Below are some notes for doing development with Scarab.
 
