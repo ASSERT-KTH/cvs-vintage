@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.126 2004/11/11 13:45:57 mkl Exp $
+// $Id: FigNodeModelElement.java,v 1.127 2004/11/16 12:55:42 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1124,7 +1124,7 @@ public abstract class FigNodeModelElement
         while (it.hasNext()) {
             ((Fig) it.next()).deleteFromModel();
         }
-        super.dispose();
+        super.deleteFromModel();
     }
 
     /**
