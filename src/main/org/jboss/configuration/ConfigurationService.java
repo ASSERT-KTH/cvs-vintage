@@ -67,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -661,7 +661,7 @@ implements ConfigurationServiceMBean
                {
                   log.error("Could not create MBean " +
                             objectName + "(" + code + ")", ex);
-                  
+                  logException(ex);
                   // Ah what the heck.. skip it
                   continue;
                }

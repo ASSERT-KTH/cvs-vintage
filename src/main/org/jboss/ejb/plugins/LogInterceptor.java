@@ -7,7 +7,10 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.rmi.RemoteException;
+import java.rmi.ServerError;
 import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
@@ -23,226 +26,237 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.transaction.TransactionRolledbackException;
 
+import org.apache.log4j.NDC;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.MethodInvocation;
+import org.jboss.logging.log4j.JBossCategory;
+import org.jboss.metadata.BeanMetaData;
 
-import org.jboss.logging.Log;
-import org.jboss.logging.Logger;
-
-
-/**
- *   <description> 
- *      
- *   @see <related>
+/** An interceptor used to log call invocations. It also handles any
+ unexpected exceptions.
+ *
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.16 $
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ *   @version $Revision: 1.17 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-   protected Log log;
-   
-    protected boolean callLogging;
-    
-    protected Container container;
-    
    // Static --------------------------------------------------------
-
+   private static JBossCategory log = (JBossCategory) JBossCategory.getInstance(LogInterceptor.class);
+   
+   // Attributes ----------------------------------------------------
+   protected String ejbName;
+   protected boolean callLogging;
+   protected Container container;
+   
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
-   public void setContainer(Container container) 
-   { 
-    this.container = container; 
-   }
-    
-   public  Container getContainer()
+   public void setContainer(Container container)
    {
-    return container;
+      this.container = container;
    }
-
+   
+   public Container getContainer()
+   {
+      return container;
+   }
+   
    // Container implementation --------------------------------------
    public void init()
       throws Exception
    {
       super.start();
       
-      String name = getContainer().getBeanMetaData().getEjbName();
-        
-      // Should we log all calls?
-      callLogging = getContainer().getBeanMetaData().getContainerConfiguration().getCallLogging();
-        
-      log = Log.createLog(name);
+      BeanMetaData md = getContainer().getBeanMetaData();
+      ejbName = md.getEjbName();
+      // Should we log call details
+      callLogging = md.getContainerConfiguration().getCallLogging();
    }
    
    public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-      Log.setLog(log);
-      
-        // Log calls?
-        if (callLogging)
-        {
-            StringBuffer str = new StringBuffer();
-            str.append(mi.getMethod().getName());
-            str.append("(");
-            Object[] args = mi.getArguments();
-            if (args != null)
-               for (int i = 0; i < args.length; i++)
-                {
-                  str.append(i==0?"":",");
-                    str.append(args[i]);
-                }
-            str.append(")");
-            log.log(str.toString());
-        }
-      
+      NDC.push(ejbName);
+      String methodName = mi.getMethod().getName();
+      boolean trace = log.isTraceEnabled();
+      if( trace )
+         log.trace("Start method="+methodName);
+      // Log call details
+      if(callLogging)
+      {
+         StringBuffer str = new StringBuffer("InvokeHome: ");
+         str.append(methodName);
+         str.append("(");
+         Object[] args = mi.getArguments();
+         if (args != null)
+         {
+            for (int i = 0; i < args.length; i++)
+            {
+               str.append(i==0?"":",");
+               str.append(args[i]);
+            }
+         }
+         str.append(")");
+         log.debug(str.toString());
+      }
+
       try
       {
-         return getNext().invokeHome(mi);
-      } catch (Exception e)
+         Interceptor next = getNext();
+         Object value = next.invokeHome(mi);
+         return value;
+      }
+      catch(Throwable e)
       {
-        // Log system exceptions
-        if (e instanceof EJBException)
-        {
-            Logger.error("BEAN EXCEPTION:"+e.getMessage());
-            if (((EJBException)e).getCausedByException() != null)
-                Logger.exception(((EJBException)e).getCausedByException());
-            
-            // Client sees RemoteException
-            throw new ServerException("Bean exception. Notify the application administrator", e);
-        } else if (e instanceof RuntimeException)
-        {
-            Logger.error("CONTAINER EXCEPTION:"+e.getMessage());
-            Logger.exception(e);
-            
-            // Client sees RemoteException
-            throw new ServerException("Container exception. Notify the container developers :-)", e);
-        } else if (e instanceof TransactionRolledbackException)
-        {
-            Logger.error("TRANSACTION ROLLBACK EXCEPTION:"+e.getMessage());
-            // Log the rollback cause
-            // Sometimes it wraps EJBException - let's unwrap it
-            Throwable cause = ((RemoteException) e).detail;
-            if (cause != null) {
-                if ((cause instanceof EJBException) &&
-                        (((EJBException) cause).getCausedByException() != null)) {
-                    cause = ((EJBException) cause).getCausedByException();
-                }
-                Logger.exception(cause);
-            }
-            throw e;
-        } else
-        {
-            // Application exception, or (in case of RemoteException) already handled system exc
-            // Call debugging -> show exceptions
-            if (callLogging)
-            {
-                Logger.warning(e.getMessage());
-                // The full stack trace is much more useful for debugging
-                // On the other hand, it may be turned off by the logger filter
-                Logger.debug(e);
-            }
-            
-            throw e;
-        }
-      } finally
+         throw handleException(e, trace);
+      }
+      finally
       {
-         Log.unsetLog();
+         if( trace )
+            log.trace("End method="+methodName);
+         NDC.pop();
       }
    }
 
    /**
-    *   This method does invocation interpositioning of tx and security, 
+    *   This method does invocation interpositioning of tx and security,
     *   retrieves the instance from an object table, and invokes the method
     *   on the particular instance
     *
-    * @param   id  
-    * @param   m  
-    * @param   args  
-    * @return     
-    * @exception   Exception  
+    * @param   id
+    * @param   m
+    * @param   args
+    * @return
+    * @exception   Exception
     */
    public Object invoke(MethodInvocation mi)
       throws Exception
    {
-      Log.setLog(log);
-      
-      // Log calls?
-      if (callLogging)
+      NDC.push(ejbName);
+      String methodName = mi.getMethod().getName();
+      boolean trace = log.isTraceEnabled();
+      if( trace )
+         log.trace("Start method="+methodName);
+      // Log call details
+      if(callLogging)
       {
-        StringBuffer str = new StringBuffer();
+         StringBuffer str = new StringBuffer("Invoke: ");
          str.append(mi.getId() == null ? "" : "["+mi.getId().toString()+"] ");
-        str.append(mi.getMethod().getName());
-        str.append("(");
+         str.append(methodName);
+         str.append("(");
          Object[] args = mi.getArguments();
          if (args != null)
+         {
             for (int i = 0; i < args.length; i++)
             {
                str.append(i==0?"":",");
-                str.append(args[i]);
+               str.append(args[i]);
             }
-        str.append(")");
-         log.log(str.toString());
+         }
+         str.append(")");
+         log.debug(str.toString());
       }
-        
+
       try
       {
-         return getNext().invoke(mi);
-      } catch (Exception e)
-      {
-        // Log system exceptions
-        if (e instanceof EJBException)
-        {
-            Logger.error("BEAN EXCEPTION:"+e.getMessage());
-            if (((EJBException)e).getCausedByException() != null)
-                Logger.exception(((EJBException)e).getCausedByException());
-            
-            // Client sees RemoteException
-            throw new ServerException("Bean exception. Notify the application administrator", e);
-        } else if (e instanceof RuntimeException)
-        {
-            Logger.error("CONTAINER EXCEPTION:"+e.getMessage());
-            Logger.exception(e);
-            
-            // Client sees RemoteException
-            throw new ServerException("Container exception. Notify the container developers :-)", e);
-        } else if (e instanceof TransactionRolledbackException)
-        {
-            Logger.error("TRANSACTION ROLLBACK EXCEPTION:"+e.getMessage());
-            // Log the rollback cause
-            // Sometimes it wraps EJBException - let's unwrap it
-            Throwable cause = ((RemoteException) e).detail;
-            if (cause != null) {
-                if ((cause instanceof EJBException) && 
-                        (((EJBException) cause).getCausedByException() != null)) {
-                    cause = ((EJBException) cause).getCausedByException();
-                }
-                Logger.exception(cause);
-            }
-            throw e;
-        } else
-        {
-            // Application exception, or (in case of RemoteException) already handled system exc
-            // Call debugging -> show exceptions
-            if (callLogging)
-            {
-                Logger.warning(e.getMessage());
-                // The full stack trace is much more useful for debugging
-                // On the other hand, it may be turned off by the logger filter
-                Logger.debug(e);
-            }
-            
-            throw e;
-        }
-      } finally
-      {
-         Log.unsetLog();
+         Interceptor next = getNext();
+         Object value = next.invoke(mi);
+         return value;
       }
+      catch(Throwable e)
+      {
+         throw handleException(e, trace);
+      }
+      finally
+      {
+         if( trace )
+            log.trace("End method="+methodName);
+         NDC.pop();
+      }
+   }
+
+   // Private -------------------------------------------------------
+   private Exception handleException(Throwable e, boolean trace)
+   {
+      Exception toThrow = null;
+      // Log system exceptions
+      if (e instanceof EJBException)
+      {
+         EJBException ex = (EJBException) e;
+         log.error("BEAN EXCEPTION:"+ex.getMessage());
+         if( ex.getCausedByException() != null )
+            log.error("CausedBy", ex.getCausedByException());
+
+         // Client sees RemoteException
+         toThrow = new ServerException("Bean exception. Notify the application administrator", ex);
+      }
+      else if (e instanceof RuntimeException)
+      {
+         RuntimeException ex = (RuntimeException) e;
+         log.error("CONTAINER EXCEPTION:", e);
+         
+         // Client sees RemoteException
+         toThrow = new ServerException("Container exception. Notify the container developers :-)", ex);
+      }
+      else if (e instanceof TransactionRolledbackException)
+      {
+         TransactionRolledbackException ex = (TransactionRolledbackException) e;
+         log.error("TRANSACTION ROLLBACK EXCEPTION: "+ex.getMessage());
+         // Log the rollback cause
+         // Sometimes it wraps EJBException - let's unwrap it
+         Throwable cause = ex.detail;
+         if (cause != null)
+         {
+            if ((cause instanceof EJBException) &&
+            (((EJBException) cause).getCausedByException() != null))
+            {
+               cause = ((EJBException) cause).getCausedByException();
+            }
+            log.error("Detail", cause);
+         }
+         toThrow = ex;
+      }
+      else
+      {
+         Exception ex = null;
+         if( e instanceof Exception )
+            ex = (Exception) e;
+         else if( e instanceof Error )
+         {
+            // The app should not be throwing this show issue a warning
+            Error err = (Error) e;
+            log.warn("Unexpected Error", err);
+            ex = new ServerError("Unexpected Error", err);
+         }
+         else
+         {
+            // The app should not be throwing this show issue a warning
+            String msg = formatException("Unexpected Throwable", e);
+            log.warn("Unexpected Throwable", e);
+            ex = new ServerException(msg);
+         }
+         // Application exception, or (in case of RemoteException) already handled system exc
+         // Call debugging -> show exceptions
+         if(callLogging)
+            log.info("AppException", ex);
+         toThrow = ex;
+      }
+      return toThrow;
+   }
+
+   private String formatException(String msg, Throwable t)
+   {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      if( msg != null )
+         pw.println(msg);
+      t.printStackTrace(pw);
+      return sw.toString();
    }
    
   // Monitorable implementation ------------------------------------
@@ -257,7 +271,4 @@ public class LogInterceptor
   public void resetStatistic()
   {
   }
-   // Private -------------------------------------------------------
 }
-
-
