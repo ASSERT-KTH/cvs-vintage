@@ -1,4 +1,4 @@
-// $Id: PropPanelStructuralFeature.java,v 1.8 2004/04/25 00:45:18 d00mst Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.9 2004/04/25 01:07:28 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStructuralFeature.java,v 1.8 2004/04/25 00:45:18 d00mst Exp $
+// $Id: PropPanelStructuralFeature.java,v 1.9 2004/04/25 01:07:28 d00mst Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.UMLCheckBox2;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
@@ -59,7 +60,7 @@ public class PropPanelStructuralFeature extends PropPanelFeature {
 
     /**
      * Returns the multiplicityComboBox.
-     * @return UMLComboBox2
+     * @return UMLMultiplicityComboBox2
      */
     public UMLComboBox2 getMultiplicityComboBox() {
 	if (_multiplicityComboBox == null) {
@@ -68,7 +69,7 @@ public class PropPanelStructuralFeature extends PropPanelFeature {
 		    new UMLStructuralFeatureMultiplicityComboBoxModel();
 	    }
 	    _multiplicityComboBox =
-		new UMLComboBox2(
+		new UMLMultiplicityComboBox2(
 				 multiplicityComboBoxModel,
 				 ActionSetStructuralFeatureMultiplicity.SINGLETON);
 	    _multiplicityComboBox.setEditable(true);
