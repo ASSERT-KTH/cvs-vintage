@@ -47,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -254,19 +254,19 @@ public abstract class EnterpriseContext
          {
             if (((EntityContainer)con).getContainerInvoker()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
+            return (EJBHome)((EntityContainer)con).getContainerInvoker().getEJBHome(); 
          } 
          else if (con instanceof StatelessSessionContainer)
          {
             if (((StatelessSessionContainer)con).getContainerInvoker()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
+            return (EJBHome) ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
          } 
          else if (con instanceof StatefulSessionContainer) 
          {
             if (((StatefulSessionContainer)con).getContainerInvoker()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
+            return (EJBHome) ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
          }
 
          // Should never get here
