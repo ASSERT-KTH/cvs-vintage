@@ -19,28 +19,29 @@ package org.jboss.jms.jndi;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
+import java.io.Serializable;
 
 /**
  * JMSProviderAdapter.java
  *
+ * <p>Created: Wed Nov 29 14:15:07 2000
+ * 
+ * <p>6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * Created: Wed Nov 29 14:15:07 2000
- * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
- *
- * @author 
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
- * @version
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.4 $
  */
-
-public interface JMSProviderAdapter {
-	public Context getInitialContext() throws NamingException;
-
-	public void setName(String name);
-	public String getName();
-	public void setProviderUrl(String url);
-	public String getProviderUrl();
-	public String getQueueFactoryRef();
-	public String getTopicFactoryRef();
-	public void setQueueFactoryRef(String newQueueFactoryRef);
-	public void setTopicFactoryRef(String newTopicFactoryRef);
+public interface JMSProviderAdapter
+   extends Serializable
+{
+   Context getInitialContext() throws NamingException;
+   void setName(String name);
+   String getName();
+   void setProviderUrl(String url);
+   String getProviderUrl();
+   String getQueueFactoryRef();
+   String getTopicFactoryRef();
+   void setQueueFactoryRef(String newQueueFactoryRef);
+   void setTopicFactoryRef(String newTopicFactoryRef);
 }
