@@ -1,6 +1,6 @@
 <html>
 <head>
-  <!-- $Id: tomcat-iis-howto.html,v 1.3 2001/06/02 22:00:25 nacho Exp $ -->
+  <!-- $Id: tomcat-iis-howto.html,v 1.4 2001/10/20 20:58:59 larryi Exp $ -->
   <!-- Copyright 1999-2001, Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" href="style.css">
@@ -26,7 +26,7 @@ installation should have the following subdirectories:
 <ol>
   <li>&lt;tomcat_home&gt;\conf - Where you can place various configuration files</li>
   <li>&lt;tomcat_home&gt;\webapps - Containing example applications </li>
-  <li>&lt;tomcat_home&gt;\bin - Where you place web server plugins </li>
+  <li>&lt;tomcat_home&gt;\bin - Where you may place web server plugins </li>
 </ol>
 
 <p>In all the examples in this document &lt;tomcat_home&gt; will be c:\jakarta-tomcat.</p>
@@ -39,11 +39,15 @@ server.</p>
 <p>The IIS-Tomcat redirector was developed and tested on:
 
 <ol>
-  <li>WinNT4.0-i386 SP4/SP5/SP6a (it should be able to work on other
-  versions of the NT service pack.) and Win98 </li>
-  <li>IIS4.0 and PWS4.0 </li>
+  <li>Win2k SP2, WinNT4.0-i386 SP4/SP5/SP6a, and Win98 </li>
+  <li>IIS 5.0, PWS 5.0, IIS4.0 and PWS4.0 </li>
   <li>Tomcat3.0 - Tomcat3.3</li>
 </ol>
+
+<p><b>Note:</b> Due to some feature additions, the IIS-Tomcat redirector from
+earlier Tomcat's can't be used with Tomcat 3.3.  Only use the IIS-Tomcat
+redirector from Tomcat 3.3, or newer versions from the jakarta-tomcat-connectors
+Jakarta project.</p>
 
 <p>The redirector uses <b>ajp13</b> or <b>ajp12</b> to send requests to the Tomcat 
   containers. There is also an option to use Tomcat in process, more about the 
@@ -78,52 +82,63 @@ distribution.</p>
 <p>The installation includes the following parts:
 
 <ol>
-  <li>Configuring the ISAPI redirector with a default /examples context and
-  checking that you can serve servlets with IIS.</li>
-  <li>Adding more contexts to the configuration.</li>
+  <li>Start Tomcat 3.3 with the &quot;jkconf&quot; specified so configuration
+      files are written.</li>
+  <li>Configuring the ISAPI redirector with a configuration files and
+      checking that you can serve servlets with IIS.</li>
+  <li>Repeat the appropriate portions of the previous steps when changes to
+      configuration or contexts occur.</li>
 </ol>
+
+<h3>Creating the Configuration Files</h3>
+
+<p>The default installation of Tomcat 3.3 includes the
+<a href="serverxml.html#IISConfig">IISConfig</a> module in the
+<code>server.xml</code> file.  This module is responsible for writting the
+configuration files used for the IIS installation and operation.</p>
+
+<p>Unlike prior versions of Tomcat, the configuration files are not automatically
+written each time Tomcat 3.3 is started up.  Instead you must start Tomcat 3.3
+with &quot;jkconf&quot; specified.  Tomcat 3.3 will initialize, write the
+configuration files, and then exit.  This may be done, while an instance of
+Tomcat 3.3 is running.</p>
+
+<p>The IISConfig writes two configuration files.  The first is the registry
+configuration file, which by default will be
+<code>conf/auto/iis_redirect.reg</code>.  The second is the worker map
+configuration file, which by default will be
+<code>conf/auto/uriworkermap.properties</code>.</p>
 
 <h3>Configuring the ISAPI Redirector</h3>
 
-<p>In this document I will assume that isapi_redirect.dll is placed in
-c:\jakarta-tomcat\bin\win32\i386\isapi_redirect.dll and that you created the properties
-files are in c:\jakarta-tomcat\conf.</p>
+<p>The following step show how to configure the isapi redirector plugin.</p>
 
 <ol>
-  <li>In the registry, create a new registry key named <br>
-    <tt>&quot;HKEY_LOCAL_MACHINE\SOFTWARE\Apache Software Foundation\Jakarta Isapi
-    Redirector\1.0&quot;</tt></li>
-  <li>Add a string value with the name <tt>extension_uri</tt> and a value of
-    /jakarta/isapi_redirect.dll</li>
-  <li>Add a string value with the name <tt>log_file</tt> and a value pointing
-    to where you want your log file to be (for example <tt>c:\jakarta-tomcat\logs\isapi.log)</tt>.</li>
-  <li>Add a string value with the name <tt>log_level</tt> and a value for
-    your log level (can be <tt>debug</tt>, <tt>info</tt>, <tt>error</tt>
-	  or <tt>emerg</tt>). </li>
-  <li>Add a string value with the name <tt>worker_file</tt> and a value which
-    is the full path to your workers.properties file (for example
-    <tt>c:\jakarta-tomcat\conf\workers.properties</tt>)</li>
-  <li>Add a string value with the name <tt>worker_mount_file</tt> and a value
-    which is the full path to your uriworkermap.properties file (for example
-    <tt>c:\jakarta-tomcat\conf\uriworkermap.properties</tt>)</li>
+  <li>Enter the registry settings from the registry configuration file into
+    the registry.  This can be done from Windows Explorer by double-clicking
+    the file or by right-clicking the file and selecting <code>Open</code>
+    or <code>Merge</code>.</li>
   <li>Using the IIS management console, add a new virtual directory to your
     IIS/PWS web site. The name of the virtual directory must be jakarta. Its
 	physical path should be the directory where you placed isapi_redirect.dll
-	(in our example it is c:\jakarta-tomcat\bin\win32\i386). While creating this new
+	(for example it is c:\jakarta-tomcat\bin\native). While creating this new
 	virtual directory assign it with execute access.</li>
-  <li>Using the IIS management console, add isapi_redirect.dll as a filter
-    in your IIS/PWS web site. The name of the filter should reflect its task
-	(I use the name jakarta), its executable must be our
-	<tt>c:\jakarta-tomcat\bin\win32\i386\isapi_redirect.dll</tt>. For PWS, you'll need 
-	to use regedit and add/edit the "Filter DLLs" key under 
-	HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters. This key 
-        contains a "," separated list of dlls ( full paths ) - you need to insert the 
-        full path to isapi_redirect.dll.</li>
-  <li>Restart IIS (stop + start the IIS service), make sure that the
-    jakarta filter is marked with a green up-pointing arrow. <br>(costin)Under Win98 you may 
-    need to cd WINDOWS\SYSTEM\inetsrv and type PWS /stop ( the DLL and log files are locked -
-    even if you click the stop button, PWS will still keep the DLLs in memory. ). Type pws
-    to start it again.
+  <li>Add isapi_redirect.dll as a filter in your IIS/PWS web site. The name of
+    the filter should reflect its task (for example,
+    &quot;Jakarta Redirector&quot;). Its executable must be our
+	<code>isapi_redirect.dll</code>.  On WinNT and Win2k, you can use the
+    IIS Management console to add the filter.  For PWS, you'll need 
+	to use regedit and add/edit the &quot;Filter DLLs&quot; key under 
+	<code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\W3SVC\Parameters.</code>
+    This key contains a comma separated list of dlls ( full paths ). You need to
+    add the full path to isapi_redirect.dll to this key.</li>
+  <li>Restart IIS/PWS (stop + start the IIS service).  If you are using WinNT
+    or Win2k, you can make sure that the jakarta filter is successfully loaded
+    by checking for a green up-pointing arrow.<br>
+    <br>
+    On Win98, to properly stop and restart PWS, you should open an MS-DOS window,
+    navigate to the <code>WINDOWS\SYSTEM\inetsrv</code> directory and execute
+    <code>PWS /stop</code>. Then execute <code>PWS</code> to start it again.
  </li>
 </ol>
 
@@ -139,12 +154,17 @@ on correcting the problem.</p>
 to add your own contexts. Adding a new context requires two operations:
 
 <ol>
-  <li>Adding the context to Tomcat (I am not going to talk about this).</li>
+  <li>Adding the context to Tomcat (This is covered in the
+    <a href="tomcat-ug.html#context_addcust">Tomcat User's Guide</a>).</li>
   <li>Adding the context to the ISAPI redirector.</li>
 </ol>
 
-<p>Adding a context to the ISAPI redirector is simple, all you need to do is to edit your
-<tt>uriworkermap.properties</tt> and to add a line that looks like: </p>
+<p>Adding a context to the ISAPI redirector is simple, all you need to do is to
+start Tomcat 3.3 with &quot;jkconf&quot; specified again. After the
+worker map file is rewritten, restart IIS/PWS.</p>
+
+<p>If you are using a manually modified worker map file, edit the fileyour
+to add a line that looks like: </p>
 
 <p><tt>/context/*=worker_name</tt></p>
 
@@ -155,17 +175,8 @@ to add your own contexts. Adding a new context requires two operations:
 
 <p><tt>/shop/*=ajp13</tt></p>
 
-<p>After saving <tt>uriworkermap.properties</tt> restart IIS and it will serve the new context.</p>
-
-<p>As a new feature in Tomcat 3.2, a <tt>uriworkermap.properties-auto</tt> is
-automatically written each time Tomcat is started.  This file includes settings
-for each of the contexts that Tomcat will serve during its run. Each context
-has settings to have Tomcat handle servlet and JSP requests, but by default static
-content is left to be served by IIS.  Each context also has a commented out setting
-to have Tomcat handle all requests to the context.  You can rename this file (so it won't
-be overwritten the next time Tomcat is started) and uncomment this setting or make
-other customizations.  You may also use this file as is in your <tt>worker_mount_file</tt>
-setting.</p>
+<p>After saving <tt>uriworkermap.properties</tt> restart IIS/PWS and it will
+serve the new context.</p>
 
 <h2>Building the redirector</h2>
 
@@ -200,6 +211,17 @@ it using the build menu.</p>
 </ol>
 
 <h2>Advanced Context Configuration</h2>
+
+<p>Unlike prior versions, Tomcat 3.3 writes config files which default to
+sending all requests, including those for static pages, to Tomcat for processing.
+This gives the best chance for the web application configuration specified in the
+<code>web.xml</code> file to work successfully.</p>
+
+<p>Also, unlike prior versions, the default worker map file does not try
+to add servlet or JSP operation to the IIS/PWS main virtual directory.  To
+see how to control the manner in which Tomcat writes the worker map file see
+the reference information on the <a href="serverxml.html#IISConfig">IISConfig</a>
+module.</p>
 
 <p>Sometimes it is better to have IIS serve the static pages (html, gif, jpeg etc.) even
 if these files are part of a context served by Tomcat. For example, consider the html and
@@ -295,18 +317,18 @@ steps, restart the IIS service as described above in the last step of the instal
 then retry the step.</p>
 
 <p><b>Note:</b> These steps assume your <tt>worker_mount_file</tt> setting points
-to an unmodified copy of the uriworkermap.properties file. Results may be misleading
-if <tt>worker_mount_file</tt> points to a modified uriworkermap.properties or
-the uriworkermap.properties-auto file.  It is also assumed that the "/examples"
+to an unmodified copy of the <code>conf/auto/uriworkermap.properties</code> file.
+Results may be misleading if <tt>worker_mount_file</tt> points to a modified
+version of the file.  It is also assumed that the &quot;/examples&quot;
 context works correcly if you access Tomcat directly.</p>
 
 <h3>Win98</h3>
 
 <ol>
-  <li>Make sure web site activity is being logged. For PWS 4.0 make sure &quot;Save 
+  <li>Make sure web site activity is being logged. For PWS make sure &quot;Save 
     Web Site Activity Log&quot; is checked in the Advanced Options of the Personal 
     Web Manager.</li>
-  <li>Start the IIS service and Tomcat.</li>
+  <li>Start the PWS service and Tomcat.</li>
   <li>Check for the presence of the ISAPI redirector log file you specified in 
     the <tt>log_file</tt> setting. If not found, check the following: 
     <ol type="A">
@@ -322,9 +344,9 @@ context works correcly if you access Tomcat directly.</p>
     If the above are set correctly, the ISAPI redirector should be able to create 
     the log file.</li>
   <li>Invoke the URL &quot;http://localhost/examples/jsp/index.html&quot; in your 
-    browser. Case is important in Tomcat 3.2. The characters following &quot;localhost&quot; 
-    in the URL must be lower case. If the page fails to appear, stop the IIS service 
-    (required to view the IIS log file). Then examine the last line in the IIS 
+    browser, case is important. The characters following &quot;localhost&quot; 
+    in the URL must be lower case. If the page fails to appear, stop the PWS service 
+    (required to view the PWS log file). Then examine the last line in the PWS 
     log file in found in SYSTEM/LogFiles/W3SVC1. 
     <ol type="A">
       <li>If the last line contains: <tt>GET &quot;/examples/jsp/index.html HTTP/1.1&quot; 
@@ -360,7 +382,7 @@ context works correcly if you access Tomcat directly.</p>
               <li>Make sure that &quot;isapi_redirect.dll&quot; follows &quot;/jakarta/&quot; 
                 in the <tt>extension_uri</tt> setting.</li>
               <li>Check the workers.properties file and make sure the port setting 
-                for <tt>workers used </tt> is the same as the port specified in 
+                for <tt>workers used</tt> is the same as the port specified in 
                 the server.xml for the ajp13 or ajp12 connectors, normally this 
                 ports are 8007 for ajp12 and 8009 for ajp13.</li>
             </ol>
@@ -375,10 +397,10 @@ context works correcly if you access Tomcat directly.</p>
     the JSP examples.</li>
 </ol>
 
-<h3>WinNT</h3>
+<h3>WinNT/Win2k</h3>
 
 <ol>
-  <li>Make sure web site activity is being logged.  For PWS 4.0  make sure
+  <li>Make sure web site activity is being logged.  For IIS/PWS make sure
     &quot;Save Web Site Activity Log&quot; is checked in the Advanced Options of
     the Personal Web Manager.</li>
   <li>Start the World Wide Web Publishing Service and Tomcat.</li>
