@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.195 2003/08/04 03:19:13 spestov Exp $
+ * @version $Id: Buffer.java,v 1.196 2003/08/09 20:35:14 spestov Exp $
  */
 public class Buffer
 {
@@ -2557,17 +2557,17 @@ loop:		for(int i = 0; i < seg.count; i++)
 						% tabSize));
 				}
 				break;
-			case '(':
-				openParens.push(new Integer(i));
-				break;
-			case ')':
-				if(openParens.size() > 0)
-				{
-					openParens.pop();
-				}
-				break;
 			default:
 				prevLineStart = false;
+
+				// for deep indent
+				if(c == '(')
+					openParens.push(new Integer(i));
+				else if(c == ')')
+				{
+					if(openParens.size() > 0)
+						openParens.pop();
+				}
 
 				if(closeBrackets.indexOf(c) != -1)
 				{
