@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.57 2003/09/29 18:51:52 alexb Exp $
+// $Id: NavigatorPane.java,v 1.58 2003/10/19 21:54:57 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import org.apache.log4j.Logger;
 
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.QuadrantPanel;
+import org.argouml.ui.explorer.DnDExplorerTree;
+import org.argouml.ui.explorer.ExportExplorer;
 import org.argouml.ui.explorer.ExplorerTree;
 import org.argouml.ui.explorer.PerspectiveComboBox;
 import org.argouml.ui.explorer.PerspectiveManager;
@@ -53,7 +55,7 @@ import org.tigris.toolbar.ToolBar;
  *
  * <p>Perspectives are now built in the Perspective Manager.
  *
- * $Id: NavigatorPane.java,v 1.57 2003/09/29 18:51:52 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.58 2003/10/19 21:54:57 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -130,7 +132,7 @@ public class NavigatorPane
         
         JComboBox combo = new PerspectiveComboBox();
         JComboBox orderByCombo = new JComboBox();
-        tree = new DnDNavigatorTree();
+        tree = new ExportExplorer();//DnDExplorerTree();
         ToolBar toolbar = new ToolBar();
         
         toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
