@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.255 2003/01/18 19:36:48 jon Exp $
+ * @version $Id: Issue.java,v 1.256 2003/01/21 14:06:03 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1617,29 +1617,19 @@ public class Issue
 
     /**
      * Gets default history limit for this module-issue type.
+     * The default is 5.
      */
     public int getHistoryLimit() throws Exception
     {
-        Integer result = null;
         RModuleIssueType rmit = getModule().getRModuleIssueType(getIssueType());
-        Object obj = ScarabCache.get(this, GET_HISTORY_LIMIT, rmit);
-        if (obj == null)
+        if (rmit != null)
         {
-            try
-            {
-                result = new Integer(rmit.getHistory());
-            }
-            catch (Exception e)
-            {
-                log().error("Issue.getHistoryLimit(): ", e);
-            }
-            ScarabCache.put(result, this, GET_HISTORY_LIMIT, rmit);
+            return rmit.getHistory();
         }
         else
         {
-            result = (Integer)obj;
+            return 5;
         }
-        return result.intValue();
     }
 
     /**
