@@ -99,7 +99,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.23 2003/07/29 17:29:25 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.24 2003/07/29 20:42:52 dlr Exp $
  */
 public class ImportIssues
     implements ErrorHandler
@@ -465,8 +465,10 @@ public class ImportIssues
                 }
                 else
                 {
-                    LOG.error("Found " + importErrors.size() +
-                              " errors importing '" + name + "':");
+                    int nbrErrors = importErrors.size();
+                    LOG.error("Found " + nbrErrors + " error" +
+                              (nbrErrors == 1 ? "" : "s") + " importing '" +
+                              name + "':");
                     for (Iterator itr = importErrors.iterator();
                          itr.hasNext(); )
                     {
