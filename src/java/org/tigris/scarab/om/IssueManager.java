@@ -23,8 +23,6 @@ public class IssueManager
     extends BaseIssueManager
     implements CacheListener
 {
-    private boolean isNew;
-
     /**
      * Creates a new <code>IssueManager</code> instance.
      *
@@ -35,7 +33,6 @@ public class IssueManager
     {
         super();
         setRegion(getClassName().replace('.', '_'));
-        isNew = true;
     }
 
     /*
@@ -85,25 +82,15 @@ public class IssueManager
     }
     */
 
-    public MethodResultCache getMethodResultCache()
+    /**
+     * Notify other managers with relevant CacheEvents.
+     */
+    protected void registerAsListener()
     {
-        if (isNew) 
-        {
-            registerAsListener();
-        }
-        return super.getMethodResultCache();
-    }
-
-    synchronized protected void registerAsListener()
-    {
-        if (isNew) 
-        {
-            AttributeValueManager.addCacheListener(this);
-            AttachmentManager.addCacheListener(this);
-            DependManager.addCacheListener(this);
-            ActivityManager.addCacheListener(this);
-            isNew = false;   
-        }        
+        AttributeValueManager.addCacheListener(this);
+        AttachmentManager.addCacheListener(this);
+        DependManager.addCacheListener(this);
+        ActivityManager.addCacheListener(this);
     }
 
 

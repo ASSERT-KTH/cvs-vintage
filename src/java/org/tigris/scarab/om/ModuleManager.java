@@ -23,8 +23,6 @@ public class ModuleManager
     extends BaseModuleManager
     implements CacheListener
 {
-    private boolean isNew;
-
     /**
      * Creates a new <code>ModuleManager</code> instance.
      *
@@ -35,7 +33,6 @@ public class ModuleManager
     {
         super();
         setRegion(getClassName().replace('.', '_'));
-        isNew = true;
     }
 
     protected Module getInstanceImpl()
@@ -43,25 +40,16 @@ public class ModuleManager
         return new ScarabModule();
     }
 
-    public MethodResultCache getMethodResultCache()
-    {
-        if (isNew) 
-        {
-            registerAsListener();
-        }
-        return super.getMethodResultCache();
-    }
 
-    synchronized protected void registerAsListener()
+    /**
+     * Notify other managers with relevant CacheEvents.
+     */
+    protected void registerAsListener()
     {
-        if (isNew) 
-        {
-            RModuleIssueTypeManager.addCacheListener(this);
-            RModuleAttributeManager.addCacheListener(this);
-            AttributeGroupManager.addCacheListener(this);
-            RModuleOptionManager.addCacheListener(this);
-            isNew = false;   
-        }        
+        RModuleIssueTypeManager.addCacheListener(this);
+        RModuleAttributeManager.addCacheListener(this);
+        AttributeGroupManager.addCacheListener(this);
+        RModuleOptionManager.addCacheListener(this);
     }
 
     // -------------------------------------------------------------------
