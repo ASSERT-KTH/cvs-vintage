@@ -59,10 +59,11 @@
 package sessions;
 
 import javax.servlet.http.*;
+import java.io.Serializable;
 import java.util.Vector;
 import java.util.Enumeration;
 
-public class DummyCart {
+public class DummyCart implements  Serializable{
     Vector v = new Vector();
     String submit = null;
     String item = null;
