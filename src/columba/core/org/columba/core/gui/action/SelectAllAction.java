@@ -44,12 +44,15 @@ public class SelectAllAction extends FrameAction {
 			null,
 			'A',
 			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+		
+		setEnabled(false);
+		MainInterface.focusManager.setSelectAllAction(this);
 	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		//MainInterface.focusManager.selectall();
+		MainInterface.focusManager.selectAll();
 	}
 
 }

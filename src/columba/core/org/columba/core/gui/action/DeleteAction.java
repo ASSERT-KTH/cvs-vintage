@@ -32,25 +32,16 @@ public class DeleteAction extends FrameAction {
 	public DeleteAction(AbstractFrameController controller) {
 		super(
 			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_delete"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_delete"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_delete"),
+			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
+			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
+			GlobalResourceLoader.getString(null, null, "menu_edit_delete"),
 			"DELETE",
 			ImageLoader.getImageIcon("stock_delete-16.png"),
 			ImageLoader.getImageIcon("stock_delete.png"),
 			'D',
 			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
 			false);
-			
+
 		setEnabled(false);
 		MainInterface.focusManager.setDeleteAction(this);
 	}
@@ -60,12 +51,5 @@ public class DeleteAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		MainInterface.focusManager.delete();
 	}
-	
-	/* (non-Javadoc)
-		 * @see org.columba.core.action.FrameAction#isSingleton()
-		 */
-		public boolean isSingleton() {
-			return true;
-		}
 
 }

@@ -53,14 +53,16 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK),
 			false);
 			
+		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+		MainInterface.focusManager.setRedoAction(this);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MainInterface.processor.getUndoManager().redoLast();		
+		MainInterface.focusManager.redo();
 	}
 
 	/* (non-Javadoc)

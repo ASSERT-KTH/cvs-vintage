@@ -52,15 +52,19 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 			'T',
 			KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK),
 			false);
+		
+		setEnabled(false);
 			
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+		
+		MainInterface.focusManager.setUndoAction(this);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MainInterface.processor.getUndoManager().undoLast();		
+		MainInterface.focusManager.undo();
 	}
 
 	/* (non-Javadoc)

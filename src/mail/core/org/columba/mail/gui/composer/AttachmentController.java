@@ -263,8 +263,9 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
 	 */
 	public boolean isSelectAllActionEnabled() {
-		// attachment controller doesn't support selectAll actions
-		return false;
+		if (view.count() > 0)
+			return true;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -274,6 +275,51 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 		// attachment controller doesn't support paste actions
 
 	}
+
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+		// attachment controller doesn't support redo operation
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+		// attachment controller doesn't support undo operation
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+		// attachment controller doesn't support redo operation
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+		view.setSelectionInterval(0, view.count()-1);
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+		// attachment controller doesn't support undo operation
+
+	}
+	
+	/********************* ListSelectionListener interface ***********************/
+	
+	
 
 	/* (non-Javadoc)
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)

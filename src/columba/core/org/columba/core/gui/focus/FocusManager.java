@@ -47,7 +47,7 @@ public class FocusManager implements FocusListener {
 	 * list of focus owners
 	 */
 	List list;
-	
+
 	/**
 	 * map associating focus listener ui with focus owner
 	 */
@@ -60,6 +60,9 @@ public class FocusManager implements FocusListener {
 	BasicAction copyAction;
 	BasicAction pasteAction;
 	BasicAction deleteAction;
+	BasicAction selectAllAction;
+	BasicAction undoAction;
+	BasicAction redoAction;
 
 	/**
 	 * current focus owner
@@ -83,10 +86,10 @@ public class FocusManager implements FocusListener {
 	 */
 	public void registerComponent(FocusOwner c) {
 		list.add(c);
-		
+
 		// associate ui component with FocusOwner
 		map.put(c.getComponent(), c);
-		
+
 		c.getComponent().addFocusListener(this);
 	}
 
@@ -107,7 +110,7 @@ public class FocusManager implements FocusListener {
 
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * FocusOwner objects should call this method on
@@ -115,8 +118,7 @@ public class FocusManager implements FocusListener {
 	 * enable/disable the actions
 	 *
 	 */
-	public void updateActions()
-	{
+	public void updateActions() {
 		enableActions(getCurrentOwner());
 	}
 
@@ -126,23 +128,27 @@ public class FocusManager implements FocusListener {
 	 * @param o		current focus owner
 	 */
 	protected void enableActions(FocusOwner o) {
-		if ( o == null ) 
-		{
+		if (o == null) {
 			//  no component has the focus
 			// -> disable all actions
-			
+
 			cutAction.setEnabled(false);
 			copyAction.setEnabled(false);
 			pasteAction.setEnabled(false);
 			deleteAction.setEnabled(false);
-					
+			undoAction.setEnabled(false);
+			redoAction.setEnabled(false);
+			selectAllAction.setEnabled(false);
 			return;
-		} 
-		
+		}
+
 		cutAction.setEnabled(o.isCutActionEnabled());
 		copyAction.setEnabled(o.isCopyActionEnabled());
 		pasteAction.setEnabled(o.isPasteActionEnabled());
 		deleteAction.setEnabled(o.isDeleteActionEnabled());
+		undoAction.setEnabled(o.isUndoActionEnabled());
+		redoAction.setEnabled(o.isRedoActionEnabled());
+		selectAllAction.setEnabled(o.isSelectAllActionEnabled());
 	}
 
 	/**
@@ -150,7 +156,6 @@ public class FocusManager implements FocusListener {
 	 * 
 	 */
 	public void focusGained(FocusEvent event) {
-		System.out.println("focus gained:" + event.getSource().toString());
 
 		current = (FocusOwner) map.get(event.getSource());
 
@@ -162,7 +167,6 @@ public class FocusManager implements FocusListener {
 	 * Component lost focus
 	 */
 	public void focusLost(FocusEvent event) {
-		System.out.println("focus lost:" + event.getSource().toString());
 
 		FocusOwner lost = (FocusOwner) map.get(event.getSource());
 
@@ -170,7 +174,7 @@ public class FocusManager implements FocusListener {
 
 		current = null;
 		//current = lost;
-		
+
 		updateActions();
 
 	}
@@ -181,7 +185,7 @@ public class FocusManager implements FocusListener {
 	 */
 	public void cut() {
 		getCurrentOwner().cut();
-		
+
 		enableActions(getCurrentOwner());
 	}
 
@@ -191,7 +195,7 @@ public class FocusManager implements FocusListener {
 		 */
 	public void copy() {
 		getCurrentOwner().copy();
-		
+
 		enableActions(getCurrentOwner());
 	}
 
@@ -201,7 +205,7 @@ public class FocusManager implements FocusListener {
 		 */
 	public void paste() {
 		getCurrentOwner().paste();
-		
+
 		enableActions(getCurrentOwner());
 	}
 
@@ -211,16 +215,39 @@ public class FocusManager implements FocusListener {
 		 */
 	public void delete() {
 		getCurrentOwner().delete();
-		
+
 		enableActions(getCurrentOwner());
 	}
 
+	/**
+	 * execute redo action of currentyl available focus owner
+	 *
+	 */
+	public void redo() {
+		getCurrentOwner().redo();
+		enableActions(getCurrentOwner());
+	}
 
+	/**
+	 * execute undo action of currentyl available focus owner
+	 *
+	 */
+	public void undo() {
+		getCurrentOwner().undo();
+		enableActions(getCurrentOwner());
+	}
 
+	/**
+		 * execute selectAll action of currentyl available focus owner
+		 *
+		 */
+	public void selectAll() {
+		getCurrentOwner().selectAll();
+		enableActions(getCurrentOwner());
+	}
 
 	/************************* setter of actions **********************/
-	
-	
+
 	/**
 	 * @param action
 	 */
@@ -247,6 +274,27 @@ public class FocusManager implements FocusListener {
 	 */
 	public void setPasteAction(BasicAction action) {
 		pasteAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setRedoAction(BasicAction action) {
+		redoAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setSelectAllAction(BasicAction action) {
+		selectAllAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setUndoAction(BasicAction action) {
+		undoAction = action;
 	}
 
 }

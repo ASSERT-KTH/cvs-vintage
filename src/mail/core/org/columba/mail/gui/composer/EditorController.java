@@ -34,7 +34,8 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class EditorController implements DocumentListener, FocusOwner, CaretListener {
+public class EditorController
+	implements DocumentListener, FocusOwner, CaretListener {
 	EditorView view;
 	ComposerController controller;
 
@@ -46,9 +47,9 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 		document = new UndoDocument();
 
 		view = new EditorView(this, document);
-		
+
 		MainInterface.focusManager.registerComponent(this);
-		
+
 		view.addCaretListener(this);
 	}
 
@@ -89,6 +90,13 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 
 	/************** FocusOwner implementation **************************/
 
+	// the following lines add cut/copy/paste/undo/redo/selectall
+	// actions support using the Columba action objects.
+	// 
+	// This means that we only have a single instance of these
+	// specific actions, which is shared by all menuitems and
+	// toolbar buttons.
+	
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.focus.FocusOwner#copy()
 	 */
@@ -124,8 +132,9 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
 	 */
 	public boolean isCopyActionEnabled() {
-		if ( view.getSelectedText() == null ) return false;
-		
+		if (view.getSelectedText() == null)
+			return false;
+
 		if (view.getSelectedText().length() > 0)
 			return true;
 
@@ -136,8 +145,9 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
 	 */
 	public boolean isCutActionEnabled() {
-		if ( view.getSelectedText() == null ) return false;
-		
+		if (view.getSelectedText() == null)
+			return false;
+
 		if (view.getSelectedText().length() > 0)
 			return true;
 
@@ -148,8 +158,9 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
 	 */
 	public boolean isDeleteActionEnabled() {
-		if ( view.getSelectedText() == null ) return false;
-		
+		if (view.getSelectedText() == null)
+			return false;
+
 		if (view.getSelectedText().length() > 0)
 			return true;
 
@@ -160,7 +171,7 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
 	 */
 	public boolean isPasteActionEnabled() {
-		
+
 		return true;
 	}
 
@@ -180,11 +191,36 @@ public class EditorController implements DocumentListener, FocusOwner, CaretList
 	}
 
 	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+		// TODO: use UndoableEditEvent to make this really work
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+		// TODO: use UndoableEditEvent to make this really work
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+		view.selectAll();
+
+	}
+
+	/************************** CaretUpdateListener interface *****************/
+
+	/* (non-Javadoc)
 	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
 	 */
 	public void caretUpdate(CaretEvent arg0) {
 		MainInterface.focusManager.updateActions();
 
 	}
-
 }
