@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * Java's keyboard handling is crap, to put it mildly.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.43 2005/02/06 20:43:43 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.44 2005/02/24 05:02:35 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -128,7 +128,7 @@ public class KeyEventWorkaround
 		case KeyEvent.VK_OPEN_BRACKET :
 		case KeyEvent.VK_BACK_SLASH   :
 		case KeyEvent.VK_CLOSE_BRACKET:
-		case KeyEvent.VK_NUMPAD0 :
+/* 		case KeyEvent.VK_NUMPAD0 :
 		case KeyEvent.VK_NUMPAD1 :
 		case KeyEvent.VK_NUMPAD2 :
 		case KeyEvent.VK_NUMPAD3 :
@@ -143,7 +143,7 @@ public class KeyEventWorkaround
 		case KeyEvent.VK_SEPARATOR:
 		case KeyEvent.VK_SUBTRACT   :
 		case KeyEvent.VK_DECIMAL    :
-		case KeyEvent.VK_DIVIDE     :
+		case KeyEvent.VK_DIVIDE     : */
 		case KeyEvent.VK_BACK_QUOTE:
 		case KeyEvent.VK_QUOTE:
 		case KeyEvent.VK_DEAD_GRAVE:

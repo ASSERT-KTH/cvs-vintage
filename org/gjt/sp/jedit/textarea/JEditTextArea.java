@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.344 2005/02/21 21:06:18 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.345 2005/02/24 05:02:37 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2581,6 +2581,12 @@ loop:		for(int i = getCaretPosition() - 1; i >= 0; i--)
 	public void goToPrevCharacter(boolean select)
 	{
 		Selection s = getSelectionAtOffset(caret);
+
+		if(caret == 0)
+		{
+			getToolkit().beep();
+			return;
+		}
 
 		if(!select && s instanceof Selection.Range)
 		{

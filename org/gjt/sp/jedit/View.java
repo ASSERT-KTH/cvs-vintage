@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.124 2005/02/05 20:34:39 spestov Exp $
+ * @version $Id: View.java,v 1.125 2005/02/24 05:02:34 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -763,6 +763,7 @@ public class View extends JFrame implements EBComponent
 		newSplitPane.setOneTouchExpandable(true);
 		newSplitPane.setBorder(null);
 		newSplitPane.setMinimumSize(new Dimension(0,0));
+		newSplitPane.setResizeWeight(0.5);
 
 		int parentSize = (orientation == JSplitPane.VERTICAL_SPLIT
 			? oldEditPane.getHeight() : oldEditPane.getWidth());
