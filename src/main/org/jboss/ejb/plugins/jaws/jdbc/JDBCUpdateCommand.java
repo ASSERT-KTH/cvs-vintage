@@ -7,6 +7,8 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
+import org.apache.log4j.Category;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -16,11 +18,22 @@ import java.sql.SQLException;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public abstract class JDBCUpdateCommand extends JDBCCommand
 {
-   // Constructors --------------------------------------------------
+   // Attributes ----------------------------------------------------
+   private Category log = Category.getInstance(JDBCUpdateCommand.class);
+
+  // Constructors --------------------------------------------------
    
    /**
     * Pass the arguments on to the superclass constructor.
@@ -48,7 +61,7 @@ public abstract class JDBCUpdateCommand extends JDBCCommand
    {
       int rowsAffected = stmt.executeUpdate();
       
-      if (debug)
+      if (log.isDebugEnabled())
       {
          log.debug("Rows affected = " + rowsAffected);
       }

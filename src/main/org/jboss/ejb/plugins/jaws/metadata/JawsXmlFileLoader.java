@@ -13,12 +13,12 @@ import java.io.IOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.jboss.logging.Log;
-
 import org.jboss.ejb.DeploymentException;
 
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
+
+import org.apache.log4j.Category;
 
 
 /**
@@ -26,7 +26,15 @@ import org.jboss.metadata.XmlFileLoader;
  *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JawsXmlFileLoader {
 
@@ -34,15 +42,14 @@ public class JawsXmlFileLoader {
     private ApplicationMetaData application;
 	private ClassLoader classLoader;
 	private ClassLoader localClassLoader;
-    private Log log;
+    private Category log = Category.getInstance(JawsXmlFileLoader.class);
 
 
 	// Constructors --------------------------------------------------
-	public JawsXmlFileLoader(ApplicationMetaData app, ClassLoader cl, ClassLoader localCl, Log l) {
+	public JawsXmlFileLoader(ApplicationMetaData app, ClassLoader cl, ClassLoader localCl) {
 		application = app;
 		classLoader = cl;
 		localClassLoader = localCl;
-		log = l;
 	}
 
 

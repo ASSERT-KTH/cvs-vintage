@@ -13,16 +13,30 @@ import java.sql.SQLException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 
+import org.apache.log4j.Category;
+
 /**
  * JDBCBeanExistsCommand
  *
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
+   // Attributes ----------------------------------------------------
+
+   private Category log = Category.getInstance(JDBCBeanExistsCommand.class);
+
    // Constructors --------------------------------------------------
 
    public JDBCBeanExistsCommand(JDBCCommandFactory factory)
@@ -46,7 +60,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
          result = ((Boolean)jdbcExecute(id)).booleanValue();
       } catch (Exception e)
       {
-	      log.debug(e);
+	      if (log.isDebugEnabled()) log.debug("Exception",e);
       }
 
       return result;

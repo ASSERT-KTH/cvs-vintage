@@ -27,7 +27,6 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.jaws.jdbc.JDBCCommandFactory;
 
-import org.jboss.logging.Log;
 import org.jboss.util.FinderResults;
 
 /**
@@ -39,7 +38,15 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -66,7 +73,7 @@ public class JAWSPersistenceManager
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
 
-   Log log = Log.createLog(this.getClass().getName());
+   Category log = Category.getInstance(this.getClass().getName());
 
    // EntityPersistenceStore implementation -------------------------
 
@@ -81,7 +88,7 @@ public class JAWSPersistenceManager
                 container.getBeanMetaData().getEjbName());
 
       // Set up Commands
-      commandFactory = new JDBCCommandFactory(container, log);
+      commandFactory = new JDBCCommandFactory(container);
 
       initCommand = commandFactory.createInitCommand();
       startCommand = commandFactory.createStartCommand();

@@ -30,6 +30,8 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.util.FinderResults;
 
+import org.apache.log4j.Category;
+
 /**
  * Implementation of the LoadEntitiesCommand added in JBoss 2.3. This preloads
  * data for all entities whose keys were retrieved by a finder.
@@ -41,12 +43,23 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCLoadEntitiesCommand
    extends JDBCLoadEntityCommand
    implements JPMLoadEntitiesCommand
 {
+   // Attributes ----------------------------------------------------
+   private Category log = Category.getInstance(JDBCLoadEntitiesCommand.class);
+
    String selectClause;
    // Constructors --------------------------------------------------
 
@@ -116,7 +129,7 @@ public class JDBCLoadEntitiesCommand
          }
          factory.addPreloadData(key, allValues);
       } catch (SQLException sqle) {
-         log.warning("SQL Error preloading data for key "+key);
+         log.warn("SQL Error preloading data for key "+key, sqle);
       }
    }
    

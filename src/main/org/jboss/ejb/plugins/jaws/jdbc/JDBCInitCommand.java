@@ -21,6 +21,8 @@ import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
+import org.apache.log4j.Category;
+
 /**
  * JAWSPersistenceManager JDBCInitCommand
  *
@@ -33,17 +35,31 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
  * 
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * 
- * Revison:
- * 20010621 danch: merged patch from David Jenks - null constraint on columns.
- *    Also fixed bug where remapping column name of key field caused an invalid
- *    PK constraint to be build.
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 danch</b>: 
+ *   <ul>
+ *   <li>merged patch from David Jenks - null constraint on columns.
+ *   <li>fixed bug where remapping column name of key field caused an invalid
+ *   PK constraint to be build.
+ *   </ul>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   <li> Correct pk-constraint to not only work when PK class is primitive
+ *   </ul>
+ *
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
    implements JPMInitCommand
 {
+   // Attributes ----------------------------------------------------
+   private Category log = Category.getInstance(JDBCInitCommand.class);
+
    // Constructors --------------------------------------------------
 
    public JDBCInitCommand(JDBCCommandFactory factory)
@@ -71,7 +87,7 @@ public class JDBCInitCommand
       // If there is a primary key field,
       // and the bean has explicitly <pk-constraint>true</pk-constraint> in jaws.xml
       // add primary key constraint.
-      if (jawsEntity.getPrimKeyField() != null && jawsEntity.hasPkConstraint())  
+      if (jawsEntity.hasPkConstraint())  
       {
          sql += ",CONSTRAINT pk"+jawsEntity.getTableName()+" PRIMARY KEY (";
          for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
@@ -123,7 +139,7 @@ public class JDBCInitCommand
 
          // Try to create it
          if(created) {
-             log.log("Table '"+jawsEntity.getTableName()+"' already exists");
+             log.info("Table '"+jawsEntity.getTableName()+"' already exists");
          } else {
              try
              {          
@@ -133,20 +149,30 @@ public class JDBCInitCommand
                 factory.getContainer().getTransactionManager().commit ();
 
                 // Create successful, log this
-                log.log("Created table '"+jawsEntity.getTableName()+"' successfully.");
-                log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
-                  +jawsEntity.getPrimKeyField()+"'.");
-             } catch (Exception e)
+                log.info("Created table '"+jawsEntity.getTableName()+"' successfully.");
+	             if (jawsEntity.getPrimKeyField() != null)
+	             	log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
+	             		+jawsEntity.getPrimKeyField()+"'.");
+	             else {
+	             	String flds = "[";
+	                for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
+					   flds += ((PkFieldMetaData)i.next()).getName();
+					   flds += i.hasNext()?",":"";
+					}
+				    flds += "]";
+	             	log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is " + flds);
+	             }	
+	         } catch (Exception e)
              {
                 log.debug("Could not create table " +
-                          jawsEntity.getTableName() + ": " + e.getMessage());
+                          jawsEntity.getTableName(), e);
                 try
                 {
                    factory.getContainer().getTransactionManager().rollback ();
                 }
                 catch (Exception _e)
                 {
-                   log.error("Could not roll back transaction: "+ _e.getMessage());
+                   log.error("Could not roll back transaction", _e);
                 }
              }
          }

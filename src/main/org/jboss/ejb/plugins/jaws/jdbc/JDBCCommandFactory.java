@@ -48,10 +48,11 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
-import org.jboss.logging.Log;
 import org.jboss.util.FinderResults;
 import org.jboss.util.TimerTask;
 import org.jboss.util.TimerQueue;
+
+import org.apache.log4j.Category;
 
 /**
  * Command factory for the JAWS JDBC layer. This class is primarily responsible
@@ -69,13 +70,27 @@ import org.jboss.util.TimerQueue;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
- * Revision:
- * 20010621 Bill Burke: createDefinedFinderCommand creates different objects
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 Bill Burke:</b> 
+ *   <ul>
+ *   <li>createDefinedFinderCommand creates different objects
  *    based on the read-head flag of the FinderMetaData.
- * 20010621 danch: extended Bill's change to work on other finder types; 
- *    removed stale todos. 
+ *   </ul>
+ *
+ *   <p><b>20010621 danch:</b>
+ *   <ul>
+ *   <li>extended Bill's change to work on other finder types; 
+ *    removed stale todos.
+ *   </ul>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -84,8 +99,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    private EntityContainer container;
    private Context javaCtx;
    private JawsEntityMetaData metadata;
-   private Log log;
-   private boolean debug = false;
+   private Category log;
 
    /** Timer queue used to time polls on the preloadRefQueue on all JAWS 
     *  handled entities
@@ -119,13 +133,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
       
    // Constructors --------------------------------------------------
    
-   public JDBCCommandFactory(EntityContainer container,
-                             Log log)
+   public JDBCCommandFactory(EntityContainer container)
       throws Exception
    {
       this.container = container;
-      this.log = log;
-     
       this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
       
       String ejbName = container.getBeanMetaData().getEjbName();
@@ -134,12 +145,11 @@ public class JDBCCommandFactory implements JPMCommandFactory
            
       if (jamd == null) {
          // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
-         JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
+         JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader());
          jamd = jfl.load();
          amd.addPluginData("JAWS", jamd);
       }
-      debug = jamd.getDebug();
-              
+
       metadata = jamd.getBeanByEjbName(ejbName);
       if (metadata == null) {
          throw new DeploymentException("No metadata found for bean " + ejbName);
@@ -165,16 +175,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public JawsEntityMetaData getMetaData()
    {
       return metadata;
-   }
-   
-   public Log getLog()
-   {
-      return log;
-   }
-   
-   public boolean getDebug() 
-   {
-      return debug;
    }
    
    // Additional Command creation
@@ -320,7 +320,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
       try {
          trans = tm.getTransaction();
       } catch (javax.transaction.SystemException sysE) {
-         log.warning("System exception getting transaction for preload - can't preload data for "+entityKey);
+         log.warn("System exception getting transaction for preload - can't preload data for "+entityKey, sysE);
          return;
       }
 //log.debug("PRELOAD: adding preload for "+entityKey+" in transaction "+(trans != null ? trans.toString() : "NONE")+" entityData="+entityData);
@@ -332,10 +332,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
                try {
                   trans.registerSynchronization(new PreloadClearSynch(trans));
                } catch (javax.transaction.SystemException se) {
-                  log.warning("System exception getting transaction for preload - can't get preloaded data for "+entityKey);
+                  log.warn("System exception getting transaction for preload - can't get preloaded data for "+entityKey, se);
                   return;
                } catch (javax.transaction.RollbackException re) {
-                  log.warning("Rollback exception getting transaction for preload - can't get preloaded data for "+entityKey);
+                  log.warn("Rollback exception getting transaction for preload - can't get preloaded data for "+entityKey, re);
                   return;
                }
                entitiesInTransaction = new HashMap();
@@ -361,7 +361,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
       try {
          trans = tm.getTransaction();
       } catch (javax.transaction.SystemException sysE) {
-         log.warning("System exception getting transaction for preload - not preloading "+entityKey);
+         log.warn("System exception getting transaction for preload - not preloading "+entityKey, sysE);
          return null;
       }
       

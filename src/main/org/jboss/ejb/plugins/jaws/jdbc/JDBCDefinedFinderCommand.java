@@ -17,6 +17,8 @@ import java.sql.PreparedStatement;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
 
+import org.apache.log4j.Category;
+
 /**
  * JAWSPersistenceManager JDBCDefinedFinderCommand
  *
@@ -29,15 +31,26 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
- * Revisions:
- * 20010621 Bill Burke: exposed parameterArray through get method.
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 Bill Burke:</b>
+ *   <ul>
+ *   <li>exposed parameterArray through get method.
+ *   </li>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
 
+   private Category log = Category.getInstance(JDBCDefinedFinderCommand.class);
    private int[] parameterArray;
    private TypeMappingMetaData typeMapping;
 
@@ -100,7 +113,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
          if (whereStart == -1) {
             //log this at debug in case someone has made a mistake, but assume that
             // they mean a findAll.
-            log.debug("Strange query for finder "+f.getName()+
+            if (log.isDebugEnabled()) log.debug("Strange query for finder "+f.getName()+
                ". Includes join, but no 'where' clause. Is this a findAll?");
             tableList = query;
             whereClause = "";

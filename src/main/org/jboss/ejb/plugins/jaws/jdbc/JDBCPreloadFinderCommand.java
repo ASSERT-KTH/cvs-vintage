@@ -33,18 +33,30 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
 import org.jboss.util.FinderResults;
 
+import org.apache.log4j.Category;
+
 /**
  * Preloads data for all entities in where clause
  *
  * @see <related>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
- * Revision:
- * 20010621 danch: abstracted the finders further so that this class can be 
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 danch:<b>
+ *   <ul>
+ *   <li> abstracted the finders further so that this class can be 
  *    used against the findAll and FindBy types of finders as well as the 
  *    defined finders.
+ *   </ul>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCPreloadFinderCommand
    extends JDBCFinderCommand
@@ -53,6 +65,8 @@ public class JDBCPreloadFinderCommand
    protected JDBCFinderCommand finderDelegate;
    /** The load command we delegate to for our column list */
    protected JDBCLoadEntityCommand loadCommand;
+
+   private Category log = Category.getInstance(JDBCPreloadFinderCommand.class);
 
    // Constructors --------------------------------------------------
 
@@ -111,7 +125,7 @@ public class JDBCPreloadFinderCommand
    }
    
    protected void preloadOneEntity(ResultSet rs, Object key) {
-      if (debug)
+      if (log.isDebugEnabled())
          log.debug("PRELOAD: preloading entity "+key);   
       int idx = 1;
       // skip the PK fields at the beginning of the select.
@@ -133,11 +147,11 @@ public class JDBCPreloadFinderCommand
             allValues[fieldCount] = value;
             fieldCount++;
          }
-         if (debug)
+         if (log.isDebugEnabled())
             log.debug("adding to preload data: " + key.toString());
          factory.addPreloadData(key, allValues);
       } catch (Exception sqle) {
-         log.warning("SQL Error preloading data for key "+key);
+         log.warn("SQL Error preloading data for key "+key, sqle);
       }
    }
    

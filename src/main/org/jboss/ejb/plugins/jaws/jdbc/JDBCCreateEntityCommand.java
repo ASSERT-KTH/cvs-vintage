@@ -30,6 +30,8 @@ import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
+import org.apache.log4j.Category;
+
 /**
  * JAWSPersistenceManager JDBCCreateEntityCommand
  *
@@ -38,7 +40,15 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand
@@ -47,7 +57,8 @@ public class JDBCCreateEntityCommand
    // Attributes ----------------------------------------------------
    
    private JDBCBeanExistsCommand beanExistsCommand;
-   
+   private Category log = Category.getInstance(JDBCCreateEntityCommand.class);
+
    // Constructors --------------------------------------------------
    
    public JDBCCreateEntityCommand(JDBCCommandFactory factory)
@@ -117,7 +128,7 @@ public class JDBCCreateEntityCommand
             id = from.get(ctx.getInstance());
          }
          
-         if (debug)
+         if (log.isDebugEnabled())
          {
             log.debug("Create, id is "+id);
          }
@@ -135,7 +146,7 @@ public class JDBCCreateEntityCommand
             jdbcExecute(ctx);
          } catch (Exception e)
          {
-            log.debug(e);
+            if (log.isDebugEnabled()) log.debug("Exception", e);
             throw new CreateException("Could not create entity:"+e);
          }
          
@@ -143,7 +154,7 @@ public class JDBCCreateEntityCommand
          
       } catch (IllegalAccessException e)
       {
-         log.debug(e);
+         if (log.isDebugEnabled()) log.debug("IllegalAccessException", e);
          throw new CreateException("Could not create entity:"+e);
       }
    }

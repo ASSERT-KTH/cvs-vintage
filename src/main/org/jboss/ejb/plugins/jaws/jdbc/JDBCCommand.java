@@ -46,8 +46,8 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
-import org.jboss.logging.Log;
-import org.jboss.logging.Logger;
+
+import org.apache.log4j.Category;
 
 /**
  * Abstract superclass for all JAWS Commands that use JDBC directly.
@@ -58,11 +58,25 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.38 $ 
+ * @version $Revision: 1.39 $ 
  * 
- * Revision:
- * 20010621 danch: add getter for name
- * 20010621 (ref 1.25) danch: improve logging: an exception execing SQL is an error!
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 danch:</b>
+ *   <ul>
+ *   <li>add getter for name
+ *   </ul>
+ *
+ *   <p><b>20010621 (ref 1.25) danch:</b>
+ *   <ul>
+ *   <li>improve logging: an exception execing SQL is an error!
+ *   </ul>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public abstract class JDBCCommand
 {
@@ -92,7 +106,7 @@ public abstract class JDBCCommand
             rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
             rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
         } catch(NoSuchMethodException e) {
-            e.printStackTrace();
+            Category.getInstance(JDBCCommand.class).error("NoSuchMethodException", e);
         }
     }
 
@@ -100,16 +114,11 @@ public abstract class JDBCCommand
 
    protected JDBCCommandFactory factory;
    protected JawsEntityMetaData jawsEntity;
-   protected Log log;
    protected String name;    // Command name, used for debug trace
 
+   private Category log = Category.getInstance(JDBCCommand.class);
    private String sql;
    private static Map jdbcTypeNames;
-
-   /**
-    * Gives compile-time control of tracing.
-    */
-   public static boolean debug = false;
 
    // Constructors --------------------------------------------------
 
@@ -125,9 +134,7 @@ public abstract class JDBCCommand
    {
       this.factory = factory;
       this.jawsEntity = factory.getMetaData();
-      this.log = factory.getLog();
       this.name = name;
-      this.debug = factory.getDebug();
    }
 
    /** return the name of this command */
@@ -161,15 +168,15 @@ public abstract class JDBCCommand
       {
          con = getConnection();
          String theSQL = getSQL(argOrArgs);
-         if (debug)
+         if (log.isDebugEnabled())
          {
             log.debug(name + " command executing: " + theSQL);
          }
-             stmt = con.prepareStatement(theSQL);
-             setParameters(stmt, argOrArgs);
-             result = executeStatementAndHandleResult(stmt, argOrArgs);
+         stmt = con.prepareStatement(theSQL);
+         setParameters(stmt, argOrArgs);
+         result = executeStatementAndHandleResult(stmt, argOrArgs);
       } catch(SQLException e) {
-          log.error("Exception caught executing SQL: "+e);
+          log.error("Exception caught executing SQL", e);
           throw e;
       } finally
       {
@@ -180,7 +187,7 @@ public abstract class JDBCCommand
                stmt.close();
             } catch (SQLException e)
             {
-               Logger.debug(e);
+               log.error("SQLException", e);
             }
          }
          if (con != null)
@@ -190,7 +197,7 @@ public abstract class JDBCCommand
                con.close();
             } catch (SQLException e)
             {
-               Logger.debug(e);
+               log.error("SQLException", e);
             }
          }
       }
@@ -205,10 +212,8 @@ public abstract class JDBCCommand
     */
    protected void setSQL(String sql)
    {
-      if (debug)
-      {
+      if (log.isDebugEnabled())
          log.debug(name + " SQL: " + sql);
-      }
       this.sql = sql;
    }
 
@@ -278,7 +283,7 @@ public abstract class JDBCCommand
                                Object value)
       throws SQLException
    {
-      if (debug)
+      if (log.isDebugEnabled())
       {
          log.debug("Set parameter: idx=" + idx +
                    ", jdbcType=" + getJDBCTypeName(jdbcType) +
@@ -406,9 +411,9 @@ public abstract class JDBCCommand
                 if(rs.wasNull()) return null;
                 return result;
             } catch(IllegalAccessException e) {
-                log.debug("Unable to read from ResultSet: "+e);
+                log.debug("Unable to read from ResultSet: ",e);
             } catch(InvocationTargetException e) {
-                log.debug("Unable to read from ResultSet: "+e);
+                log.debug("Unable to read from ResultSet: ",e);
             }
         }
 
@@ -418,7 +423,7 @@ public abstract class JDBCCommand
 
         if(destination.isAssignableFrom(result.getClass()) && !result.getClass().equals(MarshalledObject.class) )
             return result;
-        else if(debug)
+        else if(log.isDebugEnabled())
             log.debug("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
 
         // Also we should detect the EJB references here
@@ -442,8 +447,8 @@ public abstract class JDBCCommand
                 in.close();
                 return string.toString();
             } catch(IOException e) {
-                log.error("Unable to read a CLOB column: "+e);
-                throw new SQLException("Unable to read a CLOB column: "+e);
+                log.error("Unable to read a CLOB column", e);
+                throw new SQLException("Unable to read a CLOB column: " +e);
             }
         } else {
             bytes = rs.getBytes(idx);
@@ -486,7 +491,8 @@ public abstract class JDBCCommand
                      }
                  }
                  if(!found) {
-                     log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
+                     if (log.isDebugEnabled())
+                        log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
                      result = null;
                  }
              }
@@ -536,7 +542,7 @@ public abstract class JDBCCommand
       } catch (Exception e)
       {
          // JF: Dubious - better to throw a meaningful exception
-         Logger.debug(e);
+         log.debug("Exception",e);
          return Types.OTHER;
       }
    }
@@ -705,7 +711,7 @@ public abstract class JDBCCommand
             jdbcTypeNames.put(fieldValue, fieldName);
          } catch (IllegalAccessException e) {
             // Should never happen
-            Logger.debug(e);
+            log.error("IllegalAccessException",e);
          }
       }
    }

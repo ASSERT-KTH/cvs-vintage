@@ -29,6 +29,8 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 
+import org.apache.log4j.Category;
+
 /**
  * JAWSPersistenceManager JDBCLoadEntityCommand
  *
@@ -39,7 +41,15 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -59,7 +69,9 @@ public class JDBCLoadEntityCommand
     *  to account for the fact that JDBC counts from one whilst every other
     *  damn thing in the languase starts at 0, the way God intended!
     */
-   private static final int JDBC_WART_OFFSET = 1;   
+   private static final int JDBC_WART_OFFSET = 1;
+   private Category log = Category.getInstance(JDBCLoadEntityCommand.class);
+
    // Constructors --------------------------------------------------
 
    public JDBCLoadEntityCommand(JDBCCommandFactory factory)
@@ -143,7 +155,7 @@ public class JDBCLoadEntityCommand
             Object[] data = factory.getPreloadData(ctx.getId());
             if (data != null) {
                loadFromPreload(data, ctx);
-               if (debug)
+               if (log.isDebugEnabled())
                {
                   log.debug("preloading: " + ctx.getId().toString());
                }

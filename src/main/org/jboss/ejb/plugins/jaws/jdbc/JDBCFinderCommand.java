@@ -27,6 +27,8 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.util.FinderResults;
 
+import org.apache.log4j.Category;
+
 /**
  * Abstract superclass of finder commands that return collections.
  * Provides the handleResult() implementation that these all need.
@@ -36,16 +38,31 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
- * Revisions:
- * 20010621 Bill Burke: added constructor to facilitate re-use. Removed extra login for setting up FinderResults since this class is really not used anymore.
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010621 Bill Burke:</b>
+ *   <ul>
+ *   <li>added constructor to facilitate re-use. Removed extra login for setting up FinderResults since this class is really not used anymore.
+ *   </ul>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
    implements JPMFindEntitiesCommand
 {
+
+   // Attributes ----------------------------------------------------
+   private Category log = Category.getInstance(JDBCFinderCommand.class);
+
    protected FinderMetaData finderMetaData = null;
+
    // Constructors --------------------------------------------------
 
    public JDBCFinderCommand(JDBCCommandFactory factory, String name)
@@ -96,7 +113,7 @@ public abstract class JDBCFinderCommand
          result = new FinderResults(keys, null, null, null);
       } catch (Exception e)
       {
-         log.debug(e);
+         if (log.isDebugEnabled()) log.debug("Exception", e);
          throw new FinderException("Find failed");
       }
 

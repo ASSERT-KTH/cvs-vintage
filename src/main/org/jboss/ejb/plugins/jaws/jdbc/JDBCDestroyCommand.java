@@ -12,6 +12,8 @@ import java.sql.SQLException;
 
 import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
 
+import org.apache.log4j.Category;
+
 /**
  * JAWSPersistenceManager JDBCDestroyCommand
  *
@@ -20,12 +22,24 @@ import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
+ *
+ *   <p><b>Revisions:</b>
+ *
+ *   <p><b>20010812 vincent.harcq@hubmethods.com:</b>
+ *   <ul>
+ *   <li> Get Rid of debug flag, use log4j instead
+ *   </ul>
+ *
  */
 public class JDBCDestroyCommand
    extends JDBCUpdateCommand
    implements JPMDestroyCommand
 {
+   // Attributes ----------------------------------------------------
+
+   private Category log = Category.getInstance(JDBCDestroyCommand.class);
+
    // Constructors --------------------------------------------------
    
    public JDBCDestroyCommand(JDBCCommandFactory factory)
@@ -52,8 +66,8 @@ public class JDBCDestroyCommand
             factory.getContainer().getTransactionManager().commit ();
          } catch (Exception e)
          {
-            log.debug("Could not drop table " +
-                      jawsEntity.getTableName() + ": " + e.getMessage());
+            if (log.isDebugEnabled()) log.debug("Could not drop table " +
+                      jawsEntity.getTableName(), e);
 
             try
             {
@@ -61,7 +75,7 @@ public class JDBCDestroyCommand
             }
             catch (Exception _e)
             {
-               log.error("Could not roll back transaction: "+ _e.getMessage());
+               log.error("Could not roll back transaction", _e);
             }
          }
       }
