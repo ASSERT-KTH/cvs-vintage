@@ -3,7 +3,7 @@
      #set ($issuetype = $scarabR.CurrentIssueType)
      #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
      #set ($globalQueries = $module.getGlobalQueries($issuetype))
-     #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
+     #if (($privateQueries.size() && $privateQueries.size() > 0) || ($globalQueries.size() && $globalQueries.size() > 0))
         <select name="queryId">
        #foreach ($query in $privateQueries)
         <option value="$query.QueryId">$query.Name</option>
