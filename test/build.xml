@@ -42,7 +42,7 @@
   <property name="test.dist.jdoc"  	   value="${test.dist}/jdoc"/>
   <property name="test.dist.results"  	   value="${test.dist}/results"/>
   <property name="test.conform"            value="conform"/>
-  <property name="test.conform.src"        value="${test.src}/org/objectweb/carol/jtests/conform"/>
+  <property name="test.conform.src"        value="${test.src}/org/objectweb/carol"/>
 
   <!-- tmp directories for tests lauhing -->
   <property name="test.tmp"                value="${test.dist}/tmp"/> 
@@ -78,14 +78,7 @@
   <!-- *********    COMPILE TEST   **********-->
   <!-- **************************************-->
   <target name="compile.base" description="Compiles tests base classes">
-    <condition property="test.conform.dir.exist">
-      <available file="${test.conform.src}"/>
-    </condition>
-    <antcall target="compile.conform"/>
-  </target>  
-
-  <target name="compile.conform" if="test.conform.dir.exist">
-  	<mkdir dir="${test.build}/classes"/>
+    <mkdir dir="${test.build}/classes"/>
     <javac 
       srcdir="${test.src}"
       destdir="${test.build}/classes"
@@ -94,10 +87,11 @@
       nowarn="${compile.nowarn}"
       optimize="${compile.optimize}">
       <classpath refid="test.classpath"/>
-      <include name="**/conform/**/*.java"/>  
+      <include name="**/*.java"/>  
     </javac> 
-  </target>
-  
+
+  </target>  
+
   <target name="compile.stub">      
     <mkdir dir="${test.dist.lib}"/>
     <mkdir dir="${test.build.stub}"/>
