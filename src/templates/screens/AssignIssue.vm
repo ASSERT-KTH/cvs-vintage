@@ -136,7 +136,7 @@ $intake.declareGroups()
 #end
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
-#macro (sort $shortName $longName)
+#macro (userSort $shortName $longName)
      #if ($sortColumn.equals($shortName))
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
@@ -244,8 +244,8 @@ $intake.declareGroups()
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 	<th nowrap="nowrap">Select</th>
-    <th>#sort ("name" "Name")</th>
-	<th>#sort ("email" "Email")</a></th>
+    <th>#userSort ("name" "Name")</th>
+	<th>#userSort ("email" "Email")</a></th>
 	<th>Association</th>
 	</tr>
    #foreach ($user in $searchResults)
