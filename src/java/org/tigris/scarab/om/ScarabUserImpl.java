@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.62 2002/05/09 01:50:25 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.63 2002/05/23 17:10:58 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -176,6 +176,10 @@ public class ScarabUserImpl
                 perms = (String[])permList.toArray(perms);
                 
                 Module[] modules = getPrivateModules(perms, showDeletedModules);
+                if (modules == null || modules.length == 0)
+                {
+                    return new ArrayList();
+                }
                 return Arrays.asList(modules);
             }
         };
