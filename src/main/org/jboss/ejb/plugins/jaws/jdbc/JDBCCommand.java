@@ -7,6 +7,8 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
+import java.math.BigDecimal;
+
 import java.lang.reflect.Field;
 
 import java.util.Iterator;
@@ -42,7 +44,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class JDBCCommand
 {
@@ -327,21 +329,43 @@ public abstract class JDBCCommand
       throws SQLException
    {
       Object result = rs.getObject(idx);
-
+      
+      // Result transformation required by Oracle, courtesy of Jay Walters
+      
+      if (result != null && result instanceof BigDecimal)
+      {
+         BigDecimal bigDecResult = (BigDecimal)result;
+         
+         switch (jdbcType)
+         {
+            case Types.INTEGER:
+               result = new Integer(bigDecResult.intValue());
+               break;
+            
+            case Types.BIT:
+               result = new Boolean(bigDecResult.intValue() > 0);
+               break;
+            
+            case Types.DOUBLE:
+               result = new Double(bigDecResult.doubleValue());
+               break;
+            
+            case Types.FLOAT:
+               result = new Float(bigDecResult.floatValue());
+               break;
+            
+            case Types.BIGINT:
+               result = new Long(bigDecResult.longValue());
+               break;
+         }
+      }
+      
       if (debug) {
-		  String className = result == null ? "null" : result.getClass().getName();
+         String className = result == null ? "null" : result.getClass().getName();
          log.debug("Got result: idx=" + idx +
                    ", value=" + result +
                    ", class=" + className +
                    ", JDBCtype=" + getJDBCTypeName(jdbcType));
-      }
-      
-      // Trial result transformation - BigDecimal to Integer
-      if ((result instanceof java.math.BigDecimal) && (jdbcType == Types.INTEGER))
-      {
-         log.debug("*** Transforming BigDecimal to Integer ***");
-         
-         result = new Integer(((java.math.BigDecimal)result).intValue());
       }
       
       return result;
@@ -473,11 +497,6 @@ public abstract class JDBCCommand
       throws IllegalAccessException
    {
       Field field = pkFieldInfo.getPkField();
-      
-      // JF: Temp checks to narrow down bug
-      if (pk == null) log.debug("***** getPkFieldValue: PK is null *****");
-      if (field == null) log.debug("***** getPkFieldValue: Field is null *****");
-      
       return field.get(pk);
    }
    
