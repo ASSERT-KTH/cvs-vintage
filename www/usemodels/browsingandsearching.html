@@ -4,8 +4,7 @@
     <title>Browsing and Searching Use Cases</title>
   </head>
 
-  
-<body bgcolor="#FFFFFF">
+  <body>
     <h1>Browsing and Searching Use Cases</h1>
 
 <!-- --------------------------------------------------------------- -->
@@ -15,48 +14,55 @@
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-    <td bgcolor="white" valign="top">UC-02: Search for Issue by ID (later: or Global ID)</td>
+    <td bgcolor="white" valign="top">UC-02: Search for issue by ID</td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td> 
     <td bgcolor="white" valign="top">None</td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" align="right"
+    valign="top"><b>Purpose:</b></td>
     <td bgcolor="white" valign="top">
-       User enters issue number and sees the specified issue or an appropriate message.
+       User enters issue number and sees the specified issue or an
+       appropriate message.
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td>
-    <td bgcolor="white" valign="top"><a href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td> 
+    <td bgcolor="white" valign="top">
+      <a href="http://www.tigris.org/features/feature.html">FeatureName</a>
+    </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
     <td bgcolor="white" valign="top">
-       User: Any Role.<br>
-       Scarab: The scarab system.
+       User: Any Role (High Priority, High Frequency)<br> 
+       Scarab: The scarab system.<br>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Other Stakeholders:</b></td>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
     <td bgcolor="white" valign="top">
       Fellow Project Participant: wants to be able to specify issue
       unamgiously via an easy-to-type-or-say string.  This is often
       done via email, in code comments, in chat, or verbally on phone
       or in meetings.  Challenge is that unambiguous specification is
-      at odds with brevity.  Assumes project name or URL as shared knowledge?
+      at odds with brevity.  Assumes project name or URL as shared
+      knowledge?
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Prereq:</b></td>
+    <td bgcolor="white" align="right" valign="top"><b>Pre-conditions:</b></td>
     <td bgcolor="white" valign="top">
-       Logged in<br>
-       Project set up<br>
+       Logged in<br> 
+       Project set up<br> 
+       Existing issue<br> 
+       User knows issue number<br>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
+    <td bgcolor="white" align="right" valign="top"><b>Post-conditions:</b></td> 
     <td bgcolor="white" valign="top">Specified issue is displayed or error message.
     </td>
   </tr>
@@ -67,32 +73,317 @@
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Notes/Questions:</b></td>
-    <td bgcolor="white" valign="top">
-        If all issues are in project context, is there a quick way to jump to issue in another project?
-        How can this functionality be put on tigris StartPage?
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor="white"  colspan="2" valign="top"><b>Main Success Scenario:</b>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Main Success Scenario:</b><br>
       <ol>
-        <li> User: visit ProjectIssues, or any Scarab page in project context. 
-        <li> User: Enter issue ID into small field and hit button
-        <li> [validation] Scarab: validates issue number
-        <li> Scarab: display IssueView
+        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a>, or any Scarab page in project context.  
+        <li> User: Enter issue ID into small field and hit button 
+        <li> [validation] Scarab: validates issue number 
+        <li> Scarab: display <a href="IssueView.html">IssueView</a>
       </ol>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white"  colspan="2" valign="top"><b>Alternative Scenario Extensions:</b>
-
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b><br>
       <ul>
-        <li> [validation] if validation fails, Scarab displays InvalidIssueNumber page
+        <li> [validation] if validation fails, Scarab displays <a href="InvalidIssueNumber.html">InvalidIssueNumber</a> page
       </ul>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2"
+    valign="top"><b>Notes/Questions:</b><br>
+       <ul>
+         <li>If all issues are in project context, is there a quick way to jump to issue in another project?  
+         <li>How can this functionality be put on tigris StartPage?
+        </ul>
     </td>
   </tr>
 </table>
 <br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+
+<a name="UC-03"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-03: Quick search for issues</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td> 
+    <td bgcolor="white" valign="top">None</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       User enters a few terms and sees a list of issues that are
+       likely to be relevant.  Next, the user can drill into a
+       specific issue from the list.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td> 
+    <td bgcolor="white" valign="top">
+      <a href="http://www.tigris.org/features/feature.html">FeatureName</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor="white" valign="top">
+       User: Any Role (High Priority, High Frequency)<br> 
+       Scarab: The scarab system.<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor="white" valign="top">None
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Pre-conditions:</b></td>
+    <td bgcolor="white" valign="top">
+       Logged in<br> 
+       Project set up<br> 
+       Existing issue(s)<br> 
+       User knows some search terms<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Post-conditions:</b></td> 
+    <td bgcolor="white" valign="top">
+      List of issues matching criteria are displayed, or go direcly to issue if only one match.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor="white" valign="top">
+        Query terms.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Main Success Scenario:</b><br>
+      <ol>
+        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a>.  
+        <li> User: Enter search critia into field and hits 'search' button 
+        <li> [validation] Scarab: validates search criteria
+        <li> Scarab: searches for matching issues
+        <li> if results.size( ) == 0:
+             <ul type='a'>
+               <li> Scarab: display message on <a href="ProjectIssues.html">ProjectIssues</a> with field data as entered
+               <li> User: Modify search criteria and repeat
+             </ul>
+        <li> if results.size( ) == 1: 
+             <ul type='a'>
+               <li> Scarab: display <a href="IssueView.html">IssueView</a>
+             </ul>
+
+        <li> if results.size( ) > 1:
+             <ul type='a'>
+               <li> Scarab: display <a href="IssueList.html">IssueList</a>
+               <li> User: survey resulting list
+               <li> User: select one of the presented issues
+             </ul>
+      </ol>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b><br>
+      <ul>
+        <li> [validation] if validation fails:
+             <ul type='a'>
+               <li> Scarab: display <a href="ProjectIssues.html">ProjectIssues</a> with error message and field data as entered
+             </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Notes/Questions:</b><br>
+       <ul>
+       <li> Future feature: This is where query relaxation could be
+       useful to offer users results that were "close" to what they
+       asked for in addition to the ones that exactly match.
+       <li> Future feature: result column sorting, custom columns, etc.
+       </ul>
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-04"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-04: Advanced search for issues</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td> 
+    <td bgcolor="white" valign="top">None</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       User enters detailed search criteria and sees a list of issues
+       that match.  Next, the user can drill into a specific issue
+       from the list.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td> 
+    <td bgcolor="white" valign="top">
+      <a href="http://www.tigris.org/features/feature.html">FeatureName</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor="white" valign="top">
+       User: QA Manager (High Priority, High Frequence)<br> 
+       User: Any other role (High Frequence, Med-Low Frequency)<br> 
+       Scarab: The scarab system.<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor="white" valign="top">None
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Pre-conditions:</b></td>
+    <td bgcolor="white" valign="top">
+       Logged in<br> 
+       Project set up<br> 
+       Existing issue<br> 
+       User knows some search terms<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Post-conditions:</b></td> 
+    <td bgcolor="white" valign="top">
+      List of issues matching criteria are displayed, or go direcly to issue if only one match.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor="white" valign="top">
+        Search criteria.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Main Success Scenario:</b><br>
+      <ol>
+        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a>.
+        <li> User: click 'Advanced' link
+        <li> Scarab: display <a href="AdvancedSearch.html">AdvancedSearch</a> page
+        <li> User: Enter search critia into field and hits 'search' button 
+        <li> [validation] Scarab: validates search criteria
+        <li> Scarab: searches for matching issues
+        <li> if results.size( ) == 0:
+             <ul type='a'>
+               <li> Scarab: display message on <a href="ProjectIssues.html">ProjectIssues</a> with field data as entered
+               <li> User: Modify search criteria and repeat
+             </ul>
+        <li> if results.size( ) == 1: 
+             <ul type='a'>
+               <li> Scarab: display <a href="IssueView.html">IssueView</a>
+             </ul>
+
+        <li> if results.size( ) > 1:
+             <ul type='a'>
+               <li> Scarab: display <a href="IssueList.html">IssueList</a>
+               <li> User: survey resulting list
+               <li> User: select one of the presented issues
+             </ul>
+      </ol>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b><br>
+      <ul>
+        <li> [validation] if validation fails:
+             <ul type='a'>
+               <li> Scarab: display <a href="AdvancedSearch.html">AdvancedSearch</a> with error message and field data as entered
+             </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Notes/Questions:</b><br>
+       <ul>
+         <li> Need to break this use case down into more detailed ones 
+              for future advanced search features.
+         <li> Need to consider saved searches, etc.
+         <li> If quick search and saved search features are successful, 
+              this use case will have lower frequency.
+        </ul>
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-05"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-05: Store issue query</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       Specify search criteria for easy rerun of named query later.  Can be personal or shared in project.
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-06"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-06: Rerun stored issue query</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       Easily pick stored query from list and rerun it.  Also, easily refine it.
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-07"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-07: Step through related issues</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       Systematically view or edit each issue in a results list.  Use 'next' and 'prev' links on IssueView.
+    </td>
+  </tr>
+</table>
+
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-08"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-08: Review resulting issues in long format</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       View a large number of issues at once.  Useful for printing or comparison.
+    </td>
+  </tr>
+</table>
+
 
   </body>
 </html>
