@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.frame;
 
 import java.awt.BorderLayout;
@@ -117,8 +118,6 @@ public abstract class AbstractFrameView
 		setSize(screenSize);
 		*/
 
-		// FIXME: this works only with JDK1.4
-		// has to be added with org.columba.core.util.Compatibility-class
 		//setExtendedState(MAXIMIZED_BOTH);
 	}
 
