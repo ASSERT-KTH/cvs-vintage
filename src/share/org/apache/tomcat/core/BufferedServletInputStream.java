@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.3 2000/01/08 21:31:39 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 21:31:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.4 2000/01/15 23:30:19 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/15 23:30:19 $
  *
  * ====================================================================
  * 
@@ -87,16 +87,16 @@ public class BufferedServletInputStream extends ServletInputStream {
     
     private int bytesRead = 0;
     private int limit = -1;
-    private RequestAdapter reqA;
+    private Request reqA;
     
     public BufferedServletInputStream() {
     }
 
-    public BufferedServletInputStream( RequestAdapter reqA ) {
+    public BufferedServletInputStream( Request reqA ) {
 	this.reqA=reqA;
     }
     
-    public void setRequestAdapter(RequestAdapter reqA ) {
+    public void setRequest(Request reqA ) {
 	this.reqA=reqA;
     }
     

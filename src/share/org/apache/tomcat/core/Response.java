@@ -77,9 +77,6 @@ import org.apache.tomcat.util.*;
  * @author costin@dnt.ro
  */
 public interface Response {
-    public void setResponseAdapter( ResponseAdapter resA ) ;
-
-    public ResponseAdapter getResponseAdapter() ;
 
     public HttpServletResponseFacade getFacade() ;
 
@@ -137,7 +134,9 @@ public interface Response {
     /** Set server-specific headers */
     void fixHeaders() throws IOException ;
 
-    // XXX should be abstract
+    /** Signal that we're done with a particular request, the
+	server can go on and read more requests or close the socket
+    */
     public void endResponse() throws IOException ;
 
     // XXX should be abstract
@@ -171,4 +170,24 @@ public interface Response {
 
 
     public void sendBodyText(String s) throws IOException ;
+
+
+    public void addMimeHeaders(MimeHeaders headers) throws IOException;
+
+    /** Signal that we're done with the headers, and body will follow.
+	The adapter doesn't have to maintain state, it's done inside the engine
+    */
+    public void endHeaders() throws IOException;
+
+    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
+     */
+    public ServletOutputStream getServletOutputStream() throws IOException;
+    
+    /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
+     *	No need to implement it if your adapter implements ServletOutputStream.
+     *  Headers and status will be written before this method is exceuted.
+     */
+    public void doWrite( byte buffer[], int pos, int count) throws IOException ;
+
 }

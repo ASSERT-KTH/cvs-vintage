@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.4 1999/10/29 23:40:53 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/29 23:40:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorRequest.java,v 1.5 2000/01/15 23:30:24 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/15 23:30:24 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import org.apache.tomcat.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class ConnectorRequest extends RequestAdapterImpl {
+public class ConnectorRequest extends RequestImpl {
     MsgConnector con;
     Hashtable env_vars;
 

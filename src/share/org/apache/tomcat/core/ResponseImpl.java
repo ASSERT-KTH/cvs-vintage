@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.6 2000/01/15 03:52:57 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/15 03:52:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.7 2000/01/15 23:30:21 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/15 23:30:21 $
  *
  * ====================================================================
  *
@@ -104,7 +104,9 @@ public class ResponseImpl implements Response {
     protected boolean omitHeaders = false;
     protected String serverHeader = null;
 
-    protected ResponseAdapter resA;
+    String message;
+    BufferedServletOutputStream sos=new BufferedServletOutputStream(this);
+    StringBuffer body=new StringBuffer();
 
     public ResponseImpl() {
         responseFacade = new HttpServletResponseFacade(this);
@@ -112,20 +114,9 @@ public class ResponseImpl implements Response {
 	out.setResponse(this);
     }
 
-    public void setResponseAdapter( ResponseAdapter resA ) {
-	this.resA=resA;
-	out.setResponseAdapter( resA );
-    }
-
-    public ResponseAdapter getResponseAdapter() {
-	return resA;
-    }
-
     public HttpServletResponseFacade getFacade() {
 	return responseFacade;
     }
-
-    // XXX - public so this can be called from ConnectionHandler.java
 
     public void setRequest(Request request) {
 	this.request = request;
@@ -151,11 +142,6 @@ public class ResponseImpl implements Response {
 	this.omitHeaders = omitHeaders;
     }
 
-//     public void setBufferedServeletOutputStream(
-//         BufferedServletOutputStream out) {
-// 	this.out=out;
-//     }
-
     public void recycle() {
 	userCookies.removeAllElements();
 	systemCookies.removeAllElements();
@@ -172,6 +158,13 @@ public class ResponseImpl implements Response {
 	started = false;
 	committed = false;
 	omitHeaders=false;
+
+	// adapter
+	sos.recycle();
+	headers.clear();
+	status=-1;
+	message=null;
+	body.setLength(0);
     }
 
     public void finish() throws IOException {
@@ -359,14 +352,14 @@ public class ResponseImpl implements Response {
         cookieEnum = systemCookies.elements();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
-            headers.addHeader( CookieTools.getCookieHeaderName(c),
+            addHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
 	    if( c.getVersion() == 1 ) {
 		// add a version 0 header too.
 		// XXX what if the user set both headers??
 		Cookie c0 = (Cookie)c.clone();
 		c0.setVersion(0);
-		headers.addHeader( CookieTools.getCookieHeaderName(c0),
+		addHeader( CookieTools.getCookieHeaderName(c0),
 				   CookieTools.getCookieHeaderValue(c0));
 	    }
         }
@@ -374,14 +367,14 @@ public class ResponseImpl implements Response {
         cookieEnum = userCookies.elements();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
-            headers.addHeader( CookieTools.getCookieHeaderName(c),
+            addHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
 	    if( c.getVersion() == 1 ) {
 		// add a version 0 header too.
 		// XXX what if the user set both headers??
 		Cookie c0 = (Cookie)c.clone();
 		c0.setVersion(0);
-		headers.addHeader( CookieTools.getCookieHeaderName(c0),
+		addHeader( CookieTools.getCookieHeaderName(c0),
 				   CookieTools.getCookieHeaderValue(c0));
 	    }
         }
@@ -391,7 +384,7 @@ public class ResponseImpl implements Response {
 
     // XXX should be abstract
     public void endResponse() throws IOException {
-	resA.endResponse();
+	//	resA.endResponse();
     }
 
     // XXX should be abstract
@@ -399,9 +392,9 @@ public class ResponseImpl implements Response {
 	if(omitHeaders)
 	    return;
 
-	resA.setStatus( status, sm.getString("sc."+ status ));
+	setStatus( status, sm.getString("sc."+ status ));
 	fixHeaders();
-	resA.addMimeHeaders( headers );
+	addMimeHeaders( headers );
     }
 
     public void addCookie(Cookie cookie) {
@@ -606,4 +599,60 @@ public class ResponseImpl implements Response {
 	    out.close();
 	}
     }
+
+
+    
+    /** Set the response status and message. 
+     *	@param message null will set the "default" message, "" will send no message
+     */ 
+    public void setStatus( int status, String message) throws IOException {
+	this.status=status;
+	this.message=message;
+    }
+
+    // XXX This one or multiple addHeader?
+    // Probably not a big deal - but an adapter may have
+    // an optimized version for this one ( one round-trip only )
+    public void addMimeHeaders(MimeHeaders headers) throws IOException {
+	int size = headers.size();
+        for (int i = 0; i < size; i++) {
+            MimeHeaderField h = headers.getField(i);
+            addHeader( h.getName(), h.getValue());
+        }
+    }
+
+    /** Signal that we're done with the headers, and body will follow.
+	The adapter doesn't have to maintain state, it's done inside the engine
+    */
+    public void endHeaders() throws IOException {
+
+    }
+
+    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
+     */
+    public ServletOutputStream getServletOutputStream() throws IOException {
+	return sos;
+    }
+	
+    
+    /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
+     *	No need to implement it if your adapter implements ServletOutputStream.
+     *  Headers and status will be written before this method is exceuted.
+     */
+    public void doWrite( byte buffer[], int pos, int count) throws IOException {
+        // XXX fix if charset is other than default.
+        body.append(new String(buffer, pos, count, 
+                    Constants.CharacterEncoding.Default) );
+    }
+
+    public String getMessage() {
+	return message;
+    }
+
+    public StringBuffer getBody() {
+	return body;
+    }
+
+    
 }

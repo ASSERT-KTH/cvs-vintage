@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/JspWrapper.java,v 1.1 2000/01/14 04:08:10 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/14 04:08:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/JspWrapper.java,v 1.2 2000/01/15 23:30:20 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/15 23:30:20 $
  *
  * ====================================================================
  *
@@ -131,16 +131,16 @@ public class JspWrapper extends ServletWrapper {
 	// need to find out what this code does!
 	
 	// XXX XXX find a better way !!!
-	RequestAdapterImpl reqA=new RequestAdapterImpl();
-	ResponseAdapterImpl resA=new ResponseAdapterImpl();
+	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	//	ResponseAdapterImpl resA=new ResponseAdapterImpl();
 	
 	RequestImpl request = new RequestImpl();
 	ResponseImpl response = new ResponseImpl();
 	request.recycle();
 	response.recycle();
 	
-	request.setRequestAdapter( reqA );
-	response.setResponseAdapter( resA );
+	//	request.setRequestAdapter( reqA );
+	// response.setResponseAdapter( resA );
 	
 	request.setResponse(response);
 	response.setRequest(request);
@@ -149,8 +149,8 @@ public class JspWrapper extends ServletWrapper {
 	    Constants.JSP.Directive.Compile.Name + "=" +
 	    Constants.JSP.Directive.Compile.Value;
 	
-	reqA.setRequestURI(context.getPath() + path);
-	reqA.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
+	request.setRequestURI(context.getPath() + path);
+	request.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
 			     Constants.JSP.Directive.Compile.Value );
 	
 	request.setContext(context);

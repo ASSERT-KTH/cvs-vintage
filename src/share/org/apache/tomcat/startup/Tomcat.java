@@ -28,6 +28,7 @@ public class Tomcat {
 	xmlHelper.addMap( "contextManager", "org.apache.tomcat.core.ContextManager");
 	xmlHelper.addMap( "context", "org.apache.tomcat.core.Context");
 	xmlHelper.addMap( "adapter" , "httpAdapter", "org.apache.tomcat.service.http.HttpAdapter");
+	xmlHelper.addMap( "adapter" , "ajp12Adapter", "org.apache.tomcat.service.connector.Ajp12Adapter");
 	xmlHelper.addMap( "requestInterceptor" , "mapper", "org.apache.tomcat.request.MapperInterceptor");
 	xmlHelper.addMap( "requestInterceptor", "contextMapper", "org.apache.tomcat.request.ContextMapperInterceptor");
 	xmlHelper.addMap( "requestInterceptor", "session", "org.apache.tomcat.request.SessionInterceptor");

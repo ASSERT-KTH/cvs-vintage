@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.3 2000/01/08 21:31:41 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 21:31:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.4 2000/01/15 23:30:26 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/15 23:30:26 $
  *
  * ====================================================================
  *
@@ -79,7 +79,7 @@ import javax.servlet.http.*;
 
 /**
  */
-public class HttpResponseAdapter implements  ResponseAdapter {
+public class HttpResponseAdapter extends  ResponseImpl {
     protected OutputStream sout;
 
     // no need to create new objects/request,
@@ -112,10 +112,15 @@ public class HttpResponseAdapter implements  ResponseAdapter {
 	sout = os;
     }
 
-    public void addHeader(String name, String value) throws IOException{
+    public void addHeader(String name, String value) { //throws IOException{
 	headersSB.setLength(0);
 	headersSB.append(name).append(": ").append(value).append("\r\n");
-	sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
+	try {
+	    sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
+	    //XXX mark the error - should abandon everything 
+	}
     }
     
     public void addMimeHeaders(MimeHeaders headers) throws IOException {

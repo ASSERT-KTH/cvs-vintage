@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.7 2000/01/15 03:52:57 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/15 03:52:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.8 2000/01/15 23:30:20 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/15 23:30:20 $
  *
  * ====================================================================
  *
@@ -88,7 +88,7 @@ public class RequestImpl  implements Request {
     protected String queryString;
 
    //  RequestAdapterImpl Hints
-    String serverName;
+    protected String serverName;
     protected Vector cookies = new Vector();
 
     protected String contextPath;
@@ -104,7 +104,6 @@ public class RequestImpl  implements Request {
     protected String remoteUser;
 
     // Request
-    protected RequestAdapter reqA;
     protected Response response;
     protected HttpServletRequestFacade requestFacade;
     protected Context context;
@@ -131,57 +130,50 @@ public class RequestImpl  implements Request {
     String resolvedServlet = null;
     String resouceName=null;
 
+    protected String scheme;
+    protected String method;
+    protected String protocol;
+    protected MimeHeaders headers;
+    protected ServletInputStream in;
+    
+    protected int serverPort;
+    protected String remoteAddr;
+    protected String remoteHost;
+
+
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
 
     public RequestImpl() {
+ 	headers = new MimeHeaders();
+ 	recycle(); // XXX need better placement-super()
     }
 
-    public void setRequestAdapter( RequestAdapter reqA) {
-	this.reqA=reqA;
-    }
-
-    // Begin Adapter
     public String getScheme() {
-        return reqA.getScheme();
+        return scheme; 
     }
 
     public String getMethod() {
-        return reqA.getMethod();
+        return method; 
     }
 
     public String getRequestURI() {
         if( requestURI!=null) return requestURI;
-	return reqA.getRequestURI();
+	return requestURI; 
     }
 
     // XXX used by forward
     public String getQueryString() {
 	if( queryString != null ) return queryString;
-        return reqA.getQueryString();
+        return queryString; 
     }
 
     public String getProtocol() {
-        return reqA.getProtocol();
-    }
-
-    public String getHeader(String name) {
-        return reqA.getHeader(name);
-    }
-
-    public Enumeration getHeaderNames() {
-        return reqA.getHeaderNames();
-    }
-
-    public ServletInputStream getInputStream()
-	throws IOException {
-	return reqA.getInputStream();
+        return protocol; 
     }
 
     // XXX server IP and/or Host:
     public String getServerName() {
-	if(serverName!=null) return serverName;
-	serverName=reqA.getServerName();
 	if(serverName!=null) return serverName;
 
 	String hostHeader = this.getHeader("host");
@@ -198,20 +190,6 @@ public class RequestImpl  implements Request {
 	serverName="localhost";
 	return serverName;
     }
-
-    public int getServerPort() {
-        return reqA.getServerPort();
-    }
-
-    public String getRemoteAddr() {
-        return reqA.getRemoteAddr();
-    }
-
-    public String getRemoteHost() {
-	return reqA.getRemoteHost();
-    }
-
-    // End Adapter "required" fields
 
     public String getLookupPath() {
 	return lookupPath;
@@ -247,24 +225,17 @@ public class RequestImpl  implements Request {
 
     public String getCharacterEncoding() {
         if(charEncoding!=null) return charEncoding;
-
-	charEncoding=reqA.getCharacterEncoding();
-	if(charEncoding!=null) return charEncoding;
         charEncoding = RequestUtil.getCharsetFromContentType( getContentType());
 	return charEncoding;
     }
 
     public int getContentLength() {
         if( contentLength > -1 ) return contentLength;
-	contentLength = reqA.getContentLength();
-	if( contentLength > -1 ) return contentLength;
 	contentLength = getIntHeader("content-length");
 	return contentLength;
     }
 
     public String getContentType() {
-	if(contentType != null) return contentType;
-	contentType= reqA.getContentType();
 	if(contentType != null) return contentType;
 	contentType = getHeader("content-type");
 	if(contentType != null) return contentType;
@@ -426,24 +397,6 @@ public class RequestImpl  implements Request {
 	//        return cookies;
     }
 
-
-//     // XXX XXX XXX
-//     public ServerSession getServerSession(boolean create) {
-// 	if (context == null) {
-// 	    System.out.println("CONTEXT WAS NEVER SET");
-// 	    return null;
-// 	}
-
-// 	if (serverSession == null && create) {
-//             serverSession =
-// 		ServerSessionManager.getManager()
-// 		    .getServerSession(this, response, create);
-//             serverSession.accessed();
-// 	}
-
-// 	return serverSession;
-//     }
-
     public HttpSession getSession(boolean create) {
 	// use the cached value 
 	if( serverSession!=null )
@@ -528,40 +481,6 @@ public class RequestImpl  implements Request {
 	resouceName=m;
     }
 
-    // -------------------- Setters
-//     public void setURI(String requestURI) {
-//         this.requestURI = requestURI;
-//     }
-
-
-//     public void setHeaders( MimeHeaders h ) {
-// 	headers=h;
-//     }
-
-//     public void setServletInputStream( ServletInputStream in ) {
-// 	this.in=in;
-//     }
-
-//     public void setServerPort( int port ) {
-// 	serverPort=port;
-//     }
-
-//     public void setRemoteAddress(String addr) {
-// 	this.remoteAddr = addr;
-//     }
-
-//     public void setRemoteHost( String host ) {
-// 	this.remoteHost=host;
-//     }
-
-//     public void setMethod( String meth ) {
-// 	this.method=meth;
-//     }
-
-//     public void setProtocol( String protocol ) {
-// 	this.protocol=protocol;
-//     }
-
     public void setRequestURI( String r ) {
  	this.requestURI=r;
     }
@@ -606,22 +525,6 @@ public class RequestImpl  implements Request {
 	this.queryString = queryString;
     }
     
-    
-//      /** parse the query string into parameters
-//      */
-//     public void processQueryString() {
-//         try {
-//             this.parameters = HttpUtils.parseQueryString(queryString);
-//         } catch (Throwable e) {
-//             this.parameters.clear();
-//         }
-//     }
-
-//     public void setScheme(String scheme) {
-//         this.scheme = scheme;
-//     }
-
-
     public void setSession(HttpSession serverSession) {
 	this.serverSession = serverSession;
     }
@@ -661,16 +564,19 @@ public class RequestImpl  implements Request {
 
     // -------------------- Facade for MimeHeaders
     public long getDateHeader(String name) {
-	return reqA.getMimeHeaders().getDateHeader(name);
+	//return reqA.getMimeHeaders().getDateHeader(name);
+	return getMimeHeaders().getDateHeader(name);
     }
 
     public Enumeration getHeaders(String name) {
-	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
+	//	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
+	Vector v = getMimeHeaders().getHeadersVector(name);
 	return v.elements();
     }
 
     public int getIntHeader(String name)  {
-        return reqA.getMimeHeaders().getIntHeader(name);
+	//        return reqA.getMimeHeaders().getIntHeader(name);
+        return getMimeHeaders().getIntHeader(name);
     }
 
     // -------------------- Utils - facade for RequestUtil
@@ -714,8 +620,119 @@ public class RequestImpl  implements Request {
 	didParameters = false;
 	didReadFormData = false;
 	didCookies = false;
-	if( reqA!=null) reqA.recycle();// XXX avoid double recycle
-	//	moreRequests = false;
+
+	scheme = "http";// no need to use Constants
+	method = "GET";
+	requestURI="/";
+	queryString=null;
+	protocol="HTTP/1.0";
+	headers.clear(); // XXX use recycle pattern
+	serverName="localhost";
+	serverPort=8080;
+
+	// XXX a request need to override those if it cares
+	// about security
+	remoteAddr="127.0.0.1";
+	remoteHost="localhost";
+
+    }
+
+    public MimeHeaders getMimeHeaders() {
+	return headers;
+    }
+    
+    public String getHeader(String name) {
+        return headers.getHeader(name);
+    }
+
+    public Enumeration getHeaderNames() {
+        return headers.names();
+    }
+    
+    public ServletInputStream getInputStream() throws IOException {
+    	return in;    
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+    
+    public String getRemoteAddr() {
+        return remoteAddr;
+    }
+    
+    public String getRemoteHost() {
+	return remoteHost;
+    }    
+
+    // you need to override this method if you want non-empty InputStream
+    public  int doRead( byte b[], int off, int len ) throws IOException {
+	return -1; // not implemented - implement getInputStream 
+    }
+
+    // you need to override this method if you want non-empty InputStream
+    public int doRead() throws IOException {
+	return -1;
+    }
+    
+    // -------------------- "cooked" info --------------------
+    // Hints = return null if you don't know,
+    // and Tom will find the value. You can also use the static
+    // methods in RequestImpl
+
+    /** Return the parsed Cookies
+     */
+    public String[] getCookieHeaders() {
+	return null;
+    }
+
+    // server may have it pre-calculated - return null if
+    // it doesn't
+    public String getContextPath() {
+	return null;
+    }
+
+    // What's between context path and servlet name ( /servlet )
+    // A smart server may use arbitrary prefixes and rewriting
+    public String getServletPrefix() {
+	return null;
+    }
+
+    // Servlet name ( a smart server may use aliases and rewriting !!! )
+    public String getServletName() {
+	return null;
+    }
+
+    public void setScheme( String scheme ) {
+	this.scheme=scheme;
+    }
+
+    public void setMethod( String method ) {
+	this.method=method;
+    }
+
+    public void setProtocol( String protocol ) {
+	this.protocol=protocol;
+    }
+
+    public void setMimeHeaders( MimeHeaders headers ) {
+	this.headers=headers;
+    }
+
+    public void setBody( StringBuffer body ) {
+	// ??? 
+    }
+
+    public void setServerPort(int serverPort ) {
+	this.serverPort=serverPort;
+    }
+
+    public void setRemoteAddr( String remoteAddr ) {
+	this.remoteAddr=remoteAddr;
+    }
+
+    public void setRemoteHost(String remoteHost) {
+	this.remoteHost=remoteHost;
     }
 
     public String toString() {

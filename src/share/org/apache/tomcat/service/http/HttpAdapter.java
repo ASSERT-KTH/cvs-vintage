@@ -1,9 +1,7 @@
-
-
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpAdapter.java,v 1.3 2000/01/14 19:48:23 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/14 19:48:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpAdapter.java,v 1.4 2000/01/15 23:30:25 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/15 23:30:25 $
  *
  * ====================================================================
  *

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.21 2000/01/13 18:20:32 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/01/13 18:20:32 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -77,10 +73,6 @@ import javax.servlet.http.*;
  *
  */
 public interface Request  {
-
-    // only if we use RA
-    public void setRequestAdapter( RequestAdapter reqA);
-
     // Required fields
 
     public String getScheme() ;
@@ -97,6 +89,7 @@ public interface Request  {
 
     public Enumeration getHeaderNames() ;
 
+    
     public ServletInputStream getInputStream() 	throws IOException;
 
     public String getServerName() ;
@@ -110,6 +103,7 @@ public interface Request  {
     // Hints - will be set by Interceptors if not set
     // by adapter
     public String getLookupPath() ;
+
     public void setLookupPath( String l ) ;
 
     public String getAuthType() ;
@@ -121,7 +115,7 @@ public interface Request  {
 
     String getRemoteUser() ;
 
-	boolean isSecure() ;
+    boolean isSecure() ;
 	
     Principal getUserPrincipal() ;
 
@@ -130,6 +124,7 @@ public interface Request  {
     public String getRequestedSessionId() ;
 
     public void setRequestedSessionId(String reqSessionId) ;
+
     public String getServletPath() ;
 
     boolean isRequestedSessionIdFromCookie() ;
@@ -138,12 +133,13 @@ public interface Request  {
 
     
     public void updatePaths() ;//XXX - not to be used, use RD
-    public void setContext(Context context) ;
 
+    public void setContext(Context context) ;
 
     public HttpSession getSession(boolean create) ;
 
     boolean isRequestedSessionIdValid() ;
+
     public String getResolvedServlet() ;
 
     public void setResolvedServlet(String rs ) ;
@@ -168,6 +164,7 @@ public interface Request  {
     public void setParameters( Hashtable h ) ;
 
     public Hashtable getParameters() ;
+
     public void setContentLength( int  len ) ;
 
     public void setContentType( String type ) ;
@@ -182,7 +179,6 @@ public interface Request  {
     /** Set query string - will be called by forward
      */
     public void setQueryString(String queryString) ;
-
 
     
     // -------------------- Computed fields - will be computed if not set
@@ -203,11 +199,6 @@ public interface Request  {
 
     public String getContentType() ;
     
-    
-    // Everything after context, before ?
-
-
-    // Relationships. 
     public HttpServletRequestFacade getFacade() ;
 
     public void setResponse(Response response) ;
@@ -241,4 +232,32 @@ public interface Request  {
 
     // -------------------- End utils
     public void recycle() ;
+
+    public MimeHeaders getMimeHeaders();
+
+    /** Return the cookies
+     */
+    public String[] getCookieHeaders();
+
+    // server may have it pre-calculated - return null if
+    // it doesn't
+    public String getContextPath();
+
+    // Servlet name ( a smart server may use aliases and rewriting !!! )
+    public String getServletName();
+
+    /** Fill in the buffer. This method is probably easier to implement than
+	previous.
+	This method should only be called from SerlvetInputStream implementations.
+	No need to implement it if your adapter implements ServletInputStream.
+     */
+    public  int doRead( byte b[], int off, int len ) throws IOException;
+
+    // XXX I hate this - but the only way to remove this method from the
+    // inteface is to implement it on top of doRead(b[]).
+    // Don't use this method if you can ( it is bad for performance !!)
+    public int doRead() throws IOException;
+    
+
+
 }

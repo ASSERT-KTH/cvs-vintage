@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.4 2000/01/11 02:06:55 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/11 02:06:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.5 2000/01/15 23:30:26 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/15 23:30:26 $
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class HttpRequestAdapter extends RequestAdapterImpl {
+public class HttpRequestAdapter extends RequestImpl {
     private Socket socket;
     private boolean moreRequests = false;
     InputStream sin;

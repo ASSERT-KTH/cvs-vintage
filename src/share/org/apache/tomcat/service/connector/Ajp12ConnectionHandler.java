@@ -107,28 +107,28 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
         try {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
-	    socket.setSoTimeout( 1000); // or what ? 
+	    //	    socket.setSoTimeout( 1000); // or what ? 
 
-	    RequestImpl request = new RequestImpl();
+	    //	    RequestImpl request = new RequestImpl();
 	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(contextM, socket);
-	    ResponseImpl response=new ResponseImpl();
+	    //	    ResponseImpl response=new ResponseImpl();
 	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
 
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
 	    
-	    request.setRequestAdapter(reqA);
-	    response.setResponseAdapter( resA );
+	    //	    request.setRequestAdapter(reqA);
+	    //	    response.setResponseAdapter( resA );
 	    resA.setOutputStream(socket.getOutputStream());
 
-	    request.setResponse(response);
-	    response.setRequest(request);
+	    reqA.setResponse(resA);
+	    resA.setRequest(reqA);
 
 	    reqA.readNextRequest();
 	    if( reqA.shutdown )
 		return;
-	    if (response.getStatus() >= 400) {
-		response.finish();
+	    if (resA.getStatus() >= 400) {
+		resA.finish();
 		
 		socket.close();
 		return;
@@ -136,16 +136,16 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
 	    // resolve the server that we are for
 
-	    int contentLength = request.getIntHeader("content-length");
+	    int contentLength = reqA.getIntHeader("content-length");
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
-		    (BufferedServletInputStream)request.getInputStream();
+		    (BufferedServletInputStream)reqA.getInputStream();
 		sis.setLimit(contentLength);
 	    }
 
-	    contextM.service( request, response );
+	    contextM.service( reqA, resA );
 
-	    response.finish();
+	    resA.finish();
 	    socket.close();
 	} catch (Exception e) {
             // XXX
@@ -156,7 +156,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
     }
 }
 
-class AJP12RequestAdapter extends RequestAdapterImpl {
+class AJP12RequestAdapter extends RequestImpl {
     StringManager sm = StringManager.getManager("org.apache.tomcat.service");
     Socket socket;
     InputStream sin;

@@ -447,8 +447,8 @@ public class ContextManager {
 	/** Creates an "internal" request
 	 */
 	RequestImpl lr = new RequestImpl();
-	RequestAdapterImpl reqA=new RequestAdapterImpl();
-	lr.setRequestAdapter( reqA);
+	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	//lr.setRequestAdapter( reqA);
 	lr.setLookupPath( urlPath );
 	lr.setQueryString( queryString );
 	//	lr.processQueryString();

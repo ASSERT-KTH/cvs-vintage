@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.10 2000/01/13 18:20:35 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/13 18:20:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.11 2000/01/15 23:30:26 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/01/15 23:30:26 $
  *
  * ====================================================================
  *
@@ -108,23 +108,23 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    socket=connection.getSocket();
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
-	    RequestImpl request=new RequestImpl();
+	    //	    RequestImpl request=new RequestImpl();
 	    HttpRequestAdapter reqA=new HttpRequestAdapter();
-	    ResponseImpl response=new ResponseImpl();
+	    //	    ResponseImpl response=new ResponseImpl();
 	    HttpResponseAdapter resA=new HttpResponseAdapter();
 	    
-	    response.setRequest(request);
-	    request.setResponse( response );
-	    request.setRequestAdapter( reqA );
-	    response.setResponseAdapter( resA );
+	    resA.setRequest(reqA);
+	    reqA.setResponse( resA );
+	    //	    request.setRequestAdapter( reqA );
+	    //	    res.setResponseAdapter( resA );
 	    
 	    reqA.setSocket( socket );
 	    resA.setOutputStream( out );
 
-	    reqA.readNextRequest(response );
+	    reqA.readNextRequest(resA);
 
 	    // XXX temporary fix for getServerName
-	    String hostHeader = request.getHeader("host");
+	    String hostHeader = reqA.getHeader("host");
 	    //  if it's not null, Request.getServerName() will take care
 	    if (hostHeader == null) {
 		// XXX
@@ -141,7 +141,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		reqA.setServerName(hostHeader);
              }
     
-	    contextM.service( request, response );
+	    contextM.service( reqA, resA );
 
 	    try {
                InputStream is = socket.getInputStream();
