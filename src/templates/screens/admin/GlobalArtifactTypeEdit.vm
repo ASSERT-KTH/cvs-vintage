@@ -135,7 +135,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">$l10n.Select</th>
-<th>$l10n.UserAttributeName</th>
+<th>$l10n.Name</th>
 <th>$l10n.Active</th>
 <th>$l10n.Locked</th>
 <th>$l10n.Sequence</th>
