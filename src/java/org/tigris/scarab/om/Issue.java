@@ -1250,6 +1250,26 @@ public class Issue
         return result;
     }
 
+    /**
+     * Returns limited list of Activity objects associated with this Issue.
+     */
+    public void addActivity(Activity activity) throws TorqueException  
+    {
+        List activityList = null;
+        try
+        {
+            activityList = getActivity(true);
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
+        super.addActivity(activity);
+        if (!activityList.contains(activity))
+        {
+            activityList.add(activity);
+        }
+    }
 
     /**
      * Returns list of child dependencies

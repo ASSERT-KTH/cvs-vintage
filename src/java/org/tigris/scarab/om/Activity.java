@@ -174,18 +174,13 @@ public class Activity
             save(dbCon);
         }
         // Make sure new activity is added to activity cache
-        List activityList = null;
         try
         {
-            activityList = issue.getActivity(true);
+            issue.addActivity(this);
         }
         catch (Exception e)
         {
             throw new TorqueException(e);
-        }
-        if (!activityList.contains(this))
-        {
-            activityList.add(this);
         }
     }
 
