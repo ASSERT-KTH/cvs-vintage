@@ -515,7 +515,7 @@ class RedirectHandler extends Handler {
 	    req.getAttribute("javax.servlet.error.message");
 	Context ctx=req.getContext();
 	
-	//location = makeAbsolute(req, location);
+	location = makeAbsolute(req, location);
 
 	if( debug>0) ctx.log("Redirect " + location + " " + req );
 
