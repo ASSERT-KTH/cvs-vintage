@@ -38,37 +38,6 @@ public class WebXmlReader extends BaseInterceptor {
 	validate=b;
     }
 
-//     private Handler addServlet( Context ctx, String name, String classN )
-// 	throws TomcatException
-//     {
-// 	ServletInfo sw=new ServletInfo(); // ctx.createHandler();
-// 	sw.setContext(ctx);
-// 	sw.setServletName( name );
-// 	sw.setServletClassName( classN);
-// 	ctx.addServlet( sw.getHandler() );
-// 	sw.setLoadOnStartUp( -2147483646 );
-// 	return sw.getHandler();
-//     }
-    
-//     private void setDefaults( Context ctx )
-// 	throws TomcatException
-//     {
-// 	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
-// 	// 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
-// 	//	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
-// 	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
-
-// // 	ctx.addServletMapping( "/servlet/*", "invoker");
-// 	ctx.addServletMapping( "*.jsp", "jsp");
-	
-// 	ctx.setSessionTimeOut( 30 );
-
-// 	// mime-mapping - are build into MimeMap.
-// 	// Note that default mappings are based on existing registered types.
-
-//     }
-
-
     private void readDefaultWebXml( Context ctx ) throws TomcatException {
 	ContextManager cm=ctx.getContextManager();
 	String home = cm.getHome();
@@ -127,6 +96,35 @@ public class WebXmlReader extends BaseInterceptor {
 
     }
 
+    static class WebXmlErrorHandler implements ErrorHandler{
+	Context ctx;
+	XmlMapper xm;
+	boolean ok;
+	WebXmlErrorHandler( XmlMapper xm,Context ctx ) {
+	    this.ctx=ctx;
+	    this.xm=xm;
+	}
+
+	public void warning (SAXParseException exception)
+	    throws SAXException {
+	    ctx.log("web.xml: Warning " + exception );
+	    ctx.log(xm.positionToString());
+	}
+	public void error (SAXParseException exception)
+	    throws SAXException
+	{
+	    ctx.log("web.xml: Error " + exception );
+	    ctx.log(xm.positionToString());
+	}
+	public void fatalError (SAXParseException exception)
+	    throws SAXException
+	{
+	    ctx.log("web.xml: Fatal error " + exception );
+	    ctx.log(xm.positionToString());
+	    throw new SAXException( "Fatal error " + exception );
+	}
+    }
+    
     void processWebXmlFile( Context ctx, String file) {
 	try {
 	    File f=new File(FileUtil.patch(file));
@@ -142,8 +140,8 @@ public class WebXmlReader extends BaseInterceptor {
 		    v.lastModified() < f.lastModified() ) {
 		    ctx.log("Validating web.xml");
 		    xh.setValidating(true);
+		    xh.setErrorHandler( new WebXmlErrorHandler( xh, ctx ) );
 		}
-		//	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
 	    }
 
 	    // By using dtdURL you brake most parsers ( at least xerces )
@@ -242,7 +240,12 @@ public class WebXmlReader extends BaseInterceptor {
 		}
 	    }
 	} catch(Exception ex ) {
-	    log("ERROR reading " + file, ex);
+	    log("ERROR initializing " + file, ex);
+	    try {
+		ctx.setState( Context.STATE_DISABLED );
+	    } catch(Exception ex1 ) {
+		ex1.printStackTrace();
+	    }
 	    // XXX we should invalidate the context and un-load it !!!
 	}
     }

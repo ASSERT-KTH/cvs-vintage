@@ -21,10 +21,8 @@ import org.apache.tomcat.util.compat.*;
  *
  * @author costin@dnt.ro
  */
-public class XmlMapper
-    extends HandlerBase
-    implements SaxContext {
-
+public class XmlMapper  extends HandlerBase implements SaxContext
+{
     Locator locator;
 
     /**
@@ -42,7 +40,8 @@ public class XmlMapper
     String tagStack[];
     int oSp;
     int sp;
-
+    ErrorHandler errorHandler;
+    
     String body;
 
     int debug=0;
@@ -61,6 +60,10 @@ public class XmlMapper
 	this.locator = locator;
     }
 
+    public Locator getLocator() {
+	return locator;
+    }
+    
     public void startDocument () throws SAXException
     {
         sp = 0;
@@ -89,7 +92,7 @@ public class XmlMapper
 	}
     }
 
-    private String positionToString() {
+    public String positionToString() {
 	StringBuffer sb=new StringBuffer();
 	if( locator!=null ) sb.append("Line ").append(locator.getLineNumber()).append(" ");
 	sb.append("/");
@@ -258,6 +261,10 @@ public class XmlMapper
 	return this;
     }
 
+    public void setErrorHandler( ErrorHandler eh ) {
+	errorHandler=eh;
+    }
+    
     boolean useLocalLoader=true;
     
     public void useLocalLoader(boolean b ) {
@@ -287,7 +294,20 @@ public class XmlMapper
 	    factory.setNamespaceAware(false);
 	    factory.setValidating(validating);
 	    parser = factory.newSAXParser();
-	    parser.parse(xmlFile, this);
+	    Parser saxParser=parser.getParser();
+	    saxParser.setDocumentHandler( this );
+	    saxParser.setEntityResolver( this );
+	    if( errorHandler!=null ) {
+		saxParser.setErrorHandler( errorHandler );
+	    }
+
+	    String uri = "file:" + xmlFile.getAbsolutePath();
+	    if (File.separatorChar == '\\') {
+		uri = uri.replace('\\', '/');
+	    }
+	    InputSource input = new InputSource(uri);
+
+	    saxParser.parse(input);
 
 	    if( useLocalLoader && cl!= null ) {
 		jdk11Compat.setContextClassLoader(cl);
