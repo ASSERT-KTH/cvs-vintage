@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class LRUCachePolicy 
 	implements CachePolicy
@@ -280,6 +280,15 @@ public class LRUCachePolicy
 						m_head = entry;
 						++m_count;
 					}
+					else if (m_count < m_maxCapacity) 
+					{
+						entry.m_prev = null;
+						entry.m_next = m_head;
+						m_head.m_prev = entry;
+						m_head = entry;
+						++m_count;
+						++m_capacity;
+					}
 					else {throw new IllegalStateException("Attempt to put a new cache entry on a full cache");}
 				}
 				else {} // entry is the head, do nothing 
@@ -334,7 +343,7 @@ public class LRUCachePolicy
 			if (entry == null) {throw new IllegalArgumentException("Cannot remove a null entry from the cache");}
 			if (m_count < 1) {throw new IllegalStateException("Trying to remove an entry from an empty cache");}
 
-//			entry.m_key = entry.m_object = null;
+			entry.m_key = entry.m_object = null;
 			if (m_count == 1) 
 			{
 				m_head = m_tail = null;
