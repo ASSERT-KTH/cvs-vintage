@@ -231,8 +231,9 @@ public class Context {
     // are servlets allowed to access internal objects? 
     private boolean trusted=false;
 
+    private static Log defaultContextLog=Log.getLog("org/apache/tomcat/core", "Context");
     // log channels for context and servlets 
-    private Log loghelper = Log.getLog("org/apache/tomcat/core", this);
+    private Log loghelper = defaultContextLog;
     private Log loghelperServlet;
 
     // servlet API implemented by this Context

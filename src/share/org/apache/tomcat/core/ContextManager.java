@@ -250,6 +250,7 @@ public class ContextManager {
      */
     public void setHome(String home) {
 	this.home=home;
+	System.getProperties().put(TOMCAT_HOME, home );
     }
 
     public String getHome() {
