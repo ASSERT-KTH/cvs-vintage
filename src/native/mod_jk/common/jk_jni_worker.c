@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #if !defined(WIN32) && !defined(NETWARE)
@@ -89,8 +89,9 @@
 
 jint (JNICALL *jni_get_default_java_vm_init_args)(void *) = NULL;
 jint (JNICALL *jni_create_java_vm)(JavaVM **, JNIEnv **, void *) = NULL;
+jint (JNICALL *jni_get_created_java_vms)(JavaVM **, int, int *) = NULL;
 
-#define JAVA_BRIDGE_CLASS_NAME ("org/apache/tomcat/service/JNIEndpoint")
+#define JAVA_BRIDGE_CLASS_NAME ("org/apache/tomcat/modules/server/JNIEndpoint")
  
 static jk_worker_t *the_singleton_jni_worker = NULL;
 
@@ -688,10 +689,16 @@ static int load_jvm_dll(jni_worker_t *p,
         (FARPROC)jni_create_java_vm = 
             GetProcAddress(hInst, "JNI_CreateJavaVM");
 
+        (FARPROC)jni_get_created_java_vms = 
+            GetProcAddress(hInst, "JNI_GetCreatedJavaVMs");
+
         (FARPROC)jni_get_default_java_vm_init_args = 
             GetProcAddress(hInst, "JNI_GetDefaultJavaVMInitArgs");
 
-        if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+        jk_log(l, JK_LOG_DEBUG, 
+               "Loaded all JNI procs\n");
+
+        if(jni_create_java_vm && jni_get_default_java_vm_init_args && jni_get_created_java_vms) {
             return JK_TRUE;
         }
 
@@ -711,9 +718,10 @@ static int load_jvm_dll(jni_worker_t *p,
     }
     if (0 != javaNlmHandle) {
         jni_create_java_vm = ImportSymbol(GetNLMHandle(), "JNI_CreateJavaVM");
+        jni_get_created_java_vms = ImportSymbol(GetNLMHandle(), "JNI_GetCreatedJavaVMs");
         jni_get_default_java_vm_init_args = ImportSymbol(GetNLMHandle(), "JNI_GetDefaultJavaVMInitArgs");
     }
-    if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+    if(jni_create_java_vm && jni_get_default_java_vm_init_args && jni_get_created_java_vms) {
         return JK_TRUE;
     }
 #else 
@@ -729,9 +737,10 @@ static int load_jvm_dll(jni_worker_t *p,
                dlerror());
     } else {
         jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
+        jni_get_created_java_vms = dlsym(handle, "JNI_GetCreatedJavaVMs");
         jni_get_default_java_vm_init_args = dlsym(handle, "JNI_GetDefaultJavaVMInitArgs");
 
-        if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+        if(jni_create_java_vm && jni_get_default_java_vm_init_args && jni_get_created_java_vms) {
     	    jk_log(l, JK_LOG_DEBUG, 
                    "In load_jvm_dll, symbols resolved, done\n");
             return JK_TRUE;
@@ -909,7 +918,7 @@ static int open_jvm2(jni_worker_t *p,
     int optn = 0, err;
     char* tmp;
 
-    *env = NULL;
+    *env = penv = NULL;
 
     jk_log(l, JK_LOG_DEBUG, 
            "Into open_jvm2\n");
@@ -971,9 +980,24 @@ static int open_jvm2(jni_worker_t *p,
 
     jk_log(l, JK_LOG_DEBUG, "In open_jvm2, about to create JVM...\n");
 
-    if((err=jni_create_java_vm(&(p->jvm), &penv, &vm_args)) != 0) {
+    err=jni_create_java_vm(&(p->jvm), &penv, &vm_args);
+
+    if (JNI_EEXIST == err)
+    {
+        int vmCount;
+    	jk_log(l, JK_LOG_DEBUG, "JVM alread instantiated.  Trying to attach instead.\n"); 
+
+        jni_get_created_java_vms(&(p->jvm), 1, &vmCount);
+        if (NULL != p->jvm)
+            penv = attach_to_jvm(p, l);
+
+        if (NULL != penv)
+            err = 0;
+    }
+
+    if(err != 0) {
     	jk_log(l, JK_LOG_EMERG, "Fail-> could not create JVM, code: %d \n", err); 
-        return JK_FALSE;
+            return JK_FALSE;
     }
     jk_log(l, JK_LOG_DEBUG, "In open_jvm2, JVM created, done\n");
 
