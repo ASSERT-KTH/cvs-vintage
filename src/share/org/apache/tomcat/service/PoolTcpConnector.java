@@ -262,7 +262,7 @@ public final class PoolTcpConnector implements ServerConnector {
 	    } else if(THREAD_POOL.equals(prop)) {
 		usePools = ! valueS.equalsIgnoreCase("off");
 	    } else if(INET.equals(prop)) {
-		address=string2Inet( prop );
+		address=string2Inet( valueS );
 	    } else if( MAX_THREADS.equals(prop)) {
 		maxThreads = string2Int(valueS);
 	    } else if( MAX_SPARE_THREADS.equals(prop)) {
