@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.9 2004/06/19 02:32:55 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.10 2004/06/19 14:05:16 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -563,7 +563,7 @@ properties that should be associated with the call/stub for the port.
 
 Used in: service-ref
 -->
-<!ELEMENT port-component-ref (service-endpoint-interface, call-property*)>
+<!ELEMENT port-component-ref (service-endpoint-interface?, call-property*)>
 
 <!-- The wsdl-override element the actual wsdl docuement the web service client
 uses to connect to the remote service. It overrides the value of wsdl-file in ejb-jar.xml.
