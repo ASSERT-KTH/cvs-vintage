@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -66,6 +66,7 @@ public class EntityInstancePool
    protected EnterpriseContext create(Object instance, Container con)
       throws RemoteException
    {
+	   // MF FIXME why pass con and then use getContainer()
       return new EntityEnterpriseContext(instance, getContainer());
    }
     
