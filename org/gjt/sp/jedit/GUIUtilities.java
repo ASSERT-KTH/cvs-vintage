@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.47 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.48 2003/01/13 02:21:28 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1001,15 +1001,51 @@ public class GUIUtilities
 	 */
 	public static boolean isPopupTrigger(MouseEvent evt)
 	{
-		if(OperatingSystem.isMacOS())
-		{
-			return (evt.isControlDown() || ((evt.getModifiers()
-				& InputEvent.BUTTON2_MASK) != 0));
-		}
-		else
-			return ((evt.getModifiers() & InputEvent.BUTTON3_MASK) != 0);
+		return isRightButton(evt.getModifiers());
 	} //}}}
 
+	//{{{ isMiddleButton() method
+	/**
+	 * @param modifiers The modifiers flag from a mouse event
+	 * @since jEdit 4.1pre9
+	 */
+	public static boolean isMiddleButton(int modifiers)
+	{
+		if (OperatingSystem.isMacOS())
+		{
+			if ((modifiers & MouseEvent.BUTTON1_MASK) != 0)
+				return ((modifiers & MouseEvent.META_MASK) != 0);
+			String javaVersion = System.getProperty("java.version");
+			if(javaVersion.compareTo("1.4") < 0)
+				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
+			else
+				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
+		}
+		else
+			return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
+	} //}}}
+	
+	//{{{ isRightButton() method
+	/**
+	 * @param modifiers The modifiers flag from a mouse event
+	 * @since jEdit 4.1pre9
+	 */
+	public static boolean isRightButton(int modifiers)
+	{
+		if (OperatingSystem.isMacOS())
+		{
+			if ((modifiers & MouseEvent.BUTTON1_MASK) != 0)
+				return ((modifiers & MouseEvent.CTRL_MASK) != 0);
+			String javaVersion = System.getProperty("java.version");
+			if(javaVersion.compareTo("1.4") < 0)
+				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
+			else
+				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
+		}
+		else
+			return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
+	} //}}}
+	
 	//{{{ showPopupMenu() method
 	/**
 	 * Shows the specified popup menu, ensuring it is displayed within

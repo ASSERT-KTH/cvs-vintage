@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.21 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.22 2003/01/13 02:21:29 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -163,6 +163,16 @@ public class HyperSearchResults extends JPanel implements EBComponent
 	public DefaultTreeModel getTreeModel()
 	{
 		return resultTreeModel;
+	} //}}}
+
+	//{{{ getTree() method
+	/**
+	 * Returns the result tree.
+	 * @since jEdit 4.1pre9
+	 */
+	public JTree getTree()
+	{
+		return resultTree;
 	} //}}}
 
 	//{{{ searchStarted() method

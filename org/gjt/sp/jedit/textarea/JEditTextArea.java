@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.170 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.171 2003/01/13 02:21:29 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6222,7 +6222,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			}
 
 			quickCopyDrag = (isQuickCopyEnabled()
-				&& (evt.getModifiers() & MouseEvent.BUTTON2_MASK) != 0);
+				&& GUIUtilities.isMiddleMouseButton(evt));
 			blink = true;
 			invalidateLine(caretLine);
 
@@ -6574,7 +6574,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 					Registers.setRegister('%',getSelectedText());
 			}
 			else if(isQuickCopyEnabled()
-				&& (evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0)
+				&& GUIUtilities.isMiddleMouseButton(evt))
 			{
 				setCaretPosition(dragStart,false);
 				if(!isEditable())
