@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
     "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
 
-#set ($page.Title = $l10n.ScarabLinks)
+#set ($page.Title = $l10n.Title)
 
 <html>
  <head>
