@@ -363,7 +363,7 @@
     <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
             unless="schema.uptodate">
 
-        <ant antfile="build.xml"
+        <ant antfile="build-torque.xml"
                 dir="${torque.dir.scarab}" target="project-sql-no-idtable" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -401,7 +401,7 @@
         <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
         <delete file="${torque.dir.scarab}/schema/scheduler-schema.xml"/>
 
-        <ant antfile="build.xml" dir="${torque.dir.scarab}" 
+        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}" 
                 target="project-om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
