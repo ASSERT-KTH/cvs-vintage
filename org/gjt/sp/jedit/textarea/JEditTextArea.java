@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.34 2001/11/24 09:45:13 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.35 2001/11/24 13:03:36 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -250,7 +250,6 @@ public class JEditTextArea extends JComponent
 
 			if(this.buffer != null)
 			{
-				setCaretPosition(0);
 				this.buffer._releaseFoldVisibilityManager(foldVisibilityManager);
 				this.buffer.removeBufferChangeListener(bufferHandler);
 			}
@@ -260,6 +259,11 @@ public class JEditTextArea extends JComponent
 			bufferHandlerInstalled = true;
 
 			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
+
+			setCaretPosition(0);
+
+			// just in case, maybe not necessary?...
+			physFirstLine = foldVisibilityManager.virtualToPhysical(0);
 
 			painter.updateTabSize();
 

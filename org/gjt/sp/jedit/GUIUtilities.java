@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.13 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.14 2001/11/24 13:03:36 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1047,6 +1047,27 @@ public class GUIUtilities
 		}
 
 		popup.show(comp,x,y);
+	} //}}}
+
+	//{{{ getView() method
+	/**
+	 * Finds the view parent of the specified component.
+	 * @since jEdit 4.0pre2
+	 */
+	public static View getView(Component comp)
+	{
+		for(;;)
+		{
+			if(comp instanceof View)
+				return (View)comp;
+			else if(comp instanceof JPopupMenu)
+				comp = ((JPopupMenu)comp).getInvoker();
+			else if(comp != null)
+				comp = comp.getParent();
+			else
+				break;
+		}
+		return null;
 	} //}}}
 
 	//{{{ Package-private members

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.11 2001/11/09 07:43:22 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.12 2001/11/24 13:03:36 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -665,6 +665,34 @@ public class FoldVisibilityManager
 	 */
 	public void narrow(int start, int end)
 	{
+		int virtualLineCount = buffer._getVirtualLineCount(index);
+		for(int i = 0; i < start; i++)
+		{
+			if(buffer._isLineVisible(i,index))
+			{
+				virtualLineCount--;
+				buffer._setLineVisible(i,index,false);
+			}
+		}
+
+		for(int i = end + 1; i < buffer.getLineCount(); i++)
+		{
+			if(buffer._isLineVisible(i,index))
+			{
+				virtualLineCount--;
+				buffer._setLineVisible(i,index,false);
+			}
+		}
+
+		buffer._setVirtualLineCount(index,virtualLineCount);
+
+		lastPhysical = lastVirtual = -1;
+		foldStructureChanged();
+
+		// Hack... need a more direct way of obtaining a view?
+		// JEditTextArea.getView() method?
+		GUIUtilities.getView(textArea).getStatus().setMessageAndClear(
+			jEdit.getProperty("view.status.narrow"));
 	} //}}}
 
 	//{{{ Methods for Buffer class to call
