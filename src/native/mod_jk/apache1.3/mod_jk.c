@@ -515,13 +515,17 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     if(r->headers_in && ap_table_elts(r->headers_in)) {
+        BOOL need_content_length_header = (s->content_length == 0);
         array_header *t = ap_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
             table_entry *elts = (table_entry *)t->elts;
             s->num_headers = t->nelts;
-            s->headers_names  = ap_palloc(r->pool, sizeof(char *) * t->nelts);
-            s->headers_values = ap_palloc(r->pool, sizeof(char *) * t->nelts);
+			/* allocate an extra header slot in case we need to add a content-length header */
+            s->headers_names  = ap_palloc(r->pool, sizeof(char *) * (t->nelts + 1));
+            s->headers_values = ap_palloc(r->pool, sizeof(char *) * (t->nelts + 1));
+            if(!s->headers_names || !s->headers_values)
+				return JK_FALSE;
             for(i = 0 ; i < t->nelts ; i++) {
                 char *hname = ap_pstrdup(r->pool, elts[i].key);
                 s->headers_values[i] = ap_pstrdup(r->pool, elts[i].val);
@@ -530,7 +534,30 @@ static int init_ws_service(apache_private_data_t *private_data,
                     *hname = tolower(*hname);
                     hname++;
                 }
+                if(need_content_length_header &&
+                        !strncmp(s->headers_values[i],"content-length",14)) {
+                    need_content_length_header = FALSE;
+                }
             }
+            /* Add a content-length = 0 header if needed. 
+             * Ajp13 assumes an absent content-length header means an unknown, 
+             * but non-zero length body. 
+             */ 
+            if(need_content_length_header) {
+                s->headers_names[s->num_headers] = "content-length"; 
+                s->headers_values[s->num_headers] = "0"; 
+                s->num_headers++;
+            }
+        }
+        /* Add a content-length = 0 header if needed.*/
+        else if (need_content_length_header) {
+            s->headers_names  = ap_palloc(r->pool, sizeof(char *));
+            s->headers_values = ap_palloc(r->pool, sizeof(char *));
+            if(!s->headers_names || !s->headers_values)
+				return JK_FALSE;
+            s->headers_names[0] = "content-length"; 
+            s->headers_values[0] = "0"; 
+            s->num_headers++;
         }
     }
 
@@ -799,6 +826,7 @@ static int jk_handler(request_rec *r)
     if(rc = ap_setup_client_block(r, REQUEST_CHUNKED_DECHUNK)) {
 	return rc;
     }
+
       
     if(worker_name) {
         jk_server_conf_t *conf =
@@ -837,6 +865,7 @@ static int jk_handler(request_rec *r)
                          * request data, consume and discard all further
                          * characters left to read from client 
                          */
+
                         char *buff = ap_palloc(r->pool, 2048);
                         if (buff != NULL) {
                             int rd;

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 
@@ -471,6 +471,8 @@ static int init_ws_service(nsapi_private_data_t *private_data,
 static int setup_http_headers(nsapi_private_data_t *private_data,
                               jk_ws_service_t *s) 
 {
+    BOOL need_content_length_header = (s->content_length == 0);
+
     pblock *headers_jar = private_data->rq->headers;
     int cnt;
     int i;
@@ -483,9 +485,13 @@ static int setup_http_headers(nsapi_private_data_t *private_data,
         }
     }
 
+    s->headers_names  = NULL;
+    s->headers_values = NULL;
+    s->num_headers = cnt;
     if(cnt) {
-        s->headers_names  = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
-        s->headers_values = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
+		/* allocate an extra header slot in case we need to add a content-length header */
+        s->headers_names  = jk_pool_alloc(&private_data->p, (cnt + 1) * sizeof(char *));
+        s->headers_values = jk_pool_alloc(&private_data->p, (cnt + 1) * sizeof(char *));
 
         if(s->headers_names && s->headers_values) {            
             for(i = 0, cnt = 0 ; i < headers_jar->hsize ; i++) {
@@ -493,18 +499,39 @@ static int setup_http_headers(nsapi_private_data_t *private_data,
                 while(h && h->param) {
                     s->headers_names[cnt]  = h->param->name;
                     s->headers_values[cnt] = h->param->value;
+                    if(need_content_length_header &&
+                            !strncmp(h->param->name,"content-length",14)) {
+                        need_content_length_header = FALSE;
+                    }
                     cnt++;
                     h = h->next;
                 }
+            }
+            /* Add a content-length = 0 header if needed. 
+             * Ajp13 assumes an absent content-length header means an unknown, 
+             * but non-zero length body. 
+             */ 
+            if(need_content_length_header) {
+                s->headers_names[cnt] = "content-length"; 
+                s->headers_values[cnt] = "0"; 
+                cnt++;
             }
             s->num_headers = cnt;
             return JK_TRUE;
         }
     } else {
-        s->num_headers = cnt;
-        s->headers_names  = NULL;
-        s->headers_values = NULL;
-        return JK_TRUE;
+        if (need_content_length_header) {
+            s->headers_names  = jk_pool_alloc(&private_data->p, sizeof(char *));
+            s->headers_values = jk_pool_alloc(&private_data->p, sizeof(char *));
+            if(s->headers_names && s->headers_values) {
+                s->headers_names[0] = "content-length"; 
+                s->headers_values[0] = "0"; 
+                s->num_headers++;
+                return JK_TRUE;
+            }
+        }
+        else
+            return JK_TRUE;
     }
 
     return JK_FALSE;
