@@ -558,13 +558,13 @@
   
   <!-- End Database Dependencies -->    
   
-    <dependency> 
-      <groupId>maven-plugins</groupId> 
+   <dependency> 
+      <groupId>torque</groupId> 
       <artifactId>maven-torque-plugin</artifactId> 
-      <version>3.2</version> 
-      <url>http://db.apache.org/torque/maven-plugin/</url> 
+      <version>3.1.1-rc2</version> 
+      <url>http://db.apache.org/torque/</url> 
       <type>plugin</type>
-    </dependency> 
+    </dependency>
       
     <dependency> 
       <groupId>maven</groupId> 
