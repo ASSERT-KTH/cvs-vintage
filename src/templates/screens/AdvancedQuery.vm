@@ -6,8 +6,8 @@ $page.setTitle("Advanced query")
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-	<td>Avanced query</td>
-	<th><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></th>
+	<th>Avanced query</th>
+	<td><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></td>
 	<td><a href="$link.setPage("QueryList.vm")" title="view saved queries">Saved queries</a></td>
 </tr>
 </table>

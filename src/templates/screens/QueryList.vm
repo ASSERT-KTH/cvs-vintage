@@ -7,8 +7,14 @@ $page.setTitle("Stored query list")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-<div class="functnbar">		
-<input type="submit" value="Done"  name="eventSubmit_doSave" />&nbsp;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&nbsp;
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query">Avanced query</a></td>
+	<td><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></td>
+	<th>Saved queries</th>
+</tr>
+</table>
 </div>
 
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
