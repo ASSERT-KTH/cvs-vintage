@@ -44,7 +44,7 @@ public class Query
         ScarabSecurity security = SecurityFactory.getInstance();
         // If it's a global query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
-        if (getQueryType().getQueryTypeId().equals(USER__PK))
+        if (getTypeId().equals(USER__PK))
         {
             setApproved(true);
         }
@@ -194,8 +194,10 @@ public class Query
         ScarabModule module = getScarabModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user, module)
-          || (user.getUserId().equals(getUserId()) && getQueryType().equals(USER__PK)))
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
+                                   user, module)
+          || (user.getUserId().equals(getUserId()) 
+             && getQueryType().equals(USER__PK)))
         {
             setDeleted(true);
             save();
