@@ -116,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.53 2003/08/14 22:01:53 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.54 2003/08/26 22:51:39 elicia Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -964,7 +964,7 @@ public class ScarabIssues implements java.io.Serializable
 
             // Determine if this ActivitySet should be marked as the 
             // creation event
-            ActivitySet creationSet = issueOM.getActivitySet();
+            ActivitySet creationSet = issueOM.getInitialActivitySet();
             if (ActivitySetTypePeer.CREATE_ISSUE__PK
                 .equals(activitySetOM.getTypeId()) 
                ||
@@ -973,7 +973,7 @@ public class ScarabIssues implements java.io.Serializable
                         (creationSet == null || activitySetOM.getCreatedDate()
                          .before(creationSet.getCreatedDate()))) ) 
             {
-                issueOM.setActivitySet(activitySetOM);
+                issueOM.setInitialActivitySet(activitySetOM);
             }
 
 /////////////////////////////////////////////////////////////////////////////////  

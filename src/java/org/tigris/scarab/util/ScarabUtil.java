@@ -60,7 +60,7 @@ import org.tigris.scarab.util.IssueIdParser;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.6 2003/08/01 00:21:54 elicia Exp $
+ * @version $Id: ScarabUtil.java,v 1.7 2003/08/26 22:51:38 elicia Exp $
  */
 public class ScarabUtil
 {
@@ -137,11 +137,8 @@ public class ScarabUtil
 
     /**
      * Check whether Object array contains passed in object.
-     *
-     * @param in Object array and Object.
-     * @param out boolean
      */
-    public static final boolean contains(Object[] array, Object obj )
+    public static final boolean contains(Object[] array, Object obj
     {
         boolean contains = false;
         if (array != null && array.length > 0)
