@@ -81,6 +81,24 @@ public abstract class AttributeValue
     {
     }
 
+    public String getQueryKey()
+    {
+        String key = super.getQueryKey();
+        if ( key == null || key.length() == 0 ) 
+        {
+            try
+            {
+                key = "__" + getAttribute().getQueryKey();
+            }
+            catch (Exception e)
+            {
+                key = "";
+            }
+        }
+        
+        return key;
+    }
+
     public String toString()
     {
         try

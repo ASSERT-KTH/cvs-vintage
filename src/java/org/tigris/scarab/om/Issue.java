@@ -218,11 +218,9 @@ public class Issue
     public SequencedHashtable getModuleAttributeValuesMap() throws Exception
     {
         SequencedHashtable map = null; 
-
-        try{
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
-        // this exception is getting lost 
+
         attributes = getModule().getActiveAttributes();
         siaValuesMap = getAttributeValuesMap();
 
@@ -243,7 +241,7 @@ public class Issue
                 map.put( key, aval );
             }
         }
-        }catch (Exception e){e.printStackTrace();}
+
         return map;
     }
 
@@ -264,6 +262,20 @@ public class Issue
         return aval;
     }
 
+    /*
+    public AttributeValue[] getAttributeValues(Attribute attribute)
+       throws Exception
+    {
+        Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.DELETED, false)        
+            .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
+
+        List avals = getAttributeValues(crit);
+        AttributeValue[] avalsArray = new AttributeValue[avals.size()];
+        
+        return (AttributeValue[]) avals.toArray(avalsArray);
+    }
+    */
 
     /**
      * AttributeValues that are set for this Issue in the order
@@ -287,7 +299,6 @@ public class Issue
         throws Exception
     {
         AttributeValue[] orderedValues = new AttributeValue[values.size()];
-        try{
 
         int i=0;
         for ( int j=0; j<attributes.length; j++ ) 
@@ -305,12 +316,6 @@ public class Issue
             orderedValues[i++] = (AttributeValue)iter.next();
         }
 
-        }catch (Exception e){e.printStackTrace();}
-
-        for ( int j=0; j<orderedValues.length; j++ ) 
-        {
-            
-        }
         return orderedValues;
     }
 
@@ -353,16 +358,17 @@ public class Issue
     }
 
 
+    /**
+     * Describe <code>containsMinimumAttributeValues</code> method here.
+     *
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.ACTIVE, true)        
-            .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] attributes = getModule().getAttributes(crit);
-        //        Vector moduleAttributes = 
-        //    getModule().getRModuleAttributes(crit);
-        
+        Attribute[] attributes = getModule().getRequiredAttributes();
+
         boolean result = true;
         SequencedHashtable avMap = getModuleAttributeValuesMap(); 
         Iterator i = avMap.iterator();
@@ -392,9 +398,45 @@ public class Issue
     }       
 
     /**
-     * Returns userid, the value of the "AssignedTo" Attribute 
+     * Users who can be assigned to this issue.  if a user has already
+     * been assigned to this issue, they will not show up in this list.
+     *
+     * @return a <code>List</code> value
      */
-    public List getAssignedTo() throws Exception
+    public List getEligibleAssignees()
+    {
+
+        //#foreach ($user in $security.getUsers($attr.Permission, $module))
+        return null;
+    }
+    /*
+#macro (userSelectBox $attrValue $size)
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $module = $attrValue.Issue.Module )
+
+        <select name="$attrInput.UserId.Key" 
+                #if($size.length())size="$size"#end class="select">
+            #if ($size.length() == 0)
+            <option value="">Choose...</option>
+            #end
+
+              #set ( $selected = "" )
+              #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$user.PrimaryKey">
+                  $user.UserName</option>
+            #end
+        </select>
+#end
+    */      
+
+
+    /**
+     * Returns userids, the value of the "AssignedTo" Attribute 
+     */
+    public List getAssignedUsers() throws Exception
     {
         ArrayList assignees = new ArrayList();
         Criteria crit = new Criteria()
@@ -423,7 +465,7 @@ public class Issue
             .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
                      AttachmentPeer.ATTACHMENT_TYPE_ID)
             .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 2)
-            .addOrderByColumn(AttachmentPeer.CREATED_DATE);
+            .addAscendingOrderByColumn(AttachmentPeer.CREATED_DATE);
 
         return  AttachmentPeer.doSelect(crit);
     }
@@ -451,7 +493,7 @@ public class Issue
         Criteria crit = new Criteria()
             .add(ActivityPeer.ISSUE_ID, getIssueId())
             .setLimit(10)
-            .addOrderByColumn(ActivityPeer.TRANSACTION_ID);
+            .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
         return ActivityPeer.doSelect(crit);
     }
 

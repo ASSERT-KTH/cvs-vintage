@@ -74,7 +74,7 @@
 
 <group name="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
-        <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
+        <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="([0-9]|:)+">badIdMessage</rule>
         </field>
         <field name="OptionId" key="optionid" type="NumberKey">

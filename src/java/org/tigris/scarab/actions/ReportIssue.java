@@ -51,8 +51,9 @@ import java.util.List;
 import java.math.BigDecimal;
 
 // Turbine Stuff 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
-import org.apache.turbine.TemplateContext;
+import org.apache.turbine.services.template.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.SequencedHashtable;
@@ -62,7 +63,6 @@ import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.services.resources.TurbineResources;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.26 2001/07/13 23:18:13 jon Exp $
+    @version $Id: ReportIssue.java,v 1.27 2001/07/17 02:01:19 jmcnally Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -111,10 +111,8 @@ public class ReportIssue extends TemplateAction
         summary.setRequired(true);
 
         // set any other required flags
-        Criteria crit = new Criteria(3)
-            .add(RModuleAttributePeer.ACTIVE, true)        
-            .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        Attribute[] requiredAttributes = 
+            issue.getModule().getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
         AttributeValue aval = null;
@@ -294,6 +292,7 @@ public class ReportIssue extends TemplateAction
                     intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null ) 
                 {
+                    System.out.println("Parameters: "+data.getParameters());
                     group.setProperties(aval);
                 }                
             }
@@ -365,7 +364,7 @@ public class ReportIssue extends TemplateAction
                     data.setMessage("Your comment for issue #" + 
                                     issue.getUniqueId() + 
                                     " has been added.");
-                    String nextTemplate = TurbineResources
+                    String nextTemplate = Turbine.getConfiguration()
                         .getString("template.homepage", "Start.vm");
                     if ( ! reusedSearchStuff(data, context, 
                              "eventSubmit_doAddnote",1, nextTemplate) ) 
@@ -399,7 +398,7 @@ public class ReportIssue extends TemplateAction
                 issue.addVote((ScarabUser)data.getUser());
                 data.setMessage("Your vote for issue #" + issue.getUniqueId() 
                                 + " has been accepted.");
-                String nextTemplate = TurbineResources
+                String nextTemplate = Turbine.getConfiguration()
                     .getString("template.homepage", "Start.vm");
                 if ( ! reusedSearchStuff(data, context, 
                           "eventSubmit_doAddvote",1, nextTemplate) ) 
@@ -434,7 +433,7 @@ public class ReportIssue extends TemplateAction
     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        String template = TurbineResources
+        String template = Turbine.getConfiguration()
             .getString("template.homepage", "Start.vm");
         setTarget(data, template);
     }

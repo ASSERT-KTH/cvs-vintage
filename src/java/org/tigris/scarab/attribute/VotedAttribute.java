@@ -48,7 +48,6 @@ package org.tigris.scarab.attribute;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.*;
-import org.apache.turbine.om.security.TurbineUser;
 import org.apache.turbine.services.db.util.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.services.db.om.*;
@@ -57,7 +56,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.10 $ $Date: 2001/06/29 01:57:26 $
+ * @version $Revision: 1.11 $ $Date: 2001/07/17 02:01:19 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -85,10 +84,7 @@ public abstract class VotedAttribute extends OptionAttribute
         votes = new Hashtable();
         AttributeVote vote;
         Criteria crit = new Criteria();
-        crit.add(AttributeVotePeer.ATTRIBUTE_ID, 
-                 getAttribute().getPrimaryKey())
-            .add(AttributeVotePeer.ISSUE_ID, 
-                 getIssue().getPrimaryKey());
+        crit.add(AttributeVotePeer.VALUE_ID, getValueId());
         Vector res = AttributeVotePeer.doSelect(crit);
         for (i=0; i<res.size(); i++)
         {
@@ -98,10 +94,7 @@ public abstract class VotedAttribute extends OptionAttribute
                       String.valueOf(vote.getOptionId()))));
         }
         Criteria crit1 = new Criteria()
-            .add(AttributeValuePeer.ATTRIBUTE_ID, 
-                 getAttribute().getPrimaryKey())
-            .add(AttributeValuePeer.ISSUE_ID, 
-                 getIssue().getPrimaryKey());
+            .add(AttributeValuePeer.VALUE_ID, getValueId());
         if (AttributeValuePeer.doSelect(crit1).size()==1)
             loaded = true;
         result = computeResult();

@@ -83,6 +83,7 @@ public abstract class Module
     private Attribute[] activeAttributes;
     private Attribute[] dedupeAttributes;
     private Attribute[] quicksearchAttributes;
+    private Attribute[] requiredAttributes;
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
 
@@ -176,6 +177,27 @@ public abstract class Module
         }
 
         return quicksearchAttributes;
+    }
+
+    /**
+     * Array of Attributes used for quick search.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getRequiredAttributes()
+        throws Exception
+    {
+        if ( requiredAttributes == null ) 
+        {
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.REQUIRED, true)        
+                .add(RModuleAttributePeer.ACTIVE, true)
+                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
+                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+            requiredAttributes = getAttributes(crit);
+        }
+
+        return requiredAttributes;
     }
 
     /**
