@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class EntityContainer
    extends Container
@@ -387,9 +387,16 @@ public class EntityContainer
          // Single entity finder
          Object id = getPersistenceManager().findEntity(mi.getMethod(), 
 		                                                mi.getArguments(), 
-														(EntityEnterpriseContext)mi.getEnterpriseContext());
+														(EntityEnterpriseContext)mi());
+														
+		 //First we create the EJBObject
+		 EJBObject ejbObject = (EJBObject)containerInvoker.getEntityEJBObject(id);
 		 
-		 return (EJBObject)containerInvoker.getEntityEJBObject(id);
+		 // Set the context with the EJBObject
+		 ((EntityEnterpriseContext)mi.getEnterpriseContext()).setEJBObject(ejbObject);
+	
+		 return ejbObject;
+		 
       }
    }
    
