@@ -60,6 +60,13 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /*
         values(9, 'severity', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Tracking */
         values(10, 'tracking', 10);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Brief (one-line) Description */
+        values(11, 'summary', 1);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Additional Comments */
+        values(12, 'comment', 1);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Additional Comments */
+        values(13, 'url', 1);
+
 
 /*
  *

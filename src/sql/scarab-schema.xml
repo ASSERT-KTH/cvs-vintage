@@ -1,4 +1,4 @@
-<!-- $Id: scarab-schema.xml,v 1.1 2001/03/03 02:10:29 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.2 2001/03/29 19:32:04 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -91,7 +91,8 @@
     <!--
         Flag, which marks that attachment has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+            default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -138,7 +139,8 @@
     <!--
         Flag, which marks that attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_TYPE">
         <reference local="ATTRIBUTE_TYPE_ID" foreign="ATTRIBUTE_TYPE_ID"/>
     </foreign-key>
@@ -251,7 +253,8 @@
     <!--
         Flag, which marks that dependency has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="OBSERVED_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -311,7 +314,8 @@
     <!--
         Flag, which marks that issue has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
@@ -373,7 +377,8 @@
     <!--
         Flag, which marks that attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -456,7 +461,8 @@
     <!--
         Flag, which marks that module has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"/>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
 
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="PARENT_ID" foreign="MODULE_ID"/>
@@ -484,7 +490,14 @@
     <!--
         Flag, which marks that module attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
+    <!--
+        Flag, which marks that issues entered for this module must have
+        this attribute set.
+    -->
+    <column name="REQUIRED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
@@ -508,7 +521,8 @@
     <!--
         Flag, which marks that association has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
@@ -537,7 +551,8 @@
     <!--
         Flag, which marks that association has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_R_MODULE_USER">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
         <reference local="USER_ID" foreign="USER_ID"/>
