@@ -89,7 +89,7 @@ public final class SessionExpirer  extends BaseInterceptor {
     int manager_note;
 
     int checkInterval = 60;
-    Expirer expirer=new Expirer();
+    Expirer expirer=null;
     
     public SessionExpirer() {
     }
@@ -110,7 +110,11 @@ public final class SessionExpirer  extends BaseInterceptor {
     }
 
     // -------------------- Tomcat request events --------------------
+
+    // XXX use contextInit/shutdown for local modules
+    
     public void engineInit( ContextManager cm ) throws TomcatException {
+	expirer=new Expirer();
 	expirer.setCheckInterval( checkInterval );
 	expirer.setExpireCallback( new SessionExpireCallback(this, debug) );
 	expirer.start();
