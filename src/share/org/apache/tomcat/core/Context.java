@@ -659,12 +659,26 @@ public class Context {
 	if(mappedPath == null )
 	    mappedPath=lr.getLookupPath();
 
-        URL docBase = getDocumentBase();
-
-	url=new URL(docBase.getProtocol(), docBase.getHost(),
-		       docBase.getPort(), docBase.getFile() + mappedPath);
-	if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
-	return url;
+        URL documentBase = getDocumentBase();
+	try {
+	    String contextHome=new File( docBase ).getCanonicalPath();
+	    String realPath=contextHome + mappedPath;
+	    
+	    //   System.out.println("XXX " + realPath + " " + new File(realPath).getCanonicalPath() + " "  + contextHome );
+	    if( ! new File(realPath).getCanonicalPath().startsWith(contextHome) ) {
+		// no access to files in a different context.
+		// XXX needs a better design - it should be in an interceptor,
+		// in order to support non-file based repositories.
+		return null;
+	    }
+	    url=new URL(documentBase.getProtocol(), documentBase.getHost(),
+			documentBase.getPort(), realPath );
+	    if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
+	    return url;
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
+	    return null;
+	}
     }
 
 
