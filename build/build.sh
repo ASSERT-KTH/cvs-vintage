@@ -12,7 +12,7 @@ fi
 
 CLASSPATH=""
 
-if test -f ${JAVA_HOME}/lib/tools.jar ; then
+if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
     CLASSPATH=${JAVA_HOME}/lib/tools.jar
 fi
 
@@ -26,7 +26,7 @@ for i in `find ../src -name "crimson*.jar" -print | tail -1` ; do
    CLASSPATH="$CLASSPATH:$i"
 done
 
-for i in `find . -name "jaxp*.jar" -print` ; do
+for i in `find ../src -name "jaxp*.jar" -print | tail -1` ; do
    CLASSPATH="$CLASSPATH:$i"
 done
 
