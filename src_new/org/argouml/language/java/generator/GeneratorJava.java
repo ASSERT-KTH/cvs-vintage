@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.41 2002/09/02 09:36:17 kataka Exp $
+// $Id: GeneratorJava.java,v 1.42 2002/09/13 08:12:59 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -80,7 +80,7 @@ implements PluggableNotation, FileGenerator {
 
   public static GeneratorJava getInstance() { return SINGLETON; }
 
-  private GeneratorJava() {
+  protected GeneratorJava() {
     super (Notation.makeNotation ("Java",
                                   null,
                                   Argo.lookupIconResource ("JavaNotation")));
@@ -1493,7 +1493,7 @@ implements PluggableNotation, FileGenerator {
        @param mClassifier The classifier to update from.
        @param file The file to update.
     */
-    private static void update(MClassifier mClassifier,
+    protected static void update(MClassifier mClassifier,
                         File file)
 	throws Exception
     {

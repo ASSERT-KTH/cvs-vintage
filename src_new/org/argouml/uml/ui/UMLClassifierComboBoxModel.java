@@ -24,7 +24,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.6 2002/08/19 10:48:08 kataka Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.7 2002/09/13 08:12:59 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -189,5 +189,12 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 
 
   
+
+	/**
+	 * @see ru.novosoft.uml.MElementListener#propertySet(MElementEvent)
+	 */
+	public void propertySet(MElementEvent e) {
+		super.propertySet(e);
+	}
 
 }
