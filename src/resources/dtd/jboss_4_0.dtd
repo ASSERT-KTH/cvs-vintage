@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.13 2004/08/02 16:32:08 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.14 2004/08/02 19:23:41 tdiesler Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -1376,7 +1376,7 @@ ior-security-config element describes the security configuration information for
 transport-config is the root element for security between the end points
 -->
 <!ELEMENT transport-config ( integrity, confidentiality,
- establish-trust-in-target, establish-trust-in-client, detect-misordering?
+ establish-trust-in-target, establish-trust-in-client, detect-misordering?,
  detect-replay?)> 
 
 <!--
