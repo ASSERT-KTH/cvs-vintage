@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.26 2002/05/29 09:53:14 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.27 2002/06/18 06:55:59 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -476,7 +476,7 @@ public class BufferIORequest extends WorkRequest
 		}
 
 		buffer.setBooleanProperty(Buffer.TRAILING_EOL,false);
-		if(bufferLength != 0)
+		if(bufferLength != 0 && jEdit.getBooleanProperty("stripTrailingEOL"))
 		{
 			char ch = seg.array[bufferLength - 1];
 			if(ch == '\n')
@@ -733,8 +733,7 @@ public class BufferIORequest extends WorkRequest
 			out.write(lineSegment.array,lineSegment.offset,
 				lineSegment.count);
 
-			if(i != buffer.getLineCount() - 1
-				|| buffer.getBooleanProperty(Buffer.TRAILING_EOL))
+			if(i != buffer.getLineCount() - 1)
 			{
 				out.write(newline);
 			}
@@ -742,6 +741,13 @@ public class BufferIORequest extends WorkRequest
 			if(++i % PROGRESS_INTERVAL == 0)
 				setProgressValue(i / PROGRESS_INTERVAL);
 		}
+
+		if(jEdit.getBooleanProperty("stripTrailingEOL")
+			&& buffer.getBooleanProperty(Buffer.TRAILING_EOL))
+		{
+			out.write(newline);
+		}
+
 		out.close();
 	} //}}}
 

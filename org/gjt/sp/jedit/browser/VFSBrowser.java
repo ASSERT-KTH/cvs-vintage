@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.47 2002/06/15 07:28:49 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.48 2002/06/18 06:55:59 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1156,7 +1156,8 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 					GUIUtilities.showPopupMenu(
 						popup,CommandsMenuButton.this,0,
-						CommandsMenuButton.this.getHeight());
+						CommandsMenuButton.this.getHeight(),
+						false);
 				}
 				else
 				{
@@ -1259,7 +1260,8 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 				{
 					GUIUtilities.showPopupMenu(
 						popup,PluginsMenuButton.this,0,
-						PluginsMenuButton.this.getHeight());
+						PluginsMenuButton.this.getHeight(),
+						false);
 				}
 				else
 				{
@@ -1392,7 +1394,8 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 					GUIUtilities.showPopupMenu(
 						popup,FavoritesMenuButton.this,0,
-						FavoritesMenuButton.this.getHeight());
+						FavoritesMenuButton.this.getHeight(),
+						false);
 				}
 				else
 				{

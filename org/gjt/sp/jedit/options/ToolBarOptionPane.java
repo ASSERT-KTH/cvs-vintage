@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.5 2001/10/18 07:41:23 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.6 2002/06/18 06:56:00 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -90,9 +90,13 @@ public class ToolBarOptionPane extends AbstractOptionPane
 				{
 					iconName = jEdit.getProperty(actionName + ".icon");
 					if(iconName == null)
-						continue;
-
-					icon = GUIUtilities.loadIcon(iconName);
+						icon = GUIUtilities.loadIcon("BrokenImage.png");
+					else
+					{
+						icon = GUIUtilities.loadIcon(iconName);
+						if(icon == null)
+							icon = GUIUtilities.loadIcon("BrokenImage.png");
+					}
 				}
 				listModel.addElement(new Button(actionName,iconName,icon,label));
 			}

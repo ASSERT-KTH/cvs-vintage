@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.19 2002/05/14 11:20:41 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.20 2002/06/18 06:55:59 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -111,13 +111,6 @@ public class BufferOptions extends EnhancedDialog
 			"buffer-options.gzipped"));
 		gzipped.setSelected(buffer.getBooleanProperty(Buffer.GZIPPED));
 		panel.addComponent(gzipped);
-		//}}}
-
-		//{{{ Trailing EOL setting
-		trailingEOL = new JCheckBox(jEdit.getProperty(
-			"buffer-options.trailingEOL"));
-		trailingEOL.setSelected(buffer.getBooleanProperty(Buffer.TRAILING_EOL));
-		panel.addComponent(trailingEOL);
 		//}}}
 
 		panel.addSeparator("buffer-options.editing");
@@ -276,15 +269,6 @@ public class BufferOptions extends EnhancedDialog
 			buffer.setDirty(true);
 		}
 
-		boolean trailingEOLValue = trailingEOL.isSelected();
-		boolean oldTrailingEOL = buffer.getBooleanProperty(
-			Buffer.TRAILING_EOL);
-		if(trailingEOLValue != oldTrailingEOL)
-		{
-			buffer.setBooleanProperty(Buffer.TRAILING_EOL,trailingEOLValue);
-			buffer.setDirty(true);
-		}
-
 		buffer.setStringProperty("folding",(String)folding.getSelectedItem());
 
 		buffer.setStringProperty("wrap",(String)wrap.getSelectedItem());
@@ -341,7 +325,6 @@ public class BufferOptions extends EnhancedDialog
 	private JComboBox lineSeparator;
 	private JComboBox encoding;
 	private JCheckBox gzipped;
-	private JCheckBox trailingEOL;
 	private JComboBox folding;
 	private JComboBox wrap;
 	private JComboBox maxLineLen;

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.45 2002/06/06 09:17:52 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.46 2002/06/18 06:56:00 spestov Exp $
  */
 class ChunkCache
 {
@@ -244,8 +244,8 @@ class ChunkCache
 			softWrap.init(textArea.lineSegment,painter.getStyles(),
 				painter.getFontRenderContext(),
 				painter,out,textArea.wrapMargin);
-			if(MONOSPACED_FONT_OPTIMIZATION)
-				softWrap.setMonospacedCharWidth(textArea.charWidth);
+			softWrap.setMonospacedCharWidth(textArea.monospacedHack
+				? textArea.charWidth : 0);
 			buffer.markTokens(physicalLine,softWrap);
 		}
 		else
@@ -266,8 +266,8 @@ class ChunkCache
 		noWrap.init(textArea.lineSegment,painter.getStyles(),
 			painter.getFontRenderContext(),
 			painter);
-		if(MONOSPACED_FONT_OPTIMIZATION)
-			noWrap.setMonospacedCharWidth(textArea.charWidth);
+		noWrap.setMonospacedCharWidth(textArea.monospacedHack
+			? textArea.charWidth : 0);
 		buffer.markTokens(physicalLine,noWrap);
 		return noWrap.getChunks();
 	} //}}}

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.28 2002/06/17 09:30:36 spestov Exp $
+ * @version $Id: View.java,v 1.29 2002/06/18 06:55:59 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -395,11 +395,6 @@ public class View extends JFrame implements EBComponent
 					return;
 				}
 			}
-
-			Keymap keymap = ((JTextComponent)getFocusOwner())
-				.getKeymap();
-			if(keymap.getAction(KeyStroke.getKeyStrokeForEvent(evt)) != null)
-				return;
 		}
 
 		if(evt.isConsumed())
