@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.16 2001/08/28 03:00:46 dlr Exp $
+    @version $Id: Confirm.java,v 1.17 2001/08/28 15:19:38 dlr Exp $
 */
 public class Confirm extends TemplateAction
 {
@@ -95,6 +95,7 @@ public class Confirm extends TemplateAction
                 ScarabUser confirmedUser = (ScarabUserImpl) TurbineSecurity.getUser(username);
                 confirmedUser.setHasLoggedIn(Boolean.TRUE);
                 data.setUser(confirmedUser);
+                data.save();
             }
             else
             {
