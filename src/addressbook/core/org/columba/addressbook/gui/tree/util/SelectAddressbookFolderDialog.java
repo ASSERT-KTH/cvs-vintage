@@ -33,14 +33,15 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.DialogStore;
 
 public class SelectAddressbookFolderDialog
-	
-	implements ActionListener, TreeSelectionListener
-{
+	implements ActionListener, TreeSelectionListener {
 	private String name;
 
 	//private MainInterface mainInterface;
@@ -58,12 +59,16 @@ public class SelectAddressbookFolderDialog
 	private Folder selectedFolder;
 
 	private TreeModel model;
-	
+
 	private JDialog dialog;
 
-	public SelectAddressbookFolderDialog(TreeModel model)
-	{
-		dialog = DialogStore.getDialog(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"));
+	public SelectAddressbookFolderDialog(TreeModel model) {
+		dialog =
+			DialogStore.getDialog(
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"select_folder"));
 		//super(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"), true);
 
 		this.model = model;
@@ -76,11 +81,15 @@ public class SelectAddressbookFolderDialog
 		init();
 	}
 
-	public void init()
-	{
+	public void init() {
 		buttons = new JButton[3];
 
-		JLabel label2 = new JLabel(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"));
+		JLabel label2 =
+			new JLabel(
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"select_folder"));
 
 		buttons[0] = new JButton("Cancel");
 		buttons[0].setActionCommand("CANCEL");
@@ -88,7 +97,12 @@ public class SelectAddressbookFolderDialog
 		buttons[1] = new JButton("Ok");
 		buttons[1].setEnabled(true);
 		buttons[1].setActionCommand("OK");
-		buttons[2] = new JButton(AddressbookResourceLoader.getString("tree", "folderdialog", "new_subFolder"));
+		buttons[2] =
+			new JButton(
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"new_subFolder"));
 		buttons[2].setActionCommand("NEW");
 		buttons[2].setEnabled(false);
 
@@ -111,7 +125,10 @@ public class SelectAddressbookFolderDialog
 		centerPanel.setBorder(
 			BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(),
-				AddressbookResourceLoader.getString("tree", "folderdialog", "choose_folder")));
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"choose_folder")));
 		centerPanel.setLayout(new BorderLayout());
 
 		tree = new JTree(model);
@@ -119,8 +136,8 @@ public class SelectAddressbookFolderDialog
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
 		tree.addTreeSelectionListener(this);
-		tree.setCellRenderer( new AddressbookTreeCellRenderer(true) );
-		
+		tree.setCellRenderer(new AddressbookTreeCellRenderer(true));
+
 		//FolderTreeCellRenderer renderer = new FolderTreeCellRenderer( true );
 		//tree.setCellRenderer(renderer);
 
@@ -157,8 +174,7 @@ public class SelectAddressbookFolderDialog
 
 		//getContentPane().add(  Box.createRigidArea( new java.awt.Dimension(0,10) )  );
 
-		for (int i = 0; i < 3; i++)
-		{
+		for (int i = 0; i < 3; i++) {
 			buttons[i].addActionListener(this);
 		}
 
@@ -167,18 +183,15 @@ public class SelectAddressbookFolderDialog
 		dialog.setVisible(true);
 	}
 
-	public boolean success()
-	{
+	public boolean success() {
 		return bool;
 	}
 
-	public Folder getSelectedFolder()
-	{
+	public Folder getSelectedFolder() {
 		return selectedFolder;
 	}
 
-	public int getUid()
-	{
+	public int getUid() {
 		/*
 		  FolderTreeNode node = tree.getSelectedNode();
 		
@@ -190,23 +203,17 @@ public class SelectAddressbookFolderDialog
 
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
-		if (action.equals("OK"))
-		{
+		if (action.equals("OK")) {
 			//name = textField.getText();
 
 			bool = true;
 			dialog.dispose();
-		}
-		else if (action.equals("CANCEL"))
-		{
+		} else if (action.equals("CANCEL")) {
 			bool = false;
 			dialog.dispose();
-		}
-		else if (action.equals("NEW"))
-		{
+		} else if (action.equals("NEW")) {
 			/*
 			EditFolderDialog dialog = treeViewer.getEditFolderDialog( "New Folder" );
 			dialog.showDialog();
@@ -236,44 +243,23 @@ public class SelectAddressbookFolderDialog
 
 	/******************************* tree selection listener ********************************/
 
-	public void valueChanged(TreeSelectionEvent e)
-	{
+	public void valueChanged(TreeSelectionEvent e) {
 
-		Folder node = (Folder) tree.getLastSelectedPathComponent();
+		AddressbookTreeNode node =
+			(AddressbookTreeNode) tree.getLastSelectedPathComponent();
 		if (node == null)
 			return;
 
-		selectedFolder = node;
+		FolderItem item = node.getFolderItem();
 
-		//FolderItem item = node.getFolderItem();
-
-		/*
-		if ( item.getType().equals("root") )
-			buttons[1].setEnabled(false);
-		else
+		if (item.get("type").equals("AddressbookFolder")) {
 			buttons[1].setEnabled(true);
-		*/
+			selectedFolder = (AddressbookFolder) node;
+		} else {
+			buttons[1].setEnabled(false);
+		}
+
 		
-		
-		/*
-		if ( item.isAddAllowed() )
-		{
-		    buttons[1].setEnabled( true );
-		}
-		else
-		{
-		    buttons[1].setEnabled( false );
-		}
-		
-		if ( item.isSubfolderAllowed() )
-		{
-		    buttons[2].setEnabled( true );
-		}
-		else
-		{
-		    buttons[2].setEnabled( false );
-		}
-		*/
 
 	}
 }
