@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.command.FolderCommandReference;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.io.IOException;
+
+import org.columba.mail.command.FolderCommandReference;
 
 
 /**
@@ -41,23 +40,23 @@ public class MessageReferencesTransfer implements Transferable {
         }
     }
 
-    private FolderCommandReference[] references;
+    private FolderCommandReference reference;
 
     /**
  * Creates a message transferable
  * @param ref message references.
  */
-    public MessageReferencesTransfer(FolderCommandReference[] ref) {
+    public MessageReferencesTransfer(FolderCommandReference ref) {
         super();
-        references = ref;
+        reference = ref;
     }
 
     /**
  * Returns the message references for this transfer.
  * @return the message references for this transfer.
  */
-    public FolderCommandReference[] getFolderReferences() {
-        return references;
+    public FolderCommandReference getFolderReferences() {
+        return reference;
     }
 
     /** {@inheritDoc} */

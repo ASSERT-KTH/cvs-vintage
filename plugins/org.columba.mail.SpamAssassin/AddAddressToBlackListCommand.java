@@ -37,7 +37,7 @@ public class AddAddressToBlackListCommand extends FolderCommand {
     /**
      * @param references
      */
-    public AddAddressToBlackListCommand(DefaultCommandReference[] references) {
+    public AddAddressToBlackListCommand(DefaultCommandReference references) {
         super(references);
     }
 
@@ -46,7 +46,7 @@ public class AddAddressToBlackListCommand extends FolderCommand {
      * @param references
      */
     public AddAddressToBlackListCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
+        DefaultCommandReference references) {
         super(frame, references);
     }
 
@@ -54,10 +54,10 @@ public class AddAddressToBlackListCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference r = (FolderCommandReference) getReference();
 
-        Object[] uids = r[0].getUids();
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        Object[] uids = r.getUids();
+        MessageFolder folder = (MessageFolder) r.getFolder();
 
         for (int i = 0; i < uids.length; i++) {
             Header header = folder.getHeaderFields(uids[i],

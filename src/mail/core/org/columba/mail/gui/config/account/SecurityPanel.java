@@ -16,22 +16,25 @@
 
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.config.PGPItem;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Shows PGP-related options.

@@ -15,18 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -42,6 +30,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.SpecialFoldersItem;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class SpecialFoldersPanel extends DefaultPanel implements ActionListener {

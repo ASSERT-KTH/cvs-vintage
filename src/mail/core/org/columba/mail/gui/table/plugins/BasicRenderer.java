@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.mail.gui.table.model.MessageNode;
-
 import java.awt.Component;
 
 import javax.swing.JTable;
+
+import org.columba.mail.gui.table.model.MessageNode;
 
 
 public class BasicRenderer extends DefaultLabelRenderer {

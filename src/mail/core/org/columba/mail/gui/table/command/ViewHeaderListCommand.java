@@ -18,10 +18,10 @@ package org.columba.mail.gui.table.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -31,73 +31,73 @@ import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
-
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- *
+ *  
  */
 public class ViewHeaderListCommand extends Command {
-    private HeaderList headerList;
-    private MessageFolder folder;
+	private HeaderList headerList;
 
-    public ViewHeaderListCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
+	private MessageFolder folder;
 
-        priority = Command.REALTIME_PRIORITY;
-        commandType = Command.NO_UNDO_OPERATION;
-    }
+	public ViewHeaderListCommand(FrameMediator frame,
+			DefaultCommandReference reference) {
+		super(frame, reference);
 
-    /**
- * @see org.columba.core.command.Command#updateGUI()
- */
-    public void updateGUI() throws Exception {
-        // notify table selection handler 
-        ((TableSelectionHandler) frameMediator.getSelectionManager().getHandler("mail.table")).setFolder(folder);
+		priority = Command.REALTIME_PRIORITY;
 
-        // this should be called from TableController instead
-        ((TableViewOwner) frameMediator).getTableController().showHeaderList(folder,
-            headerList);
+	}
 
-        // update tree model
-        MailInterface.treeModel.nodeChanged(folder);
-    }
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		// notify table selection handler
+		((TableSelectionHandler) frameMediator.getSelectionManager()
+				.getHandler("mail.table")).setFolder(folder);
 
-    /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		// this should be called from TableController instead
+		((TableViewOwner) frameMediator).getTableController().showHeaderList(
+				folder, headerList);
 
-        folder = (MessageFolder) r[0].getFolder();
+		/*
+		 * // update tree model MailInterface.treeModel.nodeChanged(folder);
+		 */
+	}
 
-        //		register for status events
-        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        // fetch the headerlist
-        headerList = (folder).getHeaderList();
-        //TODO: Handle CommandCancelledException
-        
-        // this is a little hack !!
-        // check if this is an imap folder
-        FolderItem folderItem = folder.getConfiguration();
+		folder = (MessageFolder) r.getFolder();
 
-        if (folderItem.get("type").equals("IMAPFolder")) {
-            IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
-            AccountItem accountItem = rootFolder.getAccountItem();
-            ImapItem item = accountItem.getImapItem();
+		//		register for status events
+		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-            boolean applyFilter = item.getBoolean("automatically_apply_filter",
-                    false);
+		// fetch the headerlist
+		headerList = (folder).getHeaderList();
+		//TODO: Handle CommandCancelledException
 
-            // if "automatically apply filter" is selected 
-            if (applyFilter == true) {
-                MainInterface.processor.addOp(new ApplyFilterCommand(r));
-            }
-        }
-    }
+		// this is a little hack !!
+		// check if this is an imap folder
+		FolderItem folderItem = folder.getConfiguration();
+
+		if (folderItem.get("type").equals("IMAPFolder")) {
+			IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
+			AccountItem accountItem = rootFolder.getAccountItem();
+			ImapItem item = accountItem.getImapItem();
+
+			boolean applyFilter = item.getBoolean("automatically_apply_filter",
+					false);
+
+			// if "automatically apply filter" is selected
+			if (applyFilter == true) {
+				MainInterface.processor.addOp(new ApplyFilterCommand(r));
+			}
+		}
+	}
 }

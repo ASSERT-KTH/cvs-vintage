@@ -16,9 +16,10 @@
 
 package org.columba.mail.folder.search;
 
-import org.columba.mail.filter.FilterRule;
-
 import java.util.List;
+
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.FilterRule;
 
 /**
  * Custom implementation for performing optimized search requests.

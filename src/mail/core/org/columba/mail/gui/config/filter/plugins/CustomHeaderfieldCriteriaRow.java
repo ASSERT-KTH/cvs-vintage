@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
-
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
 
 
 public class CustomHeaderfieldCriteriaRow extends DefaultCriteriaRow {

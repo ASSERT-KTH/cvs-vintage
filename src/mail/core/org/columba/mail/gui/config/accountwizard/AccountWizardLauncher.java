@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountwizard;
 
+import javax.help.CSH;
+
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.JavaHelpSupport;
@@ -24,10 +26,7 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
-
 import org.columba.mail.util.MailResourceLoader;
-
-import javax.help.CSH;
 
 
 public class AccountWizardLauncher {

@@ -76,8 +76,7 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         model.getMessage().getHeader().setFlags(flags);
         
         // create command reference
-        ComposerCommandReference[] r = new ComposerCommandReference[1];
-        r[0] = new ComposerCommandReference(composerController, destFolder);
+        ComposerCommandReference r =  new ComposerCommandReference(composerController, destFolder);
      
         // create command
         SaveMessageCommand c = new SaveMessageCommand(r);

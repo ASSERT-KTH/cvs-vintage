@@ -23,9 +23,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.folder.MessageFolder;
-
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
 

@@ -63,8 +63,8 @@ public class RedirectCommand extends ForwardCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public RedirectCommand(DefaultCommandReference[] references) {
-		super(references);
+	public RedirectCommand(DefaultCommandReference reference) {
+		super(reference);
 	}
 
 	public void execute(WorkerStatusController worker) throws Exception {
@@ -72,17 +72,16 @@ public class RedirectCommand extends ForwardCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReference())
 				.getFolder();
 
 		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		Object[] uids = ((FolderCommandReference) getReference()).getUids();
 
 //		 ->set source reference in composermodel
         // when replying this is the original sender's message
 		// you selected and replied to
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(folder, uids);
+        FolderCommandReference ref = new FolderCommandReference(folder, uids);
         model.setSourceReference(ref);
 
 		// setup to, references and account

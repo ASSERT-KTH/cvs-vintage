@@ -479,9 +479,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			if (renameFolder) {
 				if (!oldFolderName.equals(nameTextField.getText())) {
 					// user changed folder name
-					FolderCommandReference[] r = new FolderCommandReference[1];
-					r[0] = new FolderCommandReference(folder);
-					r[0].setFolderName(nameTextField.getText());
+					FolderCommandReference r = new FolderCommandReference(folder);
+					r.setFolderName(nameTextField.getText());
 					MainInterface.processor.addOp(new RenameFolderCommand(r));
 				}
 			}
@@ -519,8 +518,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					localFolder.setSearchEngine(null);
 
 					// execute resyncing command
-					FolderCommandReference[] r = new FolderCommandReference[1];
-					r[0] = new FolderCommandReference(folder);
+					FolderCommandReference r = new FolderCommandReference(
+							folder);
 					MainInterface.processor
 							.addOp(new SyncSearchEngineCommand(r));
 				} else {
@@ -534,8 +533,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					FolderOptionsController.STATE_BEFORE);
 
 			// re-select folder to make changes visible to the user
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(folder);
+			FolderCommandReference r = new FolderCommandReference(folder);
 			MainInterface.processor.addOp(new ViewHeaderListCommand(
 					getMediator(), r));
 		}
@@ -570,9 +568,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			setVisible(false);
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(folder);
-			r[0].setDestFile(destFile);
+			FolderCommandReference r = new FolderCommandReference(folder);
+			r.setDestFile(destFile);
 			MainInterface.processor.addOp(new ExportFolderCommand(r));
 		} else if (action.equals("RESET")) { //$NON-NLS-1$
 

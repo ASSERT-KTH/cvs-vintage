@@ -16,18 +16,17 @@
 
 package org.columba.mail.gui.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
 
 /**
  * Open column config dialog.
@@ -41,10 +40,10 @@ public class ColumnDialogAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
 
-        if (r.length != 0) {
-            AbstractFolder folder = r[0].getFolder();
+        if (r != null) {
+            AbstractFolder folder = r.getFolder();
 
             if (folder == null) {
                 return;

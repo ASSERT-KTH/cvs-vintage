@@ -18,7 +18,6 @@ package org.columba.mail.filter.plugins;
 import java.io.InputStream;
 
 import org.columba.core.io.StreamUtils;
-
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.MessageFolder;
 

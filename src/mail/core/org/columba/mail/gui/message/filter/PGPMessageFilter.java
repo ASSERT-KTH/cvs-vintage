@@ -65,334 +65,303 @@ import org.waffel.jscf.JSCFStatement;
  * @author fdietz
  *  
  */
-public class PGPMessageFilter extends AbstractFilter
-{
+public class PGPMessageFilter extends AbstractFilter {
 
-  private static final java.util.logging.Logger LOG = java.util.logging.Logger
-      .getLogger("org.columba.mail.gui.message.filter");
+	private static final java.util.logging.Logger LOG = java.util.logging.Logger
+			.getLogger("org.columba.mail.gui.message.filter");
 
-  private ColumbaHeader header;
+	private ColumbaHeader header;
 
-  private MimeTree mimePartTree;
+	private MimeTree mimePartTree;
 
-  private int pgpMode = SecurityInformationController.NOOP;
+	private int pgpMode = SecurityInformationController.NOOP;
 
-  // true if we view an encrypted message
-  private boolean encryptedMessage = false;
+	// true if we view an encrypted message
+	private boolean encryptedMessage = false;
 
-  private String pgpMessage = "";
+	private String pgpMessage = "";
 
-  private InputStream decryptedStream;
+	private InputStream decryptedStream;
 
-  private ColumbaMessage message;
+	private ColumbaMessage message;
 
-  private List listeners;
+	private List listeners;
 
-  public PGPMessageFilter (FrameMediator mediator)
-  {
-    super(mediator);
+	public PGPMessageFilter(FrameMediator mediator) {
+		super(mediator);
 
-    listeners = new ArrayList();
-  }
+		listeners = new ArrayList();
+	}
 
-  public void addSecurityStatusListener (SecurityStatusListener l)
-  {
-    listeners.add(l);
-  }
+	public void addSecurityStatusListener(SecurityStatusListener l) {
+		listeners.add(l);
+	}
 
-  public void fireSecurityStatusEvent (SecurityStatusEvent ev)
-  {
-    Iterator it = listeners.iterator();
-    while (it.hasNext())
-    {
-      SecurityStatusListener l = (SecurityStatusListener) it.next();
-      l.statusUpdate(ev);
-    }
-  }
+	public void fireSecurityStatusEvent(SecurityStatusEvent ev) {
+		Iterator it = listeners.iterator();
+		while (it.hasNext()) {
+			SecurityStatusListener l = (SecurityStatusListener) it.next();
+			l.statusUpdate(ev);
+		}
+	}
 
-  /**
-   * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
-   *      java.lang.Object)
-   */
-  public FolderCommandReference[] filter (MessageFolder folder, Object uid)
-      throws Exception
-  {
+	/**
+	 * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
+	 *      java.lang.Object)
+	 */
+	public FolderCommandReference filter(MessageFolder folder, Object uid)
+			throws Exception {
 
-    mimePartTree = folder.getMimePartTree(uid);
+		mimePartTree = folder.getMimePartTree(uid);
 
-    //		@TODO dont use deprecated method
-    header = folder.getMessageHeader(uid);
+		//		@TODO dont use deprecated method
+		header = folder.getMessageHeader(uid);
 
-    // TODO encrypt AND sign dosN#t work. The message is always only
-    // encrypted. We need a function that knows, here
-    // is an encrypted AND signed Message. Thus first encyrpt and then
-    // verifySign the message
-    MimeType firstPartMimeType = mimePartTree.getRootMimeNode().getHeader()
-        .getMimeType();
-    //      if this message is signed/encrypted we have to use
-    // GnuPG to extract the decrypted bodypart
-    // - multipart/encrypted
-    // - multipart/signed
-    String contentType = (String) header.get("Content-Type");
+		// TODO encrypt AND sign dosN#t work. The message is always only
+		// encrypted. We need a function that knows, here
+		// is an encrypted AND signed Message. Thus first encyrpt and then
+		// verifySign the message
+		MimeType firstPartMimeType = mimePartTree.getRootMimeNode().getHeader()
+				.getMimeType();
+		//      if this message is signed/encrypted we have to use
+		// GnuPG to extract the decrypted bodypart
+		// - multipart/encrypted
+		// - multipart/signed
+		String contentType = (String) header.get("Content-Type");
 
-    AccountItem defAccount = 
-      MailInterface.config.getAccountList().getDefaultAccount();
+		AccountItem defAccount = MailInterface.config.getAccountList()
+				.getDefaultAccount();
 
-    boolean pgpActive = false;
-    
-    if (defAccount != null)
-    {
-	    PGPItem pgpItem = defAccount.getPGPItem();
-	    LOG.fine("pgp activated: " + pgpItem.get("enabled"));
-	    pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
-    }
+		boolean pgpActive = false;
 
-    FolderCommandReference[] result = null;
-    LOG.fine("pgp is true");
-    if (firstPartMimeType.getSubtype().equals("signed"))
-    {
-      result = verify(folder, uid, pgpActive);
+		if (defAccount != null) {
+			PGPItem pgpItem = defAccount.getPGPItem();
+			LOG.fine("pgp activated: " + pgpItem.get("enabled"));
+			pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
+		}
 
-    }
-    else if (firstPartMimeType.getSubtype().equals("encrypted"))
-    {
-      LOG.fine("Mimepart type encrypted found");
-      result = decrypt(folder, uid, pgpActive);
+		FolderCommandReference result = null;
+		LOG.fine("pgp is true");
+		if (firstPartMimeType.getSubtype().equals("signed")) {
+			result = verify(folder, uid, pgpActive);
 
-    }
-    else
-    {
-      pgpMode = SecurityInformationController.NOOP;
-    }
+		} else if (firstPartMimeType.getSubtype().equals("encrypted")) {
+			LOG.fine("Mimepart type encrypted found");
+			result = decrypt(folder, uid, pgpActive);
 
-    //notify listeners
-    fireSecurityStatusEvent(new SecurityStatusEvent(this, pgpMessage, pgpMode));
+		} else {
+			pgpMode = SecurityInformationController.NOOP;
+		}
 
-    return result;
-  }
+		//notify listeners
+		fireSecurityStatusEvent(new SecurityStatusEvent(this, pgpMessage,
+				pgpMode));
 
-  /**
-   * Decrypt message.
-   * 
-   * @param folder
-   *          selected folder
-   * @param uid
-   *          selected message UID
-   * @throws Exception
-   * @throws IOException
-   */
-  private FolderCommandReference[] decrypt (MessageFolder folder, Object uid,
-      boolean pgpActive) throws Exception, IOException
-  {
-    InputStream decryptedStream = null;
-    LOG.fine("start decrypting");
-    if (!pgpActive)
-    {
-      pgpMessage = "";
-      pgpMode = SecurityInformationController.NO_KEY;
-    }
-    else
-    {
-      PGPItem pgpItem = null;
-      // we need the pgpItem, to extract the path to gpg
-      pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
-          .getPGPItem();
-      // this is wrong! we need the default id.
-      //pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
-      //        .getMailAddress());
+		return result;
+	}
 
-      MimePart encryptedMultipart = mimePartTree.getRootMimeNode();
+	/**
+	 * Decrypt message.
+	 * 
+	 * @param folder
+	 *            selected folder
+	 * @param uid
+	 *            selected message UID
+	 * @throws Exception
+	 * @throws IOException
+	 */
+	private FolderCommandReference decrypt(MessageFolder folder, Object uid,
+			boolean pgpActive) throws Exception, IOException {
+		InputStream decryptedStream = null;
+		LOG.fine("start decrypting");
+		if (!pgpActive) {
+			pgpMessage = "";
+			pgpMode = SecurityInformationController.NO_KEY;
+		} else {
+			PGPItem pgpItem = null;
+			// we need the pgpItem, to extract the path to gpg
+			pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
+					.getPGPItem();
+			// this is wrong! we need the default id.
+			//pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
+			//        .getMailAddress());
 
-      encryptedMessage = true;
+			MimePart encryptedMultipart = mimePartTree.getRootMimeNode();
 
-      // the first child must be the control part
-      InputStream controlPart = folder.getMimePartBodyStream(uid,
-          encryptedMultipart.getChild(0).getAddress());
+			encryptedMessage = true;
 
-      // the second child must be the encrypted message
-      InputStream encryptedPart = folder.getMimePartBodyStream(uid,
-          encryptedMultipart.getChild(1).getAddress());
+			// the first child must be the control part
+			InputStream controlPart = folder.getMimePartBodyStream(uid,
+					encryptedMultipart.getChild(0).getAddress());
 
-      try
-      {
-        JSCFController controller = JSCFController.getInstance();
-        JSCFConnection con = controller.getConnection();
-        LOG.fine("new JSCConnection");
-        JSCFStatement stmt = con.createStatement();
-        LOG.fine("new Statement");
-        PGPPassChecker passCheck = PGPPassChecker.getInstance();
-        boolean check = passCheck.checkPassphrase(con);
-        LOG.fine("after pass check, check is " + check);
-        if (!check)
-        {
-          pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
-          // TODO make i18n!
-          pgpMessage = "wrong passphrase";
-          return null;
-        }
-        LOG.fine("encrypted is != null?: " + (encryptedPart != null));
-        JSCFResultSet res = stmt.executeDecrypt(encryptedPart);
-        LOG.fine("after calling decrypting");
-        if (res.isError())
-        {
-          LOG.fine("the result set contains errors ");
-          pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
-          pgpMessage = StreamUtils.readInString(res.getErrorStream())
-              .toString();
-          LOG.fine("error message: " + pgpMessage);
-          decryptedStream = res.getResultStream();
-          //return null;
-        }
-        else
-        {
-          decryptedStream = res.getResultStream();
-          pgpMode = SecurityInformationController.DECRYPTION_SUCCESS;
-        }
-      }
-      catch (JSCFException e)
-      {
-        e.printStackTrace();
-        LOG.severe(e.getMessage());
-        pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
-        pgpMessage = e.getMessage();
+			// the second child must be the encrypted message
+			InputStream encryptedPart = folder.getMimePartBodyStream(uid,
+					encryptedMultipart.getChild(1).getAddress());
 
-        // just show the encrypted raw message
-        decryptedStream = encryptedPart;
-      }
-    }
-    try
-    {
-      LOG.fine("decrypted Stream is: " + decryptedStream);
-      CharSequence decryptedBodyPart = "";
-      // if the pgp mode is active we should get the decrypted part
-      if (pgpActive)
-      {
-        // TODO should be removed if we only use Streams!
-        decryptedBodyPart = StreamUtils.readInString(decryptedStream);
-        // check if the returned String is has a length != 0
-        if (decryptedBodyPart.length() == 0)
-        {
-          LOG.fine("decrypted body part has a 0 length ... fixing it");
-          decryptedBodyPart = new StringBuffer(
-              "Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n");
-        }
-      }
-      // else we set the body to the i18n String
-      else
-      {
-        decryptedBodyPart = new StringBuffer(
-            "Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n"
-                + MailResourceLoader.getString("menu", "mainframe",
-                    "security_decrypt_encrypted") + "\n");
-      }
-      LOG.fine("the decrypted Body part: " + decryptedBodyPart);
-      // construct new Message from decrypted string
-      message = new ColumbaMessage(header);
+			try {
+				JSCFController controller = JSCFController.getInstance();
+				JSCFConnection con = controller.getConnection();
+				LOG.fine("new JSCConnection");
+				JSCFStatement stmt = con.createStatement();
+				LOG.fine("new Statement");
+				PGPPassChecker passCheck = PGPPassChecker.getInstance();
+				boolean check = passCheck.checkPassphrase(con);
+				LOG.fine("after pass check, check is " + check);
+				if (!check) {
+					pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
+					// TODO make i18n!
+					pgpMessage = "wrong passphrase";
+					return null;
+				}
+				LOG.fine("encrypted is != null?: " + (encryptedPart != null));
+				JSCFResultSet res = stmt.executeDecrypt(encryptedPart);
+				LOG.fine("after calling decrypting");
+				if (res.isError()) {
+					LOG.fine("the result set contains errors ");
+					pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
+					pgpMessage = StreamUtils.readInString(res.getErrorStream())
+							.toString();
+					LOG.fine("error message: " + pgpMessage);
+					decryptedStream = res.getResultStream();
+					//return null;
+				} else {
+					decryptedStream = res.getResultStream();
+					pgpMode = SecurityInformationController.DECRYPTION_SUCCESS;
+				}
+			} catch (JSCFException e) {
+				e.printStackTrace();
+				LOG.severe(e.getMessage());
+				pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
+				pgpMessage = e.getMessage();
 
-      Source decryptedSource = new CharSequenceSource(decryptedBodyPart);
-      MimeHeader mimeHeader = new MimeHeader(HeaderParser
-          .parse(decryptedSource));
-      mimePartTree = new MimeTree(BodyParser.parseMimePart(mimeHeader,
-          decryptedSource));
-      message.setMimePartTree(mimePartTree);
+				// just show the encrypted raw message
+				decryptedStream = encryptedPart;
+			}
+		}
+		try {
+			LOG.fine("decrypted Stream is: " + decryptedStream);
+			CharSequence decryptedBodyPart = "";
+			// if the pgp mode is active we should get the decrypted part
+			if (pgpActive) {
+				// TODO should be removed if we only use Streams!
+				decryptedBodyPart = StreamUtils.readInString(decryptedStream);
+				// check if the returned String is has a length != 0
+				if (decryptedBodyPart.length() == 0) {
+					LOG
+							.fine("decrypted body part has a 0 length ... fixing it");
+					decryptedBodyPart = new StringBuffer(
+							"Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n");
+				}
+			}
+			// else we set the body to the i18n String
+			else {
+				decryptedBodyPart = new StringBuffer(
+						"Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n"
+								+ MailResourceLoader.getString("menu",
+										"mainframe",
+										"security_decrypt_encrypted") + "\n");
+			}
+			LOG.fine("the decrypted Body part: " + decryptedBodyPart);
+			// construct new Message from decrypted string
+			message = new ColumbaMessage(header);
 
-      InputStream messageSourceStream = folder.getMessageSourceStream(uid);
-      message.setSource(new CharSequenceSource(StreamUtils
-          .readInString(messageSourceStream)));
-      messageSourceStream.close();
+			Source decryptedSource = new CharSequenceSource(decryptedBodyPart);
+			MimeHeader mimeHeader = new MimeHeader(HeaderParser
+					.parse(decryptedSource));
+			mimePartTree = new MimeTree(BodyParser.parseMimePart(mimeHeader,
+					decryptedSource));
+			message.setMimePartTree(mimePartTree);
 
-      encryptedMessage = true;
+			InputStream messageSourceStream = folder
+					.getMessageSourceStream(uid);
+			message.setSource(new CharSequenceSource(StreamUtils
+					.readInString(messageSourceStream)));
+			messageSourceStream.close();
 
-      // call AbstractFilter to do the tricky part
-      return filter(folder, uid, message);
-      //header = (ColumbaHeader) message.getHeaderInterface();
-    }
-    catch (ParserException e)
-    {
-      e.printStackTrace();
+			encryptedMessage = true;
 
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
+			// call AbstractFilter to do the tricky part
+			return filter(folder, uid, message);
+			//header = (ColumbaHeader) message.getHeaderInterface();
+		} catch (ParserException e) {
+			e.printStackTrace();
 
-    }
+		} catch (IOException e) {
+			e.printStackTrace();
 
-    /*
-     * controlPart.close(); encryptedPart.close(); if (decryptedStream != null) {
-     * decryptedStream.close(); }
-     */
-    return null;
-  }
+		}
 
-  /**
-   * Verify message.
-   * 
-   * @param folder
-   *          selected folder
-   * @param uid
-   *          selected message UID
-   * @throws Exception
-   * @throws IOException
-   */
-  private FolderCommandReference[] verify (MessageFolder folder, Object uid,
-      boolean pgpActive) throws Exception, IOException
-  {
-    if (!pgpActive)
-    {
-      pgpMessage = "";
-      pgpMode = SecurityInformationController.NO_KEY;
-      return null;
-    }
-    MimePart signedMultipart = mimePartTree.getRootMimeNode();
+		/*
+		 * controlPart.close(); encryptedPart.close(); if (decryptedStream !=
+		 * null) { decryptedStream.close(); }
+		 */
+		return null;
+	}
 
-    //          the first child must be the signed part
-    InputStream signedPart = folder.getMimePartSourceStream(uid,
-        signedMultipart.getChild(0).getAddress());
+	/**
+	 * Verify message.
+	 * 
+	 * @param folder
+	 *            selected folder
+	 * @param uid
+	 *            selected message UID
+	 * @throws Exception
+	 * @throws IOException
+	 */
+	private FolderCommandReference verify(MessageFolder folder, Object uid,
+			boolean pgpActive) throws Exception, IOException {
+		if (!pgpActive) {
+			pgpMessage = "";
+			pgpMode = SecurityInformationController.NO_KEY;
+			return null;
+		}
+		MimePart signedMultipart = mimePartTree.getRootMimeNode();
 
-    // the second child must be the pgp-signature
-    InputStream signature = folder.getMimePartBodyStream(uid, signedMultipart
-        .getChild(1).getAddress());
+		//          the first child must be the signed part
+		InputStream signedPart = folder.getMimePartSourceStream(uid,
+				signedMultipart.getChild(0).getAddress());
 
-    // Get the mailaddress and use it as the id
-    Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
-    try
-    {
-      JSCFController controller = JSCFController.getInstance();
-      JSCFConnection con = controller.getConnection();
-      JSCFStatement stmt = con.createStatement();
-      String micalg = signedMultipart.getHeader().getContentParameter("micalg")
-          .substring(4);
-      JSCFResultSet res = stmt.executeVerify(signedPart, signature, micalg);
-      if (res.isError())
-      {
-        pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
-        pgpMessage = StreamUtils.readInString(res.getErrorStream()).toString();
-      }
-      else
-      {
-        pgpMode = SecurityInformationController.VERIFICATION_SUCCESS;
-        pgpMessage = StreamUtils.readInString(res.getResultStream()).toString();
-      }
+		// the second child must be the pgp-signature
+		InputStream signature = folder.getMimePartBodyStream(uid,
+				signedMultipart.getChild(1).getAddress());
 
-    }
-    catch (JSCFException e)
-    {
+		// Get the mailaddress and use it as the id
+		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
+		try {
+			JSCFController controller = JSCFController.getInstance();
+			JSCFConnection con = controller.getConnection();
+			JSCFStatement stmt = con.createStatement();
+			String micalg = signedMultipart.getHeader().getContentParameter(
+					"micalg").substring(4);
+			JSCFResultSet res = stmt.executeVerify(signedPart, signature,
+					micalg);
+			if (res.isError()) {
+				pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
+				pgpMessage = StreamUtils.readInString(res.getErrorStream())
+						.toString();
+			} else {
+				pgpMode = SecurityInformationController.VERIFICATION_SUCCESS;
+				pgpMessage = StreamUtils.readInString(res.getResultStream())
+						.toString();
+			}
 
-      if (MainInterface.DEBUG) e.printStackTrace();
+		} catch (JSCFException e) {
 
-      pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
-      pgpMessage = e.getMessage();
-      // something really got wrong here -> show error dialog
-      //JOptionPane.showMessageDialog(null, e.getMessage());
+			if (MainInterface.DEBUG)
+				e.printStackTrace();
 
-      pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
-    }
+			pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
+			pgpMessage = e.getMessage();
+			// something really got wrong here -> show error dialog
+			//JOptionPane.showMessageDialog(null, e.getMessage());
 
-    signedPart.close();
-    signature.close();
+			pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
+		}
 
-    return null;
-  }
+		signedPart.close();
+		signature.close();
+
+		return null;
+	}
 
 }

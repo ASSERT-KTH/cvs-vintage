@@ -15,18 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.gui.attachment.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
 
 
 /**

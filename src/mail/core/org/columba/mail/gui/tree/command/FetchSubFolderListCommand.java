@@ -17,71 +17,69 @@ package org.columba.mail.gui.tree.command;
 
 import java.util.logging.Logger;
 
-import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
-
 
 /**
  * @author freddy
  */
 public class FetchSubFolderListCommand extends FolderCommand {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.tree.command");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.tree.command");
 
-    AbstractFolder treeNode;
+	AbstractFolder treeNode;
 
-    /**
-     * Constructor for FetchSubFolderListCommand.
-     * @param references
-     */
-    public FetchSubFolderListCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for FetchSubFolderListCommand.
+	 * 
+	 * @param references
+	 */
+	public FetchSubFolderListCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        MailInterface.treeModel.nodeStructureChanged(treeNode);
-    }
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		/*
+		 * MailInterface.treeModel.nodeStructureChanged(treeNode);
+		 */
+	}
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        LOG.info("reference=" + getReferences(Command.UNDOABLE_OPERATION));
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences(Command.FIRST_EXECUTION);
+		if (r == null) {
+			return;
+		}
 
-        if (r == null) {
-            return;
-        }
+		treeNode = (AbstractFolder) r.getFolder();
 
-        treeNode = (AbstractFolder) r[0].getFolder();
+		if (treeNode instanceof IMAPRootFolder) {
+			((IMAPRootFolder) treeNode).syncSubscribedFolders();
+		}
+	}
 
-        if (treeNode instanceof IMAPRootFolder) {
-            ((IMAPRootFolder) treeNode).syncSubscribedFolders();
-        }
-    }
+	/**
+	 * @see org.columba.core.command.Command#undo(Worker)
+	 */
+	public void undo(Worker worker) throws Exception {
+	}
 
-    /**
-     * @see org.columba.core.command.Command#undo(Worker)
-     */
-    public void undo(Worker worker) throws Exception {
-    }
-
-    /**
-     * @see org.columba.core.command.Command#redo(Worker)
-     */
-    public void redo(Worker worker) throws Exception {
-    }
+	/**
+	 * @see org.columba.core.command.Command#redo(Worker)
+	 */
+	public void redo(Worker worker) throws Exception {
+	}
 }

@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;

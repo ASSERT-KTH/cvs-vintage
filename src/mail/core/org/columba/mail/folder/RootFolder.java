@@ -16,6 +16,8 @@
 
 package org.columba.mail.folder;
 
+import org.columba.mail.folder.imap.IMAPRootFolder;
+
 /**
  * Root folders like {@link LocalRootFolder} and {@link IMAPRootFolder} should
  * implement this interface. It provides an easy way to determine the inbox and

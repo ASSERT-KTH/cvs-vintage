@@ -15,25 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.SortingStateObservable;
-import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,6 +24,21 @@ import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
+
+import org.columba.core.action.IMenu;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.SortingStateObservable;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class SortMessagesMenu extends IMenu implements ActionListener, Observer,

@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
-import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
@@ -56,15 +55,12 @@ import org.columba.mail.parser.PassiveHeaderParserInputStream;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.imap.IMAPFlags;
-import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.parser.HeaderParser;
-import org.columba.ristretto.parser.ParserException;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -210,7 +206,8 @@ public class IMAPFolder extends RemoteFolder {
 	 * @throws CommandCancelledException
 	 * @throws IMAPException
 	 */
-	public void synchronizeHeaderlist() throws Exception, IOException, CommandCancelledException, IMAPException {
+	public void synchronizeHeaderlist() throws Exception, IOException,
+			CommandCancelledException, IMAPException {
 		headerList = super.getHeaderList();
 
 		getObservable().setMessage(
@@ -225,8 +222,7 @@ public class IMAPFolder extends RemoteFolder {
 			if (e.getResponse().isNO()) {
 				// Trigger sync folder command
 				Command c = new FetchSubFolderListCommand(
-						new FolderCommandReference[]{new FolderCommandReference(
-								getRootFolder())});
+						new FolderCommandReference(getRootFolder()));
 				MainInterface.processor.addOp(c);
 				throw new CommandCancelledException(e);
 			} else {
@@ -247,8 +243,7 @@ public class IMAPFolder extends RemoteFolder {
 			changed = true;
 		}
 
-		messageFolderInfo = getServer()
-				.getSelectedFolderMessageFolderInfo();
+		messageFolderInfo = getServer().getSelectedFolderMessageFolderInfo();
 
 		updateFlags(flags);
 
@@ -483,7 +478,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	protected void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid) throws Exception {
 		super.removeMessage(uid);
 
 		//      remove message
@@ -624,7 +619,8 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Object addMessage(InputStream in, Attributes attributes, Flags flags)
 			throws Exception {
-		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(in);
+		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(
+				in);
 
 		IMAPFlags imapFlags = new IMAPFlags(flags.getFlags());
 
@@ -636,7 +632,8 @@ public class IMAPFolder extends RemoteFolder {
 		if (((Boolean) attributes.get("columba.spam")).booleanValue()) {
 			imapFlags.set(IMAPFlags.JUNK, true);
 
-			getServer().setFlags(new Object[]{uid}, imapFlags, getImapPath());
+			getServer()
+					.setFlags(new Object[] { uid }, imapFlags, getImapPath());
 		}
 
 		// Parser the header
@@ -758,8 +755,9 @@ public class IMAPFolder extends RemoteFolder {
 	 *      org.columba.ristretto.message.Attributes)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
-		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(in);
-		
+		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(
+				in);
+
 		Integer uid = getServer().append(getImapPath(), withHeaderInputStream);
 
 		fireMessageAdded(uid);
@@ -782,6 +780,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		return attributeStorage;
 	}
+
 	/**
 	 * @see org.columba.mail.folder.Folder#getSearchEngineInstance()
 	 */

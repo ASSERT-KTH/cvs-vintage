@@ -16,11 +16,10 @@
 
 package org.columba.mail.gui.view;
 
-import org.columba.core.gui.view.AbstractView;
-
-import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-
 import javax.swing.JPanel;
+
+import org.columba.core.gui.view.AbstractView;
+import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 
 /**
  *

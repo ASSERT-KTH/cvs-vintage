@@ -15,21 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageSourceAsCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 
 /**
@@ -67,7 +66,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         LOG.info("Save Message Source As... called");
 

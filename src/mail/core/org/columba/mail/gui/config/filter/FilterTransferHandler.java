@@ -3,10 +3,6 @@
  */
 package org.columba.mail.gui.config.filter;
 
-import org.columba.core.facade.DialogFacade;
-
-import org.columba.mail.filter.Filter;
-
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -14,6 +10,9 @@ import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
+
+import org.columba.core.facade.DialogFacade;
+import org.columba.mail.filter.Filter;
 
 
 /**

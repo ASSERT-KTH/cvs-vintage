@@ -21,7 +21,6 @@ import org.columba.core.command.CompoundCommand;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;

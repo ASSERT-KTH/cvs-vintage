@@ -201,8 +201,8 @@ public abstract class LocalFolder extends MessageFolder {
 
     /** {@inheritDoc} */
     public InputStream getMessageSourceStream(Object uid) throws Exception {
-        return new SourceInputStream(getDataStorageInstance().getMessageSource(
-                uid));
+        return getDataStorageInstance().getMessageStream(
+                uid);
     }
 
     /** {@inheritDoc} */
@@ -277,8 +277,8 @@ public abstract class LocalFolder extends MessageFolder {
         return addMessage(in, null, null);
     }
 
+    
     public Object addMessage(InputStream in, Attributes attributes, Flags flags) throws Exception {
-
         // before adding message, load header list
         getHeaderListStorage().getHeaderList();
 
@@ -291,13 +291,13 @@ public abstract class LocalFolder extends MessageFolder {
         // close stream
         in.close();
 
+        // parse header
         Source source = getDataStorageInstance().getMessageSource(newUid);
 
-        // parse header
         Header header = HeaderParser.parse(source);
 
         source.close();
-
+    
         if ((attributes != null) && (flags != null)) {
             // save header and attributes
             getHeaderListStorage().addMessage(newUid, header, attributes, flags );
@@ -444,7 +444,8 @@ public abstract class LocalFolder extends MessageFolder {
         // remove message from disk
         getDataStorageInstance().removeMessage(uid);
 
-        fireMessageRemoved(uid, getFlags(uid));
+        //fireMessageRemoved(uid, getFlags(uid));
+        super.removeMessage(uid);
         
     }
 

@@ -16,7 +16,6 @@
 package org.columba.mail.gui.tree.util;
 
 import java.io.File;
-
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;

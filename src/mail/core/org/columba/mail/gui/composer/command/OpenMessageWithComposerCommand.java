@@ -66,8 +66,8 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
-		super(references);
+	public OpenMessageWithComposerCommand(DefaultCommandReference reference) {
+		super(reference);
 	}
 
 	public void updateGUI() throws Exception {
@@ -86,11 +86,11 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+		folder = (MessageFolder) ((FolderCommandReference) getReference())
 				.getFolder();
 
 		// get selected messages
-		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		Object[] uids = ((FolderCommandReference) getReference()).getUids();
 
 		// we only need the first message
 		uid = uids[0];

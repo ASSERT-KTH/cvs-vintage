@@ -16,15 +16,14 @@
 
 package org.columba.mail.mailchecking;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Provides a menu item for each mail account enabling users to fetch new

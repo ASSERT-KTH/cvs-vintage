@@ -86,13 +86,13 @@ public class SpamStatusController implements Viewer, ActionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		// get selected message
-		FolderCommandReference[] r = mediator.getTableSelection();
+		FolderCommandReference r = mediator.getTableSelection();
 
 		// learn message as non spam
 		MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
 
 		// mark as not spam
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+		r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
 		MarkMessageCommand c = new MarkMessageCommand(r);
 		MainInterface.processor.addOp(c);
 	}

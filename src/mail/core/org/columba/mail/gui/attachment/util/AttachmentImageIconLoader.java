@@ -18,9 +18,9 @@ package org.columba.mail.gui.attachment.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.util.ImageLoader;
-
 import javax.swing.ImageIcon;
+
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**

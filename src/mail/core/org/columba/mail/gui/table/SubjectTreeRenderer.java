@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.message.Flags;
-
 import java.awt.Component;
 import java.awt.Font;
 
@@ -28,6 +23,10 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 /**
  * Renderer for the JTree in the JTable, which is responsible for displaying the

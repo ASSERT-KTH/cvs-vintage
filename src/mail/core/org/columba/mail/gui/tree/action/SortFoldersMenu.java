@@ -15,23 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.menu.CRadioButtonMenuItem;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.frame.TreeViewOwner;
-import org.columba.mail.gui.tree.comparator.FolderComparator;
-import org.columba.mail.gui.tree.comparator.UnreadFolderComparator;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
+
+import org.columba.core.action.IMenu;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.CRadioButtonMenuItem;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.frame.TreeViewOwner;
+import org.columba.mail.gui.tree.comparator.FolderComparator;
+import org.columba.mail.gui.tree.comparator.UnreadFolderComparator;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Menu items for sorting the folder tree.

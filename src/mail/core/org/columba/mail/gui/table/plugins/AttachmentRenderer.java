@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class AttachmentRenderer extends DefaultLabelRenderer {

@@ -15,13 +15,12 @@
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer;
 
+import java.io.File;
+
 import org.columba.core.main.MainInterface;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
-
-import java.io.File;
 
 
 public class ComposerSpellCheck {

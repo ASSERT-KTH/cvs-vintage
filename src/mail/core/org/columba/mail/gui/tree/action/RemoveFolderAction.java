@@ -15,103 +15,103 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
-
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
-public class RemoveFolderAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public RemoveFolderAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_removefolder"));
+public class RemoveFolderAction extends AbstractColumbaAction implements
+		SelectionListener {
+	public RemoveFolderAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_removefolder"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_removefolder").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_folder_removefolder").replaceAll("&", ""));
 
-        // icons
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+		// icons
+		putValue(SMALL_ICON, ImageLoader
+				.getSmallImageIcon("stock_delete-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = (FolderCommandReference[]) frameMediator.getSelectionManager()
-                                                                             .getSelection("mail.tree");
-        AbstractFolder folder = r[0].getFolder();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference r = (FolderCommandReference) frameMediator
+				.getSelectionManager().getSelection("mail.tree");
+		AbstractFolder folder = r.getFolder();
 
-        if (!folder.isLeaf()) {
-            // warn user
-            JOptionPane.showMessageDialog(null,
-                "Your can only remove leaf folders!");
+		if (!folder.isLeaf()) {
+			// warn user
+			JOptionPane.showMessageDialog(null,
+					"Your can only remove leaf folders!");
 
-            return;
-        } else {
-            // warn user in any other cases
-            int n = JOptionPane.showConfirmDialog(null,
-                    MailResourceLoader.getString("tree", "tree",
-                        "folder_warning"),
-                    MailResourceLoader.getString("tree", "tree",
-                        "folder_warning_title"), JOptionPane.YES_NO_OPTION);
+			return;
+		} else {
+			// warn user in any other cases
+			int n = JOptionPane.showConfirmDialog(null, MailResourceLoader
+					.getString("tree", "tree", "folder_warning"),
+					MailResourceLoader.getString("tree", "tree",
+							"folder_warning_title"), JOptionPane.YES_NO_OPTION);
 
-            if (n == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
+			if (n == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
 
-        MainInterface.processor.addOp(new RemoveFolderCommand(r));
-    }
+		MainInterface.processor.addOp(new RemoveFolderCommand(r));
+	}
 
-    /* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            AbstractFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			AbstractFolder folder = ((TreeSelectionChangedEvent) e)
+					.getSelected()[0];
 
-            if ((folder != null) && folder instanceof MessageFolder) {
-                FolderItem item = folder.getConfiguration();
+			if ((folder != null) && folder instanceof MessageFolder) {
+				FolderItem item = folder.getConfiguration();
 
-                if (item.get("property", "accessrights").equals("user")) {
-                    setEnabled(true);
-                } else {
-                    setEnabled(false);
-                }
-            }
-        } else {
-            setEnabled(false);
-        }
-    }
+				if (item.get("property", "accessrights").equals("user")) {
+					setEnabled(true);
+				} else {
+					setEnabled(false);
+				}
+			}
+		} else {
+			setEnabled(false);
+		}
+	}
 }

@@ -15,15 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-
-import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -42,6 +33,14 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

@@ -15,22 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
+import java.awt.event.ActionEvent;
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-
-import java.net.URL;
-
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**

@@ -16,7 +16,6 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.Command;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
@@ -37,33 +36,32 @@ public class MarkMessageAsReadAction extends AbstractFilterAction {
  */
     public Command getCommand(FilterAction filterAction, MessageFolder srcFolder,
         Object[] uids) throws Exception {
-        FolderCommandReference[] r = new FolderCommandReference[1];
-        r[0] = new FolderCommandReference(srcFolder, uids);
+        FolderCommandReference r = new FolderCommandReference(srcFolder, uids);
 
         String variant = filterAction.getMarkVariant();
 
         if (variant.equals("read")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
         } else if (variant.equals("unread")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
         } else if (variant.equals("flagged")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
         } else if (variant.equals("not_flagged")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
         } else if (variant.equals("expunged")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
         } else if (variant.equals("not_expunged")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
         } else if (variant.equals("answered")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
         } else if (variant.equals("spam")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
         } else if (variant.equals("no_spam")) {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
         }
         // if something goes wrong here, fall back to "mark as read" 
         else {
-            r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+            r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
         }
 
         MarkMessageCommand c = new MarkMessageCommand(r);

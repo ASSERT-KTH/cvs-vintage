@@ -17,11 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-
 import java.util.Enumeration;
 import java.util.Map;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
 
 /**
  * @author fdietz

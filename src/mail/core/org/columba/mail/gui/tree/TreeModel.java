@@ -16,11 +16,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
+import java.util.Enumeration;
+import java.util.MissingResourceException;
+
+import javax.swing.tree.DefaultTreeModel;
+
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
 import org.columba.mail.folder.AbstractFolder;
@@ -30,11 +34,6 @@ import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.util.Enumeration;
-import java.util.MissingResourceException;
-
-import javax.swing.tree.DefaultTreeModel;
 
 
 /**

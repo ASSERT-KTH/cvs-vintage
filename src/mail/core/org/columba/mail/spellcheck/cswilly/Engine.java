@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2004/06/01 16:11:47 $
+ * $Revision: 1.2 $
+ * $Date: 2004/08/22 15:55:07 $
  * $Author: fdietz $
  *
  * Copyright (C) 2001 C. Scott Willy

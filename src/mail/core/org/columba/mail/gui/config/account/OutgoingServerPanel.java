@@ -29,14 +29,23 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.main.MailInterface;

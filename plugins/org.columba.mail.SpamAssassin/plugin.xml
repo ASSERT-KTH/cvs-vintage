@@ -1,48 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" category="Spam" version="1.0"  enabled="true">
-
-<!-- POP3 preprocessing filter -->
-
- <extension name="org.columba.mail.pop3preprocessingfilter">
-  <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"/>
- </extension>
- 
-<!-- external tools -->
- 
-  <extension name="org.columba.core.externaltools">
-   <tool name="spamc" class="SpamcExternalToolPlugin" />
-   <tool name="spamassassin" class="SpamAssassinExternalToolPlugin" />
-   <tool name="sa-learn" class="SALearnExternalToolPlugin" />
+<plugin name="SpamAssassin Plugin" description="Simple Example" id="org.columba.mail.SpamAssassin" version="1.0" category="Spam" enabled="false">
+  <extension name="org.columba.mail.pop3preprocessingfilter">
+    <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"></pop3preprocessingfilter>
   </extension>
- 
-<!-- actions -->
- <extension name="org.columba.core.action">
-  <action name="MarkMessageAsSpam" class="MarkMessageAsSpamAction" />
-  <action name="MarkMessageAsHam" class="MarkMessageAsHamAction" />
-  <action name="AnalyzeMessage" class="AnalyzeMessageAction" />
-  <action name="AddAddressToWhitelist" class="AddAddressToWhiteListAction" />
-  <action name="AddAddressToBlacklist" class="AddAddressToBlackListAction" />
-  <action name="RemoveAddressFromWhitelist" class="RemoveAddressFromWhiteListAction" />
- </extension>
- 
-<!-- menu entries -->
- <extension name="org.columba.mail.menu">
-  <menu name="menu_utilities" extensionpoint="mail_bottom">
-    <menu name="SpamAssassin">
-  	 <menuitem action="AddAddressToWhitelist"/>
-  	 <menuitem action="AddAddressToBlacklist"/>
-  	 <menuitem action="RemoveAddressFromWhitelist"/>
-  	 <separator/>
-  	  <menuitem action="AnalyzeMessage"/>
-  	 <separator/>
-  	  <menuitem action="MarkMessageAsSpam"/>
-  	  <menuitem action="MarkMessageAsHam"/>
-  	</menu>
-  </menu>
- </extension>
- 
- 
- <runtime type="java" jar="SpamAssassinPlugin.jar"/>
+  <extension name="org.columba.core.externaltools">
+    <tool name="spamc" class="SpamcExternalToolPlugin"></tool>
+    <tool name="spamassassin" class="SpamAssassinExternalToolPlugin"></tool>
+    <tool name="sa-learn" class="SALearnExternalToolPlugin"></tool>
+  </extension>
+  <extension name="org.columba.core.action">
+    <action name="MarkMessageAsSpam" class="MarkMessageAsSpamAction"></action>
+    <action name="MarkMessageAsHam" class="MarkMessageAsHamAction"></action>
+    <action name="AnalyzeMessage" class="AnalyzeMessageAction"></action>
+    <action name="AddAddressToWhitelist" class="AddAddressToWhiteListAction"></action>
+    <action name="AddAddressToBlacklist" class="AddAddressToBlackListAction"></action>
+    <action name="RemoveAddressFromWhitelist" class="RemoveAddressFromWhiteListAction"></action>
+  </extension>
+  <extension name="org.columba.mail.menu">
+    <menu name="menu_utilities" extensionpoint="mail_bottom">
+      <menu name="SpamAssassin">
+        <menuitem action="AddAddressToWhitelist"></menuitem>
+        <menuitem action="AddAddressToBlacklist"></menuitem>
+        <menuitem action="RemoveAddressFromWhitelist"></menuitem>
+        <separator></separator>
+        <menuitem action="AnalyzeMessage"></menuitem>
+        <separator></separator>
+        <menuitem action="MarkMessageAsSpam"></menuitem>
+        <menuitem action="MarkMessageAsHam"></menuitem>
+      </menu>
+    </menu>
+  </extension>
+  <runtime jar="SpamAssassinPlugin.jar" type="java"></runtime>
 </plugin>

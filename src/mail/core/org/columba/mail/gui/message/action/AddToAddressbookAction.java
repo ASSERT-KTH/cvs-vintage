@@ -22,7 +22,6 @@ import java.util.Observer;
 import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.model.Contact;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;

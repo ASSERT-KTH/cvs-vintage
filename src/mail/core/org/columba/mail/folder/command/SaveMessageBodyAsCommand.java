@@ -88,19 +88,12 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @param charset
      *            Charset to use for decoding messages before save
      */
-    public SaveMessageBodyAsCommand(DefaultCommandReference[] references,
+    public SaveMessageBodyAsCommand(DefaultCommandReference reference,
         Charset charset) {
-        super(references);
+        super(reference);
         this.charset = charset;
     }
 
-    /**
-     * Implementation-specific: This method does not perform anything
-     *
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updatedGUI() throws Exception {
-    }
 
     /**
      * This method executes the save action, i.e. it saves the selected
@@ -112,9 +105,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker)
         throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Object[] uids = r[0].getUids(); // uid for messages to save
-        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
+        FolderCommandReference r = (FolderCommandReference) getReference();
+        Object[] uids = r.getUids(); // uid for messages to save
+        MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

@@ -14,9 +14,11 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.folder;
+package org.columba.mail.folder.event;
 
 import java.util.EventObject;
+
+import org.columba.mail.folder.AbstractFolder;
 
 /**
  * Passed to listeners to notify them of changes.
@@ -33,6 +35,13 @@ public class FolderEvent extends EventObject {
     }
     
     /**
+	 * @param folder
+	 */
+	public FolderEvent(AbstractFolder folder) {
+		super(folder);
+	}
+
+	/**
      * Encapsulates the changes that have occured.
      */
     public Object getChanges() {

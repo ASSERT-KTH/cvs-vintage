@@ -19,7 +19,6 @@
 package org.columba.addressbook.gui.table;
 
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.ContactStorage;

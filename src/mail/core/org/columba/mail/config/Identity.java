@@ -19,7 +19,6 @@ package org.columba.mail.config;
 import java.io.File;
 
 import org.columba.core.xml.XmlElement;
-
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 

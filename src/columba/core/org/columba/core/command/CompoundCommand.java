@@ -16,122 +16,129 @@
 
 package org.columba.core.command;
 
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.filter.FilterAction;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.virtual.VirtualFolder;
+
 /**
- * Special type of {@link Command} which is used for a set
- * of different commands.
+ * Special type of {@link Command}which is used for a set of different
+ * commands.
  * <p>
- * This is used by {@link FilterAction} and {@link VirtualFolder}
- * to execute commands, which work on a set of references.
- *
+ * This is used by {@link FilterAction}and {@link VirtualFolder}to execute
+ * commands, which work on a set of references.
+ * 
  * @author tstich, fdietz
  */
 public class CompoundCommand extends Command {
-    protected List commandList;
-    protected List referenceList;
+	protected List commandList;
 
-    /**
- * Constructor for CompoundCommand.
- * Caution : Never use this command with Virtual Folders!
- * @param frameMediator
- * @param references
- */
-    public CompoundCommand() {
-        super(null, null);
-        commandList = new Vector();
-        referenceList = new Vector();
+	protected List referenceList;
 
-        priority = Command.NORMAL_PRIORITY;
-        commandType = Command.NORMAL_OPERATION;
-    }
+	/**
+	 * Constructor for CompoundCommand. Caution : Never use this command with
+	 * Virtual Folders!
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public CompoundCommand() {
+		super(null, null);
+		commandList = new Vector();
+		referenceList = new Vector();
 
-    public void add(Command c) {
-        commandList.add(c);
+		priority = Command.NORMAL_PRIORITY;
+		commandType = Command.NORMAL_OPERATION;
+	}
 
-        FolderCommandReference[] commandRefs = (FolderCommandReference[]) c.getReferences();
+	public void add(Command c) {
+		commandList.add(c);
 
-        for (int i = 0; i < commandRefs.length; i++) {
-            if (!referenceList.contains(commandRefs[i].getFolder())) {
-                referenceList.add(commandRefs[i].getFolder());
-            }
-        }
-    }
+		FolderCommandReference commandRefs = (FolderCommandReference) c
+				.getReference();
 
-    /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        Command c;
+		if (!referenceList.contains(commandRefs.getFolder())) {
+			referenceList.add(commandRefs.getFolder());
+		}
 
-        for (Iterator it = commandList.iterator(); it.hasNext();) {
-            c = (Command) it.next();
-            c.execute(worker);
-        }
-    }
+	}
 
-    //	/**
-    //	 * @see org.columba.core.command.Command#canBeProcessed(int)
-    //	 */
-    //	public boolean canBeProcessed(int operationMode) {
-    //
-    //		boolean result = true;
-    //		Command c;
-    //		for (int i = 0; i < commandList.size(); i++) {
-    //			c = (Command) commandList.get(i);
-    //			result &= c.canBeProcessed(operationMode);
-    //		}
-    //
-    //		if (!result) {
-    //
-    //			releaseAllFolderLocks(operationMode);
-    //		}
-    //
-    //		return result;
-    //	}
-    //
-    //	/**
-    //	 * @see org.columba.core.command.Command#releaseAllFolderLocks(int)
-    //	 */
-    //	public void releaseAllFolderLocks(int operationMode) {
-    //		Command c;
-    //		for (int i = 0; i < commandList.size(); i++) {
-    //			c = (Command) commandList.get(i);
-    //			c.releaseAllFolderLocks(operationMode);
-    //		}
-    //	}
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		Command c;
 
-    /**
- * @see org.columba.core.command.Command#getReferences()
- */
-    public DefaultCommandReference[] getReferences() {
-        FolderCommandReference[] refs = new FolderCommandReference[referenceList.size()];
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
+			c.execute(worker);
+		}
+	}
 
-        for (int i = 0; i < referenceList.size(); i++) {
-            refs[i] = new FolderCommandReference((AbstractFolder) referenceList.get(
-                        i));
-        }
+	//	/**
+	//	 * @see org.columba.core.command.Command#canBeProcessed(int)
+	//	 */
+	//	public boolean canBeProcessed(int operationMode) {
+	//
+	//		boolean result = true;
+	//		Command c;
+	//		for (int i = 0; i < commandList.size(); i++) {
+	//			c = (Command) commandList.get(i);
+	//			result &= c.canBeProcessed(operationMode);
+	//		}
+	//
+	//		if (!result) {
+	//
+	//			releaseAllFolderLocks(operationMode);
+	//		}
+	//
+	//		return result;
+	//	}
+	//
+	//	/**
+	//	 * @see org.columba.core.command.Command#releaseAllFolderLocks(int)
+	//	 */
+	//	public void releaseAllFolderLocks(int operationMode) {
+	//		Command c;
+	//		for (int i = 0; i < commandList.size(); i++) {
+	//			c = (Command) commandList.get(i);
+	//			c.releaseAllFolderLocks(operationMode);
+	//		}
+	//	}
 
-        return refs;
-    }
-	/* (non-Javadoc)
+	/**
+	 * @see org.columba.core.command.Command#getReferences()
+	 */
+	public DefaultCommandReference[] getReferences() {
+		FolderCommandReference[] refs = new FolderCommandReference[referenceList
+				.size()];
+
+		for (int i = 0; i < referenceList.size(); i++) {
+			refs[i] = new FolderCommandReference((AbstractFolder) referenceList
+					.get(i));
+		}
+
+		return refs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-        Command c;
+		Command c;
 
-        for (Iterator it = commandList.iterator(); it.hasNext();) {
-            c = (Command) it.next();
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
 
-            //		for (int i = 0; i < commandList.size(); i++) {
-            //			c = (Command) commandList.get(i);
-            c.updateGUI();
-        }
+			//		for (int i = 0; i < commandList.size(); i++) {
+			//			c = (Command) commandList.get(i);
+			c.updateGUI();
+		}
 	}
 }

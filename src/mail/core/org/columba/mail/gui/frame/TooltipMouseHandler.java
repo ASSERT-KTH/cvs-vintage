@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.core.gui.statusbar.StatusBar;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+
+import org.columba.core.gui.statusbar.StatusBar;
 
 
 /**

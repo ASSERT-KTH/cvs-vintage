@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2004/06/01 16:11:47 $
+ * $Revision: 1.2 $
+ * $Date: 2004/08/22 15:55:07 $
  * $Author: fdietz $
  *
  * This program is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
  */
 /*--
 
-$Id: SpellException.java,v 1.1 2004/06/01 16:11:47 fdietz Exp $
+$Id: SpellException.java,v 1.2 2004/08/22 15:55:07 fdietz Exp $
 
 Copyright (C) 2000 Brett McLaughlin & Jason Hunter.
 All rights reserved.

@@ -71,8 +71,7 @@ public class MarkFolderAsReadCommandTest extends AbstractFolderTest {
         assertNotNull("Flags for msg 3 was null", folder.getFlags(uid3));
         assertFalse("Msg 3 is read", folder.getFlags(uid3).getSeen());
 
-        FolderCommandReference[] references = new FolderCommandReference[1];
-        references[0] = new FolderCommandReference(folder);
+        FolderCommandReference references = new FolderCommandReference(folder);
         MarkFolderAsReadCommand command = new MarkFolderAsReadCommand(references);
         command.execute(NullWorkerStatusController.getInstance());
 

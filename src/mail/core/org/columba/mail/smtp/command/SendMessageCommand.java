@@ -18,12 +18,11 @@
 package org.columba.mail.smtp.command;
 
 import java.text.MessageFormat;
-import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
@@ -70,85 +69,82 @@ public class SendMessageCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public SendMessageCommand(DefaultCommandReference[] references) {
-		super(references);
+	public SendMessageCommand(DefaultCommandReference reference) {
+		super(reference);
 	}
 
-	private void showInvalidRecipientMessage(String recipient)
-	{
-	  
-	  String message = 
-	    MailResourceLoader.getString("dialog","error",recipient);
-	  
-	  String title = 
-	    MailResourceLoader.getString("dialog","error","invalid_recipient_title");
-	  message = MessageFormat.format(message,new Object[]{recipient});
-		JOptionPane.showMessageDialog(null,
-		                             	message,
-		                             	title,
-		                             	JOptionPane.ERROR_MESSAGE);
+	private void showInvalidRecipientMessage(String recipient) {
+
+		String message = MailResourceLoader.getString("dialog", "error",
+				recipient);
+
+		String title = MailResourceLoader.getString("dialog", "error",
+				"invalid_recipient_title");
+		message = MessageFormat.format(message, new Object[] { recipient });
+		JOptionPane.showMessageDialog(null, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
-	
+
 	/*
-	 * validate command parameters.
-	 * At the moment only checks if there are any invalid email addresses
-	 * 
-	 * */
-	private boolean validArguments(ComposerCommandReference[] references)
-	{
+	 * validate command parameters. At the moment only checks if there are any
+	 * invalid email addresses
+	 *  
+	 */
+	private boolean validArguments(ComposerCommandReference reference) {
 
-	  String invalidRecipient = null;		
-	  
-//VALIDATION DISABLE ! Sebastian Witt 25.07.04,
-//"NAME" <email@somewhat.de> isnt true, which should :(
-//root@localhost is valid, but not with this check. :(
-//root is also valid (with local mailserver), but not with this check :(
+		String invalidRecipient = null;
 
-//TODO: get the validation working CORRECTLY !
+		//VALIDATION DISABLE ! Sebastian Witt 25.07.04,
+		//"NAME" <email@somewhat.de> isnt true, which should :(
+		//root@localhost is valid, but not with this check. :(
+		//root is also valid (with local mailserver), but not with this check
+		// :(
 
-//		for(int i=0;i<references.length;i++)
-//		{
-//		  
-//			invalidRecipient = references[i].getComposerController().getModel()
-//														.getInvalidRecipients();
-//			
-//		  if (invalidRecipient != null)
-//			{
-//
-//		    //it would be really nice to highlight the invalid recipient
-//				showInvalidRecipientMessage(invalidRecipient);
-//				//AFAIK, there's no need to set showComposer to true because
-//				//composer window is already displayed
-//				//	open composer view
-//				//showComposer = true;
-//				
-//				return false;
-//
-//			}
-//			
-//		}
-//		
+		//TODO: get the validation working CORRECTLY !
+
+		//		for(int i=0;i<references.length;i++)
+		//		{
+		//		  
+		//			invalidRecipient = references[i].getComposerController().getModel()
+		//														.getInvalidRecipients();
+		//			
+		//		  if (invalidRecipient != null)
+		//			{
+		//
+		//		    //it would be really nice to highlight the invalid recipient
+		//				showInvalidRecipientMessage(invalidRecipient);
+		//				//AFAIK, there's no need to set showComposer to true because
+		//				//composer window is already displayed
+		//				// open composer view
+		//				//showComposer = true;
+		//				
+		//				return false;
+		//
+		//			}
+		//			
+		//		}
+		//		
 		return true;
-		
+
 	}
-	
+
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 
-	  ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
+		ComposerCommandReference r = (ComposerCommandReference) getReference();
 
-		if (!validArguments(r)) 
-		  return;
-		
+		if (!validArguments(r))
+			return;
+
 		//	display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "send_message_compose"));
 
 		// get composer controller
 		// -> get all the account information from the controller
-		composerController = r[0].getComposerController();
+		composerController = r.getComposerController();
 
 		// close composer view
 		if (composerController.getView().getFrame() != null) {
@@ -240,10 +236,9 @@ public class SendMessageCommand extends FolderCommand {
 			message.getHeader().setFlags(flags);
 
 			// save message in Sent folder
-			ComposerCommandReference[] ref = new ComposerCommandReference[1];
-			ref[0] = new ComposerCommandReference(composerController,
-					sentFolder);
-			ref[0].setMessage(message);
+			ComposerCommandReference ref = new ComposerCommandReference(
+					composerController, sentFolder);
+			ref.setMessage(message);
 
 			SaveMessageCommand c = new SaveMessageCommand(ref);
 
@@ -251,11 +246,11 @@ public class SendMessageCommand extends FolderCommand {
 
 			// -> get source reference of message
 			// when replying this is the original sender's message
-			// you selected and replied to 
-			FolderCommandReference[] ref2 = model.getSourceReference();
+			// you selected and replied to
+			FolderCommandReference ref2 = model.getSourceReference();
 			if (ref2 != null) {
 				// mark message as answered
-				ref2[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 				MarkMessageCommand c1 = new MarkMessageCommand(ref2);
 				MainInterface.processor.addOp(c1);
 			}
@@ -272,8 +267,8 @@ public class SendMessageCommand extends FolderCommand {
 					"message", "send_message_success"));
 		} /*
 		   * catch (SMTPException e) { JOptionPane.showMessageDialog(null,
-		   * e.getMessage(), "Error while sending", JOptionPane.ERROR_MESSAGE);
-		   *  // open composer view showComposer = true; }
+		   * e.getMessage(), "Error while sending", JOptionPane.ERROR_MESSAGE); //
+		   * open composer view showComposer = true; }
 		   */catch (Exception e) {
 			//e.printStackTrace();
 
@@ -285,13 +280,12 @@ public class SendMessageCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-	  
-	  //can no longer assume that sendMessageDialog has been displayed
-	  if (sendMessageDialog != null)
-	  {
+
+		//can no longer assume that sendMessageDialog has been displayed
+		if (sendMessageDialog != null) {
 			// close send message dialog
 			sendMessageDialog.setVisible(false);
-	  }
+		}
 
 		if (showComposer == true
 				&& composerController.getView().getFrame() != null) {

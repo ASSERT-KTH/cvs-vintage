@@ -18,7 +18,13 @@
 
 package org.columba.mail.gui.config.filter;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -37,7 +43,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.filter.FilterActionList;

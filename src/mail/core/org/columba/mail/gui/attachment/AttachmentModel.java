@@ -17,13 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
-import org.columba.mail.folder.MessageFolder;
+import java.util.List;
 
+import org.columba.mail.folder.MessageFolder;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
-
-import java.util.List;
 
 
 /**

@@ -6,7 +6,6 @@ package org.columba.mail.gui.config.filter;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.io.IOException;
 
 import javax.swing.JComponent;

@@ -45,8 +45,8 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
  *
  * @param references
  */
-    public AddSenderToAddressbookCommand(DefaultCommandReference[] references) {
-        super(references);
+    public AddSenderToAddressbookCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /**
@@ -56,8 +56,8 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
  * @param references
  */
     public AddSenderToAddressbookCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
+        DefaultCommandReference reference) {
+        super(frame, reference);
     }
 
     /**
@@ -66,13 +66,13 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get reference
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference r = (FolderCommandReference) getReference();
 
         // get array of message UIDs
-        Object[] uids = r[0].getUids();
+        Object[] uids = r.getUids();
 
         // get source folder
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

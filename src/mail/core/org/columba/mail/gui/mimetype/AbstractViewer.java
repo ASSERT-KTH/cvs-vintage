@@ -15,11 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
 
-import org.columba.ristretto.message.MimeHeader;
-
 import java.io.File;
-
 import java.net.URL;
+
+import org.columba.ristretto.message.MimeHeader;
 
 
 public abstract class AbstractViewer {

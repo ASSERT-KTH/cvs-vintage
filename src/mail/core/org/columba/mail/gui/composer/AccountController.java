@@ -15,14 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBoxMenuItem;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.main.MailInterface;
 
 
 /**

@@ -15,14 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.pop3.POP3Server;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -51,6 +43,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.pop3.POP3Server;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class ConfigFrame extends JDialog implements ListSelectionListener,

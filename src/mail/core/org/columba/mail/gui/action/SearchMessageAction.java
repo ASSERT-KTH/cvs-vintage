@@ -15,20 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 
 public class SearchMessageAction extends AbstractColumbaAction {

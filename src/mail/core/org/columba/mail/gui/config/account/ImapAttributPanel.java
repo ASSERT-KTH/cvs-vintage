@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-
-import org.columba.mail.config.ImapItem;
-import org.columba.mail.util.MailResourceLoader;
-
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.mail.config.ImapItem;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

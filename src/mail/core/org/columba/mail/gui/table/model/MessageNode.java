@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.ColumbaHeader;
-
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.columba.mail.message.ColumbaHeader;
 
 
 /**

@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import java.awt.Color;
+
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.MessageFolder;
-
-import java.awt.Color;
 
 
 /**

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
+import java.util.List;
+
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-
-import java.util.List;
 
 
 /**

@@ -51,10 +51,9 @@ public class MoveMessageTest extends AbstractFolderTest {
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
-        ref[0] = new FolderCommandReference(getSourceFolder(), new Object[] {uid});
-        ref[1] = new FolderCommandReference(getDestFolder());
+//      create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), getDestFolder(), new Object[] { uid });
 
         // create copy command
         MoveMessageCommand command = new MoveMessageCommand(ref);

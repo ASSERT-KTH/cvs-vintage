@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2004/06/01 16:11:47 $
+ * $Revision: 1.2 $
+ * $Date: 2004/08/22 15:55:07 $
  * $Author: fdietz $
  *
  * Copyright (C) 2001 C. Scott Willy
@@ -29,7 +29,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.util.List;
 
 import javax.swing.AbstractAction;

@@ -15,25 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html;
 
-import org.columba.core.charset.CharsetEvent;
-import org.columba.core.charset.CharsetListener;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
-import org.columba.mail.gui.composer.html.util.ExtendedHTMLEditorKit;
-
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.io.IOException;
-
 import java.nio.charset.Charset;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,6 +38,14 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTML;
+
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
+import org.columba.mail.gui.composer.html.util.ExtendedHTMLEditorKit;
 
 
 /**

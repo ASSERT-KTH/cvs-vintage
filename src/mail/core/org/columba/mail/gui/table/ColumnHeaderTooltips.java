@@ -17,7 +17,6 @@ package org.columba.mail.gui.table;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
 import java.util.HashMap;
 import java.util.Map;
 

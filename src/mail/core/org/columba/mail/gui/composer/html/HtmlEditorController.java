@@ -15,14 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html;
 
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.gui.composer.AbstractEditorController;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.html.util.FormatInfo;
-
 import java.awt.Font;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -39,6 +32,11 @@ import javax.swing.text.ChangedCharSetException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTML;
+
+import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.html.util.FormatInfo;
 
 
 /**

@@ -8,7 +8,6 @@ package org.columba.mail.gui.tree;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.menu.MailContextMenu;
 
 

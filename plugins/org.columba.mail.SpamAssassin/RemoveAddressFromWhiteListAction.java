@@ -77,7 +77,7 @@ public class RemoveAddressFromWhiteListAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
         MainInterface.processor.addOp(new RemoveAddressFromWhiteListCommand(r));
     }

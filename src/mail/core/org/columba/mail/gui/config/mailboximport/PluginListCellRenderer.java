@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.mailboximport;
 
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-
-import org.columba.mail.plugin.ImportPluginHandler;
-
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.plugin.ImportPluginHandler;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {

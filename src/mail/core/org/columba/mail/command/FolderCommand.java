@@ -19,34 +19,25 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.frame.FrameMediator;
 
-
 /**
  * Adds an array of folder references
- *
+ * 
  * @author fdietz, tstich
  */
 public abstract class FolderCommand extends Command {
-    /**
- * Constructor for FolderCommand.
- * @param frameMediator
- * @param references
- */
-    public FolderCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	
 
-    public FolderCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
-    }
+	public FolderCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /**
- * Returns the references.
- * @return DefaultCommandReference[]
- */
-    public DefaultCommandReference[] getReferences() {
-        FolderCommandReference[] r = (FolderCommandReference[]) super.getReferences();
+	
+	public FolderCommand(FrameMediator frame, DefaultCommandReference reference) {
+		super(frame, reference);
+	}
+	
+	public FolderCommandReference getFolderCommandReference() {
+		return (FolderCommandReference) getReference();
+	}
 
-        return r[0].getFolder().getCommandReference(r);
-    }
 }

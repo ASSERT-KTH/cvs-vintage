@@ -15,13 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.core.plugin.Plugin;
-
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.message.Flags;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -32,6 +25,11 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+
+import org.columba.core.plugin.Plugin;
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 
 /**

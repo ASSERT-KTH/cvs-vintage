@@ -26,121 +26,114 @@ import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MailboxInfo;
 
-
 /**
  * @author fdietz
- *
+ *  
  */
 public class CopyMessageCommandTest extends AbstractFolderTest {
 
-    public CopyMessageCommandTest(String arg0) {
-        super(arg0);
-    }
-    
-    /**
-     * @param arg0
-     */
-    public CopyMessageCommandTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-    }
+	public CopyMessageCommandTest(String arg0) {
+		super(arg0);
+	}
 
-    /**
-     * Copy message using a {@link CopyMessageCommand}.
-     *
-     * @throws Exception
-     */
-    public void testCopyMessage() throws Exception {
-        // add message "0.eml" as inputstream to folder
-        String input = FolderTstHelper.getString(0);
-        System.out.println("input=" + input);
-        // create stream from string
-        ByteArrayInputStream inputStream = FolderTstHelper
-                .getByteArrayInputStream(input);
-        // add stream to folder
-        Object uid = getSourceFolder().addMessage(inputStream);
+	/**
+	 * @param arg0
+	 */
+	public CopyMessageCommandTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
+	}
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] {uid});
-        ref[1] = new FolderCommandReference(getDestFolder());
+	/**
+	 * Copy message using a {@link CopyMessageCommand}.
+	 * 
+	 * @throws Exception
+	 */
+	public void testCopyMessage() throws Exception {
+		// add message "0.eml" as inputstream to folder
+		String input = FolderTstHelper.getString(0);
+		System.out.println("input=" + input);
+		// create stream from string
+		ByteArrayInputStream inputStream = FolderTstHelper
+				.getByteArrayInputStream(input);
+		// add stream to folder
+		Object uid = getSourceFolder().addMessage(inputStream);
 
-        // create copy command
-        CopyMessageCommand command = new CopyMessageCommand(ref);
+		// create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), getDestFolder(), new Object[] { uid });
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		// create copy command
+		CopyMessageCommand command = new CopyMessageCommand(ref);
 
-        // get inputstream of this message from folder
-        InputStream outputStream = destFolder.getMessageSourceStream(uid);
-        // create string from inputstream
-        String output = FolderTstHelper.getStringFromInputStream(outputStream);
-        // compare both messages
-        assertEquals(input, output);
-        Object[] uids = getDestFolder().getUids();
-        assertEquals("one message should be in destination folder", 1, uids.length);
-        MailboxInfo info = getDestFolder().getMessageFolderInfo();
-        assertEquals("one message should be in destination folder", 1, info
-                .getExists());
-        // close streams
-        inputStream.close();
-        outputStream.close();
-    }
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-    /**
-     * Copy message using a {@link CopyMessageCommand}and check if attributes
-     * are copied correctly.
-     *
-     * @throws Exception
-     */
-    public void testCopyMessageAttribute() throws Exception {
-        //  add message "0.eml" as inputstream to folder
-        String input = FolderTstHelper.getString(0);
-        System.out.println("input=" + input);
-        // create stream from string
-        ByteArrayInputStream inputStream = FolderTstHelper
-                .getByteArrayInputStream(input);
-        // add stream to folder
-        Object uid = getSourceFolder().addMessage(inputStream);
-        // get flags of message
-        Flags oldFlags = getSourceFolder().getFlags(uid);
-        // set flags
-        oldFlags.setSeen(false);
-        /*
-        oldFlags.setRecent(true);
-        oldFlags.setFlagged(true);
-        oldFlags.setExpunged(false);
-		*/
-		
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] {uid});
-        ref[1] = new FolderCommandReference(getDestFolder());
+		// get inputstream of this message from folder
+		InputStream outputStream = destFolder.getMessageSourceStream(uid);
+		// create string from inputstream
+		String output = FolderTstHelper.getStringFromInputStream(outputStream);
+		// compare both messages
+		assertEquals(input, output);
+		Object[] uids = getDestFolder().getUids();
+		assertEquals("one message should be in destination folder", 1,
+				uids.length);
+		MailboxInfo info = getDestFolder().getMessageFolderInfo();
+		assertEquals("one message should be in destination folder", 1, info
+				.getExists());
+		// close streams
+		inputStream.close();
+		outputStream.close();
+	}
 
-        // create copy command
-        CopyMessageCommand command = new CopyMessageCommand(ref);
+	/**
+	 * Copy message using a {@link CopyMessageCommand}and check if attributes
+	 * are copied correctly.
+	 * 
+	 * @throws Exception
+	 */
+	public void testCopyMessageAttribute() throws Exception {
+		//  add message "0.eml" as inputstream to folder
+		String input = FolderTstHelper.getString(0);
+		System.out.println("input=" + input);
+		// create stream from string
+		ByteArrayInputStream inputStream = FolderTstHelper
+				.getByteArrayInputStream(input);
+		// add stream to folder
+		Object uid = getSourceFolder().addMessage(inputStream);
+		// get flags of message
+		Flags oldFlags = getSourceFolder().getFlags(uid);
+		// set flags
+		oldFlags.setSeen(false);
+		/*
+		 * oldFlags.setRecent(true); oldFlags.setFlagged(true);
+		 * oldFlags.setExpunged(false);
+		 */
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		// create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), getDestFolder(), new Object[] { uid });
 
-        Flags flags = getDestFolder().getFlags(uid);
+		// create copy command
+		CopyMessageCommand command = new CopyMessageCommand(ref);
 
-        assertEquals("copied message should be marked as not seen", false,
-                flags.getSeen());
-        /*
-        assertEquals("copied message should be marked as recent", true, flags
-                .getRecent());
-        assertEquals("copied message should be marked as flagged", true, flags
-                .getFlagged());
-        assertEquals("copied message should be marked as not expunged", false,
-                flags.getExpunged());
-        */
-        // close streams
-        inputStream.close();
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-    }
+		Flags flags = getDestFolder().getFlags(uid);
+
+		assertEquals("copied message should be marked as not seen", false,
+				flags.getSeen());
+		/*
+		 * assertEquals("copied message should be marked as recent", true, flags
+		 * .getRecent()); assertEquals("copied message should be marked as
+		 * flagged", true, flags .getFlagged()); assertEquals("copied message
+		 * should be marked as not expunged", false, flags.getExpunged());
+		 */
+		// close streams
+		inputStream.close();
+
+	}
 
 }

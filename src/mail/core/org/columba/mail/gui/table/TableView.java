@@ -17,13 +17,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.Dimension;
+import java.util.Enumeration;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.tree.TreePath;
+
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.OptionsSerializer;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
@@ -32,18 +40,8 @@ import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.plugins.DefaultLabelRenderer;
 import org.columba.mail.plugin.TableRendererPluginHandler;
-
+import org.frappucino.treetable.CustomTreeTableCellRenderer;
 import org.frappucino.treetable.TreeTable;
-
-import java.awt.Dimension;
-
-import java.util.Enumeration;
-
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.TreePath;
 
 /**
  * This widget is a mix between a JTable and a JTree ( we need the JTree for the

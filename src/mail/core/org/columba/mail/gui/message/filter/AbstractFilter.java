@@ -46,7 +46,7 @@ public abstract class AbstractFilter implements Filter {
      * @return TODO
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder, java.lang.Object)
      */
-    public FolderCommandReference[] filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
+    public FolderCommandReference filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
 //      map selection to this temporary message
         TempFolder tempFolder = MailInterface.treeModel.getTempFolder();
 
@@ -55,8 +55,7 @@ public abstract class AbstractFilter implements Filter {
 
         
         // create reference to this message
-        FolderCommandReference[] local = new FolderCommandReference[1];
-        local[0] = new FolderCommandReference(tempFolder,
+        FolderCommandReference local = new FolderCommandReference(tempFolder,
                 new Object[] {uid});
 
         // if we don't use this here - actions like reply would only work

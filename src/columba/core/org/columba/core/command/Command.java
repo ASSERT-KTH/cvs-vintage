@@ -18,260 +18,170 @@ package org.columba.core.command;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.Lock;
 
-import java.lang.reflect.Array;
-
-
 /**
  * A Command uses the information provided from {@link DefaultCommandReference}
  * to execute itself.
- *
+ * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public abstract class Command {
-    /**
- * Command Types
-* Commands that can be undone, e.g. move message
-* line for constructor:
-* commandType = Command.UNDOABLE_OPERATION;
-*/
-    public static final int UNDOABLE_OPERATION = 0;
 
-    /**
- * Commands that can not be undone but previous commands
-* can be undone, e.g. view message (default)
-* line for constructor:
-* commandType = Command.NORMAL_OPERATION;
-*/
-    public static final int NORMAL_OPERATION = 1;
+	/**
+	 * Commands that can not be undone but previous commands can be undone, e.g.
+	 * view message (default) line for constructor: commandType =
+	 * Command.NORMAL_OPERATION;
+	 */
+	public static final int NORMAL_OPERATION = 1;
 
-    /**
- * Commands that can not be undone and previous commands
-* cannot be undone anymore, e.g. delete message from trash
-* line for constructor:
-* commandType = Command.NO_UNDO_OPERATION;
-*/
-    public static final int NO_UNDO_OPERATION = 2;
+	/**
+	 * Priorities: Commands that are started by an automated process, e.g.
+	 * auto-check for new messages
+	 */
+	public static final int DAEMON_PRIORITY = -10;
 
-    /**
- * Priorities:
-* Commands that are started by an automated process, e.g. auto-check
-* for new messages
-*/
-    public static final int DAEMON_PRIORITY = -10;
+	/**
+	 * Normal priority for e.g. copying (default)
+	 */
+	public static final int NORMAL_PRIORITY = 0;
 
-    /**
- * Normal priority for e.g. copying (default)
- */
-    public static final int NORMAL_PRIORITY = 0;
+	/**
+	 * Commands that the user waits for to finish, e.g. view message
+	 */
+	public static final int REALTIME_PRIORITY = 10;
 
-    /** 
- * Commands that the user waits for to finish, e.g. view message
- */
-    public static final int REALTIME_PRIORITY = 10;
+	/**
+	 * Never Use this!! - internally highest priority
+	 */
+	public static final int DEFINETLY_NEXT_OPERATION_PRIORITY = 20;
 
-    /**
- * Never Use this!! - internally highest priority
- */
-    public static final int DEFINETLY_NEXT_OPERATION_PRIORITY = 20;
+	/**
+	 * Never use these!!! - for internal state control only
+	 */
+	public static final int FIRST_EXECUTION = 0;
 
-    /**
- * Never use these!!! - for internal state control only
- */
-    public static final int FIRST_EXECUTION = 0;
-    public static final int UNDO = 1;
-    public static final int REDO = 2;
-    protected int priority;
-    protected int commandType;
-    protected boolean synchronize;
-    protected int timeStamp;
-    protected Lock[] folderLocks;
-    private DefaultCommandReference[] references;
-    private DefaultCommandReference[] undoReferences;
-    protected FrameMediator frameMediator;
+	protected int priority;
 
-    public Command(DefaultCommandReference[] references) {
-        this.references = references;
+	protected int commandType;
 
-        commandType = NORMAL_OPERATION;
-        priority = NORMAL_PRIORITY;
-    }
+	protected boolean synchronize;
 
-    public Command(FrameMediator frameMediator,
-        DefaultCommandReference[] references) {
-        this.references = references;
-        this.frameMediator = frameMediator;
+	protected int timeStamp;
 
-        commandType = NORMAL_OPERATION;
-        priority = NORMAL_PRIORITY;
-    }
+	protected Lock[] folderLocks;
 
-    public void process(Worker worker, int operationMode)
-        throws Exception {
-        setTimeStamp(worker.getTimeStamp());
+	private DefaultCommandReference reference;
 
-        switch (operationMode) {
-        case FIRST_EXECUTION:
-            execute(worker);
+	protected FrameMediator frameMediator;
 
-            break;
+	public Command(DefaultCommandReference reference) {
+		this.reference = reference;
 
-        case UNDO:
-            undo(worker);
+		commandType = NORMAL_OPERATION;
+		priority = NORMAL_PRIORITY;
+	}
 
-            break;
+	public Command(FrameMediator frameMediator,
+			DefaultCommandReference reference) {
+		this.reference = reference;
+		this.frameMediator = frameMediator;
 
-        case REDO:
-            redo(worker);
+		commandType = NORMAL_OPERATION;
+		priority = NORMAL_PRIORITY;
+	}
 
-            break;
-        }
-    }
+	public void process(Worker worker) throws Exception {
+		setTimeStamp(worker.getTimeStamp());
+		execute(worker);
+	}
 
-    public void updateGUI() throws Exception {
-    }
+	public void updateGUI() throws Exception {
+	}
 
-    /**
- * Command must implement this method
- * Executes the Command when run the first time
- *
- * @param worker
- * @throws Exception
- */
-    public abstract void execute(WorkerStatusController worker)
-        throws Exception;
+	/**
+	 * Command must implement this method Executes the Command when run the
+	 * first time
+	 * 
+	 * @param worker
+	 * @throws Exception
+	 */
+	public abstract void execute(WorkerStatusController worker)
+			throws Exception;
 
-    /**
- * Command must implement this method
- * Undos the command after command was executed or redone.
- *
- * @param worker
- * @throws Exception
- */
-    public void undo(Worker worker) throws Exception {
-    }
+	public boolean canBeProcessed() {
 
-    /**
- * Command must implement this method
- * Redos the command after command was undone.
- *
- * @param worker
- * @throws Exception
- */
-    public void redo(Worker worker) throws Exception {
-    }
+		boolean success = reference.tryToGetLock(this);
+		if (!success) {
+			releaseAllFolderLocks();
+		}
+		return success;
 
-    public boolean canBeProcessed(int operationMode) {
-        DefaultCommandReference[] references = getReferences(operationMode);
-        int size = Array.getLength(references);
+	}
 
-        boolean success = true;
+	public void releaseAllFolderLocks() {
 
-        for (int i = 0; (i < size) && success; i++) {
-            if (references[i] != null) {
-                success &= references[i].tryToGetLock(this);
-            }
-        }
+		reference.releaseLock(this);
 
-        if (!success) {
-            releaseAllFolderLocks(operationMode);
-        }
+	}
 
-        return success;
-    }
+	/** *********** Methods for interacting with the Operator ************ */
 
-    public void releaseAllFolderLocks(int operationMode) {
-        DefaultCommandReference[] references = getReferences(operationMode);
-        int size = Array.getLength(references);
+	public int getCommandType() {
+		return commandType;
+	}
 
-        for (int i = 0; i < size; i++) {
-            if (references[i] != null) {
-                references[i].releaseLock(this);
-            }
-        }
-    }
+	public int getPriority() {
+		return priority;
+	}
 
-    /************* Methods for interacting with the Operator *************/
-    public DefaultCommandReference[] getReferences(int operationMode) {
-        if (operationMode == UNDO) {
-            return getUndoReferences();
-        } else {
-            return getReferences();
-        }
-    }
+	public void incPriority() {
+		priority++;
+	}
 
-    public int getCommandType() {
-        return commandType;
-    }
+	public boolean isSynchronize() {
+		return synchronize;
+	}
 
-    public int getPriority() {
-        return priority;
-    }
+	public void setSynchronize(boolean synchronize) {
+		this.synchronize = synchronize;
+	}
 
-    public void incPriority() {
-        priority++;
-    }
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 
-    public boolean isSynchronize() {
-        return synchronize;
-    }
+	/**
+	 * Returns the timeStamp.
+	 * 
+	 * @return int
+	 */
+	public int getTimeStamp() {
+		return timeStamp;
+	}
 
-    public void setSynchronize(boolean synchronize) {
-        this.synchronize = synchronize;
-    }
+	/**
+	 * Sets the timeStamp.This method is for testing only!
+	 * 
+	 * @param timeStamp
+	 *            The timeStamp to set
+	 */
+	public void setTimeStamp(int timeStamp) {
+		this.timeStamp = timeStamp;
+	}
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
+	public DefaultCommandReference getReference() {
+		return reference;
+	}
 
-    /**
- * Sets the undoReferences.
- * @param undoReferences The undoReferences to set
- */
-    public void setUndoReferences(DefaultCommandReference[] undoReferences) {
-        this.undoReferences = undoReferences;
-    }
+	public void finish() throws Exception {
+		updateGUI();
+	}
 
-    /**
- * Returns the timeStamp.
- * @return int
- */
-    public int getTimeStamp() {
-        return timeStamp;
-    }
-
-    /**
- * Sets the timeStamp.This method is for testing only!
- * @param timeStamp The timeStamp to set
- */
-    public void setTimeStamp(int timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    /**
- * Returns the references.
- * @return DefaultCommandReference[]
- */
-    public DefaultCommandReference[] getReferences() {
-        return references;
-    }
-
-    /**
- * Returns the undoReferences.
- * @return DefaultCommandReference[]
- */
-    public DefaultCommandReference[] getUndoReferences() {
-        return undoReferences;
-    }
-
-    public void finish() throws Exception {
-        updateGUI();
-    }
-
-    /**
- * Returns the frameMediator.
- * @return FrameController
- */
-    public FrameMediator getFrameMediator() {
-        return frameMediator;
-    }
+	/**
+	 * Returns the frameMediator.
+	 * 
+	 * @return FrameController
+	 */
+	public FrameMediator getFrameMediator() {
+		return frameMediator;
+	}
 }

@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.filter.FilterList;
-
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import org.columba.mail.filter.FilterList;
 
 
 class FilterListTable extends JTable {

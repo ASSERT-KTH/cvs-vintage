@@ -94,8 +94,8 @@ public class PrintMessageCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public PrintMessageCommand(DefaultCommandReference[] references, Charset charset) {
-        super(references);
+    public PrintMessageCommand(DefaultCommandReference reference, Charset charset) {
+        super(reference);
         this.charset = charset;
 
         // Header
@@ -181,11 +181,11 @@ public class PrintMessageCommand extends FolderCommand {
                  * *20030604, karlpeder* Fixed minor flaws to be able to print text
                  * messages. Further more added support for html messages.
                  */
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference r = (FolderCommandReference) getReference();
 
-        Object[] uids = r[0].getUids(); // uid for messages to print
+        Object[] uids = r.getUids(); // uid for messages to print
 
-        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
+        MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
         //register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

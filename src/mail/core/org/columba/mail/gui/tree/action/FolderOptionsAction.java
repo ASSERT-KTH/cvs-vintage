@@ -15,22 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
 
 
 /**
@@ -63,10 +62,10 @@ public class FolderOptionsAction extends AbstractColumbaAction
  */
     public void actionPerformed(ActionEvent evt) {
         // it is safe here to cast to AbstractMailFrameControlller
-        FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+        FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
         // only use the first selected folder		
-        AbstractFolder folder = r[0].getFolder();
+        AbstractFolder folder = r.getFolder();
 
         // cast to Folder
         new FolderOptionsDialog((MessageFolder) folder,true,

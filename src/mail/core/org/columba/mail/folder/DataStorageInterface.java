@@ -55,6 +55,15 @@ public interface DataStorageInterface {
     public Source getMessageSource(Object uid) throws Exception;
 
     /**
+     * Get the InputStream of the message source.
+     * 
+     * @param uid UID of the message
+     * @return the message stream
+     * @throws Exception
+     */
+    public InputStream getMessageStream(Object uid) throws Exception;
+    
+    /**
  * Save message in data storage.
  *
  * @param uid                        UID of message

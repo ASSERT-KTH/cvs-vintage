@@ -57,272 +57,276 @@ import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.checkabletree.CheckableTree;
 
-
 /**
  * Subscribe dialog used by IMAP accounts.
  * 
  * @author fdietz
  */
 public class SubscribeDialog extends JDialog implements ActionListener,
-    TreeSelectionListener {
-    private JButton subscribeButton;
-    private JButton syncButton;
-    private JButton unsubscribeButton;
-    private JTree tree;
-    private ListInfoTreeNode selection;
-    private IMAPRootFolder root;
-    private DefaultTreeModel treeModel;
+		TreeSelectionListener {
+	private JButton subscribeButton;
 
-    public SubscribeDialog(JFrame parent, IMAPRootFolder rootFolder) {
-        super(parent, true);
-        
-        setTitle(MailResourceLoader.getString("dialog", "subscribe",
-                "dialog_title"));
-        root = rootFolder;
+	private JButton syncButton;
 
-        initComponents();
-        pack();
-        setLocationRelativeTo(null);
+	private JButton unsubscribeButton;
 
-        syncFolderList();
+	private JTree tree;
 
-        setVisible(true);
-    }
+	private ListInfoTreeNode selection;
 
-    private void syncFolderList() {
-        setEnabled(false);
+	private IMAPRootFolder root;
 
-        Command c = new SynchronizeFolderListCommand(new SubscribeCommandReference(
-                    root, this));
-        MainInterface.processor.addOp(c);
-    }
+	private DefaultTreeModel treeModel;
 
-    private void subscribe() {
-        setEnabled(false);
+	public SubscribeDialog(JFrame parent, IMAPRootFolder rootFolder) {
+		super(parent, true);
 
-        Command c = new SubscribeFolderCommand(new SubscribeCommandReference(
-                    root, this, selection.getMailbox()));
-        MainInterface.processor.addOp(c);
-    }
+		setTitle(MailResourceLoader.getString("dialog", "subscribe",
+				"dialog_title"));
+		root = rootFolder;
 
-    private void unsubscribe() {
-        setEnabled(false);
+		initComponents();
+		pack();
+		setLocationRelativeTo(null);
 
-        Command c = new UnsubscribeFolderCommand(new SubscribeCommandReference(
-                    root, this, selection.getMailbox()));
-        MainInterface.processor.addOp(c);
-    }
+		syncFolderList();
 
-    /**
- * Inits the GUI components.
- */
-    private void initComponents() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        getContentPane().add(mainPanel);
+		setVisible(true);
+	}
 
-        subscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "subscribe"));
-        subscribeButton.setActionCommand("SUBSCRIBE");
-        subscribeButton.addActionListener(this);
-        subscribeButton.setEnabled(false);
+	private void syncFolderList() {
+		setEnabled(false);
 
-        syncButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "sync"));
-        syncButton.setActionCommand("SYNC");
-        syncButton.setEnabled(false);
-        syncButton.addActionListener(this);
+		Command c = new SynchronizeFolderListCommand(
+				new SubscribeCommandReference(root, this));
+		MainInterface.processor.addOp(c);
+	}
 
-        unsubscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "subscribe", "unsubscribe"));
-        unsubscribeButton.setActionCommand("UNSUBSCRIBE");
-        unsubscribeButton.setEnabled(false);
-        unsubscribeButton.addActionListener(this);
+	private void subscribe() {
+		setEnabled(false);
 
-        // top panel
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		Command c = new SubscribeFolderCommand(new SubscribeCommandReference(
+				root, this, selection.getMailbox()));
+		MainInterface.processor.addOp(c);
+	}
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+	private void unsubscribe() {
+		setEnabled(false);
 
-        //topPanel.setLayout( );
-        JPanel topBorderPanel = new JPanel();
-        topBorderPanel.setLayout(new BorderLayout());
+		Command c = new UnsubscribeFolderCommand(new SubscribeCommandReference(
+				root, this, selection.getMailbox()));
+		MainInterface.processor.addOp(c);
+	}
 
-        Component glue = Box.createVerticalGlue();
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
+	/**
+	 * Inits the GUI components.
+	 */
+	private void initComponents() {
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		getContentPane().add(mainPanel);
 
-        //c.fill = GridBagConstraints.HORIZONTAL;
-        gridBagLayout.setConstraints(glue, c);
+		subscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "subscribe", "subscribe"));
+		subscribeButton.setActionCommand("SUBSCRIBE");
+		subscribeButton.addActionListener(this);
+		subscribeButton.setEnabled(false);
 
-        gridBagLayout = new GridBagLayout();
-        c = new GridBagConstraints();
+		syncButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "subscribe", "sync"));
+		syncButton.setActionCommand("SYNC");
+		syncButton.setEnabled(false);
+		syncButton.addActionListener(this);
 
-        JPanel eastPanel = new JPanel(gridBagLayout);
-        mainPanel.add(eastPanel, BorderLayout.EAST);
+		unsubscribeButton = new ButtonWithMnemonic(MailResourceLoader
+				.getString("dialog", "subscribe", "unsubscribe"));
+		unsubscribeButton.setActionCommand("UNSUBSCRIBE");
+		unsubscribeButton.setEnabled(false);
+		unsubscribeButton.addActionListener(this);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagLayout.setConstraints(subscribeButton, c);
-        eastPanel.add(subscribeButton);
+		// top panel
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-        Component strut1 = Box.createRigidArea(new Dimension(30, 6));
-        gridBagLayout.setConstraints(strut1, c);
-        eastPanel.add(strut1);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
 
-        gridBagLayout.setConstraints(unsubscribeButton, c);
-        eastPanel.add(unsubscribeButton);
+		//topPanel.setLayout( );
+		JPanel topBorderPanel = new JPanel();
+		topBorderPanel.setLayout(new BorderLayout());
 
-        Component strut = Box.createRigidArea(new Dimension(30, 12));
-        gridBagLayout.setConstraints(strut, c);
-        eastPanel.add(strut);
+		Component glue = Box.createVerticalGlue();
+		c.anchor = GridBagConstraints.EAST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
 
-        gridBagLayout.setConstraints(syncButton, c);
-        eastPanel.add(syncButton);
+		//c.fill = GridBagConstraints.HORIZONTAL;
+		gridBagLayout.setConstraints(glue, c);
 
-        glue = Box.createVerticalGlue();
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 1.0;
-        gridBagLayout.setConstraints(glue, c);
-        eastPanel.add(glue);
+		gridBagLayout = new GridBagLayout();
+		c = new GridBagConstraints();
 
-        // centerpanel
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-        tree = new CheckableTree();
-        tree.addTreeSelectionListener(this);
-        tree.setRootVisible(false);
+		JPanel eastPanel = new JPanel(gridBagLayout);
+		mainPanel.add(eastPanel, BorderLayout.EAST);
 
-        JScrollPane scrollPane = new JScrollPane(tree);
-        scrollPane.setPreferredSize(new Dimension(300, 250));
-        scrollPane.getViewport().setBackground(Color.white);
-        scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
-        centerPanel.add(scrollPane);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(subscribeButton, c);
+		eastPanel.add(subscribeButton);
 
-        mainPanel.add(centerPanel);
+		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
+		gridBagLayout.setConstraints(strut1, c);
+		eastPanel.add(strut1);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		gridBagLayout.setConstraints(unsubscribeButton, c);
+		eastPanel.add(unsubscribeButton);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		Component strut = Box.createRigidArea(new Dimension(30, 12));
+		gridBagLayout.setConstraints(strut, c);
+		eastPanel.add(strut);
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
-        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+		gridBagLayout.setConstraints(syncButton, c);
+		eastPanel.add(syncButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
-        buttonPanel.add(helpButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+		glue = Box.createVerticalGlue();
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		gridBagLayout.setConstraints(glue, c);
+		eastPanel.add(glue);
 
-        // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "organising_and_managing_your_email_3");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
-            "organising_and_managing_your_email_3");
-    }
+		// centerpanel
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
+		tree = new CheckableTree();
+		tree.addTreeSelectionListener(this);
+		tree.setRootVisible(false);
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		JScrollPane scrollPane = new JScrollPane(tree);
+		scrollPane.setPreferredSize(new Dimension(300, 250));
+		scrollPane.getViewport().setBackground(Color.white);
+		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
+		centerPanel.add(scrollPane);
 
-        if (action.equals("CLOSE")) {
-            syncAndExit();
-        } else if (action.equals("SUBSCRIBE")) {
-            subscribe();
-        } else if (action.equals("UNSUBSCRIBE")) {
-            unsubscribe();
-        } else if (action.equals("SYNC")) {
-            syncFolderList();
-        }
-    }
+		mainPanel.add(centerPanel);
 
-    private void syncAndExit() {
-        setEnabled(false);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        Command c = new FetchSubFolderListCommand(new FolderCommandReference[] {
-                    new FolderCommandReference(root)
-                });
-        MainInterface.processor.addOp(c);
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        setVisible(false);
-    }
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
+		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
 
-    /** ********************** TreeSelectionListener ******************** */
-    /**
-     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-     */
-    public void valueChanged(TreeSelectionEvent arg0) {
-        selection = (ListInfoTreeNode) arg0.getPath().getLastPathComponent();
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        updateButtons();
-    }
+		// associate with JavaHelp
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+				"organising_and_managing_your_email_3");
+		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+				"organising_and_managing_your_email_3");
+	}
 
-    /**
-     *  
-     */
-    private void updateButtons() {
-        if (selection != null) {
-            subscribeButton.setEnabled(!selection.isSelected());
-            unsubscribeButton.setEnabled(selection.isSelected());
-        } else {
-            subscribeButton.setEnabled(false);
-            unsubscribeButton.setEnabled(false);
-        }
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-        syncButton.setEnabled(true);
-        tree.setEnabled(true);
-    }
+		if (action.equals("CLOSE")) {
+			syncAndExit();
+		} else if (action.equals("SUBSCRIBE")) {
+			subscribe();
+		} else if (action.equals("UNSUBSCRIBE")) {
+			unsubscribe();
+		} else if (action.equals("SYNC")) {
+			syncFolderList();
+		}
+	}
 
-    /**
-     * @param model
-     */
-    public void syncFolderListDone(DefaultTreeModel model) {
-        tree.setModel(model);
-        tree.expandRow(0);
-        tree.expandRow(1);
+	private void syncAndExit() {
+		setEnabled(false);
 
-        treeModel = model;
+		Command c = new FetchSubFolderListCommand(new FolderCommandReference(
+				root));
+		MainInterface.processor.addOp(c);
 
-        updateButtons();
-    }
+		setVisible(false);
+	}
 
-    public void setEnabled(boolean value) {
-        subscribeButton.setEnabled(value);
-        unsubscribeButton.setEnabled(value);
-        syncButton.setEnabled(value);
+	/** ********************** TreeSelectionListener ******************** */
+	/**
+	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+	 */
+	public void valueChanged(TreeSelectionEvent arg0) {
+		selection = (ListInfoTreeNode) arg0.getPath().getLastPathComponent();
 
-        tree.setEnabled(value);
-    }
+		updateButtons();
+	}
 
-    /**
-     *  
-     */
-    public void subscribeDone() {
-        selection.setSelected(true);
-        treeModel.nodeChanged(selection);
+	/**
+	 *  
+	 */
+	private void updateButtons() {
+		if (selection != null) {
+			subscribeButton.setEnabled(!selection.isSelected());
+			unsubscribeButton.setEnabled(selection.isSelected());
+		} else {
+			subscribeButton.setEnabled(false);
+			unsubscribeButton.setEnabled(false);
+		}
 
-        updateButtons();
-    }
+		syncButton.setEnabled(true);
+		tree.setEnabled(true);
+	}
 
-    /**
- *  
- */
-    public void unsubscribeDone() {
-        selection.setSelected(false);
-        treeModel.nodeChanged(selection);
+	/**
+	 * @param model
+	 */
+	public void syncFolderListDone(DefaultTreeModel model) {
+		tree.setModel(model);
+		tree.expandRow(0);
+		tree.expandRow(1);
 
-        updateButtons();
-    }
+		treeModel = model;
+
+		updateButtons();
+	}
+
+	public void setEnabled(boolean value) {
+		subscribeButton.setEnabled(value);
+		unsubscribeButton.setEnabled(value);
+		syncButton.setEnabled(value);
+
+		tree.setEnabled(value);
+	}
+
+	/**
+	 *  
+	 */
+	public void subscribeDone() {
+		selection.setSelected(true);
+		treeModel.nodeChanged(selection);
+
+		updateButtons();
+	}
+
+	/**
+	 *  
+	 */
+	public void unsubscribeDone() {
+		selection.setSelected(false);
+		treeModel.nodeChanged(selection);
+
+		updateButtons();
+	}
 }

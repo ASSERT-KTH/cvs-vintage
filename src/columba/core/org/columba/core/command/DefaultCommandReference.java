@@ -17,32 +17,32 @@ package org.columba.core.command;
 
 import org.columba.core.util.Lock;
 
-
 /**
  * Encapsulates the reference for a {@link Command}-
- *
+ * 
  * @author fdietz, tstich
  */
 public class DefaultCommandReference {
-    /**
- * a lock to claim access on some resource
- */
-    protected Lock lock;
+	/**
+	 * a lock to claim access on some resource
+	 */
+	protected Lock lock;
 
-    /**
- * Try to get lock.
- *
- * @param locker        the instance who wants to have the lock
- *
- * @return                        true, if locker has got the lock, false otherwise
- */
-    public boolean tryToGetLock(Object locker) {
-        return true;
-    }
+	/**
+	 * Try to get lock.
+	 * 
+	 * @param locker
+	 *            the instance who wants to have the lock
+	 * 
+	 * @return true, if locker has got the lock, false otherwise
+	 */
+	public boolean tryToGetLock(Object locker) {
+		return true;
+	}
 
-    /**
- * Release lock.
- */
-    public void releaseLock(Object locker) {
-    }
+	/**
+	 * Release lock.
+	 */
+	public void releaseLock(Object locker) {
+	}
 }

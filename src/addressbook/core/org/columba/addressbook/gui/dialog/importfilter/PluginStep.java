@@ -18,22 +18,10 @@
 
 package org.columba.addressbook.gui.dialog.importfilter;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultDataLookup;
-
-import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.plugin.ImportPluginHandler;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import java.lang.reflect.Method;
 
 import javax.swing.JComponent;
@@ -42,6 +30,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultDataLookup;
+
+import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
+import org.columba.addressbook.plugin.ImportPluginHandler;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.MultiLineLabel;
 
 
 class PluginStep extends AbstractStep implements ListSelectionListener {

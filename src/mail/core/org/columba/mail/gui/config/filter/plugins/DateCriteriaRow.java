@@ -15,21 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.util.DateChooserDialog;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.text.DateFormat;
-
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.util.DateChooserDialog;
 
 
 public class DateCriteriaRow extends DefaultCriteriaRow

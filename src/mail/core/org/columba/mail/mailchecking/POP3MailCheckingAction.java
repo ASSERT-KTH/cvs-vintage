@@ -16,7 +16,6 @@
 package org.columba.mail.mailchecking;
 
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
@@ -52,8 +51,7 @@ public class POP3MailCheckingAction extends AbstractMailCheckingAction {
         
         setEnabled( false );
         
-        POP3CommandReference[] r = new POP3CommandReference[1];
-        r[0] = new POP3CommandReference(controller);
+        POP3CommandReference r = new POP3CommandReference(controller);
 
         FetchNewMessagesCommand c = new FetchNewMessagesCommand(this, r);
 

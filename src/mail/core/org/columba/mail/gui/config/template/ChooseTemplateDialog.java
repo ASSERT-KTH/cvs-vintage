@@ -15,21 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.template;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -45,6 +36,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

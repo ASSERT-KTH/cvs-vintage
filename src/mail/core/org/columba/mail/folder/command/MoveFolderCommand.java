@@ -18,11 +18,9 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -47,11 +45,12 @@ public class MoveFolderCommand extends Command {
     /**
      * @param references the folder references.
      */
-    public MoveFolderCommand(DefaultCommandReference[] references) {
-        super(references);
+    public MoveFolderCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /** {@inheritDoc} */
+    /*
     public void updateGUI() throws Exception {
 
         // update treemodel
@@ -63,14 +62,15 @@ public class MoveFolderCommand extends Command {
             MailInterface.treeModel.nodesWereInserted(destParentFolder, destChildIndicies);
         }
     }
+    */
 
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        MessageFolder movedFolder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder movedFolder = (MessageFolder) ((FolderCommandReference) getReference()).getFolder();
 
         // get destination folder
-        destParentFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
+        destParentFolder = ((FolderCommandReference) getReference()).getFolder();
 
         srcParentFolder = (AbstractFolder)movedFolder.getParent();
         srcChildIndicies = new int[] {srcParentFolder.getIndex(movedFolder)};

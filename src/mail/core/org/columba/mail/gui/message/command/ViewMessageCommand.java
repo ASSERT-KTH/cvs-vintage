@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
@@ -57,8 +58,8 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ViewMessageCommand(FrameMediator frame,
-			DefaultCommandReference[] references) {
-		super(frame, references);
+			DefaultCommandReference reference) {
+		super(frame, reference);
 
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
@@ -81,7 +82,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// after a user configurable time interval
 			((TableViewOwner) frameMediator).getTableController()
 					.getMarkAsReadTimer().restart(
-							(FolderCommandReference) getReferences()[0]);
+							(FolderCommandReference) getReference());
 		}
 
 	}
@@ -91,16 +92,16 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void execute(WorkerStatusController wsc) throws Exception {
 		// get command reference
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		FolderCommandReference r = (FolderCommandReference) getReference();
 		
 		// get selected folder
-		srcFolder = (MessageFolder) r[0].getFolder();
+		srcFolder = (MessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
 		
 		// get selected message UID
-		uid = r[0].getUids()[0];
+		uid = r.getUids()[0];
 
 		try {
 			// get attachment structure
@@ -127,12 +128,12 @@ public class ViewMessageCommand extends FolderCommand {
 				.getMessageController();
 
 		// if necessary decrypt/verify message
-		FolderCommandReference[] newRefs = messageController.getPgpFilter().filter(srcFolder, uid);
+		FolderCommandReference newRefs = messageController.getPgpFilter().filter(srcFolder, uid);
 
 		// pass work along to MessageController
 		if( newRefs != null ) {
-			srcFolder = (MessageFolder)newRefs[0].getFolder();
-			uid = newRefs[0].getUids()[0];
+			srcFolder = (MessageFolder)newRefs.getFolder();
+			uid = newRefs.getUids()[0];
 			mimePartTree = srcFolder.getMimePartTree(uid);
 		} 
 		messageController.showMessage(srcFolder, uid);

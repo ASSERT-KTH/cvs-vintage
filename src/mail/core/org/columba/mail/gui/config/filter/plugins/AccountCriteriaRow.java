@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import org.columba.core.plugin.AbstractPluginHandler;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 
+import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.main.MailInterface;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.JComboBox;
 
 
 /**

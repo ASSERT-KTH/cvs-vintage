@@ -1,7 +1,6 @@
 package org.columba.mail.message;
 
 import org.columba.mail.config.PGPItem;
-
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 

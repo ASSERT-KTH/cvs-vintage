@@ -29,5 +29,5 @@ import org.columba.mail.folder.MessageFolder;
  *
  */
 public interface Filter {
-    FolderCommandReference[] filter(MessageFolder folder, Object uid) throws Exception;   
+    FolderCommandReference filter(MessageFolder folder, Object uid) throws Exception;   
 }

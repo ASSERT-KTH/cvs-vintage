@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="org.columba.mail.BounceAction" name="Bounce Message Action" description="This action sends the message back as if the you wouldn't exist" category="Spam" version="1.0" enabled="true" >
- <extension name="org.columba.core.action">
-  <action name="BounceAction" class="BounceAction" />
- </extension>
- <extension name="org.columba.mail.menu">
-  <menu name="menu_message" extensionpoint="top">
-  	<menuitem action="BounceAction"/>
-  	<separator/>
-  </menu>
- </extension>
- <runtime type="java" jar="BounceAction.jar"/>
+<plugin name="Bounce Message Action" description="This action sends the message back as if the you wouldn&apos;t exist" id="org.columba.mail.BounceAction" version="1.0" category="Spam" enabled="false">
+  <extension name="org.columba.core.action">
+    <action name="BounceAction" class="BounceAction"></action>
+  </extension>
+  <extension name="org.columba.mail.menu">
+    <menu name="menu_message" extensionpoint="top">
+      <menuitem action="BounceAction"></menuitem>
+      <separator></separator>
+    </menu>
+  </extension>
+  <runtime jar="BounceAction.jar" type="java"></runtime>
 </plugin>

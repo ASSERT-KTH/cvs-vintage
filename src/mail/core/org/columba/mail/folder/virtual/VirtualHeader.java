@@ -17,42 +17,56 @@ package org.columba.mail.folder.virtual;
 
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaHeader;
-
 import org.columba.ristretto.message.HeaderInterface;
-
 
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
-    protected MessageFolder srcFolder;
-    protected Object srcUid;
 
-    public VirtualHeader(ColumbaHeader header, MessageFolder srcFolder, Object srcUid) {
-        super(header);
+	protected MessageFolder srcFolder;
 
-        this.srcFolder = srcFolder;
-        this.srcUid = srcUid;
-    }
+	protected Object virtualUid;
 
-    /**
- * Returns the srcFolder.
- * @return Folder
- */
-    public MessageFolder getSrcFolder() {
-        return srcFolder;
-    }
+	public VirtualHeader(ColumbaHeader header, MessageFolder srcFolder,
+			Object srcUid) {
+		super(header);
 
-    /**
- * Returns the srcUid.
- * @return Object
- */
-    public Object getSrcUid() {
-        return srcUid;
-    }
+		this.srcFolder = srcFolder;
+		this.virtualUid = srcUid;
+	}
+
+	/**
+	 * Returns the srcFolder.
+	 * 
+	 * @return Folder
+	 */
+	public MessageFolder getSrcFolder() {
+		return srcFolder;
+	}
+
+	/**
+	 * Returns the srcUid.
+	 * 
+	 * @return Object
+	 */
+	public Object getVirtualUid() {
+		return virtualUid;
+	}
+
+	/**
+	 * @param srcUid
+	 *            The srcUid to set.
+	 */
+	public void setVirtualUid(Object srcUid) {
+		this.virtualUid = srcUid;
+	}
+	
+	public Object getSrcUid() {
+		return get("columba.uid");
+	}
 }

@@ -18,49 +18,50 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
-
+import org.columba.mail.folder.MessageFolder;
 
 /**
- * Save folder configuration including MessageFolderInfo and
- * headercache to disk.
- *
+ * Save folder configuration including MessageFolderInfo and headercache to
+ * disk.
+ * 
  * @author fdietz
  */
 public class SaveFolderConfigurationCommand extends FolderCommand {
-    /**
- * @param references
- */
-    public SaveFolderConfigurationCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * @param references
+	 */
+	public SaveFolderConfigurationCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        // skip if no reference available
-        if ((getReferences().length == 0) || (getReferences()[0] == null)) {
-            return;
-        }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		// skip if no reference available
+		if ((getReference() != null) || (getReference() == null)) {
+			return;
+		}
 
-        AbstractFolder folderTreeNode = (AbstractFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		AbstractFolder folderTreeNode = (AbstractFolder) ((FolderCommandReference) getReference())
+				.getFolder();
 
-        // if folder is message folder
-        // ->TODO: there should be an interface, instead of the MessageFolder class
-        if (folderTreeNode instanceof MessageFolder) {
-            MessageFolder folder = (MessageFolder) folderTreeNode;
+		// if folder is message folder
+		// ->TODO: there should be an interface, instead of the MessageFolder
+		// class
+		if (folderTreeNode instanceof MessageFolder) {
+			MessageFolder folder = (MessageFolder) folderTreeNode;
 
-            // register for status events
-            ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+			// register for status events
+			((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-            // save headercache
-            folder.save();
-        }
-    }
+			// save headercache
+			folder.save();
+		}
+	}
 }

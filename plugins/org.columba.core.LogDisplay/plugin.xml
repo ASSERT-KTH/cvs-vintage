@@ -1,20 +1,13 @@
-<?xml version="1.0"?>
-<plugin id="org.columba.core.gui.logdisplay.LogDisplay" 
-	name="Log display" 
-	description="displays the log for Columba" 
-	version="0.9" 
-	enabled="true">
-
-	<extension name="org.columba.core.action">
-		<action name="LogDisplayAction" class="org.columba.core.gui.logdisplay.DisplayLogAction" />
-	</extension>
-
-	<extension name="org.columba.mail.menu">
-		<menu name="menu_file" extensionpoint="bottom">
-			<menuitem action="LogDisplayAction"/>
-			<separator/>
-		</menu>
-	</extension>
-
-	<runtime type="java" jar="LogDisplay.jar" />
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Log display" description="displays the log for Columba" id="org.columba.core.gui.logdisplay.LogDisplay" version="0.9" enabled="false">
+  <extension name="org.columba.core.action">
+    <action name="LogDisplayAction" class="org.columba.core.gui.logdisplay.DisplayLogAction"></action>
+  </extension>
+  <extension name="org.columba.mail.menu">
+    <menu name="menu_file" extensionpoint="bottom">
+      <menuitem action="LogDisplayAction"></menuitem>
+      <separator></separator>
+    </menu>
+  </extension>
+  <runtime jar="LogDisplay.jar" type="java"></runtime>
 </plugin>

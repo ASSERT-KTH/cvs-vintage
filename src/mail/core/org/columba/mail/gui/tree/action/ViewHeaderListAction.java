@@ -45,32 +45,32 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references = (FolderCommandReference[]) getFrameMediator()
+		FolderCommandReference references = (FolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
-		if (references.length == 1) {
-			if ((references[0].getFolder() instanceof MessageFolder)) {
-				// view message list
-				MainInterface.processor.addOp(new ViewHeaderListCommand(
-						getFrameMediator(), references));
-			} else {
-				// clear message list
-				TableController c = ((TableViewOwner) getFrameMediator())
-						.getTableController();
-				
-				// clear message-list selection
-				c.getView().getSelectionModel().clearSelection();
-				c.clear();
-				
-				// notify selection handler
-				((TableSelectionHandler) frameMediator.getSelectionManager().getHandler("mail.table")).setFolder(null);
+		if ((references.getFolder() instanceof MessageFolder)) {
+			// view message list
+			MainInterface.processor.addOp(new ViewHeaderListCommand(
+					getFrameMediator(), references));
+		} else {
+			// clear message list
+			TableController c = ((TableViewOwner) getFrameMediator())
+					.getTableController();
 
-				// clear message-viewer
-				MessageController m = ((MessageViewOwner) getFrameMediator())
-						.getMessageController();
-				m.clear();
+			// clear message-list selection
+			c.getView().getSelectionModel().clearSelection();
+			c.clear();
 
-			}
+			// notify selection handler
+			((TableSelectionHandler) frameMediator.getSelectionManager()
+					.getHandler("mail.table")).setFolder(null);
+
+			// clear message-viewer
+			MessageController m = ((MessageViewOwner) getFrameMediator())
+					.getMessageController();
+			m.clear();
+
 		}
 	}
+
 }

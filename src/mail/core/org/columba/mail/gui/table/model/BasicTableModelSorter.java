@@ -15,16 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.message.Flags;
-
 import java.text.Collator;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Flags;
 
 
 /**

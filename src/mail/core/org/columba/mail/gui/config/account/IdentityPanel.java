@@ -18,26 +18,29 @@
 
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.io.File;
-
-import javax.swing.*;
+import com.jgoodies.forms.layout.FormLayout;
 
 public class IdentityPanel extends DefaultPanel implements ActionListener {
     private JLabel nameLabel;

@@ -17,74 +17,73 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.command;
 
+import java.util.Hashtable;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.main.MailInterface;
-
-import java.util.Hashtable;
+import org.columba.mail.folder.FolderFactory;
 
 /**
  * Create subfolder command.
  * 
  * @author Timo Stich (tstich@users.sourceforge.net)
- * @author fdietz 
+ * @author fdietz
  */
 public class CreateSubFolderCommand extends Command {
 
-    private AbstractFolder parentFolder;
+	private AbstractFolder parentFolder;
 
-    private boolean success;
+	private boolean success;
 
-    private Hashtable attributes;
+	private Hashtable attributes;
 
-    /**
-     * Constructor for CreateSubFolderCommand.
-     * 
-     * @param references
-     */
-    public CreateSubFolderCommand(DefaultCommandReference[] references) {
-        super(references);
+	/**
+	 * Constructor for CreateSubFolderCommand.
+	 * 
+	 * @param references
+	 */
+	public CreateSubFolderCommand(DefaultCommandReference reference) {
+		super(reference);
 
-        success = true;
-    }
+		success = true;
+	}
 
-    /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        if (success) {
-            MailInterface.treeModel.nodeStructureChanged(parentFolder);
-        }
-    }
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		if (success) {
+			/*
+			 * MailInterface.treeModel.nodeStructureChanged(parentFolder);
+			 */
+		}
+	}
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        parentFolder = ((FolderCommandReference) getReferences()[0])
-                .getFolder();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		parentFolder = ((FolderCommandReference) getReference()).getFolder();
 
-        String name = ((FolderCommandReference) getReferences()[0])
-                .getFolderName();
+		String name = ((FolderCommandReference) getReference()).getFolderName();
 
-        try {
-            AbstractFolder subFolder = FolderFactory.getInstance()
-                    .createDefaultChild(parentFolder, name);
+		try {
+			AbstractFolder subFolder = FolderFactory.getInstance()
+					.createDefaultChild(parentFolder, name);
 
-            // if folder creation failed
-            //  -> don't update tree ui
-            if (subFolder == null) {
-                success = false;
-            }
-        } catch (Exception ex) {
-            success = false;
-            throw ex;
-        }
-    }
+			// if folder creation failed
+			//  -> don't update tree ui
+			if (subFolder == null) {
+				success = false;
+			}
+		} catch (Exception ex) {
+			success = false;
+			throw ex;
+		}
+	}
 
 }

@@ -16,6 +16,18 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
+import java.lang.reflect.Method;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
@@ -24,17 +36,9 @@ import net.javaprog.ui.wizard.DefaultDataLookup;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
-
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
-
-import java.lang.reflect.Method;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 class IdentityStep extends AbstractStep {
     protected DataModel data;

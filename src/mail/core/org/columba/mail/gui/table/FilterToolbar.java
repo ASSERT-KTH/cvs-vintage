@@ -198,7 +198,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
                 MessageFolder searchFolder = (MessageFolder) MailInterface.treeModel.getFolder(106);
 
                 MessageFolder folder = (MessageFolder) ((MailFrameMediator)tableController.getFrameController())
-                                                        .getTableSelection()[0].getFolder();
+                                                        .getTableSelection().getFolder();
 
                 if (folder == null) {
                     return;

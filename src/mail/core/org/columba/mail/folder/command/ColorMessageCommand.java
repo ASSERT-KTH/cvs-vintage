@@ -17,112 +17,70 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ColorFactory;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandAdapter;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
-
 import java.awt.Color;
 
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ColorFactory;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
 
 /**
  * Mark selected messages with specific variant.
  * <p>
- *
+ * 
  * Variant can be: - read/unread - flagged/unflagged - expunged/unexpunged -
  * answered
- *
+ * 
  * @author fdietz
  */
 public class ColorMessageCommand extends FolderCommand {
-    protected FolderCommandAdapter adapter;
 
-    /**
- * Constructor for MarkMessageCommand.
- *
- * @param frameMediator
- * @param references
- */
-    public ColorMessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for MarkMessageCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ColorMessageCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    public void updateGUI() throws Exception {
-        // get source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
 
-        // for every source references
-        TableModelChangedEvent ev;
+		// get array of source references
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        for (int i = 0; i < r.length; i++) {
-            // update table
-            ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
-                    r[i].getFolder());
+		// get array of message UIDs
+		Object[] uids = r.getUids();
 
-            TableUpdater.tableChanged(ev);
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
-            // update treemodel
-            MailInterface.treeModel.nodeChanged(r[i].getFolder());
-        }
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-        // get update reference
-        // -> only available if VirtualFolder is involved in operation
-        FolderCommandReference u = adapter.getUpdateReferences();
+		// which kind of color?
+		int rgbValue = r.getColorValue();
 
-        if (u != null) {
-            ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
-                    u.getFolder());
+		// saving last selected Message to the folder
+		srcFolder.setLastSelection(uids[0]);
 
-            TableUpdater.tableChanged(ev);
-            MailInterface.treeModel.nodeChanged(u.getFolder());
-        }
-    }
+		// get color from factory
+		// ->factory shares color objects to save memory
+		Color color = ColorFactory.getColor(rgbValue);
 
-    /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        // use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
+		// for each message
+		for (int j = 0; j < uids.length; j++) {
+			// set columba.color flag
+			srcFolder.setAttribute(uids[j], "columba.color", color);
+		}
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
-
-        // for every folder
-        for (int i = 0; i < r.length; i++) {
-            // get array of message UIDs
-            Object[] uids = r[i].getUids();
-
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
-
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
-
-            // which kind of color?
-            int rgbValue = r[i].getColorValue();
-
-            // saving last selected Message to the folder
-            srcFolder.setLastSelection(uids[0]);
-
-            // get color from factory
-            // ->factory shares color objects to save memory
-            Color color = ColorFactory.getColor(rgbValue);
-
-            // for each message
-            for (int j = 0; j < uids.length; j++) {
-                // set columba.color flag
-                srcFolder.setAttribute(uids[j], "columba.color", color);
-            }
-        }
-    }
+	}
 }

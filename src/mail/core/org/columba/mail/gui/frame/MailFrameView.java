@@ -15,6 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.ResourceBundle;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -23,7 +32,6 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.UIFSplitPane;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.composer.HeaderView;
@@ -35,16 +43,6 @@ import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import java.util.ResourceBundle;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 
 
 /**
@@ -227,10 +225,10 @@ public void showFolderInfo(boolean b) {
         viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
         viewItem.set("splitpanes", "header", rightSplitPane.getDividerLocation());
 
-        FolderCommandReference[] r = ((MailFrameMediator) getViewController()).getTreeSelection();
+        FolderCommandReference r = ((MailFrameMediator) getViewController()).getTreeSelection();
 
-        if (r.length > 0) {
-            AbstractFolder folder = r[0].getFolder();
+        if (r != null) {
+            AbstractFolder folder = r.getFolder();
 
             // folder-based configuration
             ((MailFrameMediator) frameController).getFolderOptionsController()

@@ -33,118 +33,115 @@ import org.columba.ristretto.message.MailboxInfo;
  */
 public class MarkMessageTest extends AbstractFolderTest {
 
-    private Object uid;
+	private Object uid;
 
-    private ByteArrayInputStream inputStream;
+	private ByteArrayInputStream inputStream;
 
-    
-    public MarkMessageTest(String arg0) {
-        super(arg0);
-    }
-    
-    /**
-     * @param arg0
-     */
-    public MarkMessageTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-    }
+	public MarkMessageTest(String arg0) {
+		super(arg0);
+	}
 
-    public void testMarkAsReadMessage() throws Exception {
+	/**
+	 * @param arg0
+	 */
+	public MarkMessageTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
+	}
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] {uid});
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+	public void testMarkAsReadMessage() throws Exception {
 
-        // create copy command
-        MarkMessageCommand command = new MarkMessageCommand(ref);
+		//    	 create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
+		ref.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		// create copy command
+		MarkMessageCommand command = new MarkMessageCommand(ref);
 
-        Flags flags = getSourceFolder().getFlags(uid);
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-        assertEquals("message should be marked as read", true, flags.getSeen());
+		Flags flags = getSourceFolder().getFlags(uid);
 
-        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
-        assertEquals("one mark as read message should be in folder", 1, info
-                .getExists()
-                - info.getUnseen());
+		assertEquals("message should be marked as read", true, flags.getSeen());
 
-    }
+		MailboxInfo info = getSourceFolder().getMessageFolderInfo();
+		assertEquals("one mark as read message should be in folder", 1, info
+				.getExists()
+				- info.getUnseen());
 
-    public void testMarkAsFlaggedMessage() throws Exception {
+	}
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
+	public void testMarkAsFlaggedMessage() throws Exception {
 
-        // create copy command
-        MarkMessageCommand command = new MarkMessageCommand(ref);
+		//    	 create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		ref.setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
 
-        Flags flags = getSourceFolder().getFlags(uid);
+		// create copy command
+		MarkMessageCommand command = new MarkMessageCommand(ref);
 
-        assertEquals("message should be marked as flagged", true, flags
-                .getFlagged());
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-    }
+		Flags flags = getSourceFolder().getFlags(uid);
 
-    public void testMarkAsExpungedMessage() throws Exception {
+		assertEquals("message should be marked as flagged", true, flags
+				.getFlagged());
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[2];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+	}
 
-        // create copy command
-        MarkMessageCommand command = new MarkMessageCommand(ref);
+	public void testMarkAsExpungedMessage() throws Exception {
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		//   	 create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
+		ref.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-        Flags flags = getSourceFolder().getFlags(uid);
+		// create copy command
+		MarkMessageCommand command = new MarkMessageCommand(ref);
 
-        assertEquals("message should be marked as expunged", true, flags
-                .getDeleted());
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-    }
+		Flags flags = getSourceFolder().getFlags(uid);
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        // create folders, etc.
-        super.setUp();
+		assertEquals("message should be marked as expunged", true, flags
+				.getDeleted());
 
-        // add message "0.eml" as inputstream to folder
-        String input = FolderTstHelper.getString(0);
-        System.out.println("input=" + input);
-        // create stream from string
-        inputStream = FolderTstHelper.getByteArrayInputStream(input);
-        // add stream to folder
-        uid = getSourceFolder().addMessage(inputStream);
+	}
 
-    }
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		// create folders, etc.
+		super.setUp();
 
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        // close streams
-        inputStream.close();
+		// add message "0.eml" as inputstream to folder
+		String input = FolderTstHelper.getString(0);
+		System.out.println("input=" + input);
+		// create stream from string
+		inputStream = FolderTstHelper.getByteArrayInputStream(input);
+		// add stream to folder
+		uid = getSourceFolder().addMessage(inputStream);
 
-        // delete folders
-        super.tearDown();
+	}
 
-    }
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		// close streams
+		inputStream.close();
+
+		// delete folders
+		super.tearDown();
+
+	}
 }

@@ -17,15 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.message.ColumbaHeader;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.message.ColumbaHeader;
 
 
 /**

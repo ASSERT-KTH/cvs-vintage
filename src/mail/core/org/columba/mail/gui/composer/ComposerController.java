@@ -24,10 +24,8 @@ import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,7 +48,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;

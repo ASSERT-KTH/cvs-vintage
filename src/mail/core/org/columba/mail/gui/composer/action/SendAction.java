@@ -15,22 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.command.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 
 /**
@@ -77,8 +76,7 @@ public class SendAction extends AbstractColumbaAction {
 
         OutboxFolder outboxFolder = (OutboxFolder) MailInterface.treeModel.getFolder(103);
 
-        ComposerCommandReference[] r = new ComposerCommandReference[1];
-        r[0] = new ComposerCommandReference(composerController, outboxFolder);
+        ComposerCommandReference r = new ComposerCommandReference(composerController, outboxFolder);
 
         SendMessageCommand c = new SendMessageCommand(r);
 

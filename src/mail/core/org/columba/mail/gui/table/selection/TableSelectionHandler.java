@@ -15,14 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.selection;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.selection.SelectionHandler;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.table.TableView;
-import org.columba.mail.gui.table.model.MessageNode;
-
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -30,6 +22,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.model.MessageNode;
 
 
 /**
@@ -63,7 +62,7 @@ public class TableSelectionHandler extends SelectionHandler
     // if this is set to true, we use the local selection, instead
     // of using the table selection
     private boolean useLocalSelection;
-    private FolderCommandReference[] local;
+    private FolderCommandReference local;
 
     /**
  * @param id
@@ -82,23 +81,21 @@ public class TableSelectionHandler extends SelectionHandler
     /* (non-Javadoc)
  * @see org.columba.core.gui.util.SelectionHandler#getSelection()
  */
-    public DefaultCommandReference[] getSelection() {
+    public DefaultCommandReference getSelection() {
         if (useLocalSelection == true) {
             return local;
         }
 
-        FolderCommandReference[] references = new FolderCommandReference[1];
+        FolderCommandReference reference = new FolderCommandReference(folder, getUidArray());
 
-        references[0] = new FolderCommandReference(folder, getUidArray());
-
-        return references;
+        return reference;
     }
 
     /* (non-Javadoc)
  * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
  */
-    public void setSelection(DefaultCommandReference[] selection) {
-        FolderCommandReference ref = (FolderCommandReference) selection[0];
+    public void setSelection(DefaultCommandReference selection) {
+        FolderCommandReference ref = (FolderCommandReference) selection;
 
         folder = (MessageFolder) ref.getFolder();
 
@@ -158,7 +155,7 @@ public class TableSelectionHandler extends SelectionHandler
                 getUidArray()));
     }
 
-    public void setLocalReference(FolderCommandReference[] r) {
+    public void setLocalReference(FolderCommandReference r) {
         this.local = r;
 
         useLocalSelection = true;

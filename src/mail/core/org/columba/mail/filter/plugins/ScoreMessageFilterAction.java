@@ -36,8 +36,7 @@ public class ScoreMessageFilterAction extends AbstractFilterAction {
     public Command getCommand(FilterAction filterAction, MessageFolder srcFolder,
             Object[] uids) throws Exception {
 
-        FolderCommandReference[] r = new FolderCommandReference[1];
-        r[0] = new FolderCommandReference(srcFolder, uids);
+        FolderCommandReference r = new FolderCommandReference(srcFolder, uids);
 
         ScoreMessageCommand c = new ScoreMessageCommand(r);
         

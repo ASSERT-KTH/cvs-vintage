@@ -34,7 +34,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator		
 	 * @return				selected folder
 	 */
-	public static FolderCommandReference[] getTreeSelection(
+	public static FolderCommandReference getTreeSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTreeSelection();
 	}
@@ -45,7 +45,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected messages
 	 */
-	public static FolderCommandReference[] getTableSelection(
+	public static FolderCommandReference getTableSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTableSelection();
 	}
@@ -56,7 +56,7 @@ public class SelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected attachments
 	 */
-	public static FolderCommandReference[] getAttachmentSelection(
+	public static FolderCommandReference getAttachmentSelection(
 			MailFrameMediator mediator) {
 		return mediator.getAttachmentSelection();
 	}

@@ -15,18 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.dnd;
 
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.CopyMessageCommand;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.TableController;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.io.IOException;
 
 import javax.swing.JComponent;
@@ -34,177 +25,183 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.TransferHandler;
 
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.command.CopyMessageCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.TableController;
 
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class MessageTransferHandler extends TransferHandler {
-    JTable source = null;
-    DataFlavor localFolderCommandReferenceFlavor;
-    DataFlavor serialFolderCommandReferenceFlavor;
-    String localFolderCommandReferenceType = DataFlavor.javaJVMLocalObjectMimeType +
-        ";class=org.columba.mail.command.FolderCommandReference";
-    int[] indices = null;
-    TableController tableController;
+	JTable source = null;
 
-    public MessageTransferHandler(TableController tableController) {
-        this.tableController = tableController;
+	DataFlavor localFolderCommandReferenceFlavor;
 
-        try {
-            localFolderCommandReferenceFlavor = new DataFlavor(localFolderCommandReferenceType);
-        } catch (ClassNotFoundException e) {
-            System.out.println(
-                "ArrayListTransferHandler: unable to create data flavor");
-        }
+	DataFlavor serialFolderCommandReferenceFlavor;
 
-        serialFolderCommandReferenceFlavor = new DataFlavor(FolderCommandReference[].class,
-                "FolderCommandReference");
-    }
+	String localFolderCommandReferenceType = DataFlavor.javaJVMLocalObjectMimeType
+			+ ";class=org.columba.mail.command.FolderCommandReference";
 
-    public boolean importData(JComponent c, Transferable t) {
-        JTree target = null;
+	int[] indices = null;
 
-        FolderCommandReference[] reference = null;
+	TableController tableController;
 
-        if (!canImport(c, t.getTransferDataFlavors())) {
-            return false;
-        }
+	public MessageTransferHandler(TableController tableController) {
+		this.tableController = tableController;
 
-        try {
-            target = (JTree) c;
+		try {
+			localFolderCommandReferenceFlavor = new DataFlavor(
+					localFolderCommandReferenceType);
+		} catch (ClassNotFoundException e) {
+			System.out
+					.println("ArrayListTransferHandler: unable to create data flavor");
+		}
 
-            if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-                reference = (FolderCommandReference[]) t.getTransferData(localFolderCommandReferenceFlavor);
-            } else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-                reference = (FolderCommandReference[]) t.getTransferData(serialFolderCommandReferenceFlavor);
-            } else {
-                return false;
-            }
-        } catch (UnsupportedFlavorException ufe) {
-            System.out.println("importData: unsupported data flavor");
+		serialFolderCommandReferenceFlavor = new DataFlavor(
+				FolderCommandReference[].class, "FolderCommandReference");
+	}
 
-            return false;
-        } catch (IOException ioe) {
-            System.out.println("importData: I/O exception");
+	public boolean importData(JComponent c, Transferable t) {
+		JTree target = null;
 
-            return false;
-        }
+		FolderCommandReference reference = null;
 
-        /*
-if (source.equals(target))
-        return true;
-*/
+		if (!canImport(c, t.getTransferDataFlavors())) {
+			return false;
+		}
 
-        // do the work here
-        MessageFolder destFolder = (MessageFolder) target.getSelectionPath()
-                                           .getLastPathComponent();
+		try {
+			target = (JTree) c;
 
-        FolderCommandReference[] result = new FolderCommandReference[2];
-        FolderCommandReference r2 = new FolderCommandReference(destFolder);
+			if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
+				reference = (FolderCommandReference) t
+						.getTransferData(localFolderCommandReferenceFlavor);
+			} else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
+				reference = (FolderCommandReference) t
+						.getTransferData(serialFolderCommandReferenceFlavor);
+			} else {
+				return false;
+			}
+		} catch (UnsupportedFlavorException ufe) {
+			System.out.println("importData: unsupported data flavor");
 
-        result[0] = reference[0];
-        result[1] = r2;
+			return false;
+		} catch (IOException ioe) {
+			System.out.println("importData: I/O exception");
 
-        CopyMessageCommand command = new CopyMessageCommand(result);
+			return false;
+		}
 
-        MainInterface.processor.addOp(command);
+		/*
+		 * if (source.equals(target)) return true;
+		 */
 
-        return true;
-    }
+		// do the work here
+		MessageFolder destFolder = (MessageFolder) target.getSelectionPath()
+				.getLastPathComponent();
+		reference.setDestinationFolder(destFolder);
 
-    private boolean hasLocalArrayListFlavor(DataFlavor[] flavors) {
-        if (localFolderCommandReferenceFlavor == null) {
-            return false;
-        }
+		CopyMessageCommand command = new CopyMessageCommand(reference);
 
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(localFolderCommandReferenceFlavor)) {
-                return true;
-            }
-        }
+		MainInterface.processor.addOp(command);
 
-        return false;
-    }
+		return true;
+	}
 
-    private boolean hasSerialArrayListFlavor(DataFlavor[] flavors) {
-        if (serialFolderCommandReferenceFlavor == null) {
-            return false;
-        }
+	private boolean hasLocalArrayListFlavor(DataFlavor[] flavors) {
+		if (localFolderCommandReferenceFlavor == null) {
+			return false;
+		}
 
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(serialFolderCommandReferenceFlavor)) {
-                return true;
-            }
-        }
+		for (int i = 0; i < flavors.length; i++) {
+			if (flavors[i].equals(localFolderCommandReferenceFlavor)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public boolean canImport(JComponent c, DataFlavor[] flavors) {
-        if (hasLocalArrayListFlavor(flavors)) {
-            return true;
-        }
+	private boolean hasSerialArrayListFlavor(DataFlavor[] flavors) {
+		if (serialFolderCommandReferenceFlavor == null) {
+			return false;
+		}
 
-        if (hasSerialArrayListFlavor(flavors)) {
-            return true;
-        }
+		for (int i = 0; i < flavors.length; i++) {
+			if (flavors[i].equals(serialFolderCommandReferenceFlavor)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    protected Transferable createTransferable(JComponent c) {
-        if (c instanceof JTable) {
-            source = (JTable) c;
+	public boolean canImport(JComponent c, DataFlavor[] flavors) {
+		if (hasLocalArrayListFlavor(flavors)) {
+			return true;
+		}
 
-            FolderCommandReference[] r = ((MailFrameMediator)tableController.getFrameController())
-                                                        .getTableSelection();
+		if (hasSerialArrayListFlavor(flavors)) {
+			return true;
+		}
 
-            return new FolderCommandReferenceTransferable(r);
-        }
+		return false;
+	}
 
-        return null;
-    }
+	protected Transferable createTransferable(JComponent c) {
+		if (c instanceof JTable) {
+			source = (JTable) c;
 
-    public int getSourceActions(JComponent c) {
-        return COPY_OR_MOVE;
-    }
+			FolderCommandReference r = ((MailFrameMediator) tableController
+					.getFrameController()).getTableSelection();
 
-    public class FolderCommandReferenceTransferable implements Transferable {
-        FolderCommandReference[] data;
+			return new FolderCommandReferenceTransferable(r);
+		}
 
-        public FolderCommandReferenceTransferable(FolderCommandReference[] c) {
-            data = c;
-        }
+		return null;
+	}
 
-        public Object getTransferData(DataFlavor flavor)
-            throws UnsupportedFlavorException {
-            if (!isDataFlavorSupported(flavor)) {
-                throw new UnsupportedFlavorException(flavor);
-            }
+	public int getSourceActions(JComponent c) {
+		return COPY_OR_MOVE;
+	}
 
-            return data;
-        }
+	public class FolderCommandReferenceTransferable implements Transferable {
+		FolderCommandReference data;
 
-        public DataFlavor[] getTransferDataFlavors() {
-            return new DataFlavor[] {
-                localFolderCommandReferenceFlavor,
-                serialFolderCommandReferenceFlavor
-            };
-        }
+		public FolderCommandReferenceTransferable(FolderCommandReference c) {
+			data = c;
+		}
 
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
-            if (localFolderCommandReferenceFlavor.equals(flavor)) {
-                return true;
-            }
+		public Object getTransferData(DataFlavor flavor)
+				throws UnsupportedFlavorException {
+			if (!isDataFlavorSupported(flavor)) {
+				throw new UnsupportedFlavorException(flavor);
+			}
 
-            if (serialFolderCommandReferenceFlavor.equals(flavor)) {
-                return true;
-            }
+			return data;
+		}
 
-            return false;
-        }
-    }
+		public DataFlavor[] getTransferDataFlavors() {
+			return new DataFlavor[] { localFolderCommandReferenceFlavor,
+					serialFolderCommandReferenceFlavor };
+		}
+
+		public boolean isDataFlavorSupported(DataFlavor flavor) {
+			if (localFolderCommandReferenceFlavor.equals(flavor)) {
+				return true;
+			}
+
+			if (serialFolderCommandReferenceFlavor.equals(flavor)) {
+				return true;
+			}
+
+			return false;
+		}
+	}
 }

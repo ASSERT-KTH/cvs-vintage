@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountwizard;
 
-import net.javaprog.ui.wizard.AbstractStep;
-
-import org.columba.core.gui.util.MultiLineLabel;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import net.javaprog.ui.wizard.AbstractStep;
+
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.mail.util.MailResourceLoader;
 
 
 class WelcomeStep extends AbstractStep {

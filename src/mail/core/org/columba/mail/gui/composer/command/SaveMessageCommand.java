@@ -47,8 +47,8 @@ public class SaveMessageCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public SaveMessageCommand(DefaultCommandReference[] references) {
-        super(references);
+    public SaveMessageCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     public void updateGUI() throws Exception {
@@ -66,18 +66,18 @@ public class SaveMessageCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker)
         throws Exception {
-        ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
+        ComposerCommandReference r = (ComposerCommandReference) getReference();
 
-        ComposerController composerController = r[0].getComposerController();
+        ComposerController composerController = r.getComposerController();
 
         AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
 
-        SendableMessage message = (SendableMessage) r[0].getMessage();
+        SendableMessage message = (SendableMessage) r.getMessage();
 
         if (message == null) {
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
         }
-        folder = (MessageFolder) r[0].getFolder();
+        folder = (MessageFolder) r.getFolder();
         
         worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "save_message"));

@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
+
+import org.columba.core.action.IMenu;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

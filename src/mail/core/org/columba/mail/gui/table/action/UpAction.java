@@ -15,10 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -26,11 +30,6 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
-
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
-
-import javax.swing.tree.DefaultMutableTreeNode;
 
 
 /**
@@ -61,8 +60,8 @@ public class UpAction extends AbstractColumbaAction {
         LOG.info("action up performed");
 
         // getting last selection
-        FolderCommandReference[] r = ((MailFrameMediator)frameController).getTableSelection();
-        FolderCommandReference ref = r[0];
+        FolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
+        FolderCommandReference ref = r;
         LOG.info("folderCommandRef: " + ref);
 
         // getting current uid
@@ -119,8 +118,7 @@ public class UpAction extends AbstractColumbaAction {
                                                                                    .getCellRect(row,
                     0, false));
 
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(ref.getFolder(), prevUids);
+            FolderCommandReference refNew = new FolderCommandReference(ref.getFolder(), prevUids);
 
             // view the message under the new node
             MainInterface.processor.addOp(new ViewMessageCommand(

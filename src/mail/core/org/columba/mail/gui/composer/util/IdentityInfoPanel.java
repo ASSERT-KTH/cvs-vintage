@@ -16,13 +16,6 @@
 
 package org.columba.mail.gui.composer.util;
 
-import org.columba.core.gui.util.CInfoPanel;
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.config.AccountItem;
-
-import org.columba.ristretto.message.Address;
-
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 
@@ -30,6 +23,11 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import org.columba.core.gui.util.CInfoPanel;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.config.AccountItem;
+import org.columba.ristretto.message.Address;
 
 public class IdentityInfoPanel extends CInfoPanel {
     private JLabel label;

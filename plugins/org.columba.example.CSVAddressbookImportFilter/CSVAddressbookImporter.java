@@ -20,9 +20,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
+import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
@@ -38,7 +38,7 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 		super();
 	}
 
-	public CSVAddressbookImporter(File sourceFile, Folder destinationFolder) {
+	public CSVAddressbookImporter(File sourceFile, AbstractFolder destinationFolder) {
 		super(sourceFile, destinationFolder);
 	}
 
@@ -53,7 +53,7 @@ public class CSVAddressbookImporter extends DefaultAddressbookImporter {
 			int counter = -1;
 
 			// create new contact card
-			ContactCard card = new ContactCard();
+			Contact card = new Contact();
 
 			StringBuffer token = new StringBuffer();
 			int pos = 0;

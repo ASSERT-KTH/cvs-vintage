@@ -6,10 +6,10 @@
  */
 package org.columba.mail.command;
 
+import java.io.File;
+
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
-
-import java.io.File;
 
 
 /**

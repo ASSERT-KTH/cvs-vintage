@@ -16,7 +16,6 @@
 package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
-
 import org.columba.mail.pop3.POP3Server;
 
 

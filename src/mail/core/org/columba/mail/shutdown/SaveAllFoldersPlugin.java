@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.shutdown;
 
+import java.util.Enumeration;
+import java.util.logging.Logger;
+
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.main.MailInterface;
-
-import java.util.Enumeration;
-import java.util.logging.Logger;
 
 
 /**
@@ -49,8 +48,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
         for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
             child = (AbstractFolder) e.nextElement();
 
-            FolderCommandReference[] r = new FolderCommandReference[1];
-            r[0] = new FolderCommandReference(child);
+            FolderCommandReference r = new FolderCommandReference(child);
 
             LOG.info("Saving folder " + child.getName());
 

@@ -15,20 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.core.command.CompoundCommand;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.ExpungeFolderCommand;
-import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.MailFrameMediator;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+
+import org.columba.core.command.CompoundCommand;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.ExpungeFolderCommand;
+import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
 
 
 /**
@@ -73,9 +72,9 @@ public class TableViewTransferHandler extends TransferHandler {
                 (source instanceof TableView)) {
             // Remove the moved messages.
             MessageReferencesTransfer messageTransfer = (MessageReferencesTransfer) data;
-            FolderCommandReference[] messageRefs = messageTransfer.getFolderReferences();
+            FolderCommandReference messageRefs = messageTransfer.getFolderReferences();
 
-            messageRefs[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+            messageRefs.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
             MarkMessageCommand markCommand = new MarkMessageCommand(messageRefs);
             ExpungeFolderCommand expungeCommand = new ExpungeFolderCommand(messageRefs);

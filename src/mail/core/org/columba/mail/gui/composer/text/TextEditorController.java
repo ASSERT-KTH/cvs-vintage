@@ -15,15 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.text;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.composer.AbstractEditorController;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.util.UndoDocument;
-
 import java.awt.Font;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,6 +25,12 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.util.UndoDocument;
 
 
 /**

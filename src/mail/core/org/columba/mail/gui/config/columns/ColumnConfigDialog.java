@@ -16,12 +16,29 @@
 
 package org.columba.mail.gui.config.columns;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -30,13 +47,11 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.frapuccino.checkablelist.CheckableItemImpl;
 import org.frapuccino.checkablelist.CheckableItemListTableModel;
 import org.frapuccino.checkablelist.CheckableList;
@@ -290,8 +305,8 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
                 mediator.getFolderOptionsController().getPlugin("ColumnOptions");
 
             // make sure this configuration is also visually working immediately
-            FolderCommandReference[] r = mediator.getTreeSelection();
-            plugin.loadOptionsFromXml((MessageFolder) r[0].getFolder());
+            FolderCommandReference r = mediator.getTreeSelection();
+            plugin.loadOptionsFromXml((MessageFolder) r.getFolder());
         } else if (action.equals("CANCEL")) {
             setVisible(false);
         } else if (action.equals("SHOW")) {

@@ -6,13 +6,13 @@
  */
 package org.columba.mail.gui.config.template;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
 
 
 /**

@@ -15,48 +15,47 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.Command;
+import javax.swing.JOptionPane;
 
+import org.columba.core.command.Command;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.main.MailInterface;
 
-import javax.swing.JOptionPane;
-
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class MoveMessageAction extends AbstractFilterAction {
-    /**
- * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
- *
- * move message from source- to destination-folder
- */
-    public Command getCommand(FilterAction filterAction, MessageFolder srcFolder,
-        Object[] uids) throws Exception {
-        int uid = filterAction.getUid();
-        MessageFolder destFolder = (MessageFolder) MailInterface.treeModel.getFolder(uid);
+	/**
+	 * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
+	 * 
+	 * move message from source- to destination-folder
+	 */
+	public Command getCommand(FilterAction filterAction,
+			MessageFolder srcFolder, Object[] uids) throws Exception {
+		int uid = filterAction.getUid();
+		MessageFolder destFolder = (MessageFolder) MailInterface.treeModel
+				.getFolder(uid);
 
-        if (destFolder == null) {
-            JOptionPane.showMessageDialog(null,
-                "Unable to find destination folder, please correct the destination folder path for this filter");
-            throw new Exception("File not found");
-        }
+		if (destFolder == null) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Unable to find destination folder, please correct the destination folder path for this filter");
+			throw new Exception("File not found");
+		}
 
-        FolderCommandReference[] r = new FolderCommandReference[2];
-        r[0] = new FolderCommandReference(srcFolder, uids);
-        r[1] = new FolderCommandReference(destFolder);
+		FolderCommandReference r = new FolderCommandReference(srcFolder,
+				destFolder, uids);
 
-        MoveMessageCommand c = new MoveMessageCommand(r);
+		MoveMessageCommand c = new MoveMessageCommand(r);
 
-        return c;
-    }
+		return c;
+	}
 }

@@ -1,20 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<plugin
-	id="org.columba.mail.MarkFolderAsReadAction"
-	name="Mark folder as read"
-	description="marks all messages in a folder as read"
-	version="0.9"
-	enabled="true">
-
-	<extension name="org.columba.core.action">
-		<action name="MarkFolderAsReadAction" class="org.columba.mail.MarkFolderAsReadAction" />
-	</extension>
-
-	<extension name="org.columba.mail.menu">
-		<menu name="menu_folder" extensionpoint="bottom">
-			<menuitem action="MarkFolderAsReadAction" />
-		</menu>
-	</extension>
-
-	<runtime type="java" jar="MarkFolderAsReadAction.jar" />
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Mark folder as read" description="marks all messages in a folder as read" id="org.columba.mail.MarkFolderAsReadAction" version="0.9" enabled="false">
+  <extension name="org.columba.core.action">
+    <action name="MarkFolderAsReadAction" class="org.columba.mail.MarkFolderAsReadAction"></action>
+  </extension>
+  <extension name="org.columba.mail.menu">
+    <menu name="menu_folder" extensionpoint="bottom">
+      <menuitem action="MarkFolderAsReadAction"></menuitem>
+    </menu>
+  </extension>
+  <runtime jar="MarkFolderAsReadAction.jar" type="java"></runtime>
 </plugin>

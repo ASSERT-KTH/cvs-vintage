@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-import org.columba.core.config.DefaultXmlConfig;
-
 import java.io.File;
+
+import org.columba.core.config.DefaultXmlConfig;
 
 
 /**

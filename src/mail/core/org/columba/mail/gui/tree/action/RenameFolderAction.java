@@ -15,25 +15,24 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 
 /**
@@ -62,9 +61,9 @@ public class RenameFolderAction extends AbstractColumbaAction
     }
 
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+        FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-        new FolderOptionsDialog((MessageFolder) r[0].getFolder(), true,
+        new FolderOptionsDialog((MessageFolder) r.getFolder(), true,
             (AbstractMailFrameController) frameMediator);
     }
 

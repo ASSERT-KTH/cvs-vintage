@@ -6,20 +6,19 @@
  */
 package org.columba.mail.gui.messageframe;
 
+import java.awt.BorderLayout;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
-
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.menu.MailMenu;
 import org.columba.mail.gui.message.MessageView;
 import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
-
-import java.awt.BorderLayout;
 
 
 /**

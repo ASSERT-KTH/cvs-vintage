@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.gui.table.dnd.HeaderTableSelectionModel;
-
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
@@ -33,6 +31,8 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.InputEvent;
 
 import javax.swing.JTable;
+
+import org.columba.mail.gui.table.dnd.HeaderTableSelectionModel;
 
 
 /**

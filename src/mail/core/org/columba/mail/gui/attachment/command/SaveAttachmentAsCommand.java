@@ -38,8 +38,8 @@ public class SaveAttachmentAsCommand extends SaveAttachmentCommand {
      *
      * @param references command references
      */
-    public SaveAttachmentAsCommand(DefaultCommandReference[] references) {
-        super(references);
+    public SaveAttachmentAsCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /** {@inheritDoc} */

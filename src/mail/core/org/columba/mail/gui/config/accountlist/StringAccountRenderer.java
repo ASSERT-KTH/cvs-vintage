@@ -13,8 +13,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.config.accountlist;
 
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.Component;
 import java.awt.Font;
 
@@ -25,6 +23,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+
+import org.columba.core.gui.util.ImageLoader;
 
 
 public class StringAccountRenderer extends JLabel implements TableCellRenderer {

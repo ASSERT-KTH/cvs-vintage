@@ -33,75 +33,71 @@ import org.columba.ristretto.message.InputStreamMimePart;
  */
 public class ForwardCommandTest extends AbstractComposerTestCase {
 
-    public ForwardCommandTest(String arg0) {
-        super(arg0);
-        
-    }
-    
-    /**
-     * @param arg0
-     */
-    public ForwardCommandTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-    }
+	public ForwardCommandTest(String arg0) {
+		super(arg0);
 
-    public void test() throws Exception {
+	}
 
-        // add message "0.eml" as inputstream to folder
-        String input = FolderTstHelper.getString(0);
-        System.out.println("input=" + input);
-        // create stream from string
-        InputStream inputStream =
-            FolderTstHelper.getByteArrayInputStream(input);
-        // add stream to folder
-        Object uid = getSourceFolder().addMessage(inputStream);
+	/**
+	 * @param arg0
+	 */
+	public ForwardCommandTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
+	}
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] =
-            new FolderCommandReference(getSourceFolder(), new Object[] { uid });
+	public void test() throws Exception {
 
-        // create copy command
-        ForwardCommand command = new ForwardCommand(ref);
+		// add message "0.eml" as inputstream to folder
+		String input = FolderTstHelper.getString(0);
+		System.out.println("input=" + input);
+		// create stream from string
+		InputStream inputStream = FolderTstHelper
+				.getByteArrayInputStream(input);
+		// add stream to folder
+		Object uid = getSourceFolder().addMessage(inputStream);
 
-        // execute command -> use mock object class as worker which does
-        // nothing
-        command.execute(NullWorkerStatusController.getInstance());
+		// create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
 
-        // model should contain the data
-        ComposerModel model = command.getModel();
+		// create copy command
+		ForwardCommand command = new ForwardCommand(ref);
 
-        String subject = model.getSubject();
+		// execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
 
-        assertEquals("Subject", "Fwd: test", subject);
-    }
+		// model should contain the data
+		ComposerModel model = command.getModel();
 
-    public void testForewardWithAttachement() throws Exception {
-        String input = FolderTstHelper.getString("0_attachement.eml");
-        System.out.println("input=" + input);
-        // create stream from string
-        InputStream inputStream =
-            FolderTstHelper.getByteArrayInputStream(input);
-        // add stream to folder
-        Object uid = getSourceFolder().addMessage(inputStream);
-        // create Command refernce
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] =
-            new FolderCommandReference(getSourceFolder(), new Object[] { uid });
-        // create copy command
-        ForwardCommand command = new ForwardCommand(ref);
-        //  execute command -> use mock object class as worker which does
-        // nothing 
-        command.execute(NullWorkerStatusController.getInstance());
-        // model should contain the data
-        ComposerModel model = command.getModel();
-        List attachements = model.getAttachments();
-        assertEquals("There should be one attachement", 1, attachements.size());
-        Object mimePart = attachements.get(0);
-        assertEquals(
-            "Should be type of StreamableMimePart",
-            true,
-            (mimePart instanceof InputStreamMimePart));
+		String subject = model.getSubject();
 
-    }
+		assertEquals("Subject", "Fwd: test", subject);
+	}
+
+	public void testForewardWithAttachement() throws Exception {
+		String input = FolderTstHelper.getString("0_attachement.eml");
+		System.out.println("input=" + input);
+		// create stream from string
+		InputStream inputStream = FolderTstHelper
+				.getByteArrayInputStream(input);
+		// add stream to folder
+		Object uid = getSourceFolder().addMessage(inputStream);
+//		 create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
+		// create copy command
+		ForwardCommand command = new ForwardCommand(ref);
+		//  execute command -> use mock object class as worker which does
+		// nothing
+		command.execute(NullWorkerStatusController.getInstance());
+		// model should contain the data
+		ComposerModel model = command.getModel();
+		List attachements = model.getAttachments();
+		assertEquals("There should be one attachement", 1, attachements.size());
+		Object mimePart = attachements.get(0);
+		assertEquals("Should be type of StreamableMimePart", true,
+				(mimePart instanceof InputStreamMimePart));
+
+	}
 }

@@ -17,18 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
-import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,7 +28,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -50,6 +37,17 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.FilterRule;
+import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
+import org.columba.mail.plugin.AbstractFilterPluginHandler;
 
 public class CriteriaList extends JPanel implements ActionListener, ItemListener {
 	private Filter filter;

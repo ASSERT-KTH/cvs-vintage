@@ -18,48 +18,49 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.folder.MessageFolder;
 
 /**
  * Rename selected folder.
- *
+ * 
  * @author fdietz
  */
 public class RenameFolderCommand extends Command {
-    private AbstractFolder selectedFolder;
+	private AbstractFolder selectedFolder;
 
-    /**
-     * Constructor for RenameFolderCommand.
-     * @param references command arguments.
-     */
-    public RenameFolderCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for RenameFolderCommand.
+	 * 
+	 * @param references
+	 *            command arguments.
+	 */
+	public RenameFolderCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-        // update treemodel
-        MailInterface.treeModel.nodeChanged(selectedFolder);
-    }
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	/*
+	 * public void updateGUI() throws Exception { // update treemodel
+	 * MailInterface.treeModel.nodeChanged(selectedFolder); }
+	 */
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        // get source folder
-        selectedFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		// get source folder
+		selectedFolder = ((FolderCommandReference) getReference()).getFolder();
 
-        // get name of folder
-        String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
+		// get name of folder
+		String name = ((FolderCommandReference) getReference()).getFolderName();
 
-        // rename folder
-        ((MessageFolder) selectedFolder).setName(name);
-    }
+		// rename folder
+		((MessageFolder) selectedFolder).setName(name);
+	}
 }

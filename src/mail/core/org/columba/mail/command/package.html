@@ -27,31 +27,7 @@ All Rights Reserved.
 <body bgcolor="white">
 
 Provides {@link Command} and {@link CommandReference} classes for email purposes.
-<p>
-Note that we always use an <b>array</b> of {@link FolderCommandReference} objects. This is 
-of great importance for the understanding of most Command implementations
-making use of FolderCommandReference.
-</p>
 
-<p>
-The last element of this array always represents the destination folder reference.
-All other references in this array, are source references, containing a source folder
-reference and an array of message UIDs.
-But hey, you might ask: "Why do we have more than one source reference anyway? 
-Moving a message from a folder to another does only implies to use a source and
-a destination folder...".<br>
-This is where Virtual Folders come in the discussion. A Virtual Folder doesn't contain
-messages. Instead it has references to a message UID in a specific folder.
-So, we come up with an array of folder references with each having an array of
-message UIDs.
-</p>
-<p>
-Looking at {@link CopyMessageCommand} you will notice
-that we execute the command for every source folder reference. 
-</p>
-<p>
-Make use of {@link FolderCommandAdapter} which is a wrapper class for your convenience.
-</p>
 
 </body>
 </html>

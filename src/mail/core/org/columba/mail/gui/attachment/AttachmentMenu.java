@@ -7,7 +7,6 @@
 package org.columba.mail.gui.attachment;
 
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.gui.menu.MailContextMenu;
 
 

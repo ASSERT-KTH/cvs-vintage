@@ -18,14 +18,13 @@
 
 package org.columba.mail.folder.mailboximport;
 
-import org.columba.core.command.WorkerStatusController;
-
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @version 1.0

@@ -16,7 +16,6 @@
 package org.columba.mail.url.cid;
 
 import java.io.IOException;
-
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;

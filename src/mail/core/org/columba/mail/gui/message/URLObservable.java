@@ -6,8 +6,6 @@
  */
 package org.columba.mail.gui.message;
 
-import java.net.URL;
-
 import java.util.Observable;
 
 import org.columba.mail.gui.message.util.ColumbaURL;

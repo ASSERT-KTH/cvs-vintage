@@ -15,12 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -28,11 +32,6 @@ import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 
 /**
@@ -75,11 +74,11 @@ public class NextMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         // TODO: fix next-message action
-        if (r.length > 0) {
-            FolderCommandReference ref = r[0];
+        if (r != null) {
+            FolderCommandReference ref = r;
             TableController table = ((TableViewOwner) getFrameMediator()).getTableController();
             MessageNode node = table.getView().getSelectedNodes()[0];
 

@@ -29,7 +29,7 @@ import org.columba.mail.command.FolderCommandReference;
 public class ClipboardManager {
     public static final int CUT_ACTION = 0;
     public static final int COPY_ACTION = 1;
-    protected FolderCommandReference[] messageSelection;
+    protected FolderCommandReference messageSelection;
     protected int cutAction;
 
     public ClipboardManager() {
@@ -45,11 +45,11 @@ public class ClipboardManager {
         return b;
     }
 
-    public void setMessageSelection(FolderCommandReference[] r) {
+    public void setMessageSelection(FolderCommandReference r) {
         this.messageSelection = r;
     }
 
-    public FolderCommandReference[] getMessageSelection() {
+    public FolderCommandReference getMessageSelection() {
         return messageSelection;
     }
 

@@ -26,7 +26,6 @@ import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
-
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;

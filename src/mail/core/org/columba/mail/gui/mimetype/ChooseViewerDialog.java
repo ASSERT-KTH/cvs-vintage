@@ -15,13 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -41,6 +34,12 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class ChooseViewerDialog implements ActionListener {

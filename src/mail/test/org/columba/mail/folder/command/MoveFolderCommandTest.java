@@ -25,44 +25,52 @@ import org.columba.mail.folder.temp.TempFolder;
 
 /**
  * Test cases for the MoveFolder command.
- *
+ * 
  * @author redsolo
  */
 public class MoveFolderCommandTest extends AbstractFolderTest {
 
-    public MoveFolderCommandTest(String arg0) {
-        super(arg0);
-    }
-    
-    public MoveFolderCommandTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-    }
-    /**
-     * Tests the execute() method.
-     * @throws Exception thrown for any bad reason if the command goes wrong.
-     */
-    public void testMoveFolder() throws Exception {
-        MessageFolder rootFolder = createFolder();
-        
-        // Is not supported by IMAP and TempFolder
-        if( rootFolder instanceof IMAPFolder || rootFolder instanceof TempFolder ) {
-        	return;
-        }
+	public MoveFolderCommandTest(String arg0) {
+		super(arg0);
+	}
 
-        MessageFolder folderToBeMoved = createFolder();
-        rootFolder.append(folderToBeMoved);
+	public MoveFolderCommandTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
+	}
 
-        MessageFolder destinationFolder = createFolder();
-        rootFolder.append(destinationFolder);
+	/**
+	 * Tests the execute() method.
+	 * 
+	 * @throws Exception
+	 *             thrown for any bad reason if the command goes wrong.
+	 */
+	public void testMoveFolder() throws Exception {
+		MessageFolder rootFolder = createFolder();
 
-        FolderCommandReference[] references = new FolderCommandReference[2];
-        references[0] = new FolderCommandReference(folderToBeMoved);
-        references[1] = new FolderCommandReference(destinationFolder);
-        MoveFolderCommand command = new MoveFolderCommand(references);
-        command.execute(NullWorkerStatusController.getInstance());
+		// Is not supported by IMAP and TempFolder
+		if (rootFolder instanceof IMAPFolder
+				|| rootFolder instanceof TempFolder) {
+			return;
+		}
 
-        assertEquals("The destination folders child size is incorrect.", 1, destinationFolder.getChildCount());
-        assertEquals("The root folder has more than one child", 1, destinationFolder.getChildCount());
-        assertEquals("The moved folders parent is not the destination folder", destinationFolder, folderToBeMoved.getParent());
-    }
+		MessageFolder folderToBeMoved = createFolder();
+		rootFolder.append(folderToBeMoved);
+
+		MessageFolder destinationFolder = createFolder();
+		rootFolder.append(destinationFolder);
+
+		//      create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				folderToBeMoved, destinationFolder);
+
+		MoveFolderCommand command = new MoveFolderCommand(ref);
+		command.execute(NullWorkerStatusController.getInstance());
+
+		assertEquals("The destination folders child size is incorrect.", 1,
+				destinationFolder.getChildCount());
+		assertEquals("The root folder has more than one child", 1,
+				destinationFolder.getChildCount());
+		assertEquals("The moved folders parent is not the destination folder",
+				destinationFolder, folderToBeMoved.getParent());
+	}
 }

@@ -15,18 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
-import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
+import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
+import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.frappucino.iconpanel.IconPanel;
-
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.UIManager;
 
 
 /**

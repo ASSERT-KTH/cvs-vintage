@@ -160,9 +160,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 				SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
 						.getModel();
 				m.setSortingComparator(c);
-			}
-			else
-			{
+			} else {
 				// sorting is disabled
 				tree = new SortedJTree(MailInterface.treeModel);
 			}
@@ -240,9 +238,9 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 				return;
 			}
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(dialog.getSelected());
-			r[0].setFolderName(name);
+			FolderCommandReference r = new FolderCommandReference(dialog
+					.getSelected());
+			r.setFolderName(name);
 
 			MainInterface.processor.addOp(new CreateAndSelectSubFolderCommand(
 					tree, r));

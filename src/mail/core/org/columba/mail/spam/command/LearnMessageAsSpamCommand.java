@@ -16,111 +16,102 @@
 
 package org.columba.mail.spam.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandAdapter;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.spam.SpamController;
-
-import org.columba.ristretto.message.Header;
-
-import org.macchiato.Message;
-
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.spam.SpamController;
+import org.columba.ristretto.message.Header;
+import org.macchiato.Message;
+
 /**
  * Learn selected messages as spam.
- *
+ * 
  * @author fdietz
  */
 public class LearnMessageAsSpamCommand extends FolderCommand {
-    private FolderCommandAdapter adapter;
 
-    /**
- * @param references
- */
-    public LearnMessageAsSpamCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * @param references
+	 */
+	public LearnMessageAsSpamCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    /**
- * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
- */
-    public void execute(WorkerStatusController worker) throws Exception {
-        // use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
+	/**
+	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		// get array of source references
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        // for every folder
-        for (int i = 0; i < r.length; i++) {
-            // get array of message UIDs
-            Object[] uids = r[i].getUids();
+		// get array of message UIDs
+		Object[] uids = r.getUids();
 
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
-            //	update status message
-            if (uids.length > 1) {
-                //TODO: i18n
-                worker.setDisplayText("Training messages...");
-                worker.setProgressBarMaximum(uids.length);
-            }
-            
-            InputStream istream = null;
-            for (int j = 0; j < uids.length; j++) {
-                if (worker.cancelled()) {
-                    break;
-                }
-                
-                try {
-                    // register for status events
-                    ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+		//	update status message
+		if (uids.length > 1) {
+			//TODO: i18n
+			worker.setDisplayText("Training messages...");
+			worker.setProgressBarMaximum(uids.length);
+		}
 
-                    // get inputstream of message body
-                    istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
+		InputStream istream = null;
+		for (int j = 0; j < uids.length; j++) {
+			if (worker.cancelled()) {
+				break;
+			}
 
-                    // get headers
-                    Header h = srcFolder.getHeaderFields(uids[j],
-                            Message.HEADERFIELDS);
+			try {
+				// register for status events
+				((StatusObservableImpl) srcFolder.getObservable())
+						.setWorker(worker);
 
-                    // put headers in list
-                    Enumeration e = h.getKeys();
-                    List list = new ArrayList();
+				// get inputstream of message body
+				istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
 
-                    while (e.hasMoreElements()) {
-                        String key = (String)e.nextElement();
-                        list.add(h.get(key));
-                    }
+				// get headers
+				Header h = srcFolder.getHeaderFields(uids[j],
+						Message.HEADERFIELDS);
 
-                    //train message as spam
-                    SpamController.getInstance().trainMessageAsSpam(istream,
-                        list);
+				// put headers in list
+				Enumeration e = h.getKeys();
+				List list = new ArrayList();
 
-                    if (uids.length > 1) {
-                        worker.setProgressBarValue(j);
-                    }
-                } catch (Exception e) {
-                    if (MainInterface.DEBUG) {
-                        e.printStackTrace();
-                    }
-                } finally {
-                    try {
-                        istream.close();
-                    } catch (IOException ioe) {}
-                }
-            }
-        }
-    }
+				while (e.hasMoreElements()) {
+					String key = (String) e.nextElement();
+					list.add(h.get(key));
+				}
+
+				//train message as spam
+				SpamController.getInstance().trainMessageAsSpam(istream, list);
+
+				if (uids.length > 1) {
+					worker.setProgressBarValue(j);
+				}
+			} catch (Exception e) {
+				if (MainInterface.DEBUG) {
+					e.printStackTrace();
+				}
+			} finally {
+				try {
+					istream.close();
+				} catch (IOException ioe) {
+				}
+			}
+		}
+
+	}
 }

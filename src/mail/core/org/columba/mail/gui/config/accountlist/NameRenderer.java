@@ -13,10 +13,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.config.accountlist;
 
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
@@ -24,6 +20,10 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

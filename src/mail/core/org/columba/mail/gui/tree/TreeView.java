@@ -15,13 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.gui.tree.comparator.FolderComparator;
-import org.frappucino.swing.SortedJTree;
-
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,6 +32,12 @@ import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.TransferHandler;
 import javax.swing.tree.TreePath;
+
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.tree.comparator.FolderComparator;
+import org.frappucino.swing.SortedJTree;
 
 
 /**

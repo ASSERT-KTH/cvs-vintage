@@ -15,20 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.general;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -49,6 +35,19 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**

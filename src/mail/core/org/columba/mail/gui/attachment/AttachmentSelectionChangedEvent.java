@@ -16,7 +16,6 @@
 package org.columba.mail.gui.attachment;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
-
 import org.columba.mail.folder.MessageFolder;
 
 

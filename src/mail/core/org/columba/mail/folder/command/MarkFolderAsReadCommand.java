@@ -49,16 +49,16 @@ public class MarkFolderAsReadCommand extends FolderCommand {
     private MarkMessageCommand markMessageCommand;
 
     /**
-     * @param references folder references
+     * @param reference folder reference
      */
-    public MarkFolderAsReadCommand(DefaultCommandReference[] references) {
-        super(references);
+    public MarkFolderAsReadCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        folderToBeRead = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        folderToBeRead = (MessageFolder) ((FolderCommandReference) getReference()).getFolder();
 
         worker.setDisplayText(MessageFormat.format(
                 MailResourceLoader.getString("statusbar", "message",
@@ -66,22 +66,15 @@ public class MarkFolderAsReadCommand extends FolderCommand {
 
         worker.clearDisplayTextWithDelay();
 
-        FolderCommandReference[] markCommandRefs = new FolderCommandReference[1];
-
-        markCommandRefs[0] = new FolderCommandReference(folderToBeRead);
+        FolderCommandReference markCommandRefs = new FolderCommandReference(folderToBeRead);
         Object[] uids = folderToBeRead.getUids();
         if ((uids != null) && (uids.length > 0)) {
-            markCommandRefs[0].setUids(uids);
-            markCommandRefs[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+            markCommandRefs.setUids(uids);
+            markCommandRefs.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
             markMessageCommand = new MarkMessageCommand(markCommandRefs);
             markMessageCommand.execute(worker);
         }
     }
 
-    /** {@inheritDoc} */
-    public void updateGUI() throws Exception {
-    	// MarkMessageCommand updates everything
-    	markMessageCommand.updateGUI();
-    }
 }

@@ -18,7 +18,7 @@ package org.columba.mail.message;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.util.ColorFactory;
-
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;

@@ -15,15 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,6 +26,15 @@ import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**
@@ -53,16 +53,10 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public SaveMessageSourceAsCommand(DefaultCommandReference[] references) {
-        super(references);
+    public SaveMessageSourceAsCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
-    /**
-     * Implementation-specific: This method does anything
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-    }
 
     /**
      * Executes the command, i.e. saves source for selected
@@ -71,9 +65,9 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker)
         throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Object[] uids = r[0].getUids(); // uid for messages to save
-        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
+        FolderCommandReference r = (FolderCommandReference) getReference();
+        Object[] uids = r.getUids(); // uid for messages to save
+        MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

@@ -15,18 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
-
-import java.awt.event.ActionEvent;
 
 
 /**
@@ -52,7 +51,7 @@ public class TrainMessageAsHamAction extends AbstractColumbaAction
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
     }
 

@@ -15,24 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 /**
  * @author frd
@@ -70,18 +69,18 @@ public class CreateSubFolderAction extends AbstractColumbaAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] selection = (FolderCommandReference[]) getFrameMediator()
+		FolderCommandReference selection = (FolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
 		CreateFolderDialog dialog = new CreateFolderDialog(getFrameMediator(),
-				selection[0].getFolder().getSelectionTreePath());
+				selection.getFolder().getSelectionTreePath());
 
 		String name;
 
 		if (dialog.success()) {
 			// ok pressed
-			selection[0].setFolder(dialog.getSelected());
-			selection[0].setFolderName(dialog.getName());
+			selection.setFolder(dialog.getSelected());
+			selection.setFolderName(dialog.getName());
 
 			MainInterface.processor
 					.addOp(new CreateSubFolderCommand(selection));

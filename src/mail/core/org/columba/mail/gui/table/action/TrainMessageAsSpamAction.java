@@ -15,53 +15,54 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
 
-import java.awt.event.ActionEvent;
-
-
 /**
  * 
- *
+ * 
  * @author fdietz
  */
-public class TrainMessageAsSpamAction extends AbstractColumbaAction
-    implements SelectionListener {
-    /**
- * @param frameMediator
- * @param name
- */
-    public TrainMessageAsSpamAction(FrameMediator frameMediator) {
-        super(frameMediator, "Train Message as Spam");
+public class TrainMessageAsSpamAction extends AbstractColumbaAction implements
+		SelectionListener {
+	/**
+	 * @param frameMediator
+	 * @param name
+	 */
+	public TrainMessageAsSpamAction(FrameMediator frameMediator) {
+		super(frameMediator, "Train Message as Spam");
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator)
+				.registerTableSelectionListener(this);
+	}
 
-    /**
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-        MainInterface.processor.addOp(new LearnMessageAsSpamCommand(r));
-    }
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
+		MainInterface.processor.addOp(new LearnMessageAsSpamCommand(r));
+	}
 
-    /**
-        * Ensures that the action is only enabled when at least
-        * one message is selected in the GUI.
-        * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-        */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/**
+	 * Ensures that the action is only enabled when at least one message is
+	 * selected in the GUI.
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }

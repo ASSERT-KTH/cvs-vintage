@@ -17,8 +17,6 @@ package org.columba.core.command;
 
 import junit.framework.TestCase;
 
-import org.columba.mail.command.FolderCommandReference;
-
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -226,7 +224,7 @@ class TestCommand extends Command {
     }
 
     public TestCommand(DefaultProcessorTest test, int id, int priority ) {
-        super(null, new FolderCommandReference[0]);
+        super(null, null);
         this.id = id;
         this.test = test;
         this.priority = priority; 

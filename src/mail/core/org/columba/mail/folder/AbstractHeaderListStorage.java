@@ -138,14 +138,6 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 
         ColumbaHeader h = new ColumbaHeader(header);
 
-        // FIXME: do we need this size here? Shouldn't this be handled
-        // automatically by "columba.size" attribute
-        /*
-         * if (attributes == null) { h.getAttributes().put("columba.size", new
-         * Integer(size / 1024)); } else { h.setAttributes((Attributes)
-         * attributes.clone()); }
-         */
-
         h.setAttributes((Attributes) attributes.clone());
         h.setFlags((Flags) flags.clone());
         

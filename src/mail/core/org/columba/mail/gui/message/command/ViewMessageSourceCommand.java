@@ -15,20 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.io.TempFileStore;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
-
-import org.columba.ristretto.message.MimeHeader;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,6 +22,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.TempFileStore;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.ristretto.message.MimeHeader;
 
 
 /**
@@ -55,8 +54,8 @@ public class ViewMessageSourceCommand extends FolderCommand {
  * @param references
  */
     public ViewMessageSourceCommand(FrameMediator frameMediator,
-        DefaultCommandReference[] references) {
-        super(frameMediator, references);
+        DefaultCommandReference reference) {
+        super(frameMediator, reference);
     }
 
     /**
@@ -75,11 +74,11 @@ public class ViewMessageSourceCommand extends FolderCommand {
         throws Exception {
         AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
 
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference r = (FolderCommandReference) getReference();
 
-        Object[] uids = r[0].getUids();
+        Object[] uids = r.getUids();
 
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r.getFolder();
 
         //		register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

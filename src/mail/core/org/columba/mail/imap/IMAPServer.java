@@ -103,11 +103,14 @@ import org.columba.ristretto.parser.ParserException;
 public class IMAPServer {
 
 	private static final int NOOP_INTERVAL = 30000;
+
 	private static final Logger LOG = Logger.getLogger("org.columba.mail.imap");
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-	private static final Charset DEFAULT = Charset.forName(System.getProperty("file.encoding"));
-	
+
+	private static final Charset DEFAULT = Charset.forName(System
+			.getProperty("file.encoding"));
+
 	/**
 	 * currently selected mailbox
 	 */
@@ -140,15 +143,15 @@ public class IMAPServer {
 	private Object aktMessageUid;
 
 	private MailboxInfo messageFolderInfo;
-	
+
 	private boolean firstLogin;
-	
+
 	boolean usingSSL;
 
 	String[] capabilities;
-	
+
 	private long lastNoop;
-	
+
 	public IMAPServer(ImapItem item, IMAPRootFolder root) {
 		this.item = item;
 		this.imapRoot = root;
@@ -161,7 +164,7 @@ public class IMAPServer {
 
 		firstLogin = true;
 		usingSSL = false;
-		
+
 		lastNoop = System.currentTimeMillis();
 	}
 
@@ -169,16 +172,17 @@ public class IMAPServer {
 	 * @return
 	 */
 	protected StatusObservable getObservable() {
-		if( imapRoot != null ) {
+		if (imapRoot != null) {
 			return imapRoot.getObservable();
-		} else return null;
+		} else
+			return null;
 	}
 
 	/**
 	 * @param message
 	 */
 	protected void printStatusMessage(String message) {
-		if( getObservable() != null ) {
+		if (getObservable() != null) {
 			getObservable().setMessage(item.get("host") + ": " + message);
 		}
 	}
@@ -190,7 +194,8 @@ public class IMAPServer {
 	 * 
 	 * @return delimiter
 	 */
-	public String getDelimiter() throws IOException, IMAPException, CommandCancelledException {
+	public String getDelimiter() throws IOException, IMAPException,
+			CommandCancelledException {
 		if (delimiter == null) {
 			// try to determine delimiter
 			delimiter = fetchDelimiter();
@@ -223,14 +228,13 @@ public class IMAPServer {
 		protocol.logout();
 	}
 
-	private void openConnection() throws IOException, IMAPException, CommandCancelledException  {
+	private void openConnection() throws IOException, IMAPException,
+			CommandCancelledException {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"connecting"));
 
-		int sslType = item.getInteger("ssl_type",IncomingServerPanel.TLS);
+		int sslType = item.getInteger("ssl_type", IncomingServerPanel.TLS);
 		boolean sslEnabled = item.getBoolean("enable_ssl");
-		
-		
 
 		// open a port to the server
 		if (sslEnabled && sslType == IncomingServerPanel.IMAPS_POP3S) {
@@ -253,7 +257,7 @@ public class IMAPServer {
 				// turn off SSL for the future
 				item.set("enable_ssl", false);
 				item.set("port", IMAPProtocol.DEFAULT_PORT);
-				
+
 				// reopen the port
 				protocol.openPort();
 			}
@@ -262,8 +266,7 @@ public class IMAPServer {
 		}
 
 		// shall we switch to SSL?
-		if (!usingSSL
-				&& sslEnabled && sslType == IncomingServerPanel.TLS) {
+		if (!usingSSL && sslEnabled && sslType == IncomingServerPanel.TLS) {
 			// if CAPA was not support just give it a try...
 			if (isSupported("STLS") || (capabilities.length == 0)) {
 				try {
@@ -319,39 +322,42 @@ public class IMAPServer {
 				item.set("enable_ssl", false);
 			}
 		}
-	
+
 	}
 
 	public List checkSupportedAuthenticationMethods() throws IOException {
-		
+
 		ArrayList supportedMechanisms = new ArrayList();
 		//LOGIN is always supported
 		supportedMechanisms.add(new Integer(AuthenticationManager.LOGIN));
-		
+
 		try {
 			String serverSaslMechansims[] = getCapas("AUTH");
 			// combine them to one string
 			StringBuffer oneLine = new StringBuffer("AUTH");
-			for( int i=0; i<serverSaslMechansims.length; i++) {
+			for (int i = 0; i < serverSaslMechansims.length; i++) {
 				oneLine.append(' ');
-				oneLine.append(serverSaslMechansims[i].substring(5)); // remove the 'AUTH='
+				oneLine.append(serverSaslMechansims[i].substring(5)); // remove
+																	  // the
+																	  // 'AUTH='
 			}
-			
+
 			//AUTH?
-			if( serverSaslMechansims != null ) {
-				List authMechanisms = AuthenticationFactory.getInstance().getSupportedMechanisms(oneLine.toString());
+			if (serverSaslMechansims != null) {
+				List authMechanisms = AuthenticationFactory.getInstance()
+						.getSupportedMechanisms(oneLine.toString());
 				Iterator it = authMechanisms.iterator();
-				while( it.hasNext() ) {
-					supportedMechanisms.add(new Integer(AuthenticationManager.getSaslCode((String)it.next())));
+				while (it.hasNext()) {
+					supportedMechanisms.add(new Integer(AuthenticationManager
+							.getSaslCode((String) it.next())));
 				}
 			}
-		} catch (IOException e) {			
+		} catch (IOException e) {
 		}
-		
+
 		return supportedMechanisms;
 	}
-	
-	
+
 	/**
 	 * @param command
 	 * @return
@@ -359,51 +365,50 @@ public class IMAPServer {
 	private String[] getCapas(String command) throws IOException {
 		fetchCapas();
 		ArrayList list = new ArrayList();
-		
+
 		for (int i = 0; i < capabilities.length; i++) {
 			if (capabilities[i].startsWith(command)) {
 				list.add(capabilities[i]);
 			}
 		}
 
-		return (String[]) list.toArray(new String[0]);		
+		return (String[]) list.toArray(new String[0]);
 	}
-	
+
 	/**
 	 * @param command
 	 * @return
 	 */
 	private boolean isSupported(String command) throws IOException {
 		fetchCapas();
-		
+
 		for (int i = 0; i < capabilities.length; i++) {
 			if (capabilities[i].startsWith(command)) {
 				return true;
 			}
 		}
 
-		return false;		
+		return false;
 	}
 
 	/**
 	 * @throws IOException
 	 */
 	private void fetchCapas() throws IOException {
-		if( capabilities == null ) {
-		try {
+		if (capabilities == null) {
+			try {
 				ensureConnectedState();
-			
-			capabilities = protocol.capability();
-		} catch (IMAPException e) {
-			// CAPA not supported
-			capabilities = new String[0];
-		} catch( CommandCancelledException e) {
-			
-		}
+
+				capabilities = protocol.capability();
+			} catch (IMAPException e) {
+				// CAPA not supported
+				capabilities = new String[0];
+			} catch (CommandCancelledException e) {
+
+			}
 		}
 	}
 
-	
 	/**
 	 * Gets the selected Authentication method or else the most secure.
 	 * 
@@ -412,30 +417,32 @@ public class IMAPServer {
 	private int getLoginMethod() throws CommandCancelledException, IOException {
 		String loginMethod = item.get("login_method");
 		int result = 0;
-		
+
 		try {
 			result = Integer.parseInt(loginMethod);
 		} catch (NumberFormatException e) {
 			//Just use the default as fallback
 		}
 
-		if( result == 0 ) {
+		if (result == 0) {
 			List supported = checkSupportedAuthenticationMethods();
-			
-			if( usingSSL ) {
+
+			if (usingSSL) {
 				// NOTE if SSL is possible we just need the plain login
 				// since SSL does the encryption for us.
-				result = ((Integer)supported.get(0)).intValue();
+				result = ((Integer) supported.get(0)).intValue();
 			} else {
-				Collections.sort(supported, new AuthenticationSecurityComparator());
-				result = ((Integer)supported.get(supported.size()-1)).intValue();
+				Collections.sort(supported,
+						new AuthenticationSecurityComparator());
+				result = ((Integer) supported.get(supported.size() - 1))
+						.intValue();
 			}
-			
+
 		}
 
 		return result;
 	}
-	
+
 	/**
 	 * Login to IMAP server.
 	 * <p>
@@ -467,9 +474,10 @@ public class IMAPServer {
 			// -> not necessary when password was stored
 			if (!first || password == null) {
 				// Show the password dialog
-				if(password == null) password = new char[0]; 
-				dialog.showDialog(item.get("user"), item.get("host"), 
-				    new String(password), item.getBoolean("save_password"));
+				if (password == null)
+					password = new char[0];
+				dialog.showDialog(item.get("user"), item.get("host"),
+						new String(password), item.getBoolean("save_password"));
 				if (dialog.success()) {
 					// User pressed OK
 					password = dialog.getPassword();
@@ -492,7 +500,7 @@ public class IMAPServer {
 			// from configuration of from the dialog
 
 			try {
-				if( loginMethod == AuthenticationManager.LOGIN ) {
+				if (loginMethod == AuthenticationManager.LOGIN) {
 					protocol.login(item.get("user"), password);
 
 					// If no exception happened we have successfully logged
@@ -501,30 +509,47 @@ public class IMAPServer {
 				} else {
 					try {
 						//AUTH
-						protocol.authenticate(AuthenticationManager.getSaslName(loginMethod), item.get("user"), password);
+						protocol.authenticate(AuthenticationManager
+								.getSaslName(loginMethod), item.get("user"),
+								password);
 
 						// If no exception happened we have successfully logged
 						// in
 						authenticated = true;
 					} catch (AuthenticationException e) {
-						// If the cause is a IMAPExcpetion then only password wrong
+						// If the cause is a IMAPExcpetion then only password
+						// wrong
 						// else bogus authentication mechanism
-						if( e.getCause() instanceof IMAPException) throw (IMAPException) e.getCause();
-						
+						if (e.getCause() instanceof IMAPException)
+							throw (IMAPException) e.getCause();
+
 						// Some error in the client/server communication
 						//  --> fall back to default login process
-						int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),
-							    new MultiLineLabel( e.getMessage() + "\n" + MailResourceLoader.getString("dialog", "error",
-								"authentication_fallback_to_default")), MailResourceLoader.getString("dialog", "error",
-								"authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
-						
-						if( result == JOptionPane.OK_OPTION ) {
+						int result = JOptionPane
+								.showConfirmDialog(
+										MainInterface.frameModel
+												.getActiveFrame(),
+										new MultiLineLabel(
+												e.getMessage()
+														+ "\n"
+														+ MailResourceLoader
+																.getString(
+																		"dialog",
+																		"error",
+																		"authentication_fallback_to_default")),
+										MailResourceLoader.getString("dialog",
+												"error",
+												"authentication_process_error"),
+										JOptionPane.OK_CANCEL_OPTION);
+
+						if (result == JOptionPane.OK_OPTION) {
 							loginMethod = AuthenticationManager.LOGIN;
-							item.set("login_method", Integer.toString(loginMethod));
+							item.set("login_method", Integer
+									.toString(loginMethod));
 						} else {
 							throw new CommandCancelledException();
 						}
-					}					
+					}
 				}
 
 			} catch (IMAPException ex) {
@@ -538,21 +563,20 @@ public class IMAPServer {
 			}
 			first = false;
 		}
-		
+
 		// Sync subscribed folders if this is the first login
 		// in this session
-		if( firstLogin ) {
-	        Command c = new FetchSubFolderListCommand(new FolderCommandReference[] {
-                    new FolderCommandReference(imapRoot)
-                });
-	        try {
+		if (firstLogin) {
+			Command c = new FetchSubFolderListCommand(
+					new FolderCommandReference(imapRoot));
+			try {
 				//MainInterface.processor.addOp(c);
 				c.execute(NullWorkerStatusController.getInstance());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		firstLogin = false;
 	}
 
@@ -565,13 +589,15 @@ public class IMAPServer {
 	 *            mailbox path
 	 * @throws Exception
 	 */
-	protected void ensureSelectedState(String path) throws IOException, IMAPException, CommandCancelledException  {
+	protected void ensureSelectedState(String path) throws IOException,
+			IMAPException, CommandCancelledException {
 		// ensure that we are logged in already
 		ensureLoginState();
 
 		// if mailbox is not already selected select it
-		if( protocol.getState() != IMAPProtocol.SELECTED || !protocol.getSelectedMailbox().equals(path)) {
-			
+		if (protocol.getState() != IMAPProtocol.SELECTED
+				|| !protocol.getSelectedMailbox().equals(path)) {
+
 			// Here we get the new mailboxinfo for the folder
 			// but we do not use it here
 			messageFolderInfo = protocol.select(path);
@@ -582,22 +608,24 @@ public class IMAPServer {
 		}
 	}
 
-	public MailboxInfo getMailboxInfo(String path) throws IOException, IMAPException, CommandCancelledException {
+	public MailboxInfo getMailboxInfo(String path) throws IOException,
+			IMAPException, CommandCancelledException {
 		ensureLoginState();
-		
+
 		return protocol.select(path);
 	}
-	
+
 	/**
 	 * Fetch delimiter.
 	 *  
 	 */
-	protected String fetchDelimiter() throws IOException, IMAPException, CommandCancelledException {
+	protected String fetchDelimiter() throws IOException, IMAPException,
+			CommandCancelledException {
 		// make sure we are already logged in
 		ensureLoginState();
 
 		ListInfo[] listInfo = protocol.list("", "");
-		
+
 		return listInfo[0].getDelimiter();
 	}
 
@@ -612,8 +640,8 @@ public class IMAPServer {
 	public ListInfo[] list(String reference, String pattern) throws Exception {
 		ensureLoginState();
 
-		return protocol.list(reference,pattern);
-		
+		return protocol.list(reference, pattern);
+
 	}
 
 	/**
@@ -630,20 +658,22 @@ public class IMAPServer {
 		try {
 			// make sure we are already logged in
 			ensureLoginState();
-			
+
 			// close the mailbox if it is selected
-			if( protocol.getState() == IMAPProtocol.SELECTED && protocol.getSelectedMailbox().equals(mailboxName )) {
-					protocol.close();
+			if (protocol.getState() == IMAPProtocol.SELECTED
+					&& protocol.getSelectedMailbox().equals(mailboxName)) {
+				protocol.close();
 			}
 
-			MailboxStatus status = protocol.status(mailboxName,new String[] {"UIDNEXT"});
+			MailboxStatus status = protocol.status(mailboxName,
+					new String[] { "UIDNEXT" });
 
 			protocol.append(mailboxName, messageSource);
-			
-			return new Integer( (int) status.getUidNext() );
+
+			return new Integer((int) status.getUidNext());
 		} catch (IMAPDisconnectedException e) {
 			// Try once again
-			return append( mailboxName, messageSource );
+			return append(mailboxName, messageSource);
 		}
 	}
 
@@ -656,24 +686,26 @@ public class IMAPServer {
 	 *            message source
 	 * @throws Exception
 	 */
-	public Integer append(String mailboxName, InputStream messageSource, IMAPFlags flags)
-			throws Exception {
+	public Integer append(String mailboxName, InputStream messageSource,
+			IMAPFlags flags) throws Exception {
 		try {
-		// make sure we are already logged in
-		ensureLoginState();
-		
-		// close the mailbox if it is selected
-		if( protocol.getState() == IMAPProtocol.SELECTED && protocol.getSelectedMailbox().equals(mailboxName )) {
-			protocol.close();
-		}
+			// make sure we are already logged in
+			ensureLoginState();
 
-		MailboxStatus status = protocol.status(mailboxName,new String[] {"UIDNEXT"});
+			// close the mailbox if it is selected
+			if (protocol.getState() == IMAPProtocol.SELECTED
+					&& protocol.getSelectedMailbox().equals(mailboxName)) {
+				protocol.close();
+			}
 
-		protocol.append(mailboxName, messageSource, new Object[] { flags });
-		
-		return new Integer( (int) status.getUidNext() );
-		} catch (IMAPDisconnectedException e ){
-			return append(mailboxName, messageSource, flags );
+			MailboxStatus status = protocol.status(mailboxName,
+					new String[] { "UIDNEXT" });
+
+			protocol.append(mailboxName, messageSource, new Object[] { flags });
+
+			return new Integer((int) status.getUidNext());
+		} catch (IMAPDisconnectedException e) {
+			return append(mailboxName, messageSource, flags);
 		}
 	}
 
@@ -685,27 +717,28 @@ public class IMAPServer {
 	 * @return @throws
 	 *         Exception
 	 */
-	public void createMailbox(String path, String mailboxName) throws IOException, IMAPException, CommandCancelledException {
+	public void createMailbox(String path, String mailboxName)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			//make sure we are logged in
 			ensureLoginState();
-			
+
 			//concate the full name of the new mailbox
 			String fullName;
-			
-			if(path.length() > 0 )
+
+			if (path.length() > 0)
 				fullName = path + getDelimiter() + mailboxName;
 			else
 				fullName = mailboxName;
-			
+
 			// create the mailbox on the server
-			protocol.create( fullName );
-			
+			protocol.create(fullName);
+
 			// subscribe to the new mailbox
-			protocol.subscribe( fullName );
-		}  catch (IMAPDisconnectedException e) {
-			createMailbox( path, mailboxName);
-		}		
+			protocol.subscribe(fullName);
+		} catch (IMAPDisconnectedException e) {
+			createMailbox(path, mailboxName);
+		}
 	}
 
 	/**
@@ -721,12 +754,13 @@ public class IMAPServer {
 			// make sure we are already logged in
 			ensureLoginState();
 
-			if( protocol.getState() == IMAPProtocol.SELECTED && protocol.getSelectedMailbox().equals(path )) {
+			if (protocol.getState() == IMAPProtocol.SELECTED
+					&& protocol.getSelectedMailbox().equals(path)) {
 				protocol.close();
 			}
 
 			protocol.unsubscribe(path);
-			
+
 			protocol.delete(path);
 		} catch (IMAPDisconnectedException e) {
 			deleteFolder(path);
@@ -750,7 +784,7 @@ public class IMAPServer {
 			ensureLoginState();
 			protocol.rename(oldMailboxName, newMailboxName);
 		} catch (IMAPDisconnectedException e) {
-			renameFolder( oldMailboxName, newMailboxName );
+			renameFolder(oldMailboxName, newMailboxName);
 		}
 	}
 
@@ -762,15 +796,16 @@ public class IMAPServer {
 	 * @return @throws
 	 *         Exception
 	 */
-	public void subscribeFolder(String mailboxName) throws IOException, IMAPException, CommandCancelledException {
+	public void subscribeFolder(String mailboxName) throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			// make sure we are already logged in
 			ensureLoginState();
 
 			protocol.subscribe(mailboxName);
 		} catch (IMAPDisconnectedException e) {
-			subscribeFolder( mailboxName );
-		}		
+			subscribeFolder(mailboxName);
+		}
 	}
 
 	/**
@@ -781,14 +816,15 @@ public class IMAPServer {
 	 * @return @throws
 	 *         Exception
 	 */
-	public void unsubscribeFolder(String mailboxName) throws IOException, IMAPException, CommandCancelledException {
+	public void unsubscribeFolder(String mailboxName) throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			// make sure we are already logged in
 			ensureLoginState();
 
 			protocol.unsubscribe(mailboxName);
 		} catch (IMAPDisconnectedException e) {
-			unsubscribeFolder( mailboxName );
+			unsubscribeFolder(mailboxName);
 		}
 	}
 
@@ -801,23 +837,23 @@ public class IMAPServer {
 	 * @return list of UIDs
 	 * @throws Exception
 	 */
-	public List fetchUIDList(String path) throws IOException, IMAPException, CommandCancelledException {
+	public List fetchUIDList(String path) throws IOException, IMAPException,
+			CommandCancelledException {
 		try {
 			ensureSelectedState(path);
 
-				int count = messageFolderInfo.getExists();
+			int count = messageFolderInfo.getExists();
 
-				if (count == 0) {
-					return null;
-				}
+			if (count == 0) {
+				return null;
+			}
 
-				printStatusMessage(MailResourceLoader.getString("statusbar",
-						"message", "fetch_uid_list"));
+			printStatusMessage(MailResourceLoader.getString("statusbar",
+					"message", "fetch_uid_list"));
 
-				Integer[] uids = protocol.fetchUid(SequenceSet.getAll());
+			Integer[] uids = protocol.fetchUid(SequenceSet.getAll());
 
-
-				return Arrays.asList(uids);
+			return Arrays.asList(uids);
 		} catch (IMAPDisconnectedException e) {
 			return fetchUIDList(path);
 		}
@@ -833,10 +869,11 @@ public class IMAPServer {
 	 * @return @throws
 	 *         Exception
 	 */
-	public void expunge(String path) throws IOException, IMAPException, CommandCancelledException {
+	public void expunge(String path) throws IOException, IMAPException,
+			CommandCancelledException {
 		try {
 			ensureSelectedState(path);
-			
+
 			protocol.expunge();
 		} catch (IMAPDisconnectedException e) {
 			expunge(path);
@@ -863,7 +900,7 @@ public class IMAPServer {
 			throws Exception {
 		try {
 			ensureSelectedState(path);
-			
+
 			// We need to sort the uids in order
 			// to have the correct association
 			// between the new and old uid
@@ -872,20 +909,21 @@ public class IMAPServer {
 
 			protocol.uidCopy(new SequenceSet(Arrays.asList(uids)), destFolder);
 
-			
-			MailboxStatus status = protocol.status(destFolder ,new String[] {"UIDNEXT"});
+			MailboxStatus status = protocol.status(destFolder,
+					new String[] { "UIDNEXT" });
 
 			// the UIDS start UIDNext - uids.length() - 1 till UIDNext - 1
 			Integer[] destUids = new Integer[uids.length];
-			for( int i=0; i<uids.length; i++) {
-				destUids[i] = new Integer( (int) (status.getUidNext() - (uids.length - i)));
+			for (int i = 0; i < uids.length; i++) {
+				destUids[i] = new Integer(
+						(int) (status.getUidNext() - (uids.length - i)));
 			}
-			
+
 			return destUids;
 		} catch (IMAPDisconnectedException e) {
-			return copy(destFolder, uids, path );
+			return copy(destFolder, uids, path);
 		}
-	}	
+	}
 
 	/**
 	 * Fetch list of flags and parse it.
@@ -895,10 +933,11 @@ public class IMAPServer {
 	 * @return list of flags
 	 * @throws Exception
 	 */
-	public IMAPFlags[] fetchFlagsList(String path) throws IOException, IMAPException, CommandCancelledException {
+	public IMAPFlags[] fetchFlagsList(String path) throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(path);
-			if(messageFolderInfo.getExists() > 0) {
+			if (messageFolderInfo.getExists() > 0) {
 				return protocol.fetchFlags(SequenceSet.getAll());
 			} else {
 				return new IMAPFlags[0];
@@ -946,10 +985,11 @@ public class IMAPServer {
 
 			//get list of user-defined headerfields
 			String[] headerFields = CachedHeaderfields.getCachedHeaderfields();
-			
-			IMAPHeader[] headers = protocol.uidFetchHeaderFields(new SequenceSet(list), headerFields);
 
-			for(int i=0; i<headers.length; i++) {
+			IMAPHeader[] headers = protocol.uidFetchHeaderFields(
+					new SequenceSet(list), headerFields);
+
+			for (int i = 0; i < headers.length; i++) {
 				// add it to the headerlist
 				ColumbaHeader header = new ColumbaHeader(headers[i].getHeader());
 				Object uid = headers[i].getUid();
@@ -967,14 +1007,15 @@ public class IMAPServer {
 		} catch (IMAPDisconnectedException e) {
 			fetchHeaderList(headerList, list, path);
 		}
-		
+
 	}
-	
-	protected void ensureConnectedState() throws CommandCancelledException, IOException, IMAPException {
+
+	protected void ensureConnectedState() throws CommandCancelledException,
+			IOException, IMAPException {
 		int actState;
-		
+
 		actState = protocol.getState();
-		
+
 		if (actState < IMAPProtocol.NON_AUTHENTICATED) {
 			openConnection();
 
@@ -987,22 +1028,23 @@ public class IMAPServer {
 	 * 
 	 * @throws Exception
 	 */
-	protected void ensureLoginState() throws IOException, IMAPException, CommandCancelledException {
+	protected void ensureLoginState() throws IOException, IMAPException,
+			CommandCancelledException {
 		int actState;
-		
+
 		actState = protocol.getState();
-		
+
 		while (actState < IMAPProtocol.AUTHENTICATED) {
 			switch (actState) {
-				case IMAPProtocol.LOGOUT : {
-					openConnection();
-					break;
-				}
+			case IMAPProtocol.LOGOUT: {
+				openConnection();
+				break;
+			}
 
-				case IMAPProtocol.NON_AUTHENTICATED : {
-					login();
-					break;
-				}
+			case IMAPProtocol.NON_AUTHENTICATED: {
+				login();
+				break;
+			}
 
 			}
 
@@ -1028,18 +1070,20 @@ public class IMAPServer {
 	 * @return mimetree
 	 * @throws Exception
 	 */
-	public MimeTree getMimeTree(Object uid, String path) throws IOException, IMAPException, CommandCancelledException {
+	public MimeTree getMimeTree(Object uid, String path) throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(path);
-			
-			// Use a caching mechanism for this 
-			if( aktMimeTree == null || !aktMessageUid.equals( uid) ) {
-				aktMimeTree = protocol.uidFetchBodystructure(((Integer)uid).intValue());
+
+			// Use a caching mechanism for this
+			if (aktMimeTree == null || !aktMessageUid.equals(uid)) {
+				aktMimeTree = protocol.uidFetchBodystructure(((Integer) uid)
+						.intValue());
 				aktMessageUid = uid;
 			}
-				
+
 			return aktMimeTree;
-		}  catch (IMAPDisconnectedException e) {
+		} catch (IMAPDisconnectedException e) {
 			return getMimeTree(uid, path);
 		}
 	}
@@ -1056,14 +1100,14 @@ public class IMAPServer {
 	 * @return mimepart
 	 * @throws Exception
 	 */
-	public InputStream getMimePartBodyStream(Object uid, Integer[] address, String path)
-			throws Exception {
+	public InputStream getMimePartBodyStream(Object uid, Integer[] address,
+			String path) throws Exception {
 		try {
 			ensureSelectedState(path);
 
-			return protocol.uidFetchBody(((Integer)uid).intValue(), address);
+			return protocol.uidFetchBody(((Integer) uid).intValue(), address);
 		} catch (IMAPDisconnectedException e) {
-			return getMimePartBodyStream( uid, address, path );
+			return getMimePartBodyStream(uid, address, path);
 		}
 	}
 
@@ -1084,10 +1128,11 @@ public class IMAPServer {
 		try {
 			ensureSelectedState(path);
 
-			IMAPHeader[] headers = protocol.uidFetchHeaderFields(new SequenceSet(((Integer) uid).intValue()), keys);
-			
+			IMAPHeader[] headers = protocol.uidFetchHeaderFields(
+					new SequenceSet(((Integer) uid).intValue()), keys);
+
 			return headers[0].getHeader();
-		}  catch (IMAPDisconnectedException e) {
+		} catch (IMAPDisconnectedException e) {
 			return getHeaders(uid, keys, path);
 		}
 	}
@@ -1104,17 +1149,19 @@ public class IMAPServer {
 	 * @return mimepart
 	 * @throws Exception
 	 */
-	public InputStream getMimePartSourceStream(Object uid, Integer[] address, String path)
-			throws Exception {
+	public InputStream getMimePartSourceStream(Object uid, Integer[] address,
+			String path) throws Exception {
 		try {
 			ensureSelectedState(path);
 
-			InputStream headerSource = protocol.uidFetchMimeHeaderSource(((Integer) uid).intValue(), address);
-			InputStream bodySource = protocol.uidFetchBody(((Integer) uid).intValue(), address);
-			
-			return new SequenceInputStream( headerSource, bodySource );
+			InputStream headerSource = protocol.uidFetchMimeHeaderSource(
+					((Integer) uid).intValue(), address);
+			InputStream bodySource = protocol.uidFetchBody(((Integer) uid)
+					.intValue(), address);
+
+			return new SequenceInputStream(headerSource, bodySource);
 		} catch (IMAPDisconnectedException e) {
-			return getMimePartSourceStream( uid, address, path);
+			return getMimePartSourceStream(uid, address, path);
 		}
 	}
 
@@ -1128,13 +1175,14 @@ public class IMAPServer {
 	 * @return message source
 	 * @throws Exception
 	 */
-	public InputStream getMessageSourceStream(Object uid, String path) throws Exception {
+	public InputStream getMessageSourceStream(Object uid, String path)
+			throws Exception {
 		try {
 			ensureSelectedState(path);
-			
+
 			return protocol.uidFetchMessage(((Integer) uid).intValue());
 		} catch (IMAPDisconnectedException e) {
-			return getMessageSourceStream( uid, path );
+			return getMessageSourceStream(uid, path);
 		}
 	}
 
@@ -1159,26 +1207,27 @@ public class IMAPServer {
 			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(path);
-			
+
 			SequenceSet uidSet = new SequenceSet(Arrays.asList(uids));
-			
+
 			protocol.uidStore(uidSet, variant > 0, convertToFlags(variant));
 		} catch (IMAPDisconnectedException e) {
-			markMessage(uids, variant, path );
-		}	
+			markMessage(uids, variant, path);
+		}
 	}
 
-	public void setFlags(Object[] uids, IMAPFlags flags, String path) throws IOException, IMAPException, CommandCancelledException {
+	public void setFlags(Object[] uids, IMAPFlags flags, String path)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(path);
 			SequenceSet uidSet = new SequenceSet(Arrays.asList(uids));
 
-			protocol.uidStore(uidSet, true, flags );
+			protocol.uidStore(uidSet, true, flags);
 		} catch (IMAPDisconnectedException e) {
 			setFlags(uids, flags, path);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Search messages.
 	 * 
@@ -1193,10 +1242,10 @@ public class IMAPServer {
 	 */
 	public List search(Object[] uids, FilterRule filterRule, String path)
 			throws Exception {
-		LinkedList result = new LinkedList (search( filterRule, path));
-		
+		LinkedList result = new LinkedList(search(filterRule, path));
+
 		ListTools.intersect(result, Arrays.asList(uids));
-		
+
 		return result;
 	}
 
@@ -1206,43 +1255,43 @@ public class IMAPServer {
 	 * @return @throws
 	 *         Exception
 	 */
-	public List search(FilterRule filterRule, String path)
-			throws Exception {
+	public List search(FilterRule filterRule, String path) throws Exception {
 
 		try {
 			ensureSelectedState(path);
 
 			SearchKey[] searchRequest;
-			
+
 			searchRequest = createSearchKey(filterRule);
 
 			Integer[] result = null;
 			Charset charset = UTF8;
-			
-			while( result == null) {
+
+			while (result == null) {
 				try {
 					result = protocol.uidSearch(charset, searchRequest);
 				} catch (IMAPException e) {
-					if( e.getResponse().isNO() ) {
+					if (e.getResponse().isNO()) {
 						// Server does not support UTF-8
 						// -> fall back to System default
-						if( charset.equals(UTF8) ) {
+						if (charset.equals(UTF8)) {
 							charset = DEFAULT;
-						} else if ( charset == DEFAULT ) {
+						} else if (charset == DEFAULT) {
 							// If this also does not work
 							// -> fall back to no charset specified
 							charset = null;
-						} else {			
+						} else {
 							// something else is wrong
 							throw e;
 						}
-					} else throw e;
+					} else
+						throw e;
 				}
 			}
-			
-			return Arrays.asList( result );
+
+			return Arrays.asList(result);
 		} catch (IMAPDisconnectedException e) {
-			return search( filterRule , path );
+			return search(filterRule, path);
 		}
 	}
 
@@ -1253,33 +1302,36 @@ public class IMAPServer {
 		SearchKey[] searchRequest;
 		int argumentSize = filterRule.getChildCount();
 		// One or many arguments?
-		if( argumentSize == 1 ) {
+		if (argumentSize == 1) {
 			// One is the easiest case
-			searchRequest = new SearchKey[] { getSearchKey( filterRule.get(0) )};
+			searchRequest = new SearchKey[] { getSearchKey(filterRule.get(0)) };
 		} else {
 			// AND or OR ? -> AND is implicit, OR must be specified
-			if( filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
+			if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
 				// AND : simply create a list of arguments
 				searchRequest = new SearchKey[argumentSize];
-				
-				for( int i=0; i<argumentSize; i++) {
-					searchRequest[i] = getSearchKey( filterRule.get(i));
+
+				for (int i = 0; i < argumentSize; i++) {
+					searchRequest[i] = getSearchKey(filterRule.get(i));
 				}
-				
+
 			} else {
 				// OR : the arguments must be glued by a OR SearchKey
 				SearchKey orKey;
-				
-				orKey = new SearchKey(SearchKey.OR, getSearchKey( filterRule.get(argumentSize-1)), getSearchKey( filterRule.get(argumentSize-2)));
-				
-				for( int i=argumentSize-3; i >= 0; i--) {
-					orKey = new SearchKey(SearchKey.OR, getSearchKey( filterRule.get(i)), orKey);
+
+				orKey = new SearchKey(SearchKey.OR, getSearchKey(filterRule
+						.get(argumentSize - 1)), getSearchKey(filterRule
+						.get(argumentSize - 2)));
+
+				for (int i = argumentSize - 3; i >= 0; i--) {
+					orKey = new SearchKey(SearchKey.OR, getSearchKey(filterRule
+							.get(i)), orKey);
 				}
-				
-				searchRequest = new SearchKey[] {orKey};
+
+				searchRequest = new SearchKey[] { orKey };
 			}
 		}
-		
+
 		return searchRequest;
 	}
 
@@ -1290,99 +1342,110 @@ public class IMAPServer {
 	private SearchKey getSearchKey(FilterCriteria criteria) {
 		int operator = criteria.getCriteria();
 		int type = criteria.getTypeItem();
-		
-		switch( type ) {
-			case FilterCriteria.FROM : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.FROM, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.FROM, criteria.getPattern() ));
-				}
+
+		switch (type) {
+		case FilterCriteria.FROM: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.FROM, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.FROM, criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.CC: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.CC, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(SearchKey.CC,
+						criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.BCC: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.BCC, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.BCC, criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.TO: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.TO, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(SearchKey.TO,
+						criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.SUBJECT: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.SUBJECT, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.SUBJECT, criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.BODY: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.BODY, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.BODY, criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.CUSTOM_HEADERFIELD: {
+			if (operator == FilterCriteria.CONTAINS) {
+				return new SearchKey(SearchKey.HEADER, criteria
+						.getHeaderItemString(), criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.HEADER, criteria.getHeaderItemString(),
+						criteria.getPattern()));
+			}
+		}
+
+		case FilterCriteria.DATE: {
+			DateFormat df = DateFormat.getDateInstance();
+
+			IMAPDate searchPattern = null;
+
+			try {
+				searchPattern = new IMAPDate(df.parse(criteria.getPattern()));
+			} catch (java.text.ParseException ex) {
+				// should never happen
+				ex.printStackTrace();
 			}
 
-			case FilterCriteria.CC : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.CC, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.CC, criteria.getPattern() ));
-				}
+			if (operator == FilterCriteria.DATE_BEFORE) {
+				return new SearchKey(SearchKey.BEFORE, searchPattern);
+			} else {
+				// AFTER
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.BEFORE, searchPattern));
 			}
-			
-			case FilterCriteria.BCC : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.BCC, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.BCC, criteria.getPattern() ));
-				}
-			}
+		}
 
-			case FilterCriteria.TO : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.TO, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.TO, criteria.getPattern() ));
-				}
+		case FilterCriteria.SIZE: {
+			if (operator == FilterCriteria.SIZE_SMALLER) {
+				return new SearchKey(SearchKey.SMALLER, criteria.getPattern());
+			} else {
+				// contains not
+				return new SearchKey(SearchKey.NOT, new SearchKey(
+						SearchKey.SMALLER, criteria.getPattern()));
 			}
-
-			case FilterCriteria.SUBJECT : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.SUBJECT, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.SUBJECT, criteria.getPattern() ));
-				}
-			}
-
-			case FilterCriteria.BODY : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.BODY, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.BODY, criteria.getPattern() ));
-				}
-			}
-			
-			case FilterCriteria.CUSTOM_HEADERFIELD : {
-				if( operator == FilterCriteria.CONTAINS ) {
-					return new SearchKey( SearchKey.HEADER, criteria.getHeaderItemString(), criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.HEADER, criteria.getHeaderItemString(), criteria.getPattern() ));
-				}
-			}
-			
-			case FilterCriteria.DATE : {
-		        DateFormat df = DateFormat.getDateInstance();
-
-		        IMAPDate searchPattern = null;
-
-		        try {
-		            searchPattern = new IMAPDate( df.parse(criteria.getPattern()));
-		        } catch (java.text.ParseException ex) {
-		            // should never happen
-		            ex.printStackTrace();
-		        }
-				
-				if( operator == FilterCriteria.DATE_BEFORE ) {
-					return new SearchKey( SearchKey.BEFORE, searchPattern );
-				} else {
-					// AFTER
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.BEFORE, searchPattern ));
-				}
-			}
-
-			case FilterCriteria.SIZE : {
-				if( operator == FilterCriteria.SIZE_SMALLER ) {
-					return new SearchKey( SearchKey.SMALLER, criteria.getPattern() );
-				} else {
-					// contains not
-					return new SearchKey( SearchKey.NOT, new SearchKey( SearchKey.SMALLER, criteria.getPattern() ));
-				}
-			}
+		}
 		}
 
 		return null;
@@ -1415,48 +1478,48 @@ public class IMAPServer {
 	 */
 	private IMAPFlags convertToFlags(int variant) {
 		IMAPFlags result = new IMAPFlags();
-		
+
 		switch (variant) {
-			case MarkMessageCommand.MARK_AS_READ :
-			case MarkMessageCommand.MARK_AS_UNREAD : {
-				result.setSeen(true);
-				
-				break;
-			}
+		case MarkMessageCommand.MARK_AS_READ:
+		case MarkMessageCommand.MARK_AS_UNREAD: {
+			result.setSeen(true);
 
-			case MarkMessageCommand.MARK_AS_FLAGGED :
-			case MarkMessageCommand.MARK_AS_UNFLAGGED : {
-				result.setFlagged(true);
-
-				break;
-			}
-
-			case MarkMessageCommand.MARK_AS_EXPUNGED :
-			case MarkMessageCommand.MARK_AS_UNEXPUNGED : {
-				result.setDeleted(true);
-
-				break;
-			}
-
-			case MarkMessageCommand.MARK_AS_ANSWERED : {
-				result.setAnswered(true);
-
-				break;
-			}
-
-			case MarkMessageCommand.MARK_AS_SPAM :
-			case MarkMessageCommand.MARK_AS_NOTSPAM : {
-				result.setJunk(true);
-
-				break;
-			}
-			case MarkMessageCommand.MARK_AS_DRAFT : {
-				result.setDraft(true);
-
-				break;
-			}
+			break;
 		}
-		
+
+		case MarkMessageCommand.MARK_AS_FLAGGED:
+		case MarkMessageCommand.MARK_AS_UNFLAGGED: {
+			result.setFlagged(true);
+
+			break;
+		}
+
+		case MarkMessageCommand.MARK_AS_EXPUNGED:
+		case MarkMessageCommand.MARK_AS_UNEXPUNGED: {
+			result.setDeleted(true);
+
+			break;
+		}
+
+		case MarkMessageCommand.MARK_AS_ANSWERED: {
+			result.setAnswered(true);
+
+			break;
+		}
+
+		case MarkMessageCommand.MARK_AS_SPAM:
+		case MarkMessageCommand.MARK_AS_NOTSPAM: {
+			result.setJunk(true);
+
+			break;
+		}
+		case MarkMessageCommand.MARK_AS_DRAFT: {
+			result.setDraft(true);
+
+			break;
+		}
+		}
+
 		return result;
 	}
 
@@ -1470,16 +1533,17 @@ public class IMAPServer {
 	/**
 	 * @return
 	 */
-	public ListInfo[] fetchSubscribedFolders() throws IOException, IMAPException, CommandCancelledException  {
+	public ListInfo[] fetchSubscribedFolders() throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
-			ensureLoginState();		
-			ListInfo[] lsub = protocol.lsub("","*");
-			
+			ensureLoginState();
+			ListInfo[] lsub = protocol.lsub("", "*");
+
 			// Also set the delimiter
-			if( lsub.length > 0 ) {
+			if (lsub.length > 0) {
 				delimiter = lsub[0].getDelimiter();
 			}
-			
+
 			return lsub;
 		} catch (IMAPDisconnectedException e) {
 			return fetchSubscribedFolders();
@@ -1492,15 +1556,17 @@ public class IMAPServer {
 	 */
 	public boolean isSelected(String path) throws IOException {
 		try {
-			if( protocol.getState() != IMAPProtocol.LOGOUT && (lastNoop - System.currentTimeMillis()) > NOOP_INTERVAL ) {
+			if (protocol.getState() != IMAPProtocol.LOGOUT
+					&& (lastNoop - System.currentTimeMillis()) > NOOP_INTERVAL) {
 				lastNoop = System.currentTimeMillis();
 				protocol.noop();
 			}
 		} catch (IMAPException e) {
 			// dont care
 		}
-		
-		return (protocol.getState() == IMAPProtocol.SELECTED && protocol.getSelectedMailbox().equals(path ));
+
+		return (protocol.getState() == IMAPProtocol.SELECTED && protocol
+				.getSelectedMailbox().equals(path));
 	}
 
 	/**
@@ -1508,11 +1574,11 @@ public class IMAPServer {
 	 * @return
 	 */
 	private int showErrorDialog(String message) {
-		Object[] options = new String[]{
+		Object[] options = new String[] {
 				MailResourceLoader.getString("", "global", "ok").replaceAll(
 						"&", ""),
 				MailResourceLoader.getString("", "global", "cancel")
-						.replaceAll("&", "")};
+						.replaceAll("&", "") };
 
 		int result = JOptionPane.showOptionDialog(null, message, "Warning",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,

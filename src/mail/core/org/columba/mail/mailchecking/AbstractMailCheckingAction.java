@@ -16,16 +16,15 @@
 
 package org.columba.mail.mailchecking;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.Timer;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.AccountItem;
-
-import java.awt.event.ActionEvent;
-
-import javax.swing.Timer;
 
 /**
  * For each account there exists one check action.

@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.command.FolderCommand;
@@ -42,21 +43,21 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
     /**
      * Constructor for SaveAttachmentCommand.
      *
-     * @param references the references for the command.
+     * @param reference the reference for the command.
      */
-    public SaveAttachmentCommand(DefaultCommandReference[] references) {
-        super(references);
+    public SaveAttachmentCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
-        Object[] uids = r[0].getUids();
+        FolderCommandReference r = (FolderCommandReference) getReference();
+        MessageFolder folder = (MessageFolder) r.getFolder();
+        Object[] uids = r.getUids();
 
-        Integer[] address = r[0].getAddress();
+        Integer[] address = r.getAddress();
 
         MimeHeader header = folder.getMimePartTree(uids[0]).getFromAddress(address).getHeader();
         

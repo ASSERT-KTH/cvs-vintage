@@ -86,7 +86,7 @@ public class ComposerModel {
 	 * When replying/forwarding this is the original message you selected in the
 	 * message-list and replied to
 	 */
-	private FolderCommandReference[] ref;
+	private FolderCommandReference ref;
 
 	/**
 	 * Flag indicating whether this model holds a html message (true) or plain
@@ -155,7 +155,7 @@ public class ComposerModel {
 	 * @param ref
 	 *            source reference
 	 */
-	public void setSourceReference(FolderCommandReference[] ref) {
+	public void setSourceReference(FolderCommandReference ref) {
 		this.ref = ref;
 	}
 
@@ -166,7 +166,7 @@ public class ComposerModel {
 	 * 
 	 * @return source reference
 	 */
-	public FolderCommandReference[] getSourceReference() {
+	public FolderCommandReference getSourceReference() {
 		return ref;
 	}
 

@@ -16,7 +16,6 @@
 package org.columba.mail.parser;
 
 import java.lang.reflect.Array;
-
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 

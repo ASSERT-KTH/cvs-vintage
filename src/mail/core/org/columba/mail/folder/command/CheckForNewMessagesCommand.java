@@ -23,139 +23,107 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
-
 
 /**
  * Check for new messages in IMAPFolder.
- *
- *
+ * 
+ * 
  * @author fdietz
  */
 public class CheckForNewMessagesCommand extends FolderCommand {
-    FolderCommandAdapter adapter;
-    IMAPFolder inboxFolder;
-    boolean needGUIUpdate;
-    private Action action;
-    
-    /**
-     * @param action
-     * @param references
-     */
-    public CheckForNewMessagesCommand(Action action,
-        DefaultCommandReference[] references) {
-         	super(references);
-         	this.action = action;
-        
-    }
 
-    /* (non-Javadoc)
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        // get references
-        FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
+	IMAPFolder inboxFolder;
 
-        // use wrapper class to make handling references easier
-        adapter = new FolderCommandAdapter(references);
+	boolean needGUIUpdate;
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+	private Action action;
 
-        // get IMAP rootfolder
-        IMAPRootFolder srcFolder = (IMAPRootFolder) r[0].getFolder();
+	/**
+	 * @param action
+	 * @param references
+	 */
+	public CheckForNewMessagesCommand(Action action,
+			DefaultCommandReference reference) {
+		super(reference);
+		this.action = action;
 
-        // register for status events
-        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+	}
 
-        // we only check inbox
-        inboxFolder = (IMAPFolder) srcFolder.findChildWithName("Inbox", false);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		// get references
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        // Find old numbers
-        int total = inboxFolder.getMessageFolderInfo().getExists();
-        int recent = inboxFolder.getMessageFolderInfo().getRecent();
-        int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
+		// get IMAP rootfolder
+		IMAPRootFolder srcFolder = (IMAPRootFolder) r.getFolder();
 
-        // check for new headers
-        inboxFolder.synchronizeHeaderlist();
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-        // Get the new numbers
-        int newTotal = inboxFolder.getMessageFolderInfo().getExists();
-        int newRecent = inboxFolder.getMessageFolderInfo().getRecent();
-        int newUnseen = inboxFolder.getMessageFolderInfo().getUnseen();
+		// we only check inbox
+		inboxFolder = (IMAPFolder) srcFolder.findChildWithName("Inbox", false);
 
-        // ALP 04/29/03
-        // Call updageGUI() if anything has changed
-        if ((newRecent != recent) || (newTotal != total) ||
-                (newUnseen != unseen)) {
-            needGUIUpdate = true;
+		// Find old numbers
+		int total = inboxFolder.getMessageFolderInfo().getExists();
+		int recent = inboxFolder.getMessageFolderInfo().getRecent();
+		int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
-            //updateGUI();
-            ImapItem item = srcFolder.getAccountItem().getImapItem();
+		// check for new headers
+		inboxFolder.synchronizeHeaderlist();
 
-            if ((newRecent != recent) && (item.getBoolean("enable_sound"))) {
-                // the number of "recent" messages has changed, so play a sound
-                // of told to for new messages on server
-                //	re-enable this feature later, make it a general option
-                // not a per-account based one
-                // -> playing wav-files should be only optional
-                // just play a system beep 
-                // -> this works better for most people
-                // -> java doesn't support sound servers like 
-                // -> alsa or esound anyway
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                kit.beep(); //system beep
+		// Get the new numbers
+		int newTotal = inboxFolder.getMessageFolderInfo().getExists();
+		int newRecent = inboxFolder.getMessageFolderInfo().getRecent();
+		int newUnseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
-                /*
-                String file = item.get("sound_file");
+		// ALP 04/29/03
+		// Call updageGUI() if anything has changed
+		if ((newRecent != recent) || (newTotal != total)
+				|| (newUnseen != unseen)) {
+			needGUIUpdate = true;
 
-                ColumbaLogger.log.fine("playing sound file=" + file);
+			//updateGUI();
+			ImapItem item = srcFolder.getAccountItem().getImapItem();
 
-                if (file.equalsIgnoreCase("default")) {
-                  PlaySound.play("newmail.wav");
-                } else {
-                  try {
-                    PlaySound.play(new URL(file));
-                  } catch (Exception ex) {
-                    ex.printStackTrace();
-                  }
+			if ((newRecent != recent) && (item.getBoolean("enable_sound"))) {
+				// the number of "recent" messages has changed, so play a sound
+				// of told to for new messages on server
+				//	re-enable this feature later, make it a general option
+				// not a per-account based one
+				// -> playing wav-files should be only optional
+				// just play a system beep
+				// -> this works better for most people
+				// -> java doesn't support sound servers like
+				// -> alsa or esound anyway
+				Toolkit kit = Toolkit.getDefaultToolkit();
+				kit.beep(); //system beep
 
-                } //  END else
-                */
-            }
+				/*
+				 * String file = item.get("sound_file");
+				 * 
+				 * ColumbaLogger.log.fine("playing sound file=" + file);
+				 * 
+				 * if (file.equalsIgnoreCase("default")) {
+				 * PlaySound.play("newmail.wav"); } else { try {
+				 * PlaySound.play(new URL(file)); } catch (Exception ex) {
+				 * ex.printStackTrace(); } } // END else
+				 */
+			}
 
-            //  END if((newRecent != recent) && (item.getBoolean...
-        }
+			//  END if((newRecent != recent) && (item.getBoolean...
+		}
 
-        //  END if (newRecent != recent || newTotal != total ...
-    }
+		//  END if (newRecent != recent || newTotal != total ...
+	}
 
-    //  END public void execute(Worker worker) throws Exception
+	//  END public void execute(Worker worker) throws Exception
 
-    /* (non-Javadoc)
-     * @see org.columba.core.command.Command#updateGUI()
-     */
-    public void updateGUI() throws Exception {
-    	if(action != null ) action.setEnabled(true);
-    	
-        // send update event to table
-        TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
-                inboxFolder);
-
-        if (needGUIUpdate) {
-            // Update summary table
-            TableUpdater.tableChanged(ev);
-
-            // Update folder tree
-            MailInterface.treeModel.nodeChanged(inboxFolder);
-        }
-    }
 }

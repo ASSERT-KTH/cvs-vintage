@@ -62,8 +62,8 @@ public class MarkAsSpamAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        r.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 
         MarkMessageCommand c = new MarkMessageCommand(r);
 

@@ -22,12 +22,10 @@ import java.net.URL;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
-import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.MessageFolder;
 
 /**
@@ -57,8 +55,8 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 		// for time consuming tasks you need to create
 		// your own Command
 
-		FolderCommandReference[] r =
-			{ new FolderCommandReference(srcFolder, uids)};
+		FolderCommandReference r =
+			 new FolderCommandReference(srcFolder, uids);
 
 		PlaySoundCommand c = new PlaySoundCommand(r);
 
@@ -76,8 +74,8 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	 * Window>Preferences>Java>Code Generation.
 	 */
 	class PlaySoundCommand extends FolderCommand {
-		public PlaySoundCommand(DefaultCommandReference[] references) {
-			super(references);
+		public PlaySoundCommand(DefaultCommandReference reference) {
+			super(reference);
 		}
 
 		public void execute(WorkerStatusController worker) throws Exception {

@@ -17,7 +17,6 @@ package org.columba.mail.parser.text;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

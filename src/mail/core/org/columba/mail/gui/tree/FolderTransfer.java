@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.mail.folder.MessageFolder;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.io.IOException;
+
+import org.columba.mail.folder.MessageFolder;
 
 
 /**

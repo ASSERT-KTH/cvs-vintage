@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
-
-import java.util.List;
-import java.util.Vector;
 
 
 /**

@@ -33,104 +33,99 @@ import org.columba.mail.folder.command.ColorMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
+
 /**
  * Creates a menu with a list of colors to select.
- *
+ * 
  * @author fdietz
  */
 
 public class ColorMessageMenu extends IMenu implements ActionListener,
-    SelectionListener {
-    // TODO: add central place, which keeps a list of all possible
-    //       colors, and provides a custom color configuration possibility
-    public static String[] items = {
-		MailResourceLoader.getString("dialog", "color", "blue"),
-		MailResourceLoader.getString("dialog", "color", "gray"),
-		MailResourceLoader.getString("dialog", "color", "green"),
-		MailResourceLoader.getString("dialog", "color", "red"),
-		MailResourceLoader.getString("dialog", "color", "yellow"),
-		MailResourceLoader.getString("dialog", "color", "custom")
-    };
-    public static Color[] colors = {
-        Color.blue, Color.gray, Color.green, Color.red, Color.yellow,
-        Color.black
-    };
+		SelectionListener {
+	// TODO: add central place, which keeps a list of all possible
+	//       colors, and provides a custom color configuration possibility
+	public static String[] items = {
+			MailResourceLoader.getString("dialog", "color", "blue"),
+			MailResourceLoader.getString("dialog", "color", "gray"),
+			MailResourceLoader.getString("dialog", "color", "green"),
+			MailResourceLoader.getString("dialog", "color", "red"),
+			MailResourceLoader.getString("dialog", "color", "yellow"),
+			MailResourceLoader.getString("dialog", "color", "custom") };
 
-    /**
- * @param controller
- * @param caption
-*/
-    public ColorMessageMenu(FrameMediator controller) {
-		super(controller, 
-		MailResourceLoader.getString("dialog", "color", "menu_color_message"));
+	public static Color[] colors = { Color.blue, Color.gray, Color.green,
+			Color.red, Color.yellow, Color.black };
 
-        createSubMenu();
+	/**
+	 * @param controller
+	 * @param caption
+	 */
+	public ColorMessageMenu(FrameMediator controller) {
+		super(controller, MailResourceLoader.getString("dialog", "color",
+				"menu_color_message"));
 
-        ((MailFrameMediator) controller).registerTableSelectionListener(this);
-    }
+		createSubMenu();
 
-    protected void createSubMenu() {
-        // TODO: implement custom menuitem renderer
-		JMenuItem item= new JMenuItem(
-			MailResourceLoader.getString("dialog", "color", "none")
-			);
-        item.setActionCommand("NONE");
-        item.addActionListener(this);
-        add(item);
-        addSeparator();
+		((MailFrameMediator) controller).registerTableSelectionListener(this);
+	}
 
-        for (int i = 0; i < items.length; i++) {
-            item = new JMenuItem(items[i]);
-            item.setActionCommand(items[i]);
-            item.addActionListener(this);
-            add(item);
-        }
-    }
+	protected void createSubMenu() {
+		// TODO: implement custom menuitem renderer
+		JMenuItem item = new JMenuItem(MailResourceLoader.getString("dialog",
+				"color", "none"));
+		item.setActionCommand("NONE");
+		item.addActionListener(this);
+		add(item);
+		addSeparator();
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		for (int i = 0; i < items.length; i++) {
+			item = new JMenuItem(items[i]);
+			item.setActionCommand(items[i]);
+			item.addActionListener(this);
+			add(item);
+		}
+	}
 
-        // get current message list selection
-        FolderCommandReference[] r = ((MailFrameMediator) getController()).getTableSelection();
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-        if (action.equals("NONE")) {
-            // remove color
-            //			add color selection to reference
-            for (int i = 0; i < r.length; i++) {
-                r[i].setColorValue(0);
-            }
+		// get current message list selection
+		FolderCommandReference r = ((MailFrameMediator) getController())
+				.getTableSelection();
 
-            // pass command to scheduler
-            MainInterface.processor.addOp(new ColorMessageCommand(r));
-        } else {
-            // which menuitem was selected?
-            int result = -1;
+		if (action.equals("NONE")) {
+			// remove color
+			//			add color selection to reference
 
-            for (int i = 0; i < items.length; i++) {
-                if (action.equals(items[i])) {
-                    result = i;
-                    break;
-                }
-            }
-			
-			
-            // add color selection to reference
-            for (int i = 0; i < r.length; i++) {
-                r[i].setColorValue(colors[result].getRGB());
-              
-            }
+			r.setColorValue(0);
 
-            // pass command to scheduler
-            MainInterface.processor.addOp(new ColorMessageCommand(r));
-        }
-    }
+			// pass command to scheduler
+			MainInterface.processor.addOp(new ColorMessageCommand(r));
+		} else {
+			// which menuitem was selected?
+			int result = -1;
 
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((TableSelectionChangedEvent) e).getUids().length > 0) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+			for (int i = 0; i < items.length; i++) {
+				if (action.equals(items[i])) {
+					result = i;
+					break;
+				}
+			}
+
+			// add color selection to reference
+
+			r.setColorValue(colors[result].getRGB());
+
+			// pass command to scheduler
+			MainInterface.processor.addOp(new ColorMessageCommand(r));
+		}
+	}
+
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TableSelectionChangedEvent) e).getUids().length > 0) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 }
 

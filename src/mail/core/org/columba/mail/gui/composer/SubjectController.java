@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.composer.util.SubjectDialog;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.util.SubjectDialog;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

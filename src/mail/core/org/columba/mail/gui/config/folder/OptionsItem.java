@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.folder;
 
+import javax.swing.Icon;
+
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
 import org.frapuccino.checkablelist.CheckableItem;
-
-import javax.swing.Icon;
 
 
 /**

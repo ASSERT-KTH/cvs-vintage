@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountlist;
 
+import javax.swing.table.AbstractTableModel;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.util.MailResourceLoader;
-
-import javax.swing.table.AbstractTableModel;
 
 
 class AccountListDataModel extends AbstractTableModel {

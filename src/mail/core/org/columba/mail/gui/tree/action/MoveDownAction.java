@@ -15,18 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import org.columba.core.gui.frame.FrameMediator;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.KeyStroke;
+
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 /**
  * Move selected folder down for one row.
@@ -55,9 +54,9 @@ public class MoveDownAction extends AbstractMoveFolderAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference[] r = (FolderCommandReference[]) ((MailFrameMediator) frameMediator).getTreeSelection();
+        FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator) frameMediator).getTreeSelection();
 
-        AbstractFolder folder = r[0].getFolder();
+        AbstractFolder folder = r.getFolder();
 
         int newIndex = folder.getParent().getIndex(folder);
         newIndex = newIndex + 1;

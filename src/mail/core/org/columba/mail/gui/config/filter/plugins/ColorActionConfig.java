@@ -15,15 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import java.awt.Color;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ColorComboBox;
 import org.columba.core.gui.util.ColorFactory;
 import org.columba.core.gui.util.ColorItem;
-
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
-
-import java.awt.Color;
 
 
 /**

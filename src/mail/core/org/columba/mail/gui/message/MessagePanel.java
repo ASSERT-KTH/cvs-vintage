@@ -17,14 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.core.gui.util.FontProperties;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
+
+import org.columba.core.gui.util.FontProperties;
 
 
 /**

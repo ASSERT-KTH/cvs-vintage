@@ -25,7 +25,6 @@ import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.MenuPluginHandler;
-
 import org.columba.mail.main.MailInterface;
 
 /**

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import org.columba.mail.composer.SendableMessage;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import org.columba.mail.composer.SendableMessage;
 
 
 /**

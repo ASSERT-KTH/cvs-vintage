@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

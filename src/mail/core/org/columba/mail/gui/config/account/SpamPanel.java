@@ -30,10 +30,9 @@ import javax.swing.JRadioButton;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.MultiLineLabel;
-
+import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
 import org.columba.mail.folder.MessageFolder;

@@ -15,16 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountwizard;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultDataLookup;
-
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.lang.reflect.Method;
 
 import javax.swing.Box;
@@ -37,6 +27,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultDataLookup;
+
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.WizardTextField;
+import org.columba.mail.util.MailResourceLoader;
 
 
 class IncomingServerStep extends AbstractStep {

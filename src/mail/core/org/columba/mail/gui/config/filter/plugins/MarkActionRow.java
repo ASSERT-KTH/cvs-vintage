@@ -15,16 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.filter.FilterAction;
-import org.columba.mail.gui.config.filter.ActionList;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.mail.filter.FilterAction;
+import org.columba.mail.gui.config.filter.ActionList;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

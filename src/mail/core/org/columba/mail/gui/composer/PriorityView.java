@@ -15,10 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
@@ -27,6 +23,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

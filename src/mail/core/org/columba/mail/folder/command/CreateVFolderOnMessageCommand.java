@@ -19,14 +19,15 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.main.MailInterface;
@@ -74,8 +75,8 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      *            Which type of filter to create. Used defined constants
      */
     public CreateVFolderOnMessageCommand(FrameMediator frameController,
-        DefaultCommandReference[] references, String vfolderType) {
-        super(frameController, references);
+        DefaultCommandReference reference, String vfolderType) {
+        super(frameController, reference);
         this.vfolderType = vfolderType;
     }
 
@@ -105,8 +106,8 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Object[] uids = r[0].getUids(); // uid for messages to save
+        FolderCommandReference r = (FolderCommandReference) getReference();
+        Object[] uids = r.getUids(); // uid for messages to save
 
         if (uids.length == 0) {
             LOG.fine(
@@ -116,7 +117,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        parentFolder = (MessageFolder) r[0].getFolder();
+        parentFolder = (MessageFolder) r.getFolder();
 
         //register for status events
         ((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);

@@ -18,24 +18,10 @@
 
 package org.columba.mail.gui.config.mailboximport;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultDataLookup;
-
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
-
-import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
-import org.columba.mail.plugin.ImportPluginHandler;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import java.lang.reflect.Method;
 
 import javax.swing.JComponent;
@@ -44,6 +30,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultDataLookup;
+
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
+import org.columba.mail.plugin.ImportPluginHandler;
+import org.columba.mail.util.MailResourceLoader;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
     protected DataModel data;

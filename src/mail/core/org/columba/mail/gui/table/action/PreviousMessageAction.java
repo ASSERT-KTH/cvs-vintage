@@ -71,7 +71,7 @@ public class PreviousMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         //		TODO: fix previous-message action
 

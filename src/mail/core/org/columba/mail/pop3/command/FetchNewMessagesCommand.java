@@ -15,9 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,12 +31,10 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.pop3.POP3Exception;
 
 /**
  * @author freddy
@@ -61,12 +57,12 @@ public class FetchNewMessagesCommand extends Command {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public FetchNewMessagesCommand(Action action, DefaultCommandReference[] references) {
-		super(references);
+	public FetchNewMessagesCommand(Action action, DefaultCommandReference reference) {
+		super(reference);
 
-		POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
+		POP3CommandReference r = (POP3CommandReference) getReference();
 
-		server = r[0].getServer();
+		server = r.getServer();
 		
 		priority = Command.DAEMON_PRIORITY;
 		
@@ -77,9 +73,9 @@ public class FetchNewMessagesCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		POP3CommandReference[] r = (POP3CommandReference[]) getReferences(FIRST_EXECUTION);
+		POP3CommandReference r = (POP3CommandReference) getReference();
 
-		server = r[0].getServer();
+		server = r.getServer();
 
 		// register interest on status bar information
 		((StatusObservableImpl) server.getObservable()).setWorker(worker);
@@ -173,8 +169,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		// start command which adds message to folder
 		// and calls apply-filter on this specific message
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		r[0] = new FolderCommandReference(inboxFolder, message);
+		FolderCommandReference r = new FolderCommandReference(inboxFolder, message);
 
 		MainInterface.processor.addOp(new AddPOP3MessageCommand(r));
 	}

@@ -17,14 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.message.Address;
-
 import java.awt.Component;
 
 import javax.swing.JTable;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Address;
 
 
 public class FromRenderer extends DefaultLabelRenderer {

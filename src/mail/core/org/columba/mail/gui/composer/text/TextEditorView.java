@@ -15,23 +15,20 @@
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer.text;
 
+import java.awt.Dimension;
+import java.awt.Font;
+import java.nio.charset.Charset;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.JTextPane;
+
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.composer.util.UndoDocument;
-
-import java.awt.Dimension;
-import java.awt.Font;
-
-import java.nio.charset.Charset;
-
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.JTextPane;
 
 
 /**

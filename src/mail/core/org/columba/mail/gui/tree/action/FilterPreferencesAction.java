@@ -61,9 +61,9 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = (FolderCommandReference[]) frameMediator
+        FolderCommandReference r = (FolderCommandReference) frameMediator
                 .getSelectionManager().getSelection("mail.tree");
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r.getFolder();
 
         if (folder == null) { return; }
 

@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-
-import org.columba.mail.gui.table.model.TableModelSorter;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
@@ -28,6 +23,10 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+import org.columba.mail.gui.table.model.TableModelSorter;
 
 
 public class BasicHeaderRenderer extends DefaultTableCellRenderer {

@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.HeaderList;
-
 import java.util.Map;
 
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
+
+import org.columba.mail.message.HeaderList;
 
 
 /**

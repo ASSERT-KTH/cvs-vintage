@@ -15,11 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.command.StatusObservable;
-
-import org.columba.mail.folder.MessageFolder;
-
 import java.io.File;
+
+import org.columba.core.command.StatusObservable;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**

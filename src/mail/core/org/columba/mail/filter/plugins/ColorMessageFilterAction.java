@@ -1,13 +1,12 @@
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.Command;
+import java.awt.Color;
 
+import org.columba.core.command.Command;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.ColorMessageCommand;
-
-import java.awt.Color;
 
 
 /**
@@ -26,9 +25,8 @@ public class ColorMessageFilterAction extends AbstractFilterAction {
         int rgb = filterAction.getInteger("rgb", Color.black.getRGB());
 
         // create reference
-        FolderCommandReference[] r = new FolderCommandReference[1];
-        r[0] = new FolderCommandReference(srcFolder, uids);
-        r[0].setColorValue(rgb);
+        FolderCommandReference r = new FolderCommandReference(srcFolder, uids);
+        r.setColorValue(rgb);
 
         // create command
         return new ColorMessageCommand(r);

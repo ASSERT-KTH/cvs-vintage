@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.mail.gui.tree.action.ViewHeaderListAction;
-
 import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
@@ -24,6 +22,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreePath;
+
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 
 
 public class FolderTreeMouseListener extends MouseAdapter {

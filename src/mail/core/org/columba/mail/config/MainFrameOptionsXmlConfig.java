@@ -15,15 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
+import java.io.File;
+import java.util.logging.Logger;
+
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.GuiItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
 import org.columba.core.xml.XmlElement;
-
-import java.io.File;
-import java.util.logging.Logger;
 
 
 public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {

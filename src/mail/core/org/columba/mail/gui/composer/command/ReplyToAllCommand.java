@@ -17,20 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
-import org.columba.core.command.DefaultCommandReference;
-
-import org.columba.mail.composer.MessageBuilderHelper;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.MessageFolder;
-
-import org.columba.ristretto.message.Address;
-import org.columba.ristretto.message.BasicHeader;
-import org.columba.ristretto.message.Header;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.mail.composer.MessageBuilderHelper;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.Header;
 
 
 /**
@@ -50,8 +48,8 @@ public class ReplyToAllCommand extends ReplyCommand {
      * @param frameMediator
      * @param references
      */
-    public ReplyToAllCommand(DefaultCommandReference[] references) {
-        super(references);
+    public ReplyToAllCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     protected void initHeader(MessageFolder folder, Object[] uids)

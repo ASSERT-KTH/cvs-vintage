@@ -132,7 +132,7 @@ public class CommandProcessor implements Runnable {
 	 * @return true if the operation will not be blocked
 	 */
 	private boolean canBeProcessed(final OperationItem opItem) {
-		return opItem.getOperation().canBeProcessed(opItem.getOperationMode());
+		return opItem.getOperation().canBeProcessed();
 	}
 
 	/**

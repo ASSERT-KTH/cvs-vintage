@@ -16,31 +16,11 @@
 
 package org.columba.mail.gui.composer.html;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.toolbar.ToggleToolbarButton;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.html.action.FontSizeMenu;
-import org.columba.mail.gui.composer.html.action.ParagraphMenu;
-import org.columba.mail.gui.composer.html.util.FormatInfo;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
@@ -50,6 +30,24 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.text.html.HTML;
+
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.toolbar.ToggleToolbarButton;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.html.action.FontSizeMenu;
+import org.columba.mail.gui.composer.html.action.ParagraphMenu;
+import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * JPanel with useful HTML related actions.

@@ -15,22 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
+import java.awt.Dimension;
+import java.util.Enumeration;
+
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
+
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
-
-import java.awt.Dimension;
-
-import java.util.Enumeration;
-
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
 
 
 /**

@@ -18,11 +18,9 @@
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
-
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.MessageFolder;
-
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
@@ -47,8 +45,8 @@ public class ReplyToMailingListCommand extends ReplyCommand {
      * @param frameMediator
      * @param references
      */
-    public ReplyToMailingListCommand(DefaultCommandReference[] references) {
-        super(references);
+    public ReplyToMailingListCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     protected void initHeader(MessageFolder folder, Object[] uids)

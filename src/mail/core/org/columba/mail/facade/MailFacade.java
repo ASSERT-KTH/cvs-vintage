@@ -16,7 +16,6 @@
 package org.columba.mail.facade;
 
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.main.MailInterface;
 
 /**

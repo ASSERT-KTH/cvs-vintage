@@ -19,14 +19,11 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
 
 /**
  * Mark selected messages with specific variant.
@@ -39,113 +36,74 @@ import org.columba.mail.main.MailInterface;
  */
 public class MarkMessageCommand extends FolderCommand {
 
-    public final static int MARK_AS_READ = 1;
+	public final static int MARK_AS_READ = 1;
 
-    public final static int MARK_AS_UNREAD = -1;
+	public final static int MARK_AS_UNREAD = -1;
 
-    public final static int MARK_AS_FLAGGED = 2;
+	public final static int MARK_AS_FLAGGED = 2;
 
-    public final static int MARK_AS_UNFLAGGED = -2;
+	public final static int MARK_AS_UNFLAGGED = -2;
 
-    public final static int MARK_AS_EXPUNGED = 3;
+	public final static int MARK_AS_EXPUNGED = 3;
 
-    public final static int MARK_AS_UNEXPUNGED = -3;
+	public final static int MARK_AS_UNEXPUNGED = -3;
 
-    public final static int MARK_AS_ANSWERED = 4;
+	public final static int MARK_AS_ANSWERED = 4;
 
-    public final static int MARK_AS_UNANSWERED = -4;
+	public final static int MARK_AS_UNANSWERED = -4;
 
-    public final static int MARK_AS_SPAM = 5;
+	public final static int MARK_AS_SPAM = 5;
 
-    public final static int MARK_AS_NOTSPAM = -5;
-    
-    public final static int MARK_AS_DRAFT = 6;
-    
-    public final static int MARK_AS_NOTDRAFT = -6;
+	public final static int MARK_AS_NOTSPAM = -5;
 
-    protected FolderCommandAdapter adapter;
+	public final static int MARK_AS_DRAFT = 6;
 
-    private WorkerStatusController worker;
+	public final static int MARK_AS_NOTDRAFT = -6;
 
-    /**
-     * Constructor for MarkMessageCommand.
-     * 
-     * @param frameMediator
-     * @param references
-     */
-    public MarkMessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	private WorkerStatusController worker;
 
-    public void updateGUI() throws Exception {
-        // get source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+	/**
+	 * Constructor for MarkMessageCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public MarkMessageCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-        // for every source references
-        TableModelChangedEvent ev;
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		this.worker = worker;
 
-        for (int i = 0; i < r.length; i++) {
-            // update table
-            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK, r[i]
-                    .getFolder(), r[i].getUids(), r[i].getMarkVariant());
+		/*
+		 * // use wrapper class for easier handling of references array adapter =
+		 * new FolderCommandAdapter( (FolderCommandReference[])
+		 * getReferences()); // get array of source references
+		 * FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		 */
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-            TableUpdater.tableChanged(ev);
+		// get array of message UIDs
+		Object[] uids = r.getUids();
 
-            // update treemodel
-            MailInterface.treeModel.nodeChanged(r[i].getFolder());
-        }
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
-        // get update reference
-        // -> only available if VirtualFolder is involved in operation
-        FolderCommandReference u = adapter.getUpdateReferences();
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-        if (u != null) {
-            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK, u
-                    .getFolder(), u.getUids(), u.getMarkVariant());
+		// which kind of mark?
+		int markVariant = r.getMarkVariant();
 
-            TableUpdater.tableChanged(ev);
-            MailInterface.treeModel.nodeChanged(u.getFolder());
-        }
-    }
+		// saving last selected message to the folder
+		srcFolder.setLastSelection(uids[0]);
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        this.worker = worker;
+		// mark message
+		srcFolder.markMessage(uids, markVariant);
 
-        // use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter(
-                (FolderCommandReference[]) getReferences());
+	}
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
-
-        // for every folder
-        for (int i = 0; i < r.length; i++) {
-            // get array of message UIDs
-            Object[] uids = r[i].getUids();
-
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
-
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable())
-                    .setWorker(worker);
-
-            // which kind of mark?
-            int markVariant = r[i].getMarkVariant();
-
-            // saving last selected message to the folder
-            srcFolder.setLastSelection(uids[0]);
-
-            // mark message
-            srcFolder.markMessage(uids, markVariant);
-
-           
-
-        }
-    }
-
-    
 }

@@ -16,19 +16,18 @@
 
 package org.columba.mail.folder;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.plugin.FolderPluginHandler;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.plugin.FolderPluginHandler;
 
 /**
  * Factory for creating subfolders.

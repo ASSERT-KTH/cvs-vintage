@@ -15,10 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -26,11 +30,6 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
-
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
-
-import javax.swing.tree.DefaultMutableTreeNode;
 
 
 /**
@@ -61,12 +60,10 @@ public class DownAction extends AbstractColumbaAction {
         LOG.info("action down performed");
 
         // getting last selection
-        FolderCommandReference[] r = ((MailFrameMediator)frameController).getTableSelection();
-        FolderCommandReference ref = r[0];
-        LOG.info("folderCommandRef: " + ref);
-
+        FolderCommandReference r = ((MailFrameMediator)frameController).getTableSelection();
+       
         // getting current uid
-        Object[] uids = ref.getUids();
+        Object[] uids = r.getUids();
         LOG.info("curr uids: " + uids);
 
         // getting current node (under the selection)
@@ -90,7 +87,7 @@ public class DownAction extends AbstractColumbaAction {
         LOG.info("prevUids: " + nextUids);
 
         // and set this to the actual ref
-        ref.setUids(nextUids);
+        r.setUids(nextUids);
 
         // check if the node is not null
         MessageNode[] nodes = new MessageNode[nextUids.length];
@@ -115,15 +112,14 @@ public class DownAction extends AbstractColumbaAction {
             tableController.setSelected(nextUids);
 
             // saving the last selection for the current folder
-            ((MessageFolder) ref.getFolder()).setLastSelection(nextUids[0]);
+            ((MessageFolder) r.getFolder()).setLastSelection(nextUids[0]);
 
             int row = tableController.getView().getSelectedRow();
             tableController.getView().scrollRectToVisible(tableController.getView()
                                                                          .getCellRect(row,
                     0, false));
 
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(ref.getFolder(), nextUids);
+            FolderCommandReference refNew = new FolderCommandReference(r.getFolder(), nextUids);
 
             // view the message under the new node
             MainInterface.processor.addOp(new ViewMessageCommand(

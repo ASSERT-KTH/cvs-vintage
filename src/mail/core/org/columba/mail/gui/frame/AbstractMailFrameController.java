@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
+import java.nio.charset.Charset;
+
+import javax.swing.event.EventListenerList;
+
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
@@ -23,15 +27,11 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
-
-import java.nio.charset.Charset;
-
-import javax.swing.event.EventListenerList;
+import org.columba.mail.gui.messageframe.MessageFrameController;
 
 
 /**
@@ -73,36 +73,36 @@ public abstract class AbstractMailFrameController
         super(id, viewItem);
     }
 
-    public FolderCommandReference[] getTableSelection() {
-        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+    public FolderCommandReference getTableSelection() {
+        FolderCommandReference r = (FolderCommandReference) getSelectionManager()
                                                                     .getSelection("mail.table");
 
         return r;
     }
 
-    public void setTableSelection(FolderCommandReference[] r) {
+    public void setTableSelection(FolderCommandReference r) {
         getSelectionManager().setSelection("mail.table", r);
     }
 
-    public FolderCommandReference[] getTreeSelection() {
-        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+    public FolderCommandReference getTreeSelection() {
+        FolderCommandReference r = (FolderCommandReference) getSelectionManager()
                                                                     .getSelection("mail.tree");
 
         return r;
     }
 
-    public void setTreeSelection(FolderCommandReference[] r) {
+    public void setTreeSelection(FolderCommandReference r) {
         getSelectionManager().setSelection("mail.tree", r);
     }
 
-    public FolderCommandReference[] getAttachmentSelection() {
-        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+    public FolderCommandReference getAttachmentSelection() {
+        FolderCommandReference r = (FolderCommandReference) getSelectionManager()
                                                                     .getSelection("mail.attachment");
 
         return r;
     }
 
-    public void setAttachmentSelection(FolderCommandReference[] r) {
+    public void setAttachmentSelection(FolderCommandReference r) {
         getSelectionManager().setSelection("mail.attachment", r);
     }
 

@@ -70,8 +70,7 @@ public class SendLaterAction extends AbstractColumbaAction {
 		OutboxFolder destFolder = (OutboxFolder) MailInterface.treeModel
 				.getFolder(103);
 
-		ComposerCommandReference[] r = new ComposerCommandReference[1];
-		r[0] = new ComposerCommandReference(composerController, destFolder);
+		ComposerCommandReference r =new ComposerCommandReference(composerController, destFolder);
 
 		SaveMessageCommand c = new SaveMessageCommand(r);
 		MainInterface.processor.addOp(c);
@@ -79,11 +78,11 @@ public class SendLaterAction extends AbstractColumbaAction {
 		//      -> get source reference of message
 		// when replying this is the original sender's message
 		// you selected and replied to
-		FolderCommandReference[] ref2 = composerController.getModel()
+		FolderCommandReference ref2 = composerController.getModel()
 				.getSourceReference();
 		if (ref2 != null) {
 			// mark message as answered
-			ref2[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+			ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 			MarkMessageCommand c1 = new MarkMessageCommand(ref2);
 			MainInterface.processor.addOp(c1);
 		}

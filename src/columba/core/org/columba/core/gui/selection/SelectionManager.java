@@ -19,88 +19,93 @@ import org.columba.core.command.DefaultCommandReference;
 
 import java.util.Hashtable;
 
-
 /**
- * Manages selection handling of a complete frame which can
- * have many different components with a selection model.
+ * Manages selection handling of a complete frame which can have many different
+ * components with a selection model.
  * <p>
- * It additionally wraps almost all methods of {@link SelectionHandler}.
- * So, there's no need to directly access {@link SelectionHandler}.
+ * It additionally wraps almost all methods of {@link SelectionHandler}. So,
+ * there's no need to directly access {@link SelectionHandler}.
  * <p>
  * The <code>org.columba.core.gui.frame</code> package makes highly use of
  * this class to manage all its selection stuff.
  * <p>
- * SelectionHandler has an id <code>String</code> as attribute. This makes
- * it easy to indentify the SelectionHandler.
- *
+ * SelectionHandler has an id <code>String</code> as attribute. This makes it
+ * easy to indentify the SelectionHandler.
+ * 
  * @see org.columba.core.gui.selection.SelectionHandler
  * @see org.columba.core.gui.frame.FrameMediator
- *
+ * 
  * @author fdietz, tstich
  */
 public class SelectionManager {
-    /**
- * Map for storing all selection handlers
- *
- */
-    private Hashtable selectionHandler;
+	/**
+	 * Map for storing all selection handlers
+	 *  
+	 */
+	private Hashtable selectionHandler;
 
-    /**
- * default constructor
- */
-    public SelectionManager() {
-        // init Map
-        selectionHandler = new Hashtable();
-    }
+	/**
+	 * default constructor
+	 */
+	public SelectionManager() {
+		// init Map
+		selectionHandler = new Hashtable();
+	}
 
-    /**
- * Add selection handler
- *
- * @param handler
- */
-    public void addSelectionHandler(SelectionHandler handler) {
-        selectionHandler.put(handler.getId(), handler);
-    }
+	/**
+	 * Add selection handler
+	 * 
+	 * @param handler
+	 */
+	public void addSelectionHandler(SelectionHandler handler) {
+		selectionHandler.put(handler.getId(), handler);
+	}
 
-    /**
- * Register selection listener at selecton handler with id.
- *
- * @param id                ID of selection handler
- * @param l                        listener interested in selection changes
- */
-    public void registerSelectionListener(String id, SelectionListener l) {
-        SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
+	/**
+	 * Register selection listener at selecton handler with id.
+	 * 
+	 * @param id
+	 *            ID of selection handler
+	 * @param l
+	 *            listener interested in selection changes
+	 */
+	public void registerSelectionListener(String id, SelectionListener l) {
+		SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
 
-        h.addSelectionListener(l);
-    }
+		h.addSelectionListener(l);
+	}
 
-    /**
- * Set current selection.
- *
- * @param id                        ID of selection handler
- * @param selection                new selection for this handler
- */
-    public void setSelection(String id, DefaultCommandReference[] selection) {
-        ((SelectionHandler) selectionHandler.get(id)).setSelection(selection);
-    }
+	/**
+	 * Set current selection.
+	 * 
+	 * @param id
+	 *            ID of selection handler
+	 * @param selection
+	 *            new selection for this handler
+	 */
+	public void setSelection(String id, DefaultCommandReference selection) {
+		((SelectionHandler) selectionHandler.get(id)).setSelection(selection);
+	}
 
-    /**
- * Get current selection of specific selection handler.
- *
- * @param id                ID of selection handler
- * @return                        reference of current selection of this handler
- */
-    public DefaultCommandReference[] getSelection(String id) {
-        return ((SelectionHandler) selectionHandler.get(id)).getSelection();
-    }
+	/**
+	 * Get current selection of specific selection handler.
+	 * 
+	 * @param id
+	 *            ID of selection handler
+	 * @return reference of current selection of this handler
+	 */
+	public DefaultCommandReference getSelection(String id) {
+		return ((SelectionHandler) selectionHandler.get(id)).getSelection();
+	}
 
-    /**
- * Get selection handler.
- *
- * @param id                ID of selection handler
- * @return                        SelectionHandler
- */
-    public SelectionHandler getHandler(String id) {
-        return (SelectionHandler) selectionHandler.get(id);
-    }
+	/**
+	 * Get selection handler.
+	 * 
+	 * @param id
+	 *            ID of selection handler
+	 * @return SelectionHandler
+	 */
+	public SelectionHandler getHandler(String id) {
+		return (SelectionHandler) selectionHandler.get(id);
+	}
 }

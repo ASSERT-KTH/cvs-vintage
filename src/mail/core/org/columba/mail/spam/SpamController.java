@@ -18,18 +18,16 @@
 package org.columba.mail.spam;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
-
 import org.macchiato.DBWrapper;
 import org.macchiato.Message;
 import org.macchiato.SpamFilter;

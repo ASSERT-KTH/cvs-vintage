@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
@@ -68,9 +69,9 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * @param references
      * @param filterType  Which type of filter to create. Used defined constants
      */
-    public CreateFilterOnMessageCommand(FrameMediator mediator, DefaultCommandReference[] references,
+    public CreateFilterOnMessageCommand(FrameMediator mediator, DefaultCommandReference reference,
         String filterType) {
-        super(mediator, references);
+        super(mediator, reference);
         this.filterType = filterType;
     }
 
@@ -101,8 +102,8 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Object[] uids = r[0].getUids(); // uid for messages to save
+        FolderCommandReference r = (FolderCommandReference) getReference();
+        Object[] uids = r.getUids(); // uid for messages to save
 
         if (uids.length == 0) {
             LOG.fine(
@@ -112,7 +113,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        srcFolder = (MessageFolder) r[0].getFolder();
+        srcFolder = (MessageFolder) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

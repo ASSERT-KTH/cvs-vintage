@@ -15,27 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.search;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -64,6 +43,26 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.filter.FilterRule;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.virtual.VirtualFolder;
+import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Search message Dialog. Lets you specify a source-folder and the search
@@ -379,8 +378,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				ex.printStackTrace();
 			}
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(destFolder);
+			FolderCommandReference r =  new FolderCommandReference(destFolder);
 
 			((MailFrameMediator) frameController).setTreeSelection(r);
 

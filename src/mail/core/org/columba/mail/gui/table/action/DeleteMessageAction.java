@@ -84,10 +84,10 @@ public class DeleteMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+        r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r.getFolder();
         int uid = folder.getConfiguration().getInteger("uid");
         MessageFolder trash = (MessageFolder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
 
@@ -103,12 +103,8 @@ public class DeleteMessageAction extends AbstractColumbaAction
             // -> move messages to trash
             MessageFolder destFolder = trash;
 
-            FolderCommandReference[] result = new FolderCommandReference[2];
-            FolderCommandReference[] r1 = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-            FolderCommandReference r2 = new FolderCommandReference(destFolder);
-
-            result[0] = r1[0];
-            result[1] = r2;
+            FolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+            result.setDestinationFolder(destFolder);
 
             MoveMessageCommand c = new MoveMessageCommand(result);
 

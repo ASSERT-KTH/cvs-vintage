@@ -18,7 +18,6 @@
 package org.columba.mail.gui.table.model;
 
 import org.columba.mail.message.ColumbaHeader;
-
 import org.columba.ristretto.message.Flags;
 
 

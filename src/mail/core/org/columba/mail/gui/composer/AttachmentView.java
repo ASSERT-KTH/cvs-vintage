@@ -15,17 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;

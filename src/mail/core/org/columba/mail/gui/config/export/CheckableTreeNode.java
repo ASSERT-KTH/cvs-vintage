@@ -16,7 +16,6 @@
 package org.columba.mail.gui.config.export;
 
 import org.columba.mail.folder.AbstractFolder;
-
 import org.frappucino.checkabletree.CheckableItemImpl;
 
 

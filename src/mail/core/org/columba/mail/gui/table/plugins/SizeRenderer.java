@@ -15,14 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.mail.gui.table.model.MessageNode;
-
 import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+
+import org.columba.mail.gui.table.model.MessageNode;
 
 
 public class SizeRenderer extends DefaultLabelRenderer {

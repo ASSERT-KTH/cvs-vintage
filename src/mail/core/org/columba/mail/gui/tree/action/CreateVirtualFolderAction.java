@@ -44,9 +44,8 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-public class CreateVirtualFolderAction extends AbstractColumbaAction
-		implements
-			SelectionListener {
+public class CreateVirtualFolderAction extends AbstractColumbaAction implements
+		SelectionListener {
 
 	public CreateVirtualFolderAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
@@ -76,7 +75,8 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		CreateFolderDialog dialog = new CreateFolderDialog(getFrameMediator(), null);
+		CreateFolderDialog dialog = new CreateFolderDialog(getFrameMediator(),
+				null);
 
 		String name;
 
@@ -85,18 +85,18 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction
 			name = dialog.getName();
 
 			try {
-				FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) getFrameMediator())
+				FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) getFrameMediator())
 						.getTreeSelection();
 
 				VirtualFolder vfolder = (VirtualFolder) FolderFactory
-						.getInstance().createChild(r[0].getFolder(), name,
+						.getInstance().createChild(r.getFolder(), name,
 								"VirtualFolder");
 
-				MailInterface.treeModel.nodeStructureChanged(r[0].getFolder());
+				MailInterface.treeModel.nodeStructureChanged(r.getFolder());
 
 				// set parent folder uid
 				vfolder.getConfiguration().set("property", "source_uid",
-						r[0].getFolder().getUid());
+						r.getFolder().getUid());
 
 				// open search dialog
 				new SearchFrame((AbstractMailFrameController) frameMediator,

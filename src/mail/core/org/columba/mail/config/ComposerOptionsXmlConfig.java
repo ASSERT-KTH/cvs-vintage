@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
+import java.io.File;
+
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.ViewItem;
-
-import java.io.File;
 
 
 public class ComposerOptionsXmlConfig extends DefaultXmlConfig {

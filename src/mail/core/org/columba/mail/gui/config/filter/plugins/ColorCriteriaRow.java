@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import org.columba.core.gui.util.ColorComboBox;
-import org.columba.core.gui.util.ColorItem;
-import org.columba.core.plugin.AbstractPluginHandler;
-
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
-
 import java.awt.Color;
 
 import javax.swing.JComboBox;
+
+import org.columba.core.gui.util.ColorComboBox;
+import org.columba.core.gui.util.ColorItem;
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
 
 
 /**

@@ -19,9 +19,7 @@ package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.main.MailInterface;
-
 import org.columba.ristretto.parser.ParserException;
 
 public class AccountItem extends DefaultItem {

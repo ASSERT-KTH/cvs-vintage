@@ -23,9 +23,6 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -45,20 +42,8 @@ public class AddMessageCommand extends Command {
      *
      * @param references command arguments.
      */
-    public AddMessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
-
-    /** {@inheritDoc} */
-    public void updateGUI() throws Exception {
-        // send update to message list
-        TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
-                folder);
-
-        TableUpdater.tableChanged(ev);
-
-        // notify treemodel
-        MailInterface.treeModel.nodeChanged(folder);
+    public AddMessageCommand(DefaultCommandReference reference) {
+        super(reference);
     }
 
     /**
@@ -67,16 +52,16 @@ public class AddMessageCommand extends Command {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get reference
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference r = (FolderCommandReference) getReference();
 
         // get source folder
-        folder = (MessageFolder) r[0].getFolder();
+        folder = (MessageFolder) r.getFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
         // get message from reference
-        ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
+        ColumbaMessage message = (ColumbaMessage) r.getMessage();
 
         // add message to folder
         SourceInputStream messageStream = new SourceInputStream(message.getSource());

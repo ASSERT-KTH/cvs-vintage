@@ -15,15 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.config.PopItem;
-import org.columba.mail.main.MailInterface;
-
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 import java.util.logging.Logger;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.main.MailInterface;
 
 
 public class POP3ServerCollection { //implements ActionListener

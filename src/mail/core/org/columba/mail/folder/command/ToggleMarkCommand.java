@@ -18,16 +18,15 @@
 package org.columba.mail.folder.command;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -45,227 +44,218 @@ import org.columba.ristretto.message.Flags;
  * Creates two sets of messages and uses {@link MarkMessageCommand}, which does
  * the flag change.
  * <p>
- * Additionally, if message is marked as spam or non-spam the bayesian filter
- * is trained. 
- *
+ * Additionally, if message is marked as spam or non-spam the bayesian filter is
+ * trained.
+ * 
  * @see MarkMessageCommand
  * @author fdietz
  */
 public class ToggleMarkCommand extends FolderCommand {
 
-    protected FolderCommandAdapter adapter;
+	private WorkerStatusController worker;
 
-    private WorkerStatusController worker;
+	private List commandList;
 
-    private List commandList;
+	/**
+	 * Constructor for ToggleMarkCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ToggleMarkCommand(DefaultCommandReference reference) {
+		super(reference);
 
-    /**
-     * Constructor for ToggleMarkCommand.
-     * 
-     * @param frameMediator
-     * @param references
-     */
-    public ToggleMarkCommand(DefaultCommandReference[] references) {
-        super(references);
+		commandList = new ArrayList();
+	}
 
-        commandList = new ArrayList();
-    }
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		this.worker = worker;
 
-    public void updateGUI() throws Exception {
+		/*
+		 * // use wrapper class for easier handling of references array adapter =
+		 * new FolderCommandAdapter( (FolderCommandReference[])
+		 * getReferences());
+		 *  // get array of source references FolderCommandReference[] r =
+		 * adapter.getSourceFolderReferences();
+		 */
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-        Iterator it = commandList.iterator();
-        while (it.hasNext()) {
-            FolderCommand c = (FolderCommand) it.next();
+		// get array of message UIDs
+		Object[] uids = r.getUids();
 
-            c.updateGUI();
-        }
-    }
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        this.worker = worker;
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-        // use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter(
-                (FolderCommandReference[]) getReferences());
+		// which kind of mark?
+		int markVariant = r.getMarkVariant();
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		List list1 = new ArrayList();
+		List list2 = new ArrayList();
 
-        // for every folder
-        for (int i = 0; i < r.length; i++) {
-            // get array of message UIDs
-            Object[] uids = r[i].getUids();
+		for (int j = 0; j < uids.length; j++) {
+			Flags flags = srcFolder.getFlags(uids[j]);
 
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
+			boolean result = false;
+			if (markVariant == MarkMessageCommand.MARK_AS_READ) {
+				if (flags.getSeen())
+					result = true;
+			} else if (markVariant == MarkMessageCommand.MARK_AS_FLAGGED) {
+				if (flags.getFlagged())
+					result = true;
+			} else if (markVariant == MarkMessageCommand.MARK_AS_EXPUNGED) {
+				if (flags.getDeleted())
+					result = true;
+			} else if (markVariant == MarkMessageCommand.MARK_AS_ANSWERED) {
+				if (flags.getAnswered())
+					result = true;
+			} else if (markVariant == MarkMessageCommand.MARK_AS_DRAFT) {
+				if (flags.getDraft())
+					result = true;
+			} else if (markVariant == MarkMessageCommand.MARK_AS_SPAM) {
+				boolean spam = ((Boolean) srcFolder.getAttribute(uids[j],
+						"columba.spam")).booleanValue();
+				if (spam)
+					result = true;
+			}
 
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable())
-                    .setWorker(worker);
+			if (result)
+				list1.add(uids[j]);
+			else
+				list2.add(uids[j]);
+		}
 
-            // which kind of mark?
-            int markVariant = r[i].getMarkVariant();
+		FolderCommandReference ref = null;
 
-            List list1 = new ArrayList();
-            List list2 = new ArrayList();
+		if (list1.size() > 0) {
+			ref = new FolderCommandReference(srcFolder, list1.toArray());
+			ref.setMarkVariant(-markVariant);
+			MarkMessageCommand c = new MarkMessageCommand(ref);
+			commandList.add(c);
+			c.execute(worker);
 
-            for (int j = 0; j < uids.length; j++) {
-                Flags flags = srcFolder.getFlags(uids[j]);
+			// train bayesian filter
+			if ((markVariant == MarkMessageCommand.MARK_AS_SPAM)
+					|| (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)) {
+				processSpamFilter(uids, srcFolder, -markVariant);
+			}
+		}
 
-                boolean result = false;
-                if (markVariant == MarkMessageCommand.MARK_AS_READ) {
-                    if (flags.getSeen()) result = true;
-                } else if (markVariant == MarkMessageCommand.MARK_AS_FLAGGED) {
-                    if (flags.getFlagged()) result = true;
-                } else if (markVariant == MarkMessageCommand.MARK_AS_EXPUNGED) {
-                    if (flags.getDeleted()) result = true;
-                } else if (markVariant == MarkMessageCommand.MARK_AS_ANSWERED) {
-                    if (flags.getAnswered()) result = true;
-                }  else if (markVariant == MarkMessageCommand.MARK_AS_DRAFT) {
-                    if (flags.getDraft()) result = true;
-                } else if (markVariant == MarkMessageCommand.MARK_AS_SPAM) {
-                    boolean spam = ((Boolean) srcFolder.getAttribute(uids[j],
-                            "columba.spam")).booleanValue();
-                    if (spam) result = true;
-                }
+		if (list2.size() > 0) {
+			ref = new FolderCommandReference(srcFolder, list2.toArray());
+			ref.setMarkVariant(markVariant);
+			MarkMessageCommand c = new MarkMessageCommand(ref);
+			commandList.add(c);
+			c.execute(worker);
 
-                if (result)
-                    list1.add(uids[j]);
-                else
-                    list2.add(uids[j]);
-            }
+			// train bayesian filter
+			if ((markVariant == MarkMessageCommand.MARK_AS_SPAM)
+					|| (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)) {
+				processSpamFilter(uids, srcFolder, markVariant);
+			}
+		}
 
-            FolderCommandReference[] ref = new FolderCommandReference[1];
+	}
 
-            if (list1.size() > 0) {
-                ref[0] = new FolderCommandReference(srcFolder, list1.toArray());
-                ref[0].setMarkVariant(-markVariant);
-                MarkMessageCommand c = new MarkMessageCommand(ref);
-                commandList.add(c);
-                c.execute(worker);
+	/**
+	 * Train spam filter.
+	 * <p>
+	 * Move message to specified folder or delete message immediately based on
+	 * account configuration.
+	 * 
+	 * @param uids
+	 *            message uid
+	 * @param srcFolder
+	 *            source folder
+	 * @param markVariant
+	 *            mark variant (spam/not spam)
+	 * @throws Exception
+	 */
+	private void processSpamFilter(Object[] uids, MessageFolder srcFolder,
+			int markVariant) throws Exception {
 
-                // train bayesian filter
-                if ((markVariant == MarkMessageCommand.MARK_AS_SPAM)
-                        || (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)) {
-                    processSpamFilter(uids, srcFolder, -markVariant);
-                }
-            }
+		// update status message
+		worker.setDisplayText("Training messages...");
+		worker.setProgressBarMaximum(uids.length);
 
-            if (list2.size() > 0) {
-                ref[0] = new FolderCommandReference(srcFolder, list2.toArray());
-                ref[0].setMarkVariant(markVariant);
-                MarkMessageCommand c = new MarkMessageCommand(ref);
-                commandList.add(c);
-                c.execute(worker);
+		// mark as/as not spam
+		// for each message
+		for (int j = 0; j < uids.length; j++) {
 
-                // train bayesian filter
-                if ((markVariant == MarkMessageCommand.MARK_AS_SPAM)
-                        || (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)) {
-                    processSpamFilter(uids, srcFolder, markVariant);
-                }
-            }
-        }
-    }
+			worker.setDisplayText("Training messages...");
+			worker.setProgressBarMaximum(uids.length);
+			// increase progressbar value
+			worker.setProgressBarValue(j);
 
-    /**
-     * Train spam filter.
-     * <p>
-     * Move message to specified folder or delete message immediately based on
-     * account configuration.
-     * 
-     * @param uids
-     *            message uid
-     * @param srcFolder
-     *            source folder
-     * @param markVariant
-     *            mark variant (spam/not spam)
-     * @throws Exception
-     */
-    private void processSpamFilter(Object[] uids, MessageFolder srcFolder,
-            int markVariant) throws Exception {
+			// cancel here if user requests
+			if (worker.cancelled()) {
+				break;
+			}
 
-        // update status message
-        worker.setDisplayText("Training messages...");
-        worker.setProgressBarMaximum(uids.length);
+			// message belongs to which account?
+			AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
+					uids[j]);
+			// skip if account information is not available
+			if (item == null)
+				continue;
 
-        // mark as/as not spam
-        // for each message
-        for (int j = 0; j < uids.length; j++) {
+			// if spam filter is not enabled -> return
+			if (item.getSpamItem().isEnabled() == false)
+				continue;
 
-            worker.setDisplayText("Training messages...");
-            worker.setProgressBarMaximum(uids.length);
-            // increase progressbar value
-            worker.setProgressBarValue(j);
+			System.out.println("learning uid=" + uids[j]);
 
-            // cancel here if user requests
-            if (worker.cancelled()) {
-                break;
-            }
+			// create reference
+			FolderCommandReference ref = new FolderCommandReference(srcFolder,
+					new Object[] { uids[j] });
 
-            // message belongs to which account?
-            AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
-                    uids[j]);
-            // skip if account information is not available
-            if (item == null) continue;
+			// create command
+			Command c = null;
+			if (markVariant == MarkMessageCommand.MARK_AS_SPAM)
+				c = new LearnMessageAsSpamCommand(ref);
+			else
+				c = new LearnMessageAsHamCommand(ref);
 
-            // if spam filter is not enabled -> return
-            if (item.getSpamItem().isEnabled() == false) continue;
+			// execute command
+			c.execute(worker);
 
-            System.out.println("learning uid=" + uids[j]);
+			// skip if message is *not* marked as spam
+			if (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)
+				continue;
 
-            // create reference
-            FolderCommandReference[] ref = new FolderCommandReference[1];
-            ref[0] = new FolderCommandReference(srcFolder,
-                    new Object[] { uids[j]});
+			// skip if user didn't enable this option
+			if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
+				continue;
 
-            // create command
-            Command c = null;
-            if (markVariant == MarkMessageCommand.MARK_AS_SPAM)
-                c = new LearnMessageAsSpamCommand(ref);
-            else
-                c = new LearnMessageAsHamCommand(ref);
+			if (item.getSpamItem().isMoveTrashSelected() == false) {
+				// move message to user-configured folder (generally "Junk"
+				// folder)
+				AbstractFolder destFolder = MailInterface.treeModel
+						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
-            // execute command
-            c.execute(worker);
+				// create reference
+				FolderCommandReference ref2 = new FolderCommandReference(
+						srcFolder, destFolder, new Object[] { uids[j] });
+				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
-            // skip if message is *not* marked as spam
-            if (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM) continue;
+			} else {
+				// move message to trash
+				MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder
+						.getRootFolder()).getTrashFolder();
 
-            // skip if user didn't enable this option
-            if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
-                    continue;
+				// create reference
+				FolderCommandReference ref2 = new FolderCommandReference(
+						srcFolder, trash, new Object[] { uids[j] });
 
-            if (item.getSpamItem().isMoveTrashSelected() == false) {
-                // move message to user-configured folder (generally "Junk"
-                // folder)
-                AbstractFolder destFolder = MailInterface.treeModel
-                        .getFolder(item.getSpamItem().getMoveCustomFolder());
+				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(srcFolder,
-                        new Object[] { uids[j]});
-                ref2[1] = new FolderCommandReference(destFolder);
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+			}
 
-            } else {
-                // move message to trash
-                MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder
-                        .getRootFolder()).getTrashFolder();
-
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(srcFolder,
-                        new Object[] { uids[j]});
-                ref2[1] = new FolderCommandReference(trash);
-
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
-
-            }
-
-        }
-    }
+		}
+	}
 }

@@ -27,11 +27,9 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
-
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;

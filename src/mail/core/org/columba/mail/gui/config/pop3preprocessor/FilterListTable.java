@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import org.columba.core.xml.XmlElement;
-
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import org.columba.core.xml.XmlElement;
 
 
 class FilterListTable extends JTable {

@@ -15,16 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.ListTools;
-
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.Header;
-
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -32,6 +22,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.ListTools;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Header;
 
 
 /**

@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
-import org.columba.core.gui.util.ImageLoader;
-
-import org.frappucino.checkabletree.CheckableItemImpl;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.frappucino.checkabletree.CheckableItemImpl;
 
 
 public class ListInfoTreeNode extends CheckableItemImpl {

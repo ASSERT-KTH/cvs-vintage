@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.gui.util.ImageLoader;
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**

@@ -64,7 +64,7 @@ public class MarkFolderAsReadAction extends AbstractColumbaAction implements Sel
 
     /** {@inheritDoc} */
     public void actionPerformed(ActionEvent e) {
-        FolderCommandReference[] r = (FolderCommandReference[]) frameMediator.getSelectionManager()
+        FolderCommandReference r = (FolderCommandReference) frameMediator.getSelectionManager()
                                                                              .getSelection("mail.tree");
         MainInterface.processor.addOp(new MarkFolderAsReadCommand(r));
     }

@@ -15,15 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import org.columba.mail.gui.util.PGPPassphraseDialog;
-
-import org.waffel.jscf.JSCFConnection;
-import org.waffel.jscf.JSCFException;
-import org.waffel.jscf.JSCFStatement;
-
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+
+import org.columba.mail.gui.util.PGPPassphraseDialog;
+import org.waffel.jscf.JSCFConnection;
+import org.waffel.jscf.JSCFException;
+import org.waffel.jscf.JSCFStatement;
 
 
 /**

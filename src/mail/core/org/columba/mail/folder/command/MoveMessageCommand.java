@@ -19,123 +19,70 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.main.MailInterface;
-
 
 /**
  * Move selected messages from source to destination folder.
  * <p>
  * A dialog asks the user the destination folder to use.
- *
+ * 
  * @author fdietz
  */
 public class MoveMessageCommand extends CopyMessageCommand {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.command");
 
-    /**
-     * Constructor for MoveMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
-    public MoveMessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for MoveMessageCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public MoveMessageCommand(DefaultCommandReference reference) {
+		super(reference);
+	}
 
-    public void updateGUI() throws Exception {
-        // calling CopyMessageCommand.updateGUI() here!
-        super.updateGUI();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		// calling CopyMessageCommand.execute() here!
+		//super.execute(worker);
+		doExecute(worker, "move_messages", "err_copy_messages_retry",
+				"err_copy_messages_ignore", "err_move_messages_msg",
+				"err_move_messages_title", "move_messages_cancelled");
 
-        // get source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		// get messgae UIDs
+		Object[] uids = r.getUids();
 
-        // for each source reference
-        TableModelChangedEvent ev;
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
-        for (int i = 0; i < r.length; i++) {
-            // update message list
-            ev = new TableModelChangedEvent(TableModelChangedEvent.REMOVE,
-                    r[i].getFolder(), r[i].getUids());
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-            TableUpdater.tableChanged(ev);
+		// setting lastSelection to null
+		srcFolder.setLastSelection(null);
 
-            // update treemodel
-            MailInterface.treeModel.nodeChanged(r[i].getFolder());
-        }
+		LOG.info("src=" + srcFolder + " dest=" + destFolder);
 
-        // get update reference
-        // -> only available if virtual folder is involved in operation
-        FolderCommandReference u = adapter.getUpdateReferences();
+		// update status message
+		worker.setDisplayText("Moving messages to " + destFolder.getName()
+				+ "...");
+		worker.setProgressBarMaximum(uids.length);
 
-        if (u != null) {
-            ev = new TableModelChangedEvent(TableModelChangedEvent.REMOVE,
-                    u.getFolder(), u.getUids());
+		// mark all messages as expunged
+		srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
 
-            TableUpdater.tableChanged(ev);
+		// expunge folder
+		srcFolder.expungeFolder();
 
-            MailInterface.treeModel.nodeChanged(u.getFolder());
-        }
-    }
+		// We are done - clear the status message after a delay
+		worker.clearDisplayTextWithDelay();
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker)
-    	throws Exception 
-    {
-      // calling CopyMessageCommand.execute() here!
-      //super.execute(worker);
-      doExecute(worker,
-                "move_messages",
-                "err_copy_messages_retry",
-                "err_copy_messages_ignore",
-                "err_move_messages_msg",
-                "err_move_messages_title",
-                "move_messages_cancelled");
-      
-
-      // get source reference array
-      FolderCommandReference[] r = adapter.getSourceFolderReferences();
-
-      // for every source reference
-      for (int i = 0; i < r.length; i++) {
-          // get messgae UIDs
-          Object[] uids = r[i].getUids();
-
-          // get source folder
-          MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
-
-          // register for status events
-          ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
-
-          // setting lastSelection to null
-          srcFolder.setLastSelection(null);
-
-          uids = r[i].getUids();
-
-          LOG.info("src=" + srcFolder + " dest=" + destFolder);
-
-          // update status message
-          worker.setDisplayText("Moving messages to " + destFolder.getName()
-                  + "...");
-          worker.setProgressBarMaximum(uids.length);
-
-          // mark all messages as expunged
-          srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
-
-          // expunge folder
-          srcFolder.expungeFolder();
-
-          // We are done - clear the status message after a delay
-          worker.clearDisplayTextWithDelay();
-      }
-    }
+	}
 }

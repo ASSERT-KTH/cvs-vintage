@@ -17,22 +17,21 @@ package org.columba.mail.gui.tree;
 
 import java.util.logging.Logger;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
-
 import javax.swing.JPopupMenu;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
+import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 
 /**

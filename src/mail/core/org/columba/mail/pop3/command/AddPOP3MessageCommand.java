@@ -28,8 +28,6 @@ import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
-import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
@@ -55,17 +53,17 @@ public class AddPOP3MessageCommand extends FolderCommand {
 	 * @param references
 	 *            command arguments
 	 */
-	public AddPOP3MessageCommand(DefaultCommandReference[] references) {
-		super(references);
+	public AddPOP3MessageCommand(DefaultCommandReference reference) {
+		super(reference);
 	}
 
 	/** {@inheritDoc} */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
-		inboxFolder = (MessageFolder) r[0].getFolder();
+		inboxFolder = (MessageFolder) r.getFolder();
 
-		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
+		ColumbaMessage message = (ColumbaMessage) r.getMessage();
 
 		// add message to folder
 		SourceInputStream messageStream = new SourceInputStream(message
@@ -108,8 +106,8 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		}
 
 		// create reference
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		r[0] = new FolderCommandReference(inboxFolder, new Object[]{uid});
+		FolderCommandReference r = new FolderCommandReference(inboxFolder,
+				new Object[] { uid });
 
 		// score message and mark as "spam" or "not spam"
 		new ScoreMessageCommand(r).execute(worker);
@@ -127,10 +125,8 @@ public class AddPOP3MessageCommand extends FolderCommand {
 						.getRootFolder()).getTrashFolder();
 
 				// create reference
-				FolderCommandReference[] ref2 = new FolderCommandReference[2];
-				ref2[0] = new FolderCommandReference(inboxFolder,
-						new Object[]{uid});
-				ref2[1] = new FolderCommandReference(trash);
+				FolderCommandReference ref2 = new FolderCommandReference(
+						inboxFolder, trash, new Object[] { uid });
 
 				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 			} else {
@@ -140,10 +136,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
 				// create reference
-				FolderCommandReference[] ref2 = new FolderCommandReference[2];
-				ref2[0] = new FolderCommandReference(inboxFolder,
-						new Object[]{uid});
-				ref2[1] = new FolderCommandReference(destFolder);
+				FolderCommandReference ref2 = new FolderCommandReference(
+						inboxFolder, destFolder, new Object[] { uid });
+
 				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
 			}
@@ -167,7 +162,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 			Filter filter = list.get(j);
 
 			Object[] result = inboxFolder.searchMessages(filter,
-					new Object[]{uid});
+					new Object[] { uid });
 
 			if (result.length != 0) {
 				CompoundCommand command = filter
@@ -178,15 +173,4 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		}
 	}
 
-	/** {@inheritDoc} */
-	public void updateGUI() throws Exception {
-		// update table viewer
-		TableModelChangedEvent ev = new TableModelChangedEvent(
-				TableModelChangedEvent.UPDATE, inboxFolder);
-
-		TableUpdater.tableChanged(ev);
-
-		// update tree viewer
-		MailInterface.treeModel.nodeChanged(inboxFolder);
-	}
 }

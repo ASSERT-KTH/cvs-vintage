@@ -31,9 +31,9 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
-import org.columba.mail.folder.FolderEvent;
-import org.columba.mail.folder.FolderListener;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.event.FolderEvent;
+import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -86,9 +86,14 @@ public class DefaultSearchEngine {
                 } catch (Exception ex) {}
             }
             
-            public void folderRenamed(FolderEvent e) {}
+            public void folderPropertyChanged(FolderEvent e) {}
             public void folderAdded(FolderEvent e) {}
             public void folderRemoved(FolderEvent e) {}
+
+			public void messageFlagChanged(FolderEvent e) {
+				// not needed
+				
+			}
         });
     }
 

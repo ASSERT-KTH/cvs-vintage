@@ -15,25 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.util;
 
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.main.MailInterface;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.Timer;
+
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -141,13 +139,13 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
         LOG.info("action perfomed");
         timer.stop();
 
-        FolderCommandReference[] r = new FolderCommandReference[] {message};
+        FolderCommandReference r =message;
 
-        if (r[0] == null) {
+        if (r == null) {
             return;
         }
 
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+        r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
         MarkMessageCommand c = new MarkMessageCommand(r);
 

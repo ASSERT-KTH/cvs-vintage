@@ -17,15 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import java.util.Vector;
+
 import org.columba.core.config.WindowItem;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.message.HeaderList;
-
-import java.util.Vector;
 
 /**
  * 

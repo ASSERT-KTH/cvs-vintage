@@ -71,9 +71,9 @@ public class ToggleExpungedFlagAction extends AbstractColumbaAction implements
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator())
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
                 .getTableSelection();
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
         ToggleMarkCommand c = new ToggleMarkCommand(r);
 

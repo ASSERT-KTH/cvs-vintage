@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
+import java.io.File;
+
 import org.columba.core.config.Config;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
-
-import java.io.File;
 
 /**
  * Configuration storage.

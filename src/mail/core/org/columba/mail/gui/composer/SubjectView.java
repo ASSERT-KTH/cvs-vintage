@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.gui.util.CTextField;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
+import org.columba.core.gui.util.CTextField;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

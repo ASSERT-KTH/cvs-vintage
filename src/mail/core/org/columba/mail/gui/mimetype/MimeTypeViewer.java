@@ -15,13 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
 
-import org.columba.core.util.OSInfo;
-
-import org.columba.ristretto.message.MimeHeader;
-
 import java.io.File;
-
 import java.net.URL;
+
+import org.columba.core.util.OSInfo;
+import org.columba.ristretto.message.MimeHeader;
 
 
 public class MimeTypeViewer {

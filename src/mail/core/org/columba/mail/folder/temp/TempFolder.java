@@ -111,7 +111,7 @@ public class TempFolder extends MessageFolder {
     /**
      * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
      */
-    protected void removeMessage(Object uid) throws Exception {
+    public void removeMessage(Object uid) throws Exception {
         
         Flags flags = getFlags(uid);
         

@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -33,6 +28,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**

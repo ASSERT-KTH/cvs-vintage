@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.folder;
+package org.columba.mail.folder.event;
 
 import java.util.EventListener;
 
@@ -35,9 +35,15 @@ public interface FolderListener extends EventListener {
     public void messageRemoved(FolderEvent e);
     
     /**
+     * Called when a message flag changed.
+     * @param e
+     */
+    public void messageFlagChanged(FolderEvent e);
+    
+    /**
      * Called when a folder has been renamed.
      */
-    public void folderRenamed(FolderEvent e);
+    public void folderPropertyChanged(FolderEvent e);
     
     /**
      * Called when a subfolder has been added to a folder.

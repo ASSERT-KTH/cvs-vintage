@@ -40,10 +40,10 @@ public class SaveAttachmentTemporaryCommand extends SaveAttachmentCommand {
     private Semaphore commandSemaphore;
 
     /**
-     * @param references Command references.
+     * @param reference Command reference.
      */
-    public SaveAttachmentTemporaryCommand(DefaultCommandReference[] references) {
-        super(references);
+    public SaveAttachmentTemporaryCommand(DefaultCommandReference reference) {
+        super(reference);
         commandSemaphore = new Semaphore(true);
     }
 

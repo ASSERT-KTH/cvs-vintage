@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -46,10 +45,11 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SendAllMessagesCommand extends FolderCommand {
 	protected SendListManager sendListManager = new SendListManager();
+
 	protected OutboxFolder outboxFolder;
 
 	private Action action;
-	
+
 	/**
 	 * Constructor for SendAllMessagesCommand.
 	 * 
@@ -58,9 +58,9 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @param references
 	 */
 	public SendAllMessagesCommand(Action action, FrameMediator frameMediator,
-			DefaultCommandReference[] references) {
-		super(frameMediator, references);
-		
+			DefaultCommandReference reference) {
+		super(frameMediator, reference);
+
 		this.action = action;
 	}
 
@@ -68,14 +68,14 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		FolderCommandReference r = (FolderCommandReference) getReference();
 
 		// display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "send_message"));
 
 		// get Outbox folder from reference
-		outboxFolder = (OutboxFolder) r[0].getFolder();
+		outboxFolder = (OutboxFolder) r.getFolder();
 
 		// get UID list of messages
 		Object[] uids = outboxFolder.getUids();
@@ -94,7 +94,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 		SMTPServer smtpServer = null;
 		MessageFolder sentFolder = null;
-		
+
 		// send all messages
 		while (sendListManager.hasMoreMessages()) {
 			SendableMessage message = sendListManager.getNextMessage();
@@ -140,7 +140,6 @@ public class SendAllMessagesCommand extends FolderCommand {
 			moveToSentFolder(sentList, sentFolder);
 			sentList.clear();
 		}
-		
 	}
 
 	/**
@@ -154,23 +153,20 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 *            Sent folder
 	 */
 	protected void moveToSentFolder(List v, MessageFolder sentFolder) {
-		FolderCommandReference[] r = new FolderCommandReference[2];
-
-		// source folder
-		r[0] = new FolderCommandReference(outboxFolder, v.toArray());
-
-		// destination folder
-		r[1] = new FolderCommandReference(sentFolder);
+		FolderCommandReference r = new FolderCommandReference(outboxFolder,
+				sentFolder, v.toArray());
 
 		// start move command
 		MoveMessageCommand c = new MoveMessageCommand(r);
 
 		MainInterface.processor.addOp(c);
 	}
+
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		if( action != null ) action.setEnabled(true);
+		if (action != null)
+			action.setEnabled(true);
 	}
 }

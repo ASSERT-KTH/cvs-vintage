@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.main.ConnectionStateImpl;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.main.ConnectionStateImpl;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.main.MailInterface;
 
 
 /**

@@ -16,7 +16,6 @@
 package org.columba.mail.shutdown;
 
 import org.columba.core.backgroundtask.TaskInterface;
-
 import org.columba.mail.main.MailInterface;
 
 

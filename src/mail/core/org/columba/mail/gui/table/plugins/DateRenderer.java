@@ -15,20 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
-import org.columba.mail.gui.table.model.MessageNode;
-
 import java.awt.Component;
 import java.awt.Font;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.swing.JTable;
 import javax.swing.UIManager;
+
+import org.columba.mail.gui.table.model.MessageNode;
 
 
 public class DateRenderer extends DefaultLabelRenderer {

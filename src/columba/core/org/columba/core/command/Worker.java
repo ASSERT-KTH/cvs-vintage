@@ -91,7 +91,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     }
 
     private void returnLocks(int opMode) {
-        op.releaseAllFolderLocks(operationMode);
+        op.releaseAllFolderLocks();
     }
 
     /**
@@ -105,7 +105,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     public Object construct() {
 
         try {
-            op.process(this, operationMode);
+            op.process(this);
 
         } catch (CommandCancelledException e) {
             LOG.info("Command cancelled: " + this);

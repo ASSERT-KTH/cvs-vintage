@@ -72,7 +72,7 @@ public class PrintAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = (FolderCommandReference[]) getFrameMediator()
+        FolderCommandReference r = (FolderCommandReference) getFrameMediator()
                                                                     .getSelectionManager()
                                                                     .getSelection("mail.table");
 

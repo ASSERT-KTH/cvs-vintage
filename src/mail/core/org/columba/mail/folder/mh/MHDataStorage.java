@@ -16,6 +16,7 @@
 package org.columba.mail.folder.mh;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,4 +132,12 @@ public class MHDataStorage implements DataStorageInterface {
         source.close();
         out.close();
     }
+
+	/**
+	 * @see org.columba.mail.folder.DataStorageInterface#getMessageStream(java.lang.Object)
+	 */
+	public InputStream getMessageStream(Object uid) throws Exception {
+		// TODO Auto-generated method stub
+		return new FileInputStream( new File(folder.getDirectoryFile() + File.separator + ((Integer) uid).toString()));
+	}
 }

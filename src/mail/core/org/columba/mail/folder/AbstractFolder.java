@@ -18,371 +18,389 @@ package org.columba.mail.folder;
 
 import java.util.logging.Logger;
 
-import org.columba.core.util.Lock;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
-
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.event.FolderEvent;
+import org.columba.mail.folder.event.FolderEventDelegator;
+import org.columba.mail.folder.event.FolderListener;
+
 /**
- * Represents a treenode and is the abstract class every folder
- * extends.
+ * Represents a treenode and is the abstract class every folder extends.
  * <p>
  * See tree.xml configuration file.
- *
+ * 
  * @author fdietz
  */
 public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder");
 
-    // the next new folder will get this UID
-    private static int nextUid = 0;
+	// the next new folder will get this UID
+	private static int nextUid = 0;
 
-    // folderitem wraps xml configuration from tree.xml
-    protected FolderItem node;
+	// folderitem wraps xml configuration from tree.xml
+	protected FolderItem node;
 
-    // locking mechanism
-    protected Lock myLock = new Lock();
+	// locking mechanism
+	protected Lock myLock = new Lock();
 
-    // Root folder cache
-    private AbstractFolder rootFolder;
-    
-    protected EventListenerList listenerList = new EventListenerList();
-    
-    public AbstractFolder(String name, String type) {
-        super();
+	// Root folder cache
+	private AbstractFolder rootFolder;
 
-        XmlElement defaultElement = new XmlElement("folder");
-        defaultElement.addAttribute("type", type);
-        defaultElement.addAttribute("uid", Integer.toString(nextUid++));
-        defaultElement.addElement(new XmlElement("property"));
+	protected EventListenerList listenerList = new EventListenerList();
 
-        setConfiguration(new FolderItem(defaultElement));
-        setName(name);
-    }
+	public AbstractFolder(String name, String type) {
+		super();
 
-    public AbstractFolder() {
-        super();
-    }
+		XmlElement defaultElement = new XmlElement("folder");
+		defaultElement.addAttribute("type", type);
+		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
+		defaultElement.addElement(new XmlElement("property"));
 
-    public AbstractFolder(FolderItem node) {
-        super();
-        setConfiguration(node);
-    }
+		setConfiguration(new FolderItem(defaultElement));
+		setName(name);
 
-    /**
-     * Adds a listener.
-     */
-    public void addFolderListener(FolderListener l) {
-        listenerList.add(FolderListener.class, l);
-    }
+		// register interest on tree node changes
+		addFolderListener(FolderEventDelegator.getInstance());
+	}
 
-    /**
-     * Removes a previously registered listener.
-     */
-    public void removeFolderListener(FolderListener l) {
-        listenerList.remove(FolderListener.class, l);
-    }
+	public AbstractFolder() {
+		super();
 
-    /**
-     * Propagates an event to all registered listeners notifying them that this
-     * folder has been renamed.
-     */
-    protected void fireFolderRenamed(String name) {
-        FolderEvent e = new FolderEvent(this, name);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+		// register interest on tree node changes
+		addFolderListener(FolderEventDelegator.getInstance());
+	}
 
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderRenamed(e);
-            }
-        }
-    }
+	public AbstractFolder(FolderItem node) {
+		super();
+		setConfiguration(node);
 
-    /**
-     * Propagates an event to all registered listeners notifying them that a
-     * subfolder has been added to this folder.
-     */
-    protected void fireFolderAdded(AbstractFolder folder) {
-        FolderEvent e = new FolderEvent(this, folder);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+		// register interest on tree node changes
+		addFolderListener(FolderEventDelegator.getInstance());
+	}
 
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderAdded(e);
-            }
-        }
-    }
+	/**
+	 * Adds a listener.
+	 */
+	public void addFolderListener(FolderListener l) {
+		listenerList.add(FolderListener.class, l);
+	}
 
-    /**
-     * Propagates an event to all registered listeners notifying them that this
-     * folder has been removed from its parent folder. This method removes all
-     * registered listeners.
-     */
-    protected void fireFolderRemoved() {
-        FolderEvent e = new FolderEvent(this, this);
-        // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+	/**
+	 * Removes a previously registered listener.
+	 */
+	public void removeFolderListener(FolderListener l) {
+		listenerList.remove(FolderListener.class, l);
+	}
 
-        // Process the listeners last to first, notifying
-        // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == FolderListener.class) {
-                ((FolderListener) listeners[i + 1]).folderRemoved(e);
-                listenerList.remove(FolderListener.class, 
-                        (FolderListener)listeners[i + 1]);
-            }
-        }
-    }
+	/**
+	 * Propagates an event to all registered listeners notifying them that this
+	 * folder has been renamed.
+	 */
+	protected void fireFolderPropertyChanged() {
+		FolderEvent e = new FolderEvent(this);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
 
-    /**
- * Method getSelectionTreePath.
- * @return TreePath
- */
-    public TreePath getSelectionTreePath() {
-        return new TreePath(getPathToRoot(this, 0));
-    }
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == FolderListener.class) {
+				((FolderListener) listeners[i + 1]).folderPropertyChanged(e);
+			}
+		}
+	}
 
-    /**
-     * Returns the folder's UID.
-     */
-    public int getUid() {
-        return node.getInteger("uid");
-    }
+	/**
+	 * Propagates an event to all registered listeners notifying them that a
+	 * subfolder has been added to this folder.
+	 */
+	protected void fireFolderAdded(AbstractFolder folder) {
+		FolderEvent e = new FolderEvent(this, folder);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
 
-    /**
-     * Returns the folder's configuration.
-     */
-    public FolderItem getConfiguration() {
-        return node;
-    }
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == FolderListener.class) {
+				((FolderListener) listeners[i + 1]).folderAdded(e);
+			}
+		}
+	}
 
-    /**
-     * Sets the folder's configuration.
-     */
-    public void setConfiguration(FolderItem node) {
-        this.node = node;
+	/**
+	 * Propagates an event to all registered listeners notifying them that this
+	 * folder has been removed from its parent folder. This method removes all
+	 * registered listeners.
+	 */
+	protected void fireFolderRemoved() {
+		FolderEvent e = new FolderEvent(this, this);
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
 
-        try {
-            if (node.getInteger("uid") >= nextUid) {
-                nextUid = node.getInteger("uid") + 1;
-            }
-        } catch (NumberFormatException ex) {
-            node.set("uid", nextUid++);
-        }
-    }
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == FolderListener.class) {
+				((FolderListener) listeners[i + 1]).folderRemoved(e);
+				listenerList.remove(FolderListener.class,
+						(FolderListener) listeners[i + 1]);
+			}
+		}
+	}
 
-    /**
-     * Returns the folder's name.
-     */
-    public String getName() {
-        String name = null;
+	/**
+	 * Method getSelectionTreePath.
+	 * 
+	 * @return TreePath
+	 */
+	public TreePath getSelectionTreePath() {
+		return new TreePath(getPathToRoot(this, 0));
+	}
 
-        FolderItem item = getConfiguration();
-        name = item.get("property", "name");
+	/**
+	 * Returns the folder's UID.
+	 */
+	public int getUid() {
+		return node.getInteger("uid");
+	}
 
-        return name;
-    }
+	/**
+	 * Returns the folder's configuration.
+	 */
+	public FolderItem getConfiguration() {
+		return node;
+	}
 
-    public String toString() {
-        return getName();
-    }
-    
-    /**
-     * Sets the folder's name. This method notifies registered FolderListeners.
-     */
-    public void setName(String newName) {
-        FolderItem item = getConfiguration();
-        item.set("property", "name", newName);
-        fireFolderRenamed(newName);
-    }
+	/**
+	 * Sets the folder's configuration.
+	 */
+	public void setConfiguration(FolderItem node) {
+		this.node = node;
 
-    /**
- * Method getCommandReference.
- *
- * @param r
- * @return FolderCommandReference[]
- */
-    public FolderCommandReference[] getCommandReference(
-        FolderCommandReference[] r) {
-        return r;
-    }
+		try {
+			if (node.getInteger("uid") >= nextUid) {
+				nextUid = node.getInteger("uid") + 1;
+			}
+		} catch (NumberFormatException ex) {
+			node.set("uid", nextUid++);
+		}
+	}
 
-    /********************************** locking mechanism ****************************/
-    public boolean tryToGetLock(Object locker) {
-        return myLock.tryToGetLock(locker);
-    }
+	/**
+	 * Returns the folder's name.
+	 */
+	public String getName() {
+		String name = null;
 
-    public void releaseLock(Object locker) {
-        myLock.release(locker);
-    }
+		FolderItem item = getConfiguration();
+		name = item.get("property", "name");
 
-    /**************************** treenode management *******************************/
-    public void insert(AbstractFolder newFolder, int newIndex) {
-        AbstractFolder oldParent = (AbstractFolder) newFolder.getParent();
-        int oldIndex = oldParent.getIndex(newFolder);
-        oldParent.remove(oldIndex);
+		return name;
+	}
 
-        XmlElement oldParentNode = oldParent.getConfiguration().getRoot();
-        XmlElement newChildNode = newFolder.getConfiguration().getRoot();
-        oldParentNode.removeElement(newChildNode);
+	public String toString() {
+		return getName();
+	}
 
-        newFolder.setParent(this);
-        children.insertElementAt(newFolder, newIndex);
+	/**
+	 * Sets the folder's name. This method notifies registered FolderListeners.
+	 */
+	public void setName(String newName) {
+		FolderItem item = getConfiguration();
+		item.set("property", "name", newName);
+		fireFolderPropertyChanged();
+	}
+	
+	/*
+	public FolderCommandReference getCommandReference(FolderCommandReference r) {
+		return r;
+	}
+	*/
 
-        XmlElement newParentNode = getConfiguration().getRoot();
+	/**
+	 * ******************************** locking mechanism
+	 * ***************************
+	 */
+	public boolean tryToGetLock(Object locker) {
+		return myLock.tryToGetLock(locker);
+	}
 
-        int j = -1;
-        boolean inserted = false;
+	public void releaseLock(Object locker) {
+		myLock.release(locker);
+	}
 
-        for (int i = 0; i < newParentNode.count(); i++) {
-            XmlElement n = newParentNode.getElement(i);
-            String name = n.getName();
+	/**
+	 * ************************** treenode management
+	 * ******************************
+	 */
+	public void insert(AbstractFolder newFolder, int newIndex) {
+		AbstractFolder oldParent = (AbstractFolder) newFolder.getParent();
+		int oldIndex = oldParent.getIndex(newFolder);
+		oldParent.remove(oldIndex);
 
-            if (name.equals("folder")) {
-                j++;
-            }
+		XmlElement oldParentNode = oldParent.getConfiguration().getRoot();
+		XmlElement newChildNode = newFolder.getConfiguration().getRoot();
+		oldParentNode.removeElement(newChildNode);
 
-            if (j == newIndex) {
-                newParentNode.insertElement(newChildNode, i);
-                inserted = true;
-            }
-        }
+		newFolder.setParent(this);
+		children.insertElementAt(newFolder, newIndex);
 
-        if (!inserted) {
-            if ((j + 1) == newIndex) {
-                newParentNode.append(newChildNode);
-            }
-        }
-    }
+		XmlElement newParentNode = getConfiguration().getRoot();
 
-    /**
-     * Removes this folder from its parent. This method will notify registered
-     * FolderListeners.
-     */
-    public void removeFolder() throws Exception {
-        // remove XmlElement
-        getConfiguration().getRoot().getParent().removeElement(getConfiguration()
-                                                                .getRoot());
+		int j = -1;
+		boolean inserted = false;
 
-        // remove DefaultMutableTreeNode
-        removeFromParent();
-        fireFolderRemoved();
-    }
+		for (int i = 0; i < newParentNode.count(); i++) {
+			XmlElement n = newParentNode.getElement(i);
+			String name = n.getName();
 
-    /**
-     * Adds a child folder to this folder. This method will notify registered
-     * FolderListeners.
-     */
-    public void addSubfolder(AbstractFolder child) throws Exception {
-        add(child);
-        getConfiguration().getRoot().addElement(child.getConfiguration().getRoot());
-        fireFolderAdded(child);
-    }
+			if (name.equals("folder")) {
+				j++;
+			}
 
-    public AbstractFolder findChildWithName(String str, boolean recurse) {
-        for (int i = 0; i < getChildCount(); i++) {
-            AbstractFolder child = (AbstractFolder) getChildAt(i);
-            String name = child.getName();
+			if (j == newIndex) {
+				newParentNode.insertElement(newChildNode, i);
+				inserted = true;
+			}
+		}
 
-            if (name.equalsIgnoreCase(str)) {
-                return child;
-            } else if (recurse) {
-                AbstractFolder subchild = child.findChildWithName(str, true);
+		if (!inserted) {
+			if ((j + 1) == newIndex) {
+				newParentNode.append(newChildNode);
+			}
+		}
+	}
 
-                if (subchild != null) {
-                    return subchild;
-                }
-            }
-        }
+	/**
+	 * Removes this folder from its parent. This method will notify registered
+	 * FolderListeners.
+	 */
+	public void removeFolder() throws Exception {
+		// remove XmlElement
+		getConfiguration().getRoot().getParent().removeElement(
+				getConfiguration().getRoot());
 
-        return null;
-    }
+		// notify listeners
+		fireFolderRemoved();
+		
+	}
 
-    public AbstractFolder findChildWithUID(int uid, boolean recurse) {
-        for (int i = 0; i < getChildCount(); i++) {
-            AbstractFolder child = (MessageFolder) getChildAt(i);
-            int childUid = child.getUid();
+	/**
+	 * Adds a child folder to this folder. This method will notify registered
+	 * FolderListeners.
+	 */
+	public void addSubfolder(AbstractFolder child) throws Exception {
+		add(child);
+		getConfiguration().getRoot().addElement(
+				child.getConfiguration().getRoot());
+		fireFolderAdded(child);
+	}
 
-            if (uid == childUid) {
-                return child;
-            } else if (recurse) {
-                AbstractFolder subchild = child.findChildWithUID(uid, true);
+	public AbstractFolder findChildWithName(String str, boolean recurse) {
+		for (int i = 0; i < getChildCount(); i++) {
+			AbstractFolder child = (AbstractFolder) getChildAt(i);
+			String name = child.getName();
 
-                if (subchild != null) {
-                    return subchild;
-                }
-            }
-        }
+			if (name.equalsIgnoreCase(str)) {
+				return child;
+			} else if (recurse) {
+				AbstractFolder subchild = child.findChildWithName(str, true);
 
-        return null;
-    }
+				if (subchild != null) {
+					return subchild;
+				}
+			}
+		}
 
-    /**
- *
- * AbstractFolder wraps XmlElement
- *
- * all treenode manipulation is passed to the corresponding XmlElement
- */
-    public void append(AbstractFolder child) {
-        LOG.info("Appending child=" + child);
+		return null;
+	}
 
-        // remove child from parent
-        child.removeFromParent();
+	public AbstractFolder findChildWithUID(int uid, boolean recurse) {
+		for (int i = 0; i < getChildCount(); i++) {
+			AbstractFolder child = (MessageFolder) getChildAt(i);
+			int childUid = child.getUid();
 
-        // do the same for the XmlElement node
-        LOG.info("Appending xmlelement="
-                + child.getConfiguration().getRoot().getName());
+			if (uid == childUid) {
+				return child;
+			} else if (recurse) {
+				AbstractFolder subchild = child.findChildWithUID(uid, true);
 
-        child.getConfiguration().getRoot().removeFromParent();
+				if (subchild != null) {
+					return subchild;
+				}
+			}
+		}
 
-        // add child to this node
-        add(child);
+		return null;
+	}
 
-        // do the same for the XmlElement of child
-        getConfiguration().getRoot().addElement(child.getConfiguration().getRoot());
-        fireFolderAdded(child);
-    }
+	/**
+	 * 
+	 * AbstractFolder wraps XmlElement
+	 * 
+	 * all treenode manipulation is passed to the corresponding XmlElement
+	 */
+	public void append(AbstractFolder child) {
+		LOG.info("Appending child=" + child);
 
-    /********************* capabilities **************************************/
-    /**
- * Does this treenode support adding messages?
- *
- * @return        true, if this folder is able to contain messages, false otherwise
- *
- */
-    public boolean supportsAddMessage() {
-        return false;
-    }
+		// remove child from parent
+		child.removeFromParent();
 
-    /**
- * Returns true if this folder can have sub folders of the specified type; false otherwise.
- * @param newFolder the folder that is going to be inserted as a child.
- * @return true if this folder can have sub folders; false otherwise.
- */
-    public boolean supportsAddFolder(AbstractFolder newFolder) {
-        return false;
-    }
+		// do the same for the XmlElement node
+		LOG.info("Appending xmlelement="
+				+ child.getConfiguration().getRoot().getName());
 
-    /**
- * Returns true if this folder type can be moved around in the folder tree.
- * @return true if this folder type can be moved around in the folder tree.
- */
-    public boolean supportsMove() {
-        return false;
-    }
+		child.getConfiguration().getRoot().removeFromParent();
+
+		// add child to this node
+		add(child);
+
+		// do the same for the XmlElement of child
+		getConfiguration().getRoot().addElement(
+				child.getConfiguration().getRoot());
+		fireFolderAdded(child);
+	}
+
+	/** ******************* capabilities ************************************* */
+	/**
+	 * Does this treenode support adding messages?
+	 * 
+	 * @return true, if this folder is able to contain messages, false otherwise
+	 *  
+	 */
+	public boolean supportsAddMessage() {
+		return false;
+	}
+
+	/**
+	 * Returns true if this folder can have sub folders of the specified type;
+	 * false otherwise.
+	 * 
+	 * @param newFolder
+	 *            the folder that is going to be inserted as a child.
+	 * @return true if this folder can have sub folders; false otherwise.
+	 */
+	public boolean supportsAddFolder(AbstractFolder newFolder) {
+		return false;
+	}
+
+	/**
+	 * Returns true if this folder type can be moved around in the folder tree.
+	 * 
+	 * @return true if this folder type can be moved around in the folder tree.
+	 */
+	public boolean supportsMove() {
+		return false;
+	}
 
 	/**
 	 * Return the root folder of this folder.
@@ -394,19 +412,21 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 	 */
 	public AbstractFolder getRootFolder() {
 		// If rootFolder is not cached traverse the tree
-		if( rootFolder == null ) {
+		if (rootFolder == null) {
 			AbstractFolder parent = (AbstractFolder) getParent();
-	
+
 			// There is no parent
-			if (parent == null) { return this; }
-	
+			if (parent == null) {
+				return this;
+			}
+
 			if (parent instanceof RootFolder) {
 				rootFolder = parent;
 			} else {
 				rootFolder = parent.getRootFolder();
 			}
 		}
-		
+
 		return rootFolder;
 	}
 }

@@ -19,6 +19,7 @@ package org.columba.mail.folder;
 
 import java.io.InputStream;
 
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
@@ -287,4 +288,5 @@ public interface MailboxInterface {
      * @return Object[]                array of all UIDs this folder contains
      */
     public Object[] getUids() throws Exception;
+   
 }

@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
-
-import org.columba.mail.util.MailResourceLoader;
 import org.columba.mail.gui.view.AbstractMailView;
-
-import java.awt.event.ActionEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class ViewFolderInfoPanelAction extends AbstractSelectableAction {

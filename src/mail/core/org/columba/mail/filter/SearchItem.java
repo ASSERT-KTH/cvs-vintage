@@ -17,7 +17,6 @@ package org.columba.mail.filter;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.folder.virtual.VirtualFolder;
 
 

@@ -15,14 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import java.io.File;
+import java.lang.reflect.Array;
 
+import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.message.ColumbaMessage;
-
-import java.io.File;
-
-import java.lang.reflect.Array;
 
 
 /**
@@ -38,6 +36,8 @@ import java.lang.reflect.Array;
  */
 public class FolderCommandReference extends DefaultCommandReference {
     private AbstractFolder folder;
+    private AbstractFolder destinationFolder;
+    
     private Object[] uids;
     private Integer[] address;
     private ColumbaMessage message;
@@ -53,6 +53,11 @@ public class FolderCommandReference extends DefaultCommandReference {
     public FolderCommandReference(AbstractFolder folder) {
         this.folder = folder;
     }
+    
+    public FolderCommandReference(AbstractFolder folder, AbstractFolder destinationFolder) {
+        this.folder = folder;
+        this.destinationFolder = destinationFolder;
+    }
 
     public FolderCommandReference(AbstractFolder folder, ColumbaMessage message) {
         this.folder = folder;
@@ -66,6 +71,17 @@ public class FolderCommandReference extends DefaultCommandReference {
      */
     public FolderCommandReference(AbstractFolder folder, Object[] uids) {
         this.folder = folder;
+        this.uids = uids;
+    }
+    
+    /**
+     * Constructor for FolderCommandReference.
+     * @param folder
+     * @param uids
+     */
+    public FolderCommandReference(AbstractFolder sourceFolder, AbstractFolder destinationFolder, Object[] uids) {
+        this.folder = sourceFolder;
+		this.destinationFolder = destinationFolder;
         this.uids = uids;
     }
 
@@ -194,4 +210,16 @@ public class FolderCommandReference extends DefaultCommandReference {
     public void setColorValue(int colorValue) {
         this.colorValue = colorValue;
     }
+	/**
+	 * @return Returns the destinationFolder.
+	 */
+	public AbstractFolder getDestinationFolder() {
+		return destinationFolder;
+	}
+	/**
+	 * @param destinationFolder The destinationFolder to set.
+	 */
+	public void setDestinationFolder(AbstractFolder destinationFolder) {
+		this.destinationFolder = destinationFolder;
+	}
 }

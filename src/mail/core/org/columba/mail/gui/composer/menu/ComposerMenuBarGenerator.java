@@ -17,7 +17,6 @@ package org.columba.mail.gui.composer.menu;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.MenuBarGenerator;
-
 import org.columba.mail.util.MailResourceLoader;
 
 

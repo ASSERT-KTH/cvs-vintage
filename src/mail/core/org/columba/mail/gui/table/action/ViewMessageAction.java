@@ -45,10 +45,10 @@ public class ViewMessageAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] references = (FolderCommandReference[]) getFrameMediator()
+        FolderCommandReference references = (FolderCommandReference) getFrameMediator()
                                                                              .getSelectionManager()
                                                                              .getSelection("mail.table");
-        Object[] uids = references[0].getUids();
+        Object[] uids = references.getUids();
 
         if (uids.length == 1) {
         	// one message is selected

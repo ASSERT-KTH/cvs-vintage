@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-
-import java.awt.event.ActionEvent;
 
 
 /**

@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import org.columba.core.xml.XmlElement;
-
 import javax.swing.table.AbstractTableModel;
+
+import org.columba.core.xml.XmlElement;
 
 
 class FilterListTableModel extends AbstractTableModel {

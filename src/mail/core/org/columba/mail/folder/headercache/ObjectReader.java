@@ -17,14 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.gui.util.ColorFactory;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
 import java.util.Date;
+
+import org.columba.core.gui.util.ColorFactory;
 
 
 /**

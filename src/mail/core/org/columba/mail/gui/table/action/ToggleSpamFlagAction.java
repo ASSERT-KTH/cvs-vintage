@@ -70,9 +70,9 @@ public class ToggleSpamFlagAction extends AbstractColumbaAction implements
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator())
+        FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
                 .getTableSelection();
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+        r.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 
         ToggleMarkCommand c = new ToggleMarkCommand(r);
 

@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.gui.focus.FocusOwner;
-
 import java.awt.Font;
-
 import java.util.Observable;
 
 import javax.swing.JComponent;
+
+import org.columba.core.gui.focus.FocusOwner;
 
 
 /**

@@ -55,11 +55,9 @@ public class ReplyToAllCommandTest extends AbstractComposerTestCase {
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
 
-        // create Command reference
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(getSourceFolder(),
-                new Object[] { uid});
-
+//      create Command reference
+		FolderCommandReference ref = new FolderCommandReference(
+				getSourceFolder(), new Object[] { uid });
         // create copy command
         ReplyToAllCommand command = new ReplyToAllCommand(ref);
 

@@ -17,22 +17,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.TempFileStore;
-
-import org.columba.mail.gui.composer.AbstractEditorController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.MimeHeader;
-
 import java.awt.Font;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.io.TempFileStore;
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.MimeHeader;
 
 public class ExternalEditor {
 	String Cmd;
