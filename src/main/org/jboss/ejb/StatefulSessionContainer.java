@@ -29,13 +29,13 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.72 $</tt>
+ * @version <tt>$Revision: 1.73 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -520,7 +520,8 @@ public class StatefulSessionContainer
          }
 
          // Select instance to invoke (container or bean)
-         if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
+         if (m.getDeclaringClass().equals(StatefulSessionContainer.class)
+               || m.getDeclaringClass().equals(SessionContainer.class))
          {
             // Invoke and handle exceptions
             try

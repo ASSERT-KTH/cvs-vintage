@@ -26,11 +26,11 @@ import java.util.Map;
 /**
  * The container for <em>stateless</em> session beans.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public class StatelessSessionContainer extends SessionContainer
         implements EJBProxyFactoryContainer, InstancePoolContainer
@@ -212,7 +212,8 @@ public class StatelessSessionContainer extends SessionContainer
          }
 
          //If we have a method that needs to be done by the container (EJBObject methods)
-         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+         if (m.getDeclaringClass().equals(StatelessSessionContainer.class) ||
+               m.getDeclaringClass().equals(SessionContainer.class))
          {
             try
             {
