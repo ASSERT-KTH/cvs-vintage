@@ -25,53 +25,65 @@ import java.io.InputStreamReader;
 
 import org.columba.core.io.DiskIO;
 
-
 /**
  * Convenience methods for folder testcases.
  * 
  * @author fdietz
  */
 public final class FolderTestHelper {
-    /**
- * This directory is used to create mail folders
- */
-    public static String homeDirectory = System.getProperties().getProperty("user.dir");
 
     /**
- * Read message " <number>.eml" into String.
- * 
- * @param number
- *            number of message
- * @return string containing message source
- * @throws Exception
- */
+     * This directory is used to create mail folders
+     */
+    public static String homeDirectory = System.getProperties().getProperty(
+            "user.dir");
+
+    /**
+     * Read message " <number>.eml" into String.
+     * 
+     * @param number
+     *            number of message
+     * @return string containing message source
+     * @throws Exception
+     */
     public static String getString(int number) throws Exception {
-        return DiskIO.readFileInString(new File(
-                new String("src/mail/test/org/columba/mail/folder/" + number +
-                    ".eml")));
+        return DiskIO.readFileInString(new File(new String(
+                "src/mail/test/org/columba/mail/folder/" + number + ".eml")));
+    }
+    
+    /**
+     * Read string from file.
+     * 
+     * @param filename		name of file
+     * @return				string containing file contents
+     * @throws Exception
+     */
+    public static String getString(String filename) throws Exception {
+        return DiskIO.readFileInString(new File(new String(
+                "src/mail/test/org/columba/mail/folder/" + filename)));
     }
 
     /**
- * Create ByteArrayInputStream from String.
- * 
- * @param s
- *            String
- * @return ByteArrayInputStream
- */
+     * Create ByteArrayInputStream from String.
+     * 
+     * @param s
+     *            String
+     * @return ByteArrayInputStream
+     */
     public static ByteArrayInputStream getByteArrayInputStream(String s) {
         return new ByteArrayInputStream(s.getBytes());
     }
 
     /**
- * Create String from InputStream.
- * 
- * @param is
- *            inputstream
- * @return string
- * @throws Exception
- */
+     * Create String from InputStream.
+     * 
+     * @param is
+     *            inputstream
+     * @return string
+     * @throws Exception
+     */
     public static String getStringFromInputStream(InputStream is)
-        throws Exception {
+            throws Exception {
         StringBuffer result = new StringBuffer();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String nextLine = reader.readLine();

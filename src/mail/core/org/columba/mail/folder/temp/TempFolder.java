@@ -119,12 +119,15 @@ public class TempFolder extends Folder {
      * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
      */
     protected void removeMessage(Object uid) throws Exception {
-        super.removeMessage(uid);
         
         Flags flags = getFlags(uid);
+        
+        fireMessageRemoved(uid, flags);
+               
         headerList.remove(uid);
         messageList.remove(uid);
-        fireMessageRemoved(uid, flags);
+       
+        
     }
 
     /**
@@ -272,13 +275,13 @@ public class TempFolder extends Folder {
      */
     public Header getHeaderFields(Object uid, String[] keys)
         throws Exception {
-        Header header = ((Message) messageList.get(uid)).getHeader();
+        ColumbaHeader header = ((ColumbaMessage) messageList.get(uid)).getHeader();
 
         Header subHeader = new Header();
         String value;
 
         for (int i = 0; i < keys.length; i++) {
-            value = header.get(keys[i]);
+            value = (String) header.get(keys[i]);
 
             if (value != null) {
                 subHeader.set(keys[i], value);
@@ -306,7 +309,7 @@ public class TempFolder extends Folder {
      */
     public InputStream getMimePartBodyStream(Object uid, Integer[] address)
         throws Exception {
-        Message message = (Message) messageList.get(uid);
+        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                                                         .getFromAddress(address);
@@ -322,7 +325,7 @@ public class TempFolder extends Folder {
      */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
         throws Exception {
-        Message message = (Message) messageList.get(uid);
+        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
 
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                                                         .getFromAddress(address);

@@ -31,14 +31,18 @@ import junit.framework.TestSuite;
 public class AllTests {
 
     private static String[] list = { "AddMessageFolderTest",
-            "ExpungeFolderTest", "CopyMessageFolderTest"};
+            "ExpungeFolderTest", "CopyMessageFolderTest",
+            "GetMessageSourceStreamTest", "GetMimePartSourceStreamTest",
+            "GetHeaderFieldsTest","AttributeTest"};
 
     /**
-     * Add all testcases to the passed testsuite, using a the folder type
-     * as created in the factory.
+     * Add all testcases to the passed testsuite, using a the folder type as
+     * created in the factory.
      * 
-     * @param suite			test suite
-     * @param factory		factory which creates the folder instances
+     * @param suite
+     *            test suite
+     * @param factory
+     *            factory which creates the folder instances
      */
     private static void setup(TestSuite suite, MailboxTestFactory factory) {
         try {
