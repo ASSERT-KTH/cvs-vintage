@@ -62,7 +62,7 @@ import org.jnp.server.NamingServer;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public abstract class Container
 {
@@ -212,8 +212,9 @@ public abstract class Container
 		// Setup "java:" namespace
       setupEnvironment();
       
-		// Initialize pool
-      instancePool.init();
+		// Initialize pool 
+		// MF FIXME: the instancePool does not belong here
+      if (instancePool != null) instancePool.init();
       
  	   // Initialize the interceptor by calling the chain
       Interceptor in = interceptor;
@@ -229,7 +230,7 @@ public abstract class Container
       throws Exception
    {
 		// Start the instance pool
-      instancePool.start();
+      if (instancePool != null) instancePool.start();
       
 		// Start all interceptors in the chain		
       Interceptor in = interceptor;
@@ -243,7 +244,7 @@ public abstract class Container
    public void stop() 
    {
 		// Stop the instance pool
-      instancePool.stop();
+      if (instancePool != null) instancePool.stop();
       
 		// Stop all interceptors in the chain		
       Interceptor in = interceptor;
@@ -257,7 +258,7 @@ public abstract class Container
    public void destroy() 
    {
 		// Destroy the pool
-      instancePool.destroy();
+      if (instancePool != null) instancePool.destroy();
       
 		// Destroy all the interceptors in the chain		
       Interceptor in = interceptor;
@@ -323,8 +324,8 @@ public abstract class Container
 			// Associate this root with the classloader of the bean
 	      ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
 			
-			// Since the BCL is already associated with this thread we can start using the java: namespace directly
-	      Context ctx = (Context)new InitialContext().lookup("java:/");
+		  // Since the BCL is already associated with this thread we can start using the java: namespace directly
+	      Context ctx = (Context) new InitialContext().lookup("java:/");
 	      ctx.createSubcontext("comp");
 	      ctx = ctx.createSubcontext("comp/env");
 	      
