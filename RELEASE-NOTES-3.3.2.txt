@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.9 2002/06/27 04:38:57 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.10 2002/08/06 05:29:07 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -52,6 +52,8 @@ Jasper:
 
 Bug No.  Description
 
+11463	 Fix PageContext.removeAttribute(String) to work for a page with
+	 session=false.
 
 
 Configuration:
