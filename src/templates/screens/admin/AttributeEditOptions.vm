@@ -1,0 +1,55 @@
+$page.setTitle("Attribute Editor")
+
+#set ( $attribute = $scarabR.Attribute )
+
+<p><b>Editing Attribute</b>: <i>$attribute.Name</i></p>
+<p>Modify Attribute Options<br>
+</p>
+<form action="$link.setPage("admin,AttributeEditOptions.vm")" method="POST">
+    <input type="hidden" name="action" value="admin.ModifyAttributes">
+
+<table border="0">
+  <tr>
+    <td rowspan="2">
+
+#set ( $attogroup = $intake.AttributeOption.Default )
+<input type="hidden" name="$attogroup.CID" value="$attogroup.OID">
+#set ( $attOptions = $attribute.AttributeOptions)
+<select name="$attogroup.OptionId.Key" size="10">
+    #if ( $attOptions.size() > 0 )
+    #foreach ($option in $attOptions)
+    <option value="$option.OptionId">$option.DisplayValue</option>
+    #end
+    #end
+</select>
+
+    </td>
+    <td align="center">Sort Order<br>
+        <input type="submit" name="Submit4" value="^"><br>
+      <input type="submit" name="Submit42" value="v">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <input type="submit" name="eventSubmit_doSelectattributeoption" value="Select To Modify">
+    </td>
+  </tr>
+  
+</table>
+
+<input type="submit" name="eventSubmit_doDeleteattributeoption" value="Delete Attribute Option">  
+
+<p>
+    <input type="text" name="textfield" value="$!attoInput.Value.Value">
+    <input type="submit" name="eventSubmit_doAddmodifyattributeoption" value="Add New / Modify Existing">
+</p>
+
+</form>
+
+<p>
+  <form action="$link.setPage("admin,AttributeEditOptions.vm")" method="POST">
+    <input type="hidden" name="action" value="admin.ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
+    <input type="submit" name="eventSubmit_doAlldone" value="All Done">
+  </form>
+</p>
