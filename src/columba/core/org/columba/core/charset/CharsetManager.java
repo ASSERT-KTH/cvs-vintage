@@ -33,14 +33,15 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author -
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * The CharsetManager is in charge for managing the displayed and selected
+ * Charset of e.g. a message. It also provides a menu that can be plugged
+ * into the menubar and/or a contextmenu.
  */
 public class CharsetManager implements ActionListener {
+
+	// String definitions for the charsetnames
+	// NOTE: these are also used to look up the
+	// menuentries from the resourceloader  
 
 	private static final String[] charsets = {
 		// Auto
@@ -117,24 +118,39 @@ public class CharsetManager implements ActionListener {
 	private int defaultId;
 	private int selectedId;
 
+	/**
+	 * 
+	 * @param config The configuration that contains the user-selected Charset
+	 */
 	public CharsetManager(XmlElement config) {
 		listeners = new Vector();
 		this.config = config;
 
+		// Grab default Charset of the System
 		defaultId = getCharsetId(System.getProperty("file.encoding"));
+		
 		int charsetId;
 		selectedId = 0;
-
+		
+		
+		// Grab the user-selected charset if it exists
 		if (config != null) {
 			selectedId = getCharsetId(config.getAttribute("name"));
 		}
 
+
+		// if user selected auto or no user-preferences found
+		// select the default Charset of the system else select
+		// the preferred Charset
 		if (selectedId == 0) {
 			charsetId = defaultId;
 		} else {
 			charsetId = selectedId;
 		}
 
+		
+		// this is the menuitem that shows the selected Charset
+		// and changes when the selected/displayed charset changed
 		selectedMenuItem =
 			new CharsetMenuItem(
 				MailResourceLoader.getString(
@@ -146,6 +162,13 @@ public class CharsetManager implements ActionListener {
 				charsets[selectedId]);
 	}
 
+	
+	
+	/**
+	 * Change the menuitem that shows the selected/displayed Charset 
+	 * 
+	 * @param name
+	 */
 	public void displayCharset(String name) {
 		int charsetId = getCharsetId(name);
 
@@ -187,26 +210,19 @@ public class CharsetManager implements ActionListener {
 		return charsetId;
 	}
 
+	/**
+	 * Generates a charset menu from which this CharsetManager can
+	 * be controlled.
+	 * 
+	 * @param subMenu Menu in wich the charsetmenu will be inserted
+	 * @param handler  
+	 */
 	public void createMenu(JMenu subMenu, MouseListener handler) {
 		JMenu subsubMenu;
 		CharsetMenuItem menuItem;
 
 		int groupSize = Array.getLength(groups);
 		int charsetSize = Array.getLength(charsets);
-
-		/*
-		subMenu =
-			new CMenu(MailResourceLoader.getString("menu","mainframe", "menu_view_charset"));
-		subMenu.setIcon( ImageLoader.getImageIcon("stock_font_16.png"));
-		*/
-
-		/*
-		selectedMenuItem = new CharsetMenuItem( 
-				MailResourceLoader.getString("menu","mainframe", "menu_view_charset_"+charsets[0]),
-				-1, 0, charsets[0]);
-		
-		selectedMenuItem.addMouseListener(handler);
-		*/
 
 		subMenu.add(selectedMenuItem);
 
@@ -277,10 +293,13 @@ public class CharsetManager implements ActionListener {
 		event = new CharsetEvent(this, charsetId, charsets[charsetId]);
 		selectedId = charsetId;
 
+		// Save the charset as user preference
+		// NOTE: This may also be auto
 		if (config != null) {
 			config.addAttribute("name",charsets[charsetId]);
 		}
 
+		// Set displayed Charset
 		if (charsetId == 0) {
 			selectedMenuItem.setText(
 				MailResourceLoader.getString(
@@ -295,12 +314,12 @@ public class CharsetManager implements ActionListener {
 					"menu_view_charset_" + charsets[charsetId]));
 		}
 
+
+		// Notify Listeners
 		for (Iterator it = listeners.iterator(); it.hasNext();) {
 			// passing all events to the listeners
 			((CharsetListener) it.next()).charsetChanged(event);
 		}
-//		for (int i = 0; i < listeners.size(); i++)
-//			 ((CharsetListener) listeners.get(i)).charsetChanged(event);
 	}
 	
 	public String getSelectedCharset() {
