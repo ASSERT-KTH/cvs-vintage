@@ -372,6 +372,16 @@ public class CommandLineContext implements JspCompilationContext {
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
+        // if path is relative, 
+        // prepends the eventualy webapp relative path
+        // of the currently processed jsp
+        // -> included jsp uri's have not to be webapp relative
+        if ( ( ! path.startsWith( File.separator ) ) && ( ! jspFile.endsWith( path ) ) ) {
+        	int i = jspFile.lastIndexOf( File.separatorChar );
+        	if ( i >= 0 ) 
+        		path = jspFile.substring( 0, i + 1 ) + path;
+        		
+        }
         File f = new File(uriRoot, path.replace('/', File.separatorChar));
         return f.getAbsolutePath();
     }
