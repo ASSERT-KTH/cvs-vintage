@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.46 2001/09/24 21:29:46 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.47 2001/09/25 05:22:44 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -1158,11 +1158,6 @@
     -->
     <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
     <!--
-        The query string.
-    -->
-    <column name="VALUE" required="true" type="LONGVARCHAR"  />
-
-    <!--
         Type.
     -->
     <column name="TEMPLATE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
@@ -1201,6 +1196,44 @@
         Name.
     -->
     <column name="TEMPLATE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+</table>
+
+<table name="SCARAB_TEMPLATE_ATTRIBUTE_VALUE" idMethod="none" 
+        javaName="TemplateAttributeValue">
+    <!--
+        PK.
+    -->
+    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Template.
+    -->
+    <column name="ISSUE_TEMPLATE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" required="true" 
+            type="INTEGER" inheritance="single" />
+    <!--
+        Option that is the value of the attribute if attribute is option based.
+    -->
+    <column name="OPTION_ID" required="false" type="INTEGER"></column>
+    <column name="VALUE" required="false" type="VARCHAR" size="255"></column>
+
+    <!-- 
+         some attributes are better saved in numeric format, so this column
+         can be used in place of VALUE 
+    -->
+    <column name="NUMERIC_VALUE" required="false" type="INTEGER" size="11" />
+
+    <foreign-key foreignTable="SCARAB_ISSUE_TEMPLATE">
+        <reference local="ISSUE_TEMPLATE_ID" foreign="ISSUE_TEMPLATE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE">
+        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
+        <reference local="OPTION_ID" foreign="OPTION_ID"/>
+    </foreign-key>
 </table>
 
 
