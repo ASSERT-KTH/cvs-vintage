@@ -13,7 +13,7 @@ import java.util.HashMap;
 import javax.transaction.Transaction;
 import javax.transaction.Status;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 
 /**
@@ -36,7 +36,7 @@ import org.jboss.ejb.MethodInvocation;
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>
@@ -128,7 +128,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    }
 
 
-   public void schedule(MethodInvocation mi) throws Exception
+   public void schedule(Invocation mi) throws Exception
    {
       boolean threadScheduled = false;
       while (!threadScheduled)
@@ -138,7 +138,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
    }
    /**
-    * doSchedule(MethodInvocation)
+    * doSchedule(Invocation)
     * 
     * doSchedule implements a particular policy for scheduling the threads coming in. 
     * There is always the spec required "serialization" but we can add custom scheduling in here
@@ -147,7 +147,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     * release of the lock.  Schedulation must return with lock.
     * 
     */
-   protected boolean doSchedule(MethodInvocation mi) 
+   protected boolean doSchedule(Invocation mi) 
       throws Exception
    {
       boolean wasThreadScheduled = false;
@@ -300,7 +300,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    /**
     * Attempt to acquire a method lock.
     */
-   protected boolean attemptMethodLock(MethodInvocation mi, boolean trace) throws Exception
+   protected boolean attemptMethodLock(Invocation mi, boolean trace) throws Exception
    {
       if (isMethodLocked()) 
       {

@@ -13,7 +13,7 @@ import javax.transaction.Transaction;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.BeanLock;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 
 
@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -91,7 +91,7 @@ public abstract class BeanLockSupport
       }
    }
  
-   public abstract void schedule(MethodInvocation mi) throws Exception;
+   public abstract void schedule(Invocation mi) throws Exception;
 	
    /**
     * The setTransaction associates a transaction with the lock.
@@ -138,7 +138,7 @@ public abstract class BeanLockSupport
       }
    }
    
-   protected boolean isCallAllowed(MethodInvocation mi)
+   protected boolean isCallAllowed(Invocation mi)
    {
       // is this a reentrant bean
       if (reentrant)

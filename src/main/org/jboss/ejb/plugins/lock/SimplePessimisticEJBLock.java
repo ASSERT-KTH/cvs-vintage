@@ -11,7 +11,7 @@ package org.jboss.ejb.plugins.lock;
 import javax.transaction.Transaction;
 import javax.transaction.Status;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 /**
  * Holds all locks for entity beans, not used for stateful.
@@ -22,7 +22,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: billb</b>
@@ -57,7 +57,7 @@ public class SimplePessimisticEJBLock
  
    public Object getLock() {return lock;}
 	
-   public void schedule(MethodInvocation mi) throws Exception
+   public void schedule(Invocation mi) throws Exception
    {
       boolean threadScheduled = false;
       while (!threadScheduled)
@@ -79,7 +79,7 @@ public class SimplePessimisticEJBLock
     *            rest of the interceptors.  Returns false if the interceptor
     *            must try the scheduling again. 
     */
-   protected boolean doSchedule(MethodInvocation mi) 
+   protected boolean doSchedule(Invocation mi) 
       throws Exception
    {
       this.sync();

@@ -10,7 +10,7 @@ package org.jboss.ejb.plugins.lock;
 
 import javax.transaction.Transaction;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 /**
  * This class does not perform any pessimistic transactional locking. Only locking
@@ -24,7 +24,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -35,7 +35,7 @@ import org.jboss.ejb.MethodInvocation;
 public class MethodOnlyEJBLock extends QueuedPessimisticEJBLock
 {
    /**
-    * Schedule(MethodInvocation)
+    * Schedule(Invocation)
     * 
     * Schedule implements a particular policy for scheduling the threads coming in. 
     * There is always the spec required "serialization" but we can add custom scheduling in here
@@ -44,7 +44,7 @@ public class MethodOnlyEJBLock extends QueuedPessimisticEJBLock
     * release of the lock.  Schedulation must return with lock.
     * 
     */
-   public void schedule(MethodInvocation mi) 
+   public void schedule(Invocation mi) 
       throws Exception
    {
       Transaction miTx = mi.getTransaction();
