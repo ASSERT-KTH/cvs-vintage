@@ -6,38 +6,54 @@
 */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
+
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
-import java.rmi.RemoteException;
+import javax.ejb.EJBException;
 
 /**
-*	<description> 
-*      
-*	@see <related>
-*	@author Rickard Öberg (rickard.oberg@telkel.com)
-*	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>  
-*	@version $Revision: 1.7 $
-*/
+ * An implementation of the EJBMetaData interface which allows a
+ * client to obtain the enterprise Bean's meta-data information.
+ *      
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.8 $
+ */
 public class EJBMetaDataImpl
-implements EJBMetaData, java.io.Serializable
+    implements EJBMetaData, Serializable
 {
 	// Constants -----------------------------------------------------
-	
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 2590026239352080415L;
+    
 	// Attributes ----------------------------------------------------
-	Class remote;
-	Class home;
-	Class pkClass;
+    
+	private final Class remote;
+	private final Class home;
+	private final Class pkClass;
 	
-	boolean session;
-	boolean statelessSession;
+	private final boolean session;
+	private final boolean statelessSession;
 	
-	HomeHandle homeHandle;
+	private final HomeHandle homeHandle;
 	
 	// Constructors --------------------------------------------------
-	public EJBMetaDataImpl(Class remote, Class home, Class pkClass, boolean session, boolean statelessSession, HomeHandle homeHandle)
+
+    /**
+     * Construct an <tt>EJBMetaDataInput</tt>.
+     */
+    public EJBMetaDataImpl(final Class remote,
+                           final Class home,
+                           final Class pkClass,
+                           final boolean session,
+                           final boolean statelessSession,
+                           final HomeHandle homeHandle)
 	{
-		
 		this.remote = remote;
 		this.home = home;
 		this.pkClass = pkClass;
@@ -47,27 +63,56 @@ implements EJBMetaData, java.io.Serializable
 	}
 	
 	// EJBMetaData ---------------------------------------------------
-	public EJBHome getEJBHome() 
-	{ 
+
+    /**
+     * Obtain the home interface of the enterprise Bean.
+     *
+     * @throws EJBException     Failed to get EJBHome object.
+     */
+    public EJBHome getEJBHome() {
 		/* 
-		* MF BUG?????? 
-		* The java.ejb.HomeHandle says throws RemoteException but if I let it be propagated it doesn't compile
-		* ???????????
-		*/
+         * MF BUG?????? 
+         * The java.ejb.HomeHandle says throws RemoteException 
+         * but if I let it be propagated it doesn't compile
+         * ???????????
+         */
 		try {
 			return homeHandle.getEJBHome();
 		}
-		catch (RemoteException re) {
-			re.printStackTrace();
-			return null;
+		catch (RemoteException e) {
+			e.printStackTrace();
+            throw new EJBException(e);
 		}
 	
 	}
-	
-	public java.lang.Class getHomeInterfaceClass() { return home; }
-	public java.lang.Class getRemoteInterfaceClass() { return remote; }
-	public java.lang.Class getPrimaryKeyClass() { return pkClass; }
-	public boolean isSession() { return session; }
-	public boolean isStatelessSession() { return statelessSession; }
+
+    /**
+     * Obtain the Class object for the enterprise Bean's home interface.
+     */
+	public Class getHomeInterfaceClass() { return home; }
+
+    /**
+     * Obtain the Class object for the enterprise Bean's remote interface.
+     */
+    public Class getRemoteInterfaceClass() { return remote; }
+
+    /**
+     * Obtain the Class object for the enterprise Bean's primary key class.
+     */
+    public Class getPrimaryKeyClass() { return pkClass; }
+
+    /**
+     * Test if the enterprise Bean's type is "session".
+     *
+     * @return True if the type of the enterprise Bean is session bean.
+     */    
+    public boolean isSession() { return session; }
+
+    /**
+     * Test if the enterprise Bean's type is "stateless session".
+     *
+     * @return True if the type of the enterprise Bean is stateless session.
+     */
+    public boolean isStatelessSession() { return statelessSession; }
 }
 

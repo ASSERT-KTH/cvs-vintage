@@ -7,36 +7,78 @@
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.io.IOException;
+import java.io.Externalizable;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import java.rmi.MarshalledObject;
+import java.util.HashMap;
+import java.lang.reflect.Method;
 import java.security.Principal;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.SystemException;
 
-import org.jboss.ejb.MethodInvocation;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 import org.jboss.tm.TransactionPropagationContextFactory;
 
-import java.util.HashMap;
 import org.jboss.security.SecurityAssociation;
 
-
 /**
- *  Abstract superclass of JRMP client-side proxies.
+ * Abstract superclass of JRMP client-side proxies.
  *      
- *  @see ContainerRemote
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
- *  @version $Revision: 1.10 $
+ * @see ContainerRemote
+ * 
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a> *  
+ * @version $Revision: 1.11 $
  */
 public abstract class GenericProxy
-   implements java.io.Externalizable
+   implements Externalizable
 {
    // Constants -----------------------------------------------------
+
+   /** Serial Version Identifier. */
+   private static final long serialVersionUID = 1870461898442160570L;
     
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
 
+   /** An empty method parameter list. */
+   protected static final Object[] EMPTY_ARGS = {};
+    
+   /** {@link Object#toString} method reference. */
+   protected static final Method TO_STRING;
+
+   /** {@link Object#hashCode} method reference. */
+   protected static final Method HASH_CODE;
+
+   /** {@link Object#equals} method reference. */
+   protected static final Method EQUALS;
+
+   /**
+    * Initialize {@link Object} method references.
+    */
+   static {
+       try {
+           final Class[] empty = {};
+           final Class type = Object.class;
+
+           TO_STRING = type.getMethod("toString", empty);
+           HASH_CODE = type.getMethod("hashCode", empty);
+           EQUALS = type.getMethod("equals", new Class[] { type });
+       }
+       catch (Exception e) {
+           e.printStackTrace();
+           throw new ExceptionInInitializerError(e);
+       }
+   }
+    
    /**
     *  Our transaction manager.
     *
@@ -61,7 +103,7 @@ public abstract class GenericProxy
     *  This map maps JNDI names of containers to the remote interfaces
     *  of the container invokers of these containers.
     */
-   static HashMap invokers = new HashMap(); // Prevent DGC
+   private static HashMap invokers = new HashMap(); // Prevent DGC
 
    /**
     *  Return the remote interface of the container invoker for the
@@ -132,6 +174,9 @@ public abstract class GenericProxy
       this.name = name;
       this.container = container;
       this.optimize = optimize;
+
+      // get a context handle
+      this.initialContextHandle = InitialContextHandle.create();
    }
    
    // Public --------------------------------------------------------
@@ -143,13 +188,14 @@ public abstract class GenericProxy
     *  invoker, the remote interface of the container invoker is
     *  not externalized.
     */
-   public void writeExternal(java.io.ObjectOutput out)
-      throws IOException
+   public void writeExternal(final ObjectOutput out)
+       throws IOException
    {
         out.writeUTF(name);
         out.writeObject(isLocal() ? container : null);
         out.writeLong(containerStartup);
         out.writeBoolean(optimize);
+        out.writeObject(initialContextHandle);
    }
 
    /**
@@ -159,13 +205,14 @@ public abstract class GenericProxy
     *  invoker, the remote interface of the container invoker is
     *  restored by looking up the name in the invokers map.
     */
-   public void readExternal(java.io.ObjectInput in)
-      throws IOException, ClassNotFoundException
+   public void readExternal(final ObjectInput in)
+       throws IOException, ClassNotFoundException
    {
       name = in.readUTF();
       container = (ContainerRemote)in.readObject();
       containerStartup = in.readLong();
       optimize = in.readBoolean();
+      initialContextHandle = (InitialContextHandle)in.readObject();
       
       if (isLocal())
       {
@@ -232,18 +279,123 @@ public abstract class GenericProxy
     *  If <code>true</true>, this proxy will attempt to optimize
     *  VM-local calls.
     */
-   protected boolean optimize = false;
+   protected boolean optimize; // = false;
 
-
+   /**
+    *  Provides access to the correct naming context for handle objects.
+    */ 
+   protected InitialContextHandle initialContextHandle;
+    
    /**
     *  Returns <code>true</code> iff this instance lives in the same
     *  VM as its container.
     */
    protected boolean isLocal()
    {
-      return containerStartup == ContainerRemote.startup;
+      return containerStartup == ContainerRemote.STARTUP;
    }
 
+    /**
+     * Create an <tt>InitialContext</tt> using the saved environment or 
+     * create a vanilla <tt>InitialContext</tt> when the enviroment
+     * is <i>null</i>.
+     *
+     * @return  <tt>InitialContext</tt> suitable for the bean that this
+     *          is a proxy for.
+     *
+     * @throws NamingException    Failed to create <tt>InitialContext</tt>.
+     */
+    protected InitialContext createInitialContext() 
+        throws NamingException
+    {
+        return initialContextHandle.getInitialContext();
+    }
+    
+    /**
+     * Invoke the container to handle this method invocation.
+     *
+     * <p>If optimization is enabled and this is a local proxy, then the
+     *    container is invoked directly, else a remote call is made.
+     *
+     * @param id        ???
+     * @param method    The method to invoke.
+     * @param args      The arguments passed to the method.
+     *
+     * @throws Throwable    Failed to invoke container.
+     */
+    protected Object invokeContainer(final Object id,
+                                     final Method method,
+                                     final Object[] args)
+        throws Throwable
+    {
+        Object result;
+
+        // optimize if calling another bean in same EJB-application
+        if (optimize && isLocal()) {
+            result = container.invoke(id,
+                                      method,
+                                      args,
+                                      getTransaction(), 
+                                      getPrincipal(),
+                                      getCredential());
+        }
+        else {
+            MarshalledObject mo = createMarshalledObject(id, method, args);
+
+            // Invoke on the remote server, enforce marshaling
+            if (isLocal()) {
+                // ensure marshaling of exceptions is done properly
+                try {
+                    result = container.invoke(mo).get();
+                }
+                catch (Throwable e) {
+                    throw (Throwable)new MarshalledObject(e).get();
+                }
+            }
+            else {
+                // Marshaling is done by RMI
+                result = container.invoke(mo).get();
+            }
+        }
+        
+        return result;
+    }
+
+    /**
+     * Create a <tt>MarshalledObject</tt> suitable for
+     * invoking a remote container with.
+     *
+     * @param id        ???
+     * @param method    The method to invoke.
+     * @param args      The arguments passed to the method.
+     * @return          <tt>MarshalledObject</tt> suitable for invoking 
+     *                  a remote container with.
+     *
+     * @throws SystemException    Failed to get transaction.
+     * @throws IOException        Failed to create <tt>MarshalledObject</tt>.
+     */
+    protected MarshalledObject createMarshalledObject(final Object id,
+                                                      final Method method, 
+                                                      final Object[] args)
+        throws SystemException, IOException
+    {
+        RemoteMethodInvocation rmi =
+            new RemoteMethodInvocation(id, method, args);
+
+        // Set the transaction propagation context
+        rmi.setTransactionPropagationContext(getTransactionPropagationContext());
+
+        // Set the security stuff
+        // MF fixme this will need to use "thread local" and therefore same construct as above
+        // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+        // rmi.setCredential(sm != null? sm.getCredential() : null);
+        // is the credential thread local? (don't think so... but...)
+        rmi.setPrincipal(getPrincipal());
+        rmi.setCredential(getCredential());
+
+        return new MarshalledObject(rmi);
+    }
+    
    // Private -------------------------------------------------------
 
    /**
@@ -257,7 +409,7 @@ public abstract class GenericProxy
     *  will fail. This is, however, very unlikely to happen in real
     *  life, and next time the client is started it would run OK.
     */
-   private long containerStartup = ContainerRemote.startup;
+   private long containerStartup = ContainerRemote.STARTUP;
 
    // Inner classes -------------------------------------------------
 }

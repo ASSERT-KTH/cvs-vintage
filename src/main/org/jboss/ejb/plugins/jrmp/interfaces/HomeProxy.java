@@ -1,12 +1,15 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectInput;
+
 import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
 
@@ -17,121 +20,142 @@ import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBMetaData;
-import org.jboss.ejb.CacheKey;
 
+import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
-*      <description> 
-*      
-*      @see <related>
-*      @author Rickard Öberg (rickard.oberg@telkel.com)
-*		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.21 $
-*/
+ * The client-side proxy for an EJB Home object.
+ *      
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.22 $
+ */
 public class HomeProxy
-extends GenericProxy
+    extends GenericProxy
 {
     // Constants -----------------------------------------------------
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 432426690456622923L;
     
-    // Attributes ----------------------------------------------------
-    
-    EJBMetaData ejbMetaData;
     // Static --------------------------------------------------------
-    static Method getEJBMetaData;
-    static Method getHomeHandle;
-    static Method removeByHandle;
-    static Method removeByPrimaryKey;
-    static Method removeObject;
-    static Method toStr;
-    static Method eq;
-    static Method hash;
+
+    /** {@link EJBHome#getEJBMetaData} method reference. */
+    protected static final Method GET_EJB_META_DATA;
+
+    /** {@link EJBHome#getHomeHandle} method reference. */
+    protected static final Method GET_HOME_HANDLE;
+
+    /** {@link EJBHome#remove(Handle)} method reference. */
+    protected static final Method REMOVE_BY_HANDLE;
+
+    /** {@link EJBHome#remove(Object)} method reference. */
+    protected static final Method REMOVE_BY_PRIMARY_KEY;
+
+    /** {@link EJBObject#remove} method reference. */
+    protected static final Method REMOVE_OBJECT;
     
-    static
-    {
-        try
-        {
-            // EJB methods
-            getEJBMetaData = EJBHome.class.getMethod("getEJBMetaData", new Class[0]);
-            getHomeHandle = EJBHome.class.getMethod("getHomeHandle", new Class[0]);
-            removeByHandle = EJBHome.class.getMethod("remove", new Class[] {Handle.class});
-            removeByPrimaryKey = EJBHome.class.getMethod("remove", new Class[] {Object.class});
+    /**
+     * Initialize {@link EJBHome} and {@link EJBObject} method references.
+     */
+    static {
+        try {
+            final Class empty[] = {};
+            final Class type = EJBHome.class;
+
+            GET_EJB_META_DATA = type.getMethod("getEJBMetaData", empty);
+            GET_HOME_HANDLE = type.getMethod("getHomeHandle", empty);
+            REMOVE_BY_HANDLE = type.getMethod("remove", new Class[] { 
+                Handle.class 
+            });
+            REMOVE_BY_PRIMARY_KEY = type.getMethod("remove", new Class[] { 
+                Object.class 
+            });
+
             // Get the "remove" method from the EJBObject
-            removeObject = EJBObject.class.getMethod("remove", new Class[0]);
-            
-            // Object methods
-            toStr = Object.class.getMethod("toString", new Class[0]);
-            eq = Object.class.getMethod("equals", new Class[] { Object.class });
-            hash = Object.class.getMethod("hashCode", new Class[0]);
-        } catch (Exception e)
-        {
+            REMOVE_OBJECT = EJBObject.class.getMethod("remove", empty);
+        }
+        catch (Exception e) {
             e.printStackTrace();
+            throw new ExceptionInInitializerError(e);            
         }
     }
     
+    // Attributes ----------------------------------------------------
+
+    /** The EJB meta-data for the {@link EJBHome} reference. */    
+    protected EJBMetaData ejbMetaData;
     
     // Constructors --------------------------------------------------
-    public HomeProxy()
-    {
-        // For Externalizable to work
-    }
-    
-    public HomeProxy(String name, EJBMetaData ejbMetaData, ContainerRemote container, boolean optimize)
+
+    /**
+     * No-argument constructor for externalization.
+     */
+    public HomeProxy() {}
+
+    /**
+     * Construct a <tt>HomeProxy</tt>.
+     *
+     * @param name          The JNDI name of the container that we proxy for.
+     * @param ejbMetaData   ???
+     * @param container     The remote interface of the invoker for which
+     *                      this is a proxy for.
+     * @param optimize      True if the proxy will attempt to optimize
+     *                      VM-local calls.
+     */
+    public HomeProxy(final String name,
+                     final EJBMetaData ejbMetaData,
+                     final ContainerRemote container,
+                     final boolean optimize)
     {
         super(name, container, optimize);
-        
         this.ejbMetaData = ejbMetaData;
     }
     
     // Public --------------------------------------------------------
     
-    // InvocationHandler implementation ------------------------------
-    public Object invoke(Object proxy, Method m, Object[] args)
-    throws Throwable
+	/**
+     * InvocationHandler implementation.
+     *
+     * @param proxy   The proxy object.
+     * @param m       The method being invoked.
+     * @param args    The arguments for the method.
+     *
+     * @throws Throwable    Any exception or error thrown while processing.
+     */
+    public Object invoke(final Object proxy,
+                         final Method m,
+                         Object[] args)
+        throws Throwable
     {
-        
-        
         // Normalize args to always be an array
         // Isn't this a bug in the proxy call??
         if (args == null)
-            args = new Object[0];
+            args = EMPTY_ARGS;
         
         // Implement local methods
-        if (m.equals(toStr))
-        {
-            return name+"Home";
+        if (m.equals(TO_STRING)) {
+            return name + "Home";
         }
-        else if (m.equals(eq))
-        {
+        else if (m.equals(EQUALS)) {
             // equality of the proxy home is based on names...
-            
-            return new Boolean(invoke(proxy,toStr, args).equals(name+"Home"));
+            Object temp = invoke(proxy, TO_STRING, args);
+            return new Boolean(temp.equals(name + "Home"));
         }
-        
-        else if (m.equals(hash))
-        {
-            
+        else if (m.equals(HASH_CODE)) {
             return new Integer(this.hashCode());
         }
         
         // Implement local EJB calls
-        else if (m.equals(getHomeHandle))
-        {
-            
-            return new HomeHandleImpl(name);
+        else if (m.equals(GET_HOME_HANDLE)) {
+            return new HomeHandleImpl(initialContextHandle, name);
         }
-        
-        
-        else if (m.equals(getEJBMetaData))
-        {
-            
+        else if (m.equals(GET_EJB_META_DATA)) {
             return ejbMetaData;
         }
-        
-        
-        else if (m.equals(removeByHandle))
-        {
-            
+        else if (m.equals(REMOVE_BY_HANDLE)) {
             // First get the EJBObject
             EJBObject object = ((Handle) args[0]).getEJBObject();
             
@@ -141,136 +165,97 @@ extends GenericProxy
             // Return Void
             return Void.TYPE;
         }
-        
-        // The trick is simple we trick the container in believe it is a remove() on the instance
-        else if (m.equals(removeByPrimaryKey))
-        {
-            
-            if (optimize && isLocal())
-            {
-                return container.invoke(
-                    // The first argument is the id
-                    new CacheKey(args[0]), 
-                    // Pass the "removeMethod"
-                    removeObject, 
-                    // this is a remove() on the object
-                    new Object[0],
-                    // Tx stuff
-                    getTransaction(),
-                    // Security attributes
-                    getPrincipal(), getCredential());
-            } else
-            {
-                
-                // Build a method invocation that carries the identity of the target object
-                RemoteMethodInvocation rmi = new RemoteMethodInvocation(
-                    // The first argument is the id
-                    new CacheKey(args[0]), 
-                    // Pass the "removeMethod"
-                    removeObject, 
-                    // this is a remove() on the object
-                    new Object[0]);
-                
-                // Set the transaction context
-                rmi.setTransactionPropagationContext(getTransactionPropagationContext());
-                
-                // Set the security stuff
-                // MF fixme this will need to use "thread local" and therefore same construct as above
-                // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-                // rmi.setCredential(sm != null? sm.getCredential() : null);
-                // is the credential thread local? (don't think so... but...)
-                rmi.setPrincipal( getPrincipal() );
-                rmi.setCredential( getCredential() );
-                
-                // Invoke on the remote server, enforce marshaling
-                if (isLocal())
-                {
-                   // We need to make sure marshaling of exceptions is done properly
-                   try
-                   {
-                     return container.invoke(new MarshalledObject(rmi)).get();
-                   } catch (Throwable e)
-                   {
-                     throw (Throwable)new MarshalledObject(e).get();
-                   }
-                } else
-                {
-                  // Marshaling is done by RMI
-                  return container.invoke(new MarshalledObject(rmi)).get();
-                }
-            }
+        else if (m.equals(REMOVE_BY_PRIMARY_KEY)) {
+            // The trick is simple we trick the container in believe it
+            // is a remove() on the instance
+            Object id = new CacheKey(args[0]);
+            return invokeContainer(id, REMOVE_OBJECT, EMPTY_ARGS);
         }
         
         // If not taken care of, go on and call the container
-        else
-        {
-            
-            // Delegate to container
-            // Optimize if calling another bean in same EJB-application
-            if (optimize && isLocal())
-            {
-                return container.invokeHome( // The method and arguments for the invocation
-                    m, args,
-                    // Transaction attributes
-                    getTransaction(),
-                    // Security attributes
-                    getPrincipal(), getCredential());
-            } else
-            {
-                // Create a new MethodInvocation for distribution 
-                RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
-                
-                // Set the transaction propagation context
-                rmi.setTransactionPropagationContext(getTransactionPropagationContext());
-                
-                // Set the security stuff
-                // MF fixme this will need to use "thread local" and therefore same construct as above
-                // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-                // rmi.setCredential(sm != null? sm.getCredential() : null);
-                // is the credential thread local? (don't think so... but...)
-                rmi.setPrincipal( getPrincipal() );
-                rmi.setCredential( getCredential() );
-                
-               // Invoke on the remote server, enforce marshaling
-               if (isLocal())
-               {
-                  // We need to make sure marshaling of exceptions is done properly
-                  try
-                  {
-                    return container.invokeHome(new MarshalledObject(rmi)).get();
-                  } catch (Throwable e)
-                  {
-                    throw (Throwable)new MarshalledObject(e).get();
-                  }
-               } else
-               {
-                 // Marshaling is done by RMI
-                 return container.invokeHome(new MarshalledObject(rmi)).get();
-               }
-            }
+        else {
+            return invokeHome(m, args);
         }
     }
-    
-    public void writeExternal(java.io.ObjectOutput out)
-    throws IOException
+
+    /**
+     * Externalization support.
+     *
+     * @param out
+     *
+     * @throws IOException
+     */
+    public void writeExternal(final ObjectOutput out)
+        throws IOException
     {
         super.writeExternal(out);
-        
         out.writeObject(ejbMetaData);
     }
     
-    public void readExternal(java.io.ObjectInput in)
-    throws IOException, ClassNotFoundException
+    /**
+     * Externalization support.
+     *
+     * @param in
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void readExternal(final ObjectInput in)
+        throws IOException, ClassNotFoundException
     {
         super.readExternal(in);
-        
         ejbMetaData = (EJBMetaData)in.readObject();
     }
+    
     // Package protected ---------------------------------------------
     
     // Protected -----------------------------------------------------
     
     // Private -------------------------------------------------------
-    
+
+    /**
+     * Invoke the container to handle this <tt>EJBHome</tt> method
+     * invocation.
+     *
+     * @param method    The method to invoke.
+     * @param args      The arguments passed to the method.
+     *
+     * @throws Throwable    Failed to invoke container.
+     */
+    private Object invokeHome(final Method method, final Object[] args)
+        throws Throwable
+    {
+        Object result;
+
+        // Optimize if calling another bean in same EJB-application
+        if (optimize && isLocal()) {
+            result = container.invokeHome(method,
+                                          args,
+                                          getTransaction(),
+                                          getPrincipal(),
+                                          getCredential());
+        }
+        else {
+            MarshalledObject mo = createMarshalledObject(null, method, args);
+
+            // Invoke on the remote server, enforce marshaling
+            if (isLocal()) {
+                // ensure marshaling of exceptions is done properly
+                try {
+                    result = container.invokeHome(mo).get();
+                }
+                catch (Throwable e) {
+                    throw (Throwable)new MarshalledObject(e).get();
+                }
+            }
+            else {
+                // Marshaling is done by RMI
+                return container.invokeHome(mo).get();
+            }
+        }
+
+        return result;
+    }
+
     // Inner classes -------------------------------------------------
 }

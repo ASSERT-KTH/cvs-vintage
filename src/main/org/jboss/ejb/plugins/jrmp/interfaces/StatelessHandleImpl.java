@@ -7,60 +7,66 @@
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
+
 import javax.ejb.Handle;
 import javax.ejb.EJBObject;
-import javax.naming.InitialContext;
-import java.lang.reflect.Method;
-
 
 /**
- *	<description> 
- *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ * An EJB stateless session bean handle.
+ *
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.5 $
  */
 public class StatelessHandleImpl
-   implements Handle
+    extends AbstractHandle
+    implements Handle
 {
-   // Constants -----------------------------------------------------
+    // Constants -----------------------------------------------------
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 4651553991845772180L;
     
-   // Attributes ----------------------------------------------------
-   String name;
+    // Attributes ----------------------------------------------------
    
-   // Static --------------------------------------------------------
+    // Static --------------------------------------------------------
 
-   // Constructors --------------------------------------------------
-   public StatelessHandleImpl(String name)
-   {
-      this.name = name;
-   }
+    // Constructors --------------------------------------------------
+
+    /**
+     * Construct a <tt>StatelessHandleImpl</tt>.
+     *
+     * @param handle    The initial context handle that will be used
+     *                  to restore the naming context or null to use
+     *                  a fresh InitialContext object.
+     * @param name      JNDI name.
+     */
+    public StatelessHandleImpl(final InitialContextHandle handle,
+                               final String name)
+    {
+        super(handle, name);
+    }
    
-   // Public --------------------------------------------------------
+    // Public --------------------------------------------------------
 
-   // Handle implementation -----------------------------------------
-   public EJBObject getEJBObject()
-      throws RemoteException
-   {
-      try
-      {
-         Object home = new InitialContext().lookup(name);
-         
-         Method create = home.getClass().getMethod("create", new Class[0]);
-         return (EJBObject)create.invoke(home, new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Could not get EJBObject", e);
-      }
-   }
+    /**
+     * Handle implementation.
+     *
+     * @return  <tt>EJBObject</tt> reference.
+     *
+     * @throws ServerException    Could not get EJBObject.
+     * @throws RemoteException
+     */
+    public EJBObject getEJBObject() throws RemoteException {
+        return getEJBObject("create", new Class[0], new Object[0]);
+    }
 
-   // Package protected ---------------------------------------------
+    // Package protected ---------------------------------------------
     
-   // Protected -----------------------------------------------------
+    // Protected -----------------------------------------------------
     
-   // Private -------------------------------------------------------
+    // Private -------------------------------------------------------
 
-   // Inner classes -------------------------------------------------
+    // Inner classes -------------------------------------------------
 }
 

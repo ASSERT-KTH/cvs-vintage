@@ -14,45 +14,70 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.lang.reflect.Method;
 
-
 /**
- *	<description> 
+ * An EJB home handle implementation.
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.6 $
  */
 public class HomeHandleImpl
-   implements HomeHandle
+    extends AbstractHandle
+    implements HomeHandle
 {
-   // Constants -----------------------------------------------------
+    // Constants -----------------------------------------------------
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = -6105191783910395296L;
     
-   // Attributes ----------------------------------------------------
-   String name;
+    // Attributes ----------------------------------------------------
    
-   // Static --------------------------------------------------------
+    // Static --------------------------------------------------------
 
-   // Constructors --------------------------------------------------
-   public HomeHandleImpl(String name)
-   {
-      this.name = name;
-   }
-   
-   // Public --------------------------------------------------------
+    // Constructors --------------------------------------------------
 
-   // Handle implementation -----------------------------------------
-   public EJBHome getEJBHome()
-      throws RemoteException
-   {
-       try {
-        
-         return (EJBHome) new InitialContext().lookup(name);
-         
-        } 
-       catch (NamingException e) {
-         
-            e.printStackTrace();
-            throw new RemoteException("Could not get EJBHome");
+    /**
+     * Construct a <tt>HomeHandleImpl</tt>.
+     *
+     * @param handle    The initial context handle that will be used
+     *                  to restore the naming context or null to use
+     *                  a fresh InitialContext object.
+     * @param name      JNDI name.
+     */
+    public HomeHandleImpl(final InitialContextHandle handle,
+                          final String name)
+    {
+        super(handle, name);
+    }
+
+    /**
+     * Construct a <tt>HomeHandleImpl</tt>.  This is used for
+     * constructing a handle reference outside of a proxy.
+     *
+     * @param name   JNDI name.
+     */
+    public HomeHandleImpl(final String name) {
+        super(name);
+    }
+    
+    // Public --------------------------------------------------------
+
+    // Handle implementation -----------------------------------------
+
+    /**
+     * HomeHandle implementation.
+     *
+     * @return  <tt>EJBHome</tt> reference.
+     *
+     * @throws ServerException    Could not get EJBObject.
+     * @throws RemoteException
+     */
+    public EJBHome getEJBHome() throws RemoteException {
+        try {
+            return lookupEJBHome();
+        }
+        catch (NamingException e) {
+            throw new ServerException("Could not get EJBHome", e);
         } 
    }
 

@@ -14,11 +14,13 @@ import java.security.*;
 import org.jboss.logging.Logger;
 
 /**
- *	<description> 
- *      
+ *	<b>NOT IN USE</b>?
+ *
+ *  @deprecated     This this class in use at all?
+ *  
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class SecureSocketFactory
    extends RMISocketFactory

@@ -25,22 +25,23 @@ import java.security.DigestOutputStream;
 import javax.transaction.Transaction;
 
 /**
- *  RemoteMethodInvocation
+ *  This Serializable object carries the method to invoke and an
+ *  identifier for the target ojbect
  *
- *  This Serializable object carries the method to invoke and an identifier for the target ojbect
- *
- *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable
 {
    // Constants -----------------------------------------------------
 
+   /** Serial Version Identifier. */
+   private static final long serialVersionUID = 6021873560918744612L;
+    
    // Attributes ----------------------------------------------------
    Object id;
 //   String className;

@@ -52,9 +52,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.GenericProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
-import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
-import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
 
@@ -78,7 +76,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.36 $
+ *      @version $Revision: 1.37 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer

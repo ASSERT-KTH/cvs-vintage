@@ -7,8 +7,12 @@
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectInput;
+
 import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
+
 import javax.naming.InitialContext;
 
 import javax.ejb.EJBObject;
@@ -18,196 +22,155 @@ import javax.naming.Name;
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
- *      <description> 
+ * An EJB stateful session bean proxy class.
  *      
- *      @see <related>
- *      @author Rickard Öberg (rickard.oberg@telkel.com)
- * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.19 $
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.20 $
  */
 public class StatefulSessionProxy
-   extends GenericProxy
+   extends BeanProxy
 {
-   // Constants -----------------------------------------------------
+    // Constants -----------------------------------------------------
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 1379411137308931705L;
     
-   // Attributes ----------------------------------------------------
-   // Stateful beans come with a jboss generated identifier
-   protected Object id;
-   
-   // Static --------------------------------------------------------
+    // Attributes ----------------------------------------------------
 
-   static Method getPrimaryKey;
-   static Method getHandle;
-   static Method getEJBHome;
-   static Method isIdentical;
-   static Method toStr;
-   static Method eq;
-   static Method hash;
+    /** JBoss generated identifier. */
+    protected Object id;
    
-   static
-   {
-      try
-      {
-        // EJBObject methods
-         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
-         getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
-         getEJBHome = EJBObject.class.getMethod("getEJBHome", new Class[0]);
-         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
-         
-        // Object methods
-        toStr = Object.class.getMethod("toString", new Class[0]);
-         eq = Object.class.getMethod("equals", new Class[] { Object.class });
-         hash = Object.class.getMethod("hashCode", new Class[0]);
-      } catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+    // Static --------------------------------------------------------
 
-   // Constructors --------------------------------------------------
-   public StatefulSessionProxy()
-   {
-      // For externalization to work
-   }
-   
-   public StatefulSessionProxy(String name, ContainerRemote container, Object id, boolean optimize)
-   {
+    // Constructors --------------------------------------------------
+
+    /**
+     * No-argument constructor for externalization.
+     */
+    public StatefulSessionProxy() {}
+
+    /**
+     * Construct a <tt>StatefulSessionProxy</tt>.
+     *
+     * @param name          The JNDI name of the container that we proxy for.
+     * @param container     The remote interface of the invoker for which
+     *                      this is a proxy for.
+     * @param id            JBoss generated identifier.
+     * @param optimize      True if the proxy will attempt to optimize
+     *                      VM-local calls.
+     */
+    public StatefulSessionProxy(final String name,
+                                final ContainerRemote container,
+                                final Object id,
+                                final boolean optimize)
+    {
        super(name, container, optimize);
-    
-        this.id = id;
-   }
+       this.id = id;
+    }
    
-   // Public --------------------------------------------------------
+    // Public --------------------------------------------------------
 
-   // InvocationHandler implementation ------------------------------
-   public final Object invoke(Object proxy, Method m, Object[] args)
-      throws Throwable
-   {
-      // Normalize args to always be an array
-      // Isn't this a bug in the proxy call??
-      if (args == null)
-         args = new Object[0];
+	/**
+     * InvocationHandler implementation.
+     *
+     * @param proxy   The proxy object.
+     * @param m       The method being invoked.
+     * @param args    The arguments for the method.
+     *
+     * @throws Throwable    Any exception or error thrown while processing.
+     */
+    public final Object invoke(final Object proxy,
+                               final Method m,
+                               Object[] args)
+        throws Throwable
+    {
+        // Normalize args to always be an array
+        // Isn't this a bug in the proxy call??
+        if (args == null)
+            args = EMPTY_ARGS;
       
-      // Implement local methods
-      if (m.equals(toStr))
-      {
-         return name+":"+id.toString();
-      }
-      else if (m.equals(eq))
-      {
-         return invoke(proxy, isIdentical, args);
-      }
+        // Implement local methods
+        if (m.equals(TO_STRING)) {
+            return name + ":" + id.toString();
+        }
+        else if (m.equals(EQUALS)) {
+            return invoke(proxy, IS_IDENTICAL, args);
+        }
+        else if (m.equals(HASH_CODE)) {
+            return new Integer(id.hashCode());
+        }
       
-      else if (m.equals(hash))
-      {
-        return new Integer(id.hashCode());
-      }
-      
-      // Implement local EJB calls
-       else if (m.equals(getHandle))
-      {
-         return new StatefulHandleImpl(name, id);
-      }
-	  
-	  
-	  else if (m.equals(getEJBHome))
-      { 
-         return (EJBHome) new InitialContext().lookup(name);
-      }
-	   
-     
-      else if (m.equals(getPrimaryKey))
-      {
-         // MF FIXME 
-         // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
-         // However we need to expose the field *somehow* so we can check for "isIdentical"
-         // For now we use a non-spec compliant implementation and just return the key as is
-         // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
+        // Implement local EJB calls
+        else if (m.equals(GET_HANDLE)) {
+            return new StatefulHandleImpl(initialContextHandle, name, id);
+        }
+        else if (m.equals(GET_EJB_HOME)) {
+            return getEJBHome();
+        }
+        else if (m.equals(GET_PRIMARY_KEY)) {
+            // MF FIXME 
+            // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
+            // However we need to expose the field *somehow* so we can check for "isIdentical"
+            // For now we use a non-spec compliant implementation and just return the key as is
+            // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
          
-         // This should be the following call 
-         //throw new RemoteException("Session Beans do not expose their keys, RTFS");
+            // This should be the following call 
+            //throw new RemoteException("Session Beans do not expose their keys, RTFS");
       
-         // This is how it was solved in jboss1.0
-         // throw new PKHolder("RTFS", id);
+            // This is how it was solved in jboss1.0
+            // throw new PKHolder("RTFS", id);
          
-         // This is non-spec compliant but will do for now
-         return id;
-      }
-      else if (m.equals(isIdentical))
-      {
-           // MF FIXME
-         // See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
-         return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));
-      }
+            // This is non-spec compliant but will do for now
+            return id;
+        }
+        else if (m.equals(IS_IDENTICAL)) {
+            // MF FIXME
+            // See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
+            return isIdentical(args[0], id);
+        }
       
-      // If not taken care of, go on and call the container
-      else
-      {
-          // Delegate to container
-          // Optimize if calling another bean in same EJB-application
-          if (optimize && isLocal())
-          {
-             return container.invoke( // The entity id, method and arguments for the invocation
-                             id, m, args,
-                          // Transaction attributes
-                          getTransaction(),
-                          // Security attributes
-                          getPrincipal(), getCredential());
-          } else
-          {
-          // Create a new MethodInvocation for distribution
-             RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
-             
-          // Set the transaction context
-          rmi.setTransactionPropagationContext(getTransactionPropagationContext());
-             
-             // Set the security stuff
-             // MF fixme this will need to use "thread local" and therefore same construct as above
-             // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-             // rmi.setCredential(sm != null? sm.getCredential() : null);
-             // is the credential thread local? (don't think so... but...)
-             rmi.setPrincipal( getPrincipal() );
-             rmi.setCredential( getCredential() );
-          
-             // Invoke on the remote server, enforce marshaling
-             if (isLocal())
-             {
-                // We need to make sure marshaling of exceptions is done properly
-                try
-                {
-                  return container.invoke(new MarshalledObject(rmi)).get();
-                } catch (Throwable e)
-                {
-                  throw (Throwable)new MarshalledObject(e).get();
-                }
-             } else
-             {
-               // Marshaling is done by RMI
-               return container.invoke(new MarshalledObject(rmi)).get();
-             }
-          }
-      }
-   }
+        // If not taken care of, go on and call the container
+        else {
+            return invokeContainer(id, m, args);
+        }
+    }
 
-   // Package protected ---------------------------------------------
+    // Package protected ---------------------------------------------
     
-   // Protected -----------------------------------------------------
-   public void writeExternal(java.io.ObjectOutput out)
-      throws IOException
-   {
-    super.writeExternal(out);
-    out.writeObject(id);
-   }
-   
-   public void readExternal(java.io.ObjectInput in)
-      throws IOException, ClassNotFoundException
-   {
-    super.readExternal(in);
-    id = in.readObject();
-   }
+    // Protected -----------------------------------------------------
+
+    /**
+     * Externalization support.
+     *
+     * @param out
+     *
+     * @throws IOException
+     */
+    public void writeExternal(final ObjectOutput out)
+        throws IOException
+    {
+        super.writeExternal(out);
+        out.writeObject(id);
+    }
+
+    /**
+     * Externalization support.
+     *
+     * @param in
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void readExternal(final ObjectInput in)
+        throws IOException, ClassNotFoundException
+    {
+        super.readExternal(in);
+        id = in.readObject();
+    }
     
-   // Private -------------------------------------------------------
+    // Private -------------------------------------------------------
     
-   // Inner classes -------------------------------------------------
+    // Inner classes -------------------------------------------------
 }
-

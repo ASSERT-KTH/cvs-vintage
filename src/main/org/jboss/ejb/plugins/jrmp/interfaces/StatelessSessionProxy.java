@@ -1,117 +1,97 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.lang.reflect.Method;
 
-import java.rmi.MarshalledObject;
-import javax.naming.InitialContext;
-import javax.naming.Name;
-
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
-
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
-*      <description> 
-*      
-*      @see <related>
-*      @author Rickard Öberg (rickard.oberg@telkel.com)
-* 	   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.14 $
-*/
+ * An EJB stateless session bean proxy class.
+ *      
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.15 $
+ */
 public class StatelessSessionProxy
-   extends GenericProxy
+    extends BeanProxy
 {
 	// Constants -----------------------------------------------------
-	
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 2327647224051998978L;
+
 	// Attributes ----------------------------------------------------
 	
 	// Static --------------------------------------------------------
 	
-	static Method getPrimaryKey;
-	static Method getHandle;
-	static Method getEJBHome;
-	static Method isIdentical;
-	static Method toStr;
-	static Method eq;
-	static Method hash;
-	
-	static
-	{
-		try
-		{
-			// EJBObject methods
-			getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
-			getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
-			getEJBHome = EJBObject.class.getMethod("getEJBHome", new Class[0]);
-			isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
-			
-			// Object methods
-			toStr = Object.class.getMethod("toString", new Class[0]);
-			eq = Object.class.getMethod("equals", new Class[] { Object.class });
-			hash = Object.class.getMethod("hashCode", new Class[0]);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	
 	// Constructors --------------------------------------------------
-   public StatelessSessionProxy()
-   {
-      // For externalization to work
-   }
-   
-	public StatelessSessionProxy(String name, ContainerRemote container, boolean optimize)
+
+    /**
+     * No-argument constructor for externalization.
+     */
+    public StatelessSessionProxy() {}
+
+    /**
+     * Construct a <tt>StatelessSessionProxy</tt>.
+     *
+     * @param name          The JNDI name of the container that we proxy for.
+     * @param container     The remote interface of the invoker for which
+     *                      this is a proxy for.
+     * @param optimize      True if the proxy will attempt to optimize
+     *                      VM-local calls.
+     */
+	public StatelessSessionProxy(final String name,
+                                 final ContainerRemote container,
+                                 final boolean optimize)
 	{
 		super(name, container, optimize);
 	}
 	
 	// Public --------------------------------------------------------
 	
-	// InvocationHandler implementation ------------------------------
-	
-	public final Object invoke(Object proxy, Method m, Object[] args)
-	throws Throwable
+	/**
+     * InvocationHandler implementation.
+     *
+     * @param proxy   The proxy object.
+     * @param m       The method being invoked.
+     * @param args    The arguments for the method.
+     *
+     * @throws Throwable    Any exception or error thrown while processing.
+     */
+	public final Object invoke(final Object proxy,
+                               final Method m,
+                               Object[] args)
+        throws Throwable
 	{
 		// Normalize args to always be an array
 		// Isn't this a bug in the proxy call??
 		if (args == null)
-			args = new Object[0];
+			args = EMPTY_ARGS;
 		
 		// Implement local methods
-		if (m.equals(toStr))
-		{
-			return name+":Stateless";
+		if (m.equals(TO_STRING)) {
+			return name + ":Stateless";
 		}
-		else if (m.equals(eq))
-		{
-			return invoke(proxy, isIdentical, args);
+		else if (m.equals(EQUALS)) {
+			return invoke(proxy, IS_IDENTICAL, args);
 		}
-		
-		else if (m.equals(hash))
-		{
+		else if (m.equals(HASH_CODE)) {
 			// We base the stateless hash on the hash of the proxy...
 			// MF XXX: it could be that we want to return the hash of the name?
 			return new Integer(this.hashCode());
 		}
 		
 		// Implement local EJB calls
-		else if (m.equals(getHandle))
-		{
-			return new StatelessHandleImpl(name);
+		else if (m.equals(GET_HANDLE)) {
+			return new StatelessHandleImpl(initialContextHandle, name);
 		}
-		
-		else if (m.equals(getPrimaryKey))
-		{
-			
+		else if (m.equals(GET_PRIMARY_KEY)) {
 			// MF FIXME 
 			// The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
 			// However we need to expose the field *somehow* so we can check for "isIdentical"
@@ -129,74 +109,26 @@ public class StatelessSessionProxy
 			// are equal within a home
 			return name;
 		}
-		
-	
-	   else if (m.equals(getEJBHome))
-       { 
-           return (EJBHome) new InitialContext().lookup(name);
-       }
-	   
-		else if (m.equals(isIdentical))                 
-		{
-			// All stateless beans are identical within a home, if the names are equal we are equal
-			return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(name));
+        else if (m.equals(GET_EJB_HOME)) {
+            return getEJBHome();
+        }
+		else if (m.equals(IS_IDENTICAL)) {
+			// All stateless beans are identical within a home,
+			// if the names are equal we are equal
+            return isIdentical(args[0], name);
 		}
 		
 		// If not taken care of, go on and call the container
-		else
-		{
-			// Delegate to container
-			// Optimize if calling another bean in same EJB-application
-			if (optimize && isLocal())
-			{
-				return container.invoke( // The entity id, method and arguments for the invocation
-					null, m, args,
-					// Transaction attributes
-					getTransaction(),
-					// Security attributes
-					getPrincipal(), getCredential());
-			} else
-			{
-				// Create a new MethodInvocation for distribution
-				RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
-				
-				// Set the transaction context
-				rmi.setTransactionPropagationContext(getTransactionPropagationContext());
-				
-				// Set the security stuff
-				// MF fixme this will need to use "thread local" and therefore same construct as above
-				// rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-				// rmi.setCredential(sm != null? sm.getCredential() : null);
-				// is the credential thread local? (don't think so... but...)
-				rmi.setPrincipal( getPrincipal() );
-				rmi.setCredential( getCredential() );
-				
-				// Invoke on the remote server, enforce marshaling
-				if (isLocal())
-				{
-				   // We need to make sure marshaling of exceptions is done properly
-				   try
-				   {
-				     return container.invoke(new MarshalledObject(rmi)).get();
-				   } catch (Throwable e)
-				   {
-				     throw (Throwable)new MarshalledObject(e).get();
-				   }
-				} else
-				{
-				  // Marshaling is done by RMI
-				  return container.invoke(new MarshalledObject(rmi)).get();
-				}
-			}
+		else {
+            return invokeContainer(null, m, args);
 		}
 	}
 
+    // Package protected ---------------------------------------------
 
-// Package protected ---------------------------------------------
+    // Protected -----------------------------------------------------
 
-// Protected -----------------------------------------------------
+    // Private -------------------------------------------------------
 
-// Private -------------------------------------------------------
-
-// Inner classes -------------------------------------------------
+    // Inner classes -------------------------------------------------
 }

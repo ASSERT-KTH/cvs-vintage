@@ -7,62 +7,74 @@
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
+
 import javax.ejb.Handle;
 import javax.ejb.EJBObject;
-import javax.naming.InitialContext;
-import java.lang.reflect.Method;
-
 
 /**
- *	<description> 
+ * An EJB entity bean handle implementation.
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.6 $
+ * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version $Revision: 1.7 $
  */
 public class EntityHandleImpl
-   implements Handle
+    extends AbstractHandle
+    implements Handle
 {
-   // Constants -----------------------------------------------------
+    // Constants -----------------------------------------------------
+
+    /** Serial Version Identifier. */
+    private static final long serialVersionUID = 1636103643167246469L;
     
-   // Attributes ----------------------------------------------------
-   String name;
-   Object id;
+    // Attributes ----------------------------------------------------
+
+    /** The primary key of the entity bean. */
+    protected final Object id;
    
-   // Static --------------------------------------------------------
+    // Static --------------------------------------------------------
 
-   // Constructors --------------------------------------------------
-   public EntityHandleImpl(String name, Object id)
-   {
-      this.name = name;
-      this.id = id;
-   }
+    // Constructors --------------------------------------------------
+
+    /**
+     * Construct a <tt>EntityHandleImpl</tt>.
+     *
+     * @param state     The initial context state that will be used
+     *                  to restore the naming context or null to use
+     *                  a fresh InitialContext object.
+     * @param name      JNDI name.
+     * @param id        Primary key of the entity.
+     */
+    public EntityHandleImpl(final InitialContextHandle state,
+                            final String name,
+                            final Object id)
+    {
+        super(state, name);
+        this.id = id;
+    }
    
-   // Public --------------------------------------------------------
+    // Public --------------------------------------------------------
 
-   // Handle implementation -----------------------------------------
-   public EJBObject getEJBObject()
-      throws RemoteException
-   {
-      try
-      {
-         Object home = new InitialContext().lookup(name);
-         
-         Method finder = home.getClass().getMethod("findByPrimaryKey", new Class[] { id.getClass() });
-         return (EJBObject)finder.invoke(home, new Object[] { id });
-      } catch (Exception e)
-      {
-         throw new ServerException("Could not get EJBObject", e);
-      }
-   }
+    /**
+     * Handle implementation.
+     *
+     * @return  <tt>EJBObject</tt> reference.
+     *
+     * @throws ServerException    Could not get EJBObject.
+     * @throws RemoteException
+     */
+    public EJBObject getEJBObject() throws RemoteException {
+        return getEJBObject("findByPrimaryKey",
+                            new Class[] { id.getClass() },
+                            new Object[] { id });
+    }
 
-   // Package protected ---------------------------------------------
+    // Package protected ---------------------------------------------
     
-   // Protected -----------------------------------------------------
+    // Protected -----------------------------------------------------
     
-   // Private -------------------------------------------------------
+    // Private -------------------------------------------------------
 
-   // Inner classes -------------------------------------------------
+    // Inner classes -------------------------------------------------
 }
 
