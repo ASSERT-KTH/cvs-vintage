@@ -8,6 +8,7 @@ package org.jboss.ejb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.ejb.EJBException;
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -17,7 +18,6 @@ import java.util.Iterator;
 import java.util.Collection;
 import org.jboss.logging.Logger;
 import java.util.Map;
-import javax.transaction.TransactionRolledbackException;
 
 /**
  * This class provides a way to find out what entities are contained in
@@ -29,7 +29,7 @@ import javax.transaction.TransactionRolledbackException;
  * Entities are stored in an ArrayList to ensure specific ordering. 
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class GlobalTxEntityMap
 {
@@ -41,8 +41,9 @@ public class GlobalTxEntityMap
    /**
     * associate entity with transaction
     */
-   public synchronized void associate(Transaction tx,
-                                      EntityEnterpriseContext entity)
+   public synchronized void associate(
+         Transaction tx,
+         EntityEnterpriseContext entity)
       throws RollbackException, SystemException
    {
       ArrayList entityList = (ArrayList)m_map.get(tx);
@@ -54,7 +55,7 @@ public class GlobalTxEntityMap
       }
       if (!entityList.contains(entity))
       {
-	 entityList.add(entity);
+         entityList.add(entity);
       }
    }
 
@@ -63,77 +64,66 @@ public class GlobalTxEntityMap
     * within a transaction.
     */
    public void syncEntities(Transaction tx) 
-      throws TransactionRolledbackException
    {
       Collection entities = null;
       synchronized (m_map)
       {
-	 entities = (Collection)m_map.remove(tx);
+         entities = (Collection)m_map.remove(tx);
       }
-      if (entities != null) // there are entities associated
+
+      // if there are there no entities associated with this tx we are done
+      if (entities == null) 
       {
-	 // This is an independent point of entry. We need to make sure the
-	 // thread is associated with the right context class loader
-	 ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-    
-	 try
+         return;
+      }
+
+      // This is an independent point of entry. We need to make sure the
+      // thread is associated with the right context class loader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+ 
+      try
+      {
+         EntityEnterpriseContext ctx = null;
+         try
          {
-	    EntityEnterpriseContext ctx = null;
-	    try
-	    {
-	       for (Iterator i = entities.iterator(); i.hasNext(); )
-	       {
-                  //I don't know how this could happen without an exception in the loop,
-                  //but this method can get to here after e.g. NoSuchEntity...
-                  //new ConnectionManager won't enlist in rolled back tx.
-                  //(old one did not use enlist of XAResource for local tx)
-                  if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) 
-                  {
-                     break;
-                  } // end of if ()
+            for (Iterator i = entities.iterator(); i.hasNext(); )
+            {
+               // any one can mark the tx rollback at any time so check
+               // before continuing to the next store
+               if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) 
+               {
+                  // nothing else to do here
+                  return;
+               } 
                   
-		  //read-only will never get into this list.
-		  ctx = (EntityEnterpriseContext)i.next();
-		  EntityContainer container = (EntityContainer)ctx.getContainer();
-		  Thread.currentThread().setContextClassLoader(container.getClassLoader());
-		  container.storeEntity(ctx);
-	       }
-	    }
-	    catch (Exception e)
-	    {
-	       /*ejb 1.1 section 12.3.2
-		*ejb 2 section 18.3.3
-		*exception during store must log exception,
-		* mark tx for rollback and throw 
-		* a TransactionRolledBack[Local]Exception
-		*/
+               // read-only entities will never get into this list.
+               ctx = (EntityEnterpriseContext)i.next();
+               EntityContainer container = (EntityContainer)ctx.getContainer();
 
-	       //however we may need to ignore a NoSuchEntityException -- TODO
-	       log.error("Store failed on entity: " + ctx.getId(), e);
-	       try
-	       {
-		  tx.setRollbackOnly();
-	       }
-	       catch(SystemException se)
-	       {
-		  log.warn("SystemException while trying to rollback tx: " + tx, se);
-	       }
-	       catch (IllegalStateException ise)
-	       {
-		  log.warn("IllegalStateException while trying to rollback tx: " + tx, ise);
-	       }
-	       finally
-	       {
-		  //How do we distinguish local/remote??
-		  throw new TransactionRolledbackException("Exception in store of entity :" + ctx.id);
-	       }
-	    }
-	 }
-	 finally
+               // set the context class loader before calling the store method
+               Thread.currentThread().setContextClassLoader(
+                     container.getClassLoader());
+
+               // store it
+               container.storeEntity(ctx);
+            }
+         }
+         catch (Exception e)
          {
-	    Thread.currentThread().setContextClassLoader(oldCl);
-	 }
-
+            // EJB 1.1 section 12.3.2 and EJB 2 section 18.3.3
+            // exception during store must log exception, mark tx for 
+            // rollback and throw a TransactionRolledback[Local]Exception
+            // if using caller's transaction.  All of this is handled by 
+            // the AbstractTxInterceptor and LogInterceptor.
+            //
+            // however we may need to ignore a NoSuchEntityException -- TODO
+            //
+            throw new EJBException("Exception in store of entity:" + ctx.id, e);
+         }
+      }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
@@ -148,8 +138,9 @@ public class GlobalTxEntityMap
       GlobalTxEntityMap map;
       Transaction tx;
 
-      public GlobalTxEntityMapCleanup(GlobalTxEntityMap map,
-                                      Transaction tx)
+      public GlobalTxEntityMapCleanup(
+            GlobalTxEntityMap map,
+            Transaction tx)
       {
          this.map = map;
          this.tx = tx;
@@ -159,24 +150,39 @@ public class GlobalTxEntityMap
   
       public void beforeCompletion()
       {
-         // complete
-         boolean trace = log.isTraceEnabled();
-         if( trace )
+         if (log.isTraceEnabled()) 
+         {
             log.trace("beforeCompletion called for tx " + tx);
-	 try
-	 {
-	    syncEntities(tx);
-	 }
-	 catch (Exception e)
-	 {//ignore - we can't throw any exceptions, it is already logged
-	 }
+         }
 
+         try
+         {
+            syncEntities(tx);
+         }
+         catch (Exception e)
+         {
+            log.error("Entity synchronization failed", e);
+            try
+            {
+               // rolback the tx
+               tx.setRollbackOnly();
+            }
+            catch (SystemException ex)
+            {
+               log.warn("SystemException while trying to rollback tx: " 
+                     + tx, ex);
+            }
+            catch (IllegalStateException ex)
+            {
+               log.warn("IllegalStateException while trying to rollback tx: " +
+                     tx, ex);
+            }
+         }
       }
   
       public void afterCompletion(int status)
       {
-	 //no-op
+         //no-op
       }
    }
-   
 }
