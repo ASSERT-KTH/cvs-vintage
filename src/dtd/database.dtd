@@ -1,6 +1,6 @@
 <!-- 
     Torque XML database schema DTD 
-    $Id: database.dtd,v 1.1 2001/04/06 00:36:57 jon Exp $
+    $Id: database.dtd,v 1.2 2001/04/18 18:46:13 jmcnally Exp $
 -->
 
 <!ELEMENT app-data (database+)>
@@ -18,6 +18,9 @@
   name CDATA #REQUIRED
   javaName CDATA #IMPLIED
   idMethod (idbroker|autoincrement|sequence|none) "none"
+  skipSql (true|false) "false"
+  baseClass CDATA #IMPLIED
+  basePeer CDATA #IMPLIED
 >
 
 <!ELEMENT id-method-parameter EMPTY>
