@@ -24,25 +24,24 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.5 2002/10/08 20:04:30 kataka Exp $
+// $Id: FigInitialState.java,v 1.6 2002/12/05 21:47:19 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.Collection;
+import java.util.Vector;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.state_machines.*;
-import ru.novosoft.uml.behavior.activity_graphs.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import org.tigris.gef.graph.*;
-
-import org.argouml.uml.diagram.activity.ui.*;
+import org.argouml.uml.diagram.activity.ui.SelectionActionState;
+import org.tigris.gef.base.Selection;
+import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.presentation.FigCircle;
+import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
+import ru.novosoft.uml.behavior.state_machines.MPseudostate;
+import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 
 /** Class to display graphics for a UML State in a diagram. */
 

@@ -24,7 +24,7 @@
 // File: FigStylePanelFig.java
 // Classes: FigStylePanelFig
 // Original Author: your email address here
-// $Id: StylePanelFig.java,v 1.8 2002/12/01 12:32:24 kataka Exp $
+// $Id: StylePanelFig.java,v 1.9 2002/12/05 21:47:18 kataka Exp $
 
 // 13 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Problem with cursor
 // jumping around in the boundary box fixed (a problem with double refreshing
@@ -312,9 +312,11 @@ implements ItemListener, FocusListener, KeyListener {
             return;
         }
 
-        _target.startTrans();
-        _target.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-        _target.endTrans();
+        if (!_target.getBounds().equals(bounds)) {
+            _target.startTrans();
+            _target.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+            _target.endTrans();
+        }
     }
 
 

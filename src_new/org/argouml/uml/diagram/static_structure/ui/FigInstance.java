@@ -24,23 +24,20 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.2 2001/12/22 23:27:25 thn Exp $
+// $Id: FigInstance.java,v 1.3 2002/12/05 21:47:19 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
-import java.awt.*;
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.Vector;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import org.tigris.gef.graph.*;
-
-import org.argouml.uml.diagram.ui.*;
+import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.tigris.gef.base.Globals;
+import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.presentation.FigRect;
+import org.tigris.gef.presentation.FigText;
 
 /** Class to display graphics for a UML MInstance in a diagram. */
 

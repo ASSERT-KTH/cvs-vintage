@@ -24,28 +24,28 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.6 2002/10/08 20:04:29 kataka Exp $
+// $Id: FigMNode.java,v 1.7 2002/12/05 21:47:18 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import org.tigris.gef.graph.*;
-
-import org.argouml.application.api.*;
-import org.argouml.uml.diagram.ui.*;
+import org.argouml.application.api.Notation;
+import org.argouml.uml.diagram.ui.FigEdgeModelElement;
+import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.tigris.gef.base.Selection;
+import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigCube;
+import org.tigris.gef.presentation.FigRect;
+import org.tigris.gef.presentation.FigText;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /** Class to display graphics for a UML Node in a diagram. */
 
@@ -182,10 +182,6 @@ public class FigMNode extends FigNodeModelElement {
     else {
         _stereo.setText(Notation.generateStereotype(this, stereo));
     }
-  }
-
-  protected void modelChanged() {
-    super.modelChanged();
   }
 
   public boolean getUseTrapRect() { return true; }
