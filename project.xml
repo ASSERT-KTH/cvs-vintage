@@ -23,8 +23,8 @@
 
   <repository>
     <!--connection>scm:cvs:pserver:anoncvs@cvs.tigris.org:/cvs:scarab</connection-->
-    <connection>scm:cvs:ext:${maven.username}@cvs.tigris.org:/home/cvs:scarab</connection>    
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.tigris.org:/home/cvs:scarab</developerConnection>
+    <connection>scm:cvs:pserver:${maven.username}@cvs.tigris.org:/cvs:scarab</connection>    
+    <developerConnection>scm:cvs:pserver:${maven.username}@cvs.tigris.org:/cvs:scarab</developerConnection>
     <url>http://scarab.tigris.org/source/browse/scarab/</url>
   </repository>
 
