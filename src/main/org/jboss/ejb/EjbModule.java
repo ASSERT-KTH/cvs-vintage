@@ -94,7 +94,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -313,7 +313,7 @@ public class EjbModule
    {
       return deploymentInfo.url;
    }
-	
+        
    public ObjectName getModuleName() 
    {
       return moduleName;
@@ -326,7 +326,7 @@ public class EjbModule
       
       this.moduleName = moduleName;
    }
-	
+        
    // Service implementation ----------------------------------------
    
    protected void createService() throws Exception 
@@ -338,9 +338,9 @@ public class EjbModule
       }
 
       serviceController = (ServiceControllerMBean)
-	 MBeanProxy.create(ServiceControllerMBean.class,
-			   ServiceControllerMBean.OBJECT_NAME,
-			   server);
+         MBeanProxy.create(ServiceControllerMBean.class,
+                           ServiceControllerMBean.OBJECT_NAME,
+                           server);
       boolean debug = log.isDebugEnabled();
       log.debug( "Application.start(), begin" );
   
@@ -442,7 +442,7 @@ public class EjbModule
          serviceController.start(con.getJmxName());
       }
    }
-	
+        
    /**
     * Stops all the containers of this application.
     */
@@ -701,7 +701,8 @@ public class EjbModule
 
       // Create the container's WebClassLoader 
       // and register it with the web service.
-      String webClassLoaderName = conf.getWebClassLoader();
+      String webClassLoaderName = getWebClassLoader(conf, bean);
+      log.info("Creating WebClassLoader of class " + webClassLoaderName);
       WebClassLoader wcl = null;
       try 
       {
@@ -714,7 +715,7 @@ public class EjbModule
       catch (Exception e) 
       {
          throw new DeploymentException(
-            "Failed to create WebClassLoader of class: " 
+            "Failed to create WebClassLoader of class " 
             + webClassLoaderName + ": ", e);
       }
       WebServiceMBean webServer = 
@@ -784,6 +785,44 @@ public class EjbModule
       
       // Install the container interceptors based on the configuration
       addInterceptors(container, transType, conf.getContainerInterceptorsConf());
+   }
+
+   /**
+    * Return the name of the WebClassLoader class for this ejb.
+    */
+   private static String getWebClassLoader(ConfigurationMetaData conf, 
+                                           BeanMetaData bmd)
+      throws DeploymentException
+   {
+      String webClassLoader = null;
+      Iterator it = bmd.getInvokerBindings();
+      int count = 0;
+      while (it.hasNext())
+      {
+         String invoker = (String)it.next();
+         ApplicationMetaData amd = bmd.getApplicationMetaData();
+         InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)
+                           amd.getInvokerProxyBindingMetaDataByName(invoker);
+         Element proxyFactoryConfig = imd.getProxyFactoryConfig();
+         String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig, 
+                                                         "web-class-loader");
+         if (webCL != null)
+         {
+            log.debug("Invoker " + invoker 
+                      + " specified WebClassLoader class" + webCL);
+            webClassLoader = webCL;
+            count++;
+         }
+      }
+      if (count > 1) {
+         log.warn(count + " invokers have WebClassLoader specifications.");
+         log.warn("Using the last specification seen (" 
+                  + webClassLoader + ")."); 
+      }
+      else if (count == 0) {
+         webClassLoader = conf.getWebClassLoader();
+      }
+      return webClassLoader;
    }
    
    /**
@@ -898,7 +937,7 @@ public class EjbModule
     * Create all proxy factories for this ejb
     */
    private static void createProxyFactories(BeanMetaData conf, Container container,
-					    ClassLoader cl )
+                                            ClassLoader cl )
       throws Exception
    {
       Iterator it = conf.getInvokerBindings();
@@ -916,7 +955,7 @@ public class EjbModule
             ci = (EJBProxyFactory) cl.loadClass(imd.getProxyFactory()).newInstance();
             ci.setContainer(container);
             ci.setInvokerMetaData(imd);
-	    ci.setInvokerBinding(jndiBinding);
+            ci.setInvokerBinding(jndiBinding);
             if( ci instanceof XmlLoadable )
             {
                // the container invoker can load its configuration from the jboss.xml element
