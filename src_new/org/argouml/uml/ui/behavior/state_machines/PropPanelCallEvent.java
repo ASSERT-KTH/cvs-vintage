@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.30 2005/01/20 23:20:36 linus Exp $
+// $Id: PropPanelCallEvent.java,v 1.31 2005/01/21 16:37:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,8 @@ class UMLCallEventOperationComboBox2 extends UMLSearchableComboBox {
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isACallEvent(target)) {
-            Model.getCommonBehaviorHelper().setOperation(target, getSelectedItem());
+            Model.getCommonBehaviorHelper().setOperation(target, 
+                    getSelectedItem());
         }
     }
 }
