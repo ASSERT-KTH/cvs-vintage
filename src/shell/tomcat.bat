@@ -1,20 +1,18 @@
 @echo off
-rem $Id: tomcat.bat,v 1.14 2000/02/26 20:44:15 rubys Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
 rem Improvements to this file are welcome
 
-set jsdkJars=%TOMCAT_HOME%\lib\webserver.jar;%TOMCAT_HOME%\lib\servlet.jar
-set jspJars=%TOMCAT_HOME%\lib\jasper.jar
-set miscJars=%TOMCAT_HOME%\lib\xml.jar
-set appJars=%jsdkJars%;%jspJars%;%miscJars%
-set sysJars=%JAVA_HOME%\lib\tools.jar
-
-set appClassPath=%TOMCAT_HOME%\classes;%appJars%
 set cp=%CLASSPATH%
 
-set CLASSPATH=%appClassPath%;%sysJars%
+set CLASSPATH=.
+set CLASSPATH=%TOMCAT_HOME%\classes
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\webserver.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jasper.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xml.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar
+set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
 
 if "%cp%" == "" goto next
 
@@ -61,7 +59,7 @@ goto cleanup
 :runAnt
 rem Run ant
 echo Using classpath: %CLASSPATH%
-java -Dant.home=%TOMACT_HOME%  -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main $@
+java -Dant.home=%TOMCAT_HOME%  -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main $@
 goto cleanup
 
 :runJspc

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.12 2000/02/24 23:01:32 costin Exp $
+# $Id: tomcat.sh,v 1.13 2000/03/01 20:24:23 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -17,16 +17,7 @@ if [ -f $HOME/.tomcatrc ] ; then
 fi
 
 if [ "$TOMCAT_HOME" = "" ] ; then
-  # try to find tomcat
-  if [ -d ${HOME}/opt/tomcat/conf ] ; then 
-    TOMCAT_HOME=${HOME}/opt/tomcat
-  fi
-
-  if [ -d /opt/tomcat/conf ] ; then 
-    TOMCAT_HOME=/opt/tomcat
-  fi
-
-  ## resolve links - $0 may be a link to ant's home
+  ## resolve links - $0 may be a link to  home
   PRG=$0
   progname=`basename $0`
   
@@ -40,8 +31,33 @@ if [ "$TOMCAT_HOME" = "" ] ; then
     fi
   done
   
-  TOMCAT_HOME=`dirname "$PRG"`/..
+  TOMCAT_HOME_1=`dirname "$PRG"`/..
+  echo "Guessing TOMCAT_HOME from tomcat.sh to ${TOMCAT_HOME_1}" 
+  if [ -d ${TOMCAT_HOME_1}/conf ] ; then 
+      TOMCAT_HOME=${TOMCAT_HOME_1}
+      echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
+  fi
+fi
 
+
+if [ "$TOMCAT_HOME" = "" ] ; then
+  # try to find tomcat
+  if [ -d ${HOME}/opt/tomcat/conf ] ; then 
+    TOMCAT_HOME=${HOME}/opt/tomcat
+    echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+  fi
+
+  if [ -d /opt/tomcat/conf ] ; then 
+    TOMCAT_HOME=/opt/tomcat
+    echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+  fi
+ 
+  # Add other "standard" locations for tomcat
+fi
+
+if [ "$TOMCAT_HOME" = "" ] ; then
+    echo Can't find TOMCAT_HOME, you need to set it or install in a standard location
+    exit 1
 fi
 
 if [ -z "$JAVA_HOME" ] ;  then
@@ -82,7 +98,7 @@ fi
 
 export CLASSPATH
 
-if [ ! -f server.xml ] ; then 
+if [ ! -f conf/server.xml ] ; then 
    if [ "$2" = "" ] ; then
      # Probably we are in a wrong directory, use tomcat_home
      # If arguments are passed besides start/stop, probably a -f was used,
