@@ -1,56 +1,71 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.20 2002/04/24 22:50:17 jon Exp $
+@version $Id: AdminIndex.vm,v 1.21 2002/04/24 23:47:24 jon Exp $
 *#
 
 <div id="adminIndex" class="app">
 
 <h2>$page.Title</h2>
 
-#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
+#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
 <h3>Global data</h3>
 <ul>
+#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm"))
  <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global issue types")</li>
+#end
+#if ($link.isAllowed("admin,GlobalAttributeShow.vm"))
  <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global attributes")</li>
+#end
 </ul>
 #end
 
-#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $scarabR.CurrentModule))
+#if ($link.isAllowed("admin,Approval.vm"))
 <h3>Approve</h3>
 <ul>
  <li>$link.setPage("admin,Approval.vm").setLabel("Approve")</li>
 </ul>
 #end
 
-#if ($link.setPage("admin,ManageArtifactTypes.vm").isAllowed() || $link.setPage("admin,ManageModules.vm").isAllowed())
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportSelect.vm"))
 <h3>Modules</h3>
 <ul>
-#if ($link.setPage("admin,ManageArtifactTypes.vm").isAllowed())
- <li>$link.setLabel("Manage issue types")</li>
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm"))
+ <li>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("Manage issue types")</li>
 #end
-#if ($link.setPage("admin,ManageModules.vm").isAllowed())
- <li>$link.setLabel("Manage modules")</li>
+#if ($link.isAllowed("admin,ManageModules.vm"))
+ <li>$link.setPage("admin,ManageModules.vm").setLabel("Manage modules")</li>
 #end
-#if ($link.setPage("admin,XMLExportSelect.vm").isAllowed())
- <li>$link.setLabel("XML export")</li>
+#if ($link.isAllowed("admin,XMLExportSelect.vm"))
+ <li>$link.setPage("admin,XMLExportSelect.vm").setLabel("XML export")</li>
 #end
 </ul>
 #end
 
-#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__ADMIN,$scarabR.CurrentModule))
+#if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
 <h3>Roles</h3>
-
 <ul>
- <li><a href="admin,ManageRoles.vm">Role list</a></li>
- <li><a href="admin,AddRole.vm">Add new role</a></li>
+#if ($link.isAllowed("admin,ManageRoles.vm"))
+ <li>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</li>
+#end
+#if ($link.isAllowed("admin,AddRole.vm"))
+ <li>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</li>
+#end
 </ul>
+#end
 
+#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("ChangePassword.vm"))
 <h3>Users</h3>
-
 <ul>
+#if ($link.isAllowed("admin,ManageUserSearch.vm"))
  <li>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</li>
+#end
+#if ($link.isAllowed("admin,AddUser.vm"))
  <li>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</li>
+#end
+#if ($link.isAllowed("ChangePassword.vm"))
+ <li>$link.setPage("ChangePassword.vm").setLabel("Change password")</li>
+#end
 </ul>
 #end
 

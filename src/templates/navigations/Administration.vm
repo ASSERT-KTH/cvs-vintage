@@ -39,20 +39,31 @@
     <div><small><strong>Roles</strong></small>
     <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</small></div>
     <div><small>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</small></div>
-    </diV>
+    </div>
   #else
     <div><small>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Roles")</small></div>
   #end
 #end
 
-#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
+#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("ChangePassword.vm"))
   #if ($adminMenu.equals("5"))
     <div><small><strong>Users</strong></small>
+    #if ($link.isAllowed("admin,ManageUserSearch.vm"))
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</small></div>
+    #end
+    #if ($link.isAllowed("admin,AddUser.vm"))
     <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
+    #end
+    #if ($link.isAllowed("ChangePassword.vm"))
+    <div><small>$link.setPage("ChangePassword.vm").setLabel("Change password")</small></div>
+    #end
     </div>
   #else
+    #if (!$link.isAllowed("admin,ManageUserSearch.vm") && $link.isAllowed("ChangePassword.vm"))
+    <div><small>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
+    #else
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
+    #end
   #end
 #end
 
