@@ -1,4 +1,4 @@
-/* $Id: MxInterceptor.java,v 1.2 2002/07/30 17:27:25 costin Exp $
+/* $Id: MxInterceptor.java,v 1.3 2002/09/18 07:57:09 hgomez Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -63,6 +63,8 @@ import org.apache.tomcat.util.io.FileUtil;
 import java.io.*;
 import java.util.*;
 
+import javax.management.*;
+
 import org.apache.tomcat.util.mx.*;
 
 /**
@@ -71,6 +73,10 @@ import org.apache.tomcat.util.mx.*;
  */
 public class MxInterceptor  extends BaseInterceptor { 
 
+	MBeanServer 	mserver;
+    private int 	port=-1;
+    private String host;
+	
     // -------------------- Tomcat callbacks --------------------
 
     private void createMBean( String domain, Object proxy, String name ) {
@@ -78,12 +84,94 @@ public class MxInterceptor  extends BaseInterceptor {
             DynamicMBeanProxy mbean=new DynamicMBeanProxy();
             mbean.setReal( proxy );
             if( name!=null ) {
-                mbean.setName( name );
+                mbean.setName( "name=" + name );
             }
 
             mbean.registerMBean( domain );
+            
+            // Set mserver once
+            if (mserver == null)
+            	mserver = mbean.getMBeanServer();
+            	
         } catch( Throwable t ) {
             log( "Error creating mbean ", t );
+        }
+    }
+
+    /* -------------------- Public methods -------------------- */
+
+    /** Enable the MX4J internal adapter
+     */
+    public void setPort( int i ) {
+        port=i;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setHost(String host ) {
+        this.host=host;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    /* ==================== Start/stop ==================== */
+    ObjectName serverName=null;
+    
+    /** Initialize the worker. After this call the worker will be
+     *  ready to accept new requests.
+     */
+    public void loadAdapter() throws IOException {
+        try {
+            serverName = new ObjectName("Http:name=HttpAdaptor");
+            mserver.createMBean("mx4j.adaptor.http.HttpAdaptor", serverName, null);
+            
+            if( host!=null ) 
+                mserver.setAttribute(serverName, new Attribute("Host", host));
+            
+            mserver.setAttribute(serverName, new Attribute("Port", new Integer(port)));
+            
+           	ObjectName processorName = new ObjectName("Http:name=XSLTProcessor");
+            mserver.createMBean("mx4j.adaptor.http.XSLTProcessor", processorName, null);
+			mserver.setAttribute(serverName, new Attribute("ProcessorName", processorName));
+                
+            mserver.invoke(serverName, "start", null, null);
+			log( "Started mx4j http adaptor" + ((host != null) ? " for host " + host : "") + " at port " + port);
+            return;
+        } catch( Throwable t ) {
+            log( "Can't load the MX4J http adapter " + t.toString()  );
+        }
+
+        try {
+            Class c=Class.forName( "com.sun.jdmk.comm.HtmlAdaptorServer" );
+            Object o=c.newInstance();
+            serverName=new ObjectName("Adaptor:name=html,port=" + port);
+            log("Registering the JMX_RI html adapter " + serverName);
+            mserver.registerMBean(o,  serverName);
+
+            mserver.setAttribute(serverName,
+                                 new Attribute("Port", new Integer(port)));
+
+            mserver.invoke(serverName, "start", null, null);
+			log( "Start JMX_RI http adaptor at port " + port);
+
+        } catch( Throwable t ) {
+            log( "Can't load the JMX_RI http adapter " + t.toString()  );
+        }
+    }
+
+    public void destroy() {
+        try {
+            log("Stoping JMX ");
+
+            if( serverName!=null ) {
+                mserver.invoke(serverName, "stop", null, null);
+            }
+        } catch( Throwable t ) {
+            log( "Destroy error", t );
         }
     }
 
@@ -105,6 +193,16 @@ public class MxInterceptor  extends BaseInterceptor {
         if( bi==this ) {
             // Adding myself and on-time things
             createMBean( "tomcat3", cm, "Tomcat3Container" );
+
+			if( port > 0 ) {
+				try {
+	        		loadAdapter();
+				}
+				catch (IOException ioe)
+				{
+					log("can't load adaptor");
+				}
+			}
         }
         createMBean( "tomcat3", bi, null);
     }
