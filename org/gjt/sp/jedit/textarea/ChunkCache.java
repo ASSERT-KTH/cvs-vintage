@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.87 2003/06/05 20:37:01 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.88 2003/08/22 21:42:03 spestov Exp $
  */
 class ChunkCache
 {
@@ -306,8 +306,7 @@ class ChunkCache
 	int xToSubregionOffset(LineInfo info, int x,
 		boolean round)
 	{
-		int offset = Chunk.xToOffset(info.chunks,
-			x - textArea.getHorizontalOffset(),round);
+		int offset = Chunk.xToOffset(info.chunks,x,round);
 		if(offset == -1 || offset == info.offset + info.length)
 			offset = info.offset + info.length - 1;
 
@@ -335,8 +334,7 @@ class ChunkCache
 	 */
 	int subregionOffsetToX(LineInfo info, int offset)
 	{
-		return (int)(textArea.getHorizontalOffset() + Chunk.offsetToX(
-			info.chunks,offset));
+		return (int)Chunk.offsetToX(info.chunks,offset);
 	} //}}}
 
 	//{{{ getSubregionStartOffset() method

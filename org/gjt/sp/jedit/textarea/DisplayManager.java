@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.68 2003/08/22 17:16:11 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.69 2003/08/22 21:42:03 spestov Exp $
  */
 public class DisplayManager
 {
@@ -970,6 +970,8 @@ loop:		for(;;)
 			}
 		}
 
+		System.err.println(firstLine.scrollLine + ":" + firstLine.physicalLine);
+
 		/* update fold visibility map. */
 		int starti = fvmget(start);
 		int endi = fvmget(end);
@@ -1374,7 +1376,7 @@ loop:		for(;;)
 				if(physicalLine > getLastVisibleLine())
 				{
 					physicalLine = getLastVisibleLine();
-					scrollLine = getScrollLineCount();
+					scrollLine = getScrollLineCount() - 1;
 				}
 				else if(physicalLine < getFirstVisibleLine())
 				{
