@@ -47,7 +47,9 @@ WGET=/usr/bin/wget
 
 ## Environment variables
 if [ -z ${JAVA_HOME} ] ; then
-    if [ ${OSTYPE} = "macos" -o ${OSTYPE} = "darwin1.0" -o ${OSTYPE} = "darwin" ] ; then
+    if [ ${OSTYPE} = "macos" -o ${OSTYPE} = "darwin1.0" \
+         -o ${OSTYPE} = "darwin" -o ${OSTYPE} = "darwin1.4" \
+         -o ${VENDOR} = "apple" ] ; then
         JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
     elif [ ${OSTYPE} = "linux" ] ; then
         JAVA_HOME="/usr/local/java"
