@@ -254,7 +254,7 @@ public class Query
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
                                    user, module)
           || (user.getUserId().equals(getUserId()) 
-             && getScope().equals(Scope.PERSONAL__PK)))
+             && getScopeId().equals(Scope.PERSONAL__PK)))
         {
             setDeleted(true);
             save();
