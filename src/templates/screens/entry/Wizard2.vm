@@ -1,8 +1,7 @@
 <div id="wizard2" class="app">
 $page.setTitle("Identified as duplicate")
+#set ($currentIssue = $scarabR.ReportingIssue)
 #set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
-#set ($module = $scarabR.CurrentModule)
-#set ($currentIssue = $data.User.ReportingIssue)
 
 
 <h2>$page.Title</h2>
@@ -77,7 +76,7 @@ $page.setTitle("Identified as duplicate")
 
 </tr>
 
-#foreach ($issue in $issueList)
+#foreach ($issue in $scarabR.IssueList)
 
 #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
 

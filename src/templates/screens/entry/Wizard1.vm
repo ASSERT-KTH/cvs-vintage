@@ -1,9 +1,8 @@
 <div id="wizard1" class="app">
 $page.setTitle("Enter New Issue")
 
+#set ($issue = $scarabR.ReportingIssue)
 #set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
-#set ($module = $scarabR.CurrentModule)
-#set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <h2>$page.Title</h2>
@@ -37,8 +36,10 @@ $page.setTitle("Enter New Issue")
     </th>
     <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
+$attVal.Value<br>
         #attrValueText ( $attVal "50" )
     #else
+$attVal.Value<br>
         #attrValueLeafSelect ($attVal $field "")
     #end
      #attrValueErrorMsg ( $attVal $field )

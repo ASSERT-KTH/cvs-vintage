@@ -60,7 +60,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.13 2001/08/25 01:21:45 jon Exp $
+    @version $Id: ScarabLink.java,v 1.14 2001/10/08 05:06:03 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -106,9 +106,23 @@ public class ScarabLink extends TemplateLink
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
         }
+        String issueKey = data.getParameters()
+            .getString(ScarabConstants.REPORTING_ISSUE);
+        if (issueKey != null && issueKey.length() > 0)
+        {
+            addPathInfo(ScarabConstants.REPORTING_ISSUE, issueKey);
+        }
+        // if a screen is to be passed along, add it
+        String historyScreen = data.getParameters()
+            .getString(ScarabConstants.HISTORY_SCREEN);
+        if (historyScreen != null && historyScreen.length() > 0)
+        {
+            addPathInfo(ScarabConstants.HISTORY_SCREEN, historyScreen);
+        }
         super.setPage(t);
         return this;
     }
+    
 
     /**
      * Returns the name of the template that is being being processed

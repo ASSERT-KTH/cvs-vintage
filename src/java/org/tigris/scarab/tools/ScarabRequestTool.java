@@ -143,6 +143,11 @@ public class ScarabRequestTool
     private ModuleEntity currentModule = null;
 
     /**
+     * The issue that is currently being entered.
+     */
+    private Issue reportingIssue = null;
+
+    /**
      * A ModuleEntity object
      */
     private ModuleEntity module = null;
@@ -618,6 +623,40 @@ try{
                 .getString(ScarabConstants.CURRENT_MODULE));
         }
         return currentModule;
+    }
+
+    /**
+     * The issue that is currently being entered.
+     *
+     * @return an <code>Issue</code> value
+     */
+    public Issue getReportingIssue()
+        throws Exception
+    {
+        if ( reportingIssue == null ) 
+        {
+            String key = data.getParameters()
+                .getString(ScarabConstants.REPORTING_ISSUE);
+            if ( key == null ) 
+            {
+                // get new issue
+                reportingIssue = getCurrentModule().getNewIssue();
+                key = ((ScarabUser)data.getUser())
+                    .setReportingIssue(reportingIssue);
+                data.getParameters().add(ScarabConstants.REPORTING_ISSUE, key);
+            }
+            else 
+            {
+                reportingIssue = ((ScarabUser)data.getUser())
+                    .getReportingIssue(key);
+            }
+        }
+        return reportingIssue;
+    }
+
+    public void setReportingIssue(Issue issue)
+    {
+        reportingIssue = issue;
     }
 
     /**

@@ -53,22 +53,56 @@ import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.37 2001/10/03 00:52:44 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.38 2001/10/08 05:06:03 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
     public void createNewUser() throws Exception;
     public List getModules() throws Exception;
     public List getModules(Role role) throws Exception;
-    public Issue getReportingIssue(ModuleEntity module) throws Exception;
-    public void setReportingIssue(Issue issue);
-    public String getReportingIssueStartPoint() throws Exception;
-    public void setReportingIssueStartPoint(String template);
+
+    /**
+     * Gets an issue stored in the temp hash under key.
+     *
+     * @param key a <code>String</code> used as the key to retrieve the issue
+     * @return an <code>Issue</code> value
+     * @exception Exception if an error occurs
+     */
+    public Issue getReportingIssue(String key)
+        throws Exception;
+
+    /**
+     * Places an issue into the session that can be retrieved using the key
+     * that is returned from the method.
+     *
+     * @param issue an <code>Issue</code> to store in the session under a 
+     * new key
+     * @return a <code>String</code> value that can be used to retrieve 
+     * the issue
+     * @exception ScarabException if issue is null.
+     */
+    public String setReportingIssue(Issue issue)
+        throws ScarabException;
+
+    /**
+     * Places an issue into the session under the given key.  If another issue
+     * was already using that key, it will be overwritten.  Giving a null issue
+     * removes any issue stored using key.  This method is primarily used to
+     * remove the issue from storage.  Inserting a new issue would be most 
+     * likely done with setReportingIssue(Issue issue).
+     *
+     * @param key a <code>String</code> value under which to store the issue
+     * @param issue an <code>Issue</code> value to store, null removes any 
+     * issue already stored under key.
+     */
+    public void setReportingIssue(String key, Issue issue);
+
     public NumberKey getUserId();
     public List getAttributesForIssueList(ModuleEntity module) throws Exception;
     public List getRModuleUserAttributes(ModuleEntity module) throws Exception;

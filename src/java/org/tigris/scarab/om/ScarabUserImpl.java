@@ -65,6 +65,7 @@ import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.util.ScarabException;
 
 /**
     This class is an abstraction that is currently based around
@@ -73,7 +74,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.20 2001/10/04 23:21:14 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.21 2001/10/08 05:06:03 jmcnally Exp $
 */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -365,53 +366,67 @@ public class ScarabUserImpl
         return null;
     }
 
-    public Issue getReportingIssue(ModuleEntity me)
+    private int issueCount = 0;
+
+    /**
+     * Gets an issue stored in the temp hash under key.
+     *
+     * @param key a <code>String</code> used as the key to retrieve the issue
+     * @return an <code>Issue</code> value
+     * @exception Exception if an error occurs
+     */
+    public Issue getReportingIssue(String key)
         throws Exception
     {
-        Issue issue = (Issue) getTemp(REPORTING_ISSUE);
-        if ( issue == null ) 
-        {
-            issue = me.getNewIssue(this);
-            setTemp(REPORTING_ISSUE, issue);
-        }
-        return issue;
+        return (Issue) getTemp(REPORTING_ISSUE+key);
     }
 
-    public void setReportingIssue(Issue issue)
+    /**
+     * Places an issue into the session that can be retrieved using the key
+     * that is returned from the method.
+     *
+     * @param issue an <code>Issue</code> to store in the session under a 
+     * new key
+     * @return a <code>String</code> value that can be used to retrieve 
+     * the issue
+     * @exception ScarabException if issue is null.
+     */
+    public String setReportingIssue(Issue issue)
+        throws ScarabException
     {
+        String key = null;
         if ( issue == null ) 
         {
-            removeTemp(REPORTING_ISSUE);
-            setReportingIssueStartPoint(null);
+            throw new ScarabException("Null Issue is not allowed.");
         }
         else 
         {
-            setTemp(REPORTING_ISSUE, issue);
+            key = String.valueOf(issueCount++);
+            setTemp(REPORTING_ISSUE+key, issue);
         }
+        return key;
     }
 
-    public String getReportingIssueStartPoint()
-        throws Exception
+    /**
+     * Places an issue into the session under the given key.  If another issue
+     * was already using that key, it will be overwritten.  Giving a null issue
+     * removes any issue stored using key.  This method is primarily used to
+     * remove the issue from storage.  Inserting a new issue would be most 
+     * likely done with setReportingIssue(Issue issue).
+     *
+     * @param key a <code>String</code> value under which to store the issue
+     * @param issue an <code>Issue</code> value to store, null removes any 
+     * issue already stored under key.
+     */
+    public void setReportingIssue(String key, Issue issue)
     {
-        String template = (String) getTemp(REPORTING_ISSUE_START_POINT);
-        if ( template == null ) 
+        if ( issue == null ) 
         {
-            // FIXME: this doesn't belong here
-            template = "entry,Wizard3.vm";            
-        }
-        
-        return template;
-    }
-
-    public void setReportingIssueStartPoint(String template)
-    {
-        if ( template == null ) 
-        {
-            removeTemp(REPORTING_ISSUE_START_POINT);
+            removeTemp(REPORTING_ISSUE+key);
         }
         else 
         {
-            setTemp(REPORTING_ISSUE_START_POINT, template);            
+            setTemp(REPORTING_ISSUE+key, issue);
         }
     }
 }

@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.54 2001/10/05 23:43:29 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.55 2001/10/08 05:06:03 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -96,8 +96,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
+        Issue issue = scarabR.getReportingIssue();
 
         // set any required flags
         setRequiredFlags(issue, intake);
@@ -111,8 +110,12 @@ public class ReportIssue extends RequireLoginFirstAction
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
         }
 
-        // we know we started at Wizard1 if we are here
-        user.setReportingIssueStartPoint("entry,Wizard1.vm");
+        // we know we started at Wizard1 if we are here, Wizard3 needs
+        // to know where the issue entry process starts because it may
+        // branch back
+        data.getParameters()
+            .add(ScarabConstants.HISTORY_SCREEN, "entry,Wizard1.vm");
+        //getLinkTool(context).setHistoryScreen("entry,Wizard1.vm");
     }
 
     /**
@@ -140,8 +143,8 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
+        //ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = scarabR.getReportingIssue();
 
         // search on the option attributes and keywords
         IssueSearch search = new IssueSearch(issue);                
@@ -253,8 +256,8 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Issue issue = scarabR.getReportingIssue();
         ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
 
         // set any required flags
         setRequiredFlags(issue, intake);
@@ -281,7 +284,6 @@ public class ReportIssue extends RequireLoginFirstAction
                 
                 issue.setTypeId(IssueType.ISSUE__PK);
                 issue.save();
-                user.setReportingIssue(null);
 
                 // save the attachment
                 Attachment attachment = new Attachment();
@@ -301,8 +303,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
                 // set the template to the user selected value
                 String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, 
-                    "entry,Wizard3.vm");
+                    .getString(ScarabConstants.NEXT_TEMPLATE, "IssueView.vm");
                 if (template != null && template.equals("AssignIssue.vm"))
                 {
                     data.getParameters().add("intake-grp", "issue"); 
@@ -310,6 +311,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     data.getParameters().add("issue_0id", 
                                              issue.getIssueId().toString());
                 }
+                setTarget(data, template);
 
                 // need to not hardcode summary here. !FIXME!
                 String summary = 
@@ -322,9 +324,8 @@ public class ReportIssue extends RequireLoginFirstAction
                 transaction.sendEmail(new ContextAdapter(context), issue, 
                                       subj.toString(),
                                       "email/NewIssueNotification.vm"); 
-                setTarget(data, template);
 
-                intake.removeAll();
+                cleanup(data, context);
                 data.getParameters().add("issue_id", 
                                          issue.getIssueId().toString());
             }
@@ -366,7 +367,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         .getString("template.homepage", "Start.vm");
                     if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                     {
-                        ((ScarabUser)data.getUser()).setReportingIssue(null);
+                        cleanup(data, context);
                     }
                 }
             }
@@ -399,7 +400,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     .getString("template.homepage", "Start.vm");
                 if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                 {
-                    ((ScarabUser)data.getUser()).setReportingIssue(null);
+                    cleanup(data, context);
                 }
             }
             catch (ScarabException e)
@@ -436,6 +437,7 @@ public class ReportIssue extends RequireLoginFirstAction
         String template = Turbine.getConfiguration()
             .getString("template.homepage", "Start.vm");
         setTarget(data, template);
+        cleanup(data, context);
     }
 
     /**
@@ -445,4 +447,31 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         doCancel(data, context);
     }
+
+    private void cleanup(RunData data, TemplateContext context)
+    {
+        data.getParameters().remove(ScarabConstants.HISTORY_SCREEN);
+        String issueKey = data.getParameters()
+            .getString(ScarabConstants.REPORTING_ISSUE);
+        ((ScarabUser)data.getUser()).setReportingIssue(issueKey, null);
+        data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
+        getScarabRequestTool(context).setReportingIssue(null);
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
+    }
+
+    /*
+    private String getStartPoint()
+        throws Exception
+    {
+        String historyScreen = data.getParameters()
+            .getString(ScarabConstants.HISTORY_SCREEN);
+        if ( historyScreen == null ) 
+        {
+            historyScreen = "entry,Wizard3.vm";            
+        }
+        
+        return historyScreen;
+    }
+    */
 }

@@ -1,8 +1,7 @@
 $page.setTitle("Enter Issue")
 
+#set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue"))
-#set ($module = $scarabR.CurrentModule)
-#set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
 <div class="app" id="wizard3">
@@ -106,7 +105,7 @@ $page.setTitle("Enter Issue")
      <td>
     return to&#160;
    <input type="radio" name="nextTemplate" 
-      value="$data.User.ReportingIssueStartPoint"/> 
+      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")"/> 
       Enter New Issue 
   <input type="radio" name="nextTemplate" value="Index.vm" /> 
       Start Page 
