@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.43 2001/10/16 21:42:22 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.44 2001/10/16 23:55:01 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -440,6 +440,24 @@ public class ScarabModule
                      IssueTypePeer. ISSUE_TYPE_ID);
         crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
         crit.add(IssueTypePeer.PARENT_ID, 0);
+        return IssueTypePeer.doSelect(crit);
+    }
+
+    /**
+     * gets a list of the Issue Types for this module.
+     * that get listed in the left navigation.
+     */
+    public List getNavIssueTypes()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer. ISSUE_TYPE_ID);
+        crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
+        crit.add(IssueTypePeer.PARENT_ID, 0);
+        crit.add(RModuleIssueTypePeer.ACTIVE, true);
+        crit.add(RModuleIssueTypePeer.DISPLAY, true);
+        crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
         return IssueTypePeer.doSelect(crit);
     }
 
