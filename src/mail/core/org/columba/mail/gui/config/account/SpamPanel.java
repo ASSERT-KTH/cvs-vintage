@@ -34,6 +34,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -82,33 +83,40 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
     }
 
     protected void initComponents() {
-        enableCheckBox = new JCheckBox("Enable adaptive spam filter");
+        enableCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
+                "account", "enable_filter"));
         enableCheckBox.setActionCommand("ENABLE");
         enableCheckBox.addActionListener(this);
 
-        addressCheckBox = new JCheckBox(
-                "Do not mark message as Junk if sender is in addressbook");
+        addressCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
+                "account", "dont_mark_message"));
 
-        incomingCheckBox = new JCheckBox("Move incoming Junk messages to:");
+        incomingCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
+                "account", "move_incoming_messages"));
         incomingCheckBox.setActionCommand("INCOMING");
         incomingCheckBox.addActionListener(this);
 
         incomingChooseFolderButton = new JButton("Inbox");
         incomingChooseFolderButton.setActionCommand("INCOMING_BUTTON");
         incomingChooseFolderButton.addActionListener(this);
-        
-        incomingTrashRadioButton = new JRadioButton("Trash folder");
-        incomingMoveToRadioButton = new JRadioButton("Move to:");
+
+        incomingTrashRadioButton = new JRadioButton(MailResourceLoader
+                .getString("dialog", "account", "trash_folder"));
+        incomingMoveToRadioButton = new JRadioButton(MailResourceLoader
+                .getString("dialog", "account", "move_to"));
         ButtonGroup group = new ButtonGroup();
         group.add(incomingTrashRadioButton);
         group.add(incomingMoveToRadioButton);
-        
-        markCheckBox = new JCheckBox("When marking message as Junk:");
+
+        markCheckBox = new JCheckBox(MailResourceLoader.getString("dialog",
+                "account", "when_marking_message"));
         markCheckBox.setActionCommand("MARK");
         markCheckBox.addActionListener(this);
 
-        markTrashRadioButton = new JRadioButton("Move to Trash folder");
-        markMoveToRadioButton = new JRadioButton("Move to:");
+        markTrashRadioButton = new JRadioButton(MailResourceLoader.getString(
+                "dialog", "account", "move_to_trash_folder"));
+        markMoveToRadioButton = new JRadioButton(MailResourceLoader.getString(
+                "dialog", "account", "move_to"));
         ButtonGroup group2 = new ButtonGroup();
         group2.add(markTrashRadioButton);
         group2.add(markMoveToRadioButton);
@@ -117,17 +125,14 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
         markChooseFolderButton.setActionCommand("MARK_BUTTON");
         markChooseFolderButton.addActionListener(this);
 
-        label = new MultiLineLabel(
-                "Columba can be trained to analyze the contents of your incoming messages"
-                        + " and identify those that are most likely to be junk. If enabled, "
-                        + "you must first train Columba to identify Junk mail by marking messages"
-                        + " as Junk or not. You need to identify both Junk and non Junk messages.");
+        label = new MultiLineLabel(MailResourceLoader.getString("dialog",
+                "account", "spam_intro"));
     }
 
     protected void layoutComponents() {
         //		Create a FormLayout instance.
         FormLayout layout = new FormLayout(
-                "10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, fill:max(150dlu;default):grow", 
+                "10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, fill:max(150dlu;default):grow",
 
                 // 2 columns
                 ""); // rows are added dynamically (no need to define them
@@ -141,7 +146,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
         builder.setLeadingColumnOffset(1);
 
-        builder.appendSeparator("Adaptive Spam Filter");
+        builder.appendSeparator(MailResourceLoader.getString("dialog",
+                "account", "separator_adaptive_spam_filter"));
 
         builder.append(label, 4);
         builder.nextLine();
@@ -149,7 +155,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
         builder.append(enableCheckBox, 4);
         builder.nextLine();
 
-        builder.appendSeparator("Filter Options");
+        builder.appendSeparator(MailResourceLoader.getString("dialog",
+                "account", "separator_filter_options"));
         builder.nextLine();
 
         builder.append(addressCheckBox, 4);
@@ -162,8 +169,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 
         builder.append(incomingTrashRadioButton, 3);
         builder.nextLine();
-        builder.append(incomingMoveToRadioButton, 2);
-        builder.append(incomingChooseFolderButton);
+        builder.append(incomingMoveToRadioButton, 1);
+        builder.append(incomingChooseFolderButton, 2);
 
         builder.setLeadingColumnOffset(1);
 
@@ -175,8 +182,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
         builder.append(markTrashRadioButton, 3);
         builder.nextLine();
 
-        builder.append(markMoveToRadioButton, 2);
-        builder.append(markChooseFolderButton);
+        builder.append(markMoveToRadioButton, 1);
+        builder.append(markChooseFolderButton, 2);
     }
 
     public void updateComponents(boolean b) {
@@ -185,24 +192,20 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
         if (b) {
             enableCheckBox.setSelected(spam.isEnabled());
 
-            
             incomingCheckBox.setSelected(spam
                     .isMoveIncomingJunkMessagesEnabled());
 
-            MessageFolder folder = (MessageFolder) MailInterface.treeModel.getFolder(spam
-                    .getIncomingCustomFolder());
+            MessageFolder folder = (MessageFolder) MailInterface.treeModel
+                    .getFolder(spam.getIncomingCustomFolder());
             String treePath = folder.getTreePath();
             incomingChooseFolderButton.setText(treePath);
 
-           
             incomingMoveToRadioButton.setSelected(!spam
                     .isIncomingTrashSelected());
 
-           
-            incomingTrashRadioButton.setSelected(spam
-                    .isIncomingTrashSelected());
+            incomingTrashRadioButton
+                    .setSelected(spam.isIncomingTrashSelected());
 
-         
             markCheckBox.setSelected(spam.isMoveMessageWhenMarkingEnabled());
 
             folder = (MessageFolder) MailInterface.treeModel.getFolder(spam
@@ -210,17 +213,13 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             treePath = folder.getTreePath();
             markChooseFolderButton.setText(treePath);
 
-            
             markMoveToRadioButton.setSelected(!spam.isMoveTrashSelected());
 
-           
             markTrashRadioButton.setSelected(spam.isMoveTrashSelected());
-            
+
             addressCheckBox.setSelected(spam.checkAddressbook());
-            
+
             enableComponents(enableCheckBox.isSelected());
-            
-            
 
         } else {
             spam.setEnabled(enableCheckBox.isSelected());
@@ -231,9 +230,10 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             spam.selectedIncomingTrash(incomingTrashRadioButton.isSelected());
             spam.selectMoveTrash(markTrashRadioButton.isSelected());
 
-            
-            TreeNodeList list = new TreeNodeList(incomingChooseFolderButton.getText());
-            MessageFolder folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
+            TreeNodeList list = new TreeNodeList(incomingChooseFolderButton
+                    .getText());
+            MessageFolder folder = (MessageFolder) MailInterface.treeModel
+                    .getFolder(list);
 
             if (folder == null) {
                 // user didn't select any folder
@@ -242,9 +242,9 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             }
 
             int uid = folder.getUid();
-            
+
             spam.setIncomingCustomFolder(uid);
-            
+
             list = new TreeNodeList(markChooseFolderButton.getText());
             folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
 
@@ -255,9 +255,9 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             }
 
             uid = folder.getUid();
-            
+
             spam.setMoveCustomFolder(uid);
-            
+
             spam.enableCheckAddressbook(addressCheckBox.isSelected());
 
         }
@@ -277,7 +277,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
         } else if (action.equals("MARK")) {
             enableMark(markCheckBox.isSelected());
         } else if (action.equals("MARK_BUTTON")) {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+            SelectFolderDialog dialog = MailInterface.treeModel
+                    .getSelectFolderDialog();
 
             if (dialog.success()) {
                 MessageFolder folder = dialog.getSelectedFolder();
@@ -286,7 +287,8 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
                 markChooseFolderButton.setText(treePath);
             }
         } else if (action.equals("INCOMING_BUTTON")) {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+            SelectFolderDialog dialog = MailInterface.treeModel
+                    .getSelectFolderDialog();
 
             if (dialog.success()) {
                 MessageFolder folder = dialog.getSelectedFolder();
@@ -294,7 +296,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
                 String treePath = folder.getTreePath();
                 incomingChooseFolderButton.setText(treePath);
             }
-        } 
+        }
 
     }
 
@@ -310,14 +312,14 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
     }
 
     private void enableIncoming(boolean enable) {
-        
+
         incomingChooseFolderButton.setEnabled(incomingCheckBox.isSelected());
         incomingMoveToRadioButton.setEnabled(incomingCheckBox.isSelected());
         incomingTrashRadioButton.setEnabled(incomingCheckBox.isSelected());
     }
 
     private void enableMark(boolean enable) {
-       
+
         markChooseFolderButton.setEnabled(markCheckBox.isSelected());
         markMoveToRadioButton.setEnabled(markCheckBox.isSelected());
         markTrashRadioButton.setEnabled(markCheckBox.isSelected());
