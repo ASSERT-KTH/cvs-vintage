@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
 
 /** A representation of the web.xml and jboss-web.xml deployment
  * descriptors as used by the AbstractWebContainer web container integration
@@ -31,7 +32,7 @@ import org.jboss.mx.util.ObjectNameFactory;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -39,7 +40,7 @@ public class WebMetaData implements XmlLoadable
 
    /** The web.xml resource-refs */
    private HashMap resourceReferences = new HashMap();
-   /** The web.xml resource--env-refs */
+   /** The web.xml resource-env-refs */
    private HashMap resourceEnvReferences = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
@@ -53,15 +54,14 @@ public class WebMetaData implements XmlLoadable
    private boolean distributable = false;
    /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
    private boolean java2ClassLoadingCompliance = false;
-   /** The war context root as specified at the jboss-web.xml
-    descriptor level. */
+   /** The war context root as specified at the jboss-web.xml descriptor level. */
    private String contextRoot;
-   /** The jboss-web.xml server container virtual host the war should be
-      deployed into */
+   /** The jboss-web.xml server container virtual host the war should be deployed into */
    private String virtualHost;
-   /** The jboss-web.xml JNDI name of the security domain implementation
-    */
+   /** The jboss-web.xml JNDI name of the security domain implementation */
    private String securityDomain;
+   /** The webservices client model deployment helper */
+   private WebserviceClientDeployer webserviceClientDeployer;
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
@@ -161,6 +161,16 @@ public class WebMetaData implements XmlLoadable
    public Iterator getDepends()
    {
       return depends.iterator();
+   }
+
+   /** Get the webservice client deployment helper, null if there is no webservices-client.xml */
+   public WebserviceClientDeployer getWebserviceClientDeployer()
+   {
+      return webserviceClientDeployer;
+   }
+   public void setWebserviceClientDeployer(WebserviceClientDeployer webserviceClientDeployer)
+   {
+      this.webserviceClientDeployer = webserviceClientDeployer;
    }
 
    /** A flag indicating if the normal Java2 parent first class loading model

@@ -6,12 +6,13 @@ import java.util.Iterator;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
+import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
 import org.w3c.dom.Element;
 
 /** The metdata data from a j2ee application-client.xml descriptor
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ClientMetaData
 {
@@ -31,6 +32,8 @@ public class ClientMetaData
    private HashMap resourceEnvReferences = new HashMap();
    /** The JAAS callback handler */
    private String callbackHandler;
+   /** The webservices client model deployment helper */
+   private WebserviceClientDeployer webserviceClientDeployer;
 
    /** The application-client/display-name
     * @return application-client/display-name value
@@ -87,6 +90,16 @@ public class ClientMetaData
    public String getCallbackHandler()
    {
       return callbackHandler;
+   }
+
+   /** Get the webservice client deployment helper, null if there is no webservices-client.xml */
+   public WebserviceClientDeployer getWebserviceClientDeployer()
+   {
+      return webserviceClientDeployer;
+   }
+   public void setWebserviceClientDeployer(WebserviceClientDeployer webserviceClientDeployer)
+   {
+      this.webserviceClientDeployer = webserviceClientDeployer;
    }
 
    public void importClientXml(Element element)

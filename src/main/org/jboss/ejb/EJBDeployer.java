@@ -32,6 +32,7 @@ import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
+import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
 import org.w3c.dom.Element;
 
 /**
@@ -45,7 +46,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.44 $</tt>
+ * @version <tt>$Revision: 1.45 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -438,6 +439,7 @@ public class EJBDeployer
    public synchronized void create(DeploymentInfo di)
       throws DeploymentException
    {
+      ApplicationMetaData metaData = null;
       try
       {
          // Create a file loader with which to load the files
@@ -445,13 +447,13 @@ public class EJBDeployer
          efm.setClassLoader(di.localCl);
 
          // Load XML
-         di.metaData = efm.load();
+         di.metaData = metaData = efm.load();
       }
       catch (Exception e)
       {
          if (e instanceof DeploymentException)
             throw (DeploymentException)e;
-         throw new DeploymentException( "Failed to load metadata", e );
+         throw new DeploymentException( "Failed to load metaData", e );
       }
 
       if( verifyDeployments )
@@ -506,12 +508,19 @@ public class EJBDeployer
 
       }
 
+      // Look for webservicesclient.xml descriptor
+      URL webservicesclient = di.localCl.getResource("META-INF/webservicesclient.xml");
+      if (webservicesclient != null)
+      {
+         metaData.setWebserviceClientDeployer(new WebserviceClientDeployer());
+         metaData.getWebserviceClientDeployer().create(di);
+      }
+
       // Create an MBean for the EJB module
       try
       {
-         ApplicationMetaData metadata = (ApplicationMetaData) di.metaData;
          EjbModule ejbModule = new EjbModule(di, tm, webServiceName);
-         String name = metadata.getJmxName();
+         String name = metaData.getJmxName();
          if( name == null )
          {
             name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName;
