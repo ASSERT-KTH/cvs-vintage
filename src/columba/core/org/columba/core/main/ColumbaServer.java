@@ -15,20 +15,24 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
+import org.columba.core.config.ConfigPath;
+import org.columba.core.logging.ColumbaLogger;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.columba.core.config.ConfigPath;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
@@ -39,7 +43,7 @@ import org.columba.core.logging.ColumbaLogger;
  * in the users home directory.
  * <p>
  * Clients should use this file to determine the port number.
- * 
+ *
  * <p>
  * Basic idea taken from www.jext.org (author Roman Guy)
  *
@@ -61,7 +65,13 @@ public class ColumbaServer implements Runnable {
      * server port
      */
     private static int port;
-    
+
+    /**
+     * file in the users-home directory containing the
+     * port number, which is used by the server
+     */
+    private static File keyFile;
+
     /**
      * Server runs in its own thread
      */
@@ -73,20 +83,13 @@ public class ColumbaServer implements Runnable {
     private ServerSocket serverSocket;
 
     /**
-     * file in the users-home directory containing the
-     * port number, which is used by the server
-     */
-    private static File keyFile;
-
-    /**
      * Constructor
      *
      */
     public ColumbaServer() {
-
         // open server socket
         openSocket();
-        
+
         // start thread
         thread = new Thread(this);
         thread.setDaemon(false);
@@ -101,42 +104,38 @@ public class ColumbaServer implements Runnable {
      */
     private void openSocket() {
         try {
-            
             // just increment the server port
             port = COLUMBA_PORT;
             port += 1;
-            
+
             // init server socket
             serverSocket = new ServerSocket(port);
-            
+
             // create port number file
             createPortNumberFile(port);
-            
         } catch (Exception ex) {
             // this port is probably blocked
-            
             // TODO: what if a firewall blocks this port?
             //       are we able to distinguish that?
             ex.printStackTrace();
-            
+
             // try again, using a different port
             openSocket();
         }
     }
-    
+
     /**
      * Write port number of server to a file.
      * <p>
      * This is used by the client to find out on which
      * port its server is running.
-     * 
+     *
      * @param portNumber    port number of server
      */
     private void createPortNumberFile(int portNumber) {
         keyFile = new File(ConfigPath.getConfigDirectory(), ".auth");
 
         try {
-
             BufferedWriter writer = new BufferedWriter(new FileWriter(keyFile));
 
             String portStr = Integer.toString(portNumber);
@@ -155,7 +154,6 @@ public class ColumbaServer implements Runnable {
      *
      */
     public synchronized void stop() {
-        
         // stop thread
         thread.interrupt();
         thread = null;
@@ -165,7 +163,7 @@ public class ColumbaServer implements Runnable {
             if (serverSocket != null) {
                 serverSocket.close();
             }
-            
+
             // delete auth file
             keyFile.delete();
         } catch (Exception ex) {
@@ -203,9 +201,8 @@ public class ColumbaServer implements Runnable {
                 }
 
                 // try to read possible arguments
-                BufferedReader reader =
-                    new BufferedReader(
-                        new InputStreamReader(client.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            client.getInputStream()));
 
                 StringBuffer arguments = new StringBuffer();
                 arguments.append(reader.readLine());
@@ -217,8 +214,8 @@ public class ColumbaServer implements Runnable {
 
                 if (MainInterface.DEBUG) {
                     ColumbaLogger.log.info(
-                        "passing to running Columba session:\n"
-                            + arguments.toString());
+                        "passing to running Columba session:\n" +
+                        arguments.toString());
                 }
 
                 // do something with the arguments..
@@ -226,7 +223,11 @@ public class ColumbaServer implements Runnable {
 
                 client.close();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                if (ex instanceof SocketException) {
+                    // socket closed by Columba
+                } else {
+                    ex.printStackTrace();
+                }
             }
         }
     }

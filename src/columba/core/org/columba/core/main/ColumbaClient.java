@@ -97,7 +97,8 @@ public class ColumbaClient {
      */
     public static int readPortFromFile() throws FileNotFoundException{
         keyFile = new File(ConfigPath.getConfigDirectory(), ".auth");
-
+        if ( !keyFile.exists() ) return -1;
+        
         String s;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(keyFile));
