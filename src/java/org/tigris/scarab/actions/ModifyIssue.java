@@ -76,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.8 2001/07/12 01:41:53 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.9 2001/07/12 21:55:05 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -436,8 +436,7 @@ System.out.println("all valid");
 
         // The depend type is required.
         Field dependTypeId = group.get("TypeId");
-        dependTypeId.setRequired(true);
-        if (!dependTypeId.isValid())
+        if (dependTypeId.toString().equals("0"))
         {
             dependTypeId.setMessage("Please select a dependency type.");
         }
