@@ -16,7 +16,7 @@
 
 package org.columba.mail.folder.command;
 
-import java.io.File;
+import java.io.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -40,9 +40,6 @@ import org.columba.ristretto.message.Address;
  *
  */
 public class SaveMessageSourceAsCommand extends FolderCommand {
-
-	String source;
-	File tempFile;
 
 	/**
 	 * Constructor for SaveMessageSourceAsCommand.
@@ -119,14 +116,40 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
                                         }
 				}
 
-                                // save message source under selected filename
-                                String source = srcFolder.getMessageSource(uid);
+                                InputStream in = null;
+                                OutputStream out = null;
                                 try {
-                                        DiskIO.saveStringInFile(f, source);
-                                } catch (Exception ex) {
+                                        // save message source under selected filename
+                                        in = new BufferedInputStream(
+                                                srcFolder.getMessageSourceStream(uid));
+                                        out = new BufferedOutputStream(new FileOutputStream(f));
+                                        byte[] buffer = new byte[1024];
+                                        int read;
+                                        while ((read = in.read(buffer, 0, buffer.length)) > 0) {
+                                            out.write(buffer, 0, read);
+                                        }
+                                } catch (IOException ioe) {
                                         ColumbaLogger.log.error(
-                                                        "Error saving msg source to file...",
-                                                        ex);
+                                                "Error saving msg source to file...", ioe);
+                                        JOptionPane.showMessageDialog(null, 
+                                                MailResourceLoader.getString(
+                                                        "dialog",
+                                                        "saveas",
+                                                        "err_save_msg"),
+                                                MailResourceLoader.getString(
+                                                        "dialog",
+                                                        "saveas",
+                                                        "err_save_title"),
+                                                JOptionPane.ERROR_MESSAGE);
+                                } finally {
+                                        try {
+                                                in.close();
+                                        } catch(IOException ioe) {}
+                                        try {
+                                                if (out != null) {
+                                                        out.close();
+                                                }
+                                        } catch(IOException ioe) {}
                                 }
 			}
 		} // end of loop over selected messages
