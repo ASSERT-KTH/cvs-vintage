@@ -8,8 +8,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 4.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_4_0.dtd">
 
-$Id: jboss_4_0.dtd,v 1.5 2004/03/18 11:31:44 tdiesler Exp $
-$Revision: 1.5 $
+$Id: jboss_4_0.dtd,v 1.6 2004/03/27 21:29:39 tdiesler Exp $
+$Revision: 1.6 $
 
 Overview of the architecture of jboss.xml
 
@@ -32,6 +32,9 @@ Overview of the architecture of jboss.xml
       <security-proxy>
       <ejb-ref>
       <ejb-local-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
       <resource-ref>
         <res-ref-name />
         <resource-name />
@@ -50,6 +53,9 @@ Overview of the architecture of jboss.xml
       <security-proxy>
       <ejb-ref>
       <ejb-local-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
       <resource-ref>
         <res-ref-name />
         <resource-name />
@@ -69,6 +75,9 @@ Overview of the architecture of jboss.xml
       <configuration-name>
       <security-proxy>
       <ejb-ref>
+      <security-identity>
+        <run-as-principal>
+      </security-identity>
       <resource-ref>
       <resource-env-ref>
     </message-driven>
@@ -352,8 +361,8 @@ MaxMessages?, MDBConfig? , poa? , register-ejbs-in-jnp-context? , jnp-context?)>
   Used in: enterprise-beans
 -->
 <!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value?, read-only? ,
- configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , resource-ref* ,
- resource-env-ref* , method-attributes? , clustered? , cluster-config?,
+ configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , security-identity? ,
+ resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?,
  cache-invalidation? , cache-invalidation-config?, depends*)>
 
 <!--
@@ -366,8 +375,8 @@ MaxMessages?, MDBConfig? , poa? , register-ejbs-in-jnp-context? , jnp-context?)>
   Used in: enterprise-beans
 -->
 <!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?, configuration-name?,
- invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , resource-ref* , resource-env-ref* , clustered? ,
- cluster-config?, method-attributes?, depends*)>
+ invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , security-identity? ,
+ resource-ref* , resource-env-ref* , clustered? , cluster-config?, method-attributes?, depends*)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -381,7 +390,7 @@ MaxMessages?, MDBConfig? , poa? , register-ejbs-in-jnp-context? , jnp-context?)>
 <!ELEMENT message-driven (ejb-name , destination-jndi-name ,
  mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? ,
  configuration-name? , invoker-bindings?,
- security-proxy? , ejb-ref* ,  ejb-local-ref* , resource-ref* , resource-env-ref*, depends*)>
+ security-proxy? , ejb-ref* ,  ejb-local-ref* , security-identity? , resource-ref* , resource-env-ref*, depends*)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -494,6 +503,34 @@ container or ejb depends.
   Used in: entity, session, and message-driven
 -->
 <!ELEMENT ejb-local-ref (ejb-ref-name , local-jndi-name)>
+
+<!--
+  The security-identity element specifies whether the caller's
+  security identity is to be used for the execution of the methods of
+  the enterprise bean or whether a specific run-as identity is to be
+  used. If there is a run-as role defined for an enterprise bean, there
+  must also be a run-as-principal define here.
+
+  Used in: entity, message-driven, session
+-->
+<!ELEMENT security-identity ((use-caller-identity|run-as-principal))>
+
+<!--
+  The run-as-principal element is the name of the principal that is used
+  when the enterprise bean calls out with a run-as role.
+
+  Used in: security-identity
+-->
+<!ELEMENT run-as-principal (#PCDATA)>
+
+<!--
+  The use-caller-identity element specifies that the caller's security
+  identity be used as the security identity for the execution of the
+  enterprise bean's methods.
+
+  Used in: security-identity
+-->
+<!ELEMENT use-caller-identity EMPTY>
 
 <!--
   The resource-env-ref element gives a mapping between the "code name"

@@ -10,18 +10,20 @@ import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
 
-/** The meta data object for the security-identity element.
-The security-identity element specifies whether the caller’s security
-identity is to be used for the execution of the methods of the enterprise
-bean or whether a specific run-as role is to be used. It
-contains an optional description and a specification of the security
-identity to be used.
-
-Used in: session, entity, message-driven
-
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
-*/
+/**
+ * The meta data object for the security-identity element.
+ * The security-identity element specifies whether the caller’s security
+ * identity is to be used for the execution of the methods of the enterprise
+ * bean or whether a specific run-as role is to be used. It
+ * contains an optional description and a specification of the security
+ * identity to be used.
+ * <p/>
+ * Used in: session, entity, message-driven
+ *
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
+ * @version $Revision: 1.7 $
+ */
 public class SecurityIdentityMetaData extends MetaData
 {
     private String description;
@@ -35,6 +37,9 @@ public class SecurityIdentityMetaData extends MetaData
     */
 	private String runAsRoleName;
 
+   /** The principal that corresponds to run-as role */
+   private String runAsPrincipalName;
+
 	public String getDescription()
     {
         return description;
@@ -46,6 +51,7 @@ public class SecurityIdentityMetaData extends MetaData
     {
         return useCallerIdentity;
     }
+
     /** Get the run-as security identity. This is the principal to be used for
      the run-as identity of an enterprise bean in terms of its security role.
      */
@@ -54,8 +60,24 @@ public class SecurityIdentityMetaData extends MetaData
         return runAsRoleName;
     }
 
+   /**
+    * Get the principal that corresponds to run-as role.
+    */
+   public String getRunAsPrincipalName()
+   {
+      return runAsPrincipalName;
+   }
+
+   /**
+    * Set the principal that corresponds to run-as role.
+    */
+   public void setRunAsPrincipalName(String principalName)
+   {
+      this.runAsPrincipalName = principalName;
+   }
+
     /**
-     @param element, the security-identity element from the ejb-jar
+     @param element the security-identity element from the ejb-jar
      */
     public void importEjbJarXml(Element element) throws DeploymentException
     {
@@ -75,5 +97,4 @@ public class SecurityIdentityMetaData extends MetaData
             runAsRoleName = getElementContent(getUniqueChild(runAs, "role-name"));
         }
 	}
-
 }

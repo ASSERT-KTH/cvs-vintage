@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -789,8 +789,15 @@ public abstract class BeanMetaData
          ejbLocalRefMetaData.importJbossXml(ejbLocalRef);
       }
 
-
-
+      // Get the security identity
+      iterator = getChildrenByTagName(element, "security-identity");
+      while (iterator.hasNext())
+      {
+         Element securityIdentityElement = (Element) iterator.next();
+         String runAsPrincipal = getElementContent(getOptionalChild(securityIdentityElement,
+                 "run-as-principal"), securityIdentity.getRunAsPrincipalName());
+         securityIdentity.setRunAsPrincipalName(runAsPrincipal);
+      }
 
       // Method attributes of the bean
       Element mas = getOptionalChild(element, "method-attributes");
