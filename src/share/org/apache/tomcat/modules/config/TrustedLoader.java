@@ -86,10 +86,10 @@ public class TrustedLoader extends BaseInterceptor {
     }
 
     // -------------------- Properties --------------------
-    
+
     // -------------------- Hooks --------------------
-    Vector allModules=new Vector();
-    
+    Hashtable allModules=new Hashtable();
+
     /** Called when the server is configured - all base modules are added,
 	some contexts are added ( explicitely or by AutoDeploy/AutoAdd ).
 	No addContext callback has been called.
@@ -115,11 +115,11 @@ public class TrustedLoader extends BaseInterceptor {
 
 	    File modules=getModuleFile( context );
 	    if( modules==null ) continue;
-	    
+
 	    /*  We'll create a temporary loader for this context, and use it
 	     *  to create a module. The module will be notified for all
 	     *  contexts that were added so far, as with any normal module.
-	     * 
+	     *
 	     *  What's special is that at init stage, the module will be
 	     *  removed and loaded again, with the real class loader.
 	     *  Same thing will happen when the application is reloaded.
@@ -139,13 +139,16 @@ public class TrustedLoader extends BaseInterceptor {
 	    loadInterceptors( context, modules, modV );
 	    cm.setNote( "trustedLoader.currentContext", context );
 
+            Vector ctxModules=new Vector();
+            allModules.put( context, ctxModules );
+
 	    // Now add all modules to cm
 	    for( int i=0; i< modV.size(); i++ ) {
 		BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
 		if(debug>0) log( "Add dummy module, for configuration " + context.getDocBase() + " " + context);
 		cm.addInterceptor( bi );
-		allModules.addElement( bi );
-	    }	
+                ctxModules.addElement( bi );
+	    }
 	    cm.setNote(  "trustedLoader.currentContext", null );
 	    context.setClassLoader( null );
 	}
@@ -170,14 +173,21 @@ public class TrustedLoader extends BaseInterceptor {
 	throws TomcatException
     {
 	if(debug>0) log("reInit " + modules );
-	// remove modules
-	for( int i=0; i< allModules.size(); i++ ) {
-	    BaseInterceptor bi=(BaseInterceptor)allModules.elementAt( i );
-	    cm.removeInterceptor( bi );
-	}
-	
 
-	// The real loader is set. 
+        Vector ctxModules = (Vector)allModules.get( ctx );
+        if( ctxModules != null ) {
+            // remove modules
+            for( int i=0; i< ctxModules.size(); i++ ) {
+                BaseInterceptor bi=(BaseInterceptor)ctxModules.elementAt( i );
+                cm.removeInterceptor( bi );
+            }
+            ctxModules.removeAllElements();
+        } else {
+            ctxModules = new Vector();
+            allModules.put( ctx, ctxModules );
+        }
+
+	// The real loader is set.
 	Vector modV=new Vector();
 	if( debug > 0 ) log( "Loading the real module " + ctx + " " + modules);
 	loadInterceptors( ctx, modules, modV );
@@ -187,7 +197,8 @@ public class TrustedLoader extends BaseInterceptor {
 	for( int i=0; i< modV.size(); i++ ) {
 	    BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
 	    cm.addInterceptor( bi );
-	}	
+            ctxModules.addElement( bi );
+	}
 	cm.setNote(  "trustedLoader.currentContext", null );
     }
 
@@ -206,11 +217,11 @@ public class TrustedLoader extends BaseInterceptor {
     }
 
 
-    
+
     public void loadInterceptors( Context ctx, File modulesF, Vector modulesV )
 	throws TomcatException
     {
-	
+
 	XmlMapper xh=new XmlMapper();
 	xh.setClassLoader( ctx.getClassLoader());
 	//xh.setDebug( debug );
@@ -219,7 +230,7 @@ public class TrustedLoader extends BaseInterceptor {
 	// with <module> definition and the module itself
 	setTagRules( xh );
 
-	// then load the actual config 
+	// then load the actual config
 	ServerXmlReader.loadConfigFile(xh,modulesF,modulesV);
 
     }
@@ -239,7 +250,7 @@ public class TrustedLoader extends BaseInterceptor {
 		    });
     }
 
-    
+
     public static void setTagRules( XmlMapper xh ) {
 	xh.addRule( "module",  new XmlAction() {
 		public void start(SaxContext ctx ) throws Exception {
@@ -254,11 +265,11 @@ public class TrustedLoader extends BaseInterceptor {
 	    });
     }
 
-    
-    
+
+
     private File getModuleFile(Context ctx ) {
 	// PathSetter is the first module in the chain, we shuld have
-	// a valid path by now 
+	// a valid path by now
 	String dir=ctx.getAbsolutePath();
 
 	File f=new File(dir);
@@ -273,7 +284,7 @@ public class TrustedLoader extends BaseInterceptor {
 	    return null;
 	}
     }
-    
+
 
 }
 
