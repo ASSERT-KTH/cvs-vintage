@@ -61,12 +61,15 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.11 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.12 2001/09/13 01:08:53 jmcnally Exp $
  */
 public interface ModuleEntity
 {
     public String getName();
     public void setName(String name);
+
+    public String getCode();
+    public void setCode(String code);
 
     public String getDescription();
     public void setDescription(String description);
@@ -119,9 +122,6 @@ public interface ModuleEntity
     public void setParentId(NumberKey v ) throws Exception;
     
     public Issue getNewIssue(ScarabUser user)
-        throws Exception;
-
-    public List getUsers(String partialUserName, String permission)
         throws Exception;
 
     public Attribute[] getActiveAttributes()

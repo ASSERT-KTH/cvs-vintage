@@ -56,64 +56,10 @@ import org.tigris.scarab.services.module.ModuleEntity;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.10 $ $Date: 2001/08/02 07:11:37 $
+ * @version $Revision: 1.11 $ $Date: 2001/09/13 01:08:52 $
  */
 public class UserAttribute extends AttributeValue
 {
-    //private Hashtable usersById;
-    //private Vector users;
-    //private ScarabUser user;
-    String[] permissions;
-    
-    /**
-     * Get the value of permissions.
-     * @return value of permissions.
-     */
-    public String[] getPermissions() 
-    {
-        return permissions;
-    }
-    
-    /**
-     * Set the value of permissions.
-     * @param v  Value to assign to permissions.
-     */
-    public void setPermissions(String[]  v) 
-    {
-        this.permissions = v;
-    }
-    
-    /**
-     * Looks for users using prefix and suffix wildcards on the
-     * username.
-     */
-    public List getMatchingUsers(ModuleEntity module, String partialUserName)
-        throws Exception
-    {
-        // exclude users with Roles Guest or Observer 
-        // !FIXME! these roles need to be defined
-        //String[] permissions = null;
-
-        List matches = 
-            module.getUsers(partialUserName, (String)null);
-        
-        return matches;
-    }
-
-
-    public boolean isUserIdSet()
-        throws Exception
-    {
-        boolean isSet = (getUserId() == null);
-        if ( !isSet ) 
-        {
-            // see if value contains a valid username
-            List matches = getIssue().getScarabModule()
-                .getUsers(getUserName(), getPermissions());
-        }
-        
-        return isSet;   
-    }
 
     /** Gets the Value attribute of the Attribute object
      *

@@ -614,38 +614,6 @@ try{
 
 
     /**
-     * Gets users which are currently associated (relationship has not
-     * been deleted) with this module who have the given permssion.
-     *
-     * @param partialUserName username fragment to match against
-     * @param permissions a <code>String[]</code> permission
-     * @return a <code>List</code> of ScarabUsers
-     * @exception Exception if an error occurs
-     */
-    public List getUsers(String permission)
-        throws Exception
-    {
-        return getUsers(null, permission);
-    }
-
-    /**
-     * Gets users which are currently associated (relationship has not
-     * been deleted) with this module who have the given permssion.
-     *
-     * @param partialUserName username fragment to match against
-     * @param permissions a <code>String[]</code> permission
-     * @return a <code>List</code> of ScarabUsers
-     * @exception Exception if an error occurs
-     */
-    public List getUsers(String partialUserName, String permission)
-        throws Exception
-    {
-        String[] perms = new String[1];
-        perms[0] = permission;
-        return getUsers(partialUserName, perms);
-    }
-
-    /**
      * Determines whether this module allows users to vote many times for
      * the same issue.  This feature needs schema change to allow a
      * configuration screen.  Currently only one vote per issue is supported
@@ -665,75 +633,6 @@ try{
     public int getUnusedVoteCount(ScarabUser user)
     {
         return 1;
-    }
-
-    /**
-     * Gets users which are currently associated (relationship has not
-     * been deleted) with this module who have the given permssions.
-     *
-     * @param partialUserName username fragment to match against
-     * @param permissions a <code>String[]</code> permissions
-     * @return a <code>List</code> of ScarabUsers
-     * @exception Exception if an error occurs
-     public abstract List getUsers(String partialUserName, String[] permissions)
-        throws Exception;
-     */
-
-
-    /**
-     * Gets users which are currently associated (relationship has not 
-     * been deleted) with this module with Roles specified in includeRoles
-     * and excluding Roles in the exclude list. 
-     *
-     * @param partialUserName username fragment to match against
-     * @param includeRoles a <code>Role[]</code> value
-     * @param excludeRoles a <code>Role[]</code> value
-     * @return a <code>List</code> of ScarabUsers
-     * @exception Exception if an error occurs
-     */
-    public List getUsers(String partialUserName, String[] permissions)
-        throws Exception
-    {
-        Criteria crit = new Criteria(3)
-            .add(RModuleUserRolePeer.DELETED, false);
-        /* 
-           Criteria.Criterion c = null;
-        if ( includeRoles != null ) 
-        {            
-            crit.addIn(RModuleUserRolePeer.ROLE_ID, includeRoles);
-            c = crit.getCriterion(RModuleUserRolePeer.ROLE_ID);
-        }
-        if ( excludeRoles != null ) 
-        {   
-            if ( c == null ) 
-            {
-                crit.addNotIn(RModuleUserRolePeer.ROLE_ID, excludeRoles);
-            }
-            else 
-            {
-                c.and(crit
-                      .getNewCriterion(RModuleUserRolePeer.ROLE_ID, 
-                                       excludeRoles, Criteria.NOT_IN));
-            }
-        }
-        if ( partialUserName != null && partialUserName.length() != 0 ) 
-        {
-            crit.add(ScarabUserPeer.USERNAME, 
-                     (Object)("%" + partialUserName + "%"), Criteria.LIKE);
-        }
-        */
-        List moduleRoles = getRModuleUserRolesJoinScarabUserImpl(crit);
-
-        // rearrange so list contains Users
-        List users = new ArrayList(moduleRoles.size());
-        Iterator i = moduleRoles.iterator();
-        while (i.hasNext()) 
-        {
-            ScarabUser user = ((RModuleUserRole)i.next()).getScarabUserImpl();
-            users.add(user);
-        }
-        
-        return users;
     }
 
     /**
@@ -791,7 +690,8 @@ try{
                     BasePeer.doInsert(criteria);
                 }
                 
-                // FIXME! should use the turbine_user_group_role table
+                // FIXME! should use fulcrum security's grant methods
+                // instead of directly accessing TurbineUserGroupRole.
                 // relate the Module to the user who created it.
                 TurbineUserGroupRole relation = new TurbineUserGroupRole();
                 if ( getOwnerId() == null ) 
@@ -812,60 +712,6 @@ try{
             throw new TurbineSecurityException(e.getMessage(), e);
         }
     }
-
-    /*
-    public class OptionInList
-    {
-        public int Level;
-        private AttributeOption attOption;
-        private RModuleOption modOption;
-
-        public OptionInList(int level, AttributeOption option)
-        {
-            Level = level;
-            attOption = option;
-        }
-
-        public OptionInList(int level, RModuleOption option)
-        {
-            Level = level;
-            modOption = option;
-        }
-
-        public boolean equals(Object obj)
-        {
-            OptionInList oil = (OptionInList)obj;
-            return Level == oil.Level
-                && (attOption == null || attOption.equals(oil.attOption))
-                && (modOption == null || modOption.equals(oil.modOption));
-        }
-
-        public NumberKey getOptionId()
-        {
-            if ( attOption != null )
-            {
-                return attOption.getOptionId();
-            }
-            else
-            {
-                return modOption.getOptionId();
-            }
-
-        }
-
-        public String getDisplayValue()
-        {
-            if ( attOption != null )
-            {
-                return attOption.getName();
-            }
-            else
-            {
-                return modOption.getDisplayValue();
-            }
-        }
-    }
-    */
 
     // *******************************************************************
     // Turbine Group implementation get/setName and save are defined above
