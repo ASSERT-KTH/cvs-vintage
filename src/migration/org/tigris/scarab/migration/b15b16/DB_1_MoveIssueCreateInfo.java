@@ -62,7 +62,7 @@ import org.tigris.scarab.migration.JDBCTask;
  * SCARAB_TRANSACTION table. 
  *
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.1 2003/05/12 17:39:25 jmcnally Exp $
+ * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.2 2003/05/15 17:01:24 dlr Exp $
  */
 public class DB_1_MoveIssueCreateInfo extends JDBCTask
 {
@@ -148,7 +148,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         }
         if (result == null) 
         {
-            throw new BuildException("Unsupported database. " + theVendor);
+            throw new BuildException("Unsupported database: " + theVendor);
         }
         
         return result;
