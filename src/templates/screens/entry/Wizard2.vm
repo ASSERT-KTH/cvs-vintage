@@ -80,7 +80,7 @@
   <td><strong>$issue.UniqueId</strong></td>
 #foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
    #foreach ($attr in $attrGroup.Attributes)
-      #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #set ($rma = $module.getRModuleAttribute($attr, $issueType))
       #if ($rma.Active)
         #set ($attVal = $issue.getAttributeValue($attr))
         #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
