@@ -61,6 +61,26 @@ public class ActivitySet implements java.io.Serializable
     public ActivitySet()
     {
     }
+    
+    /**
+     * Looks for the signature that marks this as being a
+     * change user attribute activityset. Not the most pretty
+     * but it works for now.
+     */
+    public boolean isChangeUserAttribute()
+    {
+        if ((activities != null && activities.size() == 2))
+        {
+            Activity activityA = (Activity) activities.get(0);
+            Activity activityB = (Activity) activities.get(1);
+            if (activityA.getOldUser() != null &&
+                activityB.getNewUser() != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String getId()
     {
