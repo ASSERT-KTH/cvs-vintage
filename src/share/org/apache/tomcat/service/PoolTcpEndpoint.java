@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.7 2000/06/14 19:07:21 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/06/14 19:07:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.8 2000/06/22 23:24:15 alex Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/06/22 23:24:15 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.service;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.net.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -106,6 +107,8 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 
     TcpConnectionHandler handler;
 
+    private LogHelper loghelper = new LogHelper("tc_log", "PoolTcpEndpoint");
+
     private InetAddress inet;
     private int port;
 
@@ -122,8 +125,12 @@ public class PoolTcpEndpoint  { // implements Endpoint {
 	tp = new ThreadPool();
     }
 
-    void log( String s ) {
-	System.out.println("PoolTcpEndpoint: " + s );
+    private void log( String msg ) {
+	loghelper.log(msg);
+    }
+    
+    private void log(String msg, Throwable t, int level) {
+	loghelper.log(msg, t, level);
     }
     
     // -------------------- Configuration --------------------
@@ -251,7 +258,7 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     	    listener = new TcpWorkerThread(this);
             tp.runIt(listener);
         } else {
-    	    System.out.println("XXX Error - need pool !");
+	    log("XXX Error - need pool !", null, Logger.ERROR);
 	}
     }
 
@@ -293,19 +300,31 @@ public class PoolTcpEndpoint  { // implements Endpoint {
     	    // tripping an exception. Exceptions are so
     	    // 'spensive.
     	} catch (SocketException e) {
+
+	    // TCP stacks can throw SocketExceptions when the client
+	    // disconnects.  We don't want this to shut down the
+	    // endpoint, so ignore it. Is there a more robust
+	    // solution?  Should we compare the message string to
+	    // "Connection reset by peer"?
+
+	    // socket exceptions just after closing endpoint aren't
+	    // even logged
     	    if (running != false) {
-        		running = false;
-        		String msg = sm.getString("endpoint.err.fatal",
-    					                  serverSocket, e);
-    	    	e.printStackTrace(); // something very wrong happened - better know what
-    		    System.err.println(msg);
+		String msg = sm.getString("endpoint.err.nonfatal",
+					  serverSocket, e);
+		log(msg, e, Logger.INFORMATION);
     	    }
-    	} catch(Throwable e) {
+
+    	} 
+	
+	// Future developers: if you identify any other nonfatal
+	// exceptions, catch them here and log as above
+
+	catch(Throwable e) {
     	    running = false;
     	    String msg = sm.getString("endpoint.err.fatal",
-    				                  serverSocket, e);
-    	    e.printStackTrace(); // something very wrong happened - better know what
-    	    System.err.println(msg);
+				      serverSocket, e);
+	    log(msg, e, Logger.ERROR);
     	}
 
     	return accepted;
