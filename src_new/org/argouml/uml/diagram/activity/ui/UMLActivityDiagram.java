@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.4 2001/08/17 05:17:28 mkl Exp $
+// $Id: UMLActivityDiagram.java,v 1.5 2001/12/15 19:59:18 dennyd Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -50,6 +50,12 @@ import org.argouml.uml.diagram.state.ui.*;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.diagram.static_structure.ui.FigNote;
 
+/** Enabling an activity diagram connected to an
+ * actor has been requested as a feature.
+ *
+ * As well enabling swim lanes in the activity
+ * diagram is considered valuable as well.
+ */
 public class UMLActivityDiagram extends UMLDiagram {
 
   ////////////////

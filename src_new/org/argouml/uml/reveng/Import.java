@@ -38,8 +38,10 @@ import java.util.*;
 /**
  * This is the main class for all import classes.
  *
- * $Revision: 1.6 $
- * $Date: 2001/09/24 19:22:09 $
+ * Supports recursive search in folder for all .java classes.
+ *
+ * $Revision: 1.7 $
+ * $Date: 2001/12/15 19:59:16 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
