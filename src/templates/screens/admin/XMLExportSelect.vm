@@ -30,7 +30,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doXmlissues" value="XML Issues" />&#160;
+  <input type="submit" name="eventSubmit_doXmlissues" value="Export" />&#160;
   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
