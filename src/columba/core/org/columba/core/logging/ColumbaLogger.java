@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
+import org.columba.ristretto.log.RistrettoLogger;
 
 /**
  * A wrapper class for log4j. This class initialized and configures
@@ -28,7 +29,7 @@ import org.columba.core.main.MainInterface;
  * option reflected in MainInterface.DEBUG) the logger will either
  * show all debug messages (debug, info, warn, error) or nothing.
  */
-public class ColumbaLogger {
+public class ColumbaLogger  {
 	public static Logger log;
 
 	static {
@@ -39,5 +40,10 @@ public class ColumbaLogger {
 		} else {
 			log.setLevel(Level.OFF);
 		}
+		
+		RistrettoLogger.setDebugEnabled(MainInterface.DEBUG);
+		RistrettoLogger.setLogger(new ColumbaRistrettoLogger(log));
 	}
+	
+
 }
