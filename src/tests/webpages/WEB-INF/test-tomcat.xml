@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.48 $" />  
+     <property name="revision" value="$Revision: 1.49 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1364,6 +1364,78 @@ mod_webapp into mod_jk )
       />
    </target>
 
+   <!-- Ensure use of Windows DOS devices in JSP name return 404 -->
+   <target name="dos_devices" >
+      <gtest  request="GET /test/con.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/aux.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/nul.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/prn.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/clock$$.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com1.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com2.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com3.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com4.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com5.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com6.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com7.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com8.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/com9.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt1.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt2.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt3.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt4.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt5.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt6.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt7.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt8.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/lpt9.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+   </target>
+
    <target name="writer" depends="init">
       <httpClient>
           <comment>Writer test, closing writer at end</comment>
@@ -1447,7 +1519,7 @@ mod_webapp into mod_jk )
 
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,aaa,mangler">
+   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,dos_devices,aaa,mangler">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
