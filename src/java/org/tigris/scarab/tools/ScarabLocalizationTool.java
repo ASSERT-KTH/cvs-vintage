@@ -116,6 +116,12 @@ public class ScarabLocalizationTool
         {
             value = super.get(DEFAULT_SCOPE + '.', key);
         }
+        if (value == null) 
+        {
+            value = "ERROR! Missing resource (" + key + ")";
+            Log.get().error("ScarabLocalizationTool: ERROR! Missing resource: "
+                            + key);            
+        }
         return value;
     }
 
