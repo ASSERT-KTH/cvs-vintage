@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Fri May 12 12:18:49 2000">
+<kawaproject timestamp="Sun May 14 07:04:24 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -1020,6 +1020,14 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"784"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp\interfaces\GenericProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
