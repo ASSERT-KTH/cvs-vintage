@@ -1,88 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- 
-<!DOCTYPE Server SYSTEM "server.dtd" >
--->
-
 <Server>
-  <!-- Debug low-level events in XmlMapper startup 
-    <xmlmapper:debug level="0" />
-  -->
-
-  <!-- 
-  
-    Logging:
-
-         Logging in Tomcat is quite flexible; we can either have a log
-         file per module (example: ContextManager) or we can have one
-         for Servlets and one for Jasper, or we can just have one
-         tomcat.log for both Servlet and Jasper.  Right now there are
-         three standard log streams, "tc_log", "servlet_log", and
-         "JASPER_LOG".  
-
-	 Path: 
-
-	 The file to which to output this log, relative to
-	 TOMCAT_HOME.  If you omit a "path" value, then stderr or
-	 stdout will be used.
-
-	 Verbosity: 
-
-	 Threshold for which types of messages are displayed in the
-	 log.  Levels are inclusive; that is, "WARNING" level displays
-	 any log message marked as warning, error, or fatal.  Default
-	 level is WARNING.  Note: servlet_log must be level
-	 INFORMATION in order to see normal servlet log messages.
-
-	 verbosityLevel values can be: 
-	    FATAL
-	    ERROR
-	    WARNING 
-            INFORMATION
-            DEBUG
-
-	 Timestamps:
-
-	 By default, logs print a timestamp in the form "yyyy-MM-dd
-	 hh:mm:ss" in front of each message.  To disable timestamps
-	 completely, set 'timestamp="no"'. To use the raw
-	 msec-since-epoch, which is more efficient, set
-	 'timestampFormat="msec"'.  If you want a custom format, you
-	 can use 'timestampFormat="hh:mm:ss"' following the syntax of
-	 java.text.SimpleDateFormat (see Javadoc API).  For a
-	 production environment, we recommend turning timestamps off,
-	 or setting the format to "msec".
-
-	 Custom Output:
-
-	 "Custom" means "normal looking".  "Non-custom" means
-	 "surrounded with funny xml tags".  In preparation for
-	 possibly disposing of "custom" altogether, now the default is
-	 'custom="yes"' (i.e. no tags)
-
-	 Per-component Debugging:
-
-	 Some components accept a "debug" attribute.  This further
-	 enhances log output.  If you set the "debug" level for a
-	 component, it may output extra debugging information.
-    -->
-
-    <!-- if you don't want messages on screen, add the attribute
-            path="logs/tomcat.log" 
-	 to the Logger element below
-    -->
-    <Logger name="tc_log" 
-            verbosityLevel = "INFORMATION" 
-    />
-
-    <Logger name="servlet_log" 
-            path="logs/servlet-${yyyyMMdd}.log"
-            verbosityLevel = "INFORMATION" 
-    />
-
-    <Logger name="JASPER_LOG" 
-	    path="logs/jasper-${yyyyMMdd}.log"
-            verbosityLevel = "INFORMATION" 
-    />
 
     <!-- You can add a "home" attribute to represent the "base" for 
          all relative paths. If none is set, the TOMCAT_HOME property
@@ -98,8 +15,21 @@
     <ContextManager debug="0" workDir="work" >
 
       <!-- ==================== Interceptors ==================== -->
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.DefaultCMSetter" />
+
+        <!-- no path - console output -->
+        <ContextInterceptor  name="tc_log" 
+            className="org.apache.tomcat.modules.config.LogSetter"
+            verbosityLevel = "INFORMATION"  />
+
+        <ContextInterceptor  name="servlet_log" 
+            className="org.apache.tomcat.modules.config.LogSetter"
+            verbosityLevel = "INFORMATION"
+            path="logs/servlet-${yyyyMMdd}.log" />
+
+        <ContextInterceptor  name="JASPER_LOG" 
+            className="org.apache.tomcat.modules.config.LogSetter"
+            path="logs/jasper-${yyyyMMdd}.log" />
+            verbosityLevel = "INFORMATION"  />
 
         <!-- 
          ContextInterceptor 
@@ -309,18 +239,18 @@
             docBase="webapps/examples" 
             debug="0" 
 	    reloadable="true" > 
-           <RequestInterceptor 
-              className="org.apache.tomcat.modules.aaa.SimpleRealm" 
-              filename="conf/users/example-users.xml"
-              debug="0" />
-            <Logger name="example_tc_log" 
-              path="logs/examples.log"
-              verbosityLevel = "INFORMATION" 
-             />
-            <ServletLogger name="example_servlet_log" 
-              path="logs/servlet_examples.log"
-              verbosityLevel = "INFORMATION" 
-             />
+              <RequestInterceptor 
+                  className="org.apache.tomcat.modules.aaa.SimpleRealm" 
+                  filename="conf/users/example-users.xml"
+                  debug="0" />
+              <ContextInterceptor  name="example_tc_log" 
+                  className="org.apache.tomcat.modules.config.LogSetter"
+                  verbosityLevel = "INFORMATION"
+                  path="logs/examples.log" />
+              <ContextInterceptor  name="example_servlet_log" 
+                 className="org.apache.tomcat.modules.config.LogSetter"
+                 verbosityLevel = "INFORMATION"
+                 path="logs/servlet_examples.log" servletLogger="true"/>
         </Context>
 
         <!-- Admin context will use tomcat.core to add/remove/get info about

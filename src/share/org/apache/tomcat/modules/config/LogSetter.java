@@ -123,13 +123,13 @@ import java.util.*;
   component, it may output extra debugging information.
 
  */
-public class LoggerSetter extends  BaseInterceptor {
+public class LogSetter extends  BaseInterceptor {
     String name;
     String path;
     String verbosityLevel;
     boolean servletLogger=false;
     
-    public LoggerSetter() {
+    public LogSetter() {
     }
 
     /** Set the name of the logger.
