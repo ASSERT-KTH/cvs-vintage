@@ -27,7 +27,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -507,6 +507,8 @@ public class ApplicationMetaData
             if( parentConfName != null )
             {
                configurationMetaData = getConfigurationMetaDataByName(parentConfName);
+               if( configurationMetaData == null )
+                  throw new DeploymentException("Failed to find parent config="+parentConfName);
                // Make a copy of the existing configuration
                configurationMetaData = (ConfigurationMetaData) configurationMetaData.clone();
                configurations.put(confName, configurationMetaData);
