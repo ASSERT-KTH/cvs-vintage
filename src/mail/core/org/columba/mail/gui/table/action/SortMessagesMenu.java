@@ -30,7 +30,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -57,7 +57,7 @@ public class SortMessagesMenu
 		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
 
 		// register as Observer
-		TableOwner table = (TableOwner) getController();
+		TableViewOwner table = (TableViewOwner) getController();
 		observable =
 			table
 				.getTableController()
@@ -70,7 +70,7 @@ public class SortMessagesMenu
 
 	protected void createSubMenu() {
 
-		TableOwner table = (TableOwner) getController();
+		TableViewOwner table = (TableViewOwner) getController();
 
 		Object[] items =
 			table.getTableController().getTableModelSorter().getColumns();
@@ -118,7 +118,7 @@ public class SortMessagesMenu
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		TableOwner table = (TableOwner) getController();
+		TableViewOwner table = (TableViewOwner) getController();
 
 		if (action.equals("Ascending")) {
 			table.getTableController().getTableModelSorter().setSortingOrder(

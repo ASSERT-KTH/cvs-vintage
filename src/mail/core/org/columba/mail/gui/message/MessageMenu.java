@@ -19,7 +19,7 @@ import org.columba.mail.gui.menu.MailContextMenu;
 public class MessageMenu extends MailContextMenu {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public MessageMenu(AbstractFrameController frameController) {

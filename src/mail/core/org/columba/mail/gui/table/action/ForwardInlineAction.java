@@ -62,7 +62,7 @@ public class ForwardInlineAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new ForwardInlineCommand(r));
 	}
 	/* (non-Javadoc)

@@ -68,7 +68,7 @@ public class PreviousMessageAction
 		/*
 		(
 			(
-				AbstractMailFrameController) frameController)
+				AbstractMailFrameController) frameMediator)
 					.registerTableSelectionListener(
 			this);
 		*/
@@ -81,7 +81,7 @@ public class PreviousMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-					((AbstractMailFrameController) getFrameController()).getTableSelection();
+					((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		
 //		TODO: fix previous-message action
 		/*

@@ -150,7 +150,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 * <p>
 	 * 
 	 * 
-	 * @param frameController		the framecontroller which acts as parent
+	 * @param frameMediator		the framecontroller which acts as parent
 	 * 
 	 * @return JDialog				the filter editing dialog 
 	 */

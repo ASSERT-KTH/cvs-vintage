@@ -66,7 +66,7 @@ public class RemoveFolderAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) frameController
+			(FolderCommandReference[]) frameMediator
 				.getSelectionManager()
 				.getSelection(
 				"mail.tree");

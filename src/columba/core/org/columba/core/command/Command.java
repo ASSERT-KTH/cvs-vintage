@@ -253,7 +253,7 @@ public abstract class Command {
 	}
 
 	/**
-	 * Returns the frameController.
+	 * Returns the frameMediator.
 	 * @return FrameController
 	 */
 	public AbstractFrameController getFrameController() {

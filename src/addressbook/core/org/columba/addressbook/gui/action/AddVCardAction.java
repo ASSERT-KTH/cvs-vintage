@@ -51,7 +51,7 @@ public class AddVCardAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		AddressbookFrameController addressbookFrameController =
-			(AddressbookFrameController) frameController;
+			(AddressbookFrameController) frameMediator;
 
 		Folder destinationFolder =
 			(Folder) addressbookFrameController

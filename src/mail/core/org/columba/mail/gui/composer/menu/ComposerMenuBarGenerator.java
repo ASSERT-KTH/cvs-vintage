@@ -19,7 +19,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class ComposerMenuBarGenerator extends MenuBarGenerator {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public ComposerMenuBarGenerator(

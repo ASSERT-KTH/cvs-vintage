@@ -19,7 +19,7 @@ public class AnalyzeMessageAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -66,7 +66,7 @@ public class AnalyzeMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 
 		MainInterface.processor.addOp(new AnalyzeMessageCommand(r));

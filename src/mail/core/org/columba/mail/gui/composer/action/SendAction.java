@@ -77,7 +77,7 @@ public class SendAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		final ComposerController composerController = (ComposerController ) getFrameController();
+		final ComposerController composerController = (ComposerController ) getFrameMediator();
 		
 		if (composerController.checkState())
 			return;

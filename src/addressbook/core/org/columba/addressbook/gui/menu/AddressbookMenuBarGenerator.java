@@ -19,7 +19,7 @@ import org.columba.core.gui.menu.MenuBarGenerator;
 public class AddressbookMenuBarGenerator extends MenuBarGenerator {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public AddressbookMenuBarGenerator(

@@ -49,7 +49,7 @@ public class ForwardInlineCommand extends FolderCommand {
 	/**
 	 * Constructor for ForwardInlineCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ForwardInlineCommand(DefaultCommandReference[] references) {

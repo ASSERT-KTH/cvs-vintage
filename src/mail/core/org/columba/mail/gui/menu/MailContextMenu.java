@@ -19,7 +19,7 @@ import org.columba.core.gui.menu.PopupMenuGenerator;
 public class MailContextMenu extends ContextMenu {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public MailContextMenu(AbstractFrameController frameController, String path) {

@@ -49,7 +49,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
 	/**
 	 * Constructor for ViewMessageSourceCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ViewMessageSourceCommand(

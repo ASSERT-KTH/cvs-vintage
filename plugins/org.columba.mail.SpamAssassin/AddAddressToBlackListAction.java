@@ -38,7 +38,7 @@ public class AddAddressToBlackListAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -85,7 +85,7 @@ public class AddAddressToBlackListAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 
 		MainInterface.processor.addOp(new AddAddressToBlackListCommand(r));

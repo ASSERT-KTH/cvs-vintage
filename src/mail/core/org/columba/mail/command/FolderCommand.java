@@ -28,7 +28,7 @@ public abstract class FolderCommand extends Command {
 
 	/**
 	 * Constructor for FolderCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public FolderCommand(

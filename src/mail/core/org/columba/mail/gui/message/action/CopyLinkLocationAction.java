@@ -56,7 +56,7 @@ public class CopyLinkLocationAction extends FrameAction implements Observer {
 	public void actionPerformed(ActionEvent evt) {
 	// copy selected URL to clipboard as string
 
-		((AbstractMailFrameController) frameController)
+		((AbstractMailFrameController) frameMediator)
 			.messageController
 			.getView()
 			.getToolkit()

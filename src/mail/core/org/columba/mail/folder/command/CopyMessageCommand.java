@@ -50,7 +50,7 @@ public class CopyMessageCommand extends FolderCommand {
 
 	/**
 	 * Constructor for CopyMessageCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public CopyMessageCommand(DefaultCommandReference[] references) {

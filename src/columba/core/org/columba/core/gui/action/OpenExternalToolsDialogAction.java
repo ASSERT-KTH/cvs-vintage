@@ -30,7 +30,7 @@ import org.columba.core.util.GlobalResourceLoader;
 public class OpenExternalToolsDialogAction extends FrameAction {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public OpenExternalToolsDialogAction(AbstractFrameController frameController) {

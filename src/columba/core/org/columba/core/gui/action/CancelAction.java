@@ -59,7 +59,7 @@ public class CancelAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		getFrameController().getStatusBar().cancelDisplayedWorker();
+		getFrameMediator().getStatusBar().cancelDisplayedWorker();
 	}
 
 	/* (non-Javadoc)

@@ -38,7 +38,7 @@ import org.columba.mail.gui.frame.TooltipMouseHandler;
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
-public abstract class AbstractFrameController {
+public abstract class AbstractFrameController implements FrameMediator{
 
 	protected StatusBar statusBar;
 	

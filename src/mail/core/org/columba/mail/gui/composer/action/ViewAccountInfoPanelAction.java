@@ -30,12 +30,12 @@ public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
 	public void actionPerformed(ActionEvent evt) {
 
-		((ComposerView) frameController.getView()).showAccountInfoPanel();
+		((ComposerView) frameMediator.getView()).showAccountInfoPanel();
 	}
 
 	protected boolean getInitState() {
 
-		return frameController.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
+		return frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
 	}
 
 	public void setCheckBoxMenuItem(

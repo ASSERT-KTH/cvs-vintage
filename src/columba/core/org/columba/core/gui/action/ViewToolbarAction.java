@@ -46,7 +46,7 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		frameController.getView().showToolbar();
+		frameMediator.getView().showToolbar();
 	}
 
 	

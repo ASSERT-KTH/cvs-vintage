@@ -58,7 +58,7 @@ public class CloseAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		frameController.close();
-		//frameController.getView().setVisible(false);
+		frameMediator.close();
+		//frameMediator.getView().setVisible(false);
 	}
 }

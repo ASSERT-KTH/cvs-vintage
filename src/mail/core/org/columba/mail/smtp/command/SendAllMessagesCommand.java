@@ -54,7 +54,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * Constructor for SendAllMessagesCommand.
 	 * 
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SendAllMessagesCommand(

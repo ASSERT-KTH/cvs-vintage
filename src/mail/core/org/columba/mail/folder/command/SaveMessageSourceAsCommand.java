@@ -47,7 +47,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 
 	/**
 	 * Constructor for SaveMessageSourceAsCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SaveMessageSourceAsCommand(

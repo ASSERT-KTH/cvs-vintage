@@ -50,7 +50,7 @@ public class EncryptMessageAction extends CheckBoxAction {
 	public void actionPerformed(ActionEvent evt) {
 		ColumbaLogger.log.debug("start encryption...");
 	
-		ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
+		ComposerModel model = (ComposerModel) ((ComposerController)getFrameMediator()).getModel();
 		model.setEncryptMessage( getCheckBoxMenuItem().isSelected() );
 	}
 

@@ -45,7 +45,7 @@ public class AddMessageCommand extends Command {
 	/**
 	 * Constructor for AddMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public AddMessageCommand(DefaultCommandReference[] references) {

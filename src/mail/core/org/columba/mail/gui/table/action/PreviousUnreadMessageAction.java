@@ -59,7 +59,7 @@ public class PreviousUnreadMessageAction
 		/*
 		(
 			(
-				AbstractMailFrameController) frameController)
+				AbstractMailFrameController) frameMediator)
 					.registerTableSelectionListener(
 			this);
 		*/

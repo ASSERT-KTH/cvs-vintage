@@ -86,7 +86,7 @@ public class MoveMessageAction
 
 			FolderCommandReference[] result = new FolderCommandReference[2];
 			FolderCommandReference[] r1 =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 			FolderCommandReference r2 = new FolderCommandReference(destFolder);
 
 			result[0] = r1[0];

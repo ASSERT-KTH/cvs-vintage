@@ -66,7 +66,7 @@ public class CreateSubFolderAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] selection = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");
+		FolderCommandReference[] selection = (FolderCommandReference[]) getFrameMediator().getSelectionManager().getSelection("mail.tree");
 
 		CreateFolderDialog dialog = new CreateFolderDialog(selection[0].getFolder().getSelectionTreePath());
 		dialog.showDialog();

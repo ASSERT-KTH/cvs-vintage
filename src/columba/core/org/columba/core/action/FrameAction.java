@@ -16,9 +16,6 @@
 
 package org.columba.core.action;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.plugin.PluginInterface;
 
@@ -42,19 +39,19 @@ import org.columba.core.plugin.PluginInterface;
  */
 public class FrameAction extends BasicAction implements PluginInterface {
 
-	protected AbstractFrameController frameController;
+	protected AbstractFrameController frameMediator;
 
 	/**
 	 * 
 	 * default constructor 
 	 * 
-	 * @param frameController		frame controller 
+	 * @param frameMediator		frame controller 
 	 * @param name					i18n name
 	 * 
 	 */
 	public FrameAction(AbstractFrameController frameController, String name) {
 		super(name);
-		this.frameController = frameController;
+		this.frameMediator = frameController;
 	}
 
 	/**
@@ -62,130 +59,17 @@ public class FrameAction extends BasicAction implements PluginInterface {
 	 * 
 	 * @return FrameController
 	 */
-	public AbstractFrameController getFrameController() {
-		return frameController;
+	public AbstractFrameController getFrameMediator() {
+		return frameMediator;
 	}
 
 	/**
-	 * Sets the frameController.
+	 * Sets the frameMediator.
 	 * 
-	 * @param frameController 
+	 * @param frameMediator 
 	 */
-	public void setFrameController(AbstractFrameController frameController) {
-		this.frameController = frameController;
-	}
-
-	/******************** deprecated constructors ********************/
-
-	/**
-	 * 
-	 * @deprecated use default constructor instead
-	 * 
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
-	public FrameAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super(
-			name,
-			longDescription,
-			longDescription,
-			actionCommand,
-			small_icon,
-			big_icon,
-			mnemonic,
-			keyStroke);
-
-		this.frameController = frameController;
-	}
-
-	/**
-	 * 
-	 * @deprecated use default constructor instead
-	 * 
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public FrameAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super(
-			name,
-			longDescription,
-			tooltip,
-			actionCommand,
-			small_icon,
-			big_icon,
-			mnemonic,
-			keyStroke);
-
-		this.frameController = frameController;
-	}
-
-	/**
-	 * 
-	 * @deprecated use default constructor instead
-	 * 
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 * @param showToolbarText
-	 */
-	public FrameAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke,
-		boolean showToolbarText) {
-		super(
-			name,
-			longDescription,
-			tooltip,
-			actionCommand,
-			small_icon,
-			big_icon,
-			mnemonic,
-			keyStroke,
-			showToolbarText);
-
-		this.frameController = frameController;
+	public void setFrameMediator(AbstractFrameController frameController) {
+		this.frameMediator = frameController;
 	}
 
 }

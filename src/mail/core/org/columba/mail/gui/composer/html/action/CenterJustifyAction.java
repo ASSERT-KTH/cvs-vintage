@@ -43,7 +43,7 @@ public class CenterJustifyAction extends CheckBoxAction
 		implements Observer, ContainerListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public CenterJustifyAction(AbstractFrameController frameController) {
@@ -67,7 +67,7 @@ public class CenterJustifyAction extends CheckBoxAction
 			
 		// register for text selection changes
 		ComposerController ctrl =
-				(ComposerController) getFrameController();
+				(ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 		
 		// register for changes to the editor
@@ -124,7 +124,7 @@ public class CenterJustifyAction extends CheckBoxAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.setAlignment(StyleConstants.ALIGN_CENTER);
@@ -140,7 +140,7 @@ public class CenterJustifyAction extends CheckBoxAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 				"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController()).
+		((ComposerController) getFrameMediator()).
 				getEditorController().addObserver(this);
 	}
 

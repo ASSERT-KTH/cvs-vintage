@@ -42,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class RightJustifyAction extends CheckBoxAction
 		implements Observer, ContainerListener {
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public RightJustifyAction(AbstractFrameController frameController) {
@@ -66,7 +66,7 @@ public class RightJustifyAction extends CheckBoxAction
 
 		// register for text selection changes
 		ComposerController ctrl =
-				(ComposerController) getFrameController();
+				(ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 		
 		// register for changes to the editor
@@ -123,7 +123,7 @@ public class RightJustifyAction extends CheckBoxAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.setAlignment(StyleConstants.ALIGN_RIGHT);
@@ -139,7 +139,7 @@ public class RightJustifyAction extends CheckBoxAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 				"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController()).
+		((ComposerController) getFrameMediator()).
 				getEditorController().addObserver(this);
 	}
 

@@ -27,7 +27,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -72,7 +72,7 @@ public class NextMessageAction
 		/*
 		(
 			(
-				AbstractMailFrameController) frameController)
+				AbstractMailFrameController) frameMediator)
 					.registerTableSelectionListener(
 			this);
 		*/
@@ -84,7 +84,7 @@ public class NextMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 
 		// TODO: fix next-message action
@@ -92,7 +92,7 @@ public class NextMessageAction
 		if (r.length > 0) {
 			FolderCommandReference ref = r[0];
 			TableController table =
-				((TableOwner) getFrameController()).getTableController();
+				((TableViewOwner) getFrameMediator()).getTableController();
 			MessageNode node = table.getView().getSelectedNodes()[0];
 			if (node == null)
 				return;

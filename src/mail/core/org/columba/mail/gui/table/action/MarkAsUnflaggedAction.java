@@ -46,7 +46,7 @@ public class MarkAsUnflaggedAction
 		setActionCommand("MARK_AS_UNFLAGGED");
 		/*
 		super(
-			frameController,
+			frameMediator,
 			"Not Flagged",
 			"Not Flagged",
 			"MARK_AS_UNFLAGGED",
@@ -65,7 +65,7 @@ public class MarkAsUnflaggedAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

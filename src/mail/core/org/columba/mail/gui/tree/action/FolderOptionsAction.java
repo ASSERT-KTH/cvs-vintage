@@ -40,7 +40,7 @@ public class FolderOptionsAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public FolderOptionsAction(AbstractFrameController frameController) {
@@ -68,7 +68,7 @@ public class FolderOptionsAction
 		// it is safe here to cast to AbstractMailFrameControlller
 		FolderCommandReference[] r =
 			(FolderCommandReference[])
-				((AbstractMailFrameController) frameController)
+				((AbstractMailFrameController) frameMediator)
 				.getTreeSelection();
 		
 		// only use the first selected folder		

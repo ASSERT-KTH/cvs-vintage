@@ -38,7 +38,7 @@ public class CompoundCommand extends Command {
 	/**
 	 * Constructor for CompoundCommand.
 	 * Caution : Never use this command with Virtual Folders!
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public CompoundCommand() {

@@ -54,7 +54,7 @@ public class AddContactCardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameController;
+		AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameMediator;
 		
 		ContactDialog dialog =
 				new ContactDialog(addressbookFrameController.getView());

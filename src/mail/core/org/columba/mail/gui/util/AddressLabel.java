@@ -36,7 +36,7 @@ public class AddressLabel extends JPanel implements MouseListener//, ActionListe
 
     public AddressLabel( String str ) {
         super();
-        //this.frame = MainInterface.frameController.getView();
+        //this.frame = MainInterface.frameMediator.getView();
         //this.addressbookXmlConfig = MainInterface.config.getAddressbookConfig();
 
         setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );

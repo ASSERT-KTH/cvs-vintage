@@ -70,7 +70,7 @@ public class OpenMessageWithComposerAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new OpenMessageWithComposerCommand(r));
 	}
 	/* (non-Javadoc)

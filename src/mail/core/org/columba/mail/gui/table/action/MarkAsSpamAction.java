@@ -71,7 +71,7 @@ public class MarkAsSpamAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

@@ -377,7 +377,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			((AbstractMailFrameController) frameController).setTreeSelection(r);
 
 			MainInterface.processor.addOp(new ViewHeaderListCommand(frameController, r));
-			//frameController.treeController.setSelected(destFolder);
+			//frameMediator.treeController.setSelected(destFolder);
 		}
 	}
 }

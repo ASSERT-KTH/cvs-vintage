@@ -73,10 +73,10 @@ public class MimeTypeViewer
 	/*
     public void openWithBrowserURL( URL url )
     {
-        boolean b = MainInterface.frameController.messageController.getView().enableViewer( MessageView.HTML );
-        //MainInterface.frameController.messageController.getView().update(b);
+        boolean b = MainInterface.frameMediator.messageController.getView().enableViewer( MessageView.HTML );
+        //MainInterface.frameMediator.messageController.getView().update(b);
 
-        HtmlViewer viewer = (HtmlViewer) MainInterface.frameController.messageController.getView().getViewer( MessageView.HTML );
+        HtmlViewer viewer = (HtmlViewer) MainInterface.frameMediator.messageController.getView().getViewer( MessageView.HTML );
 
         if ( viewer != null )
         {
@@ -89,12 +89,12 @@ public class MimeTypeViewer
                 ex.printStackTrace();
                 if ( ex instanceof java.net.UnknownHostException )
                 {
-                    JOptionPane.showMessageDialog( MainInterface.frameController.getView(),
+                    JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
                                                            "Unknown host exception: "+ex.getMessage() );
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog( MainInterface.frameController.getView(),
+                    JOptionPane.showMessageDialog( MainInterface.frameMediator.getView(),
                                                            "Browser exception: "+ex.getMessage() );
                 }
             }

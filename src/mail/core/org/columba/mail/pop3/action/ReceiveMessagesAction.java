@@ -53,7 +53,7 @@ public class ReceiveMessagesAction extends FrameAction {
 		// Select INBOX
 		FolderCommandReference[] refs = new FolderCommandReference[1];
 		refs[0] = new FolderCommandReference(MailInterface.treeModel.getFolder(101));
-		getFrameController().getSelectionManager().setSelection("mail.tree", refs);
+		getFrameMediator().getSelectionManager().setSelection("mail.tree", refs);
 		
 		// Fetch Messages
 		

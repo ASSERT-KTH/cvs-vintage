@@ -60,7 +60,7 @@ public class EditPropertiesAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		AddressbookFrameController addressbookFrameController =
-			(AddressbookFrameController) frameController;
+			(AddressbookFrameController) frameMediator;
 
 		Object uid =
 			addressbookFrameController.getTable().getView().getSelectedUid();

@@ -70,7 +70,7 @@ public class CreateFilterOnSubjectAction
 
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameController()).
+				((AbstractMailFrameController) getFrameMediator()).
 					getTableSelection();
 
 		// add command for execution

@@ -52,7 +52,7 @@ public class ReplyToMailingListCommand extends FolderCommand {
 	/**
 	 * Constructor for ReplyToMailingListCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ReplyToMailingListCommand(DefaultCommandReference[] references) {

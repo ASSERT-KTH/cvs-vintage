@@ -68,7 +68,7 @@ public class SearchMessageAction extends FrameAction {
 			
 		SearchFrame frame =
 			new SearchFrame(
-				(AbstractMailFrameController) getFrameController(),
+				(AbstractMailFrameController) getFrameMediator(),
 				searchFolder);				
 	}
 

@@ -52,7 +52,7 @@ public class SaveMessageCommand extends FolderCommand {
 	/**
 	 * Constructor for SaveMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SaveMessageCommand(DefaultCommandReference[] references) {

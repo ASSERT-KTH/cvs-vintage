@@ -54,7 +54,7 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 		
 		MainInterface.processor.addOp(
 			new SaveAttachmentCommand(
-				getFrameController()
+				getFrameMediator()
 					.getSelectionManager()
 					.getHandler("mail.attachment")
 					.getSelection()));

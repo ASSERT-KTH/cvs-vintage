@@ -25,7 +25,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class ViewFolderInfoPanelAction extends CheckBoxAction {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -46,12 +46,12 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 
 	public void actionPerformed(ActionEvent evt) {
 
-		((MailFrameView)frameController.getView()).showFolderInfoPanel();
+		((MailFrameView)frameMediator.getView()).showFolderInfoPanel();
 	}
 
 	protected boolean getInitState() {
 
-		return frameController.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL);
+		return frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL);
 	}
 
 	public void setCheckBoxMenuItem(

@@ -19,7 +19,7 @@ public class AnalyzeFolderAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -66,7 +66,7 @@ public class AnalyzeFolderAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTreeSelection();
 
 		MainInterface.processor.addOp(new AnalyzeFolderCommand(r));

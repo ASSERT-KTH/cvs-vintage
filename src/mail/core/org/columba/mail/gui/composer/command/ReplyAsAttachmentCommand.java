@@ -49,7 +49,7 @@ public class ReplyAsAttachmentCommand extends FolderCommand {
 	/**
 	 * Constructor for ReplyCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {

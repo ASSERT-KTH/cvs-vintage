@@ -57,7 +57,7 @@ public class SpellcheckAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController composerController =
-			(ComposerController) getFrameController();
+			(ComposerController) getFrameMediator();
 
 		//String checked =
 		//	composerController.getComposerSpellCheck().checkText(

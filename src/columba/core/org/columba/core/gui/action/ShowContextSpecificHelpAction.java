@@ -33,7 +33,7 @@ import org.columba.core.util.GlobalResourceLoader;
 public class ShowContextSpecificHelpAction extends FrameAction {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public ShowContextSpecificHelpAction(AbstractFrameController frameController) {

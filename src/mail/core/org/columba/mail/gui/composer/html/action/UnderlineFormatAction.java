@@ -47,7 +47,7 @@ public class UnderlineFormatAction
 	implements Observer, ContainerListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public UnderlineFormatAction(AbstractFrameController frameController) {
@@ -74,7 +74,7 @@ public class UnderlineFormatAction
 			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
-		ComposerController ctrl = (ComposerController) getFrameController();
+		ComposerController ctrl = (ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 
 		// register for changes to the editor
@@ -135,7 +135,7 @@ public class UnderlineFormatAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.toggleUnderline();
@@ -152,7 +152,7 @@ public class UnderlineFormatAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 			"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController())
+		((ComposerController) getFrameMediator())
 			.getEditorController()
 			.addObserver(
 			this);

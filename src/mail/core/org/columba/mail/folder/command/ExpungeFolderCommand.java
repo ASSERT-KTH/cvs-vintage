@@ -42,7 +42,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 	/**
 	 * Constructor for ExpungeFolderCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ExpungeFolderCommand(DefaultCommandReference[] references) {

@@ -83,7 +83,7 @@ public class SendAllMessagesAction extends FrameAction {
 
 		// start command
 		SendAllMessagesCommand c =
-			new SendAllMessagesCommand(frameController, r);
+			new SendAllMessagesCommand(frameMediator, r);
 
 		MainInterface.processor.addOp(c);		
 	}

@@ -43,7 +43,7 @@ public class ExternalEditorAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		final ComposerController composerController = (ComposerController ) getFrameController();
+		final ComposerController composerController = (ComposerController ) getFrameMediator();
 		
 		final SwingWorker worker = new SwingWorker() {
 			public Object construct() {

@@ -46,7 +46,7 @@ public class MarkAsUnexpungedAction
 		setActionCommand("MARK_AS_UNEXPUNGED");
 		/*		
 		super(
-			frameController,
+			frameMediator,
 			"Not Expunged",
 			"Not Expunged",
 			"MARK_AS_UNEXPUNGED",
@@ -64,7 +64,7 @@ public class MarkAsUnexpungedAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

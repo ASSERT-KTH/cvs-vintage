@@ -19,7 +19,7 @@ import org.columba.mail.gui.menu.MailContextMenu;
 public class TreeMenu extends MailContextMenu {
 
 	//protected PopupMenuGenerator menuGenerator;
-	//protected FrameController frameController;
+	//protected FrameController frameMediator;
 
 	/**
 	 * 
@@ -28,11 +28,11 @@ public class TreeMenu extends MailContextMenu {
 		super(frameController, "org/columba/mail/action/tree_contextmenu.xml");
 		
 		/*
-		this.frameController = frameController;
+		this.frameMediator = frameMediator;
 
 		menuGenerator =
 			new PopupMenuGenerator(
-				frameController,
+				frameMediator,
 				"org/columba/mail/action/tree_contextmenu.xml");
 		menuGenerator.createPopupMenu(this);
 		*/

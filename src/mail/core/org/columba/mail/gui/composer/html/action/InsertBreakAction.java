@@ -36,7 +36,7 @@ public class InsertBreakAction extends FrameAction
 		implements Observer{
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public InsertBreakAction(AbstractFrameController frameController) {
 		super(
@@ -91,7 +91,7 @@ public class InsertBreakAction extends FrameAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.insertBreak();

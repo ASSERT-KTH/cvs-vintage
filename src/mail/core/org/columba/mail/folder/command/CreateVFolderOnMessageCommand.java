@@ -67,7 +67,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 	 * and saves flag for which kind of virtual folder to create. Default for
 	 * filter type is FILTER_ON_SUBJECT.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 * @param vfolderType
 	 *            Which type of filter to create. Used defined constants

@@ -47,7 +47,7 @@ public class ItalicFormatAction
 	implements Observer, ContainerListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public ItalicFormatAction(AbstractFrameController frameController) {
@@ -73,7 +73,7 @@ public class ItalicFormatAction
 			KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
-		ComposerController ctrl = (ComposerController) getFrameController();
+		ComposerController ctrl = (ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 
 		// register for changes to the editor
@@ -133,7 +133,7 @@ public class ItalicFormatAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.toggleItalic();
@@ -149,7 +149,7 @@ public class ItalicFormatAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 			"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController())
+		((ComposerController) getFrameMediator())
 			.getEditorController()
 			.addObserver(
 			this);

@@ -17,16 +17,16 @@ import org.columba.mail.gui.table.TableController;
  * <p>
  * To recognize we can just test it:
  * <pre>
- *  if ( frameController instanceof TableOwner ) 
+ *  if ( frameMediator instanceof TableOwner ) 
  *   { 
- *      TableController table = ( (TableOwner) frameController).getTableController() 
+ *      TableController table = ( (TableOwner) frameMediator).getTableController() 
  *      // do something here
  *   }
  * </pre>
  *
  * @author fdietz
  */
-public interface TableOwner {
+public interface TableViewOwner {
 
 	public abstract TableController getTableController();
 

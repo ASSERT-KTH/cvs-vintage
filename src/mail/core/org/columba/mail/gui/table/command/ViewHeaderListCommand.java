@@ -29,7 +29,7 @@ import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
@@ -67,7 +67,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			folder);
 
 		// this should be called from TableController instead
-		((TableOwner) frameController).getTableController().showHeaderList(
+		((TableViewOwner) frameController).getTableController().showHeaderList(
 			folder,
 			headerList);
 

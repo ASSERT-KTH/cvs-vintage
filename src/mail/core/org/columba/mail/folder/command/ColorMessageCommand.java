@@ -48,7 +48,7 @@ public class ColorMessageCommand extends FolderCommand {
 	/**
 	 * Constructor for MarkMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ColorMessageCommand(DefaultCommandReference[] references) {

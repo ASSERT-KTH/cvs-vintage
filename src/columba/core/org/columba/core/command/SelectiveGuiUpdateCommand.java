@@ -46,7 +46,7 @@ public abstract class SelectiveGuiUpdateCommand extends Command {
 
 	/**
 	 * Constructor for SelectiveGuiUpdateCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SelectiveGuiUpdateCommand(

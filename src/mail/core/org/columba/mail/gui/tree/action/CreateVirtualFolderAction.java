@@ -80,7 +80,7 @@ public class CreateVirtualFolderAction
 
 			try {
 				FolderCommandReference[] r =
-					(FolderCommandReference[]) frameController
+					(FolderCommandReference[]) frameMediator
 						.getSelectionManager()
 						.getSelection(
 						"mail.tree");
@@ -88,7 +88,7 @@ public class CreateVirtualFolderAction
 
 				FolderCommandReference[] reference =
 					(FolderCommandReference[])
-						((AbstractMailFrameController) getFrameController())
+						((AbstractMailFrameController) getFrameMediator())
 						.getTreeSelection();
 				MailInterface.treeModel.nodeStructureChanged(
 					reference[0].getFolder());

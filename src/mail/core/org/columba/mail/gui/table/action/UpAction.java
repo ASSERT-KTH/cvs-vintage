@@ -25,7 +25,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -45,7 +45,7 @@ public class UpAction extends JAbstractAction {
 
 	public UpAction(AbstractMailFrameController frameController) {
 		super();
-		this.tableController = ( (TableOwner) frameController).getTableController();
+		this.tableController = ( (TableViewOwner) frameController).getTableController();
 		this.frameController = frameController;
 		
 	}

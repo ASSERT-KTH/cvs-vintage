@@ -64,7 +64,7 @@ public class AddressbookAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		ComposerController composerController =
-			((ComposerController) getFrameController());
+			((ComposerController) getFrameMediator());
 
 		composerController.getHeaderController().cleanupHeaderItemList();
 

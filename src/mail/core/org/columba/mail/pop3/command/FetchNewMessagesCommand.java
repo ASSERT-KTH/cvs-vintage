@@ -52,7 +52,7 @@ public class FetchNewMessagesCommand extends Command {
 
 	/**
 	 * Constructor for FetchNewMessages.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public FetchNewMessagesCommand(DefaultCommandReference[] references) {

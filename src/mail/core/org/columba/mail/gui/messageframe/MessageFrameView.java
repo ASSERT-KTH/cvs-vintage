@@ -30,7 +30,7 @@ public class MessageFrameView extends AbstractFrameView {
 	private FolderInfoPanel folderInfoPanel;
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public MessageFrameView(AbstractFrameController frameController) {
 		super(frameController);

@@ -59,7 +59,7 @@ public class SaveMessageSourceAsAction
 		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
 
 		setEnabled(false);
-		((AbstractMailFrameController) frameController)
+		((AbstractMailFrameController) frameMediator)
 				.registerTableSelectionListener(this);
 	}
 
@@ -70,7 +70,7 @@ public class SaveMessageSourceAsAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
 		ColumbaLogger.log.debug("Save Message Source As... called");
 		SaveMessageSourceAsCommand c =

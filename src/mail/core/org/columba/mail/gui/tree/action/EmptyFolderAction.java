@@ -43,7 +43,7 @@ public class EmptyFolderAction
 		// FIXME
 		//  -> uncomment to enable/disable action
 		/*
-		((MailFrameController) frameController).registerTreeSelectionListener(
+		((MailFrameController) frameMediator).registerTreeSelectionListener(
 			this);
 		*/
 	}

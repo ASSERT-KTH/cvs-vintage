@@ -77,7 +77,7 @@ public class ReplyWithTemplateAction
 	public void actionPerformed(ActionEvent evt) {
 
 		FolderCommandReference[] r1 =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 
 		MainInterface.processor.addOp(new ReplyWithTemplateCommand(r1));

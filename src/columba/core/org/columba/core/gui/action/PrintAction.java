@@ -65,8 +65,8 @@ public class PrintAction
 		
 		// *20030614, karlpeder* In main view only enabled when 
 		// message(s) selected
-		if (frameController instanceof AbstractMailFrameController) {
-			((AbstractMailFrameController) frameController)
+		if (frameMediator instanceof AbstractMailFrameController) {
+			((AbstractMailFrameController) frameMediator)
 					.registerTableSelectionListener(this);
 		}
 		setEnabled(false);
@@ -77,13 +77,13 @@ public class PrintAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) getFrameController()
+			(FolderCommandReference[]) getFrameMediator()
 				.getSelectionManager()
 				.getSelection("mail.table");
 
 		// GetCharset() added
 		String charset =
-			((CharsetOwnerInterface) getFrameController())
+			((CharsetOwnerInterface) getFrameMediator())
 				.getCharsetManager()
 				.getSelectedCharset();
 

@@ -70,7 +70,7 @@ public class ReplyToAllAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyToAllCommand(r));
 	}
 	/* (non-Javadoc)

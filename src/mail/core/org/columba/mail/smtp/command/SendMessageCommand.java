@@ -62,7 +62,7 @@ public class SendMessageCommand extends FolderCommand {
 	/**
 	 * Constructor for SendMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SendMessageCommand(DefaultCommandReference[] references) {

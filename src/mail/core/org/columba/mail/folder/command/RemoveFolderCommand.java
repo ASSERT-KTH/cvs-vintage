@@ -35,7 +35,7 @@ public class RemoveFolderCommand extends Command {
 
 	/**
 	 * Constructor for RemoveFolder.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public RemoveFolderCommand(DefaultCommandReference[] references) {

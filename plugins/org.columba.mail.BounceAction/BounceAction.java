@@ -28,7 +28,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class BounceAction extends FrameAction implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -43,18 +43,24 @@ public class BounceAction extends FrameAction implements SelectionListener {
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_message_bounce"),
+				"menu_message_bounce"));
+
+		setActionCommand("BOUNCE");
+
+		setTooltipText(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_message_bounce_tooltip"),
-			"BOUNCE",
-			null,
-			null,
-			'B',
+				"menu_message_bounce_tooltip"));
+
+		setMnemonic('B');
+
 		// we must see if the Key not alrady used
-		KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+		setAcceleratorKey(
+			KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+
 		setEnabled(false);
+
 		(
 			(
 				AbstractMailFrameController) frameController)
@@ -68,7 +74,7 @@ public class BounceAction extends FrameAction implements SelectionListener {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 		MainInterface.processor.addOp(new BounceCommand(r));
 	}

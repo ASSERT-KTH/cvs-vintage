@@ -46,7 +46,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 	/**
 	 * Constructor for OpenMessageInComposerCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {

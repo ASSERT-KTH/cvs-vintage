@@ -39,7 +39,7 @@ public class ForwardAsAttachmentAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -77,7 +77,7 @@ public class ForwardAsAttachmentAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 		MainInterface.processor.addOp(new ForwardCommand(r));
 	}

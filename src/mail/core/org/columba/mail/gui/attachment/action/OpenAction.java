@@ -57,7 +57,7 @@ public class OpenAction extends FrameAction implements SelectionListener {
 	public void actionPerformed(ActionEvent evt) {
 		MainInterface.processor.addOp(
 			new OpenAttachmentCommand(
-				getFrameController()
+				getFrameMediator()
 					.getSelectionManager()
 					.getHandler("mail.attachment")
 					.getSelection()));

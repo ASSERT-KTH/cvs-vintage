@@ -30,7 +30,7 @@ import org.columba.core.xml.XmlElement;
 public class PopupMenuGenerator extends AbstractMenuGenerator {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public PopupMenuGenerator(

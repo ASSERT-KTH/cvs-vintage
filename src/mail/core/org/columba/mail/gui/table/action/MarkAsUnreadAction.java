@@ -45,7 +45,7 @@ public class MarkAsUnreadAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -82,7 +82,7 @@ public class MarkAsUnreadAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
 

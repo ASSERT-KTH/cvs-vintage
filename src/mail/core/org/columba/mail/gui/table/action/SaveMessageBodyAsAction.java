@@ -66,11 +66,11 @@ public class SaveMessageBodyAsAction
 
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameController()).
+				((AbstractMailFrameController) getFrameMediator()).
 					getTableSelection();
 
 		// get active charset - necessary to decode msg for saving
-		String charset = ((CharsetOwnerInterface) getFrameController())
+		String charset = ((CharsetOwnerInterface) getFrameMediator())
 							.getCharsetManager()
 							.getSelectedCharset();
 

@@ -116,7 +116,7 @@ public class ForwardAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 
 		if (forwardStyle.equals("attachment"))

@@ -41,7 +41,7 @@ public class StrikeoutFormatAction extends CheckBoxAction
 		implements Observer, ContainerListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public StrikeoutFormatAction(AbstractFrameController frameController) {
@@ -65,7 +65,7 @@ public class StrikeoutFormatAction extends CheckBoxAction
 
 		// register for text selection changes
 		ComposerController ctrl =
-				(ComposerController) getFrameController();
+				(ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 		
 		// register for changes to the editor
@@ -122,7 +122,7 @@ public class StrikeoutFormatAction extends CheckBoxAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.toggleStrikeout();
@@ -139,7 +139,7 @@ public class StrikeoutFormatAction extends CheckBoxAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 				"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController()).
+		((ComposerController) getFrameMediator()).
 				getEditorController().addObserver(this);
 	}
 

@@ -89,7 +89,7 @@ public class DeleteMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
 		Folder folder = (Folder) r[0].getFolder();
@@ -112,7 +112,7 @@ public class DeleteMessageAction
 
 			FolderCommandReference[] result = new FolderCommandReference[2];
 			FolderCommandReference[] r1 =
-				((AbstractMailFrameController) getFrameController())
+				((AbstractMailFrameController) getFrameMediator())
 					.getTableSelection();
 			FolderCommandReference r2 = new FolderCommandReference(destFolder);
 

@@ -24,7 +24,7 @@ public class ComposerMenu extends Menu {
 
 	/**
 	 * @param xmlRoot
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public ComposerMenu(String xmlRoot, AbstractFrameController frameController) {
 		super(xmlRoot, frameController);

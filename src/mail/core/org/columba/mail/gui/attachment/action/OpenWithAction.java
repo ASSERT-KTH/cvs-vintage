@@ -48,7 +48,7 @@ public class OpenWithAction extends FrameAction implements SelectionListener {
 	public void actionPerformed(ActionEvent evt) {
 		MainInterface.processor.addOp(
 			new OpenWithAttachmentCommand(
-				getFrameController()
+				getFrameMediator()
 					.getSelectionManager()
 					.getHandler("mail.attachment")
 					.getSelection()));

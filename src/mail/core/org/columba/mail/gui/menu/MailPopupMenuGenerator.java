@@ -19,7 +19,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class MailPopupMenuGenerator extends PopupMenuGenerator {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public MailPopupMenuGenerator(

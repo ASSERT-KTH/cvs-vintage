@@ -44,7 +44,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	/**
 	 * Constructor for MoveMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public MoveMessageCommand(DefaultCommandReference[] references) {

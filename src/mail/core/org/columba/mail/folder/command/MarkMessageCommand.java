@@ -55,7 +55,7 @@ public class MarkMessageCommand extends FolderCommand {
 	/**
 	 * Constructor for MarkMessageCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public MarkMessageCommand(DefaultCommandReference[] references) {

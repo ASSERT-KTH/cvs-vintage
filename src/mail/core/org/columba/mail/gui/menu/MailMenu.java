@@ -32,7 +32,7 @@ public class MailMenu extends Menu {
 
 	/**
 	 * @param xmlRoot
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public MailMenu(String xmlRoot, String extension, AbstractFrameController frameController) {
 		super(xmlRoot, frameController);

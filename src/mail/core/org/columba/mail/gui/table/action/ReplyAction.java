@@ -89,7 +89,7 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
 		MainInterface.processor.addOp(new ReplyCommand(r));
 	}

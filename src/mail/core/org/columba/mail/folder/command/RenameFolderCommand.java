@@ -34,7 +34,7 @@ public class RenameFolderCommand extends Command {
 
 	/**
 	 * Constructor for RenameFolderCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public RenameFolderCommand(DefaultCommandReference[] references) {

@@ -54,7 +54,7 @@ public class SendLaterAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		final ComposerController composerController =
-			(ComposerController) getFrameController();
+			(ComposerController) getFrameMediator();
 
 		if (composerController.checkState())
 			return;

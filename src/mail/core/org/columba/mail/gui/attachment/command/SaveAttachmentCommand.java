@@ -54,7 +54,7 @@ public class SaveAttachmentCommand extends FolderCommand {
 	/**
 	 * Constructor for SaveAttachmentCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public SaveAttachmentCommand(DefaultCommandReference[] references) {

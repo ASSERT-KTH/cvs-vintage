@@ -66,7 +66,7 @@ public class ApplyFilterAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTreeSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTreeSelection();
 
 		//Folder folder = (Folder) r[0].getFolder();
 		MainInterface.processor.addOp(new ApplyFilterCommand(r));

@@ -50,7 +50,7 @@ public class ReplyToAllCommand extends FolderCommand {
 	/**
 	 * Constructor for ReplyToAllCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ReplyToAllCommand(DefaultCommandReference[] references) {

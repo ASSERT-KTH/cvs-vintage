@@ -33,7 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class MailOptionsAction extends FrameAction {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public MailOptionsAction(

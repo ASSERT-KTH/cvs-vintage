@@ -52,7 +52,7 @@ public class ReplyCommand extends FolderCommand {
 	/**
 	 * Constructor for ReplyCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ReplyCommand(DefaultCommandReference[] references) {

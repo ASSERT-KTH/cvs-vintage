@@ -29,7 +29,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
@@ -82,7 +82,7 @@ public class TreeController implements TreeWillExpandListener {
 
 		getView().setTransferHandler(
 			new MessageTransferHandler(
-				((TableOwner) getMailFrameController()).getTableController()));
+				((TableViewOwner) getMailFrameController()).getTableController()));
 
 		/*
 		getView().getInputMap().put(

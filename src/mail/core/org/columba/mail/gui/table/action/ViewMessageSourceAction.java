@@ -60,7 +60,7 @@ public class ViewMessageSourceAction
 					KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		((AbstractMailFrameController) frameMediator).registerTableSelectionListener(
 			this);
 	}
 
@@ -69,11 +69,11 @@ public class ViewMessageSourceAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 					.getTableSelection();
 
 		ViewMessageSourceCommand c =
-			new ViewMessageSourceCommand(getFrameController(), r);
+			new ViewMessageSourceCommand(getFrameMediator(), r);
 
 		MainInterface.processor.addOp(c);
 	}

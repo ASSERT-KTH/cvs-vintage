@@ -65,7 +65,7 @@ public class RenameFolderAction
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			(FolderCommandReference[])
-				((AbstractMailFrameController)frameController)
+				((AbstractMailFrameController)frameMediator)
 				.getTreeSelection();
 
 		new FolderOptionsDialog((Folder)r[0].getFolder(), true);

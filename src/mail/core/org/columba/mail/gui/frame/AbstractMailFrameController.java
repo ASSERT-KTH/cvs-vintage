@@ -31,20 +31,20 @@ import org.columba.mail.gui.message.MessageController;
 /**
  * 
  * Abstract frame controller for all mail windows.
- * 
+ * <p>
  * The ThreePane and the message frame use this as basis.
- * 
+ * <p>
  * It adds all mail specific stuff every mail frame has
  * in common.
- * 
+ * <p>
  * So, please note that the only reason it exists is first of
- * all to save code duplication.
+ * all to save code duplication.<br>
  * The other reason is that every action in Columba, needs to
  * have a reference on a mail frame controller class.
- * 
+ * <p>
  * So, changing this class will affect every action.
- * 
- * For more specific examples:
+ * <p>
+ * For more specific examples:<br>
  * @see ThreePaneMailFrameController
  * @see MessageFrameController
  *
@@ -53,9 +53,7 @@ import org.columba.mail.gui.message.MessageController;
  */
 public abstract class AbstractMailFrameController
 	extends AbstractFrameController
-	implements CharsetOwnerInterface {
-
-	//public SelectionManager selectionManager;
+	implements MailFrameMediator, MessageViewOwner, AttachmentViewOwner, CharsetOwnerInterface {
 
 	private ToolBar toolBar;
 	
@@ -106,64 +104,21 @@ public abstract class AbstractMailFrameController
 		return view;
 	}
 
-	/*
-	protected void changeToolbars() {
-		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
-	
-		boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
-		boolean toolbar = item.getBoolean("toolbars", "show_main");
-	
-		if (toolbar == true) {
-	
-			((MailFrameView) getView()).hideToolbar(folderInfo);
-			item.set("toolbars", "show_main", false);
-		} else {
-	
-			((MailFrameView) getView()).showToolbar(folderInfo);
-			item.set("toolbars", "show_main", true);
-		}
-	
-		if (folderInfo == true) {
-	
-			((MailFrameView) getView()).hideFolderInfo(toolbar);
-			item.set("toolbars", "show_folderinfo", false);
-		} else {
-	
-			((MailFrameView) getView()).showFolderInfo(toolbar);
-			item.set("toolbars", "show_folderinfo", true);
-		}
-	
-	}
-	*/
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#registerSelectionHandlers()
-	 */
+	
 	protected void registerSelectionHandlers() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#initInternActions()
-	 */
 	protected void initInternActions() {
-		//new ViewHeaderListAction(this);
-		//new ViewMessageAction(this);
+		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#init()
-	 */
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#createDefaultConfiguration(java.lang.String)
-	 */
 	protected XmlElement createDefaultConfiguration(String id) {
 
 		XmlElement child = super.createDefaultConfiguration(id);
 
-		// *20030831, karlpeder* toolbars element already added above
-		//XmlElement toolbars = new XmlElement("toolbars");
-		//child.addElement(toolbars);
+		
 		XmlElement splitpanes = new XmlElement("splitpanes");
 		splitpanes.addAttribute("main", "200");
 		splitpanes.addAttribute("header", "200");
@@ -173,9 +128,6 @@ public abstract class AbstractMailFrameController
 		return child;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#init()
-	 */
 	protected void init() {
 
 		setCharsetManager(new CharsetManager(null));
@@ -186,17 +138,21 @@ public abstract class AbstractMailFrameController
 
 	}
 
-	/**
-		 * @return
-		 */
 	public CharsetManager getCharsetManager() {
 		return charsetManager;
 	}
 
-	/**
-	 * @param manager
-	 */
 	public void setCharsetManager(CharsetManager manager) {
 		charsetManager = manager;
 	}
+	
+	
+	public MessageController getMessageController() {
+		return messageController;
+	}
+
+	public AttachmentController getAttachmentController() {
+		return attachmentController;
+	}
+
 }

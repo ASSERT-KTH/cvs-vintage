@@ -72,7 +72,7 @@ public class MarkAsFlaggedAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

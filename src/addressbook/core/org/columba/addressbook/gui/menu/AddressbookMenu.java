@@ -24,7 +24,7 @@ public class AddressbookMenu extends Menu {
 
 	/**
 	 * @param xmlRoot
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public AddressbookMenu(String xmlRoot, AbstractFrameController frameController) {
 		super(xmlRoot, frameController);

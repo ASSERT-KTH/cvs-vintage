@@ -32,7 +32,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -50,7 +50,7 @@ public class ThreadedViewAction
 
 	/**
 	 * Constructor for ThreadedViewAction.
-	 * @param frameController
+	 * @param frameMediator
 	 */
 	public ThreadedViewAction(AbstractFrameController frameController) {
 		super(
@@ -86,7 +86,7 @@ public class ThreadedViewAction
 		if (e.getEventType() == TableModelChangedEvent.UPDATE) {
 			FolderCommandReference[] r =
 				(FolderCommandReference[])
-					((AbstractMailFrameController) frameController)
+					((AbstractMailFrameController) frameMediator)
 					.getTreeSelection();
 
 			Folder folder = (Folder) r[0].getFolder();
@@ -120,14 +120,14 @@ public class ThreadedViewAction
 
 	public void actionPerformed(ActionEvent e) {
 
-		if ((frameController instanceof TableOwner) == false)
+		if ((frameMediator instanceof TableViewOwner) == false)
 			return;
 
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
 		FolderCommandReference[] r =
 			(FolderCommandReference[])
-				((AbstractMailFrameController) frameController)
+				((AbstractMailFrameController) frameMediator)
 				.getTreeSelection();
 
 		Folder folder = (Folder) r[0].getFolder();
@@ -144,20 +144,20 @@ public class ThreadedViewAction
 
 	protected void updateTable(boolean enableThreadedView) {
 
-		if ((frameController instanceof TableOwner) == false)
+		if ((frameMediator instanceof TableViewOwner) == false)
 			return;
 
-		((TableOwner) frameController)
+		((TableViewOwner) frameMediator)
 			.getTableController()
 			.getView()
 			.enableThreadedView(enableThreadedView);
 
-		((TableOwner) frameController)
+		((TableViewOwner) frameMediator)
 			.getTableController()
 			.getTableModelThreadedView()
 			.toggleView(enableThreadedView);
 
-		((TableOwner) frameController)
+		((TableViewOwner) frameMediator)
 			.getTableController()
 			.getUpdateManager()
 			.update();

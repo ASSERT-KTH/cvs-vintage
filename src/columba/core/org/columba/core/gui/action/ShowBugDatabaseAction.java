@@ -34,7 +34,7 @@ import org.columba.mail.gui.util.URLController;
 public class ShowBugDatabaseAction extends FrameAction {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand

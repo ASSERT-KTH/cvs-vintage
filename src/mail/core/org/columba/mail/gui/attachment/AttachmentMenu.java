@@ -18,7 +18,7 @@ import org.columba.mail.gui.menu.MailContextMenu;
 public class AttachmentMenu extends MailContextMenu {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param path
 	 */
 	public AttachmentMenu(AbstractFrameController frameController) {

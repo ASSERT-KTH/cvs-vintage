@@ -83,7 +83,7 @@ public class PrintMessageCommand extends FolderCommand {
 
 	/**
 	 * Constructor for PrintMessageCommdn.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public PrintMessageCommand(

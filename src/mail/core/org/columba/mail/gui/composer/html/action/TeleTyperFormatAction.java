@@ -46,7 +46,7 @@ public class TeleTyperFormatAction
 	implements Observer, ContainerListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public TeleTyperFormatAction(AbstractFrameController frameController) {
@@ -69,7 +69,7 @@ public class TeleTyperFormatAction
 			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
-		ComposerController ctrl = (ComposerController) getFrameController();
+		ComposerController ctrl = (ComposerController) getFrameMediator();
 		ctrl.getEditorController().addObserver(this);
 
 		// register for changes to the editor
@@ -128,7 +128,7 @@ public class TeleTyperFormatAction
 		// this action is disabled when the text/plain editor is used
 		// -> so, its safe to just cast to HtmlEditorController here
 		HtmlEditorController editorController =
-			(HtmlEditorController) ((ComposerController) frameController)
+			(HtmlEditorController) ((ComposerController) frameMediator)
 				.getEditorController();
 
 		editorController.toggleTeleTyper();
@@ -145,7 +145,7 @@ public class TeleTyperFormatAction
 	public void componentAdded(ContainerEvent e) {
 		ColumbaLogger.log.debug(
 			"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController())
+		((ComposerController) getFrameMediator())
 			.getEditorController()
 			.addObserver(
 			this);

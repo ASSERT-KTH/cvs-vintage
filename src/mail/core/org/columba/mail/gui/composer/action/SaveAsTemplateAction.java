@@ -63,7 +63,7 @@ public class SaveAsTemplateAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		
-		final ComposerController composerController = (ComposerController ) getFrameController();
+		final ComposerController composerController = (ComposerController ) getFrameMediator();
 		if (composerController.checkState())
 			return;
 

@@ -47,7 +47,7 @@ public class ForwardCommand extends FolderCommand {
 	/**
 	 * Constructor for ForwardCommand.
 	 * 
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ForwardCommand(DefaultCommandReference[] references) {

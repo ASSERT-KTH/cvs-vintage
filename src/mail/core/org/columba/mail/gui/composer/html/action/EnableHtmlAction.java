@@ -43,7 +43,7 @@ public class EnableHtmlAction
 		
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 */
 	public EnableHtmlAction(AbstractFrameController frameController) {

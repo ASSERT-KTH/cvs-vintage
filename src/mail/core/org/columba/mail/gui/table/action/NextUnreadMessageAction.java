@@ -40,7 +40,7 @@ public class NextUnreadMessageAction
 	implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -72,7 +72,7 @@ public class NextUnreadMessageAction
 		/*
 		(
 			(
-				AbstractMailFrameController) frameController)
+				AbstractMailFrameController) frameMediator)
 					.registerTableSelectionListener(
 			this);
 		*/
@@ -85,7 +85,7 @@ public class NextUnreadMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
 //		TODO: fix next-unread-message action
 	/*

@@ -66,7 +66,7 @@ public class OpenMessageWithMessageFrameAction
 		MessageFrameController c = new MessageFrameController();
 
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
 		c.setTreeSelection(r);
 

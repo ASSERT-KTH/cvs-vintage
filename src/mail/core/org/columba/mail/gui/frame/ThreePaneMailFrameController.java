@@ -37,7 +37,7 @@ import org.columba.mail.main.MailInterface;
  */
 public class ThreePaneMailFrameController
 	extends AbstractMailFrameController
-	implements TableOwner {
+	implements TableViewOwner, TreeViewOwner {
 
 	public TreeController treeController;
 	public TableController tableController;
@@ -180,6 +180,13 @@ public class ThreePaneMailFrameController
 	 */
 	public TableController getTableController() {
 		return tableController;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.frame.TreeOwner#getTreeController()
+	 */
+	public TreeController getTreeController() {
+		return treeController;
 	}
 
 }

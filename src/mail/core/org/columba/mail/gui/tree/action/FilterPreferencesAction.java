@@ -53,7 +53,7 @@ public class FilterPreferencesAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) frameController
+			(FolderCommandReference[]) frameMediator
 				.getSelectionManager()
 				.getSelection(
 				"mail.tree");
@@ -66,7 +66,7 @@ public class FilterPreferencesAction
 		if (item == null)
 			return;
 
-		folder.showFilterDialog(((AbstractMailFrameController) getFrameController()));
+		folder.showFilterDialog(((AbstractMailFrameController) getFrameMediator()));
 	}
 	/* (non-Javadoc)
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

@@ -59,7 +59,7 @@ public class AttachFileAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		ComposerController composerController = ((ComposerController)getFrameController());
+		ComposerController composerController = ((ComposerController)getFrameMediator());
 
 		composerController.getAttachmentController().addFileAttachment();
 		

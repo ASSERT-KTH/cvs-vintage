@@ -56,13 +56,13 @@ public class MessageActionListener implements ActionListener
 
 		/*
 		if (action
-			.equals(MainInterface.frameController.globalActionCollection.copyAction.getActionCommand()))
+			.equals(MainInterface.frameMediator.globalActionCollection.copyAction.getActionCommand()))
 		{
 			copy();
 		}
 		else if (
 			action.equals(
-				MainInterface.frameController.globalActionCollection.selectAllAction.getActionCommand()))
+				MainInterface.frameMediator.globalActionCollection.selectAllAction.getActionCommand()))
 		{
 			selectAll();
 		}

@@ -56,7 +56,7 @@ public class AddGroupCardAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		
 		AddressbookFrameController addressbookFrameController =
-				(AddressbookFrameController) frameController;
+				(AddressbookFrameController) frameMediator;
 		
 		Folder folder =
 				(Folder) addressbookFrameController.getTree().

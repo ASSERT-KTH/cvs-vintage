@@ -53,7 +53,7 @@ public class RemoveCardAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		AddressbookFrameController addressbookFrameController =
-			(AddressbookFrameController) frameController;
+			(AddressbookFrameController) frameMediator;
 
 		Object[] uids =
 			addressbookFrameController.getTable().getView().getSelectedUids();

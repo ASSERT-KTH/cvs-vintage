@@ -62,9 +62,9 @@ public class AddAllSendersToAddressbookAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(
-			new AddAllSendersToAddressbookCommand(getFrameController(), r));
+			new AddAllSendersToAddressbookCommand(getFrameMediator(), r));
 	}
 
 	/* (non-Javadoc)

@@ -37,7 +37,7 @@ public class ApplyFilterCommand extends Command{
 
 	/**
 	 * Constructor for ApplyFilterCommand.
-	 * @param frameController
+	 * @param frameMediator
 	 * @param references
 	 */
 	public ApplyFilterCommand(

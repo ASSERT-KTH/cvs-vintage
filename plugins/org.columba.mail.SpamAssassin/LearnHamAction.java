@@ -25,7 +25,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 public class LearnHamAction extends FrameAction implements SelectionListener {
 
 	/**
-	 * @param frameController
+	 * @param frameMediator
 	 * @param name
 	 * @param longDescription
 	 * @param actionCommand
@@ -72,7 +72,7 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController())
+			((AbstractMailFrameController) getFrameMediator())
 				.getTreeSelection();
 
 		MainInterface.processor.addOp(new LearnHamCommand(r));

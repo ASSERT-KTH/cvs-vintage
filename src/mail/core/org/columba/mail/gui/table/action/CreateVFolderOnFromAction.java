@@ -70,13 +70,13 @@ public class CreateVFolderOnFromAction
 
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameController()).
+				((AbstractMailFrameController) getFrameMediator()).
 					getTableSelection();
 
 		// add command for execution
 		CreateVFolderOnMessageCommand c =
 				new CreateVFolderOnMessageCommand(
-						getFrameController(),
+						getFrameMediator(),
 						r,
 						CreateVFolderOnMessageCommand.VFOLDER_ON_FROM);
 						

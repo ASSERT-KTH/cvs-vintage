@@ -13,29 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.mail.gui.frame;
 
-package com.mycom;
+import org.columba.mail.gui.tree.TreeController;
 
-import java.awt.event.ActionEvent;
+/**
+ * 
+ *
+ * @author fdietz
+ */
+public interface TreeViewOwner {
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.AbstractFrameController;
-
-public class HelloWorldAction extends FrameAction {
-
-	public HelloWorldAction(AbstractFrameController controller) {
-		super(controller, "Hello, World!");
-
-		setTooltipText("Show me this tooltip, please");
-
-		setActionCommand("HELLO_WORLD");
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		System.out.println("Hello World!");
-	}
-
+	public TreeController getTreeController();
 }
