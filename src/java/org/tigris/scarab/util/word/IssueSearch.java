@@ -1002,6 +1002,19 @@ public class IssueSearch
      * Get a List of Issues that match the criteria given by this
      * SearchIssue's searchWords and the quick search attribute values.
      *
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getMatchingIssues()
+        throws Exception
+    {
+        return getMatchingIssues(-1);
+    }
+
+    /**
+     * Get a List of Issues that match the criteria given by this
+     * SearchIssue's searchWords and the quick search attribute values.
+     *
      * @param limitResults an <code>int</code> value
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
