@@ -1,8 +1,6 @@
-Columba v1.0 RC1-final
+Columba v1.0 RC1-test4
 
 New features:
-- added acknowledge panel to About Dialog listing all third-party libraries, use 
-  Contributurs and License file instead of hardcoded Strings
 - cleanup of addressbook component including:
   - selecting handling fixes, enable/disable actions
   - moved group support out of table, instead use JTree nodes for groups
@@ -12,10 +10,27 @@ New features:
   - cleanup of folder package, JTable tablemodel, list-component, dialogs
   - added more facade methods for accessing addressbook from mail or
     plugins 
-  
+- added taskmanager dialog
+- added acknowledge panel to About Dialog listing all third-party libraries, use 
+  Contributurs and License file instead of hardcoded Strings
 
 Fixed bugs:
-- 
+- #980605, can't install plugin
+- #980612,sorting doesn't work for spam flag column
+- Account Dialog layout cleanup
+- #979674, folder options->advanced ui isse
+- #972185, external editor doesn't work on win32
+- #977315, added hotkeys for all toggle flag actions
+- Made the HeaderParser more robust against bogus multiple headerfields (tstich)
+- removed all unnecessary exceptions, don't show error dialog, instead display 
+  exception message in pgp-status panel
+- #956284, To much logging in default setting
+- #979675, move/copy filter action exception if folder doesn't exist
+- Spam filter: message wasn't moved to Junk, directly execute command -> much better speed
+- #972818, Problem when changing pop hostname in account
+- #972776, menu-mnemonics & was visible in popup menu
+- #972475, doesn't start if ".columba" directory missing
+
 
 Columba v1.0 RC1-test3
 
