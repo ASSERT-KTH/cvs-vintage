@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.19 2003/08/17 22:17:00 linus Exp $
+// $Id: Generator.java,v 1.20 2003/08/17 22:34:50 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,6 @@
 
 // File: Generator.java
 // Classes: Generator
-// Original Author:
-// $Id: Generator.java,v 1.19 2003/08/17 22:17:00 linus Exp $
-
-// 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
-// extension points.
-
-// 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patched
-// generateStereotype to handle the case where the stereotype has a null name
-// (caused NPE when making a new stereotype).
 
 package org.argouml.uml.generator;
 import java.util.HashMap;
@@ -72,8 +63,8 @@ import ru.novosoft.uml.model_management.MPackage;
  * the generation logic.  See the <a href=
  * "http://hillside.net/patterns/patterns.html">Vistor design
  * pattern</a> in "Design Patterns", and the <a href=
- * "http://www.ccs.neu.edu/research/demeter/"> Demeter project</a>. */
-
+ * "http://www.ccs.neu.edu/research/demeter/"> Demeter project</a>. 
+ */
 public abstract class Generator
     implements NotationProvider, PluggableNotation {
 
@@ -284,6 +275,16 @@ public abstract class Generator
         if (s != null)
             return s.trim();
         return null;
+    }
+
+    /**   
+     * The default for any Generator is to be enabled.
+     *
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     * @return that this module is enabled.
+     */
+    public boolean isModuleEnabled() {
+        return true;
     }
 
 } /* end class Generator */
