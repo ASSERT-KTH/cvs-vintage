@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.3 2000/02/14 04:59:43 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/14 04:59:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.4 2000/02/16 17:46:58 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/16 17:46:58 $
  *
  * ====================================================================
  *
@@ -72,6 +72,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.NoSuchElementException;
+
+/* XXX XXX XXX Need a major rewrite  !!!!
+ */
 
 /**
  * This class is used to contain standard internet message headers,
@@ -460,7 +463,12 @@ public class MimeHeaders {
 	    // XXX this does not currently handle headers which
 	    // are folded to take more than one line.
 	    
-	    putHeader().parse(b, start, off - start);
+	    MimeHeaderField mhf=putHeader();
+	    if( ! mhf.parse(b, start, off - start) ) {
+		// error parsing header
+		return;
+	    }
+	    
 	}
     }
 

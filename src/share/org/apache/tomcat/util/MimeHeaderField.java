@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.2 2000/02/14 04:59:43 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/14 04:59:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.3 2000/02/16 17:46:58 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/16 17:46:58 $
  *
  * ====================================================================
  *
@@ -74,7 +74,6 @@ import java.io.OutputStream;
  * @author dac@eng.sun.com
  * @author James Todd [gonzo@eng.sun.com]
  */
-
 public class MimeHeaderField {
 
     private StringManager sm =
@@ -346,16 +345,15 @@ public class MimeHeaderField {
      * @exception IllegalArgumentException if the header format was invalid
      */
 
-    public void parse(byte[] b, int off, int len)
-    throws IllegalArgumentException {
+    public boolean parse(byte[] b, int off, int len)
+    {
 	int start = off;
 	byte c;
 
 	while ((c = b[off++]) != ':' && c != ' ') {
 	    if (c == '\n') {
-                String msg = sm.getString("mimeHeaderField.header.iae");
-
-		throw new IllegalArgumentException(msg);
+		System.out.println("Parse error, empty line: " + new String( b, off, len ));
+		return false;
 	    }
 	}
 
@@ -366,14 +364,14 @@ public class MimeHeaderField {
 	}
 
 	if (c != ':') {
-            String msg = sm.getString("mimeHeaderField.header.iae");
-
-	    throw new IllegalArgumentException(msg);
+	    System.out.println("Parse error, missing : in  " + new String( b, off, len ));
+	    return false;
 	}
 
 	while ((c = b[off++]) == ' ');
 
 	setValue(b, off - 1, len - (off - start - 1));
+	return true;
     }
 
     /**

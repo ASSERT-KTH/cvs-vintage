@@ -282,9 +282,9 @@ public class DefaultServlet extends HttpServlet {
 	response.setContentLength((int)file.length());
 	response.setDateHeader("Last-Modified", file.lastModified());
 
-	FileInputStream in = new FileInputStream(file);
-
+	FileInputStream in=null;
 	try {
+	    in = new FileInputStream(file);
 	    serveStream(in, request, response);
 	} catch (FileNotFoundException e) {
 	    // Figure out what we're serving

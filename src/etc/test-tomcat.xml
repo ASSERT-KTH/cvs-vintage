@@ -73,7 +73,7 @@
       <gtest description="PrintWriterTest"
              request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
              returnCode="HTTP/1.0 200"
-             responseMatch="Included servlet error: 500:" 
+             responseMatch="Included servlet error: 500" 
        />
       <gtest description="Mismatch2"
              request="GET /test/servlet/dispatch.Mismatch2 HTTP/1.0"

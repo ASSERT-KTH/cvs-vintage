@@ -123,16 +123,16 @@
     <security-constraint>
       <web-resource-collection>
          <web-resource-name>a</web-resource-name>
-         <url-pattern>/foo/*</url-pattern>
-         <url-pattern>/bar/*</url-pattern>
+         <url-pattern>/foo1/*</url-pattern>
+         <url-pattern>/bar1/*</url-pattern>
          <http-method>GET</http-method>
          <http-method>POST</http-method>
       </web-resource-collection>
 
       <web-resource-collection>
          <web-resource-name>a</web-resource-name>
-         <url-pattern>/foo1/*</url-pattern>
-         <url-pattern>/bar1/*</url-pattern>
+         <url-pattern>/foo2/*</url-pattern>
+         <url-pattern>/bar2/*</url-pattern>
       </web-resource-collection>
 
       <auth-constraint>
