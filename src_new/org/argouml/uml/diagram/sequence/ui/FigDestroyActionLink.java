@@ -1,4 +1,4 @@
-// $Id: FigDestroyActionLink.java,v 1.1 2003/12/02 20:43:38 kataka Exp $
+// $Id: FigDestroyActionLink.java,v 1.2 2003/12/02 20:48:54 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,14 @@ public class FigDestroyActionLink extends FigLink {
     public FigDestroyActionLink() {
         super();
         // TODO Auto-generated constructor stub
+    }
+
+    /* (non-Javadoc)
+     * @see org.argouml.uml.diagram.sequence.ui.FigLink#layoutActivations()
+     */
+    protected void layoutActivations() {
+        // TODO Auto-generated method stub
+
     }
 
 }
