@@ -93,7 +93,7 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th width="70">Select</th>
+  <th width="70">$l10n.Select</th>
  #if ($mitlist && !$mitlist.isSingleModule())
   <th>$l10n.CapModule</th> 
  #end

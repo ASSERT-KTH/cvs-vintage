@@ -133,7 +133,7 @@
 
 
 #if ($attribute.AttributeType.AttributeClass.Name.equals("select-one"))
-#datatitle ("Attribute options")
+#datatitle ("$l10n.AttributeOptions")
 
 <div class="colbar">$l10n.AttributeOptionCannotBeDeleted</div>
 

@@ -8,6 +8,10 @@
   <body>
     <release version="b19" date="in cvs">
       <action dev="epugh" type="add">
+        <a href="http://scarab.collab.net/scarab/issues/id/SCB1026">SCB1026</a> 
+        i10n fixes, and patches to German language bundle.
+      </action>       
+      <action dev="epugh" type="add">
         Added Maven generated docs to scarab-gen.
       </action>             
     </release>
