@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactory.java,v 1.12 2004/07/23 17:53:51 linus Exp $
+// $Id: ModelManagementFactory.java,v 1.13 2004/08/19 18:00:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,14 +47,16 @@ public class ModelManagementFactory extends AbstractUmlModelFactory {
 
     /** Singleton instance.
      */
-    private static ModelManagementFactory SINGLETON =
+    private static ModelManagementFactory singleton =
                    new ModelManagementFactory();
 
     /**
      * Singleton instance access method.
+     *
+     * @return the singleton
      */
     public static ModelManagementFactory getFactory() {
-        return SINGLETON;
+        return singleton;
     }
 
     /** Don't allow instantiation
@@ -121,12 +123,24 @@ public class ModelManagementFactory extends AbstractUmlModelFactory {
 	return modelElement;
     }
 
+    /**
+     * @param elem to be deleted
+     */
     public void deleteElementImport(MElementImport elem) { }
 
+    /**
+     * @param elem to be deleted
+     */
     public void deleteModel(MModel elem) { }
 
+    /**
+     * @param elem to be deleted
+     */
     public void deletePackage(MPackage elem) { }
 
+    /**
+     * @param elem to be deleted
+     */
     public void deleteSubsystem(MSubsystem elem) { }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.43 2004/07/31 22:30:22 kataka Exp $
+// $Id: ModelManagementHelper.java,v 1.44 2004/08/19 18:00:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.model.uml.modelmanagement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -303,8 +302,15 @@ public class ModelManagementHelper {
         return set;
     }
 
-    public MModelElement getElement(Vector path, Object rt) {
-        MModelElement root = (MModelElement) rt;
+    /**
+     * Get the modelelement a given path below a given root-namespace.
+     * 
+     * @param path the given path
+     * @param theRootNamespace the given namespace to start from
+     * @return the modelelement looked for, or null if not found
+     */
+    public MModelElement getElement(Vector path, Object theRootNamespace) {
+        MModelElement root = (MModelElement) theRootNamespace;
         Object name;
         int i;
 
