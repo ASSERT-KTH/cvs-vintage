@@ -10,7 +10,7 @@ This is the XML DTD for the jbosscmp-jdbc deployment descriptor.
 <!--
 The root element of JBossCMP-JDBC configuration files.
 -->
-<!ELEMENT jbosscmp-jdbc (defaults, enterprise-beans?, relationships?,
+<!ELEMENT jbosscmp-jdbc (defaults?, enterprise-beans?, relationships?,
          dependent-value-classes?, type-mappings?)>
 
 <!--
@@ -18,8 +18,8 @@ The optional defaults elements contains the default values for
 entities, and relationships.
 -->
 <!ELEMENT defaults (datasource?, type-mapping?, create-table?, remove-table?,
-         read-only?, time-out?, row-locking?, pk-constraint?,
-         fk-constraint?, preferred-relation-mapping?, read-ahead?)>
+         read-only?, time-out?, row-locking?, pk-constraint?, fk-constraint?,
+         preferred-relation-mapping?, read-ahead?, max-list-cache?)>
 
 
 <!--
@@ -27,7 +27,6 @@ The optional datasource element contains the jndi-name used to lookup
 the datasource.  All database connections used by an entity or relation table are obtained from the datasource. 
 -->
 <!ELEMENT datasource (#PCDATA)>
-
 
 
 <!--
@@ -108,31 +107,15 @@ The preferred-relation-mapping element must be one of the two following:
 <!ELEMENT preferred-relation-mapping (#PCDATA)>
 
 <!--
-The read-ahead element can use either #PCDATA (true/false) or a 
-strategy, limit, and cache-size element, but not both.  This 
-is a problem for most parsers, because it has mixed types.
-We should change this synatx.
--->
-
-<!--
 Specifies the read ahead strategy.
-
-The read-ahead element must be one of the following:
-         <read-ahead>true</read-ahead>
-
-         <read-ahead>false</read-ahead>
-         
-         <read-ahead>
-            <strategy>none</strategy>
-         </read-ahead>
 
          <read-ahead>
             <strategy>on-load</strategy>
-            <limit>255</limit>
-            <cache-size>1000</cache-size>
+            <page-size>255</page-size>
+            <eager-load-group>*</eager-load-group>
          </read-ahead>
 -->
-<!ELEMENT read-ahead ANY>
+<!ELEMENT read-ahead (strategy, page-size?, eager-load-group?)>
 
 <!--
 Specifies the strategy used to read-ahead data in queries.
@@ -140,22 +123,23 @@ Specifies the strategy used to read-ahead data in queries.
 The strategy element must be one of the two following:
          <strategy>none</strategy>
          <strategy>on-load</strategy>
+         <strategy>on-find</strategy>
 -->
 <!ELEMENT strategy (#PCDATA)>
 
 
 <!--
 Specifies the number of entities that will be read in a single 
-read-ahead load query. This is effectively the page size. 
+read-ahead load query.
 -->
-<!ELEMENT limit (#PCDATA)>
+<!ELEMENT page-size (#PCDATA)>
 
 
 <!--
-Specifies the number of simultaneous queries that can be served by 
+Specifies the number of simultaneous queries that can be tracked by 
 the cache for an entity. 
 -->
-<!ELEMENT cache-size (#PCDATA)>
+<!ELEMENT max-list-cache (#PCDATA)>
 
 
 <!--
@@ -169,9 +153,9 @@ be configured.
 The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, datasource?, type-mapping?, create-table?, 
-         remove-table?, read-only?, time-out?, row-locking?, 
-         pk-constraint?, read-ahead?, table-name?, cmp-field*, 
-         eager-load?, lazy-load-groups*, query*)>
+         remove-table?, read-only?, time-out?, row-locking?, pk-constraint?,
+         read-ahead?, list-cache-max?, table-name?, cmp-field*, load-groups?,
+         eager-load-group?, lazy-load-groups?, query*)>
 
 <!--
 Name of the entity being configured.  This must match an entity declared
@@ -239,23 +223,28 @@ dependent-value-class field type.
 -->
 <!ELEMENT property-name (#PCDATA)>
 
-
 <!--
-Contains the fields that are eager loaded for this entity.
+Contains the named load groups.
 -->
-<!ELEMENT eager-load (field-name*)>
-
-
-<!--
-Contains the groups of lazy load fields.
--->
-<!ELEMENT lazy-load-groups (lazy-load-group+)>
+<!ELEMENT load-groups (load-group+)>
 
 
 <!--
-A group of fields that will be lazy loaded together.
+A named group of fields that will be loaded together.
 -->
-<!ELEMENT lazy-load-group (description, field-name+)>
+<!ELEMENT load-group (load-group-name, description?, field-name+)>
+
+
+<!--
+Contains the name of the load group that will eager loaded for this entity.
+-->
+<!ELEMENT eager-load-group (#PCDATA)>
+
+
+<!--
+Contains the names of the groups that will be lazy loaded together. 
+-->
+<!ELEMENT lazy-load-groups (load-group-name+)>
 
 
 <!--
@@ -267,7 +256,7 @@ Descriptive text.
 <!--
 The query element contains the configuration of a query.
 -->
-<!ELEMENT query (description, query-method, declared-sql?)>
+<!ELEMENT query (description, query-method, declared-sql?, read-ahead?)>
 
 
 <!--
@@ -378,7 +367,8 @@ The ejb-rejationship-role element contains the configuration of an
 ejb-relationship-role.
 -->
 <!ELEMENT ejb-relationship-role (ejb-relationship-role-name,
-         fk-constraint, (foreign-key-fields | table-key-fields))>
+         fk-constraint, (foreign-key-fields | table-key-fields),
+         read-ahead?)>
 
 
 <!--
