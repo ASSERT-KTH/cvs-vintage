@@ -1,0 +1,937 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Administration Use Cases</title>
+  </head>
+
+  
+<body bgcolor="#FFFFFF">
+    
+<h1>Administration Use Cases</h1>
+
+<!-- --------------------------------------------------------------- -->
+
+
+<a name="UC-01"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-23: User Defines Issue Status</td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
+    <td bgcolor=white height=38 valign=top width="86%">None</td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor=white height=35 valign=top width="86%">Allow the DomainAdmin or 
+      ProjectOwner to define the issue status across projects (domain) or within 
+      a specific project</td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor=white height=93 valign=top width="86%"> 
+      <ul>
+        <li>ProjectOwner: 
+        <li>DomainAdmin 
+        <li>Other Users on the Project 
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or withing 
+      the domain<br/>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Prereq:</b></td>
+    <td bgcolor=white height=55 valign=top width="86%"> 
+      <ul>
+        <li>Logged In as DomainAdmin or ProjectOwner 
+        <li>Can be done prior to project creation or after the fact </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Issue Status is defined as per user 
+      input</td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white" align="right" valign="top"><b>Notes/Questions:</b></td>
+    <td bgcolor=white height=73 valign=top width="86%"> 
+      <ul>
+        <li>Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific? 
+        <li>Possible conflicts can occur if this allowed at the project level 
+          (i.e. attempting to export or import databases because of different 
+          nomenclature) 
+        <li>Educating point to DomainAdmin and ProjectOwner in case of different 
+          naming conventions </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white"  colspan="2" valign="top" height="358"><b>Main Success 
+      Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab , then the 
+          Customization tab/link, and finally the Define Issue Status link. 
+        <li>Scarab: take user to the <a 
+              href="DefineIssueStatus.html">DefineIssueStatus</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: has three options: 
+          <ol type=a>
+            <li>If Add: 
+              <ol>
+                <li>User enters name of new state (free text) and clicks Add. 
+                  Goto Step 5 </li>
+              </ol>
+            <li>If Edit: 
+              <ol>
+                <li>Scarab: display a list of predefined Status to change 
+                <li>User: makes changes and clicks Update. Goto Step 5 </li>
+              </ol>
+            <li>If Delete: 
+              <ol>
+                <li>Scarab: display a list of predefined Status to delete 
+                <li>User: selects one or several Status and clicks Delete 
+                <li>Scarab: display confirmation window or message 
+                <li>User: confirms and clicks Delete. </li>
+              </ol>
+            </li>
+          </ol>
+        <li>Scarab: display <a 
+              href="DefineIssueStatus.html">DefineIssueStatus</a> 
+          page with <a 
+              href="IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor="white"  colspan="2" valign="top"><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li> None 
+      </ul>
+    </td>
+  </tr>
+</table>
+<br/><hr><br/>
+<!-- *************************************************************** --> 
+<a name="UC-24"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-24: User Defines Status Transitions</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=38 valign=top 
+            width="14%"><b>Extends:</b></td>
+    <td bgcolor=white height=38 valign=top width="86%">UC-23</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=35 valign=top 
+            width="14%"><b>Purpose:</b></td>
+    <td bgcolor=white height=35 valign=top width="86%">Allow the DomainAdmin or 
+      ProjectOwner to define the status transition model at the global (domain) 
+      or project level</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+            width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=93 valign=top 
+            width="14%"><b>Direct Actors:</b></td>
+    <td bgcolor=white height=93 valign=top width="86%"> 
+      <ul>
+        <li>ProjectOwner: 
+        <li>DomainAdmin 
+        <li>Other Users on the Project 
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+            width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or within 
+      the domain<br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=55 valign=top 
+            width="14%"><b>Prereq:</b></td>
+    <td bgcolor=white height=55 valign=top width="86%"> 
+      <ul>
+        <li>Logged In as DomainAdmin or ProjectOwner 
+        <li>Can be done prior to project creation or after the fact 
+        <li>Statii must already have been defined (UC-23) </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+          width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Status transition model is defined 
+      as per user input.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=73 valign=top 
+            width="14%"><b>Notes/Questions:</b></td>
+    <td bgcolor=white height=73 valign=top width="86%"> 
+      <ul>
+        <li>Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific? 
+        <li>Possible conflicts can occur if this allowed at the project level 
+          (i.e. attempting to export or import databases because of different 
+          nomenclature) 
+        <li>Educating point to DomainAdmin and ProjectOwner in case of different 
+          status transition model naming conventions </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 height=176 valign=top><b>Main Success Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab and then clicks 
+          the Customization tab/link. User would then click on the DefineStateTransition 
+          link 
+        <li>Scarab: take user to the <a 
+              href="http://scarab.tigris.org/usemodels/DefineIssueStatus.html">DefineIssueStatus</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner specifies starting state and allowable 
+          transtions (i.e. New - Open - Assigned) and clicks Update 
+        <li>Scarab: display <a 
+              href="http://scarab.tigris.org/usemodels/DefineIssueStatus.html">DefineIssueStatus</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>
+<!-- *************************************************************** --> 
+<a name="UC-25"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+ <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-25: User Defines Attributes</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=38 valign=top 
+            width="14%"><b>Extends:</b></td>
+    <td bgcolor=white height=38 valign=top width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=35 valign=top 
+            width="14%"><b>Purpose:</b></td>
+    <td bgcolor=white height=35 valign=top width="86%">Allow the DomainAdmin or 
+      ProjectOwner to define or actually create the attributes. User would be 
+      able to either add, edit or delete exisiting attributes.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+            width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=93 valign=top 
+            width="14%"><b>Direct Actors:</b></td>
+    <td bgcolor=white height=93 valign=top width="86%"> 
+      <ul>
+        <li>ProjectOwner: 
+        <li>DomainAdmin 
+        <li>Other Users on the Project 
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+            width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or withing 
+      the domain<br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=55 valign=top 
+            width="14%"><b>Prereq:</b></td>
+    <td bgcolor=white height=55 valign=top width="86%"> 
+      <ul>
+        <li>Logged In as DomainAdmin or ProjectOwner 
+        <li>Can be done prior to project creation or after the fact </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top 
+          width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Attributes are created, changed and/or 
+      deleted.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white height=73 valign=top 
+            width="14%"><b>Notes/Questions:</b></td>
+    <td bgcolor=white height=73 valign=top width="86%"> 
+      <ul>
+        <li>Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific? 
+        <li>Possible conflicts can occur if this allowed at the project level 
+          (i.e. attempting to export or import databases because of different 
+          nomenclature) 
+        <li>Educating point to DomainAdmin and ProjectOwner in case of different 
+          naming conventions 
+        <li>User can only edit or delete previously created fields. Scarab predefined 
+          fields could not be edited or deleted. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 height=368 valign=top><b>Main Success Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab , then the 
+          Customization tab/link, and finally the Attributes link. 
+        <li>Scarab: take user to the <a 
+              href="http://scarab.tigris.org/usemodels/Attributes.html">Attributes</a> 
+          page. 
+        <li>DomainAdmin or ProjectOwner: selects the attribute(s) they want to 
+          add/edit/delete: 
+          <ol type=a>
+            <li>If Add: 
+              <ol>
+                <li>User enters the name of the new attribute(s) 
+                <li>Clicks Add. Go to Step 5 </li>
+              </ol>
+            <li>If Edit: 
+              <ol>
+                <li>User: makes changes to selected attribute(s) 
+                <li>Clicks Update. Go to Step 5 </li>
+              </ol>
+            <li>If Delete: 
+              <ol>
+                <li>User clicks Delete 
+                <li>Scarab: display confirmation window or message 
+                <li>User: confirms and clicks Delete again. </li>
+              </ol>
+            </li>
+          </ol>
+        <li>Scarab: display <a 
+              href="http://scarab.tigris.org/usemodels/Attributes.html">Attributes</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>   
+<!-- *************************************************************** --> 
+<a name="UC-26"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+<td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-26: User Customizes Attribute 
+      Options and Default Values</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top height="38" width="14%"><b>Extends:</b></td>
+    <td bgcolor=white valign=top height="38" width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="35"><b>Purpose:</b></td>
+    <td bgcolor=white valign=top width="86%" height="35"> Allow the DomainAdmin 
+      or ProjectOwner to customize attribute options as well as default option 
+      values. This can be accomplished at a global or project level, respectively. 
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="93"><b>Direct 
+      Actors:</b></td>
+    <td bgcolor=white valign=top width="86%" height="93"> 
+      <ul>
+        <li> ProjectOwner: </li>
+        <li>DomainAdmin </li>
+        <li>Other Users on the Project </li>
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or withing 
+      the domain</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="72"><b>Prereq:</b></td>
+    <td bgcolor=white valign=top width="86%" height="72"> 
+      <ul>
+        <li> Logged In as DomainAdmin or ProjectOwner </li>
+        <li>Can be done prior to project creation or after the fact </li>
+        <li>Attribute needs to exist in order to modify the attribute option</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Attribute options and default values 
+      are defined as per user input</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%">&nbsp; </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="73"><b>Notes/Questions:</b></td>
+    <td bgcolor=white valign=top width="86%" height="73"> 
+      <ul>
+        <li> Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific?</li>
+        <li> Possible conflicts can occur if this allowed at the project level 
+          (i.e. attempting to export or import databases because of different 
+          nomenclature)</li>
+        <li>Educating point to DomainAdmin and ProjectOwner in case of different 
+          naming conventions</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top height="368"><b>Main Success Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab , then the 
+          Customization tab/link, and finally the Attributes link. 
+        <li>Scarab: take user to the <a href="Attributes.html">Attributes</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: selects the field(s) they want to add/edit/delete: 
+          <ol type="a">
+            <li>If Add: 
+              <ol>
+                <li>User enters name of new field value(free text) </li>
+                <li>User also has option to set this new value as the default 
+                  value. </li>
+                <li>Clicks Add. Go to Step 5</li>
+              </ol>
+            </li>
+            <li>If Edit: 
+              <ol>
+                <li>User: makes changes to selected fields</li>
+                <li>User also has option to set this changed valued as the default</li>
+                <li>Clicks Update. Go to Step 5</li>
+              </ol>
+            </li>
+            <li>If Delete: 
+              <ol>
+                <li>User clicks Delete</li>
+                <li>Scarab: display confirmation window or message</li>
+                <li>User: confirms and clicks Delete again. </li>
+              </ol>
+            </li>
+          </ol>
+        <li>Scarab: display <a href="Attributes.html">Attributes</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>
+
+    
+<!-- *************************************************************** --> 
+<a name="UC-27"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-27: User Sets Issue Thresholds</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top height="38" width="14%"><b>Extends:</b></td>
+    <td bgcolor=white valign=top height="38" width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="35"><b>Purpose:</b></td>
+    <td bgcolor=white valign=top width="86%" height="35"> Allow the DomainAdmin 
+      or ProjectOwner to set thresholds at a global and/or project level. Overall 
+      goal is to create urgency and allow stricter follow up on defined inactivity.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="93"><b>Direct 
+      Actors:</b></td>
+    <td bgcolor=white valign=top width="86%" height="93"> 
+      <ul>
+        <li> ProjectOwner: </li>
+        <li>DomainAdmin </li>
+        <li>Other Users on the Project </li>
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or withing 
+      the domain<br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="68"><b>Prereq:</b></td>
+    <td bgcolor=white valign=top width="86%" height="68"> 
+      <ul>
+        <li> Logged In as DomainAdmin or ProjectOwner </li>
+        <li>Can be done prior to project creation or after the fact </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Thresholds are set so that defined 
+      inactivity results in an email notification.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="59"><b>Notes/Questions:</b></td>
+    <td bgcolor=white valign=top width="86%" height="59"> 
+      <ul>
+        <li> Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific?</li>
+        <li>Thresholds should be defined at the time a project is created. However, 
+          can be modified within Scarab.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top height="231"><b>Main Success Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab , then the 
+          Customization tab/link, and finally the ProjectEdit link. 
+        <li>Scarab: take user to the <a href="ProjectEdit.html">ProjectEdit</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: selects the Threshold field on the page 
+          and sets the activity and follow up thresholds and clicks Submit. 
+          <ol type="a">
+            <li>Examples: 
+              <ol>
+                <li>If no action in &quot;x&quot; days, the assigned user receives 
+                  an email notification </li>
+                <li>Other thresholds TBD</li>
+              </ol>
+            </li>
+          </ol>
+        <li>Scarab: display <a href="ProjectEdit.html">ProjectEdit</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>
+<!-- *************************************************************** --> 
+<a name="UC-28"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-28: User Customizes Email Notifications 
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top height="38" width="14%"><b>Extends:</b></td>
+    <td bgcolor=white valign=top height="38" width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="35"><b>Purpose:</b></td>
+    <td bgcolor=white valign=top width="86%" height="35"> Allow the DomainAdmin 
+      or ProjectOwner to customize email notification fields so that all future 
+      email notifcations contain the defined fields.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="93"><b>Direct 
+      Actors:</b></td>
+    <td bgcolor=white valign=top width="86%" height="93"> 
+      <ul>
+        <li> ProjectOwner: </li>
+        <li>DomainAdmin </li>
+        <li>Other Users on the Project </li>
+        <li>Scarab: The scarab system. </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">All users on the project and/or withing 
+      the domain<br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="68"><b>Prereq:</b></td>
+    <td bgcolor=white valign=top width="86%" height="68"> 
+      <ul>
+        <li> Logged In as DomainAdmin or ProjectOwner </li>
+        <li>Can be done prior to project creation or after the fact </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Email notifications contain field 
+      information defined by the user. Gives user the level of detail they would 
+      like to see on all project-related email notifications</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="59"><b>Notes/Questions:</b></td>
+    <td bgcolor=white valign=top width="86%" height="59"> 
+      <ul>
+        <li> Should this be only at a domain level or does it make sense to have 
+          the ability to make this project specific?</li>
+        <li>Email notifications should be defined at the time a project is created. 
+          However, can be modified within Scarab.</li>
+        <li>Perhaps Email notifications should be a seperate page from ProjectEdit 
+          (link) as the fields can become lengthy</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top height="236"><b>Main Success Scenario:</b> 
+      <ol>
+        <li>DomainAdmin or ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: clicks on the Options tab , then the 
+          ProjectEdit link. 
+        <li>Scarab: take user to the <a href="ProjectEdit.html">ProjectEdit</a> 
+          page 
+        <li>DomainAdmin or ProjectOwner: navigates to the Email Notifications 
+          section on the page and selects the fields they want included on all 
+          project related email notifications 
+          <ol type="a">
+            <li>Has options to select all fields or choose from a variety of Quick, 
+              Advanced and/or any previously created attributes</li>
+            <li>Clicks Submit </li>
+          </ol>
+        <li>Scarab: display <a href="ProjectEdit.html">ProjectEdit</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+        </li>
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>
+<!-- *************************************************************** --> 
+<a name="UC-29"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-29: User Imports an XML File (Database) 
+      into a Project</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top height="59" width="14%"><b>Extends:</b></td>
+    <td bgcolor=white valign=top height="59" width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="35"><b>Purpose:</b></td>
+    <td bgcolor=white valign=top width="86%" height="35"> Allows user to import 
+      an XML file (database) into a project. The user can easily transfer an issue 
+      database across projects in an XML format.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Direct Actors:</b></td>
+    <td bgcolor=white valign=top width="86%"> CompOwner: Component Owner (High 
+      Priority, High Frequency)<br/>
+      Other Users on the Project <br/>
+      Scarab: The scarab system. </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">CompOwner: <br/>
+      Other project members: The ability to view/download the attached file(s)</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Prereq:</b></td>
+    <td bgcolor=white valign=top width="86%"> Logged In<br/>
+      Project set up<br/>
+      User has access to the project <br/>
+      User has the necessary DTD </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Issue database are imported to selected 
+      projects</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="110"><b>Notes/Questions:</b></td>
+    <td bgcolor=white valign=top width="86%" height="110"> 
+      <ul>
+        <li> Does the user have access to the project?</li>
+        <li> Should Scarab allow a partial transfer in cases of bad data? Should 
+          it be all or nothing?</li>
+        <li> Should Scarab check for incremental updates or just allow the transfer 
+          of the db without checking?</li>
+        <li> No anonymous users can import XML files to an issue</li>
+        <li> At what point do users have to log in? </li>
+        <li> Make sure user has the DTD. </li>
+        <li>Project Owner or Domain Admin role permission only?</li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Main Success Scenario:</b> 
+      <ol>
+        <li>ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>ProjectOwner: clicks on the Options tab and clicks the Import link 
+        <li>Scarab: display a window which allows the user to either enter the 
+          path/name of the XML file or to browse their local environment to select 
+          the XML file(s) they want to atach (Note: Browsing allows the ability 
+          to select several files at once) 
+        <li>ProjectOwner: enters the name or selects the file(s) from their local 
+          environment. 
+        <li>ProjectOwner: provides a brief description of the file(s) and clicks 
+          Import 
+        <li>Scarab: checks format vs DTD 
+        <li>Scarab: writes good data (see notes/questions on all or partial) to 
+          database 
+        <li>Scarab: creates a log file with data summary and/or error summary 
+        <li>Scarab: display <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br/><hr><br/>
+<!-- *************************************************************** --> <a name="UC-30"></a> 
+<table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
+  <tbody> 
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Name:</b></td>
+    <td bgcolor=white valign=top width="86%">UC-30: User Exports an XML File (Database) 
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top height="59" width="14%"><b>Extends:</b></td>
+    <td bgcolor=white valign=top height="59" width="86%">None</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="35"><b>Purpose:</b></td>
+    <td bgcolor=white valign=top width="86%" height="35"> Allow user to export 
+      an XML file (database) from a project. User should be able to export an 
+      entire database or via a query export only a portion of a database.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Feature(s):</b></td>
+    <td bgcolor=white valign=top width="86%"><a 
+            href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Direct Actors:</b></td>
+    <td bgcolor=white valign=top width="86%"> CompOwner: Component Owner (High 
+      Priority, High Frequency)<br/>
+      Other Users on the Project <br/>
+      Scarab: The scarab system. </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Stakeholders:</b></td>
+    <td bgcolor=white valign=top width="86%">CompOwner: <br/>
+      Other project members: The ability to view the exported file </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Prereq:</b></td>
+    <td bgcolor=white valign=top width="86%"> Logged In<br/>
+      Project set up<br/>
+      User has access to the project <br/>
+      User has the necessary DTD </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Results:</b></td>
+    <td bgcolor=white valign=top width="86%">Issues (database) are exported from 
+      a project.</td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%"><b>Data sets:</b></td>
+    <td bgcolor=white valign=top width="86%"><br/>
+    </td>
+  </tr>
+  <tr> 
+    <td align=right bgcolor=white valign=top width="14%" height="110"><b>Notes/Questions:</b></td>
+    <td bgcolor=white valign=top width="86%" height="110"> 
+      <ul>
+        <li> Does the user have access to the project?</li>
+        <li> Should Scarab allow a partial transfer in cases of bad data? Should 
+          it be all or nothing?</li>
+        <li> Should Scarab check for incremental updates or just allow the transfer 
+          of the db without checking?</li>
+        <li> No anonymous users can export XML files </li>
+        <li> At what point do users have to log in? </li>
+        <li> Make sure user has the DTD. </li>
+        <li>Project Owner or Domain Admin role permission only?</li>
+        <li>Need some kind of content explaining that the user needs to build 
+          a query in order to export -perhaps on the <a href="SearchAdvanced.html">SearchAdvanced</a> 
+          page </li>
+      </ul>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Main Success Scenario:</b> 
+      <ol>
+        <li>ProjectOwner: navigates to <a 
+              href="http://scarab.tigris.org/usemodels/ProjectIssues.html">ProjectIssues</a> 
+          page 
+        <li>ProjectOwner: clicks on the Options tab and then clicks the Export 
+          link. 
+        <li>Scarab: take user to the <a href="SearchAdvanced.html">SearchAdvanced</a> 
+          page 
+        <li>ProjectOwner: selects search parameters and clicks Export 
+        <li>Scarab: prompts user to name the file (query) 
+        <li>ProjectOwner: creates the filename and saves the file 
+        <li>Scarab: queries the database and writes out to an XML file 
+        <li>Scarab: creates a log file with data summary and/or error summary 
+        <li>Scarab: display <a href="ProjectIssues.html">ProjectIssues</a> 
+          page with <a 
+              href="http://scarab.tigris.org/usemodels/IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+      </ol>
+    </td>
+  </tr>
+  <tr> 
+    <td bgcolor=white colspan=2 valign=top><b>Alternative Scenario Extensions:</b> 
+      <ul>
+        <li>None </li>
+      </ul>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
