@@ -25,7 +25,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.29 2003/01/29 22:21:57 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.30 2003/04/06 11:49:54 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -39,9 +39,6 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 public class PropPanelAttribute extends PropPanelStructuralFeature {
 

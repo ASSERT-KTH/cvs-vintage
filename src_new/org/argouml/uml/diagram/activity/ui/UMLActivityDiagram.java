@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.22 2003/03/01 19:58:06 bobtarling Exp $
+// $Id: UMLActivityDiagram.java,v 1.23 2003/04/06 11:49:53 kataka Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -45,7 +45,7 @@ import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
-import org.tigris.gef.ui.ToolBar;
+
 import ru.novosoft.uml.behavior.activity_graphs.MActionState;
 import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
 import ru.novosoft.uml.behavior.state_machines.MFinalState;

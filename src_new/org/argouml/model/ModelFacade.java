@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.36 2003/04/06 10:52:15 kataka Exp $
+// $Id: ModelFacade.java,v 1.37 2003/04/06 11:49:53 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -880,6 +880,23 @@ public class ModelFacade {
     public static Collection getMessages(Object handle) {
         if (isAInteraction(handle)) {
             return ((MInteraction)handle).getMessages();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+    
+    /**
+     * Returns the container for the given modelelement. The container is the
+     * owner of the modelelement. It will be null for elements that don't have
+     * an owner. All elements except for the root element in a project should
+     * have an owner. The root element is allways a model.
+     * <p> In  the future, this function could return the container of Figs too.
+     * </p>
+     * @param handle
+     * @return Object
+     */
+    public static Object getContainer(Object handle) {
+        if (handle instanceof MBase) {
+            return ((MBase) handle).getModelElementContainer();
         }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }

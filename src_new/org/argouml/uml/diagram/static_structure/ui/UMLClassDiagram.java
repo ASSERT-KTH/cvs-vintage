@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.27 2003/04/01 14:09:56 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.28 2003/04/06 11:49:54 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -40,6 +40,7 @@ import java.awt.GridLayout;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.swingext.PopupToolBoxButton;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.LookAndFeelMgr;
@@ -119,7 +120,12 @@ public class UMLClassDiagram extends UMLDiagram {
         this(getNewDiagramName(), m);
     }
 
-    public void setNamespace(MNamespace m) {
+    public void setNamespace(Object handle) {
+        if (!ModelFacade.isANamespace(handle)) {
+          cat.error("Illegal argument. Object " + handle + " is not a namespace");
+          throw new IllegalArgumentException("Illegal argument. Object " + handle + " is not a namespace");
+        }
+        MNamespace m = (MNamespace)handle;
         super.setNamespace(m);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
         gm.setNamespace(m);
