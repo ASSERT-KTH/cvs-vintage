@@ -171,7 +171,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	
 	// Implement the spec that "no changes in response, only write"
 	// can also be done by setting the response to 0.9 mode ( as Apache does!)
-	IncludedResponse iResponse = new IncludedResponse(realResponse);
+	//	IncludedResponse iResponse = new IncludedResponse(realResponse);
 
 	// Here the spec is very special, pay attention
 
@@ -251,7 +251,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	subRequest.getWrapper().handleRequest(realRequest.getFacade() , iResponse);
+	subRequest.getWrapper().handleRequest(realRequest.getFacade() , (HttpServletResponseFacade)response);
 
 	// After request, we want to restore the include attributes - for
 	// chained includes.

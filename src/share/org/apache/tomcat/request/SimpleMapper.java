@@ -110,9 +110,6 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	// final fix on response & request
 	//		rresponse.setServerHeader(server.getServerHeader());
 	String ctxPath = ctx.getPath();
-	String pathInfo =path.substring(ctxPath.length(),
-					    path.length());
-
 	String lookupPath=rrequest.getLookupPath();
 
 	// do not set it if it is already set or we have no

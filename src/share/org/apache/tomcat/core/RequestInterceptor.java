@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.4 2000/02/03 07:11:52 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/03 07:11:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.5 2000/02/03 23:41:29 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/03 23:41:29 $
  *
  * ====================================================================
  *
@@ -81,7 +81,8 @@ public interface RequestInterceptor {
 
 
     
-    /** Will detect the context path for a request
+    /** Will detect the context path for a request.
+     *  It need to set: context, contextPath, lookupPath
      */
     public int contextMap(Request request);
 
