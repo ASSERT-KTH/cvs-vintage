@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.1 2004/04/19 05:56:46 linus Exp $
+// $Id: ModelEventPump.java,v 1.2 2004/08/08 11:50:00 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: NotationComboBox.java,v 1.7 2003/11/10 12:14:19 jhraigniac Exp $
+// $Id: NotationComboBox.java,v 1.8 2004/08/08 11:46:32 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,17 +42,23 @@ public class NotationComboBox
     implements ArgoNotationEventListener {
 
     /** logger */
-    private static Logger cat = Logger.getLogger(NotationComboBox.class);
+    private static final Logger LOG = Logger.getLogger(NotationComboBox.class);
 
-    private static NotationComboBox SINGLETON = null;
+    private static NotationComboBox singleton = null;
 
+    /**
+     * @return the singleton
+     */
     public static NotationComboBox getInstance() {
         // Only instantiate when we need it.
-        if (SINGLETON == null)
-            SINGLETON = new NotationComboBox();
-        return SINGLETON;
+        if (singleton == null)
+            singleton = new NotationComboBox();
+        return singleton;
     }
 
+    /**
+     * The constructor.
+     */
     public NotationComboBox() {
         super();
         setEditable(false);
@@ -66,22 +72,42 @@ public class NotationComboBox
         refresh();
     }
 
+    /**
+     * @see org.argouml.application.events.ArgoNotationEventListener#notationChanged(org.argouml.application.events.ArgoNotationEvent)
+     */
     public void notationChanged(ArgoNotationEvent event) {
-        //Notation.cat.debug("NotationComboBox.notationChanged(" + event + ")");
-        //cat.info("NotationComboBox.notationChanged(" + event + ")");
+        //Notation.LOG.debug("NotationComboBox.notationChanged(" + event + ")");
+        //LOG.info("NotationComboBox.notationChanged(" + event + ")");
         refresh();
     }
+    /**
+     * @see org.argouml.application.events.ArgoNotationEventListener#notationAdded(org.argouml.application.events.ArgoNotationEvent)
+     */
     public void notationAdded(ArgoNotationEvent event) {
-        //cat.info("NotationComboBox.notationAdded(" + event + ")");
+        //LOG.info("NotationComboBox.notationAdded(" + event + ")");
         refresh();
     }
+    /**
+     * @see org.argouml.application.events.ArgoNotationEventListener#notationRemoved(org.argouml.application.events.ArgoNotationEvent)
+     */
     public void notationRemoved(ArgoNotationEvent event) {
     }
+    
+    /**
+     * @see org.argouml.application.events.ArgoNotationEventListener#notationProviderAdded(org.argouml.application.events.ArgoNotationEvent)
+     */
     public void notationProviderAdded(ArgoNotationEvent event) {
     }
+    
+    /**
+     * @see org.argouml.application.events.ArgoNotationEventListener#notationProviderRemoved(org.argouml.application.events.ArgoNotationEvent)
+     */
     public void notationProviderRemoved(ArgoNotationEvent event) {
     }
 
+    /**
+     * Refresh the combobox contents. 
+     */
     public void refresh() {
         if (Configuration.getBoolean(Notation.KEY_UML_NOTATION_ONLY, false)) {
             setVisible(false);
@@ -94,7 +120,7 @@ public class NotationComboBox
                     NotationName nn = (NotationName) iterator.next();
                     addItem(nn);
                 } catch (Exception e) {
-                    cat.error("Unexpected exception", e);
+                    LOG.error("Unexpected exception", e);
                 }
             }
             setVisible(true);

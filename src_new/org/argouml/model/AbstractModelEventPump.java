@@ -1,4 +1,4 @@
-// $Id: AbstractModelEventPump.java,v 1.1 2004/04/19 05:56:46 linus Exp $
+// $Id: AbstractModelEventPump.java,v 1.2 2004/08/08 11:50:00 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ abstract class AbstractModelEventPump implements ModelEventPump {
             Object modelelement, String eventName) {
         addModelEventListener(listener, 
                 	      modelelement, 
-                	      new String[] { eventName });
+                	      new String[] {eventName });
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class AbstractModelEventPump implements ModelEventPump {
             				 String eventName) {
         removeModelEventListener(listener, 
                 		 modelelement, 
-                		 new String[] { eventName, });
+                		 new String[] {eventName, });
     }
 
     /**
@@ -115,7 +115,7 @@ abstract class AbstractModelEventPump implements ModelEventPump {
             				   String eventName) {
         addClassModelEventListener(listener, 
                 		   modelClass, 
-                		   new String[] { eventName, });
+                		   new String[] {eventName, });
     }
 
     /**
@@ -138,7 +138,7 @@ abstract class AbstractModelEventPump implements ModelEventPump {
             				      String eventName) {
         removeClassModelEventListener(listener, 
                 		      modelClass, 
-                		      new String[] { eventName, });
+                		      new String[] {eventName, });
 
     }
 }

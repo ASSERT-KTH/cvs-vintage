@@ -1,4 +1,4 @@
-// $Id: UmlModelEntity.java,v 1.5 2004/06/03 17:10:29 mvw Exp $
+// $Id: UmlModelEntity.java,v 1.6 2004/08/08 11:50:00 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,8 @@ package org.argouml.model;
  */
 public class UmlModelEntity extends AbstractModelEntity {
 
-    private boolean _availableInFacade;
-    private boolean _creatable;
+    private boolean availableInFacade;
+    private boolean creatable;
 
     /**
      * @param string the entity name
@@ -53,8 +53,8 @@ public class UmlModelEntity extends AbstractModelEntity {
                           boolean isCreatable,
                           boolean isFacade) {
         super(string);
-        _availableInFacade = isFacade;
-        _creatable = isCreatable;
+        availableInFacade = isFacade;
+        creatable = isCreatable;
     }
 
     /**
@@ -64,8 +64,8 @@ public class UmlModelEntity extends AbstractModelEntity {
     public UmlModelEntity(String string,
                           boolean isCreatable) {
         super(string);
-        _availableInFacade = true;
-        _creatable = isCreatable;
+        availableInFacade = true;
+        creatable = isCreatable;
     }
 
     /**
@@ -73,14 +73,14 @@ public class UmlModelEntity extends AbstractModelEntity {
      * @deprecated facade is to be removed
      */
     public boolean isAvailableInFacade() {
-        return _availableInFacade;
+        return availableInFacade;
     }
 
     /**
      * @return true if UmlFactory.create() can create
      */
     public boolean isCreatable() {
-        return _creatable;
+        return creatable;
     }
 
 }
