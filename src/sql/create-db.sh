@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.5 2002/03/13 20:24:34 dlr Exp $
+# $Id: create-db.sh,v 1.6 2002/03/14 00:51:23 dlr Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -88,9 +88,9 @@ if [ "$usage" ] ; then
     echo "Options:"
     echo "  -n, --name=DBNAME          Database name          (${name})"
     echo "  -h, --host=HOSTNAME        Database server host   (localhost)"
-    echo "  -p, --port=PORT            Database server port   (3306 M | 5432 P)"
+    echo "  -P, --port=PORT            Database server port   (3306 M | 5432 P)"
     echo "  -u, --username=USERNAME    Username to connect as (${username})"
-    echo "  -W, --password             Prompt for password"
+    echo "  -p, --password             Prompt for password"
     echo "  -l, --loadorder=FILE       SQL file load order    (LoadOrder.lst)"
     echo "  -s, --scripts=DIR          SQL file directory"
     echo "                               (${POPULATION_SCRIPT_DIR})"
