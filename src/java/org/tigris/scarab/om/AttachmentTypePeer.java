@@ -28,5 +28,8 @@ import org.tigris.scarab.om.map.*;
 public class AttachmentTypePeer 
     extends org.tigris.scarab.om.BaseAttachmentTypePeer
 {
+     protected static final String ATTACHMENT_TYPE_NAME = "ATTACHMENT";
+     protected static final String COMMENT_TYPE_NAME = "COMMENT";
+     protected static final String URL_TYPE_NAME = "URL";
 }
 
