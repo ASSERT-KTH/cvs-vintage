@@ -609,10 +609,10 @@ follows:
 <!--
 Unknown primary key configuration
 -->
-<!ELEMENT unknown-pk ( key-factory, read-only?, read-time-out?, 
+<!ELEMENT unknown-pk ( key-generator-factory, read-only?, read-time-out?, 
    column-name?, (jdbc-type, sql-type)? )>
 
 <!--
 The name of the key factory.
 -->
-<!ELEMENT key-factory (#PCDATA)>
+<!ELEMENT key-generator-factory (#PCDATA)>
