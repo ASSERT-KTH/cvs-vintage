@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  *
  * <p><b>Revisions:</b>
  *
@@ -69,8 +69,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    private final boolean indexed;
    protected final int jdbcContextIndex;
    protected final int tableIndex;
-   protected final CMPFieldStateFactory stateFactory;
-   protected final boolean checkDirtyAfterGet;
+   protected CMPFieldStateFactory stateFactory;
+   protected boolean checkDirtyAfterGet;
 
    protected byte defaultFlags = 0;
 
@@ -106,7 +106,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          tableIndex = -1;
 
       stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(fieldType);
-      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(fieldType);
+      checkDirtyAfterGet = !JDBCTypeFactory.isDefaultImmutable(fieldType);
 
       this.log = createLogger(manager, fieldName);
    }
@@ -135,7 +135,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       this.jdbcContextIndex = jdbcContextIndex;
       this.tableIndex = tableIndex;
       stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(fieldType);
-      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(fieldType);
+      checkDirtyAfterGet = !JDBCTypeFactory.isDefaultImmutable(fieldType);
       this.log = createLogger(manager, fieldName);
    }
 
@@ -201,6 +201,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       if(ctx.isValid())
       {
          lockingStrategy.accessed(this, ctx);
+         if(checkDirtyAfterGet)
+         {
+            setDirtyAfterGet(ctx);
+         }
       }
       return value;
    }
@@ -305,13 +309,13 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          if(fieldType == boolean.class)
             value = Boolean.FALSE;
          else if(fieldType == byte.class)
-            value = new Byte((byte) 0);
+            value = new Byte((byte)0);
          else if(fieldType == int.class)
             value = new Integer(0);
          else if(fieldType == long.class)
             value = new Long(0L);
          else if(fieldType == short.class)
-            value = new Short((short) 0);
+            value = new Short((short)0);
          else if(fieldType == char.class)
             value = new Character('\u0000');
          else if(fieldType == double.class)
@@ -455,6 +459,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
    {
       this.lockingStrategy = lockingStrategy;
    }
+
+   protected abstract void setDirtyAfterGet(EntityEnterpriseContext ctx);
 
    private Logger createLogger(JDBCStoreManager manager, String fieldName)
    {

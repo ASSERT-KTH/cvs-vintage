@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -164,15 +164,20 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
    {
       if(isReadTimedOut(ctx))
       {
-         JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
+         JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
          jdbcCtx.setFieldState(jdbcContextIndex, new FieldState(jdbcCtx));
       }
    }
 
+   protected void setDirtyAfterGet(EntityEnterpriseContext ctx)
+   {
+      getFieldState(ctx).setDirtyAfterGet();
+   }
+
    private FieldState getFieldState(EntityEnterpriseContext ctx)
    {
-      JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
-      FieldState fieldState = (FieldState) jdbcCtx.getFieldState(jdbcContextIndex);
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      FieldState fieldState = (FieldState)jdbcCtx.getFieldState(jdbcContextIndex);
       if(fieldState == null)
       {
          fieldState = new FieldState(jdbcCtx);
@@ -200,6 +205,11 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
       public void setLoaded()
       {
          entityState.setLoaded(tableIndex);
+      }
+
+      public void setDirtyAfterGet()
+      {
+         entityState.setCheckDirty(tableIndex);
       }
    }
 }

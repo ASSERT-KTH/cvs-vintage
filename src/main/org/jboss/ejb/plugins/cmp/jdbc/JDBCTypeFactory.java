@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public final class JDBCTypeFactory
 {
@@ -46,7 +46,7 @@ public final class JDBCTypeFactory
    /**
     * This implementation uses field's value as its state.
     */
-   private static final CMPFieldStateFactory SIMPLE = new CMPFieldStateFactory()
+   public static final CMPFieldStateFactory EQUALS = new CMPFieldStateFactory()
    {
       public Object getFieldState(Object fieldValue)
       {
@@ -60,6 +60,23 @@ public final class JDBCTypeFactory
    };
 
    /**
+    * This implementation will always suppose that the state is invalid unless
+    * both states are null.
+    */
+   private static final CMPFieldStateFactory INVALID_UNLESS_NULL = new CMPFieldStateFactory()
+   {
+      public Object getFieldState(Object fieldValue)
+      {
+         return fieldValue;
+      }
+
+      public boolean isStateValid(Object state, Object fieldValue)
+      {
+         return state == null ? fieldValue == null : false;
+      }
+   };
+
+   /**
     * Field state factory for java.util.Map implementations. The state is
     * a deep copy of the value.
     */
@@ -67,7 +84,7 @@ public final class JDBCTypeFactory
    {
       public Object getFieldState(Object fieldValue)
       {
-         return fieldValue == null ? null : new HashMap((Map) fieldValue);
+         return fieldValue == null ? null : new HashMap((Map)fieldValue);
       }
 
       public boolean isStateValid(Object state, Object fieldValue)
@@ -84,7 +101,7 @@ public final class JDBCTypeFactory
    {
       public Object getFieldState(Object fieldValue)
       {
-         return fieldValue == null ? null : new ArrayList((List) fieldValue);
+         return fieldValue == null ? null : new ArrayList((List)fieldValue);
       }
 
       public boolean isStateValid(Object state, Object fieldValue)
@@ -101,7 +118,7 @@ public final class JDBCTypeFactory
    {
       public Object getFieldState(Object fieldValue)
       {
-         return fieldValue == null ? null : new HashSet((Set) fieldValue);
+         return fieldValue == null ? null : new HashSet((Set)fieldValue);
       }
 
       public boolean isStateValid(Object state, Object fieldValue)
@@ -190,16 +207,20 @@ public final class JDBCTypeFactory
       {
          stateFactory = ARRAY;
       }
+      else if(isDefaultImmutable(clazz))
+      {
+         stateFactory = EQUALS;
+      }
       else
       {
-         stateFactory = SIMPLE;
+         stateFactory = INVALID_UNLESS_NULL;
       }
       return stateFactory;
    }
 
-   public static final boolean checkDirtyAfterGet(Class clazz)
+   public static final boolean isDefaultImmutable(Class clazz)
    {
-      boolean result = true;
+      boolean result = false;
       if(clazz.isPrimitive()
          || clazz == Boolean.class
          || clazz == Byte.class
@@ -212,7 +233,7 @@ public final class JDBCTypeFactory
          || clazz == String.class
       )
       {
-         result = false;
+         result = true;
       }
       return result;
    }
@@ -240,7 +261,7 @@ public final class JDBCTypeFactory
       HashMap valueClassesByType = new HashMap();
       for(Iterator i = valueClasses.iterator(); i.hasNext();)
       {
-         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData) i.next();
+         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
          valueClassesByType.put(valueClass.getJavaType(), valueClass);
       }
 
@@ -248,7 +269,7 @@ public final class JDBCTypeFactory
       // convert the value class meta data to a jdbc complex type
       for(Iterator i = valueClasses.iterator(); i.hasNext();)
       {
-         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData) i.next();
+         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
          JDBCTypeComplex type =
             createTypeComplex(valueClass, valueClassesByType);
          complexTypes.put(valueClass.getJavaType(), type);
@@ -259,7 +280,7 @@ public final class JDBCTypeFactory
    {
       if(complexTypes.containsKey(javaType))
       {
-         return (JDBCTypeComplex) complexTypes.get(javaType);
+         return (JDBCTypeComplex)complexTypes.get(javaType);
       }
       else
       {
@@ -309,7 +330,7 @@ public final class JDBCTypeFactory
       // transform properties into an array
       JDBCTypeComplexProperty[] properties =
          new JDBCTypeComplexProperty[propertyList.size()];
-      properties = (JDBCTypeComplexProperty[]) propertyList.toArray(properties);
+      properties = (JDBCTypeComplexProperty[])propertyList.toArray(properties);
 
       return new JDBCTypeComplex(properties, valueClass.getJavaType());
    }
@@ -337,7 +358,7 @@ public final class JDBCTypeFactory
 
       Mapper mapper = null;
       JDBCUserTypeMappingMetaData userTypeMapping =
-         (JDBCUserTypeMappingMetaData) userTypeMappings.get(javaType.getName());
+         (JDBCUserTypeMappingMetaData)userTypeMappings.get(javaType.getName());
       if(userTypeMapping != null)
       {
          String mappedTypeStr = userTypeMapping.getMappedType();
@@ -345,7 +366,7 @@ public final class JDBCTypeFactory
          {
             final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             Class mapperClass = contextClassLoader.loadClass(userTypeMapping.getMapper());
-            mapper = (Mapper) mapperClass.newInstance();
+            mapper = (Mapper)mapperClass.newInstance();
             javaType = contextClassLoader.loadClass(mappedTypeStr);
             if(cmpField.getSQLType() == null)
             {
@@ -377,7 +398,7 @@ public final class JDBCTypeFactory
    {
       // get the default properties for a field of its type
       JDBCTypeComplex type =
-         (JDBCTypeComplex) complexTypes.get(cmpField.getFieldType());
+         (JDBCTypeComplex)complexTypes.get(cmpField.getFieldType());
       JDBCTypeComplexProperty[] defaultProperties = type.getProperties();
 
       // create a map of the overrides based on flat property name
@@ -386,7 +407,7 @@ public final class JDBCTypeFactory
       for(int i = 0; i < cmpField.getPropertyOverrides().size(); ++i)
       {
          JDBCCMPFieldPropertyMetaData p =
-            (JDBCCMPFieldPropertyMetaData) cmpField.getPropertyOverrides().get(i);
+            (JDBCCMPFieldPropertyMetaData)cmpField.getPropertyOverrides().get(i);
          overrides.put(p.getPropertyName(), p);
       }
 
@@ -400,7 +421,7 @@ public final class JDBCTypeFactory
 
          // pop off the override, if present
          JDBCCMPFieldPropertyMetaData override;
-         override = (JDBCCMPFieldPropertyMetaData) overrides.remove(
+         override = (JDBCCMPFieldPropertyMetaData)overrides.remove(
             defaultProperties[i].getPropertyName());
 
          if(override == null)
@@ -453,7 +474,7 @@ public final class JDBCTypeFactory
       // did we find all overriden properties
       if(overrides.size() > 0)
       {
-         String propertyName = (String) overrides.keySet().iterator().next();
+         String propertyName = (String)overrides.keySet().iterator().next();
          throw new EJBException("Property " + propertyName + " in field " +
             cmpField.getFieldName() + " is not a property of value object " +
             cmpField.getFieldType().getName());
@@ -476,7 +497,7 @@ public final class JDBCTypeFactory
       for(int i = 0; i < valueClassProperties.size(); ++i)
       {
          JDBCValuePropertyMetaData propertyMetaData =
-            (JDBCValuePropertyMetaData) valueClassProperties.get(i);
+            (JDBCValuePropertyMetaData)valueClassProperties.get(i);
          properties.addAll(createComplexProperties(propertyMetaData,
             valueClassesByType, propertyStack));
       }
@@ -537,7 +558,7 @@ public final class JDBCTypeFactory
 
          // this property is a value object, recurse
          JDBCValueClassMetaData valueClass =
-            (JDBCValueClassMetaData) valueClassesByType.get(javaType);
+            (JDBCValueClassMetaData)valueClassesByType.get(javaType);
          properties.addAll(createComplexProperties(
             valueClass,
             valueClassesByType,
@@ -601,7 +622,7 @@ public final class JDBCTypeFactory
             {
                buf.append(".");
             }
-            buf.append((String) propertyNames.get(i));
+            buf.append((String)propertyNames.get(i));
          }
          return buf.toString();
       }
@@ -615,7 +636,7 @@ public final class JDBCTypeFactory
             {
                buf.append("_");
             }
-            buf.append((String) columnNames.get(i));
+            buf.append((String)columnNames.get(i));
          }
          return buf.toString();
       }
@@ -624,7 +645,7 @@ public final class JDBCTypeFactory
       {
          for(int i = 0; i < notNulls.size(); i++)
          {
-            if(((Boolean) notNulls.get(i)).booleanValue())
+            if(((Boolean)notNulls.get(i)).booleanValue())
             {
                return true;
             }
@@ -634,12 +655,12 @@ public final class JDBCTypeFactory
 
       public final Method[] getGetters()
       {
-         return (Method[]) getters.toArray(new Method[getters.size()]);
+         return (Method[])getters.toArray(new Method[getters.size()]);
       }
 
       public final Method[] getSetters()
       {
-         return (Method[]) setters.toArray(new Method[setters.size()]);
+         return (Method[])setters.toArray(new Method[setters.size()]);
       }
    }
 }

@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.deployment.DeploymentException;
 
@@ -23,12 +24,16 @@ public class JDBCCMP2xUpdatedTimeFieldBridge extends JDBCCMP2xAutoUpdatedFieldBr
       throws DeploymentException
    {
       super(manager, metadata);
+      checkDirtyAfterGet = false;
+      stateFactory = JDBCTypeFactory.EQUALS;
    }
 
    public JDBCCMP2xUpdatedTimeFieldBridge(JDBCCMP2xFieldBridge cmpField)
       throws DeploymentException
    {
       super(cmpField);
+      checkDirtyAfterGet = false;
+      stateFactory = JDBCTypeFactory.EQUALS;
    }
 
    public void setFirstVersion(EntityEnterpriseContext ctx)

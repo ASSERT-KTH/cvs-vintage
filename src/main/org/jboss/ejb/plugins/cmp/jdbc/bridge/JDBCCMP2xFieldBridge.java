@@ -18,6 +18,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
+import org.jboss.ejb.plugins.cmp.jdbc.CMPFieldStateFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 /**
@@ -34,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -56,6 +57,39 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       super(manager, metadata);
       cmpFieldIAmMappedTo = null;
       columnName = metadata.getColumnName();
+   }
+
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager,
+                               JDBCCMPFieldMetaData metadata,
+                               CMPFieldStateFactory stateFactory,
+                               boolean checkDirtyAfterGet)
+      throws DeploymentException
+   {
+      this(manager, metadata);
+      this.stateFactory = stateFactory;
+      this.checkDirtyAfterGet = checkDirtyAfterGet;
+   }
+
+   public JDBCCMP2xFieldBridge(JDBCCMP2xFieldBridge cmpField,
+                               CMPFieldStateFactory stateFactory,
+                               boolean checkDirtyAfterGet)
+      throws DeploymentException
+   {
+      this(
+         cmpField.getManager(),
+         cmpField.getFieldName(),
+         cmpField.getFieldType(),
+         cmpField.getJDBCType(),
+         cmpField.isReadOnly(),               // should always be false?
+         cmpField.getReadTimeOut(),
+         cmpField.getPrimaryKeyClass(),
+         cmpField.getPrimaryKeyField(),
+         cmpField,
+         null,                                // it should not be a foreign key
+         cmpField.getColumnName()
+      );
+      this.stateFactory = stateFactory;
+      this.checkDirtyAfterGet = checkDirtyAfterGet;
    }
 
    /**
@@ -250,6 +284,11 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       getFieldState(ctx).updateState(value);
    }
 
+   protected void setDirtyAfterGet(EntityEnterpriseContext ctx)
+   {
+      getFieldState(ctx).setCheckDirty();
+   }
+
    // Private
 
    private void addCMRChainLink(ChainLink nextCMRChainLink)
@@ -299,8 +338,6 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
        */
       public Object getValue()
       {
-         if(checkDirtyAfterGet)
-            entityState.setCheckDirty(tableIndex);
          return value;
       }
 
@@ -311,6 +348,11 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       public void setValue(Object newValue)
       {
          this.value = newValue;
+         setCheckDirty();
+      }
+
+      private void setCheckDirty()
+      {
          entityState.setCheckDirty(tableIndex);
       }
 

@@ -33,6 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.LockingStrategy;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
@@ -63,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -159,6 +160,7 @@ public class JDBCEntityBridge implements EntityBridge
       {
          Integer strategy = lockMetaData.getLockingStrategy();
          JDBCCMPFieldMetaData versionMD = lockMetaData.getLockingField();
+
          versionField = getCMPFieldByName(versionMD.getFieldName());
          boolean hidden = versionField == null;
          if(strategy == JDBCOptimisticLockingMetaData.VERSION_COLUMN_STRATEGY)
@@ -216,8 +218,15 @@ public class JDBCEntityBridge implements EntityBridge
             createdTimeField = getCMPFieldByName(auditField.getFieldName());
             if(createdTimeField == null)
             {
-               createdTimeField = new JDBCCMP2xFieldBridge(manager, auditField);
+               createdTimeField = new JDBCCMP2xFieldBridge(manager, auditField, JDBCTypeFactory.EQUALS, false);
                addCMPField(createdTimeField);
+            }
+            else
+            {
+               // just to override state factory and check-dirty-after-get
+               createdTimeField = new JDBCCMP2xFieldBridge(
+                  (JDBCCMP2xFieldBridge)createdTimeField, JDBCTypeFactory.EQUALS, false);
+               tableFields[createdTimeField.getTableIndex()] = createdTimeField;
             }
          }
          else
