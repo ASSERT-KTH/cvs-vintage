@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.31 2004/10/20 14:27:13 mkl Exp $
+// $Id: Designer.java,v 1.32 2004/10/21 20:08:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import java.util.Vector;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.i18n.Translator;
@@ -50,7 +51,7 @@ import ru.novosoft.uml.MElementListener;
  * <p><strong>This area needs work, especially as it is a
  * central idea of Argo.</strong>
  *
- * <p>Currently everything is hardcoded. What can be configurable??
+ * <p>Currently (almost) everything is hardcoded. What can be configurable??
  *
  * <p>The ToDoList is dependent on this class.
  *
@@ -99,6 +100,11 @@ public class Designer
      * email. This is not used yet. */
     private String emailAddr;
     
+    /**
+     * The designerName is the name of the current user, as he can enter in the 
+     * menuitem Edit->Settings...->User->Full Name.<p>
+     * The designerName gets updated when the user enters a new name. 
+     */
     private String designerName;
     
     /** The decisions currently being considered by the designer.
@@ -370,7 +376,11 @@ public class Designer
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent pce) {
-        critiqueASAP(pce.getSource(), pce.getPropertyName());
+        if (pce.getPropertyName().equals(Argo.KEY_USER_FULLNAME.getKey())) {
+            designerName = pce.getNewValue().toString();
+        } else {
+            critiqueASAP(pce.getSource(), pce.getPropertyName());
+        }
     }
     
     /** 
@@ -861,7 +871,7 @@ public class Designer
     public String toString() {
         //TODO: This should be the name of the designer that created 
         //      the todoitem, not the current username!
-        Object[] msgArgs = { getDesignerName() };
+        Object[] msgArgs = {getDesignerName() };
         return Translator.messageFormat("misc.designer.name", msgArgs);
     }
     
