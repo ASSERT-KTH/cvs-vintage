@@ -72,7 +72,8 @@ public class Constants {
     /**
      * The base class of the generated servlets. 
      */
-    public static final String JSP_SERVLET_BASE = "HttpJspBase";
+    public static final String JSP_SERVLET_BASE =
+	"org.apache.jasper.runtime.HttpJspBase";
 
     /**
      * _jspService is the name of the method that is called by 
@@ -94,13 +95,21 @@ public class Constants {
      *        with all our generators -akv.
      */
     public static final String[] STANDARD_IMPORTS = { 
-	"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*", 
-        "javax.servlet.jsp.tagext.*",
-	"java.io.PrintWriter", "java.io.IOException", "java.io.FileInputStream",
-        "java.io.ObjectInputStream", "java.util.Vector",
-	"org.apache.jasper.runtime.*", "java.beans.*",
-	"org.apache.jasper.JasperException"
+	"javax.servlet.*",
+	"javax.servlet.http.*",
+	"javax.servlet.jsp.*",
+	// This one is not in spec, but a lot of tests depend on it.
+	// The code is fixed to use explicit deps, when we test
+	// the watchdog tests we can remove this
+	"javax.servlet.jsp.tagext.*"
     };
+    
+//         "javax.servlet.jsp.tagext.*",
+// 	"java.io.PrintWriter", "java.io.IOException", "java.io.FileInputStream",
+//         "java.io.ObjectInputStream", "java.util.Vector",
+// 	"org.apache.jasper.runtime.*", "java.beans.*",
+// 	"org.apache.jasper.JasperException"
+//     };
 
     /**
      * ServletContext attribute for classpath. This is tomcat specific. 

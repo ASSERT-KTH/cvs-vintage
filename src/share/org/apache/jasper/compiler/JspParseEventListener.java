@@ -272,7 +272,7 @@ public class JspParseEventListener extends BaseJspListener {
         writer.println("private static boolean _jspx_inited = false;");
         writer.println();
 
-        writer.println("public final void _jspx_init() throws JasperException {");
+        writer.println("public final void _jspx_init() throws org.apache.jasper.JasperException {");
         writer.pushIndent();
 	generateAll(InitMethodPhase.class);
         writer.popIndent();
@@ -284,7 +284,7 @@ public class JspParseEventListener extends BaseJspListener {
 		       "HttpServletRequest request, "+
 		       "HttpServletResponse  response)");
 
-	writer.println("    throws IOException, ServletException {");
+	writer.println("    throws java.io.IOException, ServletException {");
 	writer.pushIndent();
 	writer.println();
         writer.println("JspFactory _jspxFactory = null;");
@@ -355,12 +355,10 @@ public class JspParseEventListener extends BaseJspListener {
 	writer.pushIndent();
 	/* Do stuff here for finally actions... */
         //writer.println("out.close();");
-	//	writer.println("System.out.println(JspWriterImpl.class.getClassLoader());");
-	//	writer.println("System.out.println(out.getClass().getClassLoader());");
-	//writer.println("if (out instanceof JspWriterImpl) { ");
-        //writer.println("    ((JspWriterImpl)out).flushBuffer();");
-	//writer.println("}");
-	writer.println("out.flush();");
+
+	writer.println("if (out instanceof org.apache.jasper.runtime.JspWriterImpl) { ");
+        writer.println("    ((org.apache.jasper.runtime.JspWriterImpl)out).flushBuffer();");
+	writer.println("}");
 	writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");
 	writer.popIndent();
 	writer.println("}");

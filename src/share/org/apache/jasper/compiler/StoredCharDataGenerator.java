@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/StoredCharDataGenerator.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/StoredCharDataGenerator.java,v 1.2 2001/03/09 22:26:14 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/03/09 22:26:14 $
  *
  * ====================================================================
  * 
@@ -107,13 +107,13 @@ public class StoredCharDataGenerator
             writer.popIndent();
             writer.println("} catch (Exception ex) {");
             writer.pushIndent();
-            writer.println("throw new JasperException(\"Unable to open data file\");");
+            writer.println("throw new org.apache.jasper.JasperException(\"Unable to open data file\");");
             writer.popIndent();
             writer.println("} finally {");
             writer.pushIndent();
             writer.println("if (oin != null)");
             writer.pushIndent();
-            writer.println("try { oin.close(); } catch (IOException ignore) { }");
+            writer.println("try { oin.close(); } catch (java.io.IOException ignore) { }");
             writer.popIndent();
             writer.popIndent();
             writer.println("}");
