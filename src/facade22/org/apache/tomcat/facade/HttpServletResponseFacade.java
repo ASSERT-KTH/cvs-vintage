@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.23 2001/11/16 04:10:35 billbarker Exp $
- * $Revision: 1.23 $
- * $Date: 2001/11/16 04:10:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.24 2002/01/30 03:37:12 billbarker Exp $
+ * $Revision: 1.24 $
+ * $Date: 2002/01/30 03:37:12 $
  *
  * ====================================================================
  *
@@ -447,8 +447,10 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    path = path.substring(0,hashP);
 	}
 	StringBuffer sb = new StringBuffer(path);
-	sb.append(";jsessionid=");
-	sb.append(sessionId);
+	if( sb.length() > 0) { // Can't have jsessionid first.
+	    sb.append(";jsessionid=");
+	    sb.append(sessionId);
+	}
 	if(anchor != null) 
 	    sb.append(anchor);
 	if (query != null)
