@@ -116,18 +116,18 @@ public class IssueSearch
     private String minDate;
     private String maxDate;
     private int minVotes;
-    private String[] createdBy;
     
     private NumberKey stateChangeAttributeId;
     private NumberKey stateChangeFromOptionId;
     private NumberKey stateChangeToOptionId;
     private String stateChangeFromDate;
     private String stateChangeToDate;
+    private NumberKey[] issueIdsFromTextSearch;
+    private List issueIdsFromUserSearch;
 
-    private NumberKey initialSortAttributeId;
-    private String initialSortPolarity;
-    private int resultsPerPage;
-    
+    private NumberKey sortAttributeId;
+    private String sortPolarity;
+     
 
     static 
     {
@@ -181,6 +181,42 @@ public class IssueSearch
     public void setSearchWords(String  v) 
     {
         this.searchWords = v;
+    }
+
+    /**
+     * Set the value of issueIdsFromUserSearch
+     * This is the search criterion resulting from user search.
+     * @param l Value to assign to issueIdsFromUserSearch
+     */
+    public void setIssueIdsFromUserSearch(List l)
+    {
+        this.issueIdsFromUserSearch = l;
+    }
+
+    /**
+     * Get the value of issueIdsFromUserSearch
+     */
+    public List getIssueIdsFromUserSearch() 
+    {
+        return issueIdsFromUserSearch;
+    }
+
+    /**
+     * Set the value of issueIdsFromTextSearch
+     * This is the search criterion resulting from user search.
+     * @param l Value to assign to issueIdsFromTextSearch
+     */
+    public void setIssueIdsFromTextSearch(NumberKey[] n)
+    {
+        this.issueIdsFromTextSearch = n;
+    }
+
+    /**
+     * Get the value of issueIdsFromTextSearch
+     */
+    public NumberKey[] getIssueIdsFromTextSearch() 
+    {
+        return issueIdsFromTextSearch;
     }
 
     /**
@@ -361,50 +397,6 @@ public class IssueSearch
     }    
         
     /**
-     * Get the value of createdBy.
-     * @return value of createdBy.
-     */
-    public String[] getCreatedByUserNames() 
-    {
-        return this.createdBy;
-    }
-    
-    /**
-     * Set the value of createdBy.
-     * @param v  Value to assign to createdBy.
-     */
-    public void setCreatedByUserNames(String[] v) 
-    {
-        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
-        {
-            this.createdBy = null;
-        }
-        else 
-        {
-            this.createdBy = v;            
-        }
-    }
-    
-    /**
-     * Get the value of resultsPerPage.
-     * @return value of resultsPerPage.
-     */
-    public int getResultsPerPage() 
-    {
-        return resultsPerPage;
-    }
-    
-    /**
-     * Set the value of resultsPerPage.
-     * @param v  Value to assign to resultsPerPage.
-     */
-    public void setResultsPerPage(int  v) 
-    {
-        this.resultsPerPage = v;
-    }
-    
-    
-    /**
      * Get the value of stateChangeAttributeId.
      * @return value of stateChangeAttributeId.
      */
@@ -518,32 +510,32 @@ public class IssueSearch
     
     
     /**
-     * Get the value of initialSortAttributeId.
-     * @return value of initialSortAttributeId.
+     * Get the value of sortAttributeId.
+     * @return value of SortAttributeId.
      */
-    public NumberKey getInitialSortAttributeId() 
+    public NumberKey getSortAttributeId() 
     {
-        return initialSortAttributeId;
+        return sortAttributeId;
     }
     
     /**
-     * Set the value of initialSortAttributeId.
-     * @param v  Value to assign to initialSortAttributeId.
+     * Set the value of sortAttributeId.
+     * @param v  Value to assign to sortAttributeId.
      */
-    public void setInitialSortAttributeId(NumberKey v) 
+    public void setSortAttributeId(NumberKey v) 
     {
-        this.initialSortAttributeId = v;
+        this.sortAttributeId = v;
     }
     
 
     /**
-     * Get the value of initialSortPolarity.
-     * @return value of initialSortPolarity.
+     * Get the value of sortPolarity.
+     * @return value of sortPolarity.
      */
-    public String getInitialSortPolarity() 
+    public String getSortPolarity() 
     {
         String polarity = null;
-        if ( DESC.equals(initialSortPolarity) ) 
+        if ( DESC.equals(sortPolarity) ) 
         {
             polarity = DESC;
         }        
@@ -555,12 +547,12 @@ public class IssueSearch
     }
     
     /**
-     * Set the value of initialSortPolarity.
-     * @param v  Value to assign to initialSortPolarity.
+     * Set the value of sortPolarity.
+     * @param v  Value to assign to sortPolarity.
      */
-    public void setInitialSortPolarity(String  v) 
+    public void setSortPolarity(String  v) 
     {
-        this.initialSortPolarity = v;
+        this.sortPolarity = v;
     }
     
 
@@ -746,6 +738,37 @@ public class IssueSearch
         }
     }
 
+    private void combineUserAndTextCriteria(Criteria crit)
+        throws ScarabException
+    {
+        Criteria.Criterion c1 = null;
+        Criteria.Criterion c2 = null;
+
+        if (issueIdsFromTextSearch != null && issueIdsFromTextSearch.length > 0)
+        {
+            c1 = crit.getNewCriterion(IssuePeer.ISSUE_ID, 
+                                       issueIdsFromTextSearch, Criteria.IN);
+        }
+        if (issueIdsFromUserSearch != null && issueIdsFromUserSearch.size() > 0)
+        {
+            c2 = crit.getNewCriterion(IssuePeer.ISSUE_ID, 
+                                       issueIdsFromUserSearch, Criteria.IN);
+        }
+        if (c1 != null && c2 != null)
+        {
+            c2.and(c1);
+            crit.add(c2);
+        }
+        else if (c1 != null)
+        {
+            crit.add(c1);
+        }
+        else if (c2 != null)
+        {
+            crit.add(c2);
+        }
+    }
+
     /**
      * give reasonable defaults if module code was not specified
      */
@@ -894,8 +917,7 @@ public class IssueSearch
         {
             //pull any chained values out to create a flat list
             AttributeValue aval = (AttributeValue)chainedValues.get(i);
-            if ( aval instanceof OptionAttribute 
-                 || aval instanceof UserAttribute) 
+            if ( aval instanceof OptionAttribute )
             {
                 // we will add at least one option attribute to the criteria
                 atLeastOne = true;
@@ -908,15 +930,7 @@ public class IssueSearch
                     // OR it to the other possibilities
                     Criteria.Criterion prevCrit = 
                         (Criteria.Criterion )aliasIndices.get(index);
-                    if ( aval instanceof OptionAttribute ) 
-                    {
-                        c2 = buildOptionCriterion(aval);
-                    }
-                    else 
-                    {
-                        c2 = buildUserCriterion(aval);
-                    }
-                    
+                    c2 = buildOptionCriterion(aval);
                     prevCrit.or(c2);
                 }
                 else
@@ -925,14 +939,7 @@ public class IssueSearch
                         AV_ISSUE_ID, "av" + index + "." + AV_ISSUE_ID + "=" + 
                         IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
                     crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
-                    if ( aval instanceof OptionAttribute ) 
-                    {
-                        c2 = buildOptionCriterion(aval);
-                    }
-                    else 
-                    {
-                        c2 = buildUserCriterion(aval);
-                    }
+                    c2 = buildOptionCriterion(aval);
                     c1.and(c2);
                     aliasIndices.put(index, c2);
                     if ( c == null ) 
@@ -988,48 +995,6 @@ public class IssueSearch
         return criterion;
     }
 
-    /**
-     * This method builds a Criterion for a single user attribute value.
-     * It is used in the addSelectedAttributes method
-     *
-     * @param aval an <code>AttributeValue</code> value
-     * @return a <code>Criteria.Criterion</code> value
-     */
-    private Criteria.Criterion buildUserCriterion(AttributeValue aval)
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        String index = aval.getAttributeId().toString();
-        Criteria.Criterion criterion = crit.getNewCriterion( 
-            "av"+index, AV_USER_ID, aval.getUserId(), Criteria.EQUAL);
-        return criterion;
-    }
-
-    private void addCreatedByUserIds(Criteria crit)
-        throws Exception
-    {
-        if ( createdBy != null && createdBy.length > 0 ) 
-        {
-            crit.addJoin(TransactionPeer.TRANSACTION_ID, 
-                         ActivityPeer.TRANSACTION_ID);
-            crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
-            crit.add(TransactionPeer.TYPE_ID, 
-                     TransactionTypePeer.CREATE_ISSUE__PK);
-            // convert usernames to ids
-            List users = UserManager.getUsers(createdBy, 
-                                              getModule().getDomain());
-            NumberKey[] ids = new NumberKey[users.size()];
-            for ( int i=0; i<users.size(); i++ ) 
-            {
-                ids[i] = ((ScarabUser)users.get(i)).getUserId();
-            }
-            
-            crit.add(TransactionPeer.CREATED_BY, ids, Criteria.IN);
-            // there could be multiple attributes modified during the creation
-            // which will lead to duplicates
-            crit.setDistinct();
-        }
-    }
 
     private NumberKey[] addTextMatches(Criteria crit, List attValues)
         throws Exception
@@ -1045,10 +1010,6 @@ public class IssueSearch
         {
             searchIndex.addQuery(getTextScope(), getSearchWords());
             matchingIssueIds = searchIndex.getRelatedIssues();    
-            if ( matchingIssueIds.length != 0 )
-            { 
-                crit.addIn(IssuePeer.ISSUE_ID, matchingIssueIds);
-            }
         }
         else 
         {
@@ -1070,13 +1031,10 @@ public class IssueSearch
             if ( atLeastOne ) 
             {
                 matchingIssueIds = searchIndex.getRelatedIssues();    
-                if ( matchingIssueIds.length != 0 )
-                { 
-                    crit.addIn(IssuePeer.ISSUE_ID, matchingIssueIds);
-                }       
             }
         }
 
+        setIssueIdsFromTextSearch(matchingIssueIds);
         return matchingIssueIds;
     }
 
@@ -1130,10 +1088,11 @@ public class IssueSearch
         }
     }
 
-    private void addInitialSortCriteria(Criteria crit)
+/*
+    private void addSortCriteria(Criteria crit)
         throws Exception
     {
-        NumberKey attId = getInitialSortAttributeId();
+        NumberKey attId = getSortAttributeId();
         if ( attId != null ) 
         {
             AttributeValue sortAttribute = 
@@ -1164,7 +1123,7 @@ public class IssueSearch
                 crit.addJoin(IssuePeer.ISSUE_ID, AttributeValuePeer.ISSUE_ID);
                 sortColumn = AttributeValuePeer.VALUE;
             }            
-            if ( getInitialSortPolarity().equals(ASC)) 
+            if ( getSortPolarity().equals(ASC)) 
             {
                 crit.addAscendingOrderByColumn(sortColumn);
             }
@@ -1174,7 +1133,7 @@ public class IssueSearch
             }
         }
     }
-
+*/
 
     /**
      * Get a List of Issues that match the criteria given by this
@@ -1186,20 +1145,6 @@ public class IssueSearch
     public List getMatchingIssues()
         throws Exception
     {
-        return getMatchingIssues(-1);
-    }
-
-    /**
-     * Get a List of Issues that match the criteria given by this
-     * SearchIssue's searchWords and the quick search attribute values.
-     *
-     * @param limitResults an <code>int</code> value
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    public List getMatchingIssues(int limitResults)
-        throws Exception
-    {
         Criteria crit = new Criteria();
         crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
         crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
@@ -1208,6 +1153,7 @@ public class IssueSearch
         Criteria tempCrit = new Criteria(2)
             .add(AttributeValuePeer.DELETED, false);        
         List attValues = getAttributeValues(tempCrit);
+
         // remove unset AttributeValues before searching
         removeUnsetValues(attValues);        
         addSelectedAttributes(crit, attValues);
@@ -1215,24 +1161,51 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
-        List matchingIssues = null;
+        List sortedIssues = null;
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
         {            
             addIssueIdRange(crit);
             addCreatedDateRange(crit);
             addMinimumVotes(crit);
 
-            // committed by
-            addCreatedByUserIds(crit);
+System.out.println("BEFORE USERS=" + crit);
+            // add user values
+            combineUserAndTextCriteria(crit);
+System.out.println("AFTEr USERS=" + crit);
+
             // state change query
             addStateChangeQuery(crit);
             
             // Get matching issues, with sort criteria
-            matchingIssues = sortIssues(crit);
+            sortedIssues = sortIssues(crit);
         }
         else 
         {
-            matchingIssues = new ArrayList(0);
+            sortedIssues = new ArrayList(0);
+        }
+
+        // Return list as issue ids
+        List sortedIssueIds = new ArrayList();
+        for (int i=0; i<sortedIssues.size(); i++)
+        {
+            sortedIssueIds.add(((Issue)sortedIssues.get(i)).getIssueId());
+        }
+        return sortedIssueIds;
+    }
+
+    private List sortIssues(Criteria crit)
+        throws Exception
+    {
+        List matchingIssues = null;
+        if (getSortAttributeId() == null)
+        {
+            //sort by unique id
+            matchingIssues = sortByUniqueId(crit);
+        }
+        else
+        {
+            //sort by unique id
+            matchingIssues = sortByAttribute(crit);
         }
         return matchingIssues;
     }
@@ -1242,7 +1215,7 @@ public class IssueSearch
      */
     private List sortByUniqueId(Criteria crit) throws Exception
     {
-        if (getInitialSortPolarity().equals("desc"))
+        if (getSortPolarity().equals("desc"))
         {
             crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
         } 
@@ -1250,123 +1223,77 @@ public class IssueSearch
         {
             crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
         }
+        crit.setDistinct();
         return IssuePeer.doSelect(crit);
     }
 
     /**
-     * Takes a List of Issues and an array of IDs and sorts the Issues in
-     * the list to the order given in the ID array
-    private List sortByIssueIdList(NumberKey[] ids, List issues, 
-                                   int limitResults)
+     * Sorts on issue attribute selected by user
+     */
+    private List sortByAttribute(Criteria crit) throws Exception
     {
-        int maxIssues = issues.size();
-        ArrayList sortedIssues = new ArrayList(maxIssues);
-        
-        // Place issues into a map by id for searching
-        Map issueIdMap = new HashMap((int)(1.25*maxIssues+1));
-        for ( int i=maxIssues-1; i>=0; i-- ) 
-        {
-            Issue issue = (Issue)issues.get(i);
-            issueIdMap.put( issue.getIssueId(), issue );
-        }
+        Vector attSet = new Vector();
+        Vector attNotSet = new Vector();
+        List unSortedIssues = IssuePeer.doSelect(crit);
+        List sortedIssues = new ArrayList(unSortedIssues.size());
+        NumberKey sortAttrId = getSortAttributeId();
+        Attribute att = Attribute.getInstance(sortAttrId);
 
-        for ( int i=0; i<ids.length  
-                  && ( limitResults <= 0 || sortedIssues.size() <= limitResults); i++ ) 
+        for (int j=0; j<unSortedIssues.size(); j++)
         {
-            Object issueObj = issueIdMap.get(ids[i]);
-            if (issueObj != null) 
+            Issue issue =  (Issue)unSortedIssues.get(j);
+            AttributeValue sortAttVal = (AttributeValue)issue
+               .getModuleAttributeValuesMap()
+               .get(att.getName().toUpperCase());
+            Object sortValue = null;
+            if ( sortAttVal instanceof OptionAttribute)
             {
-                sortedIssues.add(issueObj);
+                sortValue = sortAttVal.getAttributeOption();
             }
-        }
-     
-        return sortedIssues;
-    }
-   */
-
-    private List sortIssues(Criteria crit)
-        throws Exception
-    {
-        List matchingIssues = null;
-        NumberKey sortAttrId =  getInitialSortAttributeId();
-        if (sortAttrId == null)
-        {
-            //sort by unique id
-            if (getInitialSortPolarity().equals("desc"))
+            else 
             {
-                crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
-            } 
+            sortValue = sortAttVal.getValue();
+            }
+            if (sortValue == null)
+            {
+                attNotSet.add(issue);
+            }
             else
             {
-                crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
+                attSet.add(issue.getIssueId());
             }
-            crit.setDistinct();
-            matchingIssues =  IssuePeer.doSelect(crit);
-        }
-        else
+        } 
+        if (attSet.size() > 0)
         {
-            // sort by selected attribute
-            Vector attSet = new Vector();
-            Vector attNotSet = new Vector();
-            List unSortedIssues = IssuePeer.doSelect(crit);
-            List sortedIssues = new ArrayList(unSortedIssues.size());
-            Attribute att = Attribute.getInstance(sortAttrId);
-
-            for (int j=0; j<unSortedIssues.size(); j++)
+            String sortColumn = null;  
+            Criteria crit2 = new Criteria();
+            if ( att.isOptionAttribute())
             {
-                Issue issue =  (Issue)unSortedIssues.get(j);
-                AttributeValue sortAttVal = (AttributeValue)issue
-                   .getModuleAttributeValuesMap()
-                   .get(att.getName().toUpperCase());
-                Object sortValue = null;
-                if ( sortAttVal instanceof OptionAttribute)
-                {
-                    sortValue = sortAttVal.getAttributeOption();
-                }
-                else 
-                {
-                    sortValue = sortAttVal.getValue();
-                }
-                if (sortValue == null)
-                {
-                    attNotSet.add(issue);
-                }
-                else
-                {
-                    attSet.add(issue.getIssueId());
-                }
-            } 
-            if (attSet.size() > 0)
+                crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
+                crit2.add(AttributeOptionPeer.ATTRIBUTE_ID, sortAttrId);
+                crit2.addJoin(AttributeOptionPeer.OPTION_ID,
+                              RModuleOptionPeer.OPTION_ID);
+                crit2.addJoin(AttributeValuePeer.OPTION_ID,
+                              RModuleOptionPeer.OPTION_ID);
+                crit2.addJoin(AttributeValuePeer.ISSUE_ID,
+                              IssuePeer.ISSUE_ID);
+                crit2.addJoin(IssuePeer.MODULE_ID, 
+                              RModuleOptionPeer.MODULE_ID);
+                crit2.addJoin(IssuePeer.TYPE_ID, 
+                              RModuleOptionPeer.ISSUE_TYPE_ID);
+                sortColumn = RModuleOptionPeer.WEIGHT;
+                crit2.setDistinct();
+            }
+            else
             {
-                String sortColumn = null;  
-                Criteria crit2 = new Criteria();
-                if ( att.isOptionAttribute())
-                {
-                    crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
-                    crit2.add(AttributeOptionPeer.ATTRIBUTE_ID, sortAttrId);
-                    crit2.addJoin(AttributeOptionPeer.OPTION_ID,
-                                  RModuleOptionPeer.OPTION_ID);
-                    crit2.addJoin(AttributeValuePeer.OPTION_ID,
-                                  RModuleOptionPeer.OPTION_ID);
-                    crit2.addJoin(AttributeValuePeer.ISSUE_ID,
-                                  IssuePeer.ISSUE_ID);
-                    crit2.addJoin(IssuePeer.MODULE_ID, 
-                                  RModuleOptionPeer.MODULE_ID);
-                    crit2.addJoin(IssuePeer.TYPE_ID, 
-                                  RModuleOptionPeer.ISSUE_TYPE_ID);
-                    sortColumn = RModuleOptionPeer.WEIGHT;
-                    crit2.setDistinct();
+                crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
+                crit2.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
+                crit2.addJoin(AttributeValuePeer.ISSUE_ID,
+                              IssuePeer.ISSUE_ID);
+                crit2.setDistinct();
+                sortColumn = AttributeValuePeer.VALUE; 
                 }
-                else
-                {
-                    crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
-                    crit2.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
-                    crit2.addJoin(AttributeValuePeer.ISSUE_ID,
-                                  IssuePeer.ISSUE_ID);
-                    crit2.setDistinct();
-                    sortColumn = AttributeValuePeer.VALUE; 
-                }
-                if (getInitialSortPolarity().equals("desc"))
+                if (getSortPolarity().equals("desc"))
                 {
                     crit2.addDescendingOrderByColumn(sortColumn);
                 }
@@ -1377,8 +1304,6 @@ public class IssueSearch
                 sortedIssues.addAll(IssuePeer.doSelect(crit2));
            }
            sortedIssues.addAll(attNotSet);
-           matchingIssues = sortedIssues;
-        }
-        return matchingIssues;
+           return sortedIssues;
     }
 }
