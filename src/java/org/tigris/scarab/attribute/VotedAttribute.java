@@ -59,7 +59,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2000/12/20 03:35:14 $
+ * @version $Revision: 1.3 $ $Date: 2001/01/03 21:41:39 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -86,7 +86,7 @@ public abstract class VotedAttribute extends OptionAttribute
         for (i=0; i<res.size(); i++)
         {
             vote = (ScarabIssueAttributeVote)res.get(i);
-            votes.put(new Integer(vote.getVisitorId()), getOptionById(vote.getOptionId()));
+            votes.put(new Integer(vote.getUserId()), getOptionById(vote.getOptionId()));
         }
         Criteria crit1 = new Criteria()
             .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
@@ -116,7 +116,7 @@ public abstract class VotedAttribute extends OptionAttribute
         Criteria crit = new Criteria();
         crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getId())
             .add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.VISITOR_ID, ((TurbineUser)data.getUser()).getIdAsLong());
+            .add(ScarabIssueAttributeVotePeer.USER_ID, ((TurbineUser)data.getUser()).getIdAsLong());
         if (votes.containsKey(userId))
         {
             if (newValue == null)
