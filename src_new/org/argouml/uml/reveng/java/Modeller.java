@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.52 2003/02/21 09:28:08 lepekhine Exp $
+// $Id: Modeller.java,v 1.53 2003/02/21 12:44:42 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -685,9 +685,8 @@ public class Modeller
     {
         Object mAttribute = parseState.getFeature(name);
         if(mAttribute == null &&
-           (initializer != null ||
-            (noAssociations &&
-             getAssociationEnd(name, mClassifier) == null))) {
+           noAssociations &&
+           getAssociationEnd(name, mClassifier) == null) {
             mAttribute = UmlFactory.getFactory().getCore().buildAttribute(name);
             ModelFacade.addFeature(parseState.getClassifier(),mAttribute);
         }
