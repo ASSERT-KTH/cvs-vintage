@@ -121,8 +121,11 @@ public class ThreadedViewAction extends AbstractSelectableAction
             XmlElement threadedview = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
                                        .getConfigNode((MessageFolder) selection[0],
                     "ThreadedViewOptions");
-            String attribute = threadedview.getAttribute("enabled");
-            setState(Boolean.valueOf(attribute).booleanValue());
+            if (threadedview != null) {
+	            // *20040510, karlpeder* columns may be null (first time we visit a folder!?)
+	            String attribute = threadedview.getAttribute("enabled");
+	            setState(Boolean.valueOf(attribute).booleanValue());
+            }
         }
     }
 }

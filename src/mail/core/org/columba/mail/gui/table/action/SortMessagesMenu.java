@@ -79,11 +79,14 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
 
         Vector v = new Vector();
 
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
-
-            String name = column.getAttribute("name");
-            v.add(name);
+        // *20040510, karlpeder* columns may be null (first time we visit a folder!?)
+        if (columns != null) {
+	        for (int i = 0; i < columns.count(); i++) {
+	            XmlElement column = columns.getElement(i);
+	
+	            String name = column.getAttribute("name");
+	            v.add(name);
+	        }
         }
 
         Object[] items = new String[v.size()];
@@ -206,11 +209,14 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
                                      .getConfigNode(selectedFolder,
                     "SortingOptions");
 
-            DefaultItem item = new DefaultItem(xmlElement);
-
-            //String column = xmlElement.getAttribute("column");
-            //String s = threadedview.getAttribute("order");
-            boolean order = item.getBoolean("order");
+            if (xmlElement != null) {
+            	// *20040510, karlpeder* columns may be null (first time we visit a folder!?)
+            	DefaultItem item = new DefaultItem(xmlElement);
+	
+	            //String column = xmlElement.getAttribute("column");
+	            //String s = threadedview.getAttribute("order");
+	            boolean order = item.getBoolean("order");
+            }
         }
     }
 }
