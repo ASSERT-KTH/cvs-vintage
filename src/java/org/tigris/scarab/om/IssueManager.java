@@ -191,7 +191,7 @@ public class IssueManager
         Persistent oldOm = super.putInstanceImpl(om);
         // saving an issue object could affect some cached results, since it could be a move
         Serializable obj = (Serializable)om;
-        getMethodResult().remove(obj, Issue.GET_MODULE_ATTRVALUES_MAP);
+        getMethodResult().removeAll(obj, Issue.GET_MODULE_ATTRVALUES_MAP);
         getMethodResult().remove(obj, Issue.GET_USER_ATTRIBUTEVALUES);
         return oldOm;
     }

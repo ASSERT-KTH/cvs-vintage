@@ -34,7 +34,7 @@
             #end
             #if ($canEdit)
                  <tr>
-                  <th> #if ($attVal.isRequired())*#end 
+                  <th> #if ($rma.getRequired())*#end 
                   $rma.DisplayValue</th>
                   <td>
                 #if ($att.isOptionAttribute())
