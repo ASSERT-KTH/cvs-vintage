@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.3 2000/10/20 07:26:59 carnold Exp $
+// $Id: PropPanelAttribute.java,v 1.4 2000/10/26 06:18:17 carnold Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -59,7 +59,7 @@ public class PropPanelAttribute extends PropPanel {
         addField(stereotypeBox,3,0,0);
 
         addCaption(new JLabel("Owner:"),4,0,1);
-        JList ownerList = new UMLList(new UMLReflectionListModel(this,"owner",false,"getOwner",null,null,null),false);
+        JList ownerList = new UMLList(new UMLReflectionListModel(this,"owner",false,"getOwner",null,null,null),true);
         addLinkField(ownerList,4,0,0);
         
         
