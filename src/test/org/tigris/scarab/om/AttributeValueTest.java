@@ -59,11 +59,12 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.4 2002/10/01 00:11:07 jmcnally Exp $
+ * @version $Id: AttributeValueTest.java,v 1.5 2002/10/04 01:46:31 jon Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
     private AttributeValue attVal = null;
+    private AttributeValue attVal2 = null;
     private AttributeValue newAttVal = null;
     private Issue issue = null;
 
@@ -85,13 +86,17 @@ public class AttributeValueTest extends BaseTestCase
             throws Throwable
     {
         issue = getIssue0();
+        // severity
         attVal = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("9")));
+        // description
+        attVal2 = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("1")));
 
         testCopy();
         testSave();
         testGetQueryKey();
         testIsRequired();
         testIsSet();
+        testIsSet2();
         testIsQuickSearchAttribute();
         testGetRModuleAttribute();
         testGetAttributeOption();
@@ -144,6 +149,13 @@ public class AttributeValueTest extends BaseTestCase
     {
         System.out.println("\ntestIsSet()");
         assertEquals(true, newAttVal.isSet());
+    }
+
+    private void testIsSet2() throws Exception
+    {
+        System.out.println("\ntestIsSet2()");
+        attVal2.setValue("description");
+        assertEquals(true, attVal2.isSet());
     }
 
     private void testIsQuickSearchAttribute() throws Exception
