@@ -29,7 +29,7 @@ import java.awt.Toolkit;
 import java.io.*;
 import java.util.Vector;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.textarea.JEditTextArea;
+import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.4 2002/03/10 04:12:49 spestov Exp $
+ * @version $Id: Registers.java,v 1.5 2002/06/03 12:09:14 spestov Exp $
  */
 public class Registers
 {
@@ -163,6 +163,21 @@ public class Registers
 	 */
 	public static void paste(JEditTextArea textArea, char register)
 	{
+		paste(textArea,register,false);
+	} //}}}
+
+	//{{{ paste() method
+	/**
+	 * Convinience method that pastes the contents of the specified
+	 * register into the text area.
+	 * @param textArea The text area
+	 * @param register The register
+	 * @param vertical Vertical (columnar) paste
+	 * @since jEdit 4.1pre1
+	 */
+	public static void paste(JEditTextArea textArea, char register,
+		boolean vertical)
+	{
 		if(!textArea.isEditable())
 		{
 			textArea.getToolkit().beep();
@@ -190,7 +205,17 @@ public class Registers
 
 			// XXX: getMagicCaretPosition() is deprecated
 			int magic = textArea.getMagicCaretPosition();
-			textArea.setSelectedText(selection);
+
+			if(vertical && textArea.getSelectionCount() == 0)
+			{
+				int caret = textArea.getCaretPosition();
+				int caretLine = textArea.getCaretLine();
+				Selection.Rect rect = new Selection.Rect(
+					caret,caret,caretLine,caretLine);
+				textArea.setSelectedText(rect,selection);
+			}
+			else
+				textArea.setSelectedText(selection);
 
 			if(textArea.getCaretPosition()
 				!= textArea.getLineEndOffset(textArea.getCaretLine()) - 1)
