@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.73 $
+* @version $Revision: 1.74 $
 *
 * <p><b>Revisions:</b>
 *
@@ -392,22 +392,9 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
 
       try
       {
-         // Call default stop
-         super.stop();
-
-         // Stop container invoker
-         if (containerInvoker != null)
-            containerInvoker.stop();
-
-         // Stop instance cache
-         instanceCache.stop();
-
-         // Stop persistence
-         persistenceManager.stop();
-
-         // Stop the instance pool
-         instancePool.stop();
-
+         //Stop items in reverse order from start
+         //This assures that CachedConnectionInterceptor will get removed
+         //from in between this and the pm before the pm is stopped.
          // Stop all interceptors in the chain
          Interceptor in = interceptor;
          while (in != null)
@@ -415,6 +402,23 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             in.stop();
             in = in.getNext();
          }      
+
+         // Stop the instance pool
+         instancePool.stop();
+
+
+         // Stop persistence
+         persistenceManager.stop();
+
+         // Stop instance cache
+         instanceCache.stop();
+
+         // Stop container invoker
+         if (containerInvoker != null)
+            containerInvoker.stop();
+
+         // Call default stop
+         super.stop();
       }
       finally
       {
