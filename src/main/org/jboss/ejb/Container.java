@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.24 $
+ *   @version $Revision: 1.25 $
  */
 public abstract class Container
 {
@@ -402,7 +402,10 @@ public abstract class Container
                 {
                    // Internal link
                    Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                   bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
+                   bind(ctx, ref.getName(), new LinkRef(getApplication().getContainer(ref.getLink()).getBeanMetaData().getJndiName()));
+                       
+//                   bind(ctx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
+//                bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
                 }
                 else
                 {
@@ -524,27 +527,4 @@ public abstract class Container
 
       ctx.bind(n.get(0), val);
    }
-
-    public static class EjbReferenceFactory
-    implements ObjectFactory
-    {
-        public Object getObjectInstance(Object ref,
-                                        Name name,
-                                        Context nameCtx,
-                                        Hashtable environment)
-                                        throws Exception
-        {
-            Object con = ((Reference)ref).get(0).getContent();
-            if (con instanceof EntityContainer)
-            {
-                return ((EntityContainer)con).getContainerInvoker().getEJBHome();
-            } if (con instanceof StatelessSessionContainer)
-            {
-                return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome();
-            } else
-            {
-                return null;
-            }
-        }
-    }
 }
