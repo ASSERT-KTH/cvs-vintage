@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE server>
 
-<!-- $Id: jboss-service.xml,v 1.4 2004/03/19 00:49:41 ejort Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.5 2004/03/19 20:39:39 starksm Exp $ -->
 <server>
 
    <!-- The JRMP invoker proxy configuration for the InvokerAdaptorService -->
@@ -14,7 +13,9 @@
       <!-- Where to bind the RMIAdaptor proxy -->
       <attribute name="JndiName">jmx/invoker/RMIAdaptor</attribute>
       <!-- The RMI compabitle MBeanServer interface -->
-      <attribute name="ExportedInterface">org.jboss.jmx.adaptor.rmi.RMIAdaptor</attribute>
+      <attribute name="ExportedInterfaces">org.jboss.jmx.adaptor.rmi.RMIAdaptor,
+         org.jboss.jmx.adaptor.rmi.RMIAdaptorExt
+      </attribute>
       <attribute name="ClientInterceptors">
           <interceptors>
              <interceptor>org.jboss.proxy.ClientMethodInterceptor</interceptor>
@@ -37,8 +38,55 @@
    <!-- This is the service that handles the RMIAdaptor invocations by routing
    them to the MBeanServer the service is deployed under.  -->
    <mbean code="org.jboss.jmx.connector.invoker.InvokerAdaptorService"
-          name="jboss.jmx:type=adaptor,name=Invoker">
-      <attribute name="ExportedInterface">org.jboss.jmx.adaptor.rmi.RMIAdaptor</attribute>
+          name="jboss.jmx:type=adaptor,name=Invoker"
+      xmbean-dd="">
+      <xmbean>
+         <description>The JMX Detached Invoker Service</description>
+         <class>org.jboss.jmx.connector.invoker.InvokerAdaptorService</class>
+
+         <!-- Attributes -->
+         <attribute access="read-write" getMethod="getExportedInterfaces" setMethod="setExportedInterfaces">
+            <description>The interfaces the invoker proxy supports</description>
+            <name>ExportedInterfaces</name>
+            <type>[Ljava.lang.Class;</type>
+         </attribute>
+         <attribute access="read-only" getMethod="getMethodMap">
+            <description>Map(Long hash, Method) of the proxy interface methods</description>
+            <name>MethodMap</name>
+            <type>java.util.Map</type>
+         </attribute>
+         <!-- Operations -->
+         <operation>
+            <description>The start lifecycle operation</description>
+            <name>start</name>
+         </operation>
+         <operation>
+            <description>The stop lifecycle operation</description>
+            <name>stop</name>
+         </operation>
+
+         <operation>
+            <description>The detached invoker entry point</description>
+            <name>invoke</name>
+            <parameter>
+               <description>The method invocation context</description>
+               <name>invocation</name>
+               <type>org.jboss.invocation.Invocation</type>
+            </parameter>
+            <return-type>java.lang.Object</return-type>
+            <!-- Uncomment to require authenticated users
+            <descriptors>
+               <interceptors>
+                  <interceptor code="org.jboss.jmx.connector.invoker.AuthenticationInterceptor"
+                     securityDomain="java:/jaas/jmx-console"/>
+               </interceptors>
+            </descriptors>
+            -->
+         </operation>
+      </xmbean>
+      <attribute name="ExportedInterfaces">org.jboss.jmx.adaptor.rmi.RMIAdaptor,
+         org.jboss.jmx.adaptor.rmi.RMIAdaptorExt
+      </attribute>
    </mbean>
 
 </server>
