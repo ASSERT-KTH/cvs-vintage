@@ -68,7 +68,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.7 2001/01/16 08:31:39 jon Exp $
+    @version $Id: ScarabUser.java,v 1.8 2001/01/19 00:24:08 jon Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
@@ -125,7 +125,8 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
         exception if there is any sort of error (such as a duplicate login id) 
         and place the error message into e.getMessage(). This also creates a 
         uniqueid and places it into this object in the perm table under the
-        Visitor.CONFIRM_VALUE key.
+        Visitor.CONFIRM_VALUE key. It will use the current instance of this
+        object as the basis to create the new User.
     */
     public void createNewUser()
         throws Exception

@@ -70,7 +70,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.4 2001/01/16 08:31:38 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.5 2001/01/19 00:24:08 jon Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
@@ -91,6 +91,13 @@ public class RegisterConfirm extends VelocityAction
                 throw new Exception ("Unable to retrive user object from session.");
             // attempt to create a new user!
             su.createNewUser();
+            // grab the ScarabSystem object so that we can populate the internal User object
+            // for redisplay of the form data on the screen
+            ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
+            if (ss != null)
+	        {
+                ss.setUser(su);
+            }
             setTemplate (data, nextTemplate);
         }
         catch (Exception e)
