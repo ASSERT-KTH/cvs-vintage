@@ -48,22 +48,7 @@
  <tr valign="top">
   <td id="leftcol" width="20%">
  <div id="navcolumn">
-<div><strong>My start page</strong></div>
-<div><strong>Projects &amp; categories</strong></div>
- <div id="tools"><strong>Project tools</strong>
-      <div><small>Members</small></div>
- <div><small> Mailing lists</small></div>
-<div><small>Source code</small></div>
-<div><small>Issue tracking</small>
-   <div><small>Enter issue</small></div>
-   <div><small>Queries</small></div>
-   <div><small>Reports</small></div>
-   <div><small>Vote mgmt.</small></div>
-   <div><small>Workflow optns.</small></div>
-</div>
-     <div><small>Documents</small></div>
-      <div><small>News</small></div>
-   </div>
+$renderer.render("navigations", $data, $template, "Default.vm")
 </div>
   <div id="helptext">
  <table border="0" cellspacing="0" cellpadding="3" width="100%">
