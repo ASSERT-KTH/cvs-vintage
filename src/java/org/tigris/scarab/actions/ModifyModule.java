@@ -47,6 +47,8 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
+import java.util.List;
+
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.tool.IntakeTool;
@@ -57,6 +59,8 @@ import org.apache.turbine.ParameterParser;
 // Scarab Stuff
 import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -70,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.33 2003/04/21 20:06:03 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.34 2003/07/11 19:44:42 thierrylach Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -128,8 +132,10 @@ public class ModifyModule extends RequireLoginFirstAction
                 }
 
                 Module origParent = me.getParent();
+				String origCode = me.getCode();
                 moduleGroup.setProperties(me);
                 Module newParent = me.getParent();
+				String newCode = me.getCode();
 
                 if (newParent.getParent() == me)
                 {
@@ -147,6 +153,30 @@ public class ModifyModule extends RequireLoginFirstAction
                     setTarget(data, template);
                     return;
                 }
+                
+                // Cascade update the code to the (denormalized) issue prefix
+                if (! newCode.equals(origCode))
+                {
+					if (me instanceof ScarabModule)
+					{
+                        ScarabModule sm = (ScarabModule)me;
+						List issues = sm.getIssues();
+                        for (int i = 0; i < issues.size(); i++)
+                        {
+                            Issue issue = (Issue)issues.get(i);
+                            if (! issue.getIdPrefix().equals(me.getCode()))
+                            {
+								issue.setIdPrefix(me.getCode());
+								issue.save();
+                            }
+                        }
+					}
+					else
+					{
+						throw new Exception ("Did not get a ScarabModule");
+					}
+                }
+                
                 me.save();
 
                 // Set email overrides
