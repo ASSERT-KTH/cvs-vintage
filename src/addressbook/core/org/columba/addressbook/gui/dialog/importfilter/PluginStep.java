@@ -27,7 +27,6 @@ import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 
 import java.awt.BorderLayout;
