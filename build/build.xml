@@ -292,14 +292,14 @@
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
 
-	<!-- 
-        Patch oracle property file in torque. Supplied by Thierry Lach.
-        Should these be included in the standard torque dist?
-    -->
-	<replace file="${torque.dir.scarab}/templates/sql/base/oracle/db.props">
-	    <replacefilter token="INTEGER = INT" value="INTEGER = NUMBER"/>
-	    <replacefilter token="BINARY = RAW" value="BINARY = LONG RAW"/>
-	</replace>
+        <!-- 
+            Patch oracle property file in torque. Supplied by Thierry Lach.
+            Should these be included in the standard torque dist?
+        -->
+        <replace file="${torque.dir.scarab}/templates/sql/base/oracle/db.props">
+            <replacefilter token="INTEGER = INT" value="INTEGER = NUMBER"/>
+            <replacefilter token="BINARY = RAW" value="BINARY = LONG RAW"/>
+        </replace>
 
     </target>
  
@@ -336,12 +336,12 @@
     <!-- ================================================================== -->
     <target name="db-type-check">
         <condition property="auto.create.db">
-	    <not>
-	        <or>
-                    <equals arg1="${scarab.database.type}" arg2="oracle"/>
-                    <equals arg1="${scarab.database.type}" arg2="db2"/>
-	        </or>
-	    </not>
+        <not>
+            <or>
+                <equals arg1="${scarab.database.type}" arg2="oracle"/>
+                <equals arg1="${scarab.database.type}" arg2="db2"/>
+            </or>
+        </not>
         </condition>
     </target>
 
