@@ -27,7 +27,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.4 1998/10/09 01:05:40 jrobbins Exp $
+// $Id: FigLink.java,v 1.5 1998/10/09 01:20:37 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -49,6 +49,9 @@ public class FigLink extends FigEdgeModelElement {
     setBetweenNearestPoints(true);
     modelChanged();
   }
+
+  // needs-more-work: should edit something...
+  protected boolean canEdit(Fig f) { return false; }
 
   public void dispose() {
     Link l = (Link) getOwner();
