@@ -163,6 +163,9 @@ Have fun ... your Columba Team!
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
 			<exclude name="AUTHORS"/>
+			<include name="res/ACKNOWLEDGEMENT"/>
+			<include name="res/CONTRIBUTORS"/>
+			<include name="res/LICENSE"/>
 			<exclude name="run.bat"/>
 			<exclude name="run.sh"/>
 			<exclude name="run_source.bat"/>
@@ -351,6 +354,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
 				<include name="plugins/**/*.xml"/>
+				<include name="**/*.dll"/>
 				<!--<exclude name="plugins/**/*.jar"/>-->
 				<exclude name="columba.jar"/>
 				<exclude name="classes/**"/>
