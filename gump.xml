@@ -24,7 +24,7 @@
     <depend project="jakarta-servletapi"/>
     <depend project="jakarta-tomcat-util" runtime="true"/>
     <depend project="jakarta-tomcat-connectors"/>
-    <depend project="jsse"/>
+    <depend project="jsse" runtime="true"/>
     <depend project="jmx"/>
     <work nested="build/tomcat/classes"/>
 
