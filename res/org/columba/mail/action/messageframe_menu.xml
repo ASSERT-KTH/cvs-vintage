@@ -58,7 +58,7 @@
 		</menu>
 	</menu>
 	
-	<menu name="menu_utilities">
+	<menu name="menu_utilities" extensionpoint="bottom">
 	 <menu name="menu_message_filteronmessage">
 	  <menuitem action="CreateFilterOnSubject"/>
 	  <menuitem action="CreateFilterOnFrom"/>

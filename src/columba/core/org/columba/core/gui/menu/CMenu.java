@@ -13,9 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
+package org.columba.core.gui.menu;
 
 import javax.swing.JMenu;
+
+import org.columba.core.gui.util.MnemonicSetter;
 
 /**
  * @author frd
@@ -27,10 +29,21 @@ import javax.swing.JMenu;
  */
 public class CMenu extends JMenu{
 	
-	public CMenu( String str )
-	{
-		super(str);
-
+	/**
+	 * Creates a menu item with the specified text.
+	 * <br>
+	 * If the textcontains &, the next character is used as
+	 * mnemonic. If not, no mnemonic is set.
+	 * 
+	 * @param	str		Menu text
+	 */
+	public CMenu( String str ) {
+		super();
+		//super(str);
+	
+		// set menu text incl. mnemonic if specified
+		MnemonicSetter.setTextWithMnemonic(this, str);
+		
 		// TODO CMenu - EmptyIcon hack
 		// don't use this hack here, we need to change this in the theme
 		//setIcon( new EmptyIcon() );		

@@ -24,7 +24,6 @@ import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.util.CMenu;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -166,8 +165,9 @@ public abstract class AbstractMenuGenerator {
 		List childs = menuElement.getElements();
 		ListIterator it = childs.listIterator();
 
-		JMenu menu =
-			new JMenu(
+		// *20031004, karlpeder* Changed from JMenu to CMenu to support mnemonics
+		CMenu menu =
+			new CMenu(
 				getString(
 					"menu",
 					"mainframe",
