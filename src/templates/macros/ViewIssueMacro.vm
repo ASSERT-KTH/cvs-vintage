@@ -404,9 +404,7 @@
                <th>Attachment description</th>
                <td>
                 #textAreaMedium("$intakeAttachment.Name.Key" "")
-                #if ( !$intakeAttachment.Name.isValid())
-                    <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
-                #end
+                #fieldErrorMsg($intakeAttachment.Name "")
                </td>
             </tr>
        #end
