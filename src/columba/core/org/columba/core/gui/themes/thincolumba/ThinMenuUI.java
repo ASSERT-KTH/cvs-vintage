@@ -15,10 +15,17 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.thincolumba;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicMenuUI;
 
 /**
@@ -35,9 +42,91 @@ public class ThinMenuUI extends BasicMenuUI {
 		return new ThinMenuUI();
 	}
 
+	
 	public void paint(Graphics g, JComponent c) {
 		ThinUtilities.enableAntiAliasing(g);
 		super.paint(g, c);
+	}
+	
+
+	private MenuRenderer renderer;
+	
+
+	protected void installDefaults() {
+		super.installDefaults();
+		if (arrowIcon == null || arrowIcon instanceof UIResource) {
+			arrowIcon = UIManager.getIcon("Menu.arrowIcon");
+		}
+		renderer =
+			new MenuRenderer(
+				menuItem,
+				false,
+				acceleratorFont,
+				selectionForeground,
+				disabledForeground,
+				acceleratorForeground,
+				acceleratorSelectionForeground);
+		Integer gap = (Integer) UIManager.get("Menu.textIconGap");
+		defaultTextIconGap = gap != null ? gap.intValue() : 2;
+	}
+
+	protected void uninstallDefaults() {
+		super.uninstallDefaults();
+		renderer = null;
+	}
+
+	protected Dimension getPreferredMenuItemSize(
+		JComponent c,
+		Icon aCheckIcon,
+		Icon anArrowIcon,
+		int textIconGap) {
+
+		if (isSubMenu(menuItem)) {
+			return renderer.getPreferredMenuItemSize(
+				c,
+				aCheckIcon,
+				anArrowIcon,
+				textIconGap);
+		} else
+			return super.getPreferredMenuItemSize(
+				c,
+				aCheckIcon,
+				anArrowIcon,
+				textIconGap);
+	}
+
+	protected void paintMenuItem(
+		Graphics g,
+		JComponent c,
+		Icon aCheckIcon,
+		Icon anArrowIcon,
+		Color background,
+		Color foreground,
+		int textIconGap) {
+		if (isSubMenu(menuItem)) {
+			renderer.paintMenuItem(
+				g,
+				c,
+				aCheckIcon,
+				anArrowIcon,
+				background,
+				foreground,
+				textIconGap);
+		} else {
+			super.paintMenuItem(
+				g,
+				c,
+				aCheckIcon,
+				anArrowIcon,
+				background,
+				foreground,
+				textIconGap);
+		}
+	}
+
+
+	private boolean isSubMenu(JMenuItem aMenuItem) {
+		return !((JMenu) aMenuItem).isTopLevelMenu();
 	}
 
 }

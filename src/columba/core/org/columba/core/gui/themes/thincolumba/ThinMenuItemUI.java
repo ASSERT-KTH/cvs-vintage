@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.thincolumba;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JMenuItem;
+import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
-
-import org.columba.core.gui.util.EmptyIcon;
 
 /**
  * @author freddy
@@ -40,32 +39,78 @@ public class ThinMenuItemUI extends BasicMenuItemUI {
 		return new ThinMenuItemUI();
 	}
 
-	protected Dimension getPreferredMenuItemSize(
-		JComponent c,
-		Icon checkIcon,
-		Icon arrowIcon,
-		int defaultTextIconGap) {
-		JMenuItem b = (JMenuItem) c;
-		Icon icon = (Icon) b.getIcon();
-
-		if (icon == null)
-			b.setIcon(new EmptyIcon());
-		Dimension d =
-			super.getPreferredMenuItemSize(
-				c,
-				checkIcon,
-				arrowIcon,
-				defaultTextIconGap);
-
-		
-		
-		return d;
-	}
-
+	
+	
 	public void paint(Graphics g, JComponent c) {
 		ThinUtilities.enableAntiAliasing(g);
 
 		super.paint(g, c);
 	}
+
+	private static final int MINIMUM_WIDTH = 80;
+
+	private MenuRenderer renderer;
+
+	protected void installDefaults() {
+		super.installDefaults();
+		renderer =
+			new MenuRenderer(
+				menuItem,
+				iconBorderEnabled(),
+				acceleratorFont,
+				selectionForeground,
+				disabledForeground,
+				acceleratorForeground,
+				acceleratorSelectionForeground);
+		Integer gap =
+			(Integer) UIManager.get("MenuItem.textIconGap");
+		defaultTextIconGap = gap != null ? gap.intValue() : 2;
+	}
+
+	// RadioButtonMenuItems and CheckBoxMenuItems will override
+	protected boolean iconBorderEnabled() {
+		return false;
+	}
+
+	protected void uninstallDefaults() {
+		super.uninstallDefaults();
+		renderer = null;
+	}
+
+	
+	protected Dimension getPreferredMenuItemSize(
+		JComponent c,
+		Icon aCheckIcon,
+		Icon anArrowIcon,
+		int textIconGap) {
+		Dimension size =
+			renderer.getPreferredMenuItemSize(
+				c,
+				aCheckIcon,
+				anArrowIcon,
+				textIconGap);
+		int width = Math.max(MINIMUM_WIDTH, size.width);
+		int height = size.height;
+		return new Dimension(width, height);
+	}
+
+	protected void paintMenuItem(
+		Graphics g,
+		JComponent c,
+		Icon aCheckIcon,
+		Icon anArrowIcon,
+		Color background,
+		Color foreground,
+		int textIconGap) {
+		renderer.paintMenuItem(
+			g,
+			c,
+			aCheckIcon,
+			anArrowIcon,
+			background,
+			foreground,
+			textIconGap);
+	}
+	
 
 }

@@ -16,8 +16,6 @@
 
 package org.columba.core.gui.themes.thincolumba;
 
-import java.awt.Font;
-
 import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
@@ -49,13 +47,13 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 
 	private FontUIResource mainFontResource;
 	private FontUIResource messageFontResource;
-        
+
 	protected static final String thinPackage =
 		"org.columba.core.gui.themes.thincolumba.";
 
 	public ThinColumbaTheme(GuiItem item) {
-                mainFontResource = new FontUIResource(item.getMainFont());
-                messageFontResource = new FontUIResource(item.getTextFont());
+		mainFontResource = new FontUIResource(item.getMainFont());
+		messageFontResource = new FontUIResource(item.getTextFont());
 		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));
 		foreground = new ColorUIResource(themeItem.getForeground());
 		background = new ColorUIResource(themeItem.getBackground());
@@ -77,11 +75,11 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 	protected ColorUIResource getSecondary1() {
 		return secondary1;
 	}
-        
+
 	protected ColorUIResource getSecondary2() {
 		return secondary2;
 	}
-        
+
 	protected ColorUIResource getSecondary3() {
 		return secondary3;
 	}
@@ -109,7 +107,7 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 	public FontUIResource getUserTextFont() {
 		return mainFontResource;
 	}
-        
+
 	public void addCustomEntriesToTable(UIDefaults table) {
 		Object map[] =
 			{
@@ -177,8 +175,8 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 				thinPackage + "ThinTableUI",
 				"TreeUI",
 				thinPackage + "ThinTreeUI",
-                                "WizardContentPaneUI",
-                                thinPackage + "ThinWizardContentPaneUI"};
+				"WizardContentPaneUI",
+				thinPackage + "ThinWizardContentPaneUI" };
 		table.putDefaults(map);
 
 		// antialiasing==0 -> no antialiasing
@@ -245,12 +243,12 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 		table.put("MenuBar.border", new ThinDefaultBorder());
 
 		table.put("ToolBar.border", new ThinDefaultBorder());
-		
+
 		// default for Metal is 8, which is too big
 		table.put("TextField.tabSize", new Integer(4));
 		table.put("TextArea.tabSize", new Integer(4));
 		table.put("TextPane.tabSize", new Integer(4));
-		
+
 		/*
 		table.put("Menu.checkIcon", new ImageIcon("") );
 		table.put("MenuItem.checkIcon", new ImageIcon(""));

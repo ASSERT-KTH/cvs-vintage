@@ -46,6 +46,7 @@ public class ThinCheckBoxMenuItemUI extends BasicCheckBoxMenuItemUI {
 		
 	}
 	
+	
 	protected Dimension getPreferredMenuItemSize(
 		JComponent c,
 		Icon checkIcon,
