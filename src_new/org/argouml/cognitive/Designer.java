@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.39 2005/02/20 19:42:11 linus Exp $
+// $Id: Designer.java,v 1.40 2005/03/10 09:33:24 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -231,7 +231,7 @@ public final class Designer
 
         warmQueue = new Vector();
 
-        childGenerator = new ChildGenDMElements();
+        childGenerator = new EmptyChildGenerator();
 
         critiqueLock = 0;
     }
@@ -395,10 +395,13 @@ public final class Designer
 
     /**
      * Look for potential problems or open issues in the given design.
+     * This is currently done by invoking the Agency.
      *
      * @param des the design to be checked
      */
-    public void critique(Design des) { des.critique(this); }
+    public void critique(Object des) {
+        Agency.applyAllCritics(des, this);
+    }
 
     /**
      * Adds a property change listener.
@@ -939,17 +942,17 @@ public final class Designer
     }
 
 
-
-    class ChildGenDMElements implements ChildGenerator {
+/**
+ * ChildGenerator which always returns an empty enumeration.
+ * @author MarkusK
+ *
+ */
+    class EmptyChildGenerator implements ChildGenerator {
         /**
          * Reply a Enumeration of the children of the given Object.
          */
         public Enumeration gen(Object o) {
-            if (o instanceof Design) {
-                return ((Design) o).elements();
-            } else {
                 return EnumerationEmpty.theInstance();
-            }
         }
     } /* end class ChildGenDMElements */
 
