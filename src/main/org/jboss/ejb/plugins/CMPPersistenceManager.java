@@ -27,15 +27,15 @@ import org.jboss.ejb.EntityInstanceCache;
 import org.jboss.ejb.EntityPersistenceStore;
 
 /**
-*	The CMP Persistence Manager implements the semantics of the CMP
+*   The CMP Persistence Manager implements the semantics of the CMP
 *  EJB 1.1 call back specification. 
 *
 *  This Manager works with a "EntityPersistenceStore" that takes care of the 
 *  physical storing of instances (JAWS, JDBC O/R, FILE, Object).
 *      
-*	@see <related>
-*	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.7 $
+*   @see <related>
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*   @version $Revision: 1.8 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -58,7 +58,7 @@ implements EntityPersistenceManager {
     // Constructors --------------------------------------------------
     
     // Public --------------------------------------------------------
-    public void setContainer(Container c)	{
+    public void setContainer(Container c)   {
         con = (EntityContainer)c;
         if (store != null) store.setContainer(c);
     }
@@ -119,12 +119,12 @@ implements EntityPersistenceManager {
             // Create a new CacheKey
                Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
         
-         	// Give it to the context
-         	ctx.setCacheKey(cacheKey);
+            // Give it to the context
+            ctx.setCacheKey(cacheKey);
          
          
-         	// insert instance in cache, it is safe
-         	((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+            // insert instance in cache, it is safe
+            ((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
          
             // Create EJBObject
             ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
@@ -133,7 +133,7 @@ implements EntityPersistenceManager {
         
         } 
         catch (InvocationTargetException e) {
-            throw new CreateException("Create failed:"+e);
+            throw new CreateException("Create failed:"+e.getTargetException());
         } 
         catch (NoSuchMethodException e) {
             throw new CreateException("Create methods not found:"+e);
@@ -168,7 +168,7 @@ implements EntityPersistenceManager {
          list.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(idEnum.next()));
          }
         
-       return list;		 
+       return list;      
     }
     
     /*

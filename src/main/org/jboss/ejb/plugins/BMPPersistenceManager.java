@@ -28,12 +28,12 @@ import org.jboss.logging.Logger;
 
 
 /**
-*	<description> 
+*   <description> 
 *      
-*	@see <related>
-*	@author Rickard Öberg (rickard.oberg@telkel.com)
+*   @see <related>
+*   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -109,7 +109,7 @@ implements EntityPersistenceManager
           // Call ejbCreate
           id = createMethod.invoke(ctx.getInstance(), args);
          } catch (InvocationTargetException ite) {
-          throw new CreateException("Create failed(could not call ejbCreate):"+ite);
+          throw new CreateException("Create failed(could not call ejbCreate):"+ite.getTargetException());
          }
          
          // set the id
@@ -133,7 +133,7 @@ implements EntityPersistenceManager
          try {
           postCreateMethod.invoke(ctx.getInstance(), args);
          } catch (InvocationTargetException ite) {
-          throw new CreateException("Create failed(could not call ejbPostCreate):" + ite);
+          throw new CreateException("Create failed(could not call ejbPostCreate):" + ite.getTargetException());
          }
          
          //      } catch (InvocationTargetException e)

@@ -52,15 +52,15 @@ import org.jboss.logging.Logger;
 
 
 /**
- *	StatefulSessionFilePersistenceManager
+ *  StatefulSessionFilePersistenceManager
  *
  *  This class is one of the passivating plugins for jBoss.  
  *  It is fairly simple and can work from the file system from wich jBoss is operating
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @see <related>
+ *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -152,7 +152,7 @@ public class StatefulSessionFilePersistenceManager
 
       } catch (InvocationTargetException e)
       {
-         throw new CreateException("Create failed:"+e);
+         throw new CreateException("Create failed:"+e.getTargetException());
       } catch (NoSuchMethodException e)
       {
          throw new CreateException("Create methods not found:"+e);
@@ -204,7 +204,7 @@ public class StatefulSessionFilePersistenceManager
           if (!Modifier.isTransient(fields[i].getModifiers()))
               out.writeObject(fields[i].get(ctx.getInstance()));
          
-         out.close();	
+         out.close();   
        } catch (Exception e)
        {
           throw new ServerException("Passivation failed", e);
