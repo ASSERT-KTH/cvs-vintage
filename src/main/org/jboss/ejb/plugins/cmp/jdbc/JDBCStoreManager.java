@@ -21,9 +21,6 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
-import javax.sql.DataSource;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -64,7 +61,7 @@ import org.jboss.proxy.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore2 {
 
@@ -82,7 +79,6 @@ public class JDBCStoreManager implements EntityPersistenceStore2 {
    private JDBCEntityMetaData metaData;
    private JDBCEntityBridge entityBridge;
 
-   private DataSource dataSource;
    private JDBCTypeFactory typeFactory;
    private JDBCQueryManager queryManager;
 
@@ -151,13 +147,6 @@ public class JDBCStoreManager implements EntityPersistenceStore2 {
       return entityBridge;
    }
 
-   /**
-    * Returns the datasource for this entity.
-    */
-   public DataSource getDataSource() {
-      return dataSource;
-   }
-
    public JDBCTypeFactory getJDBCTypeFactory() {
       return typeFactory;
    }
@@ -185,15 +174,6 @@ public class JDBCStoreManager implements EntityPersistenceStore2 {
       initTxDataMap();
 
       metaData = loadJDBCEntityMetaData();
-
-      // find the datasource
-      try {
-         dataSource = (DataSource)new InitialContext().lookup(
-               metaData.getDataSourceName());
-      } catch(NamingException e) {
-         throw new DeploymentException("Error: can't find data source: " + 
-               metaData.getDataSourceName());
-      }
 
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
@@ -391,7 +371,37 @@ public class JDBCStoreManager implements EntityPersistenceStore2 {
 
    public void storeEntity(EntityEnterpriseContext ctx) {
       storeEntityCommand.execute(ctx);
+      synchronizeRelationData(ctx.getTransaction());
    }
+
+   public void synchronizeRelationData(Transaction tx) {
+      Map txDataMap = getTxDataMap();
+      Map txData = (Map)txDataMap.get(tx);
+      if(txData != null) {
+         Iterator iterator = txData.values().iterator();
+         while(iterator.hasNext()) {
+            Object obj = iterator.next();
+            if(obj instanceof RelationData) {
+               RelationData relationData = (RelationData) obj;
+               
+               // only need to bother if neither side has a foreign key
+               if(!relationData.getLeftCMRField().hasForeignKey() &&
+               !relationData.getRightCMRField().hasForeignKey()) {
+                  
+                  // delete all removed pairs from relation table
+                  deleteRelations(relationData);
+                  
+                  // insert all added pairs into the relation table
+                  insertRelations(relationData);
+                  
+                  relationData.addedRelations.clear();
+                  relationData.removedRelations.clear();
+                  relationData.notRelatedPairs.clear();
+               }
+            }
+         }
+      }
+   }   
 
    public void passivateEntity(EntityEnterpriseContext ctx) {
       passivateEntityCommand.execute(ctx);

@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCStoreEntityCommand implements StoreEntityCommand {
    private JDBCStoreManager manager;
@@ -68,9 +68,10 @@ public class JDBCStoreEntityCommand implements StoreEntityCommand {
       int rowsAffected  = 0;
       try {
          // get the connection
-         con = manager.getDataSource().getConnection();
+         con = entity.getDataSource().getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

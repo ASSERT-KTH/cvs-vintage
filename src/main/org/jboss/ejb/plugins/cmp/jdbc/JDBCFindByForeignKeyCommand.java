@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCFindByForeignKeyCommand {
    private JDBCStoreManager manager;
@@ -59,9 +59,10 @@ public class JDBCFindByForeignKeyCommand {
       PreparedStatement ps = null;
       try {
          // get the connection
-         con = manager.getDataSource().getConnection();
+         con = entity.getDataSource().getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

@@ -16,6 +16,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.ejb.EJBException;
+import javax.sql.DataSource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -49,11 +52,16 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
    protected JDBCStoreManager manager;
+
+   private DataSource dataSource;
+
+   /** is the table assumed to exist */
+   protected boolean tableExists;
    
    protected JDBCCMPFieldBridge[] cmpFields;
    protected Map cmpFieldsByName;
@@ -75,6 +83,15 @@ public class JDBCEntityBridge implements EntityBridge {
       this.metadata = metadata;                  
       this.manager = manager;
             
+      // find the datasource
+      try {
+         dataSource = (DataSource)new InitialContext().lookup(
+               metadata.getDataSourceName());
+      } catch(NamingException e) {
+         throw new DeploymentException("Error: can't find data source: " + 
+               metadata.getDataSourceName());
+      }
+
       // CMP fields
       loadCMPFields(metadata);
 
@@ -227,7 +244,32 @@ public class JDBCEntityBridge implements EntityBridge {
    public JDBCEntityMetaData getMetaData() {
       return metadata;
    }
+
+   /**
+    * Returns the datasource for this entity.
+    */
+   public DataSource getDataSource() {
+      return dataSource;
+   }
    
+   /** 
+    * Does the table exists yet? This does not mean that table has been created
+    * by the appilcation, or the the database metadata has been checked for the
+    * existance of the table, but that at this point the table is assumed to 
+    * exist.
+    * @return true if the table exists
+    */
+   public boolean getTableExists() {
+      return tableExists;
+   }
+
+   /** 
+    * Sets table exists flag.
+    */
+   public void setTableExists(boolean tableExists) {
+      this.tableExists = tableExists;
+   }
+
    public String getTableName() {
       return metadata.getTableName();
    }

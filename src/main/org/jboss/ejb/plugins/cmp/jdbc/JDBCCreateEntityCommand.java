@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCCreateEntityCommand implements CreateEntityCommand {
    private JDBCStoreManager manager;
@@ -151,10 +151,11 @@ public class JDBCCreateEntityCommand implements CreateEntityCommand {
       PreparedStatement ps = null;
       try {
          // get the connection
-         DataSource dataSource = manager.getDataSource();
+         DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + entityExistsSQL);
          ps = con.prepareStatement(entityExistsSQL);
          
          // set the parameters
@@ -188,10 +189,11 @@ public class JDBCCreateEntityCommand implements CreateEntityCommand {
       int rowsAffected  = 0;
       try {
          // get the connection
-         DataSource dataSource = manager.getDataSource();
+         DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + insertEntitySQL);
          ps = con.prepareStatement(insertEntitySQL);
          
          // set the parameters

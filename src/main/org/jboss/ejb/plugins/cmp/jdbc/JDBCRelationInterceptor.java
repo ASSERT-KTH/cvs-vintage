@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -100,7 +100,8 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
    public Object invoke(MethodInvocation mi) throws Exception
    {
       // We are going to work with the context a lot
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
+      EntityEnterpriseContext ctx =
+            (EntityEnterpriseContext)mi.getEnterpriseContext();
       
       // The Tx coming as part of the Method Invocation
       Transaction tx = mi.getTransaction();
@@ -111,33 +112,46 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          {
             
             // call getRelateId
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)mi.getArguments()[0];
+            JDBCCMRFieldBridge cmrField =
+                  (JDBCCMRFieldBridge)mi.getArguments()[0];
             return cmrField.getRelatedId(ctx);
             
          } else if(ADD_RELATION.equals(mi.getMethod()))
          {
             
             // call addRelation
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)mi.getArguments()[0];
+            JDBCCMRFieldBridge cmrField =
+                  (JDBCCMRFieldBridge)mi.getArguments()[0];
             
             Object relatedId = mi.getArguments()[1];
             cmrField.addRelation(ctx, relatedId);
             
             RelationData relationData = getRelationData(cmrField, tx);
-            relationData.addRelation(cmrField, ctx.getId(), cmrField.getRelatedCMRField(), relatedId);
+            relationData.addRelation(
+                  cmrField,
+                  ctx.getId(),
+                  cmrField.getRelatedCMRField(),
+                  relatedId);
+
             return null;
             
          } else if(REMOVE_RELATION.equals(mi.getMethod()))
          {
             
             // call removeRelation
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)mi.getArguments()[0];
+            JDBCCMRFieldBridge cmrField = 
+                  (JDBCCMRFieldBridge)mi.getArguments()[0];
             
             Object relatedId = mi.getArguments()[1];
             cmrField.removeRelation(ctx, relatedId);
             
             RelationData relationData = getRelationData(cmrField, tx);
-            relationData.removeRelation(cmrField, ctx.getId(), cmrField.getRelatedCMRField(), relatedId);
+            relationData.removeRelation(
+                  cmrField,
+                  ctx.getId(),
+                  cmrField.getRelatedCMRField(),
+                  relatedId);
+
             return null;
             
          } else
@@ -152,7 +166,8 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       }
    }
    
-   protected RelationData getRelationData(JDBCCMRFieldBridge cmrField, Transaction tx)
+   protected RelationData getRelationData(
+         JDBCCMRFieldBridge cmrField, Transaction tx)
    {
       Map txDataMap = cmrField.getJDBCStoreManager().getTxDataMap();
       Map txData = (Map)txDataMap.get(tx);
@@ -162,11 +177,13 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          txDataMap.put(tx, txData);
       }
       
-      JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
+      JDBCRelationMetaData relationMetaData = 
+            cmrField.getMetaData().getRelationMetaData();
       RelationData relationData = (RelationData)txData.get(relationMetaData);
       if(relationData == null)
       {
-         relationData = new RelationData(cmrField, cmrField.getRelatedCMRField());
+         relationData = new RelationData(
+               cmrField, cmrField.getRelatedCMRField());
          txData.put(relationMetaData, relationData);
       }
       return relationData;
@@ -222,45 +239,18 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(container.getClassLoader());
+         Thread.currentThread().setContextClassLoader(
+               container.getClassLoader());
          
          try
          {
             // Get the manager
-            CMPPersistenceManager cmpPM = (CMPPersistenceManager)container.getPersistenceManager();
-            JDBCStoreManager manager = (JDBCStoreManager)cmpPM.getPersistenceStore();
+            CMPPersistenceManager cmpPM = 
+                  (CMPPersistenceManager)container.getPersistenceManager();
+            JDBCStoreManager manager = 
+                  (JDBCStoreManager)cmpPM.getPersistenceStore();
             
-            // Save each relation
-            Map txDataMap = manager.getTxDataMap();
-            Map txData = (Map)txDataMap.get(tx);
-            if(txData != null)
-            {
-               Iterator iterator = txData.values().iterator();
-               while(iterator.hasNext())
-               {
-                  Object obj = iterator.next();
-                  if(obj instanceof RelationData)
-                  {
-                     RelationData relationData = (RelationData) obj;
-                     
-                     // only need to bother if neither side has a foreign key
-                     if(!relationData.getLeftCMRField().hasForeignKey() &&
-                     !relationData.getRightCMRField().hasForeignKey())
-                     {
-                        
-                        // delete all removed pairs from relation table
-                        manager.deleteRelations(relationData);
-                        
-                        // insert all added pairs into the relation table
-                        manager.insertRelations(relationData);
-                        
-                        relationData.addedRelations.clear();
-                        relationData.removedRelations.clear();
-                        relationData.notRelatedPairs.clear();
-                     }
-                  }
-               }
-            }
+            manager.synchronizeRelationData(tx);
          } catch (Exception e)
          {
             log.error("ex", e);

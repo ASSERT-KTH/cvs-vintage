@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCRemoveEntityCommand implements RemoveEntityCommand {
    
@@ -76,10 +76,11 @@ public class JDBCRemoveEntityCommand implements RemoveEntityCommand {
       int rowsAffected = 0;
       try {
          // get the connection
-         DataSource dataSource = manager.getDataSource();
+         DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + removeEntitySQL);
          ps = con.prepareStatement(removeEntitySQL);
          
          // set the parameters

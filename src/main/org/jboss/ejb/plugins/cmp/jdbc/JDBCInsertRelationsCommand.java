@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
@@ -56,11 +56,11 @@ public class JDBCInsertRelationsCommand {
          con = dataSource.getConnection();
          
          // get the sql
-         String theSQL = getSQL(relationData);
-         log.debug("InsertRelations command executing: " + theSQL);
+         String sql = getSQL(relationData);
          
          // get a prepared statement
-         ps = con.prepareStatement(theSQL);
+         log.debug("Executing SQL: " + sql);
+         ps = con.prepareStatement(sql);
          
          Iterator pairs = relationData.addedRelations.iterator();
          while(pairs.hasNext()) {

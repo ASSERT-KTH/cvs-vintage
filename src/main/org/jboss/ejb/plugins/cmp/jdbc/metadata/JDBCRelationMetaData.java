@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -214,11 +214,13 @@ public final class JDBCRelationMetaData {
          left = new JDBCRelationshipRoleMetaData(
                      this,
                      jdbcApplication,                     
+                     element,
                      defaultValues.getLeftRelationshipRole());
                      
          right = new JDBCRelationshipRoleMetaData(
                      this,
                      jdbcApplication,
+                     element,
                      defaultValues.getRightRelationshipRole());
          
          return;      
@@ -299,7 +301,7 @@ public final class JDBCRelationMetaData {
       } else {
          primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
       }
-      
+ 
       // read-only
       String readOnlyString = MetaData.getOptionalChildContent(
             mappingElement, "read-only");
@@ -365,6 +367,7 @@ public final class JDBCRelationMetaData {
          leftRole = new JDBCRelationshipRoleMetaData(
                      this,
                      jdbcApplication,                     
+                     element,
                      defaultValues.getLeftRelationshipRole());
                      
       }
@@ -374,6 +377,7 @@ public final class JDBCRelationMetaData {
          rightRole = new JDBCRelationshipRoleMetaData(
                      this,
                      jdbcApplication,
+                     element,
                      defaultValues.getRightRelationshipRole());
       }
       

@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCStopCommand implements StopCommand {
 
@@ -52,7 +52,7 @@ public class JDBCStopCommand implements StopCommand {
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
          log.debug("Droping table for entity " + entity.getEntityName());
-         dropTable(manager.getDataSource(), entityMetaData.getTableName());
+         dropTable(entity.getDataSource(), entityMetaData.getTableName());
       }
 
       // drop relation tables

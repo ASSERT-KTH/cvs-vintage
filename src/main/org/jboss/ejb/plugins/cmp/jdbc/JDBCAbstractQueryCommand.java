@@ -42,7 +42,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -80,9 +80,10 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       PreparedStatement ps = null;
       try {
          // get the connection
-         con = manager.getDataSource().getConnection();
+         con = manager.getEntityBridge().getDataSource().getConnection();
          
          // create the statement
+         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
          
          // set the parameters
