@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.2 2000/01/21 14:54:54 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/21 14:54:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.3 2000/01/23 01:37:46 bergsten Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/23 01:37:46 $
  *
  * ====================================================================
  *
@@ -64,11 +64,14 @@ package org.apache.jasper.compiler;
 import java.io.BufferedInputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.io.File;
+import java.io.ByteArrayOutputStream;
 
 /**
   * A Plug-in class for specifying a 'jikes' compile.
   *
   * @author Jeffrey Chiu
+  * @author Hans Bergsten <hans@gefionsoftware.com>
   */
 public class JikesJavaCompiler implements JavaCompiler {
 
@@ -129,34 +132,35 @@ public class JikesJavaCompiler implements JavaCompiler {
           //XXX - add encoding once Jikes supports it
           "-classpath", classpath,
           "-d", outdir,
+          // Only report errors, to be able to test on output in addition to exit code
+          "-nowarn",
           source
         };
 
+        ByteArrayOutputStream tmpErr = new ByteArrayOutputStream(OUTPUT_BUFFER_SIZE);
 	try {
 	    p = Runtime.getRuntime().exec(compilerCmd);
-
+	    
 	    BufferedInputStream compilerErr = new
 		BufferedInputStream(p.getErrorStream());
 
-	    StreamPumper errPumper = new StreamPumper(compilerErr);
+	    StreamPumper errPumper = new StreamPumper(compilerErr, tmpErr);
 
 	    errPumper.start();
 
-	    try {
-		// try grabbing exitValue first, if fails, then wait.
-		// (very fast compilation returns almost immediately)
-		exitValue = p.exitValue();
-	    } catch (IllegalThreadStateException itse) {
-		p.waitFor();
-		exitValue = p.exitValue();
-	    }
+            p.waitFor();
+            exitValue = p.exitValue();
 
-	    errPumper.gentleStop();
-	    errPumper.cleanUp(); // deplete the stream.
-
+	    // Wait until the complete error stream has been read
+            errPumper.join();
 	    compilerErr.close();
+
 	    p.destroy();
 
+            // Write the compiler error messages, if any, to the real stream 
+            tmpErr.close();
+            tmpErr.writeTo(out);
+            
 	} catch (IOException ioe) {
 	    return false;
 
@@ -164,19 +168,27 @@ public class JikesJavaCompiler implements JavaCompiler {
 	    return false;
 	}
 
-	return (exitValue==0);
+        boolean isOkay = exitValue == 0;
+        // Jikes returns 0 even when there are some types of errors. 
+        // Check if any error output as well
+        if (tmpErr.size() > 0) {
+            isOkay = false;
+        }
+        return isOkay;
     }
 
     // Inner class for continually pumping the input stream during
     // Process's runtime.
     class StreamPumper extends Thread {
-	BufferedInputStream stream;
-	boolean endOfStream = false;
-	boolean stopSignal  = false;
-	int SLEEP_TIME = 5;
+	private BufferedInputStream stream;
+	private boolean endOfStream = false;
+	private boolean stopSignal  = false;
+	private int SLEEP_TIME = 5;
+	private OutputStream out;
 
-	public StreamPumper(BufferedInputStream is) {
+	public StreamPumper(BufferedInputStream is, OutputStream out) {
 	    this.stream = is;
+	    this.out = out;
 	}
 
 	public void pumpStream()
@@ -188,14 +200,16 @@ public class JikesJavaCompiler implements JavaCompiler {
 
 		if (bytesRead > 0) {
 		    out.write(buf, 0, bytesRead);
-		} else if (bytesRead==-1)
+		} else if (bytesRead==-1) {
 		    endOfStream=true;
+		}
 	    }
 	}
 
 	public void run() {
 	    try {
-		while (!endOfStream || stopSignal) {
+		//while (!endOfStream || !stopSignal) {
+		while (!endOfStream) {
 		    pumpStream();
 		    sleep(SLEEP_TIME);
 		}
@@ -203,19 +217,6 @@ public class JikesJavaCompiler implements JavaCompiler {
 	    } catch (IOException ioe) {
 	    }
 	}
-
-	// causes this thread to stop in a safe manner.
-	public void gentleStop() {
-	    stopSignal = true;
-	}
-
-	// makes sure the stream is depleted.
-	public void cleanUp() throws IOException {
-	    while (!endOfStream) {
-		pumpStream();
-	    }
-	}
-
     }
 }
 
