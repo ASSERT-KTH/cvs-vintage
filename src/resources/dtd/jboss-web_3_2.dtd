@@ -12,7 +12,7 @@ DOCTYPE jboss-web
 <!-- The jboss-web element is the root element.
 -->
 <!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
-   virtual-host?, use-session-cookies?, resource-env-ref*, resource-ref* ,
+   virtual-host*, use-session-cookies?, resource-env-ref*, resource-ref* ,
    ejb-ref* , ejb-local-ref*, depends*)>
 
 <!-- The class-loading element allows one to override the default class
