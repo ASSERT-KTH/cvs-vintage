@@ -57,8 +57,8 @@ import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.ObjectUtils;
 import org.apache.commons.util.StringUtils;
 import org.apache.turbine.ParameterParser;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
+import org.apache.fulcrum.template.TemplateContext;
+import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.util.Log;
 import org.apache.torque.om.Persistent;
@@ -151,12 +151,16 @@ public class Transaction
          throws Exception
     {
         TemplateEmail te = new TemplateEmail();
-
+        if ( context == null ) 
+        {
+            context = new DefaultTemplateContext();
+        }
+        
         // add data to context
         context.put("issue", issue);
         context.put("attachment", aAttachment);
         context.put("activityList", getActivityList());
-        te.setContext(new ContextAdapter(context));
+        te.setContext(context);
 
         te.setFrom(
             Turbine.getConfiguration().getString
@@ -196,11 +200,21 @@ public class Transaction
         If no subject and template have been specified,
         Pass null arguments to the email method to specify  
         Using default values for modify issue.
-        throws Exception
+        @throws Exception
     */
-    public void sendEmail( TemplateContext context, Issue issue)
+    public void sendEmail(Issue issue)
          throws Exception
     {
-        sendEmail( context, issue, null, null);
+        sendEmail(null, issue, null, null);
+    }
+
+    /** 
+        Convenience method for emails that require no extra context info. 
+        @throws Exception
+    */
+    public void sendEmail(Issue issue, String subject, String template)
+         throws Exception
+    {
+        sendEmail(null, issue, subject, template);
     }
 }

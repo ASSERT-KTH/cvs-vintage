@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.27 2001/08/28 00:51:54 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.28 2001/08/30 23:00:06 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -235,7 +235,7 @@ public class ModifyIssue extends TemplateAction
                 } 
             }
             intake.removeAll();
-            transaction.sendEmail(context, issue);
+            transaction.sendEmail(issue);
         } 
         else
         {
@@ -333,7 +333,7 @@ public class ModifyIssue extends TemplateAction
                 intake.remove(group);
                 issue.setModifiedBy(user.getUserId());
                 issue.save();
-                transaction.sendEmail(context, issue);
+                transaction.sendEmail(issue);
 
                 String template = data.getParameters()
                                  .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -389,7 +389,7 @@ public class ModifyIssue extends TemplateAction
                                null, null, "", "");
                issue.setModifiedBy(user.getUserId());
                issue.save();
-               transaction.sendEmail(context, issue);
+               transaction.sendEmail(issue);
             } 
         }
         String template = data.getParameters()
@@ -461,7 +461,7 @@ public class ModifyIssue extends TemplateAction
                activity.create(currentIssue, null, desc,
                                transaction, null, null,
                                oldValue, newValue);
-               transaction.sendEmail(context, currentIssue);
+               transaction.sendEmail(currentIssue);
   
                break;
             }
@@ -529,7 +529,7 @@ public class ModifyIssue extends TemplateAction
                                oldValue, newValue);
                issue.setModifiedBy(user.getUserId());
                issue.save();
-               transaction.sendEmail(context, issue);
+               transaction.sendEmail(issue);
 
             }
         }
@@ -614,7 +614,7 @@ public class ModifyIssue extends TemplateAction
                             transaction, null, null, "", "");
             issue.setModifiedBy(user.getUserId());
             issue.save();
-            transaction.sendEmail(context, issue);
+            transaction.sendEmail(issue);
         }
         else
         {
