@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.15 2003/12/29 13:28:09 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.16 2004/01/07 21:49:25 mvw Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -15,8 +15,10 @@
 <!ENTITY subsysteminternationalization SYSTEM "compi18n.xml">
 <!ENTITY cookbookmodules SYSTEM "cookbook_modules.xml">
 <!ENTITY cookbooklogging SYSTEM "cookbook_logging.xml">
+<!ENTITY documentationstandards SYSTEM "documentationstandards.xml">
 
 <!ENTITY argoversion    "@VERSION@">
+<!ENTITY argouml "ArgoUML">
 
 ]>
 
@@ -2536,6 +2538,7 @@ the issues discussed recently in the user community.
 
   &cvs;
   &standards;
+  &documentationstandards;
 
 <chapter id="further_reading">
 <title>Further Reading</title>
