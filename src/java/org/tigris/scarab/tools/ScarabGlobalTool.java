@@ -83,7 +83,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.22 2002/02/19 19:30:10 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.23 2002/02/19 19:32:01 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -377,11 +377,24 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return b;
     }
 
+    /**
+     * Logs a message at the debug level.  Useful for "I am here" type 
+     * messages. The category is "org.tigris.scarab". 
+     *
+     * @param s message to log
+     */
     public void log(String s)
     {
         log.debug(s);
     }
 
+    /**
+     * Logs a message at the debug level.  Useful for "I am here" type 
+     * messages. The category in which to log is also specified. 
+     *
+     * @param category log4j Category
+     * @param s message to log
+     */
     public void log(String category, String s)
     {
         Category.getInstance(category).debug(s);
