@@ -2,10 +2,10 @@
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <folderlist>
-  <folder   <folder name="Root" class="org.columba.addressbook.folder.Root"/>
-         name="Root"   <folder name="localroot" class="org.columba.addressbook.folder.LocalRootFolder"/>
-         class="org.columba.addressbook.folder.Root" />   <folder name="remoteroot" class="org.columba.addressbook.folder.RemoteRootFolder"/>
-  <folder   <folder name="addresses" class="org.columba.addressbook.folder.AddressbookFolder"/>
+  <folder   
+         name="Root"  
+         class="org.columba.addressbook.folder.Root" />   
+  <folder  
          name="LocalRootFolder"  
          class="org.columba.addressbook.folder.LocalRootFolder" />  
   <folder  
