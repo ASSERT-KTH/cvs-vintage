@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.49 2004/08/04 19:54:27 mvw Exp $
+// $Id: FigPackage.java,v 1.50 2004/10/19 05:40:04 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,7 +479,7 @@ public class FigPackage extends FigNodeModelElement {
         Vector popUpActions = super.getPopUpActions(me);
         Object mpackage = /*(MPackage)*/ getOwner();
 
-        ArgoJMenu modifierMenu = new ArgoJMenu(BUNDLE, "menu.popup.modifiers");
+        ArgoJMenu modifierMenu = new ArgoJMenu("menu.popup.modifiers");
 
         modifierMenu.addCheckItem(new ActionModifier("Abstract",
 						     "isAbstract",
@@ -496,7 +496,7 @@ public class FigPackage extends FigNodeModelElement {
         popUpActions.insertElementAt(modifierMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 
-        ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
+        ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
 
         if (!showStereotype) {
             showMenu.add(new UMLAction("Show Stereotype", UMLAction.NO_ICON)

@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.42 2004/10/18 17:13:31 mvw Exp $
+// $Id: AboutBox.java,v 1.43 2004/10/19 05:40:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,9 +159,8 @@ public class AboutBox extends JDialog {
 	    Object o = iterator.next();
 	    AboutTabPanel atp = ((PluggableAboutTab) o).getAboutTabPanel();
 
-	    tabs.addTab(Translator.localize(atp.getTabResourceBundleKey(),
-				       atp.getTabKey()),
-			 atp.getTabPanel());
+	    tabs.addTab(Translator.localize(atp.getTabKey()),
+			atp.getTabPanel());
 	}
 
 	getContentPane().setLayout(new BorderLayout(0, 0));

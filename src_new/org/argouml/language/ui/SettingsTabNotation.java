@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.19 2004/08/09 05:48:34 linus Exp $
+// $Id: SettingsTabNotation.java,v 1.20 2004/10/19 05:40:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,8 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
 package org.argouml.language.ui;
 
 import java.awt.BorderLayout;
@@ -44,15 +42,15 @@ import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
 import org.argouml.ui.ShadowComboBox;
 
-/** Action object for handling Argo settings
+/**
+ * Action object for handling Notation settings.
  *
- *  @author Thierry Lach
- *  @since  0.9.4
+ * @author Thierry Lach
+ * @since  0.9.4
  */
-
-public class SettingsTabNotation extends SettingsTabHelper
-    implements SettingsTabPanel
-{
+public class SettingsTabNotation 
+    extends SettingsTabHelper
+    implements SettingsTabPanel {
 
     private JCheckBox allowNotations = null;
     private JCheckBox useGuillemots = null;
@@ -154,7 +152,7 @@ public class SettingsTabNotation extends SettingsTabHelper
      * @return a boolean
      */
     private static boolean getBoolean(ConfigurationKey key) {
-    return Configuration.getBoolean(key, false);
+        return Configuration.getBoolean(key, false);
     }
 
     /**
@@ -214,10 +212,4 @@ public class SettingsTabNotation extends SettingsTabHelper
      * @see org.argouml.application.api.SettingsTabPanel#getTabKey()
      */
     public String getTabKey() { return "tab.notation"; }
-    
-    /**
-     * @see org.argouml.application.api.SettingsTabPanel#getTabResourceBundleKey()
-     */
-    public String getTabResourceBundleKey() { return "CoreSettings"; }
-
 }

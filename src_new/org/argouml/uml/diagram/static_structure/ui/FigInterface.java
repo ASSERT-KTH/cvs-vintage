@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.75 2004/09/29 18:46:28 mvw Exp $
+// $Id: FigInterface.java,v 1.76 2004/10/19 05:40:04 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -255,12 +255,12 @@ public class FigInterface extends FigNodeModelElement
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
-        ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
+        ArgoJMenu addMenu = new ArgoJMenu("menu.popup.add");
         addMenu.add(ActionAddOperation.getSingleton());
         addMenu.add(ActionAddNote.getSingleton());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
-        ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
+        ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
         if (operVec.isVisible()) {
             showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
         } else {
@@ -272,7 +272,7 @@ public class FigInterface extends FigNodeModelElement
 
         // Block added by BobTarling 7-Jan-2001
         Object minterface = /*(MInterface)*/ getOwner();
-        ArgoJMenu modifierMenu = new ArgoJMenu(BUNDLE, "menu.popup.modifiers");
+        ArgoJMenu modifierMenu = new ArgoJMenu("menu.popup.modifiers");
 
         modifierMenu.addCheckItem(
 		new ActionModifier("Public",

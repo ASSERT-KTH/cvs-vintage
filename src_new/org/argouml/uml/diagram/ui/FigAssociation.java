@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.70 2004/08/14 15:26:11 mvw Exp $
+// $Id: FigAssociation.java,v 1.71 2004/10/19 05:40:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -394,7 +394,7 @@ public class FigAssociation extends FigEdgeModelElement {
 	    && srcDeterminingFactor < destDeterminingFactor) {
 
             ArgoJMenu multMenu =
-		new ArgoJMenu(BUNDLE, "menu.popup.multiplicity");
+		new ArgoJMenu("menu.popup.multiplicity");
 
             multMenu.add(ActionMultiplicity.getSrcMultOne());
             multMenu.add(ActionMultiplicity.getSrcMultZeroToOne());
@@ -403,7 +403,7 @@ public class FigAssociation extends FigEdgeModelElement {
             popUpActions.insertElementAt(multMenu, 
                 popUpActions.size() - POPUP_ADD_OFFSET);
 
-            ArgoJMenu aggMenu = new ArgoJMenu(BUNDLE, "menu.popup.aggregation");
+            ArgoJMenu aggMenu = new ArgoJMenu("menu.popup.aggregation");
         
 	    aggMenu.add(ActionAggregation.getSrcAggNone());
 	    aggMenu.add(ActionAggregation.getSrcAgg());
@@ -414,7 +414,7 @@ public class FigAssociation extends FigEdgeModelElement {
 	}
 	else if (destDeterminingFactor < rSquared) {
             ArgoJMenu multMenu =
-		new ArgoJMenu(BUNDLE, "menu.popup.multiplicity");
+		new ArgoJMenu("menu.popup.multiplicity");
 	    multMenu.add(ActionMultiplicity.getDestMultOne());
 	    multMenu.add(ActionMultiplicity.getDestMultZeroToOne());
 	    multMenu.add(ActionMultiplicity.getDestMultOneToMany());
@@ -423,7 +423,7 @@ public class FigAssociation extends FigEdgeModelElement {
 					 (popUpActions.size()
 					  - POPUP_ADD_OFFSET));
 
-            ArgoJMenu aggMenu = new ArgoJMenu(BUNDLE, "menu.popup.aggregation");
+            ArgoJMenu aggMenu = new ArgoJMenu("menu.popup.aggregation");
 	    aggMenu.add(ActionAggregation.getDestAggNone());
 	    aggMenu.add(ActionAggregation.getDestAgg());
 	    aggMenu.add(ActionAggregation.getDestAggComposite());
@@ -447,7 +447,7 @@ public class FigAssociation extends FigEdgeModelElement {
 	    if (ModelFacade.isAClassifier(ModelFacade.getType(ascStart))
                     && ModelFacade.isAClassifier(ModelFacade.getType(ascEnd))) {
                 ArgoJMenu navMenu =
-		    new ArgoJMenu(BUNDLE, "menu.popup.navigability");
+		    new ArgoJMenu("menu.popup.navigability");
         
 		navMenu.add(ActionNavigability.newActionNavigability(
                     ascStart,

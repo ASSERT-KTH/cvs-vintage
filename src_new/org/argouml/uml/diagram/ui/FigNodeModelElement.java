@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.122 2004/10/03 17:50:19 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.123 2004/10/19 05:40:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,11 +165,6 @@ public abstract class FigNodeModelElement
      * The transparency value of the shadow color (0-255).
     **/    
     protected static final int SHADOW_COLOR_ALPHA = 128;
-    
-    /**
-     * Used for creating right-click pop-up menus 
-     */
-    protected static final String BUNDLE = "UMLMenu";
 
     static {
         LABEL_FONT =
@@ -382,7 +377,7 @@ public abstract class FigNodeModelElement
         ToDoList list = Designer.theDesigner().getToDoList();
         Vector items = (Vector) list.elementsForOffender(getOwner()).clone();
         if (items != null && items.size() > 0) {
-            ArgoJMenu critiques = new ArgoJMenu(BUNDLE, "menu.popup.critiques");
+            ArgoJMenu critiques = new ArgoJMenu("menu.popup.critiques");
             ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
             if (itemUnderMouse != null) {
                 critiques.add(new ActionGoToCritique(itemUnderMouse));

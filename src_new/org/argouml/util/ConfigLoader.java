@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.20 2004/10/06 16:37:23 bobtarling Exp $
+// $Id: ConfigLoader.java,v 1.21 2004/10/19 05:40:04 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,6 @@ import org.argouml.ui.SplashScreen;
  *
  */
 public class ConfigLoader {
-	
-    private static final String BUNDLE = "statusmsg";
 	
     private static final Logger LOG = 
         Logger.getLogger(ConfigLoader.class); 
@@ -206,7 +204,7 @@ public class ConfigLoader {
 			    tabName
 			};
 			splash.getStatusBar().showStatus(Translator.
-				messageFormat(BUNDLE, 
+				messageFormat(
 				    "statusmsg.bar.making-project-browser", 
 				    msgArgs));
 			splash.getStatusBar().incProgress(2);

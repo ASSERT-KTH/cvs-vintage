@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.65 2004/09/29 18:46:27 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.66 2004/10/19 05:40:05 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,10 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// File: FigEdgeModelElement.java
-// Classes: FigEdgeModelElement
-// Original Author: abonner
 
 package org.argouml.uml.diagram.ui;
 
@@ -88,7 +84,6 @@ import org.tigris.gef.presentation.Handle;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-
 
 /**
  * Abstract class to display diagram arcs for UML ModelElements that
@@ -250,7 +245,7 @@ public abstract class FigEdgeModelElement
         ToDoList list = Designer.theDesigner().getToDoList();
         Vector items = (Vector) list.elementsForOffender(getOwner()).clone();
         if (items != null && items.size() > 0) {
-            ArgoJMenu critiques = new ArgoJMenu(BUNDLE, "menu.popup.critiques");
+            ArgoJMenu critiques = new ArgoJMenu("menu.popup.critiques");
             ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
             if (itemUnderMouse != null) {
                 critiques.add(new ActionGoToCritique(itemUnderMouse));
