@@ -1,4 +1,4 @@
-$Id: KNOWN_ISSUES.txt,v 1.6 2003/02/05 17:09:13 jon Exp $
+$Id: KNOWN_ISSUES.txt,v 1.7 2003/10/06 13:52:07 dep4b Exp $
 
 It is best to always consult the issue tracking system at
 
@@ -20,3 +20,8 @@ things to not work or be difficult...
 
 #4. The user administration screens are buggy, badly coded and need to
     be completely redone.
+
+#5. Microsoft SQL Server requires you to edit the SQL scripts after generating them
+    in the /target directory.  Change all BIGINT's to INT's and all TEXT to VARCHAR(2000)
+    columns.  Make sure to use whole word matching as some of the column names have the word
+    "TEXT" in them.  Additionally you need to put the various MSSQL drivers in the /lib directory.
