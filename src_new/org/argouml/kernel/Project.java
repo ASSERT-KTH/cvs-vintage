@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.92 2004/01/28 07:17:46 linus Exp $
+// $Id: Project.java,v 1.93 2004/01/29 07:41:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,7 +243,8 @@ public class Project implements java.io.Serializable, TargetListener {
      * ArgoParser.SINGLETON.getLastLoadStatus() field. This needs to be
      * examined by the calling function.
      *
-     * @deprecated As of ArgoUml version unknown, replaced by unknown.
+     * @deprecated As of ArgoUml version 0.15.3,
+     * TODO: What is this replaced by?
      * @param url The url with the .zargo file
      * @return MModel The model loaded
      * @throws IOException Thrown if the model or the .zargo file is corrupted.

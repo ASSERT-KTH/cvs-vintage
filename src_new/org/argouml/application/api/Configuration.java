@@ -1,5 +1,5 @@
-// $Id: Configuration.java,v 1.16 2003/11/05 00:59:56 thierrylach Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: Configuration.java,v 1.17 2004/01/29 07:41:37 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,7 +45,7 @@ public class Configuration {
     // Instance variables
 
     /** Define a static log4j category variable for ArgoUML configuration.
-     * @deprecated  public access - will become private
+     * @deprecated in 0.15.3 public access - will become private
      */
     public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.configuration");

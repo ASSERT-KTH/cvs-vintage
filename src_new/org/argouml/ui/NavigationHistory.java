@@ -1,5 +1,5 @@
-// $Id: NavigationHistory.java,v 1.7 2003/10/02 22:03:04 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: NavigationHistory.java,v 1.8 2004/01/29 07:41:37 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,14 +31,13 @@ import org.argouml.model.ModelFacade;
 
 
 /**
-*    This class implements a navigation history
-* 
+ *    This class implements a navigation history
+ * 
  * @deprecated since 0.15.2 replace with TargetManager,
- *             remove in 0.15.3
  *
-*    @author Curt Arnold
-*    @since 0.9
-*/
+ *    @author Curt Arnold
+ *    @since 0.9
+ */
 public class NavigationHistory { 
 
     private List _history;
