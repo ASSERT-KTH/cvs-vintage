@@ -1,5 +1,5 @@
-// $Id: Argo.java,v 1.26 2003/11/05 22:00:51 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: Argo.java,v 1.27 2003/11/11 23:54:59 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -110,6 +110,12 @@ public class Argo
      */
     public static final ConfigurationKey KEY_RELOAD_RECENT_PROJECT =
 	Configuration.makeKey("init", "project", "loadmostrecent");
+
+    /**
+     * Key for number of last recently used file entries in menu list
+     */
+    public static final ConfigurationKey KEY_NUMBER_LAST_RECENT_USED =
+	Configuration.makeKey("project", "mostrecent", "maxNumber");
 
     /** Key for screen top
      */
