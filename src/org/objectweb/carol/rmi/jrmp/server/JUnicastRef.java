@@ -37,6 +37,7 @@ import sun.rmi.transport.StreamRemoteCall;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.net.InetAddress;
 import java.rmi.MarshalException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -44,6 +45,7 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.Operation;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteObject;
+import java.rmi.server.UID;
 
 
 // carol import
@@ -261,10 +263,16 @@ public class JUnicastRef extends UnicastRef {
      * @param newFormat the new format boolean 
      */
     public void readExternal(ObjectInput in, boolean newFormat)
-            throws IOException, ClassNotFoundException {
-        RemoteKey rk = (RemoteKey)in.readObject();
-	localRef=JInterceptorHelper.getRemoteKey().equals(rk);
-	cis = JInterceptorStore.setRemoteInterceptors(rk, (String [])in.readObject());
+        throws IOException, ClassNotFoundException {
+        byte[] a = new byte[in.readInt()];
+        in.read(a);
+        UID uid = UID.read(in);
+        RemoteKey rk = new RemoteKey(uid, a);
+        localRef = JInterceptorHelper.getRemoteKey().equals(rk);
+        cis =
+            JInterceptorStore.setRemoteInterceptors(
+                rk,
+                (String[]) in.readObject());
         ref = LiveRef.read(in, newFormat);
     }
 
@@ -275,7 +283,10 @@ public class JUnicastRef extends UnicastRef {
      * @param newFormat the boolean new format
      */
     public void writeExternal(ObjectOutput out, boolean newFormat) throws IOException {
-        out.writeObject(JInterceptorHelper.getRemoteKey());
+        RemoteKey rk = JInterceptorHelper.getRemoteKey();
+        out.writeInt(rk.getInetA().length);
+        out.write(rk.getInetA());
+        rk.getUid().write(out);
 	out.writeObject(JInterceptorStore.getJRMPInitializers());
         ref.write(out, newFormat);
     }
