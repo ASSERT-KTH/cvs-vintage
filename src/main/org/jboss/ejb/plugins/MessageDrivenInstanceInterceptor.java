@@ -9,9 +9,13 @@ package org.jboss.ejb.plugins;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MessageDrivenContainer;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
 
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import java.rmi.RemoteException;
+import java.lang.reflect.Method;
 
 /**
  * This container acquires the given instance. This must be used after
@@ -21,11 +25,26 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class MessageDrivenInstanceInterceptor
       extends AbstractInterceptor
 {
+
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method ejbTimeout;
+   static
+   {
+      try
+      {
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+      }
+      catch (Exception e)
+      {
+         throw new ExceptionInInitializerError(e);
+      }
+   }
+
    /**
     * Message driven beans do not have homes.
     *
@@ -53,6 +72,11 @@ public class MessageDrivenInstanceInterceptor
       // Use this context
       mi.setEnterpriseContext(ctx);
 
+      if (ejbTimeout.equals(mi.getMethod()))
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
       // There is no need for synchronization since the instance is always
       // fresh also there should never be a tx associated with the instance.
       try
@@ -78,6 +102,8 @@ public class MessageDrivenInstanceInterceptor
       }
       finally
       {
+         AllowedOperationsAssociation.popInMethodFlag();
+
          // Return context
          if (mi.getEnterpriseContext() != null)
          {

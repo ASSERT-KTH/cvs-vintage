@@ -42,23 +42,35 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 abstract class AbstractTxInterceptor
         extends AbstractInterceptor
 {
 
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method ejbTimeout;
+   static
+   {
+      try
+      {
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+      }
+      catch (Exception e)
+      {
+         throw new ExceptionInInitializerError(e);
+      }
+   }
+
    /**
     * Local reference to the container's TransactionManager.
     */
    protected TransactionManager tm;
-   private Method ejbTimeout;
 
    public void create() throws Exception
    {
       super.create();
       tm = getContainer().getTransactionManager();
-      ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
    }
 
    /**

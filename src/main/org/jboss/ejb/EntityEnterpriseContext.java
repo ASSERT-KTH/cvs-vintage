@@ -30,7 +30,7 @@ import org.jboss.ejb.plugins.lock.NonReentrantLock;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -259,7 +259,8 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public UserTransaction getUserTransaction()
       {
-         AllowedOperationsAssociation.assertAllowedIn("getUserTransaction", NOT_ALLOWED);
+         AllowedOperationsAssociation.assertAllowedIn("getUserTransaction",
+                 NOT_ALLOWED);
          return super.getUserTransaction();
       }
 

@@ -22,6 +22,7 @@ import javax.naming.RefAddr;
 import javax.naming.spi.ObjectFactory;
 
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
 
 
@@ -29,7 +30,7 @@ import org.jboss.invocation.Invocation;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -127,12 +128,12 @@ abstract class AbstractTxInterceptorBMT
          // Set the threadlocal to the userTransaction of the instance
          try
          {
-            ctx.pushInMethodFlag(EnterpriseContext.IN_INTERCEPTOR_METHOD);
+            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_INTERCEPTOR_METHOD);
             userTransaction.set(ctx.getEJBContext().getUserTransaction());
          }
          finally
          {
-            ctx.popInMethodFlag();
+            AllowedOperationsAssociation.popInMethodFlag();
          }
 
          // Get the bean instance transaction

@@ -51,9 +51,9 @@ import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.114 $
+ * @version $Revision: 1.115 $
  *
- * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
+ * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
 public class EntityContainer
    extends Container
@@ -799,7 +799,7 @@ public class EntityContainer
    }
 
    /**
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @return the current cache size
     */
    public long getCacheSize()
@@ -808,7 +808,7 @@ public class EntityContainer
    }
 
    /** Flush the cache
-    * @jmx:managed-operation
+    * @jmx.managed-operation
     */
    public void flushCache()
    {
@@ -1066,7 +1066,7 @@ public class EntityContainer
             EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
             try
             {
-               ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+               AllowedOperationsAssociation.pushInMethodFlag(AllowedOperationsAssociation.IN_EJB_HOME);
                return mi.performCall(ctx.getInstance(), m, mi.getArguments());
             }
             catch (Exception e)
@@ -1074,7 +1074,7 @@ public class EntityContainer
                rethrow(e);
             }
             finally{
-               ctx.popInMethodFlag();
+               AllowedOperationsAssociation.popInMethodFlag();
             }
          }
 
@@ -1115,19 +1115,7 @@ public class EntityContainer
                EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
                Object instance = ctx.getInstance();
 
-               if (ejbTimeout.equals(mi.getMethod()))
-                  ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
-               else
-                  ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-
-               try
-               {
-                  return mi.performCall(instance, m, mi.getArguments());
-               }
-               finally
-               {
-                  ctx.popInMethodFlag();
-               }
+               return mi.performCall(instance, m, mi.getArguments());
             }
             catch (Exception e)
             {

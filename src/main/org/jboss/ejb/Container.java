@@ -80,7 +80,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.143 $
+ * @version $Revision: 1.144 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -188,25 +188,6 @@ public abstract class Container
    protected long removeCount;
    /** Time statistics for the invoke(Invocation) methods */
    protected InvocationStatistics invokeStats = new InvocationStatistics();
-
-   /** A reference to {@link TimedObject#ejbTimeout}. */
-   protected static final Method ejbTimeout;
-
-   /**
-    * Initialize <tt>TimedObject</tt> method references.
-    */
-   static
-   {
-      try
-      {
-         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         throw new ExceptionInInitializerError(e);
-      }
-   }
 
    // Public --------------------------------------------------------
 

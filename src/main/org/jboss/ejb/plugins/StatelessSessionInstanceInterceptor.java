@@ -14,6 +14,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.AllowedOperationsAssociation;
 
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
@@ -24,7 +25,7 @@ import javax.ejb.Timer;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -36,6 +37,20 @@ public class StatelessSessionInstanceInterceptor
    protected StatelessSessionContainer container;
 
    // Static --------------------------------------------------------
+
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method ejbTimeout;
+   static
+   {
+      try
+      {
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+      }
+      catch (Exception e)
+      {
+         throw new ExceptionInInitializerError(e);
+      }
+   }
 
    // Constructors --------------------------------------------------
    
@@ -67,9 +82,13 @@ public class StatelessSessionInstanceInterceptor
       // Use this context
       mi.setEnterpriseContext(ctx);
 
+      if (ejbTimeout.equals(mi.getMethod()))
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
       // There is no need for synchronization since the instance is always fresh also there should
       // never be a tx associated with the instance.
-
       try
       {
          Object obj = getNext().invoke(mi);
@@ -93,6 +112,8 @@ public class StatelessSessionInstanceInterceptor
       }
       finally
       {
+         AllowedOperationsAssociation.popInMethodFlag();
+
          // Return context
          if (mi.getEnterpriseContext() != null)
          {

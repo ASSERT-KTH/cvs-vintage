@@ -26,7 +26,7 @@ import javax.xml.rpc.handler.MessageContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -245,7 +245,8 @@ public class StatefulSessionEnterpriseContext
 
       public MessageContext getMessageContext() throws IllegalStateException
       {
-         AllowedOperationsAssociation.assertAllowedIn("getMessageContext", NOT_ALLOWED);
+         AllowedOperationsAssociation.assertAllowedIn("getMessageContext",
+                 NOT_ALLOWED);
          return null;
       }
 

@@ -17,6 +17,8 @@ import java.rmi.RemoteException;
 import java.util.Properties;
 import java.util.Date;
 import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.Serializable;
 
 import javax.ejb.*;
@@ -28,7 +30,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.22 $</tt>
+ * @version <tt>$Revision: 1.23 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -129,14 +131,15 @@ public class MessageDrivenEnterpriseContext
 
       public TimerService getTimerService() throws IllegalStateException
       {
-         assertAllowedIn("getTimerService", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn("getTimerService",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
          return new TimerServiceWrapper(this, super.getTimerService());
       }
 
       public Principal getCallerPrincipal()
       {
-         assertAllowedIn("getCallerPrincipal", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
-
+         AllowedOperationsAssociation.assertAllowedIn("getCallerPrincipal",
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
          return super.getCallerPrincipal();
       }
 
@@ -150,7 +153,8 @@ public class MessageDrivenEnterpriseContext
          if (isContainerManagedTx())
             throw new IllegalStateException("getUserTransaction should not be access for container managed Tx");
 
-         assertAllowedIn("getUserTransaction", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn("getUserTransaction",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
 
          return super.getUserTransaction();
       }
@@ -167,7 +171,8 @@ public class MessageDrivenEnterpriseContext
          if (isUserManagedTx())
             throw new IllegalStateException("getRollbackOnly should not be access for user managed Tx");
 
-         assertAllowedIn("getRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn("getRollbackOnly",
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
 
          //
          // jason: I think this is lame... but the spec says this is how it is.
@@ -195,7 +200,8 @@ public class MessageDrivenEnterpriseContext
          if (isUserManagedTx())
             throw new IllegalStateException("setRollbackOnly should not be access for user managed Tx");
 
-         assertAllowedIn("getRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn("getRollbackOnly",
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
 
          if (!isTxRequired()) {
             throw new IllegalStateException
@@ -230,37 +236,38 @@ public class MessageDrivenEnterpriseContext
 
       public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(duration, info);
       }
 
       public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(initialDuration, intervalDuration, info);
       }
 
       public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(expiration, info);
       }
 
       public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(initialExpiration, intervalDuration, info);
       }
 
       public Collection getTimers() throws IllegalStateException, EJBException
       {
-         assertAllowedIn("getTimers");
+         assertAllowedIn("TimerService.getTimers");
          return timerService.getTimers();
       }
 
       private void assertAllowedIn(String timerMethod)
       {
-         context.assertAllowedIn(timerMethod, IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn(timerMethod,
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
       }
    }
 }

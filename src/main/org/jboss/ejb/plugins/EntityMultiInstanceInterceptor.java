@@ -10,14 +10,20 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
+
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
+import java.lang.reflect.Method;
 
 /**
  * The instance interceptors role is to acquire a context representing
  * the target object from the cache.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class EntityMultiInstanceInterceptor
    extends AbstractInterceptor
@@ -27,6 +33,20 @@ public class EntityMultiInstanceInterceptor
    // Attributes ----------------------------------------------------
 	
    // Static --------------------------------------------------------
+
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method ejbTimeout;
+   static
+   {
+      try
+      {
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+      }
+      catch (Exception e)
+      {
+         throw new ExceptionInInitializerError(e);
+      }
+   }
 
    // Constructors --------------------------------------------------
 	
@@ -50,8 +70,18 @@ public class EntityMultiInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
 
-      // Invoke through interceptors
-      Object result = getNext().invokeHome(mi);
+      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+
+      Object result;
+      try
+      {
+         // Invoke through interceptors
+         result = getNext().invokeHome(mi);
+      }
+      finally
+      {
+         AllowedOperationsAssociation.popInMethodFlag();
+      }
       
       // No id, means we can put the context back in the pool
       if (ctx.getId() == null)
@@ -100,7 +130,19 @@ public class EntityMultiInstanceInterceptor
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
 
-      return getNext().invoke(mi);
-   }
+      if (ejbTimeout.equals(mi.getMethod()))
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
 
+      try
+      {
+         Object ret = getNext().invoke(mi);
+         return ret;
+      }
+      finally
+      {
+         AllowedOperationsAssociation.popInMethodFlag();
+      }
+   }
 }

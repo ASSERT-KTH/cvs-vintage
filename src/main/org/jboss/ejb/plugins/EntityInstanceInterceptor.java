@@ -11,10 +11,14 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstanceCache;
+import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
 import org.jboss.util.NestedRuntimeException;
 
 import javax.ejb.NoSuchObjectLocalException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import javax.transaction.Transaction;
 import java.lang.reflect.Method;
 import java.rmi.NoSuchObjectException;
@@ -41,7 +45,7 @@ import java.rmi.RemoteException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.71 $
+* @version $Revision: 1.72 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -53,6 +57,21 @@ public class EntityInstanceInterceptor
    protected EntityContainer container;
 
    // Static --------------------------------------------------------
+
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method ejbTimeout;
+   static
+   {
+      try
+      {
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+      }
+      catch (Exception e)
+      {
+         throw new ExceptionInInitializerError(e);
+      }
+   }
+
    // Constructors --------------------------------------------------
 	
 	// Public --------------------------------------------------------
@@ -85,8 +104,19 @@ public class EntityInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
 
+      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+
+      Object rtn = null;
+      try
+      {
          // Invoke through interceptors
-      Object rtn = getNext().invokeHome(mi);
+         rtn = getNext().invokeHome(mi);
+      }
+      finally
+      {
+         AllowedOperationsAssociation.popInMethodFlag();
+      }
+
       // Is the context now with an identity? in which case we need to insert
       if (ctx.getId() != null)
       {
@@ -167,8 +197,12 @@ public class EntityInstanceInterceptor
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);
 
-      Throwable exceptionThrown = null;
+      if (ejbTimeout.equals(mi.getMethod()))
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+      else
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
 
+      Throwable exceptionThrown = null;
       try
       {
          Object obj = getNext().invoke(mi);
@@ -201,44 +235,41 @@ public class EntityInstanceInterceptor
       }
       finally
       {
-         // ctx can be null if cache.get throws an Exception, for
-         // example when activating a bean.
-         if (ctx != null)
+         AllowedOperationsAssociation.popInMethodFlag();
+
+         // Make sure we clear the transaction on an error before synchronization.
+         // But avoid a race with a transaction rollback on a synchronization
+         // that may have moved the context onto a different transaction
+         if (exceptionThrown != null && tx != null)
          {
-            // Make sure we clear the transaction on an error before synchronization.
-            // But avoid a race with a transaction rollback on a synchronization
-            // that may have moved the context onto a different transaction
-            if (exceptionThrown != null && tx != null)
-            {
-               Transaction ctxTx = ctx.getTransaction();
-               if (tx.equals(ctxTx) && ctx.hasTxSynchronization() == false)
-                  ctx.setTransaction(null);
-            }
-
-				// If an exception has been thrown,
-            if (exceptionThrown != null &&
-                // if tx, the ctx has been registered in an InstanceSynchronization.
-                // that will remove the context, so we shouldn't.
-                // if no synchronization then we need to do it by hand
-                !ctx.hasTxSynchronization())
-            {
-               // Discard instance
-               // EJB 1.1 spec 12.3.1
-               container.getInstanceCache().remove(key);
-
-               if( trace ) log.trace("Ending invoke, exceptionThrown, ctx="+ctx, exceptionThrown);
-            }
-            else if (ctx.getId() == null)
-            {
-               // The key from the Invocation still identifies the right cachekey
-               container.getInstanceCache().remove(key);
-
-               if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);
-               // no more pool return
-            }
+            Transaction ctxTx = ctx.getTransaction();
+            if (tx.equals(ctxTx) && ctx.hasTxSynchronization() == false)
+               ctx.setTransaction(null);
          }
 
-         if( trace )	log.trace("End invoke, key="+key+", ctx="+ctx);
+         // If an exception has been thrown,
+         if (exceptionThrown != null &&
+                 // if tx, the ctx has been registered in an InstanceSynchronization.
+                 // that will remove the context, so we shouldn't.
+                 // if no synchronization then we need to do it by hand
+                 !ctx.hasTxSynchronization())
+         {
+            // Discard instance
+            // EJB 1.1 spec 12.3.1
+            container.getInstanceCache().remove(key);
+
+            if (trace) log.trace("Ending invoke, exceptionThrown, ctx=" + ctx, exceptionThrown);
+         }
+         else if (ctx.getId() == null)
+         {
+            // The key from the Invocation still identifies the right cachekey
+            container.getInstanceCache().remove(key);
+
+            if (trace) log.trace("Ending invoke, cache removal, ctx=" + ctx);
+            // no more pool return
+         }
+
+         if (trace) log.trace("End invoke, key=" + key + ", ctx=" + ctx);
 
       }	// end invoke
    }

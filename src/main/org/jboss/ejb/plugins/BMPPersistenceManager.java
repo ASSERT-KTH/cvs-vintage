@@ -12,6 +12,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ConfigurationMetaData;
 
@@ -38,7 +39,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.47 $
+*  @version $Revision: 1.48 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -192,7 +193,7 @@ public class BMPPersistenceManager
       try
       {
          // Call ejbCreate<METHOD)
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
          Method createMethod = (Method)createMethods.get(m);
          id = createMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
@@ -232,7 +233,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
 
       // set the id
@@ -263,7 +264,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
          Method postCreateMethod = (Method)postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
@@ -303,7 +304,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -312,7 +313,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
 
          // call the finder method
          Object objectId = callFinderMethod(finderMethod, args, ctx);
@@ -322,7 +323,7 @@ public class BMPPersistenceManager
       }
       finally
       {
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -333,12 +334,12 @@ public class BMPPersistenceManager
       Object result;
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
          result = callFinderMethod(finderMethod, args, ctx);
       }
       finally
       {
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
 
       if (result == null)
@@ -404,7 +405,7 @@ public class BMPPersistenceManager
 
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_ACTIVATE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_ACTIVATE);
          ejbActivate.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -430,7 +431,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -439,7 +440,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_LOAD);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_LOAD);
          ejbLoad.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -465,7 +466,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -485,7 +486,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
          ejbStore.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -511,7 +512,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -520,7 +521,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_PASSIVATE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_PASSIVATE);
          ejbPassivate.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -546,7 +547,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -555,7 +556,7 @@ public class BMPPersistenceManager
    {
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
          ejbRemove.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -586,7 +587,7 @@ public class BMPPersistenceManager
          }
       }
       finally{
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 

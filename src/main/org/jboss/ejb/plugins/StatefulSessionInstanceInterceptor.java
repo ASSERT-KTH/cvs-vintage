@@ -12,6 +12,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
+import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
@@ -21,6 +22,8 @@ import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.NoSuchObjectLocalException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
@@ -36,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -53,12 +56,13 @@ public class StatefulSessionInstanceInterceptor
    
    // Static -------------------------------------------------------
    
-   private static Method getEJBHome;
-   private static Method getHandle;
-   private static Method getPrimaryKey;
-   private static Method isIdentical;
-   private static Method remove;
-   private static Method getEJBObject;
+   private static final Method getEJBHome;
+   private static final Method getHandle;
+   private static final Method getPrimaryKey;
+   private static final Method isIdentical;
+   private static final Method remove;
+   private static final Method getEJBObject;
+   private static final Method ejbTimeout;
 
    static
    {
@@ -71,6 +75,7 @@ public class StatefulSessionInstanceInterceptor
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]{EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
          getEJBObject = Handle.class.getMethod("getEJBObject", noArg);
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
       catch (Exception e)
       {
@@ -115,6 +120,8 @@ public class StatefulSessionInstanceInterceptor
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
  
+      AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+
       try
       {
          // Invoke through interceptors
@@ -124,6 +131,8 @@ public class StatefulSessionInstanceInterceptor
       {
          synchronized (ctx)
          {
+            AllowedOperationsAssociation.popInMethodFlag();
+
             // Release the lock
             ctx.unlock();
             
@@ -271,6 +280,11 @@ public class StatefulSessionInstanceInterceptor
          // Set the current security information
          ctx.setPrincipal(mi.getPrincipal());
 
+         if (ejbTimeout.equals(mi.getMethod()))
+            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         else
+            AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
          boolean validContext = true;
          try
          {
@@ -307,6 +321,8 @@ public class StatefulSessionInstanceInterceptor
          }
          finally
          {
+            AllowedOperationsAssociation.popInMethodFlag();
+
             if (validContext)
             {
                // Still a valid instance
@@ -417,7 +433,7 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
-               ctx.pushInMethodFlag(EnterpriseContext.IN_AFTER_BEGIN);
+               AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_AFTER_BEGIN);
                afterBegin.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
@@ -425,7 +441,7 @@ public class StatefulSessionInstanceInterceptor
                log.error("failed to invoke afterBegin", e);
             }
             finally{
-               ctx.popInMethodFlag();
+               AllowedOperationsAssociation.popInMethodFlag();
             }
          }
       }
@@ -442,7 +458,7 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
-               ctx.pushInMethodFlag(EnterpriseContext.IN_BEFORE_COMPLETION);
+               AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_BEFORE_COMPLETION);
                beforeCompletion.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
@@ -450,7 +466,7 @@ public class StatefulSessionInstanceInterceptor
                log.error("failed to invoke beforeCompletion", e);
             }
             finally{
-               ctx.popInMethodFlag();
+               AllowedOperationsAssociation.popInMethodFlag();
             }
          }
       }
@@ -476,7 +492,7 @@ public class StatefulSessionInstanceInterceptor
                
                try
                {
-                  ctx.pushInMethodFlag(EnterpriseContext.IN_AFTER_COMPLETION);
+                  AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_AFTER_COMPLETION);
                   if (status == Status.STATUS_COMMITTED)
                   {
                      afterCompletion.invoke(ctx.getInstance(), new Object[]{Boolean.TRUE});
@@ -491,7 +507,7 @@ public class StatefulSessionInstanceInterceptor
                   log.error("failed to invoke afterCompletion", e);
                }
                finally{
-                  ctx.popInMethodFlag();
+                  AllowedOperationsAssociation.popInMethodFlag();
                }
             }
          }

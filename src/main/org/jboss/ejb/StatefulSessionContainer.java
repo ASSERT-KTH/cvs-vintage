@@ -35,7 +35,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.70 $</tt>
+ * @version <tt>$Revision: 1.71 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -160,12 +160,12 @@ public class StatefulSessionContainer
       // Remove from storage
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
          getPersistenceManager().removeSession(ctx);
       }
       finally
       {
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
 
       // We signify "removed" with a null id
@@ -192,7 +192,7 @@ public class StatefulSessionContainer
       // Invoke ejbCreate<METHOD>()
       try
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         AllowedOperationsAssociation.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
 
          // Build the ejbCreate<METHOD> from the home create<METHOD> sig
          String createName = m.getName();
@@ -238,7 +238,7 @@ public class StatefulSessionContainer
       }
       finally
       {
-         ctx.popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
 
       // call back to the PM to let it know that ejbCreate has been called with success
@@ -519,43 +519,31 @@ public class StatefulSessionContainer
             throw new EJBException(msg);
          }
 
-         if (ejbTimeout.equals(mi.getMethod()))
-            ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
-         else
-            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-
-         try
+         // Select instance to invoke (container or bean)
+         if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {
-            // Select instance to invoke (container or bean)
-            if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
+            // Invoke and handle exceptions
+            try
             {
-               // Invoke and handle exceptions
-               try
-               {
-                  return mi.performCall(StatefulSessionContainer.this, m, new Object[] { mi });
-               }
-               catch (Exception e)
-               {
-                  rethrow(e);
-               }
+               return mi.performCall(StatefulSessionContainer.this, m, new Object[]{mi});
             }
-            else
+            catch (Exception e)
             {
-               // Invoke and handle exceptions
-               try
-               {
-                  Object bean = ctx.getInstance();
-                  return mi.performCall(bean, m, mi.getArguments());
-               }
-               catch (Exception e)
-               {
-                  rethrow(e);
-               }
+               rethrow(e);
             }
          }
-         finally
+         else
          {
-            ctx.popInMethodFlag();
+            // Invoke and handle exceptions
+            try
+            {
+               Object bean = ctx.getInstance();
+               return mi.performCall(bean, m, mi.getArguments());
+            }
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
          }
 
          // We will never get this far, but the compiler does not know that
