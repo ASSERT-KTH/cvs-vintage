@@ -1,5 +1,4 @@
 $page.setTitle("Enter issue")
-
 #set ($issue = $scarabR.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
@@ -16,16 +15,7 @@ $page.setTitle("Enter issue")
 
 <h2>Enter issue</h2>
 
-<div class="tabs">
-  <table cellpadding="3" cellspacing="0" border="0">
-  <tr>
-  <td>1: Duplicate attributes</td>
-  <td>2: Duplicate check</td>
-  <th>3: Non-duplicate attributes</th>
-  </tr>
-  </table>
-</div>
-
+<p></p>
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
@@ -69,6 +59,7 @@ $page.setTitle("Enter issue")
     
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
+  #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
   #foreach ($att in $group.Attributes)
@@ -113,6 +104,7 @@ $page.setTitle("Enter issue")
     #end
 </table>
  #end
+ #end
 </div>
 
 ## ATTACHMENT
@@ -145,6 +137,9 @@ $page.setTitle("Enter issue")
      </tr>    </table>
 </div>
 
+<div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSaveattachment"  />
+</div>
 
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">

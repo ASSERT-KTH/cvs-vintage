@@ -15,15 +15,6 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #end
 
 <h2>$page.Title</h2>
-<div class="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-<tr>
-  <th>1: Duplicate attributes</th>
-  <td>2: Duplicate check</td>
-  <td>3: Non-duplicate attributes</td>
-</tr>
-</table>
-</div>
 
 <form method="get" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
@@ -65,7 +56,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
-    #if ($group.Dedupe)
+    #if ($group.Dedupe && !$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
   #foreach ($att in $group.Attributes)
