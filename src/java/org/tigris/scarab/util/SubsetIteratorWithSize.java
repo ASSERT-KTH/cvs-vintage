@@ -46,7 +46,6 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import org.tigris.scarab.util.IteratorWithSize;
 

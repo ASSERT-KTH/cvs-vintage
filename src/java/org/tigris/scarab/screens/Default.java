@@ -50,7 +50,6 @@ package org.tigris.scarab.screens;
 import java.util.List;
 
 // Turbine Stuff
-import org.apache.commons.configuration.Configuration;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
@@ -73,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.76 2003/08/01 23:42:57 jmcnally Exp $
+ * @version $Id: Default.java,v 1.77 2003/10/17 10:02:07 dep4b Exp $
  */
 public class Default extends TemplateSecureScreen
 {

@@ -47,9 +47,7 @@ package org.tigris.scarab.util.word;
  */ 
 
 // JDK classes
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -116,7 +114,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.116 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.117 2003/10/17 10:02:06 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue

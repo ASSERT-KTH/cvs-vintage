@@ -47,7 +47,6 @@ package org.tigris.scarab.pipeline;
  */ 
 
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
 import java.io.IOException;
 import org.apache.turbine.RunData;
@@ -68,13 +67,12 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.om.RModuleIssueType;
 
 /**
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.27 2003/08/21 01:10:32 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.28 2003/10/17 10:02:07 dep4b Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve

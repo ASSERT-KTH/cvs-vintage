@@ -48,7 +48,6 @@ package org.tigris.scarab.util.xmlissues;
 
 import java.beans.BeanDescriptor;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
@@ -107,7 +106,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.28 2003/08/27 01:10:48 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.29 2003/10/17 10:02:07 dep4b Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues

@@ -69,13 +69,12 @@ import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.40 2003/09/19 10:31:40 parun Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.41 2003/10/17 10:02:07 dep4b Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {

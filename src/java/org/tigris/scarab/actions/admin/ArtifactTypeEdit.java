@@ -56,7 +56,6 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.intake.Retrievable;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -78,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.58 2003/09/15 23:45:49 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.59 2003/10/17 10:02:07 dep4b Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {

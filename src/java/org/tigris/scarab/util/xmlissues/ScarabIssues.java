@@ -47,7 +47,6 @@ package org.tigris.scarab.util.xmlissues;
  */ 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -116,7 +115,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.56 2003/08/27 01:10:48 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.57 2003/10/17 10:02:07 dep4b Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {

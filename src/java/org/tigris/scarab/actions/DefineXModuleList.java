@@ -48,7 +48,6 @@ package org.tigris.scarab.actions;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -64,7 +63,6 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
-import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
@@ -81,7 +79,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.27 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.28 2003/10/17 10:02:07 dep4b Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {

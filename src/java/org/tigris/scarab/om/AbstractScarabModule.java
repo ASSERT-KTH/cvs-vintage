@@ -96,9 +96,7 @@ import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.AttributeGroup;
-import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
-import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ValidationException;
 import org.tigris.scarab.util.ScarabConstants;
@@ -125,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.112 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.113 2003/10/17 10:02:06 dep4b Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject

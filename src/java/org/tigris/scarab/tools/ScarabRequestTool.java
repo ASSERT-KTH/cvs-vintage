@@ -114,8 +114,6 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.om.MITListItem;
-import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportManager;

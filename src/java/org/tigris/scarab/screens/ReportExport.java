@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * Handles export of a report to non-web formats.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ReportExport.java,v 1.5 2003/09/04 00:51:16 jmcnally Exp $
+ * @version $Id: ReportExport.java,v 1.6 2003/10/17 10:02:07 dep4b Exp $
  * @see org.tigris.scarab.screens.DataExport
  * @since Scarab 1.0
  */
@@ -244,7 +244,7 @@ public class ReportExport extends DataExport
             for (int columnIndex = 0; columnIndex < nbrColumns; columnIndex++)
             {
                 Object cell = model.getValueAt(rowIndex, columnIndex);
-                String cellData = (model.isDate(cell)
+                String cellData = (ReportTableModel.isDate(cell)
                                    ? dateFormat.format((Date) cell)
                                    : cell.toString());
                 if (StringUtils.isEmpty(cellData))
