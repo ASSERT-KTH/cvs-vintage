@@ -58,7 +58,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see RARDeployer
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ConnectionFactoryLoader
    extends ServiceMBeanSupport
@@ -68,40 +68,26 @@ public class ConnectionFactoryLoader
 
    // Attributes ----------------------------------------------------
 
-   private MBeanServer server = null;
+   private MBeanServer server;
 
-   private String resourceAdapterName = null;
-   private String factoryName = null;
-   private String properties = null;
-   private String rarDeployerName = null;
+   private String resourceAdapterName;
+   private String factoryName;
+   private String properties;
+   private String rarDeployerName;
    private String tmName = "java:/TransactionManager";
+   private String cmfName;
+   private String cmProps;
 
    // Principal mapping parameters
    private String princMapClass;
    private String princMapProps;
 
-   // Pool strategy parameters
-   private String poolStrategy;
-
-   // ObjectPool configuration parameters
-   private int minSize;
-   private int maxSize;
-   private boolean blocking;
-   private boolean gcEnabled;
-   private long gcInterval;
-   private long gcMinIdleTime;
-   private boolean idleTimeoutEnabled;
-   private long idleTimeout;
-   private float maxIdleTimeoutPercent;
-   private boolean invalidateOnError;
-   private boolean timestampUsed;
-
-   private ObjectName rarDeployerObjectName = null;
+   private ObjectName rarDeployerObjectName;
 
    /** The JNDI name to which this connection factory is bound */
    private String bindName;
 
-   private ConnectionManagerImpl cm = null;
+   private JBossConnectionManager cm;
 
    /** Maps factory name to <code>ConnectionFactory</code> instance
        for JNDI lookups */
@@ -135,6 +121,12 @@ public class ConnectionFactoryLoader
    public String getTransactionManagerName() { return tmName; }
    public void setTransactionManagerName(String n) { tmName = n; }
 
+   public String getConnectionManagerFactoryName() { return cmfName; }
+   public void setConnectionManagerFactoryName(String c) { cmfName = c; }
+
+   public String getConnectionManagerProperties() { return cmProps; }
+   public void setConnectionManagerProperties(String p) { cmProps = p; }
+
    // Pincipal mapping settings
 
    public String getPrincipalMappingClass() { return princMapClass; }
@@ -143,44 +135,6 @@ public class ConnectionFactoryLoader
    public String getPrincipalMappingProperties() { return princMapProps; }
    public void setPrincipalMappingProperties(String p) { princMapProps = p; }
     
-   // Object pool settings
-
-   public String getPoolStrategy() { return poolStrategy; }
-   public void setPoolStrategy(String strategy) { poolStrategy = strategy; }
-
-   public int getMinSize() { return minSize; }
-   public void setMinSize(int minSize) { this.minSize = minSize; }
-   
-   public int getMaxSize() { return maxSize; }
-   public void setMaxSize(int maxSize) { this.maxSize = maxSize; }
-   
-   public boolean getBlocking() { return blocking; }
-   public void setBlocking(boolean blocking) { this.blocking = blocking; }
-   
-   public boolean getGCEnabled() { return gcEnabled; }
-   public void setGCEnabled(boolean gcEnabled) { this.gcEnabled = gcEnabled; }
-   
-   public long getGCInterval() { return gcInterval; }
-   public void setGCInterval(long interval) { this.gcInterval = interval; }
-   
-   public long getGCMinIdleTime() { return gcMinIdleTime; }
-   public void setGCMinIdleTime(long idleMillis) { gcMinIdleTime = idleMillis; }
-   
-   public boolean getIdleTimeoutEnabled() { return idleTimeoutEnabled; }
-   public void setIdleTimeoutEnabled(boolean e) { idleTimeoutEnabled = e; }
-   
-   public long getIdleTimeout() { return idleTimeout; }
-   public void setIdleTimeout(long idleMillis) { idleTimeout = idleMillis; }
-   
-   public float getMaxIdleTimeoutPercent() { return maxIdleTimeoutPercent; }
-   public void setMaxIdleTimeoutPercent(float p) { maxIdleTimeoutPercent = p; }
-   
-   public boolean getInvalidateOnError() { return invalidateOnError; }
-   public void setInvalidateOnError(boolean i) { invalidateOnError = i; }
-   
-   public boolean getTimestampUsed() { return timestampUsed; }
-   public void setTimestampUsed(boolean tstamp) { timestampUsed = tstamp; }
-
    // ServiceMBeanSupport overrides ---------------------------------
 
    public String getName() { return "ConnectionFactoryLoader"; }
@@ -453,19 +407,59 @@ public class ConnectionFactoryLoader
       principalMapping.setRARMetaData(metaData);
       principalMapping.setProperties(princMapProps);
 
-      // Create the connection manager
+      // Find the connection manager factory
 
+      ConnectionManagerFactory cmf ;
       try
       {
-         cm = new ConnectionManagerImpl(metaData, this, mcf, log, tm,
-                                        principalMapping);
+         cmf = (ConnectionManagerFactory) ctx.lookup("java:/" + cmfName);
       }
       catch (Exception e)
       {
-         log.error("Unable to create connection manager");
+         log.error("Unable to find connection manager factory at 'java:/" +
+                   cmfName + "'");
          log.exception(e);
          return;
       }
+
+      // Configure the connection manager
+
+      ConnectorConfig cmConfig = new ConnectorConfig();   
+
+      cmConfig.logWriter = logWriter;
+      cmConfig.rsf = new JBossResourceSubjectFactory(principalMapping);
+      cmConfig.isReauthenticationSupported =
+         metaData.getReauthenticationSupport();
+      JBossConnectionListenerImpl listener =
+         new JBossConnectionListenerImpl(mcf, log);
+      cmConfig.listener = listener;
+
+      Properties cmProperties = new Properties();
+      try
+      {
+         cmProperties.load(
+            new ByteArrayInputStream(cmProps.getBytes("ISO-8859-1")));
+         cmConfig.properties = cmProperties;
+      }
+      catch (IOException ioe)
+      {
+         log.error("Couldn't convert properties string '" + cmProps + "' to " +
+                   "Properties");
+         log.exception(ioe);
+      }
+
+      try
+      {
+         cm = cmf.addManagedConnectionFactory(mcf, cmConfig, factoryName);
+      }
+      catch (ResourceException re)
+      {
+         log.error("Error initialising connection manager");
+         log.exception(re);
+         return;
+      }
+
+      listener.setConnectionManager(cm);
 
       // Create us a connection factory
 
@@ -514,7 +508,7 @@ public class ConnectionFactoryLoader
    {
       // Destroy any managed connections
 
-      cm.shutdown();
+      cm.shutDown();
       cfs.remove(factoryName);
       log.log("Connection factory '" + factoryName + "' shut down.");
 

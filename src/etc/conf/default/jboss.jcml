@@ -130,7 +130,15 @@
   </mbean>
 
   <!-- J2EE connector architecture -->
-  <mbean code="org.jboss.resource.RARDeployer" name="J2EE:service=RARDeployer">
+  <mbean code="org.jboss.resource.RARDeployer" name="JCA:service=RARDeployer">
+  </mbean>
+
+  <!-- Minerva connection manager factory -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader">
+    <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
+    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaSharedLocalCMFactory</attribute>
+    <attribute name="Properties"></attribute>
   </mbean>
 
   <!-- This binds an XADataSource into JNDI for the example resource adapter -->
@@ -145,9 +153,9 @@
 
   <!-- Example connection factory for the connector architecture RI adapter -->
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
-         name="J2EE:service=ConnectionFactoryLoader">
+         name="JCA:service=ConnectionFactoryLoader">
     <attribute name="FactoryName">BlackBoxDS</attribute>
-    <attribute name="RARDeployerName">J2EE:service=RARDeployer</attribute>
+    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
     <attribute name="ResourceAdapterName">Black Box XA Adapter</attribute>
     <attribute name="Properties">XADataSourceName=java:/BlackBoxXADS</attribute>
 
@@ -158,24 +166,30 @@
       password=
     </attribute>
 
-    <!-- Pool strategy - uncomment to force, otherwise it is automatic
-    <attribute name="PoolStrategy">Single</attribute>
-    -->
+    <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
 
-    <!-- Connection pooling properties - see
-         org.opentools.minerva.pool.ObjectPool -->
-    <attribute name="MinSize">0</attribute>
-    <attribute name="MaxSize">10</attribute>
-    <attribute name="GCMinIdleTime">1200000</attribute>
-    <attribute name="GCEnabled">false</attribute>
-    <attribute name="InvalidateOnError">false</attribute>
-    <attribute name="TimestampUsed">false</attribute>
-    <attribute name="Blocking">true</attribute>
-    <attribute name="GCInterval">120000</attribute>
-    <attribute name="IdleTimeout">1800000</attribute>
-    <attribute name="IdleTimeoutEnabled">false</attribute>
-    <attribute name="LoggingEnabled">false</attribute>
-    <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
+    <!-- See the documentation for the specific connection manager
+         implementation you are using for the properties you can set -->
+    <attribute name="ConnectionManagerProperties">
+      # Pool strategy - uncomment to force, otherwise it is automatic
+      #PoolStrategy=Single
+
+      # Connection pooling properties - see
+      # org.opentools.minerva.pool.ObjectPool
+
+      MinSize=0
+      MaxSize=10
+      GCMinIdleTime=1200000
+      GCEnabled=false
+      InvalidateOnError=false
+      TimestampUsed=false
+      Blocking=true
+      GCInterval=120000
+      IdleTimeout=1800000
+      IdleTimeoutEnabled=false
+      LoggingEnabled=false
+      MaxIdleTimeoutPercent=1.0
+    </attribute>
   </mbean>
 
   <!-- JMX adaptors -->

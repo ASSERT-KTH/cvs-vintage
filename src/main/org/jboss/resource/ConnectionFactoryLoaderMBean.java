@@ -17,10 +17,10 @@ import org.jboss.util.ServiceMBean;
  *      
  *   @see RARDeployer
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ConnectionFactoryLoaderMBean
-   extends ServiceMBean, ConnectionFactoryConfig
+   extends ServiceMBean
 {
    String OBJECT_NAME = ":service=ConnectionFactoryLoader";
    String DEPLOYMENT_NOTIFICATION = "org.jboss.resource.deployment";
@@ -66,4 +66,36 @@ public interface ConnectionFactoryLoaderMBean
     */
    String getTransactionManagerName();
    void setTransactionManagerName(String transactionManagerName);
+
+   /**
+    * The name of the connection manager factory to use. This is the
+    * same name specified in the corresponding
+    * <code>ConnectionManagerFactoryLoader</code> MBean.
+    */
+   String getConnectionManagerFactoryName();
+   void setConnectionManagerFactoryName(String connectionManagerFactoryName);
+
+   /**
+    * The properties to set on the connection manager.
+    */
+   String getConnectionManagerProperties();
+   void setConnectionManagerProperties(String properties);
+
+   /**
+    * The name of the class implementing {@link
+    * org.jboss.resource.security.PrincipalMapping} that is to be used
+    * for mapping caller principals to resource principals for this
+    * connection factory.
+    */
+   String getPrincipalMappingClass();
+   void setPrincipalMappingClass(String className);
+
+   /**
+    * A string in a format parseable by {@link
+    * java.util.Properties#load} that defines the properties to set on
+    * the <code>PrincipalMapping</code> for this connection factory
+    * instance.
+    */
+   String getPrincipalMappingProperties();
+   void setPrincipalMappingProperties(String properties);
 }
