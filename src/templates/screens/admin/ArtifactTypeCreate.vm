@@ -27,7 +27,7 @@
     </td>
     </tr>
     <tr>
-    <th>* Issue type description</th>
+    <th>Issue type description</th>
     <td>#textAreaMedium("$group.Description.Key" $group.Description.Value)</td>
     </tr>
   </table>

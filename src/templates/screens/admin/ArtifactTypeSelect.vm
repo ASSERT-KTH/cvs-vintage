@@ -52,7 +52,7 @@
   #indexedRows($velocityCount)
   <td><input type="radio" name="issueTypeId" value="$issueType.IssueTypeId" /></td>
   <td>$issueType.Name</td>
-  <td>$issueType.Description</td>
+  <td>$!issueType.Description &nbsp;</td>
   </tr>
 #end
 </table>
