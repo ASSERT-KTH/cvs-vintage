@@ -1,4 +1,4 @@
-// $Id: UtilTestSuite.java,v 1.2 2004/06/28 06:27:27 linus Exp $
+// $Id: UtilTestSuite.java,v 1.3 2004/10/30 16:37:50 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,10 @@ import junit.framework.TestSuite;
 /**
  * @author Thierry Lach
  */
-public class UtilTestSuite {
+public final class UtilTestSuite {
 
-    /** Test suite for this package
+    /**
+     * Test suite for this package.
      * 
      * @return the junit test suite
      */
@@ -40,8 +41,6 @@ public class UtilTestSuite {
         TestSuite suite =
 	    new TestSuite("Tests for "
 			  + UtilTestSuite.class.getPackage().getName());
-        suite.addTestSuite(TestLinkedHashMap.class);
-        suite.addTestSuite(TestLinkedHashSet.class);
 	suite.addTestSuite(TestMyTokenizer.class);
         return suite;
     }
