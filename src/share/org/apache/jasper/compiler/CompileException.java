@@ -1,6 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.5 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.5 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CompileException.java,v 1.1 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.1 $
  * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
@@ -60,91 +60,20 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.util.Hashtable;
 import org.apache.jasper.JasperException;
-import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.beans.*;
-
-import org.apache.jasper.Constants;
 
 /**
- * Generator for <jsp:setProperty .../>
+ * Class for parser exceptions. 
  *
- * @author Mandar Raje
+ * @author Petr Jiricka
  */
-public class SetPropertyGenerator
-    extends GeneratorBase
-    implements ServiceMethodPhase 
-{
-    Hashtable attrs;
-    BeanRepository beanInfo;
-    Mark start;
+public class CompileException extends JasperException {
     
-    public SetPropertyGenerator (Mark start, Mark stop, Hashtable attrs,
-				 BeanRepository beanInfo) {
-	this.attrs = attrs;
-	this.beanInfo = beanInfo;
-	this.start = start;
+    public CompileException(Mark m, String reason) {
+	super(m + " " + reason);
     }
     
-    public void generate (ServletWriter writer, Class phase) 
-	throws JasperException {
-	    String name     = getAttribute ("name");
-	    String property = getAttribute ("property");
-	    String param    = getAttribute ("param");
-	    String value    = getAttribute ("value");
-	    
-	    if (property.equals("*")) {
-		
-		if (value != null) {
-		    String m = Constants.getString("jsp.error.setproperty.invalidSyantx");
-		    throw new CompileException(start, m);
-		}
-		
-		// Set all the properties using name-value pairs in the request.
-		writer.println("JspRuntimeLibrary.introspect(pageContext.findAttribute(" +
-			       "\"" + name + "\"), request);");		
-		
-	    } else {
-		
-		if (value == null) {
-		    
-		    // Parameter name specified. If not same as property.
-		    if (param == null) param = property;
-		    
-		    writer.println("JspRuntimeLibrary.introspecthelper(pageContext." +
-				   "findAttribute(\"" + name + "\"), \"" + property +
-				   "\", request.getParameter(\"" + param + "\"), " +
-				   "request, \"" + param + "\", false);");
-		} else {
-		    
-		    // value is a constant.
-		    if (!JspUtil.isExpression (value)) {
-			writer.println("JspRuntimeLibrary.introspecthelper(pageContext." +
-				       "findAttribute(\"" + name + "\"), \"" + property +
-				       "\",\"" + JspUtil.escapeQueryString(value) +
-				       "\",null,null, false);");
-		    } else {
-			
-			// This requires some careful handling.
-			// int, boolean, ... are not Object(s).
-			writer.println("JspRuntimeLibrary.handleSetProperty(pageContext." +
-				       "findAttribute(\"" + name + "\"), \"" + property +
-				       "\"," + JspUtil.getExpr(value) + ");");
-		    }
-		}
-	    }
-    }
-    
-    public String getAttribute(String name) {
-	return (attrs != null) ? (String) attrs.get(name) : null;
+    public CompileException(String reason) {
+	super(reason);
     }
 }
-
-
-
-
-
-
-

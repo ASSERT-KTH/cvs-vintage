@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.6 2000/04/25 00:07:54 mandar Exp $
- * $Revision: 1.6 $
- * $Date: 2000/04/25 00:07:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.7 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/06/11 21:41:06 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -78,12 +78,14 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	BeanRepository beanInfo;
 	boolean genSession;
 	boolean beanRT = false;
+	Mark start;
   
     public BeanGenerator (Mark start, Hashtable attrs, BeanRepository beanInfo,
 			  boolean genSession) {
 	this.attrs = attrs;
 	this.beanInfo = beanInfo;
 	this.genSession = genSession;
+	this.start = start;
     }
 	
     public void generate (ServletWriter writer, Class phase)
@@ -108,33 +110,33 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	    // Check for mandatory attributes:
 	    if ( name == null ) {
                 String m = Constants.getString("jsp.error.usebean.missing.attribute");
-		throw new JasperException(m);
+		throw new CompileException(start, m);
 	    }
 	    
 	    if (clsname == null && type == null) {
                 String m = Constants.getString("jsp.error.usebean.missing.type",
 					       new Object[] {name});
-		throw new JasperException (m);
+		throw new CompileException (start, m);
 	    }
 
 	    if (beanInfo.checkVariable(name) == true) {
                 String m = Constants.getString("jsp.error.usebean.duplicate",
 					       new Object[] {name});
-                throw new JasperException (m);
+                throw new CompileException (start, m);
 	    }
             
 	    if (scope != null && scope.equalsIgnoreCase ("session")) {
 		if (genSession != true) {
                     String m = Constants.getString("jsp.error.usebean.prohibited.as.session",
 						   new Object[] {name});
-                    throw new JasperException (m);
+                    throw new CompileException (start, m);
                 }
 	    }
 
 	    if (clsname != null && beanName != null) {
 		String m = Constants.getString("jsp.error.usebean.not.both",
 					       new Object[] {name});
-		throw new JasperException (m);
+		throw new CompileException (start, m);
 	    }	     
 	    
 	    if (clsname == null) clsname = type;
@@ -149,7 +151,7 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	    } else {
                 String m = Constants.getString("jsp.error.usebean.invalid.scope",
 					       new Object[] {name, scope});
-	        throw new JasperException (m);
+	        throw new CompileException (start, m);
             }
     }
   

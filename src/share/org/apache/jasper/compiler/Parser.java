@@ -192,13 +192,13 @@ public class Parser {
 	    Hashtable attrs = reader.parseTagAttributes();
 	    if (match.equals ("page"))
 	        JspUtil.checkAttributes ("Page directive", attrs, 
-					 pageDvalidAttrs);
+					 pageDvalidAttrs, start);
 	    else if (match.equals("include"))
 	        JspUtil.checkAttributes ("Include directive", attrs, 
-					 includeDvalidAttrs);
+					 includeDvalidAttrs, start);
 	    else if (match.equals("taglib"))
 	        JspUtil.checkAttributes ("Taglib directive", attrs, 
-					 tagDvalidAttrs);
+					 tagDvalidAttrs, start);
 	    
 	    // Match close.
 	    reader.skipSpaces();
@@ -247,7 +247,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_INCLUDE.length());
 		Hashtable attrs = reader.parseTagAttributes();
-		JspUtil.checkAttributes ("Include", attrs, validAttributes);
+		JspUtil.checkAttributes ("Include", attrs, validAttributes, start);
 		reader.skipSpaces();
 		
 		if (!reader.matches(CLOSE_INCLUDE_NO_BODY)) {
@@ -330,7 +330,7 @@ public class Parser {
 		reader.advance(OPEN_FORWARD.length());
 		Hashtable attrs = reader.parseTagAttributes();
 		Hashtable param = new Hashtable();
-	        JspUtil.checkAttributes ("Forward", attrs, validAttributes);
+	        JspUtil.checkAttributes ("Forward", attrs, validAttributes, start);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_FORWARD_NO_BODY)) {
 		    if (!reader.matches(CLOSE_FORWARD_BODY))
@@ -441,6 +441,7 @@ public class Parser {
 	{
 	    String close, open, end_open = null;
             Hashtable attrs = null;
+	    Mark start;
 				
 	    if (reader.matches(OPEN_DECL)) {
 		open = OPEN_DECL;
@@ -449,6 +450,7 @@ public class Parser {
 		return false;
 
 	    reader.advance(open.length());
+	    start = reader.mark();
 
             if (end_open != null) {
                 attrs = reader.parseTagAttributes();
@@ -460,10 +462,9 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-		JspUtil.checkAttributes("Declaration", attrs, validAttributes);
+		JspUtil.checkAttributes("Declaration", attrs, validAttributes, start);
             }
 
-	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(Constants.getString("jsp.error.unterminated", 
@@ -494,6 +495,7 @@ public class Parser {
 	{
 	    String close, open, end_open=null;
             Hashtable attrs = null;
+	    Mark start;
 		
 	    if (reader.matches(OPEN_EXPR)) {
 		open = OPEN_EXPR;
@@ -502,6 +504,7 @@ public class Parser {
 		return false;
 
 	    reader.advance(open.length());
+	    start = reader.mark();
 
             if (end_open != null) {
                 attrs = reader.parseTagAttributes();
@@ -513,10 +516,9 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-                JspUtil.checkAttributes("Expression", attrs, validAttributes);
+                JspUtil.checkAttributes("Expression", attrs, validAttributes, start);
             }
 
-	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(reader.mark(), 
@@ -546,6 +548,7 @@ public class Parser {
 	{
 	    String close, open, end_open = null;
             Hashtable attrs = null;
+	    Mark start;
 	    
 	    if (reader.matches(OPEN_SCRIPTLET)) {
 		open = OPEN_SCRIPTLET;
@@ -554,6 +557,7 @@ public class Parser {
 		return false;
 		
 	    reader.advance(open.length());
+	    start = reader.mark();
 
             if (end_open != null) {
                 attrs = reader.parseTagAttributes();
@@ -565,10 +569,9 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-                JspUtil.checkAttributes("Scriptlet", attrs, validAttributes);
+                JspUtil.checkAttributes("Scriptlet", attrs, validAttributes, start);
             }
 
-	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(reader.mark(), 
@@ -609,7 +612,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_BEAN.length());
 		Hashtable attrs = reader.parseTagAttributesBean();
-	        JspUtil.checkAttributes ("useBean", attrs, validAttributes);
+	        JspUtil.checkAttributes ("useBean", attrs, validAttributes, start);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_BEAN)) {
 		    if (!reader.matches(CLOSE_BEAN_3))
@@ -674,7 +677,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_GETPROPERTY.length());
 		Hashtable attrs = reader.parseTagAttributes ();
-	        JspUtil.checkAttributes ("getProperty", attrs, validAttributes);
+	        JspUtil.checkAttributes ("getProperty", attrs, validAttributes, start);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_GETPROPERTY))
 		    throw new ParseException(reader.mark(), 
@@ -717,7 +720,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_SETPROPERTY.length());
 		Hashtable attrs = reader.parseTagAttributes ();
-	        JspUtil.checkAttributes ("setProperty", attrs, validAttributes);
+	        JspUtil.checkAttributes ("setProperty", attrs, validAttributes, start);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_SETPROPERTY))
 		    throw new ParseException(reader.mark(), 
@@ -898,7 +901,7 @@ public class Parser {
 		Hashtable param = null;
 		String fallback = null;
 
-	        JspUtil.checkAttributes ("plugin", attrs, validAttributes);
+	        JspUtil.checkAttributes ("plugin", attrs, validAttributes, start);
 		if (reader.matches (OPEN_PARAMS)) {
 		    param = new Hashtable ();
 		    boolean paramsClosed = false;

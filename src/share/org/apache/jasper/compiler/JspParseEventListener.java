@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.15 2000/04/08 22:16:24 rubys Exp $
- * $Revision: 1.15 $
- * $Date: 2000/04/08 22:16:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.16 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
  * 
@@ -411,10 +411,12 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.contentTypeDir == true) 
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.contenttypes"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.contenttypes"));
             listener.contentTypeDir = true;
             if (contentType == null)
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.contenttype"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.contenttype"));
             listener.servletContentType = contentType;
         }
     }
@@ -426,16 +428,18 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.sessionDir == true)
-                throw new JasperException (Constants.getString("jsp.error.page.multiple.session"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.multiple.session"));
             listener.sessionDir = true;
             if (session == null)
-                throw new JasperException (Constants.getString("jsp.error.page.invalid.session"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.invalid.session"));
             if (session.equalsIgnoreCase("true"))
                 listener.genSessionVariable = true;
             else if (session.equalsIgnoreCase("false"))
                 listener.genSessionVariable = false;
             else
-                throw new JasperException("Invalid value for session");
+                throw new CompileException(start, "Invalid value for session");
         }
     }
 
@@ -446,7 +450,8 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.bufferDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.buffer"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.buffer"));
             listener.bufferDir = true;
             if (buffer != null) {
                 if (buffer.equalsIgnoreCase("none"))
@@ -462,14 +467,15 @@ public class JspParseEventListener extends BaseJspListener {
                             num = buffer.substring(0, ind);
                         i = new Integer(num);
                     } catch (NumberFormatException n) {
-                        throw new JasperException(Constants.getString(
-					"jsp.error.page.invalid.buffer"), n);
+                        throw new CompileException(start, Constants.getString(
+					"jsp.error.page.invalid.buffer"));
                     }
                     listener.bufferSize = i.intValue()*1024;
                 }
             }
             else
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.buffer"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.buffer"));
         }
     }
 
@@ -480,18 +486,21 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.autoFlushDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.autoflush"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.autoflush"));
             
             listener.autoFlushDir = true;
             if (autoflush == null)
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.autoflush"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.autoflush"));
             
             if (autoflush.equalsIgnoreCase("true"))
                 listener.autoFlush = true;
             else if (autoflush.equalsIgnoreCase("false"))
                 listener.autoFlush = false;
             else
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.autoflush"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.autoflush"));
         }
     }
 
@@ -502,18 +511,21 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.threadsafeDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.threadsafe"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.threadsafe"));
                                        
             listener.threadsafeDir = true;
             if (threadsafe == null)
-                throw new JasperException (Constants.getString("jsp.error.page.invalid.threadsafe"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.invalid.threadsafe"));
             
             if (threadsafe.equalsIgnoreCase("true"))
                 listener.singleThreaded = false;
             else if (threadsafe.equalsIgnoreCase("false"))
                 listener.singleThreaded = true;
             else 
-                throw new JasperException (Constants.getString("jsp.error.page.invalid.threadsafe"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.invalid.threadsafe"));
         }
     }
     
@@ -524,11 +536,13 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.infoDir == true)
-                throw new JasperException (Constants.getString("jsp.error.page.multiple.info"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.multiple.info"));
             
             listener.infoDir = true;
             if (info == null)
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.info"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.info"));
             
             GeneratorWrapper gen = listener. new GeneratorWrapper(new InfoGenerator(info),
                                                                   start, stop);
@@ -543,18 +557,21 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.iserrorpageDir == true)
-                throw new JasperException (Constants.getString("jsp.error.page.multiple.iserrorpage"));
+                throw new CompileException (start,
+					    Constants.getString("jsp.error.page.multiple.iserrorpage"));
             
             listener.iserrorpageDir = true;
             if (iserrorpage == null)
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.iserrorpage"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.iserrorpage"));
             
             if (iserrorpage.equalsIgnoreCase("true"))
                 listener.ctxt.setErrorPage(true);
             else if (iserrorpage.equalsIgnoreCase("false"))
                 listener.ctxt.setErrorPage(false);
             else
-                throw new JasperException(Constants.getString("jsp.error.page.invalid.iserrorpage"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.invalid.iserrorpage"));
         }
     }
     
@@ -565,7 +582,8 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.errorpageDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.errorpage"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.errorpage"));
             
             listener.errorpageDir = true;
             if (errorpage != null) 
@@ -580,12 +598,14 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.languageDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.language"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.language"));
             
             listener.languageDir = true;
             if (language != null) 
                 if (!language.equalsIgnoreCase("java"))
-                    throw new JasperException(Constants.getString("jsp.error.page.nomapping.language")+language);
+                    throw new CompileException(start,
+					       Constants.getString("jsp.error.page.nomapping.language")+language);
         }
     }
 
@@ -610,7 +630,8 @@ public class JspParseEventListener extends BaseJspListener {
             throws JasperException 
         {
             if (listener.extendsDir == true)
-                throw new JasperException(Constants.getString("jsp.error.page.multiple.extends"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.page.multiple.extends"));
             
             listener.extendsDir = true; 
             if (extendsClzz != null)  {
@@ -655,7 +676,7 @@ public class JspParseEventListener extends BaseJspListener {
 
         // Do some validations... 
         if (bufferSize == 0 && autoFlush == false)
-            throw new JasperException(Constants.getString(
+            throw new CompileException(start, Constants.getString(
 	    				"jsp.error.page.bad_b_and_a_combo"));
       
 	if (directive.equals("taglib")) {
@@ -669,7 +690,7 @@ public class JspParseEventListener extends BaseJspListener {
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Object[] args = new Object[] { uri, ex.getMessage() };
-                throw new JasperException(Constants.getString("jsp.error.badtaglib",
+                throw new CompileException(start, Constants.getString("jsp.error.badtaglib",
                                                               args));
             }
 	}
@@ -679,13 +700,15 @@ public class JspParseEventListener extends BaseJspListener {
 	    String encoding = (String) attrs.get("encoding");
 	    
 	    if (file == null)
-		throw new JasperException(Constants.getString("jsp.error.include.missing.file"));
+		throw new CompileException(start,
+					   Constants.getString("jsp.error.include.missing.file"));
             
             // jsp.error.include.bad.file needs taking care of here??
             try {
                 reader.pushFile(file, encoding);
             } catch (FileNotFoundException fnfe) {
-                throw new JasperException(Constants.getString("jsp.error.include.bad.file"));
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.include.bad.file"));
             }
 	}
     }
@@ -812,7 +835,7 @@ public class JspParseEventListener extends BaseJspListener {
                           new Object[] { attrs },
                           Logger.DEBUG);
 
-	Generator gen = new GeneratorWrapper (new PluginGenerator (attrs,
+	Generator gen = new GeneratorWrapper (new PluginGenerator (start, attrs,
 					      param, fallback), start, stop);
 	addGenerator (gen);
     }
@@ -821,7 +844,7 @@ public class JspParseEventListener extends BaseJspListener {
 	throws JasperException
     {
         Generator gen
-            = new GeneratorWrapper(new ForwardGenerator(attrs, param),
+            = new GeneratorWrapper(new ForwardGenerator(start, attrs, param),
                                    start, stop);
         
 	addGenerator(gen);
@@ -831,7 +854,7 @@ public class JspParseEventListener extends BaseJspListener {
 	throws JasperException
     {
         Generator gen
-            = new GeneratorWrapper(new IncludeGenerator(attrs, param),
+            = new GeneratorWrapper(new IncludeGenerator(start, attrs, param),
                                    start, stop);
 
 	addGenerator(gen);
@@ -862,7 +885,7 @@ public class JspParseEventListener extends BaseJspListener {
 	throws JasperException
     {
         Generator gen
-            = new GeneratorWrapper(new TagBeginGenerator(prefix, shortTagName, attrs,
+            = new GeneratorWrapper(new TagBeginGenerator(start, prefix, shortTagName, attrs,
 							 tli, ti),
                                    start, stop);
 

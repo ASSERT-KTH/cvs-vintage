@@ -91,9 +91,10 @@ public class TagBeginGenerator
     String baseVarName, thVarName;
     TagCache tc;
     TagData tagData;
+    Mark start;
 
     
-    public TagBeginGenerator(String prefix, String shortTagName, Hashtable attrs,
+    public TagBeginGenerator(Mark start, String prefix, String shortTagName, Hashtable attrs,
 			     TagLibraryInfoImpl tli, TagInfo ti) 
         throws JasperException
     {
@@ -105,6 +106,7 @@ public class TagBeginGenerator
 	this.attributes = ti.getAttributes();
 	this.baseVarName = getTagVarName(prefix, shortTagName);
 	this.thVarName = "_jspx_th_"+baseVarName;
+	this.start = start;
     }
 
     public void init(JspCompilationContext ctxt) throws JasperException {
@@ -118,7 +120,8 @@ public class TagBeginGenerator
             try {
                 clz = cl.loadClass(ti.getTagClassName());
             } catch (Exception ex) {
-                throw new JasperException(Constants.getString("jsp.error.unable.loadclass", 
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.unable.loadclass", 
                                                               new Object[] { ti.getTagClassName(),
                                                                              ex.getMessage()
                                                               }
@@ -137,7 +140,8 @@ public class TagBeginGenerator
         // First make sure all required attributes are indeed present. 
         for(int i = 0; i < attributes.length; i++)
             if (attributes[i].isRequired() && attribs.get(attributes[i].getName()) == null)
-                throw new JasperException(Constants.getString("jsp.error.missing_attribute",
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.missing_attribute",
                                                               new Object[] {
                                                                   attributes[i].getName(),
                                                                   shortTagName
@@ -157,7 +161,8 @@ public class TagBeginGenerator
 		}
             
             if (!found)
-                throw new JasperException(Constants.getString("jsp.error.bad_attribute",
+                throw new CompileException(start,
+					   Constants.getString("jsp.error.bad_attribute",
                                                               new Object[] {
                                                                   attr
                                                               }
@@ -166,7 +171,8 @@ public class TagBeginGenerator
 
         tagData = new TagData(attribs);
         if (!ti.isValid(tagData))
-            throw new JasperException(Constants.getString("jsp.error.invalid_attributes"));
+            throw new CompileException(start,
+				       Constants.getString("jsp.error.invalid_attributes"));
     }
 
     private final void generateSetters(ServletWriter writer, String parent) 
@@ -192,8 +198,8 @@ public class TagBeginGenerator
 		    Method m = tc.getSetterMethod(attrName);
 		    
 		    if (m == null)
-			throw new JasperException
-			    (Constants.getString
+			throw new CompileException
+			    (start, Constants.getString
 			     ("jsp.error.unable.to_find_method",
 			      new Object[] { attrName }));
 		    

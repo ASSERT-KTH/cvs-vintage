@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.2 1999/10/19 21:34:49 mandar Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/19 21:34:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.3 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
  * 
@@ -80,16 +80,18 @@ public class ForwardGenerator
     boolean isExpression = false;
     Hashtable params;
     
-    public ForwardGenerator(Hashtable attrs, Hashtable param) throws JasperException {
-	if (attrs.size() != 1)
-	    throw new JasperException(Constants.getString("jsp.error.invalid.forward"));
-
-        page = (String) attrs.get("page");
-        if (page == null)
-            throw new JasperException(Constants.getString("jsp.error.invalid.forward"));
-
-	this.params = param;
-	isExpression = JspUtil.isExpression (page);
+    public ForwardGenerator(Mark start, Hashtable attrs, Hashtable param)
+	throws JasperException {
+	    if (attrs.size() != 1)
+		throw new JasperException(Constants.getString("jsp.error.invalid.forward"));
+	    
+	    page = (String) attrs.get("page");
+	    if (page == null)
+		throw new CompileException(start,
+					   Constants.getString("jsp.error.invalid.forward"));
+	    
+	    this.params = param;
+	    isExpression = JspUtil.isExpression (page);
     }
     
     public void generate(ServletWriter writer, Class phase) {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.14 2000/06/10 01:41:19 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/06/10 01:41:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.15 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
  * 
@@ -214,7 +214,7 @@ public class JspUtil {
     }
 
     public static void checkAttributes (String typeOfTag, Hashtable attrs,
-    					ValidAttribute[] validAttributes)
+    					ValidAttribute[] validAttributes, Mark start)
 					throws JasperException
     {
 	boolean valid = true;
@@ -245,7 +245,7 @@ public class JspUtil {
 	 * If mandatory attribute is missing then the exception is thrown.
 	 */
 	if (!valid)
-	    throw new JasperException(Constants.getString(
+	    throw new ParseException(start, Constants.getString(
 			"jsp.error.mandatory.attribute", 
                                  new Object[] { typeOfTag, missingAttribute}));
 
@@ -272,7 +272,7 @@ public class JspUtil {
 		}
 	    }
 	    if (!valid)
-	        throw new JasperException(Constants.getString(
+	        throw new ParseException(start, Constants.getString(
 			"jsp.error.invalid.attribute", 
                                  new Object[] { typeOfTag, attribute }));
 	}

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.3 1999/10/19 21:34:50 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/19 21:34:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.4 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
  * 
@@ -88,22 +88,26 @@ public class IncludeGenerator
     boolean isExpression = false;
     Hashtable params;
     
-    public IncludeGenerator(Hashtable attrs, Hashtable param) 
+    public IncludeGenerator(Mark start, Hashtable attrs, Hashtable param) 
         throws JasperException 
     {
 	if (attrs.size() != 2)
-	    throw new JasperException(Constants.getString("jsp.error.include.tag"));
+	    throw new CompileException(start,
+				       Constants.getString("jsp.error.include.tag"));
 
         page = (String) attrs.get("page");
         if (page == null)
-	    throw new JasperException(Constants.getString("jsp.error.include.tag"));
+	    throw new CompileException(start,
+				       Constants.getString("jsp.error.include.tag"));
 
         String flush = (String) attrs.get("flush");
         if (flush == null)
-            throw new JasperException(Constants.getString("jsp.error.include.noflush"));
+            throw new CompileException(start,
+				       Constants.getString("jsp.error.include.noflush"));
 
         if (!flush.equals("true"))
-            throw new JasperException(Constants.getString("jsp.error.include.badflush"));
+            throw new CompileException(start,
+				       Constants.getString("jsp.error.include.badflush"));
 
 	this.params = param;
 	isExpression = JspUtil.isExpression (page);

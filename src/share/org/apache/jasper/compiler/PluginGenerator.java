@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.6 2000/04/05 12:16:26 nacho Exp $
- * $Revision: 1.6 $
- * $Date: 2000/04/05 12:16:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.7 2000/06/11 21:41:06 mandar Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/06/11 21:41:06 $
  *
  * ====================================================================
  * 
@@ -82,12 +82,15 @@ public class PluginGenerator
     String fallback;
 
     String ieClassId;
+    Mark start;
     
     
-    public PluginGenerator(Hashtable attrs, Hashtable param, String fallback) {
+    public PluginGenerator(Mark start, Hashtable attrs, Hashtable param,
+			   String fallback) {
     	this.attrs = attrs;
 	this.param = param;
 	this.fallback = fallback;
+	this.start = start;
     }
 
     public void init(JspCompilationContext ctxt) throws JasperException {
@@ -107,10 +110,10 @@ public class PluginGenerator
 	String iepluginurl = getAttribute ("iepluginurl");
 
 	if (type == null)
-	    throw new JasperException (Constants.getString (
+	    throw new CompileException (start, Constants.getString (
 	    				"jsp.error.plugin.notype"));
 	if (code == null)
-	    throw new JasperException (Constants.getString (
+	    throw new CompileException (start, Constants.getString (
 	    				"jsp.error.plugin.nocode"));
 
 	writer.popIndent ();
