@@ -1,6 +1,6 @@
 @echo off
-rem $Id: startup.bat,v 1.8 2000/09/04 21:24:49 larryi Exp $
-rem Startup batch file for tomcat servner.
+rem $Id: startup.bat,v 1.9 2000/11/03 12:15:37 nacho Exp $
+rem Startup batch file for tomcat server.
 
 rem This batch file written and tested under Windows NT
 rem Improvements to this file are welcome

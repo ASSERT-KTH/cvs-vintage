@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.30 2000/09/08 01:02:27 larryi Exp $
+rem $Id: tomcat.bat,v 1.31 2000/11/03 12:15:37 nacho Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -32,6 +32,9 @@ set _CP=%CP%
 set _TOMCAT_HOME=%TOMCAT_HOME%
 set _CLASSPATH=%CLASSPATH%
 
+rem ----- Internal Environment Vars used somewhere --------------------------
+
+set TEST_JAR=tomcat.jar
 
 rem ----- Verify and Set Required Environment Variables ---------------------
 
@@ -43,8 +46,8 @@ goto cleanup
 if not "%TOMCAT_HOME%" == "" goto gotTomcatHome
 set TOMCAT_HOME=.
 :gotTomcatHome
-if exist "%TOMCAT_HOME%\lib\webserver.jar" goto okTomcatHome
-echo Unable to locate webserver.jar, check the value of TOMCAT_HOME.
+if exist "%TOMCAT_HOME%\lib\%TEST_JAR%" goto okTomcatHome
+echo Unable to locate %TEST_JAR%, check the value of TOMCAT_HOME.
 goto cleanup
 :okTomcatHome
 
@@ -69,7 +72,7 @@ rem ----- Set Up The Runtime Classpath --------------------------------------
 set CP=%TOMCAT_HOME%\classes
 
 rem Try to determine if TOMCAT_HOME contains spaces
-if exist %TOMCAT_HOME%\lib\webserver.jar goto dynClasspath
+if exist %TOMCAT_HOME%\lib\%TEST_JAR% goto dynClasspath
 echo Your TOMCAT_HOME appears to contain spaces.
 echo Unable to set CLASSPATH dynamically.
 goto staticClasspath
@@ -97,7 +100,12 @@ set CP=%CP%;%TOMCAT_HOME%\lib\jasper.jar
 set CP=%CP%;%TOMCAT_HOME%\lib\jaxp.jar
 set CP=%CP%;%TOMCAT_HOME%\lib\parser.jar
 set CP=%CP%;%TOMCAT_HOME%\lib\servlet.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\webserver.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\tomcat.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_core.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_config.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_modules.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_util.jar
+set CP=%CP%;%TOMCAT_HOME%\lib\facade22.jar
 
 :chkClasspath
 if "%CLASSPATH%" == "" goto noClasspath
@@ -177,6 +185,7 @@ goto cleanup
 rem ----- Restore Environment Variables ---------------------------------------
 
 :cleanup
+set TEST_JAR=
 set _LIBJARS=
 set _SECSTARTJAVA=
 set _STARTJAVA=
