@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <!-- $Id: Tomcat-Workers-HowTo.html,v 1.1 2000/06/19 10:08:36 shachor Exp $ -->
+    <!-- $Id: Tomcat-Workers-HowTo.html,v 1.2 2001/01/30 04:27:38 danmil Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
 
     <meta http-equiv=Content-Type content="text/html">
@@ -164,7 +164,7 @@ the Java variable naming rules).</p>
   <p>worker.local.type=ajp12</p>
   </td>
   <td>
-  <p>Defines a worker named local that use the ajpv12 protocol
+  <p>Defines a worker named &quot;local&quot; that uses the ajpv12 protocol
   to forward requests to a Tomcat process.</p>
   </td>
  </tr>
@@ -173,7 +173,7 @@ the Java variable naming rules).</p>
   <p>worker.remote.type=ajp13</p>
   </td>
   <td>
-  <p>Defines a worker named local that use the ajpv12 protocol
+  <p>Defines a worker named &quot;remote&quot; that uses the ajpv13 protocol
   to forward requests to a Tomcat process.</p>
   </td>
  </tr>
@@ -182,7 +182,7 @@ the Java variable naming rules).</p>
   <p>worker.fast.type=jni</p>
   </td>
   <td>
-  <p>Defines a worker named local that use the ajpv12 protocol
+  <p>Defines a worker named &quot;fast&quot; that uses JNI
   to forward requests to a Tomcat process.</p>
   </td>
  </tr>
@@ -191,8 +191,8 @@ the Java variable naming rules).</p>
   <p>worker.loadbalancer.type=lb</p>
   </td>
   <td>
-  <p>Defines a worker named local that use the ajpv12 protocol
-  to forward requests to a Tomcat process.</p>
+  <p>Defines a worker named &quot;loadbalancer&quot; that 
+  loadbalances several Tomcat processes transparently.</p>
   </td>
  </tr>
 </table>
