@@ -32,7 +32,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -47,7 +47,7 @@ public class ApplicationMetaData
    /** ArrayList<BeanMetaData> for the ejbs */
    private ArrayList beans = new ArrayList();
    /** A HashMap<String, String> for webservice description publish locations */
-   private HashMap webserviceDescriptions = new HashMap();
+   private HashMap wsdlPublishLocationMap = new HashMap();
    /** List<RelationMetaData> of relations in this application. */
    private ArrayList relationships = new ArrayList();
    /** The assembly-descriptor */
@@ -148,7 +148,7 @@ public class ApplicationMetaData
    public String getWsdlPublishLocationByName(String name)
    {
       // if not found, the we will use default
-      return (String)webserviceDescriptions.get(name);
+      return (String)wsdlPublishLocationMap.get(name);
    }
 
    public String getWebServiceContextRoot()
@@ -879,7 +879,7 @@ public class ApplicationMetaData
                Element wsd = (Element)iterator.next();
                String wsdName = getElementContent(getUniqueChild(wsd, "webservice-description-name"));
                String wsdlPublishLocation = getOptionalChildContent(wsd, "wsdl-publish-location");
-               webserviceDescriptions.put(wsdName, wsdlPublishLocation);
+               wsdlPublishLocationMap.put(wsdName, wsdlPublishLocation);
             }
          }
          catch (DeploymentException e)
