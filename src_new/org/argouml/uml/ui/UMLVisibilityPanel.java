@@ -1,4 +1,4 @@
-// $Id: UMLVisibilityPanel.java,v 1.7 2003/09/21 15:23:22 bobtarling Exp $
+// $Id: UMLVisibilityPanel.java,v 1.8 2003/10/04 18:14:41 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,17 +52,33 @@ public class UMLVisibilityPanel extends JPanel {
 						      "getVisibility",
 						      "setVisibility",
 						      (Class)ModelFacade.VISIBILITYKIND,
-						      (Class)ModelFacade.PUBLIC_VISIBILITYKIND,
+						      ModelFacade.PUBLIC_VISIBILITYKIND,
 						      null));
 	publicButton.setSelected(true);
 	add(publicButton);
 	group.add(publicButton);
     
-	UMLRadioButton protectedButton = new UMLRadioButton("protected", container, new UMLEnumerationBooleanProperty("visibility", mclass, "getVisibility", "setVisibility", (Class)ModelFacade.VISIBILITYKIND, (Class)ModelFacade.PROTECTED_VISIBILITYKIND, null));
+	UMLRadioButton protectedButton =
+	    new UMLRadioButton("protected", container,
+		    new UMLEnumerationBooleanProperty("visibility",
+						      mclass,
+						      "getVisibility",
+						      "setVisibility",
+						      (Class)ModelFacade.VISIBILITYKIND,
+						      ModelFacade.PROTECTED_VISIBILITYKIND,
+						      null));
 	add(protectedButton);
 	group.add(protectedButton);
     
-	UMLRadioButton privateButton = new UMLRadioButton("private", container, new UMLEnumerationBooleanProperty("visibility", mclass, "getVisibility", "setVisibility", (Class)ModelFacade.VISIBILITYKIND, (Class)ModelFacade.PRIVATE_VISIBILITYKIND, null));
+	UMLRadioButton privateButton =
+	    new UMLRadioButton("private", container,
+		    new UMLEnumerationBooleanProperty("visibility",
+						      mclass,
+						      "getVisibility",
+						      "setVisibility",
+						      (Class)ModelFacade.VISIBILITYKIND,
+						      ModelFacade.PRIVATE_VISIBILITYKIND,
+						      null));
 	add(privateButton);
 	group.add(privateButton);
     
