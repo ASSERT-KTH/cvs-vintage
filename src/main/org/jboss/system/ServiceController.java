@@ -41,7 +41,7 @@ import org.jboss.logging.Log;
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @see org.jboss.system.Service
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>Revisions:</b>
 * <p><b>20010830 marcf </b>
@@ -134,8 +134,9 @@ implements ServiceControllerMBean, MBeanRegistration
 			server.getMBeanInfo(objectName), 
 			mbeanElement.getAttribute("serviceFactory"));
 		
-		service.init();
-		service.start();
+		//These are now called by the ServiceDeployer code.
+		//service.init();
+		//service.start();
 		
 		// we need to keep an order on the MBean it encapsulates dependencies
 		services.add(objectName);
@@ -177,7 +178,8 @@ implements ServiceControllerMBean, MBeanRegistration
 			
 			// Remove the MBeanClassLoader used by the MBean
 			ObjectName loader = new ObjectName("ZClassLoaders:id="+objectName.hashCode());
-			server.unregisterMBean(loader);
+			if(server.isRegistered(loader))
+				server.unregisterMBean(loader);
 			
 		}
 	};
