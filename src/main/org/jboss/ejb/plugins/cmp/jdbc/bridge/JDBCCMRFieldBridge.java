@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1161,9 +1161,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return lastRead;
       }
       public void invalidate() {
-         setHandle[0].clear();
+         if(setHandle != null && setHandle.length > 0)
+         {
+            setHandle[0] = null;
+         }
+         setHandle = new List[1];
          relationSet = null;
-         setLoaded(false);
       }
    }   
    private final static class CMRJDBCType implements JDBCType {
