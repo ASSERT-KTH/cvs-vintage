@@ -65,6 +65,7 @@ import org.tigris.scarab.om.IssueTypePeer;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.Attribute;
 
 import org.apache.torque.util.Criteria;
 
@@ -80,7 +81,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.15 2001/12/04 15:55:03 dr Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.16 2002/01/10 07:10:12 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -140,6 +141,25 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return AttributePeer.getAllAttributes();
     }
     
+    /**
+     * Gets a List of all of user Attribute objects.
+     */
+    public List getUserAttributes()
+        throws Exception
+    {
+        List allAttributes =  AttributePeer.getAllAttributes();
+        List userAttributes = new ArrayList();
+        for (int i = 0;i < allAttributes.size(); i++)
+        {
+            Attribute att = (Attribute)allAttributes.get(i);
+            if (att.isUserAttribute())
+            {
+                userAttributes.add(att);
+            }
+        }
+        return userAttributes;
+    }
+
     /**
      * gets a list of all Issue Types 
      */
