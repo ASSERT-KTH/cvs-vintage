@@ -25,7 +25,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.9 2002/10/10 13:13:56 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.10 2002/10/10 13:18:51 kataka Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -61,7 +61,7 @@ import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
  *  GEF.  This class handles only UML Sequence Digrams.  */
 
 public class SequenceDiagramGraphModel extends MutableGraphSupport
-implements MutableGraphModel, MElementListener, VetoableChangeListener {
+implements MElementListener, VetoableChangeListener {
     protected static Category cat = 
         Category.getInstance(SequenceDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.12 2002/10/10 12:58:13 kataka Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.13 2002/10/10 13:18:51 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -59,7 +59,7 @@ import org.argouml.uml.MMUtil;
  */
 
 public class UseCaseDiagramGraphModel extends MutableGraphSupport
-    implements MutableGraphModel, VetoableChangeListener, MElementListener {
+    implements VetoableChangeListener, MElementListener {
         protected static Category cat = Category.getInstance(UseCaseDiagramGraphModel.class);
 
     ///////////////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.11 2002/10/10 12:58:13 kataka Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.12 2002/10/10 13:18:51 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.apache.log4j.Category;
@@ -50,7 +50,7 @@ import org.tigris.gef.graph.*;
  *  GEF.  This class handles only UML Use Case Digrams.  */
 
 public class CollabDiagramGraphModel extends MutableGraphSupport
-implements MutableGraphModel, MElementListener, VetoableChangeListener {
+implements MElementListener, VetoableChangeListener {
     protected static Category cat = Category.getInstance(CollabDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////
   // instance variables

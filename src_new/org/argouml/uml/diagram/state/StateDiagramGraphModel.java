@@ -24,7 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.11 2002/10/10 12:58:13 kataka Exp $
+// $Id: StateDiagramGraphModel.java,v 1.12 2002/10/10 13:18:50 kataka Exp $
 
 package org.argouml.uml.diagram.state;
 import org.apache.log4j.Category;
@@ -49,7 +49,7 @@ import org.tigris.gef.graph.*;
  *  GEF.  This class handles only UML MState Digrams.  */
 
 public class StateDiagramGraphModel extends MutableGraphSupport
-implements MutableGraphModel, VetoableChangeListener, MElementListener {
+implements VetoableChangeListener, MElementListener {
     protected static Category cat = 
         Category.getInstance(StateDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////

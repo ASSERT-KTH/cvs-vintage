@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.14 2002/10/10 12:58:13 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.15 2002/10/10 13:18:51 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -50,7 +50,7 @@ import org.argouml.uml.MMUtil;
  *  GEF.  This class handles only UML Class digrams.  */
 
 public class ClassDiagramGraphModel extends MutableGraphSupport
-implements MutableGraphModel, VetoableChangeListener, MElementListener {
+implements VetoableChangeListener, MElementListener {
     protected static Category cat = Category.getInstance(ClassDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////
   // instance variables
