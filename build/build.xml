@@ -135,7 +135,7 @@
         </copy>
 
         <!-- Conditionally copy templates -->
-        <antcall target="copy-templates"/>
+        <antcall target="copy-templates" />
 
         <copy todir="${build.project}/resources" filtering="no">
             <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
@@ -150,9 +150,7 @@
             <equals arg1="${scarab.copy.templates}" arg2="true"/>
         </condition>
         <condition property="template.path" value="file://${src.dir}">
-            <not>
-                <equals arg1="${scarab.copy.templates}" arg2="true"/>
-            </not>
+            <equals arg1="${scarab.copy.templates}" arg2="false"/>
         </condition>
 
         <!-- things to go into the web-inf directory -->
@@ -249,7 +247,6 @@
     <!-- Copies templates to WEB-INF directory, if specified                -->
     <!-- ================================================================== -->
     <target name="copy-templates" if="scarab.copy.templates">
-
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
         </copy>
