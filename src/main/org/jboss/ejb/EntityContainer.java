@@ -53,7 +53,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.119 $
+ * @version $Revision: 1.120 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -582,8 +582,14 @@ public class EntityContainer
    public boolean isIdentical(Invocation mi)
       throws RemoteException
    {
-      return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(((EnterpriseContext) mi.getEnterpriseContext()).getId());
-      // TODO - should also check type
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+
+      return ci.isIdentical(this, mi);
    }
 
    /**
