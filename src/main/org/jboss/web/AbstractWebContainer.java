@@ -1,3 +1,9 @@
+/*
+ * JBoss, the OpenSource J2EE WebOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.web;
 
 import java.net.MalformedURLException;
@@ -62,45 +68,45 @@ The security context provides access to the JBossSX security mgr interface
 implementations for use by subclass request interceptors. A outline of the
 steps for authenticating a user is:
 <code>
-// Get the username & password from the request context...
-String username = f(request);
-String password = f(request);
-// Get the JBoss security manager from the ENC context
-InitialContext iniCtx = new InitialContext();
-SecurityManager securityMgr = (SecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
-SimplePrincipal principal = new SimplePrincipal(username);
-if( securityMgr.isValid(principal, password) )
-{
-// Indicate the user is allowed access to the web content...
+   // Get the username & password from the request context...
+   String username = f(request);
+   String password = f(request);
+   // Get the JBoss security manager from the ENC context
+   InitialContext iniCtx = new InitialContext();
+   SecurityManager securityMgr = (SecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
+   SimplePrincipal principal = new SimplePrincipal(username);
+   if( securityMgr.isValid(principal, password) )
+   {
+   // Indicate the user is allowed access to the web content...
 
-// Propagate the user info to JBoss for any calls into made by the servlet
-SecurityAssociation.setPrincipal(principal);
-SecurityAssociation.setCredential(password.toCharArray());
-}
-else
-{
-// Deny access...
-}
+   // Propagate the user info to JBoss for any calls into made by the servlet
+   SecurityAssociation.setPrincipal(principal);
+   SecurityAssociation.setCredential(password.toCharArray());
+   }
+   else
+   {
+   // Deny access...
+   }
 </code>
 
 An outline of the steps for authorizing the user is:
 <code>
-// Get the username & required roles from the request context...
-String username = f(request);
-String[] roles = f(request);
-// Get the JBoss security manager from the ENC context
-InitialContext iniCtx = new InitialContext();
-RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
-SimplePrincipal principal = new SimplePrincipal(username);
-Set requiredRoles = new HashSet(Arrays.asList(roles));
-if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
-{
-// Indicate the user has the required roles for the web content...
-}
-else
-{
-// Deny access...
-}
+   // Get the username & required roles from the request context...
+   String username = f(request);
+   String[] roles = f(request);
+   // Get the JBoss security manager from the ENC context
+   InitialContext iniCtx = new InitialContext();
+   RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
+   SimplePrincipal principal = new SimplePrincipal(username);
+   Set requiredRoles = new HashSet(Arrays.asList(roles));
+   if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
+   {
+   // Indicate the user has the required roles for the web content...
+   }
+   else
+   {
+   // Deny access...
+   }
 </code>
 
 The one thing to be aware of is the relationship between the thread context
@@ -128,11 +134,11 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.23 $
+@version $Revision: 1.24 $
 */
 public abstract class AbstractWebContainer 
-extends ServiceMBeanSupport 
-implements AbstractWebContainerMBean
+   extends ServiceMBeanSupport 
+   implements AbstractWebContainerMBean
 {
    
    public static interface WebDescriptorParser
@@ -161,24 +167,20 @@ implements AbstractWebContainerMBean
       public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception;
    }
    
-   
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
-   
    
    public AbstractWebContainer()
    {
    }
    
-   
    public boolean accepts(DeploymentInfo sdi) 
    {
-      
       return sdi.url.getFile().endsWith("war");
    }
-   
+
    public synchronized void init(DeploymentInfo di) 
-   throws DeploymentException 
+      throws DeploymentException 
    {
       try 
       {
@@ -194,14 +196,13 @@ implements AbstractWebContainerMBean
             {
                // iterate the ear modules
                mod = (J2eeModuleMetaData) it.next();
-               
+
                if (mod.isWeb())        
                {
                   //only pick up the context for our war, the names should match
                   // The wars come from packages and thus are unpackaged under /tmp/deploy/<intNumber>.myweb.war
                   if (di.shortName.lastIndexOf(mod.getFileName()) != -1)
                      di.webContext = mod.getWebContext();
-               
                }     
             }
          }
@@ -219,11 +220,9 @@ implements AbstractWebContainerMBean
          {
             // We watch the top only, no directory support
             di.watch = di.url;
-         }
-         
+         }         
          else if(di.url.getProtocol().startsWith("file"))
          {
-            
             File file = new File (di.url.getFile());
             
             // If not directory we watch the package
@@ -235,50 +234,41 @@ implements AbstractWebContainerMBean
          
          parseWEBINFClasses(di);
       }
-      catch (Exception e) {log.error("Problem in init ", e); throw new DeploymentException(e.getMessage());}
+      catch (Exception e)
+      {
+         log.error("Problem in init ", e); throw new DeploymentException(e.getMessage());
+      }
    }
-   
-   
+
    public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
    {
       JarFile jarFile = null;
-      
       // Do we have a jar file jar:<theURL>!/..
       try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
          catch (Exception ignored) {log.warn("could not extract webinf classes", ignored); return;}
       
       boolean uclCreated = false;
-      
       for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
       {
          JarEntry entry = (JarEntry)e.nextElement();
          String name = entry.getName();
-         
-         File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
-         
-         
+         File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");        
          if (name.lastIndexOf("WEB-INF/classes") != -1 && name.endsWith("class") )
          {
-            
-            try {
-               
+            try
+            {
                // We use the name of the entry as the name of the file under deploy 
                File outFile = new File(localCopyDir, di.shortName+".webinf"+File.separator+name);
-               
                outFile.getParentFile().mkdirs();
-               
                if (!uclCreated) 
                {
-                  
                   DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), di);
                   // There is no copying over, just use the url for the UCL
                   sub.localUrl = sub.url;
-                  
+
                   // Create a URL for the sub
                   sub.createClassLoaders();
-                  
                   uclCreated = true;  
-                  
                   di.subDeployments.add(sub);
                }
                
@@ -286,20 +276,26 @@ implements AbstractWebContainerMBean
                OutputStream out = new FileOutputStream(outFile); 
                InputStream in = jarFile.getInputStream(entry);
                
-               try { copy(in, out);}
-                  
-               finally { out.close(); }
-            
+               try
+               {
+                  copy(in, out);
+               }   
+               finally
+               {
+                  out.close();
+               }
             }
-            catch (Exception ignore) {ignore.printStackTrace();log.error("Error in webinf "+name, ignore);}
+            catch (Exception ignore)
+            {
+               log.error("Error in webinf "+name, ignore);
+            }
          }
       }
    }
    
    protected void copy(InputStream in, OutputStream out)
-   throws IOException
+      throws IOException
    {
-      
       byte[] buffer = new byte[1024];
       int read;
       while ((read = in.read(buffer)) > 0)
@@ -307,7 +303,7 @@ implements AbstractWebContainerMBean
          out.write(buffer, 0, read);
       }
    }
-   
+
    /** A template pattern implementation of the deploy() method. This method
    calls the {@link #performDeploy(String, String) performDeploy()} method to
    perform the container specific deployment steps and registers the
@@ -334,9 +330,7 @@ implements AbstractWebContainerMBean
    if war was is not being deployed as part of an enterprise application.
    @param warUrl, The string for the URL of the web application war.
    */
-   //    public synchronized void deploy(String ctxPath, String warUrl) throws DeploymentException
-   
-   
+   //    public synchronized void deploy(String ctxPath, String warUrl) throws DeploymentException   
    public synchronized void deploy(DeploymentInfo di) throws DeploymentException
    {
       Thread thread = Thread.currentThread();
@@ -510,7 +504,7 @@ implements AbstractWebContainerMBean
    }
    
    protected void addEnvEntries(Iterator envEntries, Context envCtx)
-   throws ClassNotFoundException, NamingException
+      throws ClassNotFoundException, NamingException
    {
       boolean debug = log.isDebugEnabled();
       while( envEntries.hasNext() )
@@ -523,7 +517,7 @@ implements AbstractWebContainerMBean
    }
    
    protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
-   throws NamingException
+      throws NamingException
    {
       boolean debug = log.isDebugEnabled();
       
@@ -555,7 +549,7 @@ implements AbstractWebContainerMBean
    }   
    
    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
-   throws NamingException
+      throws NamingException
    {
       boolean debug = log.isDebugEnabled();
       
@@ -585,7 +579,7 @@ implements AbstractWebContainerMBean
    }
    
    protected void linkEjbRefs(Iterator ejbRefs, Context envCtx)
-   throws NamingException
+      throws NamingException
    {
       boolean debug = log.isDebugEnabled();
       
@@ -604,10 +598,8 @@ implements AbstractWebContainerMBean
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
    }
-   
-   
-   
-   public void startService()
+
+   public void startService() throws Exception
    {
       try
       {
@@ -618,8 +610,12 @@ implements AbstractWebContainerMBean
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});
       }
-      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+      catch (Exception e)
+      {
+         log.error("Could not register with MainDeployer", e);
+      }
    }
+
    /**
    * Implements the template method in superclass. This method stops all the
    * applications in this server.
