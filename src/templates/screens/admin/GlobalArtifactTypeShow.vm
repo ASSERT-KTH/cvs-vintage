@@ -1,4 +1,4 @@
-$page.setTitle("Global Issue Types")
+$page.setTitle("Global Issue types")
 
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
@@ -41,7 +41,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 #end
 #if ($allIssueTypes.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allIssueTypes, $pageNum.toString(),       $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($allIssueTypes, $pageNum.toString(), $resultsPerPage.toString()))
  #if ($pagList)
    #set ($allIssueTypes = $pagList)
  #end
@@ -51,12 +51,12 @@ This page is for selecting an Issue type to edit which is defined in a global sc
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Issue Types</h3>
+<h3>Issue types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th></th>
-<th>#sort ("name" "Issue type name")</th>
+<th>#sort ("name" "Issue type")</th>
 <th>#sort ("desc" "Description")</th>
 </tr>
 #foreach ($issueType in $allIssueTypes)
