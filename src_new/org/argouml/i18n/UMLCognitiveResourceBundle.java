@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.16 2003/11/05 21:58:47 linus Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.17 2003/11/17 21:58:54 mvw Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
