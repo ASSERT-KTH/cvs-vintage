@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTableModel.java,v 1.8 2003/05/29 19:02:56 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTableModel.java,v 1.9 2004/01/14 04:36:50 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTableModel extends AbstractTableModel
@@ -119,16 +119,16 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 		{
 			Entry e = files[lastIndex];
 
+			if(e.level <= entry.level)
+				break;
+			else
+				lastIndex++;
+
 			if(e.expanded)
 			{
 				removeExtendedAttributes(VFSManager.getVFSForPath(
 					e.dirEntry.path));
 			}
-
-			if(e.level <= entry.level)
-				break;
-			else
-				lastIndex++;
 		}
 
 		removeExtendedAttributes(vfs);

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.20 2003/08/28 22:05:24 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.21 2004/01/14 04:36:50 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler
@@ -94,7 +94,7 @@ public abstract class InputHandler
 	 */
 	public boolean isPrefixActive()
 	{
-		return false;
+		return readNextChar != null;
 	} //}}}
 
 	//{{{ handleKey() method

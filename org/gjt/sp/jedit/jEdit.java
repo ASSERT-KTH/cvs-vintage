@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1998, 2003 Slava Pestov
+ * Copyright (C) 1998, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.207 2003/12/30 04:47:03 spestov Exp $
+ * @version $Id: jEdit.java,v 1.208 2004/01/14 04:36:50 spestov Exp $
  */
 public class jEdit
 {
