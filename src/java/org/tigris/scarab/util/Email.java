@@ -61,15 +61,36 @@ import org.tigris.scarab.om.Module;
 
 /**
  * Sends a notification email.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: Email.java,v 1.2 2002/03/22 05:07:04 jon Exp $
  */
 public class Email
 {
+    private static boolean enableEmail = true;
+
+    /**
+     * Quick way to turn off sending of emails. By default
+     * emails can be sent.
+     */
+    public static void setEnable(boolean value)
+    {
+        enableEmail = value;
+    }
+
     public static boolean sendEmail( TemplateContext context, 
                                      Module module, Object fromUser,
                                      List toUsers, List ccUsers,
                                      String subject, String template )
         throws Exception
     {
+        if (!enableEmail)
+        {
+            return true;
+        }
+
         boolean success = true;
         TemplateEmail te = new TemplateEmail();
         if ( context == null ) 
