@@ -1,4 +1,4 @@
-// $Id: ToDoByPoster.java,v 1.8 2004/07/17 16:23:57 mvw Exp $
+// $Id: ToDoByPoster.java,v 1.9 2004/09/04 07:57:37 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,12 +37,20 @@ import org.argouml.cognitive.ToDoListEvent;
 import org.argouml.cognitive.ToDoListListener;
 import org.tigris.gef.util.VectorSet;
 
+/**
+ * Represents a perspective for ToDo items: grouping by poster type.
+ *
+ */
 public class ToDoByPoster extends ToDoPerspective
     implements ToDoListListener 
 {
-    protected static Logger cat = 
+    private static final Logger LOG = 
         Logger.getLogger(ToDoByPoster.class);
 
+    /**
+     * The constructor.
+     * 
+     */
     public ToDoByPoster() {
 	super("combobox.todo-perspective-poster");
 	addSubTreeModel(new GoListToPosterToItem());
@@ -51,8 +59,11 @@ public class ToDoByPoster extends ToDoPerspective
     ////////////////////////////////////////////////////////////////
     // ToDoListListener implementation
 
+    /**
+     * @see org.argouml.cognitive.ToDoListListener#toDoItemsChanged(org.argouml.cognitive.ToDoListEvent)
+     */
     public void toDoItemsChanged(ToDoListEvent tde) {
-	cat.debug("toDoItemsChanged");
+	LOG.debug("toDoItemsChanged");
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object path[] = new Object[2];
@@ -86,8 +97,11 @@ public class ToDoByPoster extends ToDoPerspective
 	}
     }
 
+    /**
+     * @see org.argouml.cognitive.ToDoListListener#toDoItemsAdded(org.argouml.cognitive.ToDoListEvent)
+     */
     public void toDoItemsAdded(ToDoListEvent tde) {
-	cat.debug("toDoItemAdded");
+	LOG.debug("toDoItemAdded");
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object path[] = new Object[2];
@@ -121,8 +135,11 @@ public class ToDoByPoster extends ToDoPerspective
 	}
     }
 
+    /**
+     * @see org.argouml.cognitive.ToDoListListener#toDoItemsRemoved(org.argouml.cognitive.ToDoListEvent)
+     */
     public void toDoItemsRemoved(ToDoListEvent tde) {
-	cat.debug("toDoItemRemoved");
+	LOG.debug("toDoItemRemoved");
 	ToDoList list = Designer.TheDesigner.getToDoList(); //source?
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
@@ -145,6 +162,9 @@ public class ToDoByPoster extends ToDoPerspective
 	}
     }
 
+    /**
+     * @see org.argouml.cognitive.ToDoListListener#toDoListChanged(org.argouml.cognitive.ToDoListEvent)
+     */
     public void toDoListChanged(ToDoListEvent tde) { }
   
 
