@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
 
@@ -33,7 +34,14 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ *
+ * <p><b>2002/08/27: loubyansky</b>
+ * <ol>
+ *   <li>modified execute() to set unknown pk if it exists</li>
+ * </ol>
+ *
+ * @version $Revision: 1.15 $
  */
 public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
@@ -43,7 +51,7 @@ public class JDBCCreateEntityCommand {
    private String entityExistsSQL;
    private String insertEntitySQL;
    private boolean createAllowed;
-   
+
    public JDBCCreateEntityCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -119,6 +127,17 @@ public class JDBCCreateEntityCommand {
       if(!createAllowed) {
          throw new CreateException("Creation is not allowed because a " +
                "primary key field is read only.");
+      }
+
+      // AL: set unknown pk if needed
+      for( Iterator iter = entity.getPrimaryKeyFields().iterator(); iter.hasNext(); )
+      {
+         JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) iter.next();
+         Class primaryKeyClass = cmpField.getPrimaryKeyClass();
+         if( (primaryKeyClass != null)
+            && (primaryKeyClass.getName().equals("java.lang.Object")) )
+            // as_ugly_as_possible
+            cmpField.setInstanceValue( ctx, "" + System.currentTimeMillis() );
       }
 
       Object pk = entity.extractPrimaryKeyFromInstance(ctx);
