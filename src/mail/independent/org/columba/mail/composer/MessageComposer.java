@@ -29,7 +29,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.EncodedWordEncoder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.MessageIDGenerator;
 import org.columba.mail.message.MimeHeader;
@@ -40,12 +39,12 @@ import org.columba.mail.util.RFC822Date;
 
 public class MessageComposer {
 	private ComposerModel model;
-	private ComposerController controller;
+	
 	private int accountUid;
 
-	public MessageComposer(ComposerController controller) {
-		this.controller = controller;
-		model = (ComposerModel)controller.getModel();
+	public MessageComposer( ComposerModel model) {
+		
+		this.model = model;
 	}
 
 	protected SendableHeader initHeader() {
@@ -264,7 +263,7 @@ public class MessageComposer {
 		StringBuffer composedMessage = new StringBuffer();
 
 		SendableHeader header = initHeader();
-		MimePart root;
+		MimePart root=null;
 
 		Vector mimeParts = model.getAttachments();
 
@@ -294,7 +293,7 @@ public class MessageComposer {
 			root = signPart;
 		}
 
-		header.setRecipients(controller.getRCPTVector());
+		header.setRecipients(model.getRCPTVector());
 
 		String composedBody;
 

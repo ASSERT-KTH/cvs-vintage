@@ -20,6 +20,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
+import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
@@ -74,7 +75,7 @@ public class SaveMessageCommand extends FolderCommand {
 		AccountItem item = ((ComposerModel)composerController.getModel()).getAccountItem();
 
 		SendableMessage message =
-			composerController.getMessageComposer().compose(worker);
+			new MessageComposer(((ComposerModel)composerController.getModel())).compose(worker);
 
 		folder = (Folder) r[0].getFolder();
 

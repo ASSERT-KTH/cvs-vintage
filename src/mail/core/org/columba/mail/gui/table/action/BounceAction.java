@@ -15,7 +15,10 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.command.BounceCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -66,8 +69,9 @@ public class BounceAction extends FrameAction implements SelectionListener {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO implement bounce action (re-use other action and MessageBuilder class)
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			((MailFrameController) getFrameController()).getTableSelection();
+		MainInterface.processor.addOp(new BounceCommand(r));
 	}
 
 	/* (non-Javadoc)

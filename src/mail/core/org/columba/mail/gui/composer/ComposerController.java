@@ -19,14 +19,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.parser.AddressParser;
-import org.columba.addressbook.parser.ListParser;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -34,7 +30,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
-import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.message.Message;
@@ -79,29 +74,29 @@ public class ComposerController
 	*/
 
 	public ComposerController() {
-		super("Composer", new ViewItem(MailConfig.get("composer_options").getElement("/options/gui/view")));
+		super(
+			"Composer",
+			new ViewItem(
+				MailConfig.get("composer_options").getElement(
+					"/options/gui/view")));
 
 		getView().addWindowListener(this);
 
 		getView().loadWindowPosition();
-		
+
 		headerController.view.getTable().initFocus(subjectController.view);
-		
+
 		getView().setVisible(true);
-		
-		
+
 		initAddressCompletion();
-		
+
 		//headerController.appendRow();
-		
-		
+
 	}
 
-	public ComposerController(
-		Message message) {
+	public ComposerController(Message message) {
 		this();
 
-		
 		composerModel.setMessage(message);
 
 		//getView().addWindowListener(this);
@@ -109,10 +104,9 @@ public class ComposerController
 		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
 		//composerModel = new ComposerModel();
 	}
-	
 
 	public void charsetChanged(CharsetEvent e) {
-		((ComposerModel)getModel()).setCharsetName(e.getValue());
+		((ComposerModel) getModel()).setCharsetName(e.getValue());
 	}
 
 	public boolean checkState() {
@@ -187,8 +181,6 @@ public class ComposerController
 
 		headerController.updateComponents(b);
 
-		
-		
 		//headerController.appendRow();
 	}
 
@@ -274,22 +266,6 @@ public class ComposerController
 	}
 	*/
 
-	public Vector getRCPTVector() {
-		Vector output = new Vector();
-		Enumeration aktEnum;
-		Object aktAdress;
-
-		Vector v =
-			ListParser.parseVector(((ComposerModel) getModel()).getToList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(((ComposerModel) getModel()).getCcList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(((ComposerModel) getModel()).getBccList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
-
-		return output;
-	}
-
 	/*
 	protected void updateAddressbookFrame() {
 	
@@ -367,7 +343,7 @@ public class ComposerController
 		ComposerView view = new ComposerView(this);
 
 		//view.init();
-		
+
 		return view;
 	}
 
@@ -395,14 +371,14 @@ public class ComposerController
 	/**
 	 * @return CharsetManager
 	 */
-	
+
 	// FIXME
 	/*
 	public CharsetManager getCharsetManager() {
 		return charsetManager;
 	}
 	*/
-	
+
 	/**
 	 * @return ComposerSpellCheck
 	 */
@@ -431,12 +407,7 @@ public class ComposerController
 		return identityInfoPanel;
 	}
 
-	/**
-	 * @return MessageComposer
-	 */
-	public MessageComposer getMessageComposer() {
-		return new MessageComposer(this);
-	}
+	
 
 	/**
 	 * @return PriorityController
@@ -503,8 +474,9 @@ public class ComposerController
 	 * @return
 	 */
 	public ComposerModel getModel() {
-		if ( composerModel == null ) composerModel = new ComposerModel();
-		
+		if (composerModel == null)
+			composerModel = new ComposerModel();
+
 		return composerModel;
 	}
 
@@ -513,7 +485,7 @@ public class ComposerController
 	 */
 	public void setComposerModel(ComposerModel model) {
 		composerModel = model;
-		
+
 		updateComponents(true);
 	}
 
@@ -521,14 +493,14 @@ public class ComposerController
 	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
 	 */
 	public void close() {
-	
-		
+
 		ColumbaLogger.log.info("closing ComposerController");
 
 		view.saveWindowPosition();
 
 		view.setVisible(false);
-	
+
 	}
+
 
 }

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
@@ -278,4 +279,20 @@ public class ComposerModel {
 		return new ComposerController(id, this);
 	}
 	*/
+	
+
+	public Vector getRCPTVector() {
+		Vector output = new Vector();
+		Enumeration aktEnum;
+		Object aktAdress;
+
+		Vector v = ListParser.parseVector(getToList());
+		output.addAll(AddressParser.normalizeRCPTVector(v));
+		v = ListParser.parseVector(getCcList());
+		output.addAll(AddressParser.normalizeRCPTVector(v));
+		v = ListParser.parseVector(getBccList());
+		output.addAll(AddressParser.normalizeRCPTVector(v));
+
+		return output;
+	}
 }

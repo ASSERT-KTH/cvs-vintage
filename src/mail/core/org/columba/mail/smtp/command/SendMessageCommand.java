@@ -23,6 +23,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
@@ -66,7 +67,7 @@ public class SendMessageCommand extends FolderCommand {
 			(Folder) MainInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
 		SendableMessage message =
-			composerController.getMessageComposer().compose(worker);
+			new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
 
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();

@@ -598,7 +598,8 @@ public class MessageBuilder {
 
 		model.setHeaderField("References", "");
 
-		model.setBodyText("");
+		// empty bodytext is not allowed
+		model.setBodyText("<no bodytext>");
 
 	}
 

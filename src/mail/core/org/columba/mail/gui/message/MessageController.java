@@ -34,13 +34,12 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.config.Config;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.action.MessageActionListener;
@@ -61,8 +60,8 @@ public class MessageController
 	implements
 		MessageSelectionListener,
 		HyperlinkListener,
-		MouseListener, CharsetListener
-{
+		MouseListener,
+		CharsetListener {
 
 	private Folder folder;
 	private Object uid;
@@ -119,17 +118,17 @@ public class MessageController
 
 		/*
 		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
-
+		
 		FolderTreeNode treeNode = reference[0].getFolder();
 		Object[] uids = reference[0].getUids();
-
+		
 		// this is no message-viewing action,
 		// but a selection of multiple messages
 		if ( uids.length > 1 ) return;
-
+		
 		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setFolder(treeNode);
 		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setUids(uids);
-
+		
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(
 				mailFrameController,
@@ -177,78 +176,65 @@ public class MessageController
 		this.uid = o;
 	}
 
-	public void showMessage(HeaderInterface header,
-                            MimePart bodyPart,
-                            MimePartTree mimePartTree)
-      throws Exception {
+	public void showMessage(
+		HeaderInterface header,
+		MimePart bodyPart,
+		MimePartTree mimePartTree)
+		throws Exception {
 
-      if(header == null || bodyPart == null){
-        return;
-      }
+		if (header == null || bodyPart == null) {
+			return;
+		}
 
-      XmlElement html =
-        MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-                                                        "/options/html");
-      boolean htmlViewer =
-        new Boolean(html.getAttribute("prefer")).booleanValue();
+		// Which Charset shall we use ?
 
-      // Which Charset shall we use ?
+		String charset;
 
-      String charset;
-
-      if (activeCharset.equals("auto"))
-        charset = bodyPart.getHeader().getContentParameter("charset");
-      else
-        charset = activeCharset;
-
-      Decoder decoder =
-        CoderRouter.getDecoder(
-                               bodyPart.getHeader().contentTransferEncoding);
-
-      // Shall we use the HTML-Viewer?
-
-      htmlViewer =
-        bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
-
-      // Update the MessageHeaderPane
-      /*
-		messageHeader.setValues(message);
-      */
-
-      String decodedBody = null;
-
-      // Decode the Text using the specified Charset
-      try {
-        decodedBody = decoder.decode(bodyPart.getBody(), charset);
-      } catch (UnsupportedEncodingException ex) {
-        // If Charset not supported fall back to standard Charset
-
-        try {
-          decodedBody = decoder.decode(bodyPart.getBody(), null);
-        } catch (UnsupportedEncodingException never) {
-
-        }
-      }
-
-      boolean hasAttachments = false;
-
-
-      if ((mimePartTree.count() > 1)
-          || (!mimePartTree.get(0).getHeader().contentType.equals("text")))
-        hasAttachments = true;
-
-      getMailFrameController().attachmentController.setMimePartTree(
-                                                                    mimePartTree);
-      /*
-		if (hasAttachments)
-        getMailFrameController().attachmentController.setMimePartTree(
-        mimePartTree);
+		if (activeCharset.equals("auto"))
+			charset = bodyPart.getHeader().getContentParameter("charset");
 		else
-        getMailFrameController().attachmentController.setMimePartTree(null);
-      */
-      getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
+			charset = activeCharset;
 
-      getView().getVerticalScrollBar().setValue(0);
+		Decoder decoder =
+			CoderRouter.getDecoder(
+				bodyPart.getHeader().contentTransferEncoding);
+
+		// Shall we use the HTML-Viewer?
+
+		boolean htmlViewer =
+			bodyPart.getHeader().contentSubtype.equalsIgnoreCase("html");
+
+	
+
+		String decodedBody = null;
+
+		
+		// Decode the Text using the specified Charset
+		try {
+		decodedBody = decoder.decode(bodyPart.getBody(), charset);
+		} catch (UnsupportedEncodingException ex) {
+		// If Charset not supported fall back to standard Charset
+		ColumbaLogger.log.info("charset "+charset+" isn't supported, falling back to default...");
+		
+		try {
+		  decodedBody = decoder.decode(bodyPart.getBody(), null);
+		} catch (UnsupportedEncodingException never) {
+			never.printStackTrace();
+		}
+		}
+
+		boolean hasAttachments = false;
+
+		if ((mimePartTree.count() > 1)
+			|| (!mimePartTree.get(0).getHeader().contentType.equals("text")))
+			hasAttachments = true;
+
+		getMailFrameController().attachmentController.setMimePartTree(
+			mimePartTree);
+		
+		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
+
+		getView().getVerticalScrollBar().setValue(0);
 
 	}
 
@@ -264,28 +250,28 @@ public class MessageController
 	{
 		return actionListener;
 	}
-
+	
 	public MessageFocusListener getFocusListener()
 	{
 		return focusListener;
 	}
-
+	
 	public String getAddress()
 	{
 		HyperlinkTextViewer viewer =
 			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-
+	
 		if (viewer != null)
 			return viewer.getAddress();
 		else
 			return new String();
 	}
-
+	
 	public String getLink()
 	{
 		HyperlinkTextViewer viewer =
 			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-
+	
 		if (viewer != null)
 			return viewer.getLink();
 		else
@@ -310,15 +296,15 @@ public class MessageController
 			} else {
 				URL url = e.getURL();
 				if (url != null) {
-
+		
 					if (url.getProtocol().equalsIgnoreCase("mailto")) {
 						// found email address
 						URLController c = new URLController();
 						JPopupMenu menu = c.createContactMenu(url.getFile());
 						menu.setVisible(true);
-
+		
 					} else {
-
+		
 						URLController c = new URLController();
 						c.open(url);
 					}
