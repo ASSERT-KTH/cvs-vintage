@@ -27,8 +27,10 @@
 #if ($scarabR.CurrentModule)
    Current Module:   
    <a href="$link.setPage("SelectModule.vm")">$scarabR.CurrentModule.Name</a>
-   <hr>
+#else
+   <a href="$link.setPage("SelectModule.vm")">Select Module</a>
 #end
+   <hr>
       <form action="$link.setPage("ViewIssue.vm")" method="get">
    Issue# <input type="text" name="id" size="8" maxlength="255" />
       <input type="submit" name="Submit" value="Find" />
