@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.58 2002/02/13 19:59:20 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.59 2002/02/19 21:28:34 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -369,11 +369,8 @@ public interface ModuleEntity
     /**
      * Adds module-attribute mapping to module.
      */
-    public RModuleAttribute addRModuleAttribute(IssueType issueType)
-        throws Exception;
-
     public RModuleAttribute addRModuleAttribute(IssueType issueType,
-                                                String attributeType)
+                                                Attribute attribute)
         throws Exception;
 
     /**
