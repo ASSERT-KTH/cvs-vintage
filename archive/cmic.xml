@@ -1,0 +1,7 @@
+<project name="carol.cmic.archive" default="dist.jar">
+  <target name="dist.jar">
+    <!-- CMIC JAR -->
+    <jar jarfile="${dist.lib}/cmic.jar"
+      manifest="${archive}/cmic.mf"/>
+  </target>
+</project>
