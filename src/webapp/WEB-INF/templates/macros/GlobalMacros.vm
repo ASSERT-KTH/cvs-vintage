@@ -687,8 +687,13 @@ selected the radio button.
 #end
 
 #macro (asterisk)
-<p><small>"<strong>*</strong>" $l10n.RequiredFields</small></p>
+<small>(</small><b class="asterisk">*</b> <small>$l10n.RequiredFields)</small>
 #end
+
+#macro (showAsterisk)
+<b class="asterisk">*</b>
+#end
+
 
 #macro (userList $mitList $includeAny $includeCommittedBy $parameters $activeOnly)
 #set ($userAttrs = $mitList.getCommonUserAttributes($activeOnly))
@@ -921,8 +926,6 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
 <input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />
 </div>
 
-#asterisk()
-
 #set ($templateId = $data.Parameters.getString("templateId"))
 #if ($templateId && $templateId.trim().length() > 0)
   #set ($templ = $scarabR.getIssueTemplate($templateId))
@@ -935,7 +938,7 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
 <div class="axial">
 #foreach ($group in $moduleAttributeGroups)
  #if (!$group.Attributes.isEmpty())
-  <h3>$group.Name</h3>
+  <h3>$group.Name #asterisk()</h3>
   <table cellpadding="3" cellspacing="2" border="0" width="100%">
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
@@ -955,7 +958,7 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
             #set ($field = "Value")
           #end
           <tr>
-            <th> #if ($attVal.isRequired())*#end 
+            <th> #if ($attVal.isRequired()) #showAsterisk() #end 
                  $attVal.RModuleAttribute.DisplayValue
             </th>
             <td>

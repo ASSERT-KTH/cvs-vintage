@@ -19,3 +19,7 @@ input.fullWidth {
 textarea.fullWidth {
   width: 100%;
 }
+
+b.asterisk {
+/*    color: red;*/
+}

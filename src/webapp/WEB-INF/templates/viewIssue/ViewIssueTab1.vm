@@ -1,6 +1,9 @@
-<h3>$l10n.StaticIssueInfo</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>$l10n.IssueId</th>
+<td><b>$currentIssue.UniqueId ($currentIssue.RModuleIssueType.DisplayName) </b></td>
+</tr>
 #if ($currentIssue.CreatedDate)
 <tr>
 <th>$l10n.DateCommitted</th>
@@ -18,7 +21,7 @@
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module, true))
   #if (!$group.Attributes.isEmpty())
-    <h3>$group.Name</h3>
+    <h3>$group.Name #asterisk()</h3>
     <table cellpadding="3" cellspacing="2" border="0" width="100%">
       #foreach ($att in $group.Attributes)
         #set ($rma = $module.getRModuleAttribute($att, $issueType))
@@ -34,7 +37,7 @@
             #end
             #if ($canEdit)
                  <tr>
-                  <th> #if ($rma.getRequired())*#end 
+                  <th> #if ($rma.getRequired()) #showAsterisk() #end 
                   $rma.DisplayValue</th>
                   <td>
                 #if ($att.isOptionAttribute())
@@ -115,13 +118,13 @@
 </div>
  
 #if ($canEdit)
-<h3>$l10n.SaveChanges</h3>
+<h3>$l10n.SaveChanges #asterisk()</h3>
 <div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey$currentIssue.QueryKey"))
 
 <table cellpadding="3" cellspacing="2" border="0" width="100%">
 <tr>
-<th>* $l10n.ReasonForChange</th>
+<th>#showAsterisk() $l10n.ReasonForChange</th>
 <td>$l10n.EnterReason
    #fieldErrorMsg($attCommentGroup.Data "")
    

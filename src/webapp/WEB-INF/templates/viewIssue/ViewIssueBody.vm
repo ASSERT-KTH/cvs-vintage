@@ -26,18 +26,19 @@
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 #end
 
-#if ($showCopyButton || $showMoveButton)
-<div class="functnbar">
-#if ($showMoveButton)
-    <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
-#end
-#if ($showCopyButton)
-    <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
-#end
-</div>
-#end
+## uncomment to show copy and move buttons on top of the view issue page
+## #if ($showCopyButton || $showMoveButton)
+## <div class="functnbar">
+## #if ($showMoveButton)
+##     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
+## #end
+## #if ($showCopyButton)
+##     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
+## #end
+## </div>
+## #end
 
-#asterisk()
+
 #if ($rmit.Active.toString().equals("false"))
 <div class="colbar">$l10n.IssueReadOnly</div>
 #end
