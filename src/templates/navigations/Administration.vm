@@ -1,11 +1,22 @@
-#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm") || $link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm") || $link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
+#set ($allowA = $link.isAllowed("admin,Approval.vm"))
+#set ($allowMUS = $link.isAllowed("admin,ManageUserSearch.vm"))
+#set ($allowAU = $link.isAllowed("admin,AddUser.vm"))
+#set ($allowMR = $link.isAllowed("admin,ManageRoles.vm"))
+#set ($allowAR = $link.isAllowed("admin,AddRole.vm"))
+#set ($allowGATS = $link.isAllowed("admin,GlobalArtifactTypeShow.vm"))
+#set ($allowGAS = $link.isAllowed("admin,GlobalAttributeShow.vm"))
+#set ($allowMAT = $link.isAllowed("admin,ManageArtifactTypes.vm"))
+#set ($allowMM = $link.isAllowed("admin,ManageModules.vm"))
+#set ($allowCP = $link.isAllowed("ChangePassword.vm"))
+
+#if ($allowMUS || $allowAU || $allowMR || $allowAR || $allowGATS || $allowGAS || $allowMAT || $allowMM || $allowA || $allowCP)
 
 #set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, ""))
 
 <div class="focus">
 <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
 
-#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
+#if ($allowGATS || $allowGAS)
   #if ($adminMenu.equals("1"))
     <div><small><strong>Global data</strong></small>
     $renderer.render("navigations", "GlobalAdmin.vm")
@@ -15,18 +26,17 @@
   #end
 #end
 
-#if ($link.isAllowed("admin,Approval.vm"))
+#if ($allowA)
   <div><small>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</small></div>
 #end
 
-
-#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportSelect.vm"))
+#if ($allowMAT || $allowMM || $link.isAllowed("admin,XMLExportSelect.vm"))
   #if ($adminMenu.equals("3"))
     <div><small><strong>Modules</strong></small>
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
-    #if ($link.isAllowed("admin,ManageModules.vm") && ! $link.isAllowed("admin,ManageArtifactTypes.vm"))
+    #if ($allowMM && ! $allowMAT)
       <div><small>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
     #else
       <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
@@ -34,7 +44,7 @@
   #end
 #end
 
-#if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
+#if ($allowMR || $allowAR)
   #if ($adminMenu.equals("4"))
     <div><small><strong>Roles</strong></small>
     <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</small></div>
@@ -45,21 +55,21 @@
   #end
 #end
 
-#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("ChangePassword.vm"))
+#if ($allowMUS || $allowAU || $allowCP)
   #if ($adminMenu.equals("5"))
     <div><small><strong>Users</strong></small>
-    #if ($link.isAllowed("admin,ManageUserSearch.vm"))
+    #if ($allowMUS)
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</small></div>
     #end
-    #if ($link.isAllowed("admin,AddUser.vm"))
+    #if ($allowAU)
     <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
     #end
-    #if ($link.isAllowed("ChangePassword.vm"))
+    #if ($allowCP)
     <div><small>$link.setPage("ChangePassword.vm").setLabel("Change password")</small></div>
     #end
     </div>
   #else
-    #if (!$link.isAllowed("admin,ManageUserSearch.vm") && $link.isAllowed("ChangePassword.vm"))
+    #if (!$allowMUS && $allowCP)
     <div><small>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
     #else
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
