@@ -1,0 +1,126 @@
+Tomcat+Apache HOWTO
+ by 
+   Costin Manolache <costin@eng.sun.com>
+   Anil Vijendran <akv@eng.sun.com>
+
+$Revision: 1.1 $ $Date: 1999/12/14 01:20:24 $
+
+This document describes how to setup Tomcat to run with Apache. For
+now this document describes how to run Tomcat v2.2 M1 with Apache
+1.3.9. 
+------------------------------------------------------------------------
+
+Table of Contents
+
+      1. Introduction
+      2. Installation
+	 2.1 Apache 1.3.9
+	 2.2 Tomcat v1.0 R1
+	 2.3 Testing Your Configuration
+	 2.4 Adding Contexts
+      3. Tested Configurations
+      4. More information, feedback, bugs
+
+
+------------------------------------------------------------------------
+1. Introduction
+
+   This document is intended to get you started using Tomcat with
+   Apache until we have Apache and Tomcat as one integrated
+   release. If you ran into any gotchas while following these
+   instructions, please let us know so we can keep this document
+   updated. 
+
+   In the rest of the document, we use /path/to/apache-1.3.9 to mean
+   the path to the Apache 1.3.9 installation and /path/to/tomcat1.0r1
+   to mean the path to the Tomcat 1.0 R1 installation. We will assume
+   you are running Apache on the default port (80). 
+
+2. Installation
+
+   2.1 Apache 1.3.9 
+
+       * Download and install the Apache 1.3.9 binary for your
+         platform from 
+
+	   http://www.apache.org/dist/binaries
+
+       * Configure the default HTTP listener port in your
+         /path/to/apache-1.3.9/conf/httpd.conf file.
+
+       * Make sure ServerName in /path/to/apache-1.3.9/conf/httpd.conf
+         contains the name of your host.
+
+   2.2 Tomcat v1.0 R1
+
+       * Download and install Tomcat v1.0 R1 for your OS/platform from
+  
+	   http://jakarta.apache.org/builds/tomcat/release/v1.0R1/<os>/<platform>
+
+       * Download mod_jserv for your platform from 
+
+	   http://jakarta.apache.org/builds/tomcat/release/v1.0R1/<os>/<platform>/modules
+  
+         and copy it into /path/to/apache-1.3.9/modules.
+
+       * Edit /path/to/apache-1.3.9/conf/httpd.conf and add the
+         following line at the end:
+
+           Include /path/to/tomcat1.0r1/etc/tomcat.conf
+
+   2.3 Testing Your Configuration
+
+       * Restart Apache (apachectl restart or Apache -k restart on Win32)
+
+       * Make sure http://<hostname> is working
+
+       * Try http://<hostname>/examples -- you should see the Tomcat
+         examples. 
+
+   2.3 Adding Contexts
+
+       There's two different ways you can add contexts to this
+       configuration: 
+
+        (a) 
+	    * Add to /path/to/tomcat1.0r1/etc/tomcat.conf: 
+	    
+	    	    ApJservMount /<context> /root
+
+	    * restart Apache. 
+
+	(b) 
+	
+	    * Create /path/to/apache-1.3.9/htdocs/<context>
+	    
+	    * Install all the files of that context into that
+              directory.
+
+	    * Make sure /path/to/tomcat1.0r1/server.xml points to
+              /path/to/apache-1.3.9/htdocs/<context>
+
+	    * Add to /path/to/tomcat1.0r1/etc/tomcat.conf:
+
+	      ApJservMount /<context>/servlet /root 
+	      <Location /CONTEXT/WEB-INF/ >
+	           AllowOverride None
+		   deny from all
+	      </Location>
+
+3. Tested Configurations
+
+
+   Apache 1.3.9 + Tomcat 1.0 R1 has been tested on the following OSes: 
+
+    * Linux (RedHat 6.1) on SPARC and Intel
+    * Solaris 2.6 on SPARC
+    * Windows NT SP 4
+
+4. More information, feedback and bugs
+
+   Please send bug reports (both on Tomcat and on this document) to
+   tomcat-dev@jakarta.apache.org. 
+
+   If you tested this on a platform/os that is not listed here, please
+   either update this file (if you have CVS commit access on Jakarta)
+   or send a note to tomcat-dev@jakarta.apache.org.
