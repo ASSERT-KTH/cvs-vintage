@@ -265,40 +265,40 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	protected void updateFlags(IMAPFlags[] flagsList) {
 
-      // ALP 04/29/03
-      // Reset the number of seen/resent/existing messages. Otherwise you
-      // just keep adding to the number.
-      org.columba.mail.folder.MessageFolderInfo info = getMessageFolderInfo();
-      info.setExists(0);
-      info.setRecent(0);
-      info.setUnseen(0);
-      // END ADDS ALP 04/29/03
+		// ALP 04/29/03
+		// Reset the number of seen/resent/existing messages. Otherwise you
+		// just keep adding to the number.
+		org.columba.mail.folder.MessageFolderInfo info = getMessageFolderInfo();
+		info.setExists(0);
+		info.setRecent(0);
+		info.setUnseen(0);
+		// END ADDS ALP 04/29/03
 
-      for (int i = 0; i < flagsList.length; i++) {
-        IMAPFlags flags = (IMAPFlags) flagsList[i];
-        ColumbaHeader header =
-          (ColumbaHeader) headerList.get(flags.getUid());
-        if (header == null)
-          continue;
+		for (int i = 0; i < flagsList.length; i++) {
+			IMAPFlags flags = (IMAPFlags) flagsList[i];
+			ColumbaHeader header =
+				(ColumbaHeader) headerList.get(flags.getUid());
+			if (header == null)
+				continue;
 
-        if (flags.isSeen())
-          header.set("columba.flags.seen", Boolean.TRUE);
-        else
-          info.incUnseen();
+			if (flags.isSeen())
+				header.set("columba.flags.seen", Boolean.TRUE);
+			else
+				info.incUnseen();
 
-        if (flags.isAnswered())
-          header.set("columba.flags.answered", Boolean.TRUE);
-        if (flags.isDeleted())
-          header.set("columba.flags.expunged", Boolean.TRUE);
-        if (flags.isFlagged())
-          header.set("columba.flags.flagged", Boolean.TRUE);
-        if (flags.isRecent()) {
-          header.set("columba.flags.recent", Boolean.TRUE);
-          info.incRecent();
-        }
+			if (flags.isAnswered())
+				header.set("columba.flags.answered", Boolean.TRUE);
+			if (flags.isDeleted())
+				header.set("columba.flags.expunged", Boolean.TRUE);
+			if (flags.isFlagged())
+				header.set("columba.flags.flagged", Boolean.TRUE);
+			if (flags.isRecent()) {
+				header.set("columba.flags.recent", Boolean.TRUE);
+				info.incRecent();
+			}
 
-        info.incExists();
-      }
+			info.incExists();
+		}
 	}
 
 	/**
@@ -486,36 +486,53 @@ public class IMAPFolder extends RemoteFolder {
 		throws Exception {
 		ColumbaHeader h = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
 
-        if(h != null){
-          switch (variant) {
-          case MarkMessageCommand.MARK_AS_READ :
-            {
-              if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-                getMessageFolderInfo().decRecent();
-              if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-                getMessageFolderInfo().decUnseen();
+		if (h != null) {
+			switch (variant) {
+				case MarkMessageCommand.MARK_AS_READ :
+					{
+						if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+							getMessageFolderInfo().decRecent();
+						if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+							getMessageFolderInfo().decUnseen();
 
-              h.set("columba.flags.seen", Boolean.TRUE);
-              h.set("columba.flags.recent", Boolean.FALSE);
-              break;
-            }
-          case MarkMessageCommand.MARK_AS_FLAGGED :
-            {
-              h.set("columba.flags.flagged", Boolean.TRUE);
-              break;
-            }
-          case MarkMessageCommand.MARK_AS_EXPUNGED :
-            {
-              h.set("columba.flags.expunged", Boolean.TRUE);
-              break;
-            }
-          case MarkMessageCommand.MARK_AS_ANSWERED :
-            {
-              h.set("columba.flags.answered", Boolean.TRUE);
-              break;
-            }
-          }
-        }
+						h.set("columba.flags.seen", Boolean.TRUE);
+						h.set("columba.flags.recent", Boolean.FALSE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_UNREAD :
+					{
+						h.set("columba.flags.seen", Boolean.FALSE);
+						getMessageFolderInfo().incUnseen();
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_FLAGGED :
+					{
+						h.set("columba.flags.flagged", Boolean.TRUE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_UNFLAGGED :
+					{
+						h.set("columba.flags.flagged", Boolean.FALSE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_EXPUNGED :
+					{
+						h.set("columba.flags.expunged", Boolean.TRUE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_UNEXPUNGED :
+					{
+
+						h.set("columba.flags.expunged", Boolean.FALSE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_ANSWERED :
+					{
+						h.set("columba.flags.answered", Boolean.TRUE);
+						break;
+					}
+			}
+		}
 	}
 
 	/**
@@ -568,27 +585,27 @@ public class IMAPFolder extends RemoteFolder {
 
 		Object[] uids2 = getUids(worker);
 
-        if(uids2 != null){
-          for (int i = 0; i < uids2.length; i++) {
-			Object uid = uids2[i];
+		if (uids2 != null) {
+			for (int i = 0; i < uids2.length; i++) {
+				Object uid = uids2[i];
 
-			ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
+				ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
 
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
+				Boolean expunged = (Boolean) h.get("columba.flags.expunged");
 
-			ColumbaLogger.log.debug("expunged=" + expunged);
+				ColumbaLogger.log.debug("expunged=" + expunged);
 
-			if (expunged.equals(Boolean.TRUE)) {
-              // move message to trash
+				if (expunged.equals(Boolean.TRUE)) {
+					// move message to trash
 
-              ColumbaLogger.log.debug("moving message with UID " + uid
-                                      + " to trash");
+					ColumbaLogger.log.debug(
+						"moving message with UID " + uid + " to trash");
 
-              // remove message
-              headerList.remove(uid);
+					// remove message
+					headerList.remove(uid);
+				}
 			}
-          }
-        }
+		}
 	}
 
 	/**
@@ -656,25 +673,24 @@ public class IMAPFolder extends RemoteFolder {
 		/*
 		try {
 			ListInfo[] listInfo = store.lsub("\"\"", "\""+getImapPath()+getStore().getDelimiter()+"*\"");
-
+		
 			for (int i = 0; i < listInfo.length; i++) {
 				ListInfo info = listInfo[i];
 				String name = info.getName();
 				System.out.println("creating folder=" + name);
-
+		
 				boolean hasChildren = info.hasChildren();
-
+		
 				Hashtable attributes = getAttributes();
 				attributes.put("name", listInfo[i].getSource());
 				addSubFolder(attributes);
-
-
+		
+		
 			}
 		} catch (Exception ex) {
 		}
 		*/
 	}
-
 
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
@@ -687,7 +703,6 @@ public class IMAPFolder extends RemoteFolder {
 		return props;
 	}
 
-
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
 	 */
@@ -698,12 +713,11 @@ public class IMAPFolder extends RemoteFolder {
 		return getRootFolder().tryToGetLock(locker);
 	}
 
-
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
 	public void releaseLock() {
-		if ( getRootFolder() != null )
+		if (getRootFolder() != null)
 			getRootFolder().releaseLock();
 	}
 

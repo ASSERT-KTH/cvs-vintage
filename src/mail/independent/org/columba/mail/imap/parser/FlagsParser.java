@@ -139,16 +139,19 @@ public class FlagsParser {
 		Vector arg = new Vector();
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
+			case MarkMessageCommand.MARK_AS_UNREAD :
 				{
 					arg.add("\\Seen");
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
+			case MarkMessageCommand.MARK_AS_UNFLAGGED :
 				{
 					arg.add("\\Flagged");
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
+			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
 				{
 					arg.add("\\Deleted");
 					break;

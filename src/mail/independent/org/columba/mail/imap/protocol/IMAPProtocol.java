@@ -919,6 +919,41 @@ public class IMAPProtocol {
 
 		return responses;
 	}
+	
+	/**
+		 * Method removeFlags.
+		 * @param messageSet
+		 * @param flags
+		 * @param enable
+		 * @return IMAPResponse[]
+		 * @throws Exception
+		 */
+		public IMAPResponse[] removeFlags(
+			String messageSet,
+			String flags,
+			boolean enable)
+			throws Exception {
+
+			IMAPResponse[] responses = null;
+			if (enable)
+				responses =
+					sendCommand(
+						"UID STORE " + messageSet + " -FLAGS " + flags,
+						null);
+			else
+				responses =
+					sendCommand(
+						"UID STORE " + messageSet + " -FLAGS " + flags,
+						null);
+
+			notifyResponseHandler(responses);
+
+			IMAPResponse r = responses[responses.length - 1];
+
+			handleResult(r);
+
+			return responses;
+		}
 
 	/**
 	 * Method expunge.

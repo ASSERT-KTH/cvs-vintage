@@ -718,8 +718,8 @@ public class IMAPStore {
 
 		/*
 		Message message = new Message(h);
-
-
+		
+		
 		h = message.getHeader();
 		*/
 
@@ -731,7 +731,7 @@ public class IMAPStore {
 		size = Math.round(octetString.intValue() / 1024);
 		if (size == 0)
 			size = 1;
-
+		
 		h.set("columba.size", new Integer(size));
 		*/
 
@@ -817,23 +817,23 @@ public class IMAPStore {
 		WorkerStatusController worker,
 		String path)
 		throws Exception {
-
+	
 		isLogin(worker);
-
+	
 		isSelected(worker, path);
-
+	
 		boolean answer = false;
 		ColumbaHeader h = new ColumbaHeader();
-
+	
 		Vector v = new Vector();
 		String buffer = new String();
-
+	
 		TableItem items = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		StringBuffer headerFields = new StringBuffer();
-
+	
 		for (int i = 0; i < items.count(); i++) {
 			HeaderItem headerItem = items.getHeaderItem(i);
-
+	
 			String name = headerItem.get("name");
 			if ((!name.equals("Status"))
 				|| (!name.equals("Flagged"))
@@ -843,21 +843,21 @@ public class IMAPStore {
 				headerFields.append(name + " ");
 			}
 		}
-
+	
 		try {
-
+	
 			IMAPResponse[] responses =
 				getProtocol().fetchHeaderList(
 					(String) uid,
 					headerFields.toString().trim());
-
+	
 			buffer = HeaderParser.parse(responses);
 			//System.out.println("buffer=" + buffer);
-
+	
 			h = parseMessage(buffer);
-
+	
 			return h;
-
+	
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");
 			System.out.println("no messages on server");
@@ -867,11 +867,11 @@ public class IMAPStore {
 			state = STATE_NONAUTHENTICATE;
 			fetchHeader(uid, worker, path);
 		} finally {
-
+	
 		}
-
+	
 		return null;
-
+	
 	}
 	*/
 
@@ -1138,8 +1138,20 @@ public class IMAPStore {
 			String flagsString = FlagsParser.parseVariant(variant);
 			ColumbaLogger.log.debug("flags=" + flagsString);
 
-			IMAPResponse[] responses =
-				getProtocol().storeFlags(set.getString(), flagsString, true);
+			// unset flags command
+			if (variant >= 4) {
+				IMAPResponse[] responses =
+					getProtocol().removeFlags(
+						set.getString(),
+						flagsString,
+						true);
+			} else {
+				IMAPResponse[] responses =
+					getProtocol().storeFlags(
+						set.getString(),
+						flagsString,
+						true);
+			}
 
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");

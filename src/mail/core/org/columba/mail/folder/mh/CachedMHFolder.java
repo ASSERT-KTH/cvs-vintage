@@ -71,12 +71,14 @@ public class CachedMHFolder extends MHFolder {
 
 		AbstractMessage message = getMessage(uid, worker);
 		int size = message.getHeader().count();
-		
-		HeaderInterface h = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
+
+		HeaderInterface h =
+			(ColumbaHeader) cache.getHeaderList(worker).get(uid);
 		int cachedSize = h.count();
-		
-		if ( size > cachedSize ) return (ColumbaHeader) message.getHeader();
-		
+
+		if (size > cachedSize)
+			return (ColumbaHeader) message.getHeader();
+
 		return (ColumbaHeader) h;
 	}
 
@@ -94,7 +96,8 @@ public class CachedMHFolder extends MHFolder {
 		}
 
 		String source = getMessageSource(uid, worker);
-		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
+		ColumbaHeader header =
+			(ColumbaHeader) cache.getHeaderList(worker).get(uid);
 
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, header, 0);
@@ -124,13 +127,12 @@ public class CachedMHFolder extends MHFolder {
 		for (int j = 0; j < v.count(); j++) {
 			HeaderItem headerItem = v.getHeaderItem(j);
 			column = (String) headerItem.get("name");
-			
+
 			Object item = h.get(column);
-			
-			if ( item instanceof String )
-			{
+
+			if (item instanceof String) {
 				String str = (String) item;
-				h.set(column, decoder.decode( str ) );
+				h.set(column, decoder.decode(str));
 			}
 		}
 
@@ -206,15 +208,32 @@ public class CachedMHFolder extends MHFolder {
 					h.set("columba.flags.recent", Boolean.FALSE);
 					break;
 				}
+			case MarkMessageCommand.MARK_AS_UNREAD :
+				{
+					h.set("columba.flags.seen", Boolean.FALSE);
+					getMessageFolderInfo().incUnseen();
+					break;
+				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
 				{
 					h.set("columba.flags.flagged", Boolean.TRUE);
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_UNFLAGGED :
+				{
+					h.set("columba.flags.flagged", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
 
 					h.set("columba.flags.expunged", Boolean.TRUE);
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
+				{
+
+					h.set("columba.flags.expunged", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_ANSWERED :

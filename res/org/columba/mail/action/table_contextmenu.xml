@@ -26,6 +26,10 @@
 		<menuitem action="MarkAsRead"/>
 		<menuitem action="MarkAsFlagged"/>
 		<menuitem action="MarkAsExpunged"/>
+		<separator/>
+		 <menuitem action="MarkAsUnread"/>
+		 <menuitem action="MarkAsUnflagged"/>
+		 <menuitem action="MarkAsUnexpunged"/>
 	</menu>	
 </menu>
 

@@ -35,8 +35,11 @@
  <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
  <action name="Bounce" class="org.columba.mail.gui.table.action.BounceAction"/>
  <action name="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>
+ <action name="MarkAsUnread" class="org.columba.mail.gui.table.action.MarkAsUnreadAction"/>
  <action name="MarkAsFlagged" class="org.columba.mail.gui.table.action.MarkAsFlaggedAction"/>
+ <action name="MarkAsUnflagged" class="org.columba.mail.gui.table.action.MarkAsUnflaggedAction"/>
  <action name="MarkAsExpunged" class="org.columba.mail.gui.table.action.MarkAsExpungedAction"/>
+ <action name="MarkAsUnexpunged" class="org.columba.mail.gui.table.action.MarkAsUnexpungedAction"/>
  <action name="CopyMessage" class="org.columba.mail.gui.table.action.CopyMessageAction"/>
  <action name="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
  <action name="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>
