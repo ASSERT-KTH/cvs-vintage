@@ -25,7 +25,7 @@ import javax.sql.*;
  * <CODE>Class.forName("org.minerva.datasource.PoolDriver");</CODE></P>
  * @see org.jboss.minerva.datasource.JDBCPoolDataSource
  * @see org.jboss.minerva.datasource.XAPoolDataSource
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {
@@ -68,7 +68,7 @@ public class PoolDriver implements Driver {
         else if(url.startsWith(XA_URL_START))
             return getXAConnection(url.substring(XA_URL_START.length()));
         else
-            throw new SQLException("Invalid URL!");
+            return null;  // No SQL Exception here!
     }
 
     private Connection getJDBCConnection(String name) {
