@@ -14,6 +14,9 @@
         on the value of another in the issue. 
       </action>
       <action dev="epugh" type="add">
+        Deleted users no longer can be assigned to an issue.
+      </action>        
+      <action dev="epugh" type="add">
         Simplify logic for using a standard i10n key in a .vm that is custom
         per screen.  Removed an entire level of indirection and abstraction that
         was not used in Scarab.
