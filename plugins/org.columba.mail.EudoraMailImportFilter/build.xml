@@ -13,7 +13,7 @@
  <!--
  <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_root}/lib/log4j.jar:${columba_root}/lib/junit.jar:${columba_root}/lib/jakarta-oro-2.0.6.jar"/>
  -->
- <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_root}/lib/log4j.jar:${columba_root}/lib/ristretto-1.0pre1.jar"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_root}/lib/log4j.jar:${columba_root}/lib/ristretto-1.0_RC2.jar"/>
 
  <!-- compile the classes -->
  <target name="compile">

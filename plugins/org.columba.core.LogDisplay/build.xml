@@ -8,7 +8,7 @@
 	<property name="version" value="1.0" />
 	<property name="dest" value="LogDisplay" />
 	<property name="plugin-id" value="org.columba.core.gui.util.LogDisplay" />
-	<property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/lib/junit.jar::${columba_src}/../lib/forms-1.0.3.jar:${columba_src}/../lib/frappucino-1.0pre1.jar" />
+	<property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/lib/junit.jar::${columba_src}/../lib/forms-1.0.4.jar:${columba_src}/../lib/frappucino-1.0pre1.jar" />
 
 	<!-- compile the classes -->
 	<target name="compile">

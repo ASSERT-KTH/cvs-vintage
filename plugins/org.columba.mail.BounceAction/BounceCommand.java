@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -50,7 +50,7 @@ public class BounceCommand extends FolderCommand {
 	 * @param frame
 	 * @param references
 	 */
-	public BounceCommand(AbstractFrameController frame,
+	public BounceCommand(FrameMediator frame,
 			DefaultCommandReference reference) {
 		super(frame, reference);
 	}

@@ -8,7 +8,7 @@
  <property name="version" value="1.0"/>
  <property name="dest" value="SpamAssassinPlugin"/>
  <property name="plugin-id" value="org.columba.mail.SpamAssassinPlugin"/>
- <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/../lib/log4j.jar:${columba_src}/lib/jython.jar:${columba_src}/lib/junit.jar:${columba_src}/../lib/ristretto-1.0pre1.jar"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/../lib/log4j.jar:${columba_src}/lib/jython.jar:${columba_src}/lib/junit.jar:${columba_src}/../lib/ristretto-1.0_RC2.jar"/>
 
  <!-- compile the classes -->
  <target name="compile">

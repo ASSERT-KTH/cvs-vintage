@@ -8,7 +8,7 @@
  <property name="version" value="1.0"/>
  <property name="dest" value="BounceAction"/>
   <property name="plugin-id" value="org.columba.mail.BounceAction"/>
- <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/../lib/ristretto-1.0pre1.jar"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/../lib/ristretto-1.0_RC2.jar"/>
 
  <!-- compile the classes -->
  <target name="compile">
