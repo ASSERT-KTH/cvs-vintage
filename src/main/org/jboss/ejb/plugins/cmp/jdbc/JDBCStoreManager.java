@@ -59,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -581,7 +581,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    
    public boolean isModified(EntityEnterpriseContext ctx)
    {
-      return !(getEntityBridge().getDirtyFields(ctx).isEmpty());
+      return isModifiedCommand.execute( ctx );
    }
    
    public void storeEntity(EntityEnterpriseContext ctx)
