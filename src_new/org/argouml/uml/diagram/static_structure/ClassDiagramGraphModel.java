@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.37 2003/06/30 21:59:32 linus Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.38 2003/07/18 17:09:07 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.37 2003/06/30 21:59:32 linus Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.38 2003/07/18 17:09:07 d00mst Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -306,14 +306,6 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (node instanceof MModelElement &&
 	    ((MModelElement) node).getNamespace() == null) {
 	    _model.addOwnedElement((MModelElement) node);
-	}
-	if (node instanceof MInterface) {
-	    cat.debug("Interface stereo: " +
-		      MMUtil.STANDARDS.lookup("interface"));
-
-	    ((MInterface) node)
-		.setStereotype((MStereotype)
-			       MMUtil.STANDARDS.lookup("interface"));
 	}
 
 	fireNodeAdded(node);
