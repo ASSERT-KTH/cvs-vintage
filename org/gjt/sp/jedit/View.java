@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.39 2002/11/01 20:11:26 spestov Exp $
+ * @version $Id: View.java,v 1.40 2002/11/21 21:32:08 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1357,7 +1357,8 @@ public class View extends JFrame implements EBComponent
 	{
 		public void caretUpdate(CaretEvent evt)
 		{
-			status.updateCaretStatus();
+			if(evt.getSource() == getTextArea())
+				status.updateCaretStatus();
 		}
 	} //}}}
 
