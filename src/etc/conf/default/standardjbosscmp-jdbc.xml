@@ -7,14 +7,13 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.7 2001/11/05 05:25:25 schaefera Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.8 2001/11/24 21:41:44 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
    <defaults>
       <datasource>java:/DefaultDS</datasource>
       <type-mapping>Hypersonic SQL</type-mapping>
-      <debug>true</debug>
       
       <create-table>true</create-table>
       <remove-table>false</remove-table>
