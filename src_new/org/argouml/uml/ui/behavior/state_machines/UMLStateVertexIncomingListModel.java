@@ -1,4 +1,4 @@
-// $Id: UMLStateVertexIncomingListModel.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLStateVertexIncomingListModel.java,v 1.4 2003/09/01 17:56:34 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,10 @@
 // $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
-
 /**
  * Listmodel for the incoming transitions of a Statevertex
  * @since Dec 14, 2002
@@ -50,14 +49,14 @@ public class UMLStateVertexIncomingListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        setAllElements(((MStateVertex) getTarget()).getIncomings());
+        setAllElements(ModelFacade.getIncomings(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return ((MStateVertex) getTarget()).getIncomings().contains(element);
+        return ModelFacade.getIncomings(getTarget()).contains(element);
     }
 
 }

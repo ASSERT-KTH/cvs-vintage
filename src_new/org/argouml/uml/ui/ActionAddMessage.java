@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.16 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: ActionAddMessage.java,v 1.17 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.tigris.gef.presentation.FigNode;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 
 /** Action to add a message.
@@ -85,7 +84,7 @@ public class ActionAddMessage extends UMLChangeAction {
         MMessage msg =
 	    UmlFactory.getFactory().getCollaborations().buildMessage(collab, ar);
         String nextStr =
-	    "" + ((MInteraction) (collab.getInteractions().toArray())[0]).getMessages().size();	
+	    "" + ModelFacade.getMessages((collab.getInteractions().toArray())[0]).size();	
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();

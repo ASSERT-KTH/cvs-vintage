@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.31 2003/09/01 15:02:05 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.32 2003/09/01 17:56:34 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.31 2003/09/01 15:02:05 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.32 2003/09/01 17:56:34 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -51,7 +51,6 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
@@ -397,7 +396,7 @@ public class UseCaseDiagramGraphModel
         }
         else if (org.argouml.model.ModelFacade.isAGeneralization(edge)) {
             end0 = ModelFacade.getChild(edge);
-            end1 = ((MGeneralization) edge).getParent();
+            end1 = ModelFacade.getParent(edge);
         }
         else if (org.argouml.model.ModelFacade.isAExtend(edge)) {
             end0 = ModelFacade.getBase(edge);
@@ -559,8 +558,8 @@ public class UseCaseDiagramGraphModel
 
             // Collect all the includes at either end.
 
-            ends.addAll(((MUseCase) node).getIncludes());
-            ends.addAll(((MUseCase) node).getIncludes2());
+            ends.addAll(ModelFacade.getIncludes(node));
+            ends.addAll(ModelFacade.getIncludes2(node));
             ends.addAll(ModelFacade.getExtends(node));
             ends.addAll(ModelFacade.getExtends2(node));
 
@@ -612,7 +611,7 @@ public class UseCaseDiagramGraphModel
 
             // The specializations
 
-            Collection sp = ((MGeneralizableElement) node).getSpecializations();
+            Collection sp = ModelFacade.getSpecializations(node);
 
             iter = sp.iterator();
 

@@ -1,5 +1,4 @@
-
-// $Id: GoCollaborationInteraction.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: GoCollaborationInteraction.java,v 1.12 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +24,10 @@
 
 package org.argouml.uml.diagram.collaboration.ui;
 
+import org.argouml.model.ModelFacade;
 import java.util.Collection;
 
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 
 public class GoCollaborationInteraction extends AbstractGoRule {
 
@@ -37,7 +35,7 @@ public class GoCollaborationInteraction extends AbstractGoRule {
 
     public Collection getChildren(Object parent) {
 	if (!(org.argouml.model.ModelFacade.isACollaboration(parent))) return null;
-	return ((MCollaboration) parent).getInteractions();
+	return ModelFacade.getInteractions(parent);
     }
 
 }

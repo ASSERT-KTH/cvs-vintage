@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.30 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.31 2003/09/01 17:56:36 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.30 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.31 2003/09/01 17:56:36 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.collaboration;
@@ -229,7 +229,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 		    return;
 		}
 	    }
-	    Collection sp = ((MGeneralizableElement) node).getSpecializations();
+	    Collection sp = ModelFacade.getSpecializations(node);
 	    iter = sp.iterator();
 	    while (iter.hasNext()) {
 		MGeneralization s = (MGeneralization) iter.next();

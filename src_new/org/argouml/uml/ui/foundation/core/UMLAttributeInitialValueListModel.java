@@ -1,4 +1,4 @@
-// $Id: UMLAttributeInitialValueListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLAttributeInitialValueListModel.java,v 1.3 2003/09/01 17:56:34 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: UMLAttributeInitialValueListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+//$Id: UMLAttributeInitialValueListModel.java,v 1.3 2003/09/01 17:56:34 bobtarling Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.foundation.core.MAttribute;
-
 /**
  * @author jaap.branderhorst@xs4all.nl
  * @since 29 jan 2003
@@ -52,7 +51,7 @@ public class UMLAttributeInitialValueListModel
     protected void buildModelList() {
 	if (_target != null) {
 	    removeAllElements();
-	    addElement(((MAttribute) getTarget()).getInitialValue());
+	    addElement(ModelFacade.getInitialValue(getTarget()));
 	}
     }
 
@@ -60,7 +59,7 @@ public class UMLAttributeInitialValueListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-	return ((MAttribute) getTarget()).getInitialValue() == element;
+	return ModelFacade.getInitialValue(getTarget()) == element;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ChildGenRelated.java,v 1.11 2003/09/01 00:59:53 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.12 2003/09/01 17:56:36 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.11 2003/09/01 00:59:53 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.12 2003/09/01 17:56:36 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -48,8 +48,6 @@ import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.model_management.MPackage;
-
 /** @stereotype singleton
  */
 public class ChildGenRelated implements ChildGenerator {
@@ -64,7 +62,7 @@ public class ChildGenRelated implements ChildGenerator {
 	Vector res = new Vector();
 		
 	if (ModelFacade.isAPackage(o)) {
-	    Collection ownedElements = ((MPackage) o).getOwnedElements();
+	    Collection ownedElements = ModelFacade.getOwnedElements(o);
 	    if (ownedElements != null)
 		return null;
 	}

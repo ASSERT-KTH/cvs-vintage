@@ -1,4 +1,4 @@
-// $Id: UMLInteractionContextListModel.java,v 1.7 2003/09/01 11:51:07 bobtarling Exp $
+// $Id: UMLInteractionContextListModel.java,v 1.8 2003/09/01 17:56:34 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 /**
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -57,7 +56,7 @@ public class UMLInteractionContextListModel
      */
     protected boolean isValidElement(MBase elem) {
         return org.argouml.model.ModelFacade.isACollaboration(elem) && 
-            ((MCollaboration) elem).getInteractions().contains(getTarget());
+            ModelFacade.getInteractions(elem).contains(getTarget());
     }
 
 }

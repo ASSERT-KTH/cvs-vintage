@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.46 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.47 2003/09/01 17:56:36 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.46 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.47 2003/09/01 17:56:36 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -49,7 +49,6 @@ import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -272,7 +271,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	}
 	else if (ModelFacade.isAGeneralization(edge)) {
 	    end0 = ModelFacade.getChild(edge);
-	    end1 = ((MGeneralization) edge).getParent();
+	    end1 = ModelFacade.getParent(edge);
 	}
 	else if (org.argouml.model.ModelFacade.isADependency(edge)) {
 	    Collection clients = ModelFacade.getClients(edge);
@@ -351,7 +350,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 		    // return;
 		}
 	    }
-	    Collection sp = ((MGeneralizableElement) node).getSpecializations();
+	    Collection sp = ModelFacade.getSpecializations(node);
 	    iter = sp.iterator();
 	    while (iter.hasNext()) {
 		MGeneralization s = (MGeneralization) iter.next();

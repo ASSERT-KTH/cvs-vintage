@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.12 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: FigState.java,v 1.13 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigState.java,v 1.12 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: FigState.java,v 1.13 2003/09/01 17:56:35 bobtarling Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
@@ -108,8 +108,7 @@ public abstract class FigState extends FigStateVertex {
             }
             // we don't have to act on incoming and outgoing
             // transitions since that doesn't change the fig.
-        } else if (
-		   ((MState) getOwner()).getInternalTransitions().contains(mee.getSource())
+        } else if (ModelFacade.getInternalTransitions(getOwner()).contains(mee.getSource())
 		   || // the internal transitions
 		   (mee.getSource() == ModelFacade.getEntry(getOwner()))
 		   || // the entry

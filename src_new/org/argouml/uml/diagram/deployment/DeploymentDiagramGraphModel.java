@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.26 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.27 2003/09/01 17:56:36 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,7 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	    }
 	}
 	if ( ModelFacade.isAInstance(node) ) {
-	    Collection ends = ((MInstance) node).getLinkEnds();
+	    Collection ends = ModelFacade.getLinkEnds(node);
 	    Iterator iter = ends.iterator();
 	    while (iter.hasNext()) {
 		MLinkEnd ae = (MLinkEnd) iter.next();

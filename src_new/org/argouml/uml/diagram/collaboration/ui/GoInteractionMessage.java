@@ -1,5 +1,4 @@
-
-// $Id: GoInteractionMessage.java,v 1.7 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: GoInteractionMessage.java,v 1.8 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +24,11 @@
 
 package org.argouml.uml.diagram.collaboration.ui;
 
+import org.argouml.model.ModelFacade;
 import java.util.Collection;
 
 import org.argouml.application.api.Argo;
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 
 /**
  * 
@@ -48,7 +46,7 @@ public class GoInteractionMessage extends AbstractGoRule {
      */
     public Collection getChildren(Object parent) {
 	if (org.argouml.model.ModelFacade.isAInteraction(parent))
-	    return ((MInteraction) parent).getMessages();
+	    return ModelFacade.getMessages(parent);
 	return null;
     }
 

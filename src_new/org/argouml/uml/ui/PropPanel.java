@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.69 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: PropPanel.java,v 1.70 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.69 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: PropPanel.java,v 1.70 2003/09/01 17:56:35 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -81,7 +81,6 @@ import org.argouml.uml.ProfileJava;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.toolbar.ToolBar;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -291,7 +290,7 @@ abstract public class PropPanel
        @param target target of prop panel
     
     */
-    protected void removeMElementListener(MBase target) {
+    protected void removeMElementListener(Object target) {
         UmlModelEventPump.getPump().removeModelEventListener(this, target);
     }
 
@@ -302,7 +301,7 @@ abstract public class PropPanel
     
        @param target target of prop panel
     */
-    public void addMElementListener(MBase target) {
+    public void addMElementListener(Object target) {
         UmlModelEventPump.getPump().addModelEventListener(this, target);
     }
 
@@ -591,8 +590,8 @@ abstract public class PropPanel
     public void removeElement() {
         Object target = getTarget();
         if (ModelFacade.isABase(target)) {
-            MModelElement newTarget = ((MModelElement) target).getModelElementContainer();
-            MBase base = (MBase) target;
+            Object newTarget = ModelFacade.getModelElementContainer(target);
+            Object base = target;
             TargetManager.getInstance().setTarget(base);
             ActionEvent event = new ActionEvent(this, 1, "delete");
             ActionRemoveFromModel.SINGLETON.actionPerformed(event);

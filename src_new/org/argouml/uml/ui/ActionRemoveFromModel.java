@@ -1,6 +1,4 @@
-
-
-// $Id: ActionRemoveFromModel.java,v 1.29 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: ActionRemoveFromModel.java,v 1.30 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +43,6 @@ import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 
@@ -156,7 +153,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         Object newTarget = null;
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (ModelFacade.isABase(target)) {
-            newTarget = ((MBase) target).getModelElementContainer();
+            newTarget = ModelFacade.getModelElementContainer(target);
         } else if (ModelFacade.isADiagram(target)) {
             Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
             if (target != firstDiagram)

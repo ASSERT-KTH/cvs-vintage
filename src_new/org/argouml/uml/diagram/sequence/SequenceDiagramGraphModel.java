@@ -1,6 +1,4 @@
-
-
-// $Id: SequenceDiagramGraphModel.java,v 1.18 2003/08/25 19:15:57 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.19 2003/09/01 17:56:35 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +26,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.18 2003/08/25 19:15:57 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.19 2003/09/01 17:56:35 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -204,7 +202,7 @@ public class SequenceDiagramGraphModel extends UMLMutableGraphSupport
 
     public void addNodeRelatedEdges(Object node) {
 	if ( org.argouml.model.ModelFacade.isAInstance(node) ) {
-	    Collection ends = ((MInstance) node).getLinkEnds();
+	    Collection ends = ModelFacade.getLinkEnds(node);
 	    Iterator iter = ends.iterator();
 	    while (iter.hasNext()) {
 		MLinkEnd ae = (MLinkEnd) iter.next();
