@@ -147,6 +147,7 @@
       basedir="${tomcat.build}/classes" 
       manifest="src/build/manifest" > 
       <include name="org/apache/tomcat/startup/Main.class" /> 
+      <include name="org/apache/tomcat/startup/Main$*.class" /> 
       <include name="org/apache/tomcat/util/SimpleClassLoader**" /> 
     </jar>
   </target>
