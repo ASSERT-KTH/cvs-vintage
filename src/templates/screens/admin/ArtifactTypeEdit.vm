@@ -34,7 +34,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>Issue type name</th>
+    <th>Name</th>
     <td><input type="text" size="25" name="$rmitGroup.DisplayName.Key" 
       #if ($rmitGroup.DisplayName.Value.toString().length() != 0)
           value="$rmitGroup.DisplayName.Value"/>
@@ -44,7 +44,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     </td>
     </tr>
     <tr>
-    <th>Issue type description</th>
+    <th>Description</th>
     <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
