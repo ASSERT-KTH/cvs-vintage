@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.55 2004/09/02 05:07:14 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.56 2005/01/09 00:33:05 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -584,6 +584,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
  		searchSubDirectories = new JCheckBox(jEdit.getProperty(
  			"search.subdirs"));
+		searchSubDirectories.setMnemonic(jEdit.getProperty(
+ 			"search.subdirs.mnemonic"));
 
  		layout.setConstraints(searchSubDirectories,cons);
  		multifile.add(searchSubDirectories);

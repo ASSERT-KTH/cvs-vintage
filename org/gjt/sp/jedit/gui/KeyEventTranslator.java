@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.23 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.24 2005/01/09 00:33:05 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -338,33 +338,21 @@ public class KeyEventTranslator
 	} //}}}
 
 	//{{{ modifiersToString() method
+	private static int[] MODS = {
+		InputEvent.CTRL_MASK,
+		InputEvent.ALT_MASK,
+		InputEvent.META_MASK,
+		InputEvent.SHIFT_MASK
+	};
+
 	public static String modifiersToString(int mods)
 	{
 		StringBuffer buf = null;
 
-		if((mods & InputEvent.CTRL_MASK) != 0)
+		for(int i = 0; i < MODS.length; i++)
 		{
-			if(buf == null)
-				buf = new StringBuffer();
-			buf.append(getSymbolicModifierName(InputEvent.CTRL_MASK));
-		}
-		if((mods & InputEvent.ALT_MASK) != 0)
-		{
-			if(buf == null)
-				buf = new StringBuffer();
-			buf.append(getSymbolicModifierName(InputEvent.ALT_MASK));
-		}
-		if((mods & InputEvent.META_MASK) != 0)
-		{
-			if(buf == null)
-				buf = new StringBuffer();
-			buf.append(getSymbolicModifierName(InputEvent.META_MASK));
-		}
-		if((mods & InputEvent.SHIFT_MASK) != 0)
-		{
-			if(buf == null)
-				buf = new StringBuffer();
-			buf.append(getSymbolicModifierName(InputEvent.SHIFT_MASK));
+			if((mods & MODS[i]) != 0)
+				buf = lazyAppend(buf,getSymbolicModifierName(MODS[i]));
 		}
 
 		if(buf == null)
@@ -400,6 +388,15 @@ public class KeyEventTranslator
 
 	//{{{ Private members
 	private static Map transMap = new HashMap();
+
+	private static StringBuffer lazyAppend(StringBuffer buf, char ch)
+	{
+		if(buf == null)
+			buf = new StringBuffer();
+		if(buf.indexOf(String.valueOf(ch)) == -1)
+			buf.append(ch);
+		return buf;
+	} //}}}
 
 	static
 	{

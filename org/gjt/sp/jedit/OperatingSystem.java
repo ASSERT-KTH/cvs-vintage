@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.16 2003/12/25 00:09:42 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.17 2005/01/09 00:33:04 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -145,13 +145,6 @@ public class OperatingSystem
 			y = screenY + 22;
 			w = screenW;
 			h = screenH - y - 4;//shadow size
-		}
-		else if (isWindows())
-		{
-			x = screenX - 4;
-			y = screenY - 4;
-			w = screenW - 2*x;
-			h = screenH - 2*y;
 		}
 		else
 		{

@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.19 2004/09/01 22:52:06 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.20 2005/01/09 00:33:05 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -80,7 +80,7 @@ public class FileRootsVFS extends VFS
 	} //}}}
 
 	//{{{ Private members
-	private static FileSystemView fsView;
+	private static FileSystemView fsView = FileSystemView.getFileSystemView();
 
 	//{{{ listRoots() method
 	private static File[] listRoots()

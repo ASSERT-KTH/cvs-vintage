@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.25 2004/07/04 06:56:17 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.26 2005/01/09 00:33:05 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -192,7 +192,7 @@ public class UndoManager
 				rem.str = rem.str.concat(text);
 				rem.hashcode = rem.str.hashCode();
 				rem.length += length;
-				KillRing.changed(rem);
+				KillRing.getInstance().changed(rem);
 				return;
 			}
 			else if(offset + length == rem.offset)
@@ -201,7 +201,7 @@ public class UndoManager
 				rem.hashcode = rem.str.hashCode();
 				rem.length += length;
 				rem.offset = offset;
-				KillRing.changed(rem);
+				KillRing.getInstance().changed(rem);
 				return;
 			}
 		}
@@ -218,7 +218,7 @@ public class UndoManager
 		else
 			addEdit(rem);
 
-		KillRing.add(rem);
+		KillRing.getInstance().add(rem);
 	} //}}}
 
 	//{{{ bufferSaved() method

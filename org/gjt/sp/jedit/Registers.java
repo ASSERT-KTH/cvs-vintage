@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.24 2004/12/15 04:09:03 spestov Exp $
+ * @version $Id: Registers.java,v 1.25 2005/01/09 00:33:04 spestov Exp $
  */
 public class Registers
 {
@@ -264,7 +264,7 @@ public class Registers
 				}
 			}
 			else
-				textArea.setSelectedText(selection);
+				textArea.replaceSelection(selection);
 
 			HistoryModel.getModel("clipboard").addItem(selection);
 		}

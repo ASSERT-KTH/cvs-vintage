@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1998, 2004 Slava Pestov
+ * Copyright (C) 1998, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.243 2004/11/26 03:19:21 spestov Exp $
+ * @version $Id: jEdit.java,v 1.244 2005/01/09 00:33:04 spestov Exp $
  */
 public class jEdit
 {
@@ -69,7 +69,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.03.01.00";
+		return "04.03.02.00";
 	} //}}}
 
 	//{{{ main() method
@@ -398,7 +398,7 @@ public class jEdit
 
 		HistoryModel.loadHistory();
 		BufferHistory.load();
-		KillRing.load();
+		KillRing.getInstance().load();
 		propertiesChanged();
 
 		GUIUtilities.advanceSplashProgress();
@@ -851,7 +851,7 @@ public class jEdit
 		}
 
 		HistoryModel.propertiesChanged();
-		KillRing.propertiesChanged();
+		KillRing.getInstance().propertiesChanged();
 
 		EditBus.send(new PropertiesChanged(null));
 	} //}}}
@@ -2393,7 +2393,7 @@ public class jEdit
 		Registers.saveRegisters();
 		SearchAndReplace.save();
 		BufferHistory.save();
-		KillRing.save();
+		KillRing.getInstance().save();
 
 		File file1 = new File(MiscUtilities.constructPath(
 			settingsDirectory,"#properties#save#"));
