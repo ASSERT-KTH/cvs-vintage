@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.37 2003/05/06 05:16:55 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.38 2003/05/08 20:37:40 spestov Exp $
  */
 public class BeanShell
 {
@@ -756,5 +756,5 @@ public class BeanShell
 					l.classLoaderChanged();
 			}
 		}
-	}
+	} //}}}
 }

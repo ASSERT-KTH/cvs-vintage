@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.83 2003/05/08 01:43:02 spestov Exp $
+ * @version $Id: View.java,v 1.84 2003/05/08 20:37:41 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -206,9 +206,9 @@ public class View extends JFrame implements EBComponent
 	//{{{ getToolBar() method
 	/**
 	 * Returns the view's tool bar.
-	 * @since jEdit 3.2.1
+	 * @since jEdit 4.2pre1
 	 */
-	public JToolBar getToolBar()
+	public Box getToolBar()
 	{
 		return toolBar;
 	} //}}}
@@ -1239,7 +1239,7 @@ public class View extends JFrame implements EBComponent
 	private JPanel bottomToolBars;
 	private ToolBarManager toolBarManager;
 
-	private JToolBar toolBar;
+	private Box toolBar;
 	private SearchBar searchBar;
 	private ActionBar actionBar;
 
@@ -1462,7 +1462,8 @@ public class View extends JFrame implements EBComponent
 	private void handleBufferUpdate(BufferUpdate msg)
 	{
 		Buffer buffer = msg.getBuffer();
-		if(msg.getWhat() == BufferUpdate.DIRTY_CHANGED)
+		if(msg.getWhat() == BufferUpdate.DIRTY_CHANGED
+			|| msg.getWhat() == BufferUpdate.LOADED)
 		{
 			EditPane[] editPanes = getEditPanes();
 			for(int i = 0; i < editPanes.length; i++)

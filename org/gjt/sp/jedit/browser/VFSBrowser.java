@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.83 2003/05/07 03:35:31 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.84 2003/05/08 20:37:41 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1027,7 +1027,6 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 	private JCheckBox filterCheckbox;
 	private HistoryTextField filterField;
 	private Box toolbarBox;
-	private JToolBar toolbar;
 	private BrowserView browserView;
 	private RE filenameFilter;
 	private int mode;
@@ -1058,7 +1057,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 	} //}}}
 
 	//{{{ createToolBar() method
-	private JToolBar createToolBar()
+	private Box createToolBar()
 	{
 		if(mode == BROWSER)
 			return GUIUtilities.loadToolBar(actionContext,
@@ -1082,7 +1081,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 		if(jEdit.getBooleanProperty("vfs.browser.showToolbar"))
 		{
-			JToolBar toolbar = createToolBar();
+			Box toolbar = createToolBar();
 			if(horizontalLayout)
 				toolbarBox.add(toolbar);
 			else
