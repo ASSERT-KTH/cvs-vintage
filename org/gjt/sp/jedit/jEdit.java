@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.127 2003/04/14 03:59:21 spestov Exp $
+ * @version $Id: jEdit.java,v 1.128 2003/04/14 04:38:26 spestov Exp $
  */
 public class jEdit
 {
@@ -1275,9 +1275,6 @@ public class jEdit
 		}
 
 		path = MiscUtilities.constructPath(parent,path);
-
-		if(!MiscUtilities.isURL(path))
-			path = MiscUtilities.canonPath(path);
 
 		synchronized(bufferListLock)
 		{

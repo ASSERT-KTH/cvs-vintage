@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.30 2003/03/22 20:00:46 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.31 2003/04/14 04:38:27 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -80,7 +80,7 @@ public class FileVFS extends VFS
 	//{{{ load() method
 	public boolean load(View view, Buffer buffer, String path)
 	{
-		File file = new File(MiscUtilities.canonPath(path));
+		File file = new File(path);
 
 		//{{{ Check if file is valid
 		if(!file.exists())
