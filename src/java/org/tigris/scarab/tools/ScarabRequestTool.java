@@ -69,9 +69,6 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.fulcrum.parser.StringValueParser;
 import org.apache.fulcrum.pool.Recyclable;
-import org.apache.torque.NoRowsException;
-import org.apache.torque.TooManyRowsException;
-import org.apache.torque.TorqueException;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.SimpleKey;
@@ -126,6 +123,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
@@ -3096,7 +3094,7 @@ e.printStackTrace();
      */
     public boolean isAnonymousLoginAllowed()
     {
-        return Turbine.getConfiguration().getBoolean("scarab.anonymous.enable");
+        return AnonymousUserUtil.anonymousAccessAllowed();
     }
 
     public Transition getTransition(Integer pk)

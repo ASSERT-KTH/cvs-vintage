@@ -64,42 +64,53 @@
 <input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="document.login.eventSubmit_doLogin.disabled=true;document.login.submit()" />
 </div>
 
-#if ($scarabR.anonymousLoginAllowed)
-  <h3>$l10n.PublicModules</h3>
+</form>
 
+#if ($scarabR.anonymousLoginAllowed)
 #set ($userModules = $data.User.Modules)
-#if ($userModules.size() > 0)
+#if ($userModules.size() > 0 && $scarabG.publicModulesDisplayCount != 0)
+<h3>$l10n.PublicModules</h3>
+
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
     <th>$l10n.Name</th>
     <th>$l10n.Description</th>
 </tr>
 
+#set ($currentDisplayCount = 0)
 #foreach ($module in $userModules)
  #if (!$module.isGlobalModule())
-  #indexedRows($velocityCount)
-   <td>
-     $modulelink.setPage("$module.ModuleId").setLabel($module.Name)
-   </td>
-   <td>
-     $module.Description
-   </td>
-  </tr>
+  #set ($currentDisplayCount = 1 + $currentDisplayCount)
+  #if ($currentDisplayCount <= $scarabG.publicModulesDisplayCount)
+   #indexedRows($velocityCount)
+    <td>
+      $modulelink.setPage("$module.ModuleId").setLabel($module.Name)
+    </td>
+    <td>
+      $module.Description
+    </td>
+   </tr>
   #end
+ #end
 #end
-
 </table>
 
-#else
-<p class="infomark"><em>
-$l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
-</em></p>
+#if ($currentDisplayCount > $scarabG.publicModulesDisplayCount)
+ <form action="$link.omitModule().setPage("SelectModule.vm")">
+ #if ($scarabG.publicModulesDisplayCount > 0)
+   <div class="functnbar2">
+    <input type="submit" name="selectmodules" value="$l10n.MorePublicModules" />
+   </div>
+ #else
+  <div>$l10n.AnonymousAccess</div>
+  <div class="functnbar2">
+   <input type="submit" name="selectmodules" value="$l10n.AllPublicModules" />
+  </div>
+ #end
+ </form>
 #end
 
-
-
-
-
+#end
 #end
 
 $intake.declareGroups()
@@ -109,5 +120,4 @@ $intake.declareGroups()
 document.login.${loginGroup.Username.Key}.focus();
 // -->
 </script>
-</form>
 </div>

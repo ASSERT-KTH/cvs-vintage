@@ -67,7 +67,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.6 2005/01/02 00:16:18 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.7 2005/01/04 11:05:19 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -642,14 +642,16 @@
          <customization modification="required">advanced</customization>
         <file/>
       </property>
-      <property>
-        <name>scarab.automatic.role.approval</name>
-        <default/>
-        <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
-        <file/>
-        <details>
+    </group>
+    
+    <property>
+      <name>scarab.automatic.role.approval</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+      <details>
           Per default every user request for a role configured in
           Scarab needs manual approval from a Scarab admnistrator.
           Sometimes it makes sense to automatically approve for
@@ -666,9 +668,9 @@
 
           Since all roles can be freely customized in Scarab, we cant't set any
           default here.
-        </details>
-      </property>
-    </group>
+      </details>
+    </property>
+    
 
     <group name="Turbine-properties">
       <details>
@@ -702,6 +704,7 @@
         <file/>
       </property>
     </group>
+
     <group name="appserver">
       <details>
         Application server related properties
@@ -916,8 +919,25 @@
               scarab.anonymous.enable=true
 
           Note: The specified user must already exist in the database.
-      </details>
+        </details>
       </property>
+      
+      <property>
+        <name>scarab.public.modules.display.count</name>
+        <default>99999</default>
+        <comment>limits the number of public modules displayed on the Login screen</comment>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          If Anonymous login is enabled, this property controls, 
+          how many public modules are shown on the Login screen.
+          Following values are allowed:
+           0 : Don't display public modules on the Login screen
+          >0 : Display at maximum the specified amount of public modules
+        </details>
+      </property>
+      
 
     </group>
   </section>
