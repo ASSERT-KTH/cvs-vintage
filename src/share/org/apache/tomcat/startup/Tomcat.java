@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.*;
 import java.net.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.modules.config.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.task.*;
 import org.apache.tomcat.util.xml.*;
@@ -26,65 +27,74 @@ public class Tomcat extends Log {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
+    private String action="start";
+
+    // null means user didn't set one
+    String configFile=null;
+    // relative to TOMCAT_HOME 
+    static final String DEFAULT_CONFIG="conf/server.xml";
+    
     Tomcat() {
 	super("tc_log");
     }
 
-    public void execute(String args[] ) throws Exception {
-	if( ! processArgs( args ) ) {
+    public void execute() throws Exception {
+	if( "stop".equals( action )){
+	    stop();
+	} else if( "help".equals( action )) {
 	    printUsage();
-	    return;
+	} else if( "start".equals( action )) {
+	    start();
 	}
-	
-	if( doStop ) {
-	    System.out.println(sm.getString("tomcat.stop"));
-	    try {
-		org.apache.tomcat.task.StopTomcat task=
-		    new  org.apache.tomcat.task.StopTomcat();
-		
-		task.setConfig( configFile );
-		task.execute();     
-	    }
-	    catch (TomcatException te) {
-		if (te.getRootCause() instanceof java.net.ConnectException)
-		    System.out.println(sm.getString("tomcat.connectexception"));
-		else
-		    throw te;
-	    }
-	    return;
+    }
+
+    public void stop() throws Exception {
+	System.out.println(sm.getString("tomcat.stop"));
+	try {
+	    org.apache.tomcat.task.StopTomcat task=
+		new  org.apache.tomcat.task.StopTomcat();
+	    
+	    task.setConfig( configFile );
+	    task.execute();     
 	}
+	catch (TomcatException te) {
+	    if (te.getRootCause() instanceof java.net.ConnectException)
+		System.out.println(sm.getString("tomcat.connectexception"));
+	    else
+		throw te;
+	}
+	return;
+    }
 
-	StartTomcat st=new StartTomcat();
-	if( doGenerate ) st.setGenerateConfigs( true );
+    public void start() throws Exception {
+	EmbededTomcat tcat=new EmbededTomcat();
 
-	// load server.xml
-	if( configFile!=null)
-	    st.setConfig( configFile );
+	ServerXmlInterceptor sxmlConf=new ServerXmlInterceptor();
+	sxmlConf.setConfig( configFile );
+	tcat.addInterceptor( sxmlConf );
+
+	tcat.initContextManager();
 	
-	st.execute();
+	tcat.start();
     }
     
     public static void main(String args[] ) {
 	try {
 	    Tomcat tomcat=new Tomcat();
-	    tomcat.execute( args );
+	    if( ! tcat.processArgs( args )) {
+		action="help";
+	    }
+	    tomcat.execute();
 	} catch(Exception ex ) {
 	    System.out.println(sm.getString("tomcat.fatal"));
 	    System.err.println(Logger.throwableToString(ex));
 	    System.exit(1);
 	}
-
     }
 
     // -------------------- Command-line args processing --------------------
-    // null means user didn't set one
-    String configFile=null;
-    // relative to TOMCAT_HOME 
-    static final String DEFAULT_CONFIG="conf/server.xml";
 
-    boolean doStop=false;
-    boolean doGenerate=false;
-    
+
     public static void printUsage() {
 	//System.out.println(sm.getString("tomcat.usage"));
 	System.out.println("Usage: java org.apache.tomcat.startup.Tomcat {options}");
@@ -102,11 +112,10 @@ public class Tomcat extends Log {
 	    String arg = args[i];
             
 	    if (arg.equals("-help") || arg.equals("help")) {
-		printUsage();
+		action="help";
 		return false;
-		
 	    } else if (arg.equals("-stop")) {
-		doStop=true;
+		action="stop";
 	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
 		doGenerate=true;
 	    } else if (arg.equals("-f") || arg.equals("-config")) {

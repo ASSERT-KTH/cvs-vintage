@@ -217,6 +217,14 @@ public class EmbededTomcat {
 	return null;
     }
 
+    public void start() throws TomcatException {
+	contextM.start();
+    }
+
+    public void stop() throws TomcatException {
+	contextM.stop();
+    }
+
     // -------------------- Private methods
     public void addInterceptor( BaseInterceptor ri ) {
 	if( requestInt == null ) requestInt=new Vector();
@@ -265,6 +273,10 @@ public class EmbededTomcat {
 	"org.apache.tomcat.request.Jdk12Interceptor"
     };
     
+    protected String moduleSet2[] = {
+	"org.apache.tomcat.modules.config.ServerXmlInterceptor",
+    };
+    
     protected void initDefaultInterceptors() {
 	addModules( moduleSet1 );
     }
@@ -292,6 +304,5 @@ public class EmbededTomcat {
 	    return null;
 	}
     }
-	
-
 }
+
