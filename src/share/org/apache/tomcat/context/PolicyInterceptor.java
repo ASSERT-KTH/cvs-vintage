@@ -164,15 +164,15 @@ public class PolicyInterceptor extends BaseInterceptor {
 		p = new Permissions();
 	    }
 	    
-	    // Add global permissions ( from context manager )
-	    // XXX maybe use imply or something like that
-	    Permissions perms = (Permissions)cm.getPermissions();
-	    if( perms!= null ) {
-		Enumeration enum=perms.elements();
-		while(enum.hasMoreElements()) {
-		    p.add((Permission)enum.nextElement());
-		}
-	    }
+	    // 	    // Add global permissions ( from context manager )
+	    // 	    // XXX maybe use imply or something like that
+	    // 	    Permissions perms = (Permissions)cm.getPermissions();
+	    // 	    if( perms!= null ) {
+	    // 		Enumeration enum=perms.elements();
+	    // 		while(enum.hasMoreElements()) {
+	    // 		    p.add((Permission)enum.nextElement());
+	    // 		}
+	    // 	    }
 	    
 	    addDefaultPermissions( context, dir.getAbsolutePath(), p);
 	
