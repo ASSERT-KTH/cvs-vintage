@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.51 2003/05/12 04:04:14 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.52 2003/05/30 00:49:52 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1013,9 +1013,10 @@ loop:		for(int i = 0; i < str.length(); i++)
 	/**
 	 * Returns the longest common prefix in the given set of strings.
 	 * @param str The strings
+	 * @param ignoreCase If true, case insensitive
 	 * @since jEdit 4.2pre2
 	 */
-	public static String getLongestPrefix(List str)
+	public static String getLongestPrefix(List str, boolean ignoreCase)
 	{
 		if(str.size() == 0)
 			return "";
@@ -1033,7 +1034,7 @@ loop:		for(;;)
 				s = str.get(i).toString();
 				if(prefixLength >= s.length())
 					break loop;
-				if(s.charAt(prefixLength) != ch)
+				if(!compareChars(s.charAt(prefixLength),ch,ignoreCase))
 					break loop;
 			}
 			prefixLength++;
@@ -1046,9 +1047,10 @@ loop:		for(;;)
 	/**
 	 * Returns the longest common prefix in the given set of strings.
 	 * @param str The strings
+	 * @param ignoreCase If true, case insensitive
 	 * @since jEdit 4.2pre2
 	 */
-	public static String getLongestPrefix(String[] str)
+	public static String getLongestPrefix(String[] str, boolean ignoreCase)
 	{
 		if(str.length == 0)
 			return "";
@@ -1065,7 +1067,7 @@ loop:		for(;;)
 				String s = str[i];
 				if(prefixLength >= s.length())
 					break loop;
-				if(s.charAt(prefixLength) != ch)
+				if(!compareChars(s.charAt(prefixLength),ch,ignoreCase))
 					break loop;
 			}
 			prefixLength++;
@@ -1383,6 +1385,16 @@ loop:		for(;;)
 
 	//{{{ Private members
 	private MiscUtilities() {}
+
+	//{{{ compareChars()
+	/** should this be public? */
+	private static boolean compareChars(char ch1, char ch2, boolean ignoreCase)
+	{
+		if(ignoreCase)
+			return Character.toUpperCase(ch1) == Character.toUpperCase(ch2);
+		else
+			return ch1 == ch2;
+	} //}}}
 
 	//}}}
 }

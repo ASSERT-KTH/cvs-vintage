@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.40 2003/05/29 19:02:55 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.41 2003/05/30 00:49:52 spestov Exp $
  */
 public class BeanShell
 {
@@ -154,7 +154,7 @@ public class BeanShell
 				+ "if(newText != null)\n"
 				+ "{\n"
 					+ "buffer.remove(start,end - start - 1);\n"
-					+ "buffer.insert(start,newText);\n"
+					+ "buffer.insert(start,String.valueOf(newText));\n"
 				+ "}\n"
 			+ "}\n";
 

@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.53 2003/05/29 21:57:24 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.54 2003/05/30 00:49:53 spestov Exp $
  */
 public class DisplayManager
 {
@@ -625,13 +625,14 @@ public class DisplayManager
 		{
 			buffer.writeLock();
 			int oldCount = offsetMgr.getScreenLineCount(line);
+			// still have to call this even if it equals the
+			// old one so that the offset manager sets the
+			// validity flag!
+			offsetMgr.setScreenLineCount(line,count);
 			// this notifies each display manager editing this
 			// buffer of the screen line count change
 			if(count != oldCount)
-			{
-				offsetMgr.setScreenLineCount(line,count);
 				_setScreenLineCount(buffer,line,oldCount,count);
-			}
 		}
 		finally
 		{
