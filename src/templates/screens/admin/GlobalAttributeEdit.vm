@@ -35,7 +35,10 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")"  //>
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+#if ($createNew.equals("false"))
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 <h3>Attribute Info</h3>
@@ -187,10 +190,12 @@ Options because you can quickly end up with a mess.</strong></p>
 
 #end
 
-<div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<div class="functnbar">
+#if ($createNew.equals("false"))
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
-
 $intake.declareGroups()
 </form>
 </div>
