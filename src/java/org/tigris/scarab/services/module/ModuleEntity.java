@@ -61,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.12 2001/09/13 01:08:53 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.13 2001/09/21 20:54:52 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -108,10 +108,6 @@ public interface ModuleEntity
     public Vector getRModuleAttributes(Criteria criteria)
         throws Exception;
 
-    public List 
-        getRModuleOptions(Attribute attribute, boolean activeOnly)
-        throws Exception;
-
     public String getQueryKey();
 
     public boolean getDeleted();
@@ -126,6 +122,20 @@ public interface ModuleEntity
 
     public Attribute[] getActiveAttributes()
         throws Exception;
+
+    public List getRModuleOptions(Attribute attribute)
+        throws Exception;
+
+    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
+        throws Exception;
+
+    public List getLeafRModuleOptions(Attribute attribute)
+        throws Exception;
+
+    public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
+        throws Exception;
+
+
 /*    
     
     public String getAbbreviation();
@@ -146,18 +156,6 @@ public interface ModuleEntity
         throws Exception;
 
     public Attribute[] getAllAttributes()
-        throws Exception;
-
-    public List getRModuleOptions(Attribute attribute)
-        throws Exception;
-
-    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
-        throws Exception;
-
-    public List getLeafRModuleOptions(Attribute attribute)
-        throws Exception;
-
-    public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception;
 
     public List getOptionTree(Attribute attribute)

@@ -89,6 +89,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.ReportGenerator;
 
 /**
  * This class is used by the Scarab API
@@ -788,6 +789,14 @@ try{
         return search.getMatchingIssues();
     }
 
+    /**
+     * a report helper class
+     */
+    public ReportGenerator getReport()
+    {
+        return new ReportGenerator();
+    }
+    
     /**
      * Return a subset of the passed-in list.
      */

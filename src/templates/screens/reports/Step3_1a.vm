@@ -1,0 +1,77 @@
+#set ( $report = $scarabR.Report )
+#set ( $intakeReport = $intake.Report.mapTo($report) )
+#set ( $action = $link.setPage("reports,Step3_1a.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Step3_1b.vm") )
+
+<div class="app" id="div2-4-1-step4">
+
+<h2>Define report (2.4.1)</h2>
+		
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td>1: <a href="#" title="summary info">Summary info</a></td>
+			<td>2: Primary filter attribute (PFA)</td>
+			<th>3: Select row/column heading(s)</th>
+			</tr>
+			</table>
+		</div>
+		
+		<p class="functnbar">
+            <strong>3a: Define row/column criteria</strong>
+             | 
+            3b: Select row/column content
+        </p>
+		
+<h3>Report content: Comparative analysis</h3>	  
+
+<form method="get" action="$action">
+		
+<div class="axial">
+	<table width="100%" cellpadding="3" cellspacing="2" border="1">			
+		<tr>
+			<th width="120">report date</th>
+             <td>
+                <input type="text" size="20" name="$reportIntake.NewDate.Key" 
+                    value="$reportIntake.NewDate" />
+            </td>
+        </tr>
+		<tr>
+			<th>rows: criteria</th>
+
+			<td>
+			    <select name="$intakeReport.Axis1Category.Key">
+			        <option value="">select criteria</option>
+#set ($options = $scarabR.Report.Axis1Categories)
+#foreach ( $option in $options )
+		  	        <option value="$option.Value">$option.Name</option>
+#end		  
+			    </select>
+			</td>
+		</tr>
+			
+		<tr>
+			<th>columns: criteria</th>
+			<td>
+			    <select name="$intakeReport.Axis2Category.Key">
+			        <option value="">select criteria</option>
+#set ($options = $scarabR.Report.Axis2Categories)
+#foreach ( $option in $options )
+		  	        <option value="$option.Value"$option.Selected>$option.Name</option>
+#end
+			    </select>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<p class="functnbar">
+    <input type="submit" value="continue" name="eventSubmit_doStep3_1a" />
+    &nbsp;
+    <input type="submit" value="back" />
+</p>
+
+$intake.declareGroups()
+</form>
+
+</div>
+

@@ -1,0 +1,16 @@
+#macro ( attributeOptionOptionList $optionList )
+
+#foreach ( $option in $optionList )
+    #if ($showSeparator && $option.isAttribute())
+			    <option value="">----------------------------------</option>
+    #end
+    #set ($showSeparator = true)
+    #if ($option.isAttribute())
+        #set ($spaces = "")
+    #else
+        #set ($spaces = "&nbsp;&nbsp;&nbsp;")
+    #end
+    			<option value="$option.Value">$spaces$option.Name</option>
+#end
+
+#end

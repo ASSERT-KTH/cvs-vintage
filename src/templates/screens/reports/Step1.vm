@@ -1,0 +1,88 @@
+#set ( $report = $scarabR.Report )
+#set ( $intakeReport = $intake.Report.mapTo($report) )
+#set ( $action = $link.setPage("reports,Step1.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Step2.vm") )
+
+<div class="app" id="div2-4-1-step1">
+
+<h2>Define report (2.4.1)</h2>
+		
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<th>1: Summary info</th>
+			<td>2:Primary filter attribute (PFA)</td>
+			<td>3:Select row/column heading(s)</td>
+			</tr>
+			</table>
+		</div>
+		
+<h3>Summary information</h3>
+		
+<div><strong>Considering saving this report?</strong></div>
+If so,  enter the following information (it can be edited later).
+		
+<form method="get" action="$action">
+
+<div class="axial">
+	<table border="1" cellspacing="2" cellpadding="3">
+		<tr>
+			<th width="120">report name:</th>
+			<td>         
+			<input type="text" size="30" maxlength="255" 
+                name="$intakeReport.Name.Key" value="$intakeReport.Name" />
+			</td>
+		</tr>
+			
+		<tr>
+			<th width="120">report description (optional):</th>
+			<td>
+                <textarea name="$intakeReport.Description.Key" 
+                    rows="3" cols="30">$intakeReport.Description</textarea>
+            </td>
+		</tr>
+	</table>
+
+    <h3>Type of report</h3>
+		
+    <div><strong>Comparative analysis</strong></div>
+    <p>map attributes, attribute options, to  attributes, attribute options, 
+        or users for a single date/time</p>
+	
+    <div><strong>Rate of change</strong></div>
+    <p>map attributes, attribute options, or users to multiple dates in an 
+        array</p>
+
+
+	<table border="1" cellspacing="2" cellpadding="3">			
+		<tr>
+			<th width="120">type of report:</th>
+			<td>
+
+#if ($data.Parameters.getString($intakeReport.Type.Key))
+    #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
+#end
+#set ($options = $scarabR.Report.ReportTypes)
+#if ($reporttype)
+    $options.get($reporttype);
+#else
+			    <select name="$intakeReport.Type.Key">
+    #foreach ( $option in $options )
+		  	        <option value="$option.Value">$option.Name</option>
+    #end
+		 	    </select>
+#end
+
+			</td>
+		</tr>
+			
+	</table>
+</div>
+
+<p class="functnbar">
+    <input type="submit" value="continue" name="eventSubmit_doStep1" />
+</p>
+
+$intake.declareGroups()
+</form>
+
+</div>

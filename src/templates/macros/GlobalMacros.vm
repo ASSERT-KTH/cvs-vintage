@@ -181,3 +181,7 @@ value="false" />
 #macro ( datatitle $title )
 <h3>$title</h3>
 #end
+
+#macro ( trclass $count )
+  #if( $count % 2 > 0 )class="a"#else class="b"#end
+#end

@@ -1,0 +1,107 @@
+<!-- Scarab - App -->
+<div class="app" id="div2-4-1-step3">
+
+<h2>Define report (2.4.1)</h2>
+		
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td>1: <a href="#" title="summary info">Summary info</a></td>
+			<th>2: Primary filter attribute (PFA)</th>
+			<td>3: Select row/column heading(s)</td>
+			</tr>
+			</table>
+		</div>
+
+<p class="functnbar">
+    <a href="#" title="select pfa(s)">2a: Select PFA(s)</a> | <strong>
+    2b: PFA display options</strong>
+</p>
+		
+<h3>Define PFA Groups</h3>
+		
+<div><strong>Grouping PFA options</strong></div>
+<p>In cases where primary filter attribute options represent similar traits 
+(e.g. for X attribute "state" the options "open unassigned", "open assigned", 
+and "reopened unassigned" are all "open") it may be useful to calculate and 
+display these options as an average. Thus, all options listed below and being 
+the same "group" are averaged together, which is reflected in the report's 
+output.</p>
+
+<p>If there are no groups, each PFA/option will appear as a separate 
+column.</p>
+
+<form method="get" action="$action">
+
+<p class="functnbar">
+    <input type="submit" name="eventSubmit_doAddgroup" value="add group" />
+    &nbsp;
+    <input type="submit" name="eventSubmit_doDeletegroup" 
+        value="delete group" />
+</p>
+		
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th><a href="#" title="sort">group number</a></th>
+		<th><a href="#" title="sort">group name</a></th>
+	</tr>
+    
+#foreach ( $filterGroup in $report.FilterGroups )
+    #set ($intakeFilterGroup = $intake.FilterGroup.mapTo($filterGroup)
+		
+	<tr #trclass($velocityCount)>
+		<td><input type="checkbox" 
+                name="$intakeFilterGroup.Selected.Key" /></td>
+		<td>Group $velocityCount</td>
+		<td><input type="text" value="$intakeFilterGroup.Name" 
+                name="$intakeFilterGroup.Name.Key" /></td>
+	</tr>
+#end
+</table>
+
+<p class="functnbar">
+    <input type="submit" name="eventSubmit_doAddgroup" value="add group" />
+    &nbsp;
+    <input type="submit" name="eventSubmit_doDeletegroup" 
+        value="delete group" />
+</p>
+
+		
+<h3>Grouping PFA/Options</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>	
+		<th><a href="#" title="sort">group name</a></th>
+		<th><a href="#" title="sort">attribute</a></th>
+		<th><a href="#" title="sort">option</a></th>
+	</tr>
+
+#foreach ( $attOption in $report.SelectedFilterOptions )		
+	<tr #trclass($velocityCount)>
+		
+		<td>
+            <select name="">
+    #foreach ( $filterGroup in $report.FilterGroups )
+        #set ( $optionValue = $velocityCount - 1 )
+		        <option value="$optionValue">$filterGroup.Name</option>
+    #end
+		    </select>
+        </td>
+		<td>$attOption.RModuleAttribute.DisplayValue</td>
+		<td>$attOption.DisplayValue</td>
+
+	</tr>
+#end		
+</table>
+
+<p class="functnbar">
+    <input type="submit" value="continue"  name="eventSubmit_doStep2b" />
+    &nbsp;
+    <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
+</p>
+
+$intake.declareGroups()
+</form>
+	
+</div>

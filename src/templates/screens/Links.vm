@@ -16,6 +16,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
 <li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
+<li><a href="$link.setPage("reports,Step1.vm")">Reports (not working)</a></li>
 </ul>
 
 <h3>Admin Pages</h3>

@@ -1,0 +1,56 @@
+<div class="app" id="div2-4-1-step5">
+
+<h2>Define report (2.4.1)</h2>
+		
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td>1: <a href="#" title="summary info">Summary info</a></td>
+			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
+			<th>3: Select row/column heading(s)</th>
+			</tr>
+			</table>
+		</div>
+		
+<p class="functnbar">
+    <a href="#" title="define row/column criteria">
+        3a: Define row/column criteria</a> | 
+    <strong>3b: Select row/column content</strong>
+</p>
+		
+<h3>Select row/column content</h3>	  
+		
+<div class="axial">
+	<table border="1" cellspacing="2" cellpadding="3">
+
+		<tr>
+			<th>Row content</th>
+			<td>
+			<select name="$intakeReport.Axis1AttributesAndOptions.Key" 
+                multiple="multiple" size="15">
+
+                #attributeOptionOptionList( $report.getAxis1SelectOptions($module) )
+			</select>
+			</td>
+		</tr>
+
+		<tr>
+			<th>Column content</th>
+			<td>
+			<select name="$intakeReport.Axis2AttributesAndOptions.Key" 
+                multiple="multiple" size="15">
+
+                #attributeOptionOptionList( $report.getAxis2SelectOptions($module) )
+			</select>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<p class="functnbar">
+    <input type="submit" value="Generate report" />&nbsp;
+    <input type="submit" value="cancel" />
+</p>
+	
+</div>
+
