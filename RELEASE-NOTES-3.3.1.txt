@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.13 2001/12/13 04:26:09 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.14 2001/12/14 03:50:20 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -114,6 +114,8 @@ Bug No.  Description
 
 5390	 Fixed the behavior of LoadOnStartup servlets when the servlet is
 	 actually a JSP page.
+
+5365	 Fixed the JasperMangler to handle Java reserved words correctly.
 
 Documentation:
 
