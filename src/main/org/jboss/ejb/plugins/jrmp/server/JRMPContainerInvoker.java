@@ -40,7 +40,6 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.ContainerInvoker;
-import org.jboss.util.FastKey;
 import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeHandleImpl;
@@ -72,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.19 $
+ *      @version $Revision: 1.20 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -119,7 +118,7 @@ public abstract class JRMPContainerInvoker
 
    public abstract EJBObject getStatefulSessionEJBObject(Object id);
 
-   public abstract EJBObject getEntityEJBObject(FastKey id);
+   public abstract EJBObject getEntityEJBObject(Object id);
 
    public abstract Collection getEntityCollection(Collection ids);
    
@@ -139,8 +138,10 @@ public abstract class JRMPContainerInvoker
 //DEBUG	        Logger.log("The home transaction is "+tx);
     
          //Logger.log(container.getTransactionManager().toString());
-         if (tx == null)
-          tx = container.getTransactionManager().getTransaction();
+         // MF FIXME: the following don't belong here, the transaction is
+		 // passed by the call, not implicitely...
+		 //if (tx == null)
+         // tx = container.getTransactionManager().getTransaction();
        
          return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
         rmi.getPrincipal(), rmi.getCredential() ));
@@ -166,8 +167,8 @@ public abstract class JRMPContainerInvoker
          rmi.setMethodMap(beanMethodInvokerMap);
          Transaction tx = rmi.getTransaction();
         // MF FIXME: there should be no implicit thread passing of the transaction
-         if (tx == null)
-            tx = container.getTransactionManager().getTransaction();
+         //if (tx == null)
+         //   tx = container.getTransactionManager().getTransaction();
          
          Object id = rmi.getId();
          Method m = rmi.getMethod();
@@ -185,9 +186,11 @@ public abstract class JRMPContainerInvoker
     Principal identity, Object credential)
       throws Exception
    {
-       Logger.log("JRMPCI:invokeHome "+m);
+       Logger.log("JRMPCI:invokeHome "+m.getName());
+	   if (tx != null) Logger.log("Tx is "+tx.toString());
+		   else Logger.log("Tx is null");
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
-      identity, credential));
+      	identity, credential));
    }
 
    public Object invoke(Object id, Method m, Object[] args, Transaction tx,
