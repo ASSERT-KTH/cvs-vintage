@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *  or crash.
  *
  *   @author Daniel Schulze (daniel.schulze@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class J2eeDeployer 
    extends ServiceMBeanSupport
@@ -450,8 +450,6 @@ public class J2eeDeployer
 
             return d;
          }
-         else
-            throw new J2eeDeploymentException (_downloadUrl.toString ()+" points not to a valid j2ee application (app.ear/ejb.jar/web.war)!");
 
  		} catch (IOException _ioe) {
  		   uninstallApplication (d);
@@ -464,7 +462,7 @@ public class J2eeDeployer
  		   uninstallApplication (d);
  		   throw new J2eeDeploymentException ("FATAL ERROR!");
       }  			
-      
+      throw new J2eeDeploymentException (_downloadUrl.toString ()+" points not to a valid j2ee application (app.ear/ejb.jar/web.war)!");
    }
 
    void uninstallApplication (Deployment _d) throws J2eeDeploymentException
