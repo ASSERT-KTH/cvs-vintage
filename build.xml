@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.128 2002/12/09 01:47:46 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.129 2002/12/12 16:02:45 mnewcomb Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -377,18 +377,7 @@
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
-        <include name="org/jboss/invocation/ByValueInvokerInterceptor.class"/>
-        <include name="org/jboss/invocation/Invocation.class"/>
-        <include name="org/jboss/invocation/InvocationContext.class"/>
-        <include name="org/jboss/invocation/InvocationKey.class"/>
-        <include name="org/jboss/invocation/InvocationType.class"/>
-        <include name="org/jboss/invocation/Invoker.class"/>
-        <include name="org/jboss/invocation/InvokerInterceptor.class"/>
-        <include name="org/jboss/invocation/PayloadKey.class"/>
-        <include name="org/jboss/invocation/MarshalledInvocation.class"/>
-        <include name="org/jboss/invocation/MarshalledValue.class"/>
-        <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>
-        <include name="org/jboss/invocation/MarshalledValueOutputStream.class"/>
+        <include name="org/jboss/invocation/*.class"/>
 	<include name="org/jboss/invocation/trunk/client/**/*.class"/>
         <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
