@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.24 2002/01/05 17:23:50 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.25 2002/01/06 17:20:24 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -278,8 +278,25 @@ public class ScarabLink extends TemplateLink
      */
     public boolean isAllowed()
     {
+        boolean allowed = isAllowed(template);
+
+        if ( !allowed ) 
+        {
+            // reset link
+            super.toString();
+            resetProperties();
+        }
+        
+        return allowed;
+    }
+
+    /**
+     * Check if the user has the permission to see the template t. If the user
+     * has the permission(s), <code>true</code> is returned.
+     */
+    public boolean isAllowed(String t)
+    {
         boolean allowed = false;
-        String t = template.replace(',','.');
         String perm = ScarabSecurity.getScreenPermission(t);
         if (perm != null)
         {
@@ -298,14 +315,6 @@ public class ScarabLink extends TemplateLink
         {
             allowed = true;
         }
-
-        if ( !allowed ) 
-        {
-            // reset link
-            super.toString();
-            resetProperties();
-        }
-        
         return allowed;
     }
 
