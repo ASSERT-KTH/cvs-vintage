@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.83 2004/09/01 22:52:05 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.84 2004/11/04 03:19:05 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -945,7 +945,15 @@ public class GUIUtilities
 		int extState = jEdit.getIntegerProperty(name + ".extendedState", 0);
 
 		Rectangle desired = new Rectangle(x,y,width,height);
-		adjustForScreenBounds(desired);
+		try
+		{
+			adjustForScreenBounds(desired);
+		}
+		catch(Exception e)
+		{
+			/* Workaround for OS X bug. */
+			Log.log(Log.ERROR,GUIUtilities.class,e);
+		}
 
 		if(OperatingSystem.isX11() && Debug.GEOMETRY_WORKAROUND)
 			new UnixWorkaround(win,name,desired,extState);

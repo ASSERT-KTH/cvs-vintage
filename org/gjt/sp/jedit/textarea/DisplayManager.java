@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.106 2004/11/02 00:42:45 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.107 2004/11/04 03:19:05 spestov Exp $
  */
 public class DisplayManager
 {
@@ -543,10 +543,9 @@ public class DisplayManager
 	{
 		fvmreset();
 		screenLineMgr.reset();
+		textArea.propertiesChanged();
 
-		firstLine.reset();
-		scrollLineCount.reset();
-		clearNotifyFlags();
+		init();
 
 		int collapseFolds = buffer.getIntegerProperty(
 			"collapseFolds",0);
