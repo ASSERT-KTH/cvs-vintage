@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.30 2002/11/01 20:11:26 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.31 2002/12/14 22:06:08 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -640,8 +640,9 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			&& !searchSelection.isSelected());
 
 		boolean reverseEnabled = !hyperSearch.isSelected()
-			&& searchCurrentBuffer.isSelected();
-		searchBack.setEnabled(reverseEnabled && !regexp.isSelected());
+			&& searchCurrentBuffer.isSelected()
+			&& !regexp.isSelected();
+		searchBack.setEnabled(reverseEnabled);
 		searchForward.setEnabled(reverseEnabled);
 		if(!reverseEnabled)
 			searchForward.setSelected(true);
