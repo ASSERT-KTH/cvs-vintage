@@ -49,12 +49,14 @@ package org.tigris.scarab.workflow;
 import java.util.List;
 import java.util.HashMap;
 
+
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.OptionWorkflow;
+import org.tigris.scarab.om.WorkflowRules;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.util.ScarabException;
 
@@ -63,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * into the context to replace the $link that Turbine adds.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.5 2002/08/17 00:05:49 elicia Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.6 2002/08/29 00:01:00 elicia Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
@@ -81,6 +83,14 @@ public class DefaultWorkflow implements Workflow
                                   AttributeOption toOption,
                                   Issue issue, HashMap newAttVals,
                                   ScarabUser user)
+        throws ScarabException
+    {
+        return null;
+    }
+
+    public String checkInitialTransition(AttributeOption toOption,
+                                         Issue issue, HashMap newAttVals,
+                                         ScarabUser user)
         throws ScarabException
     {
         return null;
@@ -118,7 +128,7 @@ public class DefaultWorkflow implements Workflow
     public void saveWorkflow(AttributeOption fromOption, 
                              AttributeOption toOption,
                              String roleName, Module module,
-                             IssueType issueType, String rule)
+                             IssueType issueType, WorkflowRules workflowRule)
         throws ScarabException
     {
         //nothing
@@ -133,7 +143,8 @@ public class DefaultWorkflow implements Workflow
        // nothing
     }
 
-    public void resetWorkflows(String roleName, Module module, IssueType issueType)
+    public void resetWorkflows(String roleName, Module module, IssueType issueType,
+                               boolean initial)
         throws ScarabException
     {
        // nothing
