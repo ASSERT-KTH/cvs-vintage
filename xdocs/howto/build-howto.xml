@@ -30,6 +30,16 @@ If you are doing development work with Scarab, please make sure to read
 </source>
 
 <p>
+In tis document we use the following logical locations:
+<ul>
+  <li>$SCARAB_ROOT<br/>
+  This is the root of your Scarab source installation</li>
+  <li>$SCARAB_WEBAPP<br/>
+  This is the root of your webapplication</li>
+</ul>
+</p>
+
+<p>
 We appreciate your deciding to try Scarab out and appreciate constructive 
 feedback on your success (or failure...we hope not!) in getting the 
 system running.
@@ -275,7 +285,8 @@ Otherwise, you may get build errors.
 
 <subsection name="Directory structure">
 <p>
-Here is a description of the Scarab directory tree:
+Here is a description of the Scarab directory tree. In the remainder of this document
+we will refer to the root diretory of your distribution as <i>$SCARAB_ROOT</i>.
 </p>
 <source>
 scarab
@@ -323,28 +334,38 @@ src
 </subsection>
 
 <subsection name="Build properties">
-
 <p>
-The Scarab build process can be configured by adding properties to the
-file:
+The Scarab build process has been designed for maximum flexibility.
+Most of the aspects in Scarab can be controlled via build-properties.
+We provide a set of "default properties" which will be used by the
+build process to build an "out of the box" installation. These default
+properties will be used if not overwritten otherwise (see below). 
+They are all defined in the file 
 </p>
-<code>build.properties</code>
+<code>$SCARAB_ROOT/project.properties</code>
 <p>
-This file does not exist by default, so you will first have to create
-it in the root of your Scarab installation directory. We have provided 
-another file, which contains many of the most likely to be modified 
-properties together with their default settings and some descriptions 
-about what they are used for:
+Note that currently the out of the box installation won't 
+work, because some properties MUST be configured for every 
+individual site.
 </p>
-<code>project.properties</code>
+<p>
+Now you will want to modify some of the default settings to your
+individual settings. For this purpose you must create the file
+</p>
+<code>$SCARAB_ROOT/build.properties</code>
+<p>
+This file does not exist by default and you must create it 
+manually. To make life a bit easier, we have provided a sample
+file, which contains only the most common properties which are very
+likely to be changed by you:
+</p>
+<code>$SCARAB_ROOT/minimal.properties</code>
 <p>
 You can simply copy this file to your build.properties and then apply
 all your modifications to <code>build.properties</code>. 
-Or as an alternative you can copy <code>minimal.properties</code> 
-to your <code>build.properties</code>. 
-<code>minimal.properties</code> only contains the most important
-properties and is your choice if you are a casual administrator, or
-Scarab beginner.
+If you want to have full control over all available properties,
+you can also copy <code>project.properties</code> to your
+<code>build.properties</code> instead of <code>minimal.properties</code>
 </p>
 <p>
 Please note that the properties modified in <code>build.properties</code>
@@ -353,9 +374,9 @@ your appliation server has no effect at all - see the following section
 on runtime properties for more information.
 </p>
 <p>
-For users who have several development projects on their system, or
-even multiple Scarab distributions, the Scarab build-system also 
-reads properties from the following files:
+For advanced users who have several development projects on their 
+system, or even multiple Scarab distributions, the Scarab build-system 
+also reads properties from the following locations:
 </p>
 <code>
     ~/scarab.build.properties<br/>
@@ -397,7 +418,7 @@ choice is to always modify <code>build.properties</code>.
 After deployment there is no further need for modifications and your 
 runtime properties are ready available in the file
 </p>
-<code>&lt;scarab webapp>/WEB-INF/conf/defaultCustom.properties</code>
+<code>$SCARAB_WEBAPP/WEB-INF/conf/defaultCustom.properties</code>
 <p>
 Every time you rebuild Scarab from sratch, your runtime property settings 
 will be regenerated from the settings in <code>build.properties</code>.
@@ -409,11 +430,11 @@ either from you developer team or from the Scarab website (currently
 under preparation), your best choice is probably to create/modify the file
 </p>
 
-<code>&lt;scarab webapp>/WEB-INF/conf/custom.properties</code>
+<code>$SCARAB_WEBAPP/WEB-INF/conf/custom.properties</code>
 
 <p>
 Your best approach in this case would be to copy the file
-<code>&lt;scarab webapp>/WEB-INF/conf/defaultCustom.properties</code> 
+<code>$SCARAB_WEBAPP/WEB-INF/conf/defaultCustom.properties</code> 
 to <code>custom.properties</code> in the same directory and then modify 
 your settings in <code>custom.properties</code>. Note: The file 
 <code>custom.properties</code> exists and is empty by default.
