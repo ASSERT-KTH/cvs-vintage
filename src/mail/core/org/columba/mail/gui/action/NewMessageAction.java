@@ -24,12 +24,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.main.MailInterface;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -57,10 +55,10 @@ public class NewMessageAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-    	DefaultContainer c = new DefaultContainer(new ViewItem(MailInterface.config.get(
-		"composer_options").getElement("/options/gui/view")));
-    	
-    	new ComposerController(c, new ViewItem(MailInterface.config.get(
-		"composer_options").getElement("/options/gui/view")));
+    	try {
+			MainInterface.frameModel.openView("Composer");
+		} catch (PluginLoadingFailedException e) {
+			e.printStackTrace();
+		}
     }
 }

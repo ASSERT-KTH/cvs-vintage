@@ -137,7 +137,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 				.registerTableSelectionListener(tableController
 						.getMarkAsReadTimer());
 
-		getContainer().setContentPane(this);
+		//getContainer().setContentPane(this);
 	}
 
 	public void enableMessagePreview(boolean enable) {
@@ -325,5 +325,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 */
+	public ContentPane getContentPane() {
+		return this;
 	}
 }

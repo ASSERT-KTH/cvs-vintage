@@ -36,112 +36,119 @@ import org.frappucino.swing.DynamicFileFactory;
 
 /**
  * This class shows the attachmentlist
- *
- *
+ * 
+ * 
  * @version 1.0
  * @author Timo Stich
  */
 public class AttachmentController {
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.attachment");
 
-    //private IconPanel attachmentPanel;
-    //private int actIndex;
-    //private Object actUid;
-    //private TempFolder subMessageFolder;
-    //private boolean inline;
-    private ColumbaPopupMenu menu;
+	//private IconPanel attachmentPanel;
+	//private int actIndex;
+	//private Object actUid;
+	//private TempFolder subMessageFolder;
+	//private boolean inline;
+	private ColumbaPopupMenu menu;
 
-    //private AttachmentActionListener actionListener;
-    private AttachmentView view;
-    private AttachmentModel model;
-    private FrameMediator frameController;
+	//private AttachmentActionListener actionListener;
+	private AttachmentView view;
 
-    public AttachmentController(FrameMediator superController) {
-        super();
+	private AttachmentModel model;
 
-        this.frameController = superController;
+	private FrameMediator frameController;
 
-        model = new AttachmentModel();
+	public AttachmentController(FrameMediator superController) {
+		super();
 
-        view = new AttachmentView(model);
-        view.setDragEnabled(true);
-        view.setTransferHandler(new AttachmentTransferHandler(new FileGenerator()));
+		this.frameController = superController;
 
-        frameController.getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
-                view));
+		model = new AttachmentModel();
 
-        getView().setDoubleClickAction(new OpenAction(superController));
+		view = new AttachmentView(model);
+		view.setDragEnabled(true);
+		view.setTransferHandler(new AttachmentTransferHandler(
+				new FileGenerator()));
 
-        MouseListener popupListener = new PopupListener();
-        getView().addMouseListener(popupListener);
-    }
+		frameController.getSelectionManager().addSelectionHandler(
+				new AttachmentSelectionHandler(view));
 
-    public FrameMediator getFrameController() {
-        return frameController;
-    }
+		getView().setDoubleClickAction(new OpenAction(superController));
 
-    public AttachmentView getView() {
-        return view;
-    }
+		MouseListener popupListener = new PopupListener();
+		getView().addMouseListener(popupListener);
+	}
 
-    public AttachmentModel getModel() {
-        return model;
-    }
+	public FrameMediator getFrameController() {
+		return frameController;
+	}
 
-    public boolean setMimePartTree(MimeTree collection) {
-        return getView().setMimePartTree(collection);
-    }
+	public AttachmentView getView() {
+		return view;
+	}
 
-    public void createPopupMenu() {
-        //menu = new AttachmentMenu(getFrameController());
-    	menu = new ColumbaPopupMenu(getFrameController(), "org/columba/mail/action/attachment_contextmenu.xml");
-    }
+	public AttachmentModel getModel() {
+		return model;
+	}
 
-    private JPopupMenu getPopupMenu() {
-    	// bug #999990 (fdietz): make sure popup menu is created correctly
-    	if ( menu == null) createPopupMenu();
-    	
-        return menu;
-    }
+	public boolean setMimePartTree(MimeTree collection) {
+		return getView().setMimePartTree(collection);
+	}
 
-    class PopupListener extends MouseAdapter {
-        public void mousePressed(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	public void createPopupMenu() {
+		//menu = new AttachmentMenu(getFrameController());
+		menu = new ColumbaPopupMenu(getFrameController(),
+				"org/columba/mail/action/attachment_contextmenu.xml");
+	}
 
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	private JPopupMenu getPopupMenu() {
+		// bug #999990 (fdietz): make sure popup menu is created correctly
+		if (menu == null)
+			createPopupMenu();
 
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                /*if (getView().countSelected() <= 1) {
-                    getView().select(e.getPoint(), 0);
-                }*/
+		return menu;
+	}
 
-                if (getView().countSelected() >= 1) {
-                    getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        }
-    }
+	class PopupListener extends MouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			maybeShowPopup(e);
+		}
 
-    private class FileGenerator implements DynamicFileFactory {
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
 
-        /** {@inheritDoc} */
-        public File[] createFiles(JComponent arg0) throws IOException {
-            File[] files = new File[1];
-            SaveAttachmentTemporaryCommand command = new SaveAttachmentTemporaryCommand(
-                    getFrameController().getSelectionManager()
-                    .getHandler("mail.attachment").getSelection());
-            LOG.fine("Waiting for command to complete.");
-            MainInterface.processor.addOp(command);
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				/*
+				 * if (getView().countSelected() <= 1) {
+				 * getView().select(e.getPoint(), 0); }
+				 */
 
-            command.waitForCommandToComplete();
+				if (getView().countSelected() >= 1) {
+					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		}
+	}
 
-            files[0] = command.getTempAttachmentFile();
-            LOG.fine("Temporary attachment created.");
-            return files;
-        }
-    }
+	private class FileGenerator implements DynamicFileFactory {
+
+		/** {@inheritDoc} */
+		public File[] createFiles(JComponent arg0) throws IOException {
+			File[] files = new File[1];
+			SaveAttachmentTemporaryCommand command = new SaveAttachmentTemporaryCommand(
+					getFrameController().getSelectionManager().getHandler(
+							"mail.attachment").getSelection());
+			LOG.fine("Waiting for command to complete.");
+			MainInterface.processor.addOp(command);
+
+			command.waitForCommandToComplete();
+
+			files[0] = command.getTempAttachmentFile();
+			LOG.fine("Temporary attachment created.");
+			return files;
+		}
+	}
 }

@@ -165,4 +165,11 @@ public class MessageFrameController extends AbstractMailFrameController
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 */
+	public ContentPane getContentPane() {
+		return this;
+	}
 }

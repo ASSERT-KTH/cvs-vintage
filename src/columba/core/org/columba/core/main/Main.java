@@ -16,6 +16,8 @@
 
 package org.columba.core.main;
 
+import javax.swing.RepaintManager;
+
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.CommandProcessor;
@@ -24,6 +26,7 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
+import org.columba.core.gui.util.DebugRepaintManager;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
@@ -41,6 +44,7 @@ import org.columba.mail.main.MailMain;
  */
 public class Main {
 	private static boolean showStartUpFrame = true;
+
 	private Main() {
 	}
 
@@ -55,10 +59,10 @@ public class Main {
 
 		// initialize configuration backend
 		String path = cmdLineParser.getPathOption();
-		
+
 		// prompt user for profile
 		Profile profile = ProfileManager.getInstance().getProfile(path);
-		
+
 		// initialize configuration with selected profile
 		MainInterface.config = new Config(profile.getLocation());
 
@@ -68,6 +72,11 @@ public class Main {
 		ColumbaLogger.createDefaultFileHandler();
 
 		SessionController.passToRunningSessionAndExit(args);
+
+		// enable debugging of repaint manager to track down swing gui
+		// access from outside the awt-event dispatcher thread
+		if (MainInterface.DEBUG)
+			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
 		StartUpFrame frame = null;
 		if (showStartUpFrame) {
@@ -128,20 +137,17 @@ public class Main {
 		if (frame != null) {
 			frame.setVisible(false);
 		}
-			
+
 		//new DefaultContainer();
-		
-		
 
 		if (MainInterface.frameModel.getOpenFrames().length == 0) {
 			MainInterface.frameModel.openStoredViews();
 		}
-		
+
 		// initialize native code wrapper
 		MainInterface.nativeWrapper = new NativeWrapperHandler(
 				MainInterface.frameModel.getOpenFrames()[0].getFrameMediator());
-		
-		
+
 	}
 
 	public static void setShowStartUpFrame(boolean show) {

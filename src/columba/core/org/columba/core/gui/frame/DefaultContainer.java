@@ -95,11 +95,13 @@ public class DefaultContainer extends JFrame implements Container,
 
 		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
 
-		if (MainInterface.DEBUG) { 
-			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version +
-					" DEBUG MODE");
-		} else { 
-			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version);
+		if (MainInterface.DEBUG) {
+			setTitle("Columba - version: "
+					+ org.columba.core.main.MainInterface.version
+					+ " DEBUG MODE");
+		} else {
+			setTitle("Columba - version: "
+					+ org.columba.core.main.MainInterface.version);
 		}
 
 		//		register statusbar at global taskmanager
@@ -207,6 +209,10 @@ public class DefaultContainer extends JFrame implements Container,
 		viewItem = m.getViewItem();
 
 		switchedFrameMediator = false;
+
+		// update content-pane
+		setContentPane(m.getContentPane());
+
 	}
 
 	/**
@@ -225,7 +231,7 @@ public class DefaultContainer extends JFrame implements Container,
 		switchedFrameMediator = true;
 
 		// update content-pane
-		setContentPane((ContentPane) m);
+		setContentPane(m.getContentPane());
 
 	}
 
@@ -266,7 +272,12 @@ public class DefaultContainer extends JFrame implements Container,
 				toolbarPane.add(getInfoPanel());
 		}
 
-		validate();
+		//		 awt-event-thread
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				validate();
+			}
+		});
 	}
 
 	/**
@@ -305,7 +316,13 @@ public class DefaultContainer extends JFrame implements Container,
 			setSize(dim);
 			setLocation(p);
 
-			validate();
+			// awt-event-thread
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					validate();
+				}
+			});
+
 		}
 		//}
 
@@ -400,6 +417,8 @@ public class DefaultContainer extends JFrame implements Container,
 	 */
 	public void setContentPane(ContentPane view) {
 
+		LOG.finest("setting content-pane");
+
 		// remove all components from content pane
 		contentPane.removeAll();
 
@@ -414,12 +433,20 @@ public class DefaultContainer extends JFrame implements Container,
 		enableInfoPanel(isInfoPanelEnabled());
 
 		// make window visible
+		LOG.finest("setVisible()");
+
 		setVisible(true);
 
 		if (!switchedFrameMediator) {
 			// load window position
 			loadPositions(getViewItem());
-			validate();
+
+			// awt-event-thread
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					validate();
+				}
+			});
 		}
 
 		switchedFrameMediator = false;
@@ -531,7 +558,12 @@ public class DefaultContainer extends JFrame implements Container,
 				toolbarPane.add(getToolBar());
 			}
 		}
-		validate();
+		//		 awt-event-thread
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				validate();
+			}
+		});
 	}
 
 	/**

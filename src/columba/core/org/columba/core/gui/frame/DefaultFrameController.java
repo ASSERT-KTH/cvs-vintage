@@ -19,6 +19,9 @@ package org.columba.core.gui.frame;
 
 import java.util.logging.Logger;
 
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -146,5 +149,26 @@ public class DefaultFrameController implements FrameMediator {
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return GlobalResourceLoader.getString(sPath, sName, sID);
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 */
+	public ContentPane getContentPane() {
+		return new EmptyContentPane();
+	}
+
+	class EmptyContentPane implements ContentPane {
+		public EmptyContentPane() {
+			super();
+		}
+
+		/**
+		 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+		 */
+		public JComponent getComponent() {
+			return new JPanel();
+		}
+
 	}
 }

@@ -295,14 +295,23 @@ public class FrameModel {
 			// found cached instance
 			// -> re-use this instance and remove it from cache
 			frame = (FrameMediator) frameMediatorCache.remove(id);
+
+			
+			
 		} else {
 			LOG.fine("create new instance " + id);
 			Object[] args = { c, viewItem };
-			// create new instance
-			// -> get frame controller using the plugin handler found above
-			frame = (FrameMediator) handler.getPlugin(id, args);
+			try {
+				// create new instance
+				// -> get frame controller using the plugin handler found above
+				frame = (FrameMediator) handler.getPlugin(id, args);
+			} catch (PluginLoadingFailedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
-
+		
 		c.setFrameMediator(frame);
 
 		activeFrameCtrls.add(c);

@@ -78,4 +78,6 @@ public interface FrameMediator {
 	public void setContainer(Container c);
 
 	String getString(String sPath, String sName, String sID);
+	
+	public ContentPane getContentPane();
 }

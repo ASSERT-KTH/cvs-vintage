@@ -21,7 +21,6 @@ package org.columba.addressbook.gui.frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -71,7 +70,7 @@ public class AddressbookFrameController extends DefaultFrameController
 		// table should be updated when tree selection changes
 		tree.getView().addTreeSelectionListener(table);
 
-		getContainer().setContentPane(this);
+		//getContainer().setContentPane(this);
 	}
 
 	/**
@@ -145,5 +144,12 @@ public class AddressbookFrameController extends DefaultFrameController
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return AddressbookResourceLoader.getString(sPath, sName, sID);
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 */
+	public ContentPane getContentPane() {
+		return this;
 	}
 }

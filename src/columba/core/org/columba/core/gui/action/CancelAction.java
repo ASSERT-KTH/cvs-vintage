@@ -62,7 +62,12 @@ public class CancelAction extends AbstractColumbaAction
     }
 
     public void workerAdded(TaskManagerEvent e) {
-        setEnabled(taskManager.count() > 0);
+    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				setEnabled(taskManager.count() > 0);
+			}
+		});
+        
     }
     
     public void workerRemoved(TaskManagerEvent e) {

@@ -236,7 +236,7 @@ public class ComposerController extends DefaultFrameController implements
 		getContainer().getFrame().setFocusTraversalPolicy(
 				new ComposerFocusTraversalPolicy());
 
-		getContainer().setContentPane(this);
+		//getContainer().setContentPane(this);
 
 		//		 To: editor should request focus
 		headerController.getView().getToComboBox().requestFocusInWindow();
@@ -911,5 +911,12 @@ public class ComposerController extends DefaultFrameController implements
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
+	 */
+	public ContentPane getContentPane() {
+		return this;
 	}
 }
