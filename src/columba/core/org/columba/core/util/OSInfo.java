@@ -25,8 +25,8 @@
 package org.columba.core.util;
 
 public class OSInfo {
-
-	private static final String UNKNOWN = new String();
+        
+        private static final String OS_NAME = "os.name";
 
 	//Public methods
 	//Platform identifiers: Windows, Linux, Mac OS, ...
@@ -44,43 +44,35 @@ public class OSInfo {
 	
 	//Single OS identifiers: Window 95, Window 98, ...
 	public static boolean isWin95() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows 95"));
+		return "Windows 95".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWin98() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows 98"));
+		return "Windows 98".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWinME() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows ME"));
+		return "Windows ME".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWinNT() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows NT"));
+		return "Windows NT".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWin2K() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows 2000"));
+		return "Windows 2000".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWinXP() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Windows XP")); //Not tested.
+		return "Windows XP".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 
 	public static boolean isLinux() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Linux"));
+		return "Linux".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isSolaris() {
-		String sOSName = System.getProperty("os.name", UNKNOWN);
-		return (sOSName.equalsIgnoreCase("Solaris"));
+		return "Solaris".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 
 	//User home
