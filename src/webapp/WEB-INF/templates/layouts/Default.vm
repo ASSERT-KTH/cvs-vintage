@@ -177,7 +177,8 @@ function initializeAll() {
         <td>$scarabG.SiteName</td>
         <td>
           #if($scarabG.SiteLogo)
-            <img src="$staticLink.setPath("$scarabG.SiteLogo")"
+            <img hspace="10"
+                 src="$staticLink.setPath("$scarabG.SiteLogo")"
                  border="0"/>
           #end
         </td>
