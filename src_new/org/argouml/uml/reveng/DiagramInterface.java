@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.10 2003/01/27 04:51:31 thn Exp $
+// $Id: DiagramInterface.java,v 1.11 2003/02/03 19:02:36 thn Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.ModelFacade;
 
 /**
  * Instances of this class interface the current diagram.
@@ -172,7 +172,7 @@ public class DiagramInterface {
      * @return The name for the diagram.
      */
     private String getDiagramName(Object p) {
-	return getDiagramName(ModelManagementHelper.getHelper().getNamespaceName(p));
+	return getDiagramName(ModelFacade.getName(p));
     }
 
     /**

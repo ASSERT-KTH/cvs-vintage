@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ClassifierContext.java,v 1.5 2003/01/27 04:51:31 thn Exp $
+// $Id: ClassifierContext.java,v 1.6 2003/02/03 19:02:35 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -30,8 +30,7 @@
 
 package org.argouml.uml.reveng.java;
 
-import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.ModelFacade;
 
 /**
    This context is a specific classifier.
@@ -57,8 +56,7 @@ class ClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Check if it is this interface
-	if(name.equals(CoreHelper.getHelper().getClassifierName(mClassifier)) &&
-	   CoreHelper.getHelper().isInterface(mClassifier)) {
+	if(name.equals(ModelFacade.getName(mClassifier)) && ModelFacade.isAInterface(mClassifier)) {
 	    return mClassifier;
 	}
 	else {
@@ -82,7 +80,7 @@ class ClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Check if it is this classifier
-	if(classifierName.equals(CoreHelper.getHelper().getClassifierName(mClassifier))) {
+	if(classifierName.equals(ModelFacade.getName(mClassifier))) {
 	    return mClassifier;
 	}
 	else {

@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.7 2003/01/27 04:51:31 thn Exp $
+// $Id: ParseState.java,v 1.8 2003/02/03 19:02:35 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -24,8 +24,9 @@
 package org.argouml.uml.reveng.java;
 
 import java.util.*;
+
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
 
 /**
    The parse state keep control of data during parsing.
@@ -80,9 +81,9 @@ class ParseState
                       Object currentPackage)
     {
 	classnamePrefix =
-	    previousState.classnamePrefix + CoreHelper.getHelper().getClassifierName(mClassifier) + "$";
-	obsoleteFeatures = new Vector(CoreHelper.getHelper().getFeatures(mClassifier));
-	obsoleteInnerClasses = new Vector(CoreHelper.getHelper().getOwnedElements(mClassifier));
+	    previousState.classnamePrefix + ModelFacade.getName(mClassifier) + "$";
+	obsoleteFeatures = new Vector(ModelFacade.getFeatures(mClassifier));
+	obsoleteInnerClasses = new Vector(ModelFacade.getOwnedElements(mClassifier));
 	context = new OuterClassifierContext(previousState.context,
 						     mClassifier,
 						     currentPackage,
@@ -181,7 +182,7 @@ class ParseState
     public void removeObsoleteFeatures()
     {
 	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
-	    CoreHelper.getHelper().removeFeature(classifier,i.next());
+	    ModelFacade.removeFeature(classifier,i.next());
 	}
     }
 
@@ -193,7 +194,7 @@ class ParseState
     {
 	for(Iterator i = obsoleteInnerClasses.iterator(); i.hasNext(); ) {
 	    Object element = i.next();
-	    if(CoreHelper.getHelper().isClassifier(element)) {
+	    if(ModelFacade.isAClassifier(element)) {
                 CoreFactory.getFactory().deleteClassifier(element);
 	    }
 	}
@@ -220,7 +221,7 @@ class ParseState
     {
 	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
 	    Object mFeature = i.next();
-	    if(name.equals(CoreHelper.getHelper().getFeatureName(mFeature))) {
+	    if(name.equals(ModelFacade.getName(mFeature))) {
 		return mFeature;
 	    }
 	}
@@ -237,8 +238,7 @@ class ParseState
     {
 	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
 	    Object mFeature = i.next();
-	    if(CoreHelper.getHelper().isMethod(mFeature) &&
-	       name.equals(CoreHelper.getHelper().getFeatureName(mFeature))) {
+	    if(ModelFacade.isAMethod(mFeature) && name.equals(ModelFacade.getName(mFeature))) {
 		return mFeature;
 	    }
 	}
@@ -255,8 +255,7 @@ class ParseState
     {
 	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
 	    Object mFeature = i.next();
-	    if(CoreHelper.getHelper().isOperation(mFeature) &&
-	       name.equals(CoreHelper.getHelper().getFeatureName(mFeature))) {
+	    if(ModelFacade.isAOperation(mFeature) && name.equals(ModelFacade.getName(mFeature))) {
 		return mFeature;
 	    }
 	}

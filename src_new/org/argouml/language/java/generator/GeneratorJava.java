@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.55 2003/02/01 21:53:34 kataka Exp $
+// $Id: GeneratorJava.java,v 1.56 2003/02/03 19:02:36 thn Exp $
 
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
@@ -50,6 +50,7 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.PluggableNotation;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
@@ -818,7 +819,7 @@ implements PluggableNotation, FileGenerator {
             String tv = null; // helper for tagged values
 
             // add attributes
-            Collection strs = UmlHelper.getHelper().getCore().getStructuralFeatures(cls);
+            Collection strs = ModelFacade.getStructuralFeatures(cls);
             //
             // 2002-06-08
             // Jaap Branderhorst
@@ -884,7 +885,7 @@ implements PluggableNotation, FileGenerator {
 
             // add operations
             // TODO: constructors
-            Collection behs = UmlHelper.getHelper().getCore().getOperations(cls);
+            Collection behs = ModelFacade.getOperations(cls);
             //
             // 2002-06-08
             // Jaap Branderhorst
