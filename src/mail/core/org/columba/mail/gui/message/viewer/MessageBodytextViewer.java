@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Observable;
 import java.util.Observer;
@@ -243,6 +244,9 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				try {
 					charset = Charset.forName(charsetName);
 				} catch (UnsupportedCharsetException e) {
+					charsetName = System.getProperty("file.encoding");
+					charset = Charset.forName(charsetName);
+				} catch (IllegalCharsetNameException e) {
 					charsetName = System.getProperty("file.encoding");
 					charset = Charset.forName(charsetName);
 				}
