@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -84,7 +84,7 @@ public class JDBCDataSource
       try {
          // Check if the JDBC Manager exists and if not create one
          Set lNames = pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JDBC,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JDBCResource,*" ),
              null
          );
          if( lNames.isEmpty() ) {
