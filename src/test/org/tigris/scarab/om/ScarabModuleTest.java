@@ -46,10 +46,14 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.entity.User;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.test.BaseTestCase;
@@ -58,7 +62,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.20 2004/02/01 14:08:38 dep4b Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.21 2004/02/03 11:04:01 dep4b Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -66,24 +70,28 @@ public class ScarabModuleTest extends BaseTestCase
     public void setUp() throws Exception{
         super.setUp();
         newModule = (ScarabModule)ModuleManager.getInstance();
-        newModule.setRealName("New Module");
+        Date d = new Date();
+        newModule.setRealName("Test Module " + d.getTime());
         newModule.setOwnerId(new Integer(1));
         newModule.setParentId(new Integer(1));
         newModule.setDescription("This is the new module description");
+        
+     
         newModule.save();
         
     }
     
     public void tearDown() throws Exception{
-        
-        ScarabModulePeer.doDelete(newModule);
+        // SHOULD BE DELETING THE MODULE WE JUST CREATED!
+        //ScarabModulePeer.doDelete(newModule);
+        //assertFalse(ScarabModulePeer.getAllModules().contains(newModule));
         super.tearDown();
     }
 
 
     public void testGetParents() throws Exception
     {
-        Module module = (Module) ModuleManager
+        Module module = ModuleManager
             .getInstance(new NumberKey(7), false);
         List parents = module.getAncestors();
         Iterator itr = parents.iterator();
@@ -146,7 +154,6 @@ public class ScarabModuleTest extends BaseTestCase
         {
             attr = ((AttributeValue)attrMap.get(iter.next()))
                              .getAttribute();
-            List attrOptions = attr.getAttributeOptions();
             if (attr.isOptionAttribute())
             {
                 int expectedSize = 0;
@@ -161,6 +168,7 @@ public class ScarabModuleTest extends BaseTestCase
                     case 9: expectedSize = 10;break;
                     case 12: expectedSize = 3;break;
                 }
+                assertTrue(expectedSize >0);
             }
         }
     }
