@@ -22,14 +22,14 @@ import javax.naming.RefAddr;
 import javax.naming.spi.ObjectFactory;
 
 import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 
 /**
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -60,11 +60,11 @@ abstract class AbstractTxInterceptorBMT
 
    // Interceptor implementation --------------------------------------
 
-   public void init()
+   public void create()
       throws Exception
    {
       // Do initialization in superclass.
-      super.init();
+      super.create();
 
       // bind java:comp/UserTransaction
       RefAddr refAddr = new RefAddr("userTransaction") {
@@ -105,9 +105,9 @@ abstract class AbstractTxInterceptorBMT
     *                          of a method in the remote interface, otherwise
     *                          it is an invocation of a method in the home
     *                          interface.
-    *  @param mi The <code>MethodInvocation</code> of this call.
+    *  @param mi The <code>Invocation</code> of this call.
     */
-   protected Object invokeNext(boolean remoteInvocation, MethodInvocation mi)
+   protected Object invokeNext(boolean remoteInvocation, Invocation mi)
       throws Exception
    {
       // Save the transaction that comes with the MI
@@ -122,7 +122,7 @@ abstract class AbstractTxInterceptorBMT
       Transaction threadTx = tm.suspend();
 
       try {
-         EnterpriseContext ctx = mi.getEnterpriseContext();
+         EnterpriseContext ctx = ((EnterpriseContext) mi.getEnterpriseContext());
 
          // Set the threadlocal to the userTransaction of the instance
          userTransaction.set(ctx.getEJBContext().getUserTransaction());

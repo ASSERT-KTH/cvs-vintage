@@ -18,14 +18,14 @@ import javax.transaction.SystemException;
 import javax.ejb.NoSuchEntityException;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 
 /**
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -62,7 +62,7 @@ abstract class AbstractTxInterceptor
 
     // Interceptor implementation --------------------------------------
 
-    public void init()
+    public void create()
         throws Exception
     {
         tm = (TransactionManager) getContainer().getTransactionManager();
@@ -83,11 +83,11 @@ abstract class AbstractTxInterceptor
      *                          of a method in the remote interface, otherwise
      *                          it is an invocation of a method in the home
      *                          interface.
-     *  @param mi The <code>MethodInvocation</code> of this call.
+     *  @param mi The <code>Invocation</code> of this call.
      *  @param newTx If <code>true</code> the transaction has just been
      *               started in this interceptor.
      */
-    protected Object invokeNext(boolean remoteInvocation, MethodInvocation mi,
+    protected Object invokeNext(boolean remoteInvocation, Invocation mi,
                                 boolean newTx)
         throws Exception
     {
