@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.9 $
+ *      @version $Revision: 1.10 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -37,6 +37,7 @@ public class HomeProxy
    static Method getHomeHandle;
    static Method removeByHandle;
    static Method removeByPrimaryKey;
+   static Method removeObject;
    static Method toStr;
    static Method eq;
    static Method hash;
@@ -50,6 +51,8 @@ public class HomeProxy
          getHomeHandle = EJBHome.class.getMethod("getHomeHandle", new Class[0]);
          removeByHandle = EJBHome.class.getMethod("remove", new Class[] {Handle.class});
 		 removeByPrimaryKey = EJBHome.class.getMethod("remove", new Class[] {Object.class});
+		 // Get the "remove" method from the EJBObject
+		 removeObject = EJBObject.class.getMethod("remove", new Class[] {Object.class});
 		 
 		 // Object methods
 	     toStr = Object.class.getMethod("toString", new Class[0]);
@@ -124,25 +127,48 @@ public class HomeProxy
 		  return Void.TYPE;
 	  }
 	  
-	  // MF FIXME I suspect we can have a much more efficient call on the server
+	  // The trick is simple we trick the container in believe it is a remove() on the instance
 	  else if (m.equals(removeByPrimaryKey))
       {
-		  throw new Exception("NYI");
-		  /*
-		  try {
-		  
-		  // Get the metadata
-		  EJBMetaData metaData = invoke(proxy, getEJBMetaData, new Object[0]);
-		  
-		  // Retrieve the find by primary key method
-		  Method findByPrimaryKey = (metaData.getHomeInterfaceClass().getMethod(findByPrimaryKey, new Class[] {Object.class});
-		  
-		  // Find the Object we are talking about
-		  EJBObject object = invoke(proxy, findByPrimaryKey, args);
-		  
-		  // Remove it from here
-		  return object.remove();
-		  */
+		  if (optimize && isLocal())
+	      {
+	         return container.invoke(
+			 						// The first argument is the id
+									args[0], 
+									// Pass the "removeMethod"
+									removeObject, 
+									// this is a remove() on the object
+									new Object[0],
+									// Tx stuff
+									tm != null ? tm.getTransaction() : null,
+									// Security attributes
+									getPrincipal(), getCredential());
+	      } else
+	      {
+
+			// Build a method invocation that carries the identity of the target object
+		  	RemoteMethodInvocation rmi = new RemoteMethodInvocation(
+		  														// The first argument is the id
+																args[0], 
+																// Pass the "removeMethod"
+																removeObject, 
+																// this is a remove() on the object
+																new Object[0]);
+
+			 // Set the transaction context
+			 rmi.setTransaction(tm != null? tm.getTransaction() : null);
+           	 
+			 // Set the security stuff
+			 // MF fixme this will need to use "thread local" and therefore same construct as above
+			 // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+           	 // rmi.setCredential(sm != null? sm.getCredential() : null);
+           	 // is the credential thread local? (don't think so... but...)
+			 rmi.setPrincipal( getPrincipal() );
+           	 rmi.setCredential( getCredential() );
+			 
+			 // Invoke on the remote server, enforce marshalling
+	         return container.invokeHome(new MarshalledObject(rmi));
+	      }
       }
       
 	  // If not taken care of, go on and call the container
