@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.proxy.compiler;
 
 import java.lang.reflect.*;
@@ -13,8 +14,10 @@ import java.io.*;
 /**
  * A simple bytecode assembler.
  *
+ * @deprecated Use {@link ProxyCompiler} or Jakarta BCEL instead.
+ *
  * @author Unknown
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ProxyAssembler
 {
