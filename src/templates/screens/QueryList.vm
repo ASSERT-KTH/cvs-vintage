@@ -1,25 +1,15 @@
-$page.setTitle("Stored query list")
+$page.setTitle("Staved query list")
 
 <div class="app" id="querylist">
 
 <h2>$page.Title</h2>
+
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-<div class="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-<tr>
-    #set ($quote = '"')
-	<td>$link.setPage("AdvancedQuery.vm").setAttributeText("title=${quote}view advanced query${quote}").setLabel("Advanced query")</td>
-	<td>$link.setPage("Search.vm").setAttributeText("title=${quote}view custom search${quote}").setLabel("Custom")</td>
-	<th>Saved queries</th>
-</tr>
-</table>
-</div>
-
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
-<h3>Saved queries</h3>
+ <h3>Saved queries</h3>
  <p><strong class="alert">There are no stored queries.
  Please go to $link.setPage("AdvancedQuery.vm").setLabel("Advanced query")
  to create a new stored query.</strong></p>
@@ -43,8 +33,8 @@ $page.setTitle("Stored query list")
   <th>Location</th>
   <th>Initiated by</th>
   <th>Default</th>
-  <th>Subscr</th>
-  <th>Subscr frequency</th>
+  <th>Subscribe</th>
+  <th>Subscribe frequency</th>
  </tr>
  
  #foreach ($query in $module.getAllUserQueries($user, $issueType))
@@ -73,7 +63,7 @@ $page.setTitle("Stored query list")
  #end
 </table>
 
-<div class="functnbar3">		
+<div class="functnbar3">        
 <input type="submit" value="save" name="eventSubmit_doSave" />
 <input type="submit" value="copy" name="eventSubmit_doCopyquery" />
   #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
@@ -86,7 +76,7 @@ $page.setTitle("Stored query list")
 
 #end
 
-<div class="functnbar2">		
+<div class="functnbar2">        
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
