@@ -25,22 +25,22 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public class BodyFilter extends AbstractFilter {
+    
+    private String pattern;
+    private String criteria;
+    
     /**
      * Constructor for BodyFilter.
      */
-    public BodyFilter(FilterCriteria filter) {
-        super(filter);
+    public BodyFilter() {
+        super();
     }
 
     /**
      * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
      */
     public boolean process(Folder folder, Object uid) throws Exception {
-        // contains/contains not
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
+        
 
         // get message body
         String body = folder.getMessageSource(uid);
@@ -72,4 +72,16 @@ public class BodyFilter extends AbstractFilter {
 
         return result;
     }
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        // contains/contains not
+        criteria = f.get("criteria");
+
+        // string to search
+        pattern = f.get("pattern");
+
+    }
+
 }

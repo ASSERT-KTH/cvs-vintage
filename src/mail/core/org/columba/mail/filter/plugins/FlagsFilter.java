@@ -31,11 +31,14 @@ import org.columba.ristretto.message.Flags;
  * @author fdietz
  */
 public class FlagsFilter extends AbstractFilter {
+    private String criteria;
+    private String pattern;
+
     /**
      * Constructor for FlagsFilter.
      */
-    public FlagsFilter(FilterCriteria filter) {
-        super(filter);
+    public FlagsFilter() {
+        super();
     }
 
     /**
@@ -46,11 +49,6 @@ public class FlagsFilter extends AbstractFilter {
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        //  is/is not
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
         String headerField = pattern;
         int condition = FilterCriteria.getCriteria(criteria);
 
@@ -79,5 +77,16 @@ public class FlagsFilter extends AbstractFilter {
         } else {
             return !result;
         }
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        //  is/is not
+        criteria = f.get("criteria");
+
+        // string to search
+        pattern = f.get("pattern");
     }
 }

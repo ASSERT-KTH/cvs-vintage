@@ -32,11 +32,14 @@ import java.util.Date;
  * @author fdietz
  */
 public class DateFilter extends AbstractFilter {
+    private String criteria;
+    private String pattern;
+
     /**
      * Constructor for DateFilter.
      */
-    public DateFilter(FilterCriteria filter) {
-        super(filter);
+    public DateFilter() {
+        super();
     }
 
     protected Date transformDate(String pattern) {
@@ -61,12 +64,6 @@ public class DateFilter extends AbstractFilter {
      *      org.columba.core.command.WorkerStatusController)
      */
     public boolean process(Folder folder, Object uid) throws Exception {
-        // before/after
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
-
         // convert criteria into int-value
         int condition = FilterCriteria.getCriteria(criteria);
 
@@ -103,5 +100,16 @@ public class DateFilter extends AbstractFilter {
         }
 
         return result;
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        // before/after
+        criteria = f.get("criteria");
+
+        // string to search
+        pattern = f.get("pattern");
     }
 }

@@ -27,22 +27,25 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public class SizeFilter extends AbstractFilter {
+    private String criteria;
+    private String pattern;
+
     /**
      * Constructor for SizeFilter.
      */
-    public SizeFilter(FilterCriteria filter) {
-        super(filter);
+    public SizeFilter() {
+        super();
     }
 
     /**
      * Transform string to integer representation
      *
-     * @param pattern       string containing priority
+     * @param p             string containing priority
      *
      * @return              integer representation of string
      */
-    protected Integer transformSize(String pattern) {
-        Integer searchPattern = Integer.valueOf(pattern);
+    protected Integer transformSize(String p) {
+        Integer searchPattern = Integer.valueOf(p);
 
         return searchPattern;
     }
@@ -54,12 +57,6 @@ public class SizeFilter extends AbstractFilter {
      */
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
-
-        //      is/is not
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
 
         int condition = FilterCriteria.getCriteria(criteria);
         Integer size = transformSize((String) pattern);
@@ -89,5 +86,16 @@ public class SizeFilter extends AbstractFilter {
         }
 
         return result;
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        //      is/is not
+        criteria = f.get("criteria");
+
+        // string to search
+        pattern = f.get("pattern");
     }
 }

@@ -18,37 +18,50 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
+
 /**
  * Filter for account's uid.
  *
  * @author redsolo
  */
 public class AccountFilter extends AbstractFilter {
+    int criteriaCondition;
+    int criteriaAccountUid;
+
     /**
      * @param f the filter criteria
      */
-    public AccountFilter(FilterCriteria f) {
-        super(f);
+    public AccountFilter() {
+        super();
     }
 
     /** {@inheritDoc} */
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        int criteriaCondition = FilterCriteria.getCriteria(getFilterCriteria().getCriteriaString());
-        int criteriaAccountUid = getFilterCriteria().getInteger("account.uid", -1);
-        Integer messageAccountUid = (Integer) folder.getAttribute(uid, "columba.accountuid");
+        Integer messageAccountUid = (Integer) folder.getAttribute(uid,
+                "columba.accountuid");
 
         if ((messageAccountUid != null) && (criteriaAccountUid != -1)) {
             int id = messageAccountUid.intValue();
-            if ((criteriaCondition == FilterCriteria.IS) && (criteriaAccountUid == id)) {
+
+            if ((criteriaCondition == FilterCriteria.IS) &&
+                    (criteriaAccountUid == id)) {
                 result = true;
-            } else
-            if ((criteriaCondition == FilterCriteria.IS_NOT) && (criteriaAccountUid != id)) {
+            } else if ((criteriaCondition == FilterCriteria.IS_NOT) &&
+                    (criteriaAccountUid != id)) {
                 result = true;
             }
         }
 
         return result;
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());
+        criteriaAccountUid = f.getInteger("account.uid", -1);
     }
 }

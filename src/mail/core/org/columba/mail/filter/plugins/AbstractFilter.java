@@ -31,21 +31,24 @@ import org.columba.mail.folder.Folder;
  */
 public abstract class AbstractFilter implements PluginInterface {
 
-    /**
-     * filter containing the configuration
-     */
-    private FilterCriteria filterCriteria;
+   
     
     
     /**
      * Constructor for AbstractFilter
+  
+     */
+    public AbstractFilter() {
+        
+    }
+
+
+    /**
      * 
      * @param f    filter containing the configuration
      */
-    public AbstractFilter(FilterCriteria f) {
-        this.filterCriteria = f;
-    }
-
+    public abstract void setUp(FilterCriteria f);
+    
     /**
       *
       * Execute the plugin
@@ -62,13 +65,6 @@ public abstract class AbstractFilter implements PluginInterface {
     public abstract boolean process(Folder folder, Object uid)
         throws Exception;
         
-    /**
-     * Get filter criteria containing this filters configuration.
-     * 
-     * @return      filter criteria
-     */
-    public FilterCriteria getFilterCriteria() {
-        return filterCriteria;
-    }
+    
 
 }

@@ -15,50 +15,57 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import java.awt.Color;
-
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+
+import java.awt.Color;
+
 
 /**
  * Filter for filtering on a message color.
  * @author redsolo
  */
 public class ColorFilter extends AbstractFilter {
-
     private int defaultColorRGB;
+    private int criteriaRGB;
+    private int criteriaCondition;
 
     /**
      * @param f filter containing the configuration.
      */
-    public ColorFilter(FilterCriteria f) {
-        super(f);
+    public ColorFilter() {
+        super();
 
         defaultColorRGB = Color.black.getRGB();
     }
 
     /** {@inheritDoc} */
     public boolean process(Folder folder, Object uid) throws Exception {
-
-        int criteriaRGB = getFilterCriteria().getInteger("rgb");
-        int criteriaCondition = FilterCriteria.getCriteria(getFilterCriteria().getCriteriaString());
-
         int messageRGB = defaultColorRGB;
         Color messageColor = (Color) folder.getAttribute(uid, "columba.color");
+
         if (messageColor != null) {
             messageRGB = messageColor.getRGB();
         }
 
         boolean result = false;
 
-        if ((criteriaCondition == FilterCriteria.IS) && (messageRGB == criteriaRGB)) {
+        if ((criteriaCondition == FilterCriteria.IS) &&
+                (messageRGB == criteriaRGB)) {
             result = true;
-        } else
-        if ((criteriaCondition == FilterCriteria.IS_NOT) && (messageRGB != criteriaRGB)) {
+        } else if ((criteriaCondition == FilterCriteria.IS_NOT) &&
+                (messageRGB != criteriaRGB)) {
             result = true;
         }
 
         return result;
     }
 
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        criteriaRGB = f.getInteger("rgb");
+        criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());
+    }
 }

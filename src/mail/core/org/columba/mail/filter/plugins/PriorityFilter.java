@@ -29,11 +29,14 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public class PriorityFilter extends AbstractFilter {
+    private String criteria;
+    private String searchPattern;
+
     /**
      * Constructor for PriorityFilter.
      */
-    public PriorityFilter(FilterCriteria filter) {
-        super(filter);
+    public PriorityFilter() {
+        super();
     }
 
     /**
@@ -43,23 +46,23 @@ public class PriorityFilter extends AbstractFilter {
      * @return              integer representation of string
      */
     protected Integer transformPriority(String pattern) {
-        Integer searchPattern = new Integer(3);
+        Integer searchPatternInt = new Integer(3);
 
         if (pattern.equalsIgnoreCase("Highest")) {
-            searchPattern = new Integer(1);
+            searchPatternInt = new Integer(1);
         } else if (pattern.equalsIgnoreCase("High")) {
-            searchPattern = new Integer(2);
+            searchPatternInt = new Integer(2);
         } else if (pattern.equalsIgnoreCase("Normal")) {
-            searchPattern = new Integer(3);
+            searchPatternInt = new Integer(3);
         } else if (pattern.equalsIgnoreCase("Low")) {
-            searchPattern = new Integer(4);
+            searchPatternInt = new Integer(4);
         } else if (pattern.equalsIgnoreCase("Lowest")) {
-            searchPattern = new Integer(5);
+            searchPatternInt = new Integer(5);
         }
 
         //Integer priority = Integer.valueOf(pattern);
         //return priority;
-        return searchPattern;
+        return searchPatternInt;
     }
 
     /**
@@ -70,14 +73,9 @@ public class PriorityFilter extends AbstractFilter {
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        // is/is not
-        String criteria = getFilterCriteria().get("criteria");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
         int condition = FilterCriteria.getCriteria(criteria);
-        String s = (String) pattern;
-        Integer searchPattern = transformPriority(s);
+        String s = (String) searchPattern;
+        Integer searchPatternInt = transformPriority(s);
 
         Integer priority = (Integer) folder.getAttribute(uid, "columba.priority");
 
@@ -88,7 +86,7 @@ public class PriorityFilter extends AbstractFilter {
         switch (condition) {
         case FilterCriteria.IS:
 
-            if (priority.compareTo(searchPattern) == 0) {
+            if (priority.compareTo(searchPatternInt) == 0) {
                 result = true;
             }
 
@@ -96,7 +94,7 @@ public class PriorityFilter extends AbstractFilter {
 
         case FilterCriteria.IS_NOT:
 
-            if (priority.compareTo(searchPattern) != 0) {
+            if (priority.compareTo(searchPatternInt) != 0) {
                 result = true;
             }
 
@@ -104,5 +102,17 @@ public class PriorityFilter extends AbstractFilter {
         }
 
         return result;
+    }
+
+    /**
+     *
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        // is/is not
+        criteria = f.get("criteria");
+
+        // string to search
+        searchPattern = f.get("pattern");
     }
 }

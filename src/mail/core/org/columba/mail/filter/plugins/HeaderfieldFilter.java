@@ -33,13 +33,22 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  */
 public class HeaderfieldFilter extends AbstractFilter {
+    //  contains/contains not
+    private String criteria;
+
+    // get headerfield to search in (for example: Subject)
+    private String headerfield;
+
+    // string to search
+    private String pattern;
+
     /**
      * Constructor for HeaderfieldFilter.
      *
      * @param filter
      */
-    public HeaderfieldFilter(FilterCriteria filter) {
-        super(filter);
+    public HeaderfieldFilter() {
+        super();
     }
 
     /**
@@ -51,15 +60,6 @@ public class HeaderfieldFilter extends AbstractFilter {
      *      java.lang.Object, org.columba.mail.filter.Filter)
      */
     public boolean process(Folder folder, Object uid) throws Exception {
-        // contains/contains not
-        String criteria = getFilterCriteria().get("criteria");
-
-        // get headerfield to search in (for example: Subject)
-        String headerfield = getFilterCriteria().get("headerfield");
-
-        // string to search
-        String pattern = getFilterCriteria().get("pattern");
-
         // get message header
         Header header = folder.getHeaderFields(uid, new String[] { headerfield });
 
@@ -151,5 +151,19 @@ public class HeaderfieldFilter extends AbstractFilter {
         }
 
         return result;
+    }
+
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
+    public void setUp(FilterCriteria f) {
+        // contains/contains not
+        criteria = f.get("criteria");
+
+        // get headerfield to search in (for example: Subject)
+        headerfield = f.get("headerfield");
+
+        // string to search
+        pattern = f.get("pattern");
     }
 }
