@@ -101,11 +101,15 @@ public class SaveAttachmentCommand extends FolderCommand {
                         }
                         tempFile = fileChooser.getSelectedFile();
                         lastDir = tempFile.getParentFile();
-                        if (tempFile.exists() && JOptionPane.showConfirmDialog(
+                        if (tempFile.exists()) {
+                                if (JOptionPane.showConfirmDialog(
                                 null, "Overwrite File?", "Warning",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                                    break;
+                                        break;
+                                }
+                        } else {
+                                break;
                         }
 		}
 
