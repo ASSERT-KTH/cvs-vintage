@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.7 2003/08/30 13:56:55 alexb Exp $
+// $Id: DataTypesHelper.java,v 1.8 2003/09/17 21:18:53 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ public class DataTypesHelper {
 
     
     /** Singleton instance access method.
+     * @return the singleton instance.
      */
     public static DataTypesHelper getHelper() {
         return SINGLETON;
@@ -66,9 +67,9 @@ public class DataTypesHelper {
 	}
     }
     
-    public boolean equalsINITIALKind(Object kind){
+    public boolean equalsINITIALKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         
@@ -78,9 +79,9 @@ public class DataTypesHelper {
             return false;
     }
     
-    public boolean equalsDEEP_HISTORYKind(Object kind){
+    public boolean equalsDEEP_HISTORYKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         
@@ -90,9 +91,9 @@ public class DataTypesHelper {
             return false;
     }
     
-    public boolean equalsSHALLOW_HISTORYKind(Object kind){
+    public boolean equalsSHALLOW_HISTORYKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         
@@ -102,9 +103,9 @@ public class DataTypesHelper {
             return false;
     }
     
-    public boolean equalsFORKKind(Object kind){
+    public boolean equalsFORKKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         
@@ -114,9 +115,9 @@ public class DataTypesHelper {
             return false;
     }
     
-    public boolean equalsJOINKind(Object kind){
+    public boolean equalsJOINKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         
@@ -126,9 +127,9 @@ public class DataTypesHelper {
             return false;
     }
     
-    public boolean equalsBRANCHKind(Object kind){
+    public boolean equalsBRANCHKind(Object kind) {
         
-        if(!(kind instanceof MPseudostateKind)){
+        if (!(kind instanceof MPseudostateKind)) {
             throw new IllegalArgumentException();
         }
         

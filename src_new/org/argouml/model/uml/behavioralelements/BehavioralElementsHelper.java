@@ -1,4 +1,4 @@
-// $Id: BehavioralElementsHelper.java,v 1.5 2003/06/29 23:46:41 linus Exp $
+// $Id: BehavioralElementsHelper.java,v 1.6 2003/09/17 21:18:27 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ public class BehavioralElementsHelper {
 
     
     /** Singleton instance access method.
+     * @return the singleton instance of the helper
      */
     public static BehavioralElementsHelper getHelper() {
         return SINGLETON;
