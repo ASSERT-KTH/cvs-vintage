@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.13 2005/01/06 23:04:47 linus Exp $
+// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.14 2005/01/08 00:39:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
         model.targetSet(new TargetEvent(this, "set", new Object[0],
                                         new Object[] {elem}));
         types = new Object[10];
-        MModel m = Model.getModelManagementFactory().createModel();
+        Object m = Model.getModelManagementFactory().createModel();
 	ProjectManager.getManager().getCurrentProject().setRoot(m);
         for (int i = 0; i < 10; i++) {
             types[i] = Model.getCoreFactory().createClassifier();

@@ -1,4 +1,4 @@
-// $Id: GUITestCopyHelper.java,v 1.8 2005/01/07 09:11:02 linus Exp $
+// $Id: GUITestCopyHelper.java,v 1.9 2005/01/08 00:39:39 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,8 +71,8 @@ public class GUITestCopyHelper extends TestCase {
      * Testing the copying of a class.
      */
     public void testCopyClass() {
-	MModel m1 = Model.getModelManagementFactory().createModel();
-	MModel m2 = Model.getModelManagementFactory().createModel();
+	MModel m1 = (MModel) Model.getModelManagementFactory().createModel();
+	MModel m2 = (MModel) Model.getModelManagementFactory().createModel();
 	CopyHelper helper = nsmodel.getCopyHelper();
 
 	Object o;
@@ -134,8 +134,8 @@ public class GUITestCopyHelper extends TestCase {
      * Testing the copying of a data type.
      */
     public void testCopyDataType() {
-	MModel m1 = Model.getModelManagementFactory().createModel();
-	MModel m2 = Model.getModelManagementFactory().createModel();
+	MModel m1 = (MModel) Model.getModelManagementFactory().createModel();
+	MModel m2 = (MModel) Model.getModelManagementFactory().createModel();
 	CopyHelper helper = nsmodel.getCopyHelper();
 
 	Object o;
@@ -194,8 +194,8 @@ public class GUITestCopyHelper extends TestCase {
      * Testing the copying of an interface.
      */
     public void testCopyInterface() {
-	MModel m1 = Model.getModelManagementFactory().createModel();
-	MModel m2 = Model.getModelManagementFactory().createModel();
+	MModel m1 = (MModel) Model.getModelManagementFactory().createModel();
+	MModel m2 = (MModel) Model.getModelManagementFactory().createModel();
 	CopyHelper helper = nsmodel.getCopyHelper();
 
 	Object o;
@@ -254,8 +254,8 @@ public class GUITestCopyHelper extends TestCase {
      * Testing the copying of a package.
      */
     public void testCopyPackage() {
-	MModel m1 = Model.getModelManagementFactory().createModel();
-	MModel m2 = Model.getModelManagementFactory().createModel();
+	MModel m1 = (MModel) Model.getModelManagementFactory().createModel();
+	MModel m2 = (MModel) Model.getModelManagementFactory().createModel();
 	CopyHelper helper = nsmodel.getCopyHelper();
 
 	Object o;
@@ -264,7 +264,7 @@ public class GUITestCopyHelper extends TestCase {
 	MPackage p;
 	MStereotype st;
 
-	p = Model.getModelManagementFactory().createPackage();
+	p = (MPackage) Model.getModelManagementFactory().createPackage();
 	m1.addOwnedElement(p);
 
 	st =
@@ -314,8 +314,8 @@ public class GUITestCopyHelper extends TestCase {
      * Testing the copying of a stereotype.
      */
     public void testCopyStereotype() {
-	MModel m1 = Model.getModelManagementFactory().createModel();
-	MModel m2 = Model.getModelManagementFactory().createModel();
+	MModel m1 = (MModel) Model.getModelManagementFactory().createModel();
+	MModel m2 = (MModel) Model.getModelManagementFactory().createModel();
 	CopyHelper helper = nsmodel.getCopyHelper();
 
 	Object o;

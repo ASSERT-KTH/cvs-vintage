@@ -1,4 +1,4 @@
-// $Id: JavaUML.java,v 1.11 2005/01/02 10:08:35 linus Exp $
+// $Id: JavaUML.java,v 1.12 2005/01/08 00:39:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public class JavaUML {
     /**
      * This UML Model contains the Java standard elements.
      */
-    private static Object/*MModel*/ javastandards =
+    private static Object javastandards =
 	Model.getUmlFactory().getModelManagement().createModel();
 
     static {

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.242 2005/01/06 23:04:52 linus Exp $
+// $Id: ModelFacade.java,v 1.243 2005/01/08 00:39:39 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2508,6 +2508,7 @@ public class ModelFacade {
         } else if (handle instanceof MExtend) {
             return ((MExtend) handle).getBase();
         } else if (handle instanceof MInclude) {
+            // See issue 2034
             return ((MInclude) handle).getAddition();
         }
 	return illegalArgumentObject(handle);
@@ -4719,6 +4720,7 @@ public class ModelFacade {
      */
     public static Object getAddition(Object handle) {
         if (handle instanceof MInclude) {
+            // See issue 2034
             return ((MInclude) handle).getBase();
         }
 	return illegalArgumentObject(handle);
@@ -5868,11 +5870,16 @@ public class ModelFacade {
             ((MAssociationEndRole) handle).setBase((MAssociationEnd) base);
             return;
         }
-        if (handle instanceof MExtend && base instanceof MUseCase) {
+        if (handle instanceof MExtend
+                && (base instanceof MUseCase
+                        || base == null)) {
             ((MExtend) handle).setBase((MUseCase) base);
             return;
         }
-        if (handle instanceof MInclude && base instanceof MUseCase) {
+        if (handle instanceof MInclude
+                && (base instanceof MUseCase
+                        || base == null)) {
+            // See issue 2034.
             ((MInclude) handle).setAddition((MUseCase) base);
             return;
         }
@@ -7156,6 +7163,7 @@ public class ModelFacade {
 	checkExists(useCase);
 
         if (handle instanceof MInclude) {
+            // See issue 2034
             ((MInclude) handle).setBase((MUseCase) useCase);
             return;
         }

@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.18 2005/01/06 23:04:51 linus Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.19 2005/01/08 00:39:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         Project p = ProjectManager.getManager().getCurrentProject();
         model = new UMLModelElementStereotypeComboBoxModel();
         elem = Model.getCoreFactory().createClass();
-        MModel m = Model.getModelManagementFactory().createModel();
+        Object m = Model.getModelManagementFactory().createModel();
         p.setRoot(m);
         ModelFacade.setNamespace(elem, m);
         stereotypes = new MStereotype[10];
