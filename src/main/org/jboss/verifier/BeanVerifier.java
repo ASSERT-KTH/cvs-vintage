@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.15 2002/08/13 09:10:31 lqd Exp $
+ * $Id: BeanVerifier.java,v 1.16 2002/09/19 09:46:40 lqd Exp $
  */
 
  
@@ -45,6 +45,8 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 
+import org.jboss.logging.Logger;
+
 /**
  * Attempts to verify the spec compliance of the beans in a given
  * EJB-JAR file. Works against EJB spec 1.1 and 2.0. Built for use in
@@ -54,7 +56,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since   JDK 1.3
  */
 public class BeanVerifier
@@ -67,6 +69,8 @@ public class BeanVerifier
    private VerificationStrategy verifier = null;
 
    private boolean success = true;
+
+   private static Logger log = Logger.getLogger( BeanVerifier.class );
 
    /*
     * Support class which handles the event notification logic.
@@ -123,17 +127,40 @@ public class BeanVerifier
       {
          BeanMetaData bean = (BeanMetaData)beans.next();
 
-         if (bean.isEntity())
+         if( bean.isEntity() )
          {
-            verifier.checkEntity((EntityMetaData)bean);
+            EntityMetaData entityBean = (EntityMetaData)bean;
+            if( metaData.isEJB2x() && entityBean.isCMP1x() )
+            {
+               // Hook for verifying CMP 1.x Beans in a 2.x JAR: store
+               // current state and restore this state after verification
+               // of the EJB completes.
+               boolean storedSuccess = success;
+
+               verifier.checkEntity( entityBean );
+
+               if( success != storedSuccess )
+               {
+                  log.warn( "The CMP 1.x EJB '" + entityBean.getEjbName() +
+                     "' generated some verification warnings. The Deployer " +
+                     "will ignore these warnings but you should check " +
+                     "your EJB to be on the safe side of things." );
+               }
+
+               success = storedSuccess;
+            }
+            else
+            {
+               verifier.checkEntity( entityBean );
+            }
          }
-         else if (bean.isSession())
+         else if( bean.isSession() )
          {
-            verifier.checkSession((SessionMetaData)bean);
+            verifier.checkSession( (SessionMetaData)bean );
          }
          else
          {
-            verifier.checkMessageBean((MessageDrivenMetaData)bean);
+            verifier.checkMessageBean( (MessageDrivenMetaData)bean );
          }
       }
    }
