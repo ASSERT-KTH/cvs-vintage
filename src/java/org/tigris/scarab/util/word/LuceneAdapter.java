@@ -82,7 +82,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.12 2002/04/26 23:34:53 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.13 2002/09/07 01:49:08 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -127,9 +127,12 @@ public class LuceneAdapter
         if (createIndex)
         {
             Log.get().info("Creating index at '" + path + '\'');
-            IndexWriter indexer = 
-                new IndexWriter(path, new PorterStemAnalyzer(), true);
-            indexer.close();   
+            synchronized (getClass())
+            {
+                IndexWriter indexer = 
+                    new IndexWriter(path, new PorterStemAnalyzer(), true);
+                indexer.close();   
+            }
         }        
 
         attributeIds = new ArrayList(5);
@@ -324,10 +327,13 @@ public class LuceneAdapter
         doc.add(attributeId);
         doc.add(text);
 
-        IndexWriter indexer = 
-            new IndexWriter(path, new PorterStemAnalyzer(), false);
-        indexer.addDocument(doc);
-        indexer.close();
+        synchronized (getClass())
+        {
+            IndexWriter indexer = 
+                new IndexWriter(path, new PorterStemAnalyzer(), false);
+            indexer.addDocument(doc);
+            indexer.close();
+        }
     }
 
 
@@ -360,9 +366,12 @@ public class LuceneAdapter
         doc.add(typeId);
         doc.add(text);
 
-        IndexWriter indexer = 
-            new IndexWriter(path, new PorterStemAnalyzer(), false);
-        indexer.addDocument(doc);
-        indexer.close();
+        synchronized (getClass())
+        {
+            IndexWriter indexer = 
+                new IndexWriter(path, new PorterStemAnalyzer(), false);
+            indexer.addDocument(doc);
+            indexer.close();
+        }
     }
 }
