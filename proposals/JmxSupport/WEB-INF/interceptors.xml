@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server>
+    <module name="MxInterceptor" javaClass="org.apache.tomcat.modules.config.MxInterceptor" />
+    <ContextManager>
+       <!-- MxInterceptor to enable JMX monitoring.
+            
+            options are :
+            
+            port : http adaptor will listen to this port
+            
+            If you're using the MX4J HTTP Adaptor, you could also 
+            set host and authentication :
+            
+            host : the MX4J http adaptor will listen to this IP/host
+            
+            authentication: the MX4J http adaptor will use HTTP authentication
+                            method which could be (none, basic, digest)
+            
+            user: set the user to be entered when asking for user/password in
+                  HTTP authentication.
+                  
+            password : define the password for HTTP authentication
+            
+            Note, if you're using a JMX console, you don't have to 
+            use the http adaptor
+            
+        -->
+        <MxInterceptor port="8999" authentication="basic" 
+                       user="admin" password="changeit"
+            />
+    </ContextManager>
+</Server>
