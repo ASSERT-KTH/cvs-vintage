@@ -58,7 +58,7 @@
  *              These are the web server (ws) the worker and the connection*
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H

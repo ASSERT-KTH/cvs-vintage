@@ -57,7 +57,7 @@
  * Description: Data marshaling. XDR like                                  *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -189,7 +189,7 @@ int jk_b_set_buffer(jk_msg_buf_t *msg,
     }
 
     msg->len = 0;
-    msg->buf = data;
+    msg->buf = (unsigned char *)data;
     msg->maxlen = buffSize;
     
     return 0;
@@ -205,7 +205,7 @@ int jk_b_set_buffer_size(jk_msg_buf_t *msg,
 	    return -1;
     }
 
-    jk_b_set_buffer(msg, data, buffSize);
+    jk_b_set_buffer(msg, (char *)data, buffSize);
     return 0;
 }
 
@@ -260,7 +260,7 @@ int jk_b_append_string(jk_msg_buf_t *msg,
     jk_b_append_int(msg, (unsigned short )len);
 
     /* We checked for space !!  */
-    strncpy(msg->buf + msg->len , param, len+1); /* including \0 */
+    strncpy((char *)msg->buf + msg->len , param, len+1); /* including \0 */
     msg->len += len + 1;
 
     return 0;
@@ -313,7 +313,7 @@ unsigned char *jk_b_get_string(jk_msg_buf_t *msg)
     if((size < 0 ) || (size + start > msg->maxlen)) { 
 	    jk_b_dump(msg, "After get int"); 
 	    printf("ERROR\n" );
-	    return "ERROR"; /* XXX */
+	    return (unsigned char *)"ERROR"; /* XXX */
     }
 
     msg->pos += size;

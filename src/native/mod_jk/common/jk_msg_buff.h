@@ -57,7 +57,7 @@
  * Description: Data marshaling. XDR like                                  *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #ifndef JK_MSG_BUF_H

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Various utility functions                                  *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 #ifndef _JK_UTIL_H
 #define _JK_UTIL_H

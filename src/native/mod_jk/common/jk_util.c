@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -108,7 +108,9 @@ static int JK_METHOD log_to_file(jk_logger_t *l,
 	    fflush(p->logfile);
 #ifndef WIN32
 #ifndef FREEBSD
+#ifndef NETWARE
 	    fdatasync(fileno(p->logfile));
+#endif
 #endif
 #endif
         }
@@ -206,6 +208,8 @@ int jk_log(jk_logger_t *l,
                        
 #ifdef WIN32
         used = _snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
+#elif defined(NETWARE) // until we get a snprintf function
+        used = sprintf(buf, "[%s (%d)]: ", f, line);
 #else 
         used = snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
 #endif
@@ -216,6 +220,8 @@ int jk_log(jk_logger_t *l,
         va_start(args, fmt);
 #ifdef WIN32
         rc = _vsnprintf(buf + used, HUGE_BUFFER_SIZE - used, fmt, args);
+#elif defined(NETWARE) // until we get a vsnprintf function
+        rc = vsprintf(buf + used, fmt, args);
 #else 
         rc = vsnprintf(buf + used, HUGE_BUFFER_SIZE - used, fmt, args);
 #endif

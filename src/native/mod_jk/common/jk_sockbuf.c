@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Simple buffer object to handle buffered socket IO          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -90,7 +90,7 @@ int jk_sb_write(jk_sockbuf_t *sb,
                 return JK_FALSE;
             }
             if(sz > SOCKBUF_SIZE) {
-                return (send(sb->sd, buf, sz, 0) == (int)sz);
+                return (send(sb->sd, (char *)buf, sz, 0) == (int)sz);
             } 
             
             memcpy(sb->buf + sb->end, buf, sz);

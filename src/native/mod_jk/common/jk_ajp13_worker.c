@@ -57,7 +57,7 @@
  * Description: Experimental bi-directionl protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -193,7 +193,7 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
                                       jk_msg_buf_t *msg, 
                                       jk_logger_t *l) 
 {
-    char head[4];
+    unsigned char head[4];
     int rc;
     int msglen;
 

@@ -57,7 +57,7 @@
  * Description: Socket/Naming manipulation functions                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    Various Jserv files                                        *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -175,7 +175,7 @@ int jk_tcp_socket_sendfull(int sd,
 
     while(sent < len) {
         int this_time = send(sd, 
-                             b + sent , 
+                             (char *)b + sent , 
                              len - sent, 
                              0);
 	    
@@ -199,7 +199,7 @@ int jk_tcp_socket_recvfull(int sd,
 
     while(rdlen < len) {
 	    int this_time = recv(sd, 
-                             b + rdlen, 
+                             (char *)b + rdlen, 
                              len - rdlen, 
                              0);	
 	    if(-1 == this_time) {

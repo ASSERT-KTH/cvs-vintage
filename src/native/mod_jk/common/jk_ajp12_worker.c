@@ -57,7 +57,7 @@
  * Description: ajpv1.2 worker, used to call local or remote jserv hosts   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    jserv_ajpv12.c from Jserv                                  *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"

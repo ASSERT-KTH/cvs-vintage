@@ -57,10 +57,10 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(NETWARE)
 #include <dlfcn.h>
 #endif
 
@@ -74,6 +74,11 @@
 #include <pthread.h>
 #include <signal.h>
 #include <bits/signum.h>
+#endif
+
+#ifdef NETWARE
+#include <nwthread.h>
+#include <nwadv.h>
 #endif
 
 #ifndef JNI_VERSION_1_1
@@ -353,11 +358,11 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         return JK_TRUE;
     }
 
-    if(jk_get_worker_mx(props, p->name, &mem_config)) {
+    if(jk_get_worker_mx(props, p->name, (unsigned int *)&mem_config)) {
         p->tomcat_mx = mem_config;
     }
 
-    if(jk_get_worker_ms(props, p->name, &mem_config)) {
+    if(jk_get_worker_ms(props, p->name, (unsigned int *)&mem_config)) {
         p->tomcat_ms = mem_config;
     }
 
@@ -691,6 +696,25 @@ static int load_jvm_dll(jni_worker_t *p,
         }
 
         FreeLibrary(hInst);
+    }
+#elif defined(NETWARE)
+    int javaNlmHandle = FindNLMHandle("JVM");
+    if (0 == javaNlmHandle) {
+        /* if we didn't get a handle, try to load java and retry getting the */
+        /* handle */
+        spawnlp(P_NOWAIT, "JVM.NLM", NULL);
+        ThreadSwitchWithDelay();
+        javaNlmHandle = FindNLMHandle("JVM");
+        if (0 == javaNlmHandle)
+            printf("Error loading Java.");
+
+    }
+    if (0 != javaNlmHandle) {
+        jni_create_java_vm = ImportSymbol(GetNLMHandle(), "JNI_CreateJavaVM");
+        jni_get_default_java_vm_init_args = ImportSymbol(GetNLMHandle(), "JNI_GetDefaultJavaVMInitArgs");
+    }
+    if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+        return JK_TRUE;
     }
 #else 
     void *handle;

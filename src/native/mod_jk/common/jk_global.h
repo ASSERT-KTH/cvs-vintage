@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -82,14 +82,16 @@
     #include <netdb.h>
 
     #include <netinet/in.h>
-    #include <netinet/tcp.h>
-    #include <arpa/inet.h>
-
-    #include <sys/un.h>
     #include <sys/socket.h>
+    #ifndef NETWARE
+        #include <netinet/tcp.h>
+        #include <arpa/inet.h>
+        #include <sys/un.h>
+        #include <sys/socketvar.h>
+        #include <sys/select.h>
+    #endif
+        
     #include <sys/time.h>
-    #include <sys/socketvar.h>
-    #include <sys/select.h>
     #include <sys/ioctl.h>
 #endif
 
@@ -115,7 +117,7 @@ extern "C" {
 #define JK_SESSION_IDENTIFIER "JSESSIONID"
 #define JK_PATH_SESSION_IDENTIFIER ";jsessionid"
 
-#ifdef WIN32
+#if defined(WIN32) || defined(NETWARE)
     #define JK_METHOD __stdcall
     #define C_LEVEL_TRY_START       __try {
     #define C_LEVEL_TRY_END         }
