@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.61 2005/01/30 01:21:54 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.62 2005/01/30 14:05:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -337,7 +337,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
             return false;
         }
         if (ModelFacade.isAPseudostate(toPort)) {
-            if ((ModelFacade.getInitialPseudostateKindToken()).equals(
+            if ((Model.getPseudostateKind().getInitial()).equals(
                     ModelFacade.getKind(toPort))) {
                 return false;
             }
@@ -359,7 +359,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
 	}
 
         if (ModelFacade.isAPseudostate(toPort)
-                && ModelFacade.getInitialPseudostateKindToken().equals(
+                && Model.getPseudostateKind().getInitial().equals(
 			ModelFacade.getKind(toPort))) {
             return null;
 	}

@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.6 2005/01/27 21:42:26 linus Exp $
+// $Id: ActionSetParameterDirectionKind.java,v 1.7 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,13 +86,13 @@ public class ActionSetParameterDirectionKind extends UMLAction {
                 Object m = /* (MModelElement) */target;
                 Object kind = null;
                 if (actionCommand.equals(IN_COMMAND)) {
-                    kind = ModelFacade.getInParameterDirectionKindToken();
+                    kind = Model.getDirectionKind().getInParameter();
                 } else if (actionCommand.equals(OUT_COMMAND)) {
-                    kind = ModelFacade.getOutParameterDirectionKindToken();
+                    kind = Model.getDirectionKind().getOutParameter();
                 } else if (actionCommand.equals(INOUT_COMMAND)) {
-                    kind = ModelFacade.getInOutParameterDirectionKindToken();
+                    kind = Model.getDirectionKind().getInOutParameter();
                 } else {
-                    kind = ModelFacade.getReturnParameterDirectionKindToken();
+                    kind = Model.getDirectionKind().getReturnParameter();
                 }
                 Model.getCoreHelper().setKind(m, kind);
             }

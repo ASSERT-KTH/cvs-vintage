@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.17 2005/01/27 21:42:25 linus Exp $
+// $Id: WizBreakCircularComp.java,v 1.18 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,10 +208,10 @@ public class WizBreakCircularComp extends UMLWizard {
 		try {
 		    Model.getCoreHelper().setAggregation(
 		            ae0,
-		            ModelFacade.getNoneAggregationKindToken());
+		            Model.getAggregationKind().getNone());
 		    Model.getCoreHelper().setAggregation(
 		            ae1,
-		            ModelFacade.getNoneAggregationKindToken());
+		            Model.getAggregationKind().getNone());
 		} catch (Exception pve) {
 		    LOG.error("could not set aggregation", pve);
 		}

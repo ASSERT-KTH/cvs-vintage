@@ -1,4 +1,4 @@
-// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.11 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.12 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -73,13 +74,13 @@ public class UMLModelElementVisibilityRadioButtonPanel
             Object kind = ModelFacade.getVisibility(target);
             if (kind == null
                     || kind.equals(
-                            ModelFacade.getPublicVisibilityKindToken())) {
+                            Model.getVisibilityKind().getPublic())) {
                 setSelected(ActionSetModelElementVisibility.PUBLIC_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getProtectedVisibilityKindToken())) {
+                    Model.getVisibilityKind().getProtected())) {
                 setSelected(ActionSetModelElementVisibility.PROTECTED_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getPrivateVisibilityKindToken())) {
+                    Model.getVisibilityKind().getPrivate())) {
                 setSelected(ActionSetModelElementVisibility.PRIVATE_COMMAND);
             } else {
                 setSelected(ActionSetModelElementVisibility.PUBLIC_COMMAND);

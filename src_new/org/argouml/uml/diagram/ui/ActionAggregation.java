@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.8 2005/01/27 21:42:28 linus Exp $
+// $Id: ActionAggregation.java,v 1.9 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,23 +51,23 @@ public class ActionAggregation extends UMLAction {
     // aggregation
     private static UMLAction srcAgg =
 	new ActionAggregation(
-	        ModelFacade.getAggregateAggregationKindToken(), "src");
+	        Model.getAggregationKind().getAggregate(), "src");
     private static UMLAction destAgg =
 	new ActionAggregation(
-	        ModelFacade.getAggregateAggregationKindToken(), "dest");
+	        Model.getAggregationKind().getAggregate(), "dest");
 
     private static UMLAction srcAggComposite =
 	new ActionAggregation(
-	        ModelFacade.getCompositeAggregationKindToken(), "src");
+	        Model.getAggregationKind().getComposite(), "src");
     private static UMLAction destAggComposite =
 	new ActionAggregation(
-	        ModelFacade.getCompositeAggregationKindToken(), "dest");
+	        Model.getAggregationKind().getComposite(), "dest");
 
     private static UMLAction srcAggNone =
-	new ActionAggregation(ModelFacade.getNoneAggregationKindToken(), "src");
+	new ActionAggregation(Model.getAggregationKind().getNone(), "src");
     private static UMLAction destAggNone =
 	new ActionAggregation(
-	        ModelFacade.getNoneAggregationKindToken(), "dest");
+	        Model.getAggregationKind().getNone(), "dest");
 
 
     ////////////////////////////////////////////////////////////////

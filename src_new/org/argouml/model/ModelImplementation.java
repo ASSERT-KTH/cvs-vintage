@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.3 2005/01/29 20:08:28 linus Exp $
+// $Id: ModelImplementation.java,v 1.4 2005/01/30 14:05:19 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,4 +183,69 @@ public interface ModelImplementation {
      * @return the MetaTypes object.
      */
     MetaTypes getMetaTypes();
+
+    // Here follows the interfaces that contain the enums of different
+    // kinds in the UML meta-model.
+    /**
+     * Getter for the ChangeableKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    ChangeableKind getChangeableKind();
+
+    /**
+     * Getter for the AggregationKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    AggregationKind getAggregationKind();
+
+    /**
+     * Getter for the PseudostateKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    PseudostateKind getPseudostateKind();
+
+    /**
+     * Getter for the ScopeKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    ScopeKind getScopeKind();
+
+    /**
+     * Getter for the ConcurrencyKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    ConcurrencyKind getConcurrencyKind();
+
+    /**
+     * Getter for the DirectionKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    DirectionKind getDirectionKind();
+
+    /**
+     * Getter for the Multiplicities object.
+     *
+     * @return The object implementing the interface.
+     */
+    Multiplicities getMultiplicities();
+
+    /**
+     * Getter for the OrderingKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    OrderingKind getOrderingKind();
+
+    /**
+     * Getter for the VisibilityKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    VisibilityKind getVisibilityKind();
 }

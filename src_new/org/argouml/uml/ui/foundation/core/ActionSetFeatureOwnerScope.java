@@ -1,4 +1,4 @@
-// $Id: ActionSetFeatureOwnerScope.java,v 1.12 2005/01/27 21:42:26 linus Exp $
+// $Id: ActionSetFeatureOwnerScope.java,v 1.13 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,10 +60,10 @@ public class ActionSetFeatureOwnerScope extends UMLAction {
                 Object m = /*(MFeature)*/ target;
                 if (source.isSelected()) {
                     Model.getCoreHelper().setOwnerScope(m,
-                            ModelFacade.getClassifierScopeKindToken());
+                            Model.getScopeKind().getClassifier());
                 } else {
                     Model.getCoreHelper().setOwnerScope(m,
-                            ModelFacade.getInstanceScopeKindToken());
+                            Model.getScopeKind().getInstance());
                 }
             }
         }

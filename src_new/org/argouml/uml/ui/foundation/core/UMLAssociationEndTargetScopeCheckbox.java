@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.12 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.13 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
 
@@ -49,7 +50,7 @@ public class UMLAssociationEndTargetScopeCheckbox extends UMLCheckBox2 {
     public void buildModel() {
         if (getTarget() != null) {
             Object associationEnd = /*(MAssociationEnd)*/ getTarget();
-            setSelected(ModelFacade.getClassifierScopeKindToken()
+            setSelected(Model.getScopeKind().getClassifier()
                            .equals(ModelFacade.getTargetScope(associationEnd)));
         }
     }

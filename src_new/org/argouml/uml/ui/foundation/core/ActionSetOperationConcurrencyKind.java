@@ -1,4 +1,4 @@
-// $Id: ActionSetOperationConcurrencyKind.java,v 1.6 2005/01/27 21:42:26 linus Exp $
+// $Id: ActionSetOperationConcurrencyKind.java,v 1.7 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,11 +81,11 @@ public class ActionSetOperationConcurrencyKind extends UMLAction {
                 Object m = /* (MModelElement) */target;
                 Object kind = null;
                 if (actionCommand.equals(SEQUENTIAL_COMMAND)) {
-                    kind = ModelFacade.getSequentialConcurrencyKindToken();
+                    kind = Model.getConcurrencyKind().getSequential();
                 } else if (actionCommand.equals(GUARDED_COMMAND)) {
-                    kind = ModelFacade.getGuardedConcurrencyKindToken();
+                    kind = Model.getConcurrencyKind().getGuarded();
                 } else {
-                    kind = ModelFacade.getConcurrentConcurrencyKindToken();
+                    kind = Model.getConcurrencyKind().getConcurrent();
                 }
                 Model.getCoreHelper().setConcurrency(m, kind);
             }

@@ -1,4 +1,4 @@
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.4 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.5 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -38,7 +39,8 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
 public class UMLOperationConcurrencyRadioButtonPanel extends
         UMLRadioButtonPanel {
 
-    private static Map labelTextsAndActionCommands = new HashMap();
+    private static Map labelTextsAndActionCommands =
+        new HashMap();
 
     static {
         // TODO: i18n, use Translator
@@ -72,14 +74,15 @@ public class UMLOperationConcurrencyRadioButtonPanel extends
             Object kind = ModelFacade.getConcurrency(target);
             if (kind == null
                     || kind.equals(
-                            ModelFacade.getSequentialConcurrencyKindToken())) {
+                            Model.getConcurrencyKind()
+                            	.getSequential())) {
                 setSelected(ActionSetOperationConcurrencyKind
                         .SEQUENTIAL_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getGuardedConcurrencyKindToken())) {
+                    Model.getConcurrencyKind().getGuarded())) {
                 setSelected(ActionSetOperationConcurrencyKind.GUARDED_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getConcurrentConcurrencyKindToken())) {
+                    Model.getConcurrencyKind().getConcurrent())) {
                 setSelected(ActionSetOperationConcurrencyKind
                         .CONCURRENT_COMMAND);
             } else {

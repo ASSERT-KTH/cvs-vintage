@@ -1,4 +1,4 @@
-// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.4 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.5 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
@@ -74,13 +75,13 @@ public class UMLParameterDirectionKindRadioButtonPanel extends
             Object kind = ModelFacade.getKind(target);
             if (kind == null
                     || kind.equals(
-                            ModelFacade.getInParameterDirectionKindToken())) {
+                            Model.getDirectionKind().getInParameter())) {
                 setSelected(ActionSetParameterDirectionKind.IN_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getInOutParameterDirectionKindToken())) {
+                    Model.getDirectionKind().getInOutParameter())) {
                 setSelected(ActionSetParameterDirectionKind.INOUT_COMMAND);
             } else if (kind.equals(
-                    ModelFacade.getOutParameterDirectionKindToken())) {
+                    Model.getDirectionKind().getOutParameter())) {
                 setSelected(ActionSetParameterDirectionKind.OUT_COMMAND);
             } else {
                 setSelected(ActionSetParameterDirectionKind.RETURN_COMMAND);

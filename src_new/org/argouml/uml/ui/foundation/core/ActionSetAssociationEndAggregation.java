@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.13 2005/01/27 21:42:26 linus Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.14 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,11 +80,11 @@ public class ActionSetAssociationEndAggregation extends UMLAction {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MAggregationKind*/ kind = null;
                 if (actionCommand.equals(AGGREGATE_COMMAND)) {
-                    kind = ModelFacade.getAggregateAggregationKindToken();
+                    kind = Model.getAggregationKind().getAggregate();
                 } else if (actionCommand.equals(COMPOSITE_COMMAND)) {
-                    kind = ModelFacade.getCompositeAggregationKindToken();
+                    kind = Model.getAggregationKind().getComposite();
                 } else {
-                    kind = ModelFacade.getNoneAggregationKindToken();
+                    kind = Model.getAggregationKind().getNone();
                 }
                 Model.getCoreHelper().setAggregation(m, kind);
             }

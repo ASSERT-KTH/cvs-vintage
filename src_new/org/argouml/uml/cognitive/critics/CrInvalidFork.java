@@ -1,4 +1,4 @@
-// $Id: CrInvalidFork.java,v 1.10 2005/01/27 21:42:25 linus Exp $
+// $Id: CrInvalidFork.java,v 1.11 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,9 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
+
 import org.argouml.cognitive.Designer;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -57,9 +59,9 @@ public class CrInvalidFork extends CrUML {
 	    return NO_PROBLEM;
 	}
 	Object k = ModelFacade.getPseudostateKind(dm);
-	if (!ModelFacade.
-	    equalsPseudostateKind(k,
-				  ModelFacade.getForkPseudostateKindToken())) {
+	if (!ModelFacade.equalsPseudostateKind(
+	        k,
+	        Model.getPseudostateKind().getFork())) {
 	    return NO_PROBLEM;
 	}
 	Collection outgoing = ModelFacade.getOutgoings(dm);

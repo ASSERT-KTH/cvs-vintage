@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateSubvertexList.java,v 1.13 2005/01/27 21:42:29 linus Exp $
+// $Id: UMLCompositeStateSubvertexList.java,v 1.14 2005/01/30 14:05:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionRemoveModelElement;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -50,25 +50,25 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
             JMenu pMenu = new JMenu();
             pMenu.setText(Translator.localize("button.new-pseudostate"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getBranchPseudostateKindToken(),
+                    Model.getPseudostateKind().getBranch(),
                     "label.pseudostate.choice"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getInitialPseudostateKindToken(),
+                    Model.getPseudostateKind().getInitial(),
                     "label.pseudostate.initial"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getDeepHistoryPseudostateKindToken(),
+                    Model.getPseudostateKind().getDeepHistory(),
                     "label.pseudostate.deephistory"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getJunctionPseudostateKindToken(),
+                    Model.getPseudostateKind().getJunction(),
                     "label.pseudostate.junction"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getShallowHistoryPseudostateKindToken(),
+                    Model.getPseudostateKind().getShallowHistory(),
                     "label.pseudostate.shallowhistory"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getForkPseudostateKindToken(),
+                    Model.getPseudostateKind().getFork(),
                     "label.pseudostate.fork"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.getJoinPseudostateKindToken(),
+                    Model.getPseudostateKind().getJoin(),
                     "label.pseudostate.join"));
 
             JMenu newMenu = new JMenu();

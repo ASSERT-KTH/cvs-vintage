@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.34 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.35 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -452,7 +452,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             Iterator iter = conns.iterator();
             Object associationEnd0 = iter.next();
             Model.getCoreHelper().setAggregation(associationEnd0,
-                    ModelFacade.getCompositeAggregationKindToken());
+                    Model.getAggregationKind().getComposite());
         }
     }
 

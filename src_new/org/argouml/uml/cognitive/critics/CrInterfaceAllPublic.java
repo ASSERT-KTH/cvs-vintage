@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.13 2005/01/27 21:42:25 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.14 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrInterfaceAllPublic.java,v 1.13 2005/01/27 21:42:25 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.14 2005/01/30 14:05:10 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -70,7 +72,7 @@ public class CrInterfaceAllPublic extends CrUML {
 	        return NO_PROBLEM;
 	    }
 	    if (!ModelFacade.getVisibility(f)
-                .equals(ModelFacade.getPublicVisibilityKindToken())) {
+                .equals(Model.getVisibilityKind().getPublic())) {
 	        return PROBLEM_FOUND;
 	    }
 	}

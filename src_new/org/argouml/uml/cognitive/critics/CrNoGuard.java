@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.11 2005/01/27 21:42:25 linus Exp $
+// $Id: CrNoGuard.java,v 1.12 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 
@@ -62,11 +63,12 @@ public class CrNoGuard extends CrUML {
 	}
 	if (!ModelFacade.equalsPseudostateKind(
 	        ModelFacade.getPseudostateKind(sv),
-	        ModelFacade.getBranchPseudostateKindToken())) {
+	        Model.getPseudostateKind().getBranch())) {
 	    return NO_PROBLEM;
 	}
 	Object g = /*(MGuard)*/ ModelFacade.getGuard(dm);
-	boolean noGuard = (g == null
+	boolean noGuard =
+	    (g == null
             || ModelFacade.getExpression(g) == null
             || ModelFacade.getBody(ModelFacade.getExpression(g)) == null
             || ((String) ModelFacade.getBody(ModelFacade.getExpression(g)))

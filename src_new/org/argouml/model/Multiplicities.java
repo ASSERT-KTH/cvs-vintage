@@ -1,16 +1,16 @@
-// $Id: UMLFeatureOwnerScopeCheckBox.java,v 1.13 2005/01/30 14:05:10 linus Exp $
-// Copyright (c) 1996-2005 The Regents of the University of California. All
+// $Id: Multiplicities.java,v 1.1 2005/01/30 14:05:19 linus Exp $
+// Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -22,39 +22,29 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui.foundation.core;
-
-import org.argouml.i18n.Translator;
-import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLCheckBox2;
+package org.argouml.model;
 
 /**
- * @since Nov 6, 2002
- * @author jaap.branderhorst@xs4all.nl
+ * The different Multiplicities.
  */
-public class UMLFeatureOwnerScopeCheckBox extends UMLCheckBox2 {
+public interface Multiplicities {
+    /**
+     * @return Returns the 0 1 Multiplicity.
+     */
+    Object get01();
 
     /**
-     * Constructor for UMLFeatureOwnerScopeCheckBox.
+     * @return Returns the 0 N Multiplicity.
      */
-    public UMLFeatureOwnerScopeCheckBox() {
-        super(Translator.localize("label.static"),
-                ActionSetFeatureOwnerScope.getInstance(), "ownerScope");
-    }
+    Object get0N();
 
     /**
-     * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
+     * @return Returns the 1 1 Multiplicity.
      */
-    public void buildModel() {
-        Object scope = ModelFacade.getOwnerScope(getTarget());
-        if (scope != null
-                && scope.equals(
-                        Model.getScopeKind().getClassifier())) {
-            setSelected(true);
-        } else {
-            setSelected(false);
-        }
-    }
+    Object get11();
 
+    /**
+     * @return Returns the 1 N Multiplicity.
+     */
+    Object get1N();
 }

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.90 2005/01/29 15:25:57 mvw Exp $
+// $Id: FigInterface.java,v 1.91 2005/01/30 14:05:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -902,7 +902,7 @@ public class FigInterface extends FigNodeModelElement
         	oper.setText(Notation.generate(this, behavioralFeature));
         	oper.setOwner(behavioralFeature);
         	// underline, if static
-        	oper.setUnderline(ModelFacade.getClassifierScopeKindToken()
+        	oper.setUnderline(Model.getScopeKind().getClassifier()
         			  .equals(ModelFacade
         				  .getOwnerScope(behavioralFeature)));
         	// italics, if abstract

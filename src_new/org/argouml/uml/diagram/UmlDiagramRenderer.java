@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.7 2005/01/27 21:42:34 linus Exp $
+// $Id: UmlDiagramRenderer.java,v 1.8 2005/01/30 14:05:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,22 +162,22 @@ public abstract class UmlDiagramRenderer
         } else if (ModelFacade.isAPseudostate(node)) {
             Object pState = node;
             Object kind = ModelFacade.getKind(pState);
-            if (ModelFacade.getInitialPseudostateKindToken().equals(kind)) {
+            if (Model.getPseudostateKind().getInitial().equals(kind)) {
                 figNode = new FigInitialState();
-            } else if (ModelFacade.getBranchPseudostateKindToken()
+            } else if (Model.getPseudostateKind().getBranch()
                     .equals(kind)) {
                 figNode = new FigBranchState();
-            } else if (ModelFacade.getJunctionPseudostateKindToken()
+            } else if (Model.getPseudostateKind().getJunction()
                     .equals(kind)) {
                 figNode = new FigJunctionState();
-            } else if (ModelFacade.getForkPseudostateKindToken().equals(kind)) {
+            } else if (Model.getPseudostateKind().getFork().equals(kind)) {
                 figNode = new FigForkState();
-            } else if (ModelFacade.getJoinPseudostateKindToken().equals(kind)) {
+            } else if (Model.getPseudostateKind().getJoin().equals(kind)) {
                 figNode = new FigJoinState();
-            } else if (ModelFacade.getShallowHistoryPseudostateKindToken()
+            } else if (Model.getPseudostateKind().getShallowHistory()
                     .equals(kind)) {
                 figNode = new FigShallowHistoryState();
-            } else if (ModelFacade.getDeepHistoryPseudostateKindToken()
+            } else if (Model.getPseudostateKind().getDeepHistory()
                     .equals(kind)) {
                 figNode = new FigDeepHistoryState();
             }

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.131 2005/01/27 21:42:28 linus Exp $
+// $Id: FigClass.java,v 1.132 2005/01/30 14:05:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1157,7 +1157,7 @@ public class FigClass extends FigNodeModelElement
                  */
 
                 // underline, if static
-                attr.setUnderline(ModelFacade.getClassifierScopeKindToken()
+                attr.setUnderline(Model.getScopeKind().getClassifier()
 				  .equals(ModelFacade.getOwnerScope(sf)));
                 acounter++;
             }
@@ -1225,7 +1225,7 @@ public class FigClass extends FigNodeModelElement
                  */
 
                 // underline, if static
-                oper.setUnderline(ModelFacade.getClassifierScopeKindToken()
+                oper.setUnderline(Model.getScopeKind().getClassifier()
 				  .equals(ModelFacade.getOwnerScope(bf)));
                 // italics, if abstract
                 //oper.setItalic(((MOperation)bf).isAbstract()); //

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.64 2005/01/29 20:08:22 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.65 2005/01/30 14:05:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,7 +275,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionAssociation == null) {
             actionAssociation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getNoneAggregationKindToken(),
+                        Model.getAggregationKind().getNone(),
                         false,
                         "Association"));
         }
@@ -288,7 +288,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionComposition == null) {
             actionComposition = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getCompositeAggregationKindToken(),
+                        Model.getAggregationKind().getComposite(),
                         false,
                         "Composition"));
         }
@@ -330,7 +330,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniAggregation == null) {
             actionUniAggregation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getAggregateAggregationKindToken(),
+                        Model.getAggregationKind().getAggregate(),
                         true,
                         "UniAggregation"));
         }
@@ -343,7 +343,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniAssociation  == null) {
             actionUniAssociation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getNoneAggregationKindToken(),
+                        Model.getAggregationKind().getNone(),
                         true,
                         "UniAssociation"));
         }
@@ -356,7 +356,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniComposition == null) {
             actionUniComposition = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getCompositeAggregationKindToken(),
+                        Model.getAggregationKind().getComposite(),
                         true,
                         "UniComposition"));
         }
@@ -370,7 +370,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionAggregation == null) {
             actionAggregation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.getAggregateAggregationKindToken(),
+                        Model.getAggregationKind().getAggregate(),
                         false,
                         "Aggregation"));
         }

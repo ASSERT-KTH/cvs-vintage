@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndTargetScope.java,v 1.13 2005/01/27 21:42:25 linus Exp $
+// $Id: ActionSetAssociationEndTargetScope.java,v 1.14 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,10 @@ public class ActionSetAssociationEndTargetScope extends UMLAction {
                 Object m = /*(MAssociationEnd)*/ target;
                 if (source.isSelected()) {
                     Model.getCoreHelper().setTargetScope(m,
-                            ModelFacade.getClassifierScopeKindToken());
+                            Model.getScopeKind().getClassifier());
                 } else {
                     Model.getCoreHelper().setTargetScope(m,
-                            ModelFacade.getInstanceScopeKindToken());
+                            Model.getScopeKind().getInstance());
                 }
             }
         }

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.147 2005/01/29 22:26:00 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.148 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -478,7 +478,7 @@ public abstract class FigNodeModelElement
             super("checkbox.visibility.public-uc", NO_ICON);
             owner = o;
             putValue("SELECTED", new Boolean(
-                    ModelFacade.getPublicVisibilityKindToken()
+                    Model.getVisibilityKind().getPublic()
                     .equals(ModelFacade.getVisibility(getOwner()))));
         }
 
@@ -487,7 +487,7 @@ public abstract class FigNodeModelElement
          */
         public void actionPerformed(ActionEvent e) {
             Model.getCoreHelper().setVisibility(owner,
-                    ModelFacade.getPublicVisibilityKindToken());
+                    Model.getVisibilityKind().getPublic());
         }
     }
 
@@ -502,7 +502,7 @@ public abstract class FigNodeModelElement
             super("checkbox.visibility.protected-uc", NO_ICON);
             owner = o;
             putValue("SELECTED", new Boolean(
-                    ModelFacade.getProtectedVisibilityKindToken()
+                    Model.getVisibilityKind().getProtected()
                     .equals(ModelFacade.getVisibility(getOwner()))));
         }
 
@@ -511,7 +511,7 @@ public abstract class FigNodeModelElement
          */
         public void actionPerformed(ActionEvent e) {
             Model.getCoreHelper().setVisibility(owner,
-                    ModelFacade.getProtectedVisibilityKindToken());
+                    Model.getVisibilityKind().getProtected());
         }
     }
 
@@ -526,7 +526,7 @@ public abstract class FigNodeModelElement
             super("checkbox.visibility.private-uc", NO_ICON);
             owner = o;
             putValue("SELECTED", new Boolean(
-                    ModelFacade.getPrivateVisibilityKindToken()
+                    Model.getVisibilityKind().getPrivate()
                     .equals(ModelFacade.getVisibility(getOwner()))));
         }
 
@@ -535,7 +535,7 @@ public abstract class FigNodeModelElement
          */
         public void actionPerformed(ActionEvent e) {
             Model.getCoreHelper().setVisibility(owner,
-                    ModelFacade.getPrivateVisibilityKindToken());
+                    Model.getVisibilityKind().getPrivate());
         }
     }
 

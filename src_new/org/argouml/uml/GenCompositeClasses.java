@@ -1,4 +1,4 @@
-// $Id: GenCompositeClasses.java,v 1.17 2005/01/27 21:42:32 linus Exp $
+// $Id: GenCompositeClasses.java,v 1.18 2005/01/30 14:05:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
+
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
 
@@ -70,7 +72,7 @@ public class GenCompositeClasses implements ChildGenerator {
 	Iterator assocEnds = ends.iterator();
 	while (assocEnds.hasNext()) {
 	    Object ae = /*(MAssociationEnd)*/ assocEnds.next();
-	    if (ModelFacade.getCompositeAggregationKindToken().equals(
+	    if (Model.getAggregationKind().getComposite().equals(
 	            ModelFacade.getAggregation(ae))) {
 		Object asc = ModelFacade.getAssociation(ae);
 		ArrayList conn = new ArrayList(ModelFacade.getConnections(asc));

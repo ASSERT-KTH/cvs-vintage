@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.27 2005/01/27 21:42:27 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.28 2005/01/30 14:05:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.state.ui;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.UmlDiagramRenderer;
 import org.argouml.uml.diagram.activity.ui.FigActionState;
@@ -98,23 +99,25 @@ public class StateDiagramRenderer extends UmlDiagramRenderer {
             if (kind == null) {
                 return null;
             }
-            if (kind.equals(ModelFacade.getInitialPseudostateKindToken())) {
+            if (kind.equals(Model.getPseudostateKind().getInitial())) {
                 return new FigInitialState(gm, node);
             } else if (kind.equals(
-                    ModelFacade.getBranchPseudostateKindToken())) {
+                    Model.getPseudostateKind().getBranch())) {
                 return new FigBranchState(gm, node);
             } else if (kind.equals(
-                    ModelFacade.getJunctionPseudostateKindToken())) {
+                    Model.getPseudostateKind().getJunction())) {
                 return new FigJunctionState(gm, node);
-            } else if (kind.equals(ModelFacade.getForkPseudostateKindToken())) {
+            } else if (kind.equals(
+                    Model.getPseudostateKind().getFork())) {
                 return new FigForkState(gm, node);
-            } else if (kind.equals(ModelFacade.getJoinPseudostateKindToken())) {
+            } else if (kind.equals(
+                    Model.getPseudostateKind().getJoin())) {
                 return new FigJoinState(gm, node);
             } else if (kind.equals(
-                    ModelFacade.getShallowHistoryPseudostateKindToken())) {
+                    Model.getPseudostateKind().getShallowHistory())) {
                 return new FigShallowHistoryState(gm, node);
             } else if (kind.equals(
-                    ModelFacade.getDeepHistoryPseudostateKindToken())) {
+                    Model.getPseudostateKind().getDeepHistory())) {
                 return new FigDeepHistoryState(gm, node);
             } else {
                 LOG.warn("found a type not known");

@@ -1,4 +1,4 @@
-// $Id: CrMultipleInitialStates.java,v 1.14 2005/01/27 21:42:25 linus Exp $
+// $Id: CrMultipleInitialStates.java,v 1.15 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.util.VectorSet;
@@ -68,7 +69,7 @@ public class CrMultipleInitialStates extends CrUML {
         Object k = ModelFacade.getPseudostateKind(dm);
         if (!ModelFacade.equalsPseudostateKind(
                 k,
-                ModelFacade.getInitialPseudostateKindToken())) {
+                Model.getPseudostateKind().getInitial())) {
 	    return NO_PROBLEM;
         }
 
@@ -87,7 +88,7 @@ public class CrMultipleInitialStates extends CrUML {
                 && ModelFacade.
                 	equalsPseudostateKind(
                 	        ModelFacade.getPseudostateKind(sv),
-                	        ModelFacade.getInitialPseudostateKindToken())) {
+                	        Model.getPseudostateKind().getInitial())) {
                 initialStateCount++;
             }
         }
@@ -124,7 +125,7 @@ public class CrMultipleInitialStates extends CrUML {
             if (ModelFacade.isAPseudostate(sv)
                 && ModelFacade.equalsPseudostateKind(
                         ModelFacade.getPseudostateKind(sv),
-                        ModelFacade.getInitialPseudostateKindToken())) {
+                        Model.getPseudostateKind().getInitial())) {
                 offs.addElement(sv);
 	    }
         }

@@ -1,4 +1,4 @@
-// $Id: CrMergeClasses.java,v 1.16 2005/01/27 21:42:25 linus Exp $
+// $Id: CrMergeClasses.java,v 1.17 2005/01/30 14:05:10 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,10 @@ package org.argouml.uml.cognitive.critics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -78,9 +80,9 @@ public class CrMergeClasses extends CrUML {
 	    return NO_PROBLEM;
 	}
 	if (ModelFacade.getMultiplicity(ae0)
-            .equals(ModelFacade.getM11MultiplicityToken())
+            .equals(Model.getMultiplicities().get11())
                 && ModelFacade.getMultiplicity(ae1)
-                    .equals(ModelFacade.getM11MultiplicityToken())) {
+                    .equals(Model.getMultiplicities().get11())) {
 	    return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;

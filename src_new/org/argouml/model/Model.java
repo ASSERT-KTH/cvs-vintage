@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.8 2005/01/29 20:08:29 linus Exp $
+// $Id: Model.java,v 1.9 2005/01/30 14:05:19 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,5 +259,88 @@ public final class Model {
      */
     public static MetaTypes getMetaTypes() {
         return impl.getMetaTypes();
+    }
+
+    // Here follows the interfaces that contain the enums of different
+    // kinds in the UML meta-model.
+    /**
+     * Getter for the ChangeableKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static ChangeableKind getChangeableKind() {
+        return impl.getChangeableKind();
+    }
+
+    /**
+     * Getter for the AggregationKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static AggregationKind getAggregationKind() {
+        return impl.getAggregationKind();
+    }
+
+    /**
+     * Getter for the PseudostateKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static PseudostateKind getPseudostateKind() {
+        return impl.getPseudostateKind();
+    }
+
+    /**
+     * Getter for the ScopeKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static ScopeKind getScopeKind() {
+        return impl.getScopeKind();
+    }
+
+    /**
+     * Getter for the ConcurrencyKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static ConcurrencyKind getConcurrencyKind() {
+        return impl.getConcurrencyKind();
+    }
+
+    /**
+     * Getter for the DirectionKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static DirectionKind getDirectionKind() {
+        return impl.getDirectionKind();
+    }
+
+    /**
+     * Getter for the Multiplicities object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static Multiplicities getMultiplicities() {
+        return impl.getMultiplicities();
+    }
+
+    /**
+     * Getter for the OrderingKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static OrderingKind getOrderingKind() {
+        return impl.getOrderingKind();
+    }
+
+    /**
+     * Getter for the VisibilityKind object.
+     *
+     * @return The object implementing the interface.
+     */
+    public static VisibilityKind getVisibilityKind() {
+        return impl.getVisibilityKind();
     }
 }

@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.110 2005/01/29 16:28:46 linus Exp $
+// $Id: GeneratorJava.java,v 1.111 2005/01/30 14:05:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.StringTokenizer;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -378,8 +378,8 @@ public class GeneratorJava
                         // association end found
                         Object multiplicity =
 			    ModelFacade.getMultiplicity(associationEnd2);
-                        if (!ModelFacade.getM11MultiplicityToken().equals(multiplicity)
-                                && !ModelFacade.getM01MultiplicityToken().equals(
+                        if (!Model.getMultiplicities().get11().equals(multiplicity)
+                                && !Model.getMultiplicities().get01().equals(
                                         multiplicity)) {
                             importSet.add("java.util.Vector");
                         } else {
@@ -582,7 +582,7 @@ public class GeneratorJava
         // actually the API of generator is buggy since to generate
         // multiplicity correctly we need the attribute too
         if (type != null && multi != null) {
-            if (multi.equals(ModelFacade.getM11MultiplicityToken())) {
+            if (multi.equals(Model.getMultiplicities().get11())) {
                 sb.append(generateClassifierRef(type)).append(' ');
             } else if (ModelFacade.isADataType(type)) {
                 sb.append(generateClassifierRef(type)).append("[] ");
@@ -1129,8 +1129,8 @@ public class GeneratorJava
         String s = generateConstraintEnrichedDocComment(me, true, INDENT);
 
         Object/*MMultiplicity*/ m = ModelFacade.getMultiplicity(ae);
-        if (!(ModelFacade.getM11MultiplicityToken().equals(m)
-	      || ModelFacade.getM01MultiplicityToken().equals(m))) {
+        if (!(Model.getMultiplicities().get11().equals(m)
+	      || Model.getMultiplicities().get01().equals(m))) {
             // Multiplicity greater 1, that means we will generate some sort of
             // collection, so we need to specify the element type tag
             StringBuffer sDocComment = new StringBuffer(80);
@@ -1375,7 +1375,7 @@ public class GeneratorJava
         StringBuffer sb = new StringBuffer(80);
         sb.append(generateVisibility(ModelFacade.getVisibility(ae)));
 
-        if (ModelFacade.getClassifierScopeKindToken().equals(
+        if (Model.getScopeKind().getClassifier().equals(
                 ModelFacade.getTargetScope(ae)))
             sb.append("static ");
         //     String n = ae.getName();
@@ -1384,8 +1384,8 @@ public class GeneratorJava
         //     if (ae.isNavigable()) s += "navigable ";
         //     if (ae.getIsOrdered()) s += "ordered ";
         Object/*MMultiplicity*/ m = ModelFacade.getMultiplicity(ae);
-        if (ModelFacade.getM11MultiplicityToken().equals(m)
-                || ModelFacade.getM01MultiplicityToken().equals(m)) {
+        if (Model.getMultiplicities().get11().equals(m)
+                || Model.getMultiplicities().get01().equals(m)) {
             sb.append(generateClassifierRef(ModelFacade.getType(ae)));
         } else {
             sb.append("Vector "); //generateMultiplicity(m) + " ";
@@ -1477,11 +1477,11 @@ public class GeneratorJava
                 return "protected ";
         }
         if (ModelFacade.isAVisibilityKind(o)) {
-            if (ModelFacade.getPublicVisibilityKindToken().equals(o))
+            if (Model.getVisibilityKind().getPublic().equals(o))
                 return "public ";
-            if (ModelFacade.getPrivateVisibilityKindToken().equals(o))
+            if (Model.getVisibilityKind().getPrivate().equals(o))
                 return "private ";
-            if (ModelFacade.getProtectedVisibilityKindToken().equals(o))
+            if (Model.getVisibilityKind().getProtected().equals(o))
                 return "protected ";
         }
         return "";
@@ -1529,7 +1529,7 @@ public class GeneratorJava
      */
     private String generateConcurrency(Object op) {
         if (ModelFacade.getConcurrency(op) != null
-            && ModelFacade.getGuardedConcurrencyKindToken().equals(
+            && Model.getConcurrencyKind().getGuarded().equals(
                     ModelFacade.getConcurrency(op))) {
             return "synchronized ";
         }
@@ -1548,7 +1548,7 @@ public class GeneratorJava
         if (m == null) {
             return "";
         }
-        if (ModelFacade.getM0NMultiplicityToken().equals(m)) {
+        if (Model.getMultiplicities().get0N().equals(m)) {
             return ANY_RANGE;
 	}
         Iterator rangeEnum = ModelFacade.getRanges(m);

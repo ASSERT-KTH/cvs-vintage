@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.68 2005/01/29 20:08:30 linus Exp $
+// $Id: UMLActivityDiagram.java,v 1.69 2005/01/30 14:05:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -297,7 +297,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             actionForkPseudoState =
                 new RadioAction(
                         new ActionCreatePseudostate(
-                                ModelFacade.getForkPseudostateKindToken(),
+                                Model.getPseudostateKind().getFork(),
                         	"Fork"));
         }
         return actionForkPseudoState;
@@ -310,7 +310,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             actionJoinPseudoState =
                 new RadioAction(
                         new ActionCreatePseudostate(
-                                ModelFacade.getJoinPseudostateKindToken(),
+                                Model.getPseudostateKind().getJoin(),
                         	"Join"));
         }
         return actionJoinPseudoState;
@@ -323,7 +323,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             actionJunctionPseudoState =
                 new RadioAction(
                         new ActionCreatePseudostate(
-                                ModelFacade.getJunctionPseudostateKindToken(),
+                                Model.getPseudostateKind().getJunction(),
                                 "Junction"));
         }
         return actionJunctionPseudoState;
@@ -360,7 +360,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             actionStartPseudoState =
                 new RadioAction(
                         new ActionCreatePseudostate(
-                                ModelFacade.getInitialPseudostateKindToken(),
+                                Model.getPseudostateKind().getInitial(),
                                 "Initial"));
         }
         return actionStartPseudoState;

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.111 2005/01/29 16:28:47 linus Exp $
+// $Id: Modeller.java,v 1.112 2005/01/30 14:05:23 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -747,11 +747,11 @@ public class Modeller {
 	setVisibility(mOperation, modifiers);
 	if ((modifiers & JavaRecognizer.ACC_SYNCHRONIZED) > 0) {
 	    Model.getCoreHelper().setConcurrency(mOperation,
-	            ModelFacade.getGuardedConcurrencyKindToken());
+	            Model.getConcurrencyKind().getGuarded());
 	} else if (ModelFacade.getConcurrency(mOperation)
-		   == ModelFacade.getGuardedConcurrencyKindToken()) {
+		   == Model.getConcurrencyKind().getGuarded()) {
 	    Model.getCoreHelper().setConcurrency(mOperation,
-	            ModelFacade.getSequentialConcurrencyKindToken());
+	            Model.getConcurrencyKind().getSequential());
 	}
 
 	for (Iterator i = ModelFacade.getParameters(mOperation).iterator();
@@ -1407,15 +1407,15 @@ public class Modeller {
 	if ((modifiers & JavaRecognizer.ACC_PRIVATE) > 0) {
 	    Model.getCoreHelper().setVisibility(
 	            element,
-	            ModelFacade.getPrivateVisibilityKindToken());
+	            Model.getVisibilityKind().getPrivate());
 	} else if ((modifiers & JavaRecognizer.ACC_PROTECTED) > 0) {
 	    Model.getCoreHelper().setVisibility(
 	            element,
-	            ModelFacade.getProtectedVisibilityKindToken());
+	            Model.getVisibilityKind().getProtected());
 	} else if ((modifiers & JavaRecognizer.ACC_PUBLIC) > 0) {
 	    Model.getCoreHelper().setVisibility(
 	            element,
-	            ModelFacade.getPublicVisibilityKindToken());
+	            Model.getVisibilityKind().getPublic());
 	} else {
             Model.getCoreHelper().setTaggedValue(
                     element,
@@ -1434,10 +1434,10 @@ public class Modeller {
     private void setOwnerScope(Object feature, short modifiers) {
         if ((modifiers & JavaRecognizer.ACC_STATIC) > 0) {
             Model.getCoreHelper().setOwnerScope(feature,
-                    ModelFacade.getClassifierScopeKindToken());
+                    Model.getScopeKind().getClassifier());
         } else {
             Model.getCoreHelper().setOwnerScope(feature,
-                    ModelFacade.getInstanceScopeKindToken());
+                    Model.getScopeKind().getInstance());
         }
     }
 
@@ -1452,11 +1452,11 @@ public class Modeller {
         if ((modifiers & JavaRecognizer.ACC_STATIC) > 0) {
             Model.getCoreHelper().setTargetScope(
                     mAssociationEnd,
-                    ModelFacade.getClassifierScopeKindToken());
+                    Model.getScopeKind().getClassifier());
         } else {
             Model.getCoreHelper().setTargetScope(
                     mAssociationEnd,
-                    ModelFacade.getInstanceScopeKindToken());
+                    Model.getScopeKind().getInstance());
         }
     }
 

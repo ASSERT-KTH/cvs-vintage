@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.4 2005/01/29 20:08:22 linus Exp $
+// $Id: NSUMLModelImplementation.java,v 1.5 2005/01/30 14:05:20 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,18 @@ package org.argouml.model.uml;
 
 import org.argouml.model.ActivityGraphsFactory;
 import org.argouml.model.ActivityGraphsHelper;
+import org.argouml.model.AggregationKind;
+import org.argouml.model.ChangeableKind;
 import org.argouml.model.CollaborationsFactory;
 import org.argouml.model.CollaborationsHelper;
 import org.argouml.model.CommonBehaviorFactory;
 import org.argouml.model.CommonBehaviorHelper;
+import org.argouml.model.ConcurrencyKind;
 import org.argouml.model.CoreFactory;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesFactory;
 import org.argouml.model.DataTypesHelper;
+import org.argouml.model.DirectionKind;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.MetaTypes;
@@ -41,12 +45,17 @@ import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelImplementation;
 import org.argouml.model.ModelManagementFactory;
 import org.argouml.model.ModelManagementHelper;
+import org.argouml.model.Multiplicities;
+import org.argouml.model.OrderingKind;
+import org.argouml.model.PseudostateKind;
+import org.argouml.model.ScopeKind;
 import org.argouml.model.StateMachinesFactory;
 import org.argouml.model.StateMachinesHelper;
 import org.argouml.model.UmlFactory;
 import org.argouml.model.UmlHelper;
 import org.argouml.model.UseCasesFactory;
 import org.argouml.model.UseCasesHelper;
+import org.argouml.model.VisibilityKind;
 
 /**
  * The handle to find all helper and factories.
@@ -88,6 +97,8 @@ public class NSUMLModelImplementation implements ModelImplementation {
     private UseCasesHelper theUseCasesHelper = new UseCasesHelperImpl(this);
     private ModelEventPump theModelEventPump = new NSUMLModelEventPump(this);
     private MetaTypesImpl theMetaTypesObject = new MetaTypesImpl();
+
+    private KindsImpl theKindsObject = new KindsImpl();
 
     /**
      * @see org.argouml.model.ModelImplementation#getModelEventPump()
@@ -254,5 +265,67 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public MetaTypes getMetaTypes() {
         return theMetaTypesObject;
     }
-}
 
+    /**
+     * @see org.argouml.model.ModelImplementation#getChangeableKind()
+     */
+    public ChangeableKind getChangeableKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getAggregationKind()
+     */
+    public AggregationKind getAggregationKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getPseudostateKind()
+     */
+    public PseudostateKind getPseudostateKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getScopeKind()
+     */
+    public ScopeKind getScopeKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getConcurrencyKind()
+     */
+    public ConcurrencyKind getConcurrencyKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getDirectionKind()
+     */
+    public DirectionKind getDirectionKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getMultiplicities()
+     */
+    public Multiplicities getMultiplicities() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getOrderingKind()
+     */
+    public OrderingKind getOrderingKind() {
+        return theKindsObject;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getVisibilityKind()
+     */
+    public VisibilityKind getVisibilityKind() {
+        return theKindsObject;
+    }
+}

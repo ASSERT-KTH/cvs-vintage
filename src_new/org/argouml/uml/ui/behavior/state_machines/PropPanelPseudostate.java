@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.31 2005/01/27 21:42:29 linus Exp $
+// $Id: PropPanelPseudostate.java,v 1.32 2005/01/30 14:05:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.util.ConfigLoader;
 import org.tigris.gef.presentation.Fig;
@@ -70,42 +71,44 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
     public void setTarget(Object target) {
         super.setTarget(target);
 
-        Object o = ((target instanceof Fig) ? ((Fig) target).getOwner()
-                : target);
+        Object o =
+            ((target instanceof Fig)
+                    ? ((Fig) target).getOwner()
+                    : target);
         if (ModelFacade.isAPseudostate(o)) {
             Object kind = ModelFacade.getPseudostateKind(o);
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getForkPseudostateKindToken())) {
+                Model.getPseudostateKind().getFork())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.fork"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getJoinPseudostateKindToken())) {
+                Model.getPseudostateKind().getJoin())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.join"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getBranchPseudostateKindToken())) {
+                Model.getPseudostateKind().getBranch())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.choice"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getDeepHistoryPseudostateKindToken())) {
+                Model.getPseudostateKind().getDeepHistory())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.deephistory"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getShallowHistoryPseudostateKindToken())) {
+                Model.getPseudostateKind().getShallowHistory())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.shallowhistory"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getInitialPseudostateKindToken())) {
+                Model.getPseudostateKind().getInitial())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.initial"));
             }
             if (ModelFacade.equalsPseudostateKind(kind,
-                ModelFacade.getJunctionPseudostateKindToken())) {
+                Model.getPseudostateKind().getJunction())) {
                 getTitleLabel().setText(
                     Translator.localize("label.pseudostate.junction"));
             }
