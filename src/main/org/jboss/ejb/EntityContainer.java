@@ -47,7 +47,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * <p><b>Revisions:</b>
  *
@@ -132,6 +132,10 @@ public class EntityContainer
 
    /**
     * Stores all of the entities associated with the specified transaction.
+    * As per the spec 9.6.4, entities must be synchronized with the datastore
+    * when an ejbFind<METHOD> is called.
+    * Also, all entities within entire transaction should be synchronized before
+    * a remove, otherwise there may be problems with 'cascade delete'.
     * @param tx the transaction that associated entites will be stored
     * @throws Exception if an problem occures while storing the entities
     */
