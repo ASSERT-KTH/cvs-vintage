@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.12 2003/12/10 12:21:33 mkl Exp $
+// $Id: NotationProvider.java,v 1.13 2004/03/06 11:25:21 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.12 2003/12/10 12:21:33 mkl Exp $
+// $Id: NotationProvider.java,v 1.13 2004/03/06 11:25:21 mvw Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -82,10 +82,15 @@ public interface NotationProvider {
     public String generateAssociationRole(MAssociationRole m);
 
     /** Can the notation be parsed for this object?
+     *  @param o the object to be tested.
+     *  @return <code>true</code> if it can be parsed
+     *          <code>false</code> if not 
      */
     public boolean canParse(Object o);
 
     /** Can the notation be parsed at all?
+     *  @return <code>true</code> if it can be parsed
+     *          <code>false</code> if not 
      */
     public boolean canParse();
 

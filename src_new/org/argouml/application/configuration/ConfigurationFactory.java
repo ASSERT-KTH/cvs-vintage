@@ -1,4 +1,4 @@
-// $Id: ConfigurationFactory.java,v 1.8 2003/11/13 20:02:37 jjones Exp $
+// $Id: ConfigurationFactory.java,v 1.9 2004/03/06 11:25:25 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public class ConfigurationFactory
 
     /** The active configuration handler.
      */
-    private static ConfigurationHandler _handler = 
+    private static ConfigurationHandler handler = 
 	new ConfigurationProperties();
 
     /**
@@ -59,7 +59,7 @@ public class ConfigurationFactory
 	    catch (Exception e) {
 		Logger.getLogger(ConfigurationFactory.class).
 		    warn("Can't create configuration factory " 
-                    + name + ", using default factory");
+                        + name + ", using default factory");
             }
 	}
 	if (newFactory == null)
@@ -88,7 +88,7 @@ public class ConfigurationFactory
      */
     public ConfigurationHandler getConfigurationHandler() {
 	// TODO:  Allow other configuration handlers.
-	return _handler;
+	return handler;
     }
 
 } /* end class ConfigurationFactory */

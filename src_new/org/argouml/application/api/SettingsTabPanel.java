@@ -1,4 +1,4 @@
-// $Id: SettingsTabPanel.java,v 1.4 2003/06/30 19:23:17 linus Exp $
+// $Id: SettingsTabPanel.java,v 1.5 2004/03/06 11:25:21 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,15 +51,18 @@ public interface SettingsTabPanel {
      */
     public void handleSettingsTabRefresh();
 
-    /** Returns the unlocalized settings tab name.
+    /** Gets the unlocalized settings tab name.
+     *  @return the unlocalized settings tab name
      */
     public String getTabKey();
 
-    /** Returns the name of the resource bundle to use.
+    /** Gets the name of the resource bundle to use.
+     *  @return the name of the resource bundle to use.
      */
     public String getTabResourceBundleKey();
 
-    /** Returns the JPanel which implements the tab.
+    /** Gets the JPanel which implements the tab.
+     *  @return the JPanel which implements the tab
      */
     public JPanel getTabPanel();
 
