@@ -32,7 +32,7 @@
                             <type>Dropdown list</type>
                         </attribute>
                         <description>Status set to <xsl:value-of select="bug_status"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="bug_severity">
@@ -43,7 +43,7 @@
                             <type>combo-box</type>
                         </attribute>
                         <description>Severity set to <xsl:value-of select="bug_severity"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="short_desc">
@@ -54,7 +54,7 @@
                             <type>long-string</type>
                         </attribute>
                         <description>Summary set to <xsl:value-of select="short_desc"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     <activity>
                         <attribute>
@@ -63,7 +63,7 @@
                             <type>long-string</type>
                         </attribute>
                         <description>Description set to <xsl:value-of select="short_desc"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="rep_platform">
@@ -74,7 +74,7 @@
                             <type>combo-box</type>
                         </attribute>
                         <description>Platform set to <xsl:value-of select="rep_platform"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="op_sys">
@@ -85,7 +85,7 @@
                             <type>combo-box</type>
                         </attribute>
                         <description>Operating System set to <xsl:value-of select="op_sys"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="assigned_to">
@@ -96,7 +96,7 @@
                             <type>user</type>
                         </attribute>
                         <description>Assigned To set to <xsl:value-of select="assigned_to"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                     <xsl:if test="resolution">
@@ -107,7 +107,7 @@
                             <type>combo-box</type>
                         </attribute>
                         <description>Resolution set to <xsl:value-of select="resolution"/></description>
-                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
+                        <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></end-date>
                     </activity>
                     </xsl:if>
                 </activity-set>
