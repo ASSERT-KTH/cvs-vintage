@@ -93,12 +93,14 @@ public class ConnectionManager
    {
       public void run()
       {
-         Iterator i = requestConnections.values().iterator();
-         while (i.hasNext())
-         {
-            AbstractClient c = (AbstractClient) i.next();
-            c.checkExpired(expirationPeriod);
-         }
+      	 synchronized(requestConnections) {
+			Iterator i = requestConnections.values().iterator();
+			while (i.hasNext())
+			{
+			   AbstractClient c = (AbstractClient) i.next();
+			   c.checkExpired(expirationPeriod);
+			}
+      	 }
       }
    }
 
@@ -203,19 +205,10 @@ public class ConnectionManager
    {
 
       boolean tracing = log.isTraceEnabled();
-      /* most of the time this will find a connection */
-      AbstractClient connection = (AbstractClient) requestConnections.get(serverID);
-      if (connection != null)
-      {
-         if (tracing)
-            log.trace("Allready connected to that server, Reusing connection: " + connection);
-         return connection;
-      }
-
       synchronized (requestConnections)
       {
 
-         connection = (AbstractClient) requestConnections.get(serverID);
+		 AbstractClient connection = (AbstractClient) requestConnections.get(serverID);
          if (connection != null)
          {
             if (tracing)
@@ -247,11 +240,8 @@ public class ConnectionManager
          if (requestConnections.size() == 0)
             startCheckThread();
 
-         HashMap t = (HashMap) requestConnections.clone();
-         t.put(serverID, c);
-         requestConnections = t;
+		 requestConnections.put(serverID, c);
          return c;
-
       }
 
    }
@@ -264,11 +254,8 @@ public class ConnectionManager
       // Remove form out map of connections.
       synchronized (requestConnections)
       {
-         HashMap t = (HashMap) requestConnections.clone();
-         t.remove(connection.getServerID());
-         requestConnections = t;
-
-         if (t.size() == 0)
+		 requestConnections.remove(connection.getServerID());
+         if (requestConnections.size() == 0)
             stopCheckThread();
       }
    }

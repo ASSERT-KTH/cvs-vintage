@@ -11,23 +11,21 @@ package org.jboss.invocation.trunk.client;
 
 
 
-import EDU.oswego.cs.dl.util.concurrent.Channel;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-import EDU.oswego.cs.dl.util.concurrent.Slot;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import javax.resource.NotSupportedException;
 import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 import javax.transaction.xa.Xid;
+
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
+
+import EDU.oswego.cs.dl.util.concurrent.Slot;
 
 /**
  * The CommTrunkRamp acts like the on and off ramps on a highway.  It merges the Invocation traffic from 
@@ -61,12 +59,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * 
     * This field uses copy on write semantics.
     */
-   volatile HashMap responseSlots = new HashMap();
-
-   /**
-    * Used to guard write access to the responseSlots object
-    */
-   Object responseSlotsMutex = new Object();
+   private volatile HashMap responseSlots = new HashMap();
 
    /**
     * The request listner is notified of new requests
@@ -102,11 +95,9 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     */
    private void registerResponseSlot(TrunkRequest request, Slot responseSlot) throws IOException
    {
-      synchronized (responseSlotsMutex)
+      synchronized (responseSlots)
       {
-         HashMap newMap = (HashMap) responseSlots.clone();
-         newMap.put(request.requestId, responseSlot);
-         responseSlots = newMap;
+		responseSlots.put(request.requestId, responseSlot);
       }
 
    }
@@ -159,11 +150,9 @@ public final class CommTrunkRamp implements java.lang.Cloneable
       }
 
       Slot slot;
-      synchronized (responseSlotsMutex)
+      synchronized (responseSlots)
       {
-         HashMap newMap = (HashMap) responseSlots.clone();
-         slot = (Slot) newMap.remove(response.correlationRequestId);
-         responseSlots = newMap;
+         slot = (Slot)responseSlots.remove(response.correlationRequestId);
       }
 
       if (slot != null)
