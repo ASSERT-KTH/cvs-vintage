@@ -39,8 +39,6 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
         values(11, 1, 'email', 'org.tigris.scarab.attribute.StringAttribute');
 insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME)
         values(12, 1, 'long-string', 'org.tigris.scarab.attribute.StringAttribute');
-insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBUTE_TYPE_NAME, JAVA_CLASS_NAME, VALIDATION_KEY)
-    values(13, 1, 'url', 'org.tigris.scarab.attribute.StringAttribute', 'Url');
 
 /*
  *  Attributes
@@ -336,6 +334,8 @@ insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
         values(1, 'ATTACHMENT');
 insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
         values(2, 'COMMENT');
+insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
+        values(3, 'URL');
 
 /*
  * root module
