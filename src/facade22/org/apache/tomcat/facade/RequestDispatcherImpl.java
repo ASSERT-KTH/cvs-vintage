@@ -201,6 +201,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;
+	    if ( ex instanceof RuntimeException )
+		throw (RuntimeException) ex;
 	    else if ( ex instanceof ServletException )
 		throw (ServletException) ex;
 	    else
@@ -363,11 +365,13 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;
+	    if ( ex instanceof RuntimeException )
+		throw (RuntimeException) ex;	
 	    else if ( ex instanceof ServletException )
 		throw (ServletException) ex;
 	    else
 		throw new ServletException
-		    (sm.getString("dispatcher.includeException", ex));
+		    (sm.getString("dispatcher.includeException"), ex);
 	}
     }
 
