@@ -9,65 +9,53 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.csm.activities;
+package org.eclipse.ui.internal.csm.roles;
 
-import org.eclipse.ui.activities.IPatternBinding;
 import org.eclipse.ui.internal.util.Util;
+import org.eclipse.ui.roles.IActivityBinding;
 
-final class PatternBinding implements IPatternBinding {
+final class ActivityBinding implements IActivityBinding {
 
 	private final static int HASH_FACTOR = 89;
-	private final static int HASH_INITIAL = PatternBinding.class.getName().hashCode();
+	private final static int HASH_INITIAL = ActivityBinding.class.getName().hashCode();
 	
-	private boolean inclusive;
-	private String pattern;
+	private String activityId;
 
 	private transient int hashCode;
 	private transient boolean hashCodeComputed;
 	private transient String string;
 
-	PatternBinding(boolean inclusive, String pattern) {	
-		if (pattern == null)
+	ActivityBinding(String activityId) {	
+		if (activityId == null)
 			throw new NullPointerException();
 
-		this.inclusive = inclusive;
-		this.pattern = pattern;
+		this.activityId = activityId;
 	}
 
 	public int compareTo(Object object) {
-		PatternBinding patternBinding = (PatternBinding) object;
-		int compareTo = Util.compare(inclusive, patternBinding.inclusive);			
-		
-		if (compareTo == 0)			
-			compareTo = Util.compare(pattern, patternBinding.pattern);
-		
+		ActivityBinding activityBinding = (ActivityBinding) object;
+		int compareTo = Util.compare(activityId, activityBinding.activityId);					
 		return compareTo;	
 	}
 	
 	public boolean equals(Object object) {
-		if (!(object instanceof PatternBinding))
+		if (!(object instanceof ActivityBinding))
 			return false;
 
-		PatternBinding patternBinding = (PatternBinding) object;	
+		ActivityBinding activityBinding = (ActivityBinding) object;	
 		boolean equals = true;
-		equals &= Util.equals(inclusive, patternBinding.inclusive);
-		equals &= Util.equals(pattern, patternBinding.pattern);
+		equals &= Util.equals(activityId, activityBinding.activityId);
 		return equals;
 	}
 
-	public String getPattern() {
-		return pattern;
-	}
-
-	public boolean isInclusive() {
-		return inclusive;
+	public String getActivityId() {
+		return activityId;
 	}
 	
 	public int hashCode() {
 		if (!hashCodeComputed) {
 			hashCode = HASH_INITIAL;
-			hashCode = hashCode * HASH_FACTOR + Util.hashCode(inclusive);
-			hashCode = hashCode * HASH_FACTOR + Util.hashCode(pattern);
+			hashCode = hashCode * HASH_FACTOR + Util.hashCode(activityId);
 			hashCodeComputed = true;
 		}
 			
@@ -78,9 +66,7 @@ final class PatternBinding implements IPatternBinding {
 		if (string == null) {
 			final StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append('[');
-			stringBuffer.append(inclusive);
-			stringBuffer.append(',');
-			stringBuffer.append(pattern);
+			stringBuffer.append(activityId);
 			stringBuffer.append(']');
 			string = stringBuffer.toString();
 		}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.csm.activities;
+package org.eclipse.ui.internal.csm.roles;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,53 +19,53 @@ import java.util.Map;
 
 import org.eclipse.ui.internal.util.Util;
 
-final class ActivityDefinition implements Comparable, IActivityDefinition {
+final class RoleDefinition implements Comparable, IRoleDefinition {
 
 	private final static int HASH_FACTOR = 89;
-	private final static int HASH_INITIAL = ActivityDefinition.class.getName().hashCode();
+	private final static int HASH_INITIAL = RoleDefinition.class.getName().hashCode();
 
-	static Map activityDefinitionsById(Collection activityDefinitions, boolean allowNullIds) {
-		if (activityDefinitions == null)
+	static Map roleDefinitionsById(Collection roleDefinitions, boolean allowNullIds) {
+		if (roleDefinitions == null)
 			throw new NullPointerException();
 
 		Map map = new HashMap();			
-		Iterator iterator = activityDefinitions.iterator();
+		Iterator iterator = roleDefinitions.iterator();
 		
 		while (iterator.hasNext()) {
 			Object object = iterator.next();
-			Util.assertInstance(object, IActivityDefinition.class);				
-			IActivityDefinition activityDefinition = (IActivityDefinition) object;
-			String id = activityDefinition.getId();
+			Util.assertInstance(object, IRoleDefinition.class);				
+			IRoleDefinition roleDefinition = (IRoleDefinition) object;
+			String id = roleDefinition.getId();
 			
 			if (allowNullIds || id != null)
-				map.put(id, activityDefinition);		
+				map.put(id, roleDefinition);		
 		}			
 		
 		return map;
 	}
 
-	static Map activityDefinitionsByName(Collection activityDefinitions, boolean allowNullNames) {
-		if (activityDefinitions == null)
+	static Map roleDefinitionsByName(Collection roleDefinitions, boolean allowNullNames) {
+		if (roleDefinitions == null)
 			throw new NullPointerException();
 
 		Map map = new HashMap();			
-		Iterator iterator = activityDefinitions.iterator();
+		Iterator iterator = roleDefinitions.iterator();
 		
 		while (iterator.hasNext()) {
 			Object object = iterator.next();
-			Util.assertInstance(object, IActivityDefinition.class);			
-			IActivityDefinition activityDefinition = (IActivityDefinition) object;
-			String name = activityDefinition.getName();
+			Util.assertInstance(object, IRoleDefinition.class);			
+			IRoleDefinition roleDefinition = (IRoleDefinition) object;
+			String name = roleDefinition.getName();
 			
 			if (allowNullNames || name != null) {
-				Collection activityDefinitions2 = (Collection) map.get(name);
+				Collection roleDefinitions2 = (Collection) map.get(name);
 					
-				if (activityDefinitions2 == null) {
-					activityDefinitions2 = new HashSet();
-					map.put(name, activityDefinitions2);					
+				if (roleDefinitions2 == null) {
+					roleDefinitions2 = new HashSet();
+					map.put(name, roleDefinitions2);					
 				}
 	
-				activityDefinitions2.add(activityDefinition);		
+				roleDefinitions2.add(roleDefinition);		
 			}											
 		}				
 	
@@ -75,37 +75,31 @@ final class ActivityDefinition implements Comparable, IActivityDefinition {
 	private String description;
 	private String id;
 	private String name;
-	private String parentId;
 	private String pluginId;
 
 	private transient int hashCode;
 	private transient boolean hashCodeComputed;
 	private transient String string;
 	
-	ActivityDefinition(String description, String id, String name, String parentId, String pluginId) {
+	RoleDefinition(String description, String id, String name, String pluginId) {
 		this.description = description;
 		this.id = id;
 		this.name = name;
-		this.parentId = parentId;
 		this.pluginId = pluginId;
 	}
 	
 	public int compareTo(Object object) {
-		ActivityDefinition activityDefinition = (ActivityDefinition) object;
-		int compareTo = Util.compare(description, activityDefinition.description);
+		RoleDefinition roleDefinition = (RoleDefinition) object;
+		int compareTo = Util.compare(description, roleDefinition.description);
 		
 		if (compareTo == 0) {		
-			compareTo = Util.compare(id, activityDefinition.id);			
+			compareTo = Util.compare(id, roleDefinition.id);			
 		
 			if (compareTo == 0) {
-				compareTo = Util.compare(name, activityDefinition.name);
+				compareTo = Util.compare(name, roleDefinition.name);
 				
-				if (compareTo == 0) {
-					compareTo = Util.compare(parentId, activityDefinition.parentId);
-
-					if (compareTo == 0)
-						compareTo = Util.compare(pluginId, activityDefinition.pluginId);								
-				}							
+				if (compareTo == 0)
+					compareTo = Util.compare(pluginId, roleDefinition.pluginId);								
 			}
 		}
 		
@@ -113,16 +107,15 @@ final class ActivityDefinition implements Comparable, IActivityDefinition {
 	}
 	
 	public boolean equals(Object object) {
-		if (!(object instanceof ActivityDefinition))
+		if (!(object instanceof RoleDefinition))
 			return false;
 
-		ActivityDefinition activityDefinition = (ActivityDefinition) object;	
+		RoleDefinition roleDefinition = (RoleDefinition) object;	
 		boolean equals = true;
-		equals &= Util.equals(description, activityDefinition.description);
-		equals &= Util.equals(id, activityDefinition.id);
-		equals &= Util.equals(name, activityDefinition.name);
-		equals &= Util.equals(parentId, activityDefinition.parentId);
-		equals &= Util.equals(pluginId, activityDefinition.pluginId);
+		equals &= Util.equals(description, roleDefinition.description);
+		equals &= Util.equals(id, roleDefinition.id);
+		equals &= Util.equals(name, roleDefinition.name);
+		equals &= Util.equals(pluginId, roleDefinition.pluginId);
 		return equals;
 	}
 
@@ -138,10 +131,6 @@ final class ActivityDefinition implements Comparable, IActivityDefinition {
 		return name;
 	}	
 
-	public String getParentId() {
-		return parentId;
-	}
-
 	public String getPluginId() {
 		return pluginId;
 	}
@@ -152,7 +141,6 @@ final class ActivityDefinition implements Comparable, IActivityDefinition {
 			hashCode = hashCode * HASH_FACTOR + Util.hashCode(description);
 			hashCode = hashCode * HASH_FACTOR + Util.hashCode(id);
 			hashCode = hashCode * HASH_FACTOR + Util.hashCode(name);
-			hashCode = hashCode * HASH_FACTOR + Util.hashCode(parentId);
 			hashCode = hashCode * HASH_FACTOR + Util.hashCode(pluginId);
 			hashCodeComputed = true;
 		}
@@ -169,8 +157,6 @@ final class ActivityDefinition implements Comparable, IActivityDefinition {
 			stringBuffer.append(id);
 			stringBuffer.append(',');
 			stringBuffer.append(name);
-			stringBuffer.append(',');
-			stringBuffer.append(parentId);
 			stringBuffer.append(',');
 			stringBuffer.append(pluginId);
 			stringBuffer.append(']');

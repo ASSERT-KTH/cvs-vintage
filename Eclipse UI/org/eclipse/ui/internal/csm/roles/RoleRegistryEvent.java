@@ -11,9 +11,18 @@
 
 package org.eclipse.ui.internal.csm.roles;
 
-import java.util.List;
+final class RoleRegistryEvent implements IRoleRegistryEvent {
 
-public interface IMutableRoleRegistry extends IRoleRegistry {
+	private IRoleRegistry roleRegistry;
 
-	void setRoleDefinitions(List roleDefinitions);
+	RoleRegistryEvent(IRoleRegistry roleRegistry) {
+		if (roleRegistry == null)
+			throw new NullPointerException();
+		
+		this.roleRegistry = roleRegistry;
+	}
+
+	public IRoleRegistry getRoleRegistry() {
+		return roleRegistry;
+	}
 }

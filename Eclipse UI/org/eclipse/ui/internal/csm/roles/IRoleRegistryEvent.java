@@ -11,21 +11,7 @@
 
 package org.eclipse.ui.internal.csm.roles;
 
-import java.util.List;
+public interface IRoleRegistryEvent {
 
-import org.eclipse.ui.internal.util.Util;
-
-abstract class AbstractMutableRoleRegistry extends AbstractRoleRegistry implements IMutableRoleRegistry {
-
-	protected AbstractMutableRoleRegistry() {
-	}
-
-	public void setRoleDefinitions(List roleDefinitions) {
-		roleDefinitions = Util.safeCopy(roleDefinitions, IRoleDefinition.class);	
-		
-		if (!roleDefinitions.equals(this.roleDefinitions)) {
-			this.roleDefinitions = roleDefinitions;			
-			fireRoleRegistryChanged();
-		}
-	}
+	IRoleRegistry getRoleRegistry();
 }
