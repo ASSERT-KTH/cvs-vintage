@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.48 2002/02/15 03:03:16 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.49 2002/02/17 05:28:55 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -888,24 +888,33 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		gfx.setColor(caretColor);
 
-		if(textArea.isOverwriteEnabled())
-		{
-			gfx.drawLine(caretX,y + height - 1,
-				caretX + textArea.charWidth,y + height - 1);
-		}
-		else if(blockCaret)
+		if(blockCaret)
 		{
 			// Workaround for bug in Graphics2D in JDK1.4 under
 			// Windows; calling setPaintMode() does not reset
 			// graphics mode.
 			Graphics2D blockgfx = (Graphics2D)gfx.create();
 			blockgfx.setXORMode(bgColor);
-			blockgfx.fillRect(caretX,y,textArea.charWidth,height);
+
+			if(textArea.isOverwriteEnabled())
+			{
+				blockgfx.fillRect(caretX,y + height - height / 3,
+					textArea.charWidth,height / 3);
+			}
+			else
+				blockgfx.fillRect(caretX,y,textArea.charWidth,height);
+
 			blockgfx.dispose();
 		}
 		else
 		{
-			gfx.drawLine(caretX,y,caretX,y + height - 1);
+			if(textArea.isOverwriteEnabled())
+			{
+				gfx.drawLine(caretX,y + height - 1,
+					caretX + textArea.charWidth,y + height - 1);
+			}
+			else
+				gfx.drawLine(caretX,y,caretX,y + height - 1);
 		}
 	} //}}}
 
