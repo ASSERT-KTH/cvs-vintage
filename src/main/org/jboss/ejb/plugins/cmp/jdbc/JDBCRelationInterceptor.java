@@ -16,7 +16,6 @@ import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRInvocation;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -26,7 +25,8 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.21 $
  */
 public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -102,22 +102,10 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
                " id=" + ctx.getId() +
                " relatedId=" + relatedId);
          }
+
          cmrField.addRelation(ctx, relatedId);
 
-         // WARN: do not check
-         //if(cmrField.isCollectionValued() && cmrField.getRelatedCMRField().isCollectionValued())
-         // it could be 1:1 with relation table mapping
-         if(!cmrField.hasForeignKey() && !cmrField.getRelatedCMRField().hasForeignKey())
-         {
-            RelationData relationData = getRelationData(cmrField);
-            relationData.addRelation(
-               cmrField,
-               ctx.getId(),
-               cmrField.getRelatedCMRField(),
-               relatedId);
-         }
          return null;
-
       }
       else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
       {
@@ -129,21 +117,8 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
                " id=" + ctx.getId() +
                " relatedId=" + relatedId);
          }
+
          cmrField.removeRelation(ctx, relatedId);
-
-         // WARN: do not check
-         //if(cmrField.isCollectionValued() && cmrField.getRelatedCMRField().isCollectionValued())
-         // it could be 1:1 with relation table mapping
-         if(!cmrField.hasForeignKey() && !cmrField.getRelatedCMRField().hasForeignKey())
-         {
-            RelationData relationData = getRelationData(cmrField);
-            relationData.removeRelation(
-               cmrField,
-               ctx.getId(),
-               cmrField.getRelatedCMRField(),
-               relatedId);
-         }
-
          return null;
       }
       else if(CMRMessage.SCHEDULE_FOR_CASCADE_DELETE == relationshipMessage)
@@ -163,21 +138,5 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
             relationshipMessage);
       }
    }
-
-   private static RelationData getRelationData(JDBCCMRFieldBridge cmrField)
-   {
-      JDBCStoreManager manager = cmrField.getJDBCStoreManager();
-      JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
-      RelationData relationData = (RelationData)manager.getApplicationTxData(relationMetaData);
-
-      if(relationData == null)
-      {
-         relationData = new RelationData(cmrField, cmrField.getRelatedCMRField());
-         manager.putApplicationTxData(relationMetaData, relationData);
-      }
-      return relationData;
-   }
-
-   // Private  ----------------------------------------------------
 }
 

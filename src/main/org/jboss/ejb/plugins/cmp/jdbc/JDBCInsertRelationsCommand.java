@@ -21,14 +21,12 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
-public final class JDBCInsertRelationsCommand
-{
+public final class JDBCInsertRelationsCommand {
    private final Logger log;
 
-   public JDBCInsertRelationsCommand(JDBCStoreManager manager)
-   {
+   public JDBCInsertRelationsCommand(JDBCStoreManager manager) {
       this.log = Logger.getLogger(
          this.getClass().getName() +
          "." +
@@ -46,8 +44,7 @@ public final class JDBCInsertRelationsCommand
       PreparedStatement ps = null;
 
       JDBCCMRFieldBridge cmrField = relationData.getLeftCMRField();
-      try
-      {
+      try {
          // get the sql
          String sql = getSQL(relationData);
          boolean debug = log.isDebugEnabled();
@@ -57,7 +54,6 @@ public final class JDBCInsertRelationsCommand
          // get the connection
          DataSource dataSource = cmrField.getDataSource();
          con = dataSource.getConnection();
-
          // get a prepared statement
          ps = con.prepareStatement(sql);
 
@@ -69,10 +65,7 @@ public final class JDBCInsertRelationsCommand
             // set the parameters
             setParameters(ps, relationData, pair);
 
-            int rowsAffected = ps.executeUpdate();
-
-            if(debug)
-               log.debug("Rows affected = " + rowsAffected);
+            ps.executeUpdate();
          }
       }
       catch(Exception e)
@@ -87,8 +80,7 @@ public final class JDBCInsertRelationsCommand
       }
    }
 
-   protected static String getSQL(RelationData relationData)
-   {
+   protected static String getSQL(RelationData relationData) {
       JDBCCMRFieldBridge left = relationData.getLeftCMRField();
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
 
@@ -96,22 +88,22 @@ public final class JDBCInsertRelationsCommand
       sql.append(SQLUtil.INSERT_INTO).append(left.getTableName());
 
       sql.append('(');
-      SQLUtil.getColumnNamesClause(left.getTableKeyFields(), sql);
+         SQLUtil.getColumnNamesClause(left.getTableKeyFields(), sql);
       sql.append(SQLUtil.COMMA);
-      SQLUtil.getColumnNamesClause(right.getTableKeyFields(), sql);
+         SQLUtil.getColumnNamesClause(right.getTableKeyFields(), sql);
       sql.append(')');
 
       sql.append(SQLUtil.VALUES).append('(');
-      SQLUtil.getValuesClause(left.getTableKeyFields(), sql);
-      sql.append(SQLUtil.COMMA);
-      SQLUtil.getValuesClause(right.getTableKeyFields(), sql);
+            SQLUtil.getValuesClause(left.getTableKeyFields(), sql);
+            sql.append(SQLUtil.COMMA);
+            SQLUtil.getValuesClause(right.getTableKeyFields(), sql);
       sql.append(')');
       return sql.toString();
    }
 
    protected static void setParameters(PreparedStatement ps,
-                                       RelationData relationData,
-                                       RelationPair pair)
+                                RelationData relationData,
+                                RelationPair pair)
    {
       int index = 1;
 

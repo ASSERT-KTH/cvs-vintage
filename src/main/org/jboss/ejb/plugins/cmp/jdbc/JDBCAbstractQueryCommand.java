@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -208,7 +208,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          // load the results
          if(selectEntity != null)
          {
+            boolean loadOnFindCmr = !onFindCMRList.isEmpty();
             Object[] ref = new Object[1];
+            Object prevPk = null;
             while((limit == 0 || count-- > 0) && rs.next())
             {
                int index = 1;
@@ -217,9 +219,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
                Object pk = ref[0];
 
-               boolean loaded = results.contains(pk);
-               if(!loaded)
+               boolean addPk = (loadOnFindCmr ? !pk.equals(prevPk) : true);
+               if(addPk)
+               {
                   results.add(pk);
+                  prevPk = pk;
+               }
 
                // read the preload fields
                if(eagerLoadMask != null)
@@ -235,7 +240,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                         // read the value and store it in the readahead cache
                         index = field.loadArgumentResults(rs, index, ref);
 
-                        if(!loaded)
+                        if(addPk)
                            selectReadAheadCache.addPreloadData(pk, field, ref[0]);
                      }
                   }
@@ -426,11 +431,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                   // a parameter and not a function
                   sqlBuf.append("?");
                   params.add(parameter);
-
                   if(!tokens.nextToken().equals("}"))
                   {
-                     throw new DeploymentException("Invalid parameter - " +
-                        "missing closing '}' : " + sql);
+                     throw new DeploymentException("Invalid parameter - missing closing '}' : " + sql);
                   }
                }
                else
@@ -449,7 +452,6 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       }
 
       parameters = params;
-
       return sqlBuf.toString();
    }
 
@@ -636,9 +638,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          }
 
          // load eager load group
-         JDBCCMPFieldBridge[] tableFields = relatedEntity.getTableFields();
          if(node.eagerLoadMask != null)
          {
+            JDBCCMPFieldBridge[] tableFields = relatedEntity.getTableFields();
             for(int fieldInd = 0; fieldInd < tableFields.length; ++fieldInd)
             {
                if(node.eagerLoadMask[fieldInd])

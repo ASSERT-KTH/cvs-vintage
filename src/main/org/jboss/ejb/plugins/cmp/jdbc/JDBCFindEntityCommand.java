@@ -24,7 +24,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCFindEntityCommand
 {
@@ -37,14 +37,10 @@ public final class JDBCFindEntityCommand
       this.manager = manager;
    }
 
-   public Object execute(
-      Method finderMethod,
-      Object[] args,
-      EntityEnterpriseContext ctx) throws FinderException
+   public Object execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws FinderException
    {
-
-      JDBCQueryCommand query =
-         manager.getQueryManager().getQueryCommand(finderMethod);
+      JDBCQueryCommand query = manager.getQueryManager().getQueryCommand(finderMethod);
 
       Collection result = query.execute(finderMethod, args, ctx);
       if(result.isEmpty())
@@ -57,7 +53,7 @@ public final class JDBCFindEntityCommand
       }
       else
       {
-         throw new FinderException("More than one entity matches the finder criteria.");
+         throw new FinderException("More than one entity matches the finder criteria: " + result);
       }
    }
 }

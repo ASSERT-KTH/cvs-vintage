@@ -15,6 +15,7 @@ import org.jboss.tm.JBossTransactionRolledbackException;
 import org.jboss.tm.JBossTransactionRolledbackLocalException;
 import org.jboss.util.NestedException;
 import org.jboss.util.deadlock.ApplicationDeadlockException;
+import org.w3c.dom.Element;
 
 import javax.ejb.EJBException;
 import javax.ejb.TransactionRequiredLocalException;
@@ -28,13 +29,11 @@ import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Iterator;
-
-import org.w3c.dom.Element;
+import java.util.ArrayList;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -45,7 +44,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor implements XmlLoadable
@@ -277,7 +276,15 @@ extends AbstractTxInterceptor implements XmlLoadable
             case MetaData.TX_NOT_SUPPORTED:
             {
                // Do not set a transaction on the thread even if in MI, just run
-               return invokeNext(invocation, false);
+               try
+               {
+                  invocation.setTransaction(null);
+                  return invokeNext(invocation, false);
+               }
+               finally
+               {
+                  invocation.setTransaction(oldTransaction);
+               }
             }
             case MetaData.TX_REQUIRED:
             {

@@ -46,8 +46,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-import org.jboss.ejb.plugins.cmp.jdbc.ReadAheadCache;
 import org.jboss.ejb.plugins.cmp.jdbc.CascadeDeleteStrategy;
+import org.jboss.ejb.plugins.cmp.jdbc.RelationData;
 import org.jboss.tm.TransactionLocal;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.74 $
+ * @version $Revision: 1.75 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -136,8 +136,8 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    /** cascade-delete strategy */
    private CascadeDeleteStrategy cascadeDeleteStrategy;
 
-   /** Batch cascade-delete SQL for the opposite side */
-   public String batchCascadeDeleteSql;
+   /** This CMR field and its related CMR field share the same RelationDataManager */
+   private RelationDataManager relationManager;
 
    /**
     * Creates a cmr field for the entity based on the metadata.
@@ -161,6 +161,11 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          categoryName += metadata.getRelatedRole().getEntity().getName() +
             "-" + metadata.getRelatedRole().getCMRFieldName();
       this.log = Logger.getLogger(categoryName);
+   }
+
+   public RelationDataManager getRelationDataManager()
+   {
+      return relationManager;
    }
 
    public void resolveRelationship() throws DeploymentException
@@ -296,6 +301,8 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       {
          initializeForeignKeyFields();
       }
+
+      relationManager = relatedCMRField.initRelationManager(this);
    }
 
    /**
@@ -502,14 +509,6 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    }
 
    /**
-    * Gets the EntityCache from the related entity.
-    */
-   private final EntityCache getRelatedCache()
-   {
-      return (EntityCache)getRelatedContainer().getInstanceCache();
-   }
-
-   /**
     * @param ctx - entity's context
     * @return true if entity is loaded, false - otherwise.
     */
@@ -523,28 +522,29 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
     * to be created.
     * @param ctx - entity's context.
     */
-   public synchronized void addRelatedPKsWaitedForMe(EntityEnterpriseContext ctx)
+   public void addRelatedPKsWaitedForMe(EntityEnterpriseContext ctx)
    {
-      List relatedPKsWaitingForMe = (List)getRelatedPKsWaitingForMyPK().get(ctx.getId());
-      if(relatedPKsWaitingForMe == null)
-         return;
-
-      for(Iterator waitingPKsIter = relatedPKsWaitingForMe.iterator(); waitingPKsIter.hasNext();)
+      final Map relatedPKsMap = getRelatedPKsWaitingForMyPK();
+      synchronized(relatedPKsMap)
       {
-         Object waitingPK = waitingPKsIter.next();
-         waitingPKsIter.remove();
-         try
+         List relatedPKsWaitingForMe = (List)relatedPKsMap.get(ctx.getId());
+         if(relatedPKsWaitingForMe != null)
          {
-            EntityEnterpriseContext relatedCtx = (EntityEnterpriseContext)getRelatedCache().get(waitingPK);
-            if(relatedManager.loadEntity(relatedCtx, false))
+            for(Iterator waitingPKsIter = relatedPKsWaitingForMe.iterator(); waitingPKsIter.hasNext();)
             {
-               relatedCtx.setValid(true);
-               createRelationLinks(ctx, waitingPK);
+               Object waitingPK = waitingPKsIter.next();
+               waitingPKsIter.remove();
+               try
+               {
+                  EJBLocalHome relatedHome = getRelatedContainer().getLocalProxyFactory().getEJBLocalHome();
+                  relatedFindByPrimaryKey.invoke(relatedHome, new Object[]{waitingPK});
+                  createRelationLinks(ctx, waitingPK);
+               }
+               catch(Exception e)
+               {
+                  // no such object
+               }
             }
-         }
-         catch(Exception e)
-         {
-            // no such object
          }
       }
    }
@@ -1157,12 +1157,12 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    }
 
    /**
-    * Adds the foreign key to the set of related ids, and updates
-    * any foreign key fields.
+    * Adds the foreign key to the set of related ids, and updates any foreign key fields.
     */
    public void addRelation(EntityEnterpriseContext myCtx, Object fk)
    {
       addRelation(myCtx, fk, true);
+      relationManager.addRelation(this, myCtx.getId(), relatedCMRField, fk);
    }
 
    private void addRelation(EntityEnterpriseContext myCtx, Object fk, boolean updateForeignKey)
@@ -1187,12 +1187,12 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    }
 
    /**
-    * Removes the foreign key to the set of related ids, and updates
-    * any foreign key fields.
+    * Removes the foreign key to the set of related ids, and updates any foreign key fields.
     */
    public void removeRelation(EntityEnterpriseContext myCtx, Object fk)
    {
       removeRelation(myCtx, fk, true, true);
+      relationManager.removeRelation(this, myCtx.getId(), relatedCMRField, fk);
    }
 
    private void removeRelation(EntityEnterpriseContext myCtx,
@@ -1450,14 +1450,11 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 
    /**
     * This method is never called.
-    * In case of a CMR
-    * - with foreign key fields, only the foreign key fields are asked for the dirty state.
-    * - from m:m relationship, it is never dirty because added/removed key pairs are stored in application
-    * tx data map.
+    * In case of a CMR with foreign key fields, only the foreign key fields are asked for the dirty state.
     */
    public boolean isDirty(EntityEnterpriseContext ctx)
    {
-      throw new UnsupportedOperationException();
+      return foreignKeyFields == null ? relationManager.isDirty() : false;
    }
 
    /**
@@ -1477,24 +1474,32 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       return hasFKFieldsMappedToCMPFields;
    }
 
-   public synchronized void addRelatedPKWaitingForMyPK(Object myPK, Object relatedPK)
+   public void addRelatedPKWaitingForMyPK(Object myPK, Object relatedPK)
    {
       Map relatedPKsWaitingForMyPK = getRelatedPKsWaitingForMyPK();
-      List relatedPKs = (List)relatedPKsWaitingForMyPK.get(myPK);
-      if(relatedPKs == null)
+      synchronized(relatedPKsWaitingForMyPK)
       {
-         relatedPKs = new ArrayList(1);
-         relatedPKsWaitingForMyPK.put(myPK, relatedPKs);
+         List relatedPKs = (List)relatedPKsWaitingForMyPK.get(myPK);
+         if(relatedPKs == null)
+         {
+            relatedPKs = new ArrayList(1);
+            relatedPKsWaitingForMyPK.put(myPK, relatedPKs);
+         }
+         relatedPKs.add(relatedPK);
       }
-      relatedPKs.add(relatedPK);
    }
 
-   public synchronized void removeRelatedPKWaitingForMyPK(Object myPK, Object relatedPK)
+   public void removeRelatedPKWaitingForMyPK(Object myPK, Object relatedPK)
    {
-      List relatedPKs = (List)getRelatedPKsWaitingForMyPK().get(myPK);
-      if(relatedPKs == null)
-         return;
-      relatedPKs.remove(relatedPK);
+      final Map relatedPKMap = getRelatedPKsWaitingForMyPK();
+      synchronized(relatedPKMap)
+      {
+         List relatedPKs = (List)relatedPKMap.get(myPK);
+         if(relatedPKs != null)
+         {
+            relatedPKs.remove(relatedPK);
+         }
+      }
    }
 
    /**
@@ -1623,6 +1628,22 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    private Map getRelatedPKsWaitingForMyPK()
    {
       return (Map)relatedPKValuesWaitingForMyPK.get();
+   }
+
+   private RelationDataManager initRelationManager(JDBCCMRFieldBridge relatedField)
+   {
+      if(relationManager == null)
+      {
+         if(metadata.isMultiplicityMany() && metadata.getRelatedRole().isMultiplicityMany())
+         {
+            relationManager = new M2MRelationManager(this, relatedField);
+         }
+         else
+         {
+            relationManager = EMPTY_RELATION_MANAGER;
+         }
+      }
+      return relationManager;
    }
 
    public String toString()
@@ -1923,6 +1944,89 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 
       public void afterCompletion(int status)
       {
+      }
+   }
+
+   public static interface RelationDataManager
+   {
+      void addRelation(JDBCCMRFieldBridge field, Object id, JDBCCMRFieldBridge relatedField, Object relatedId);
+
+      void removeRelation(JDBCCMRFieldBridge field, Object id, JDBCCMRFieldBridge relatedField, Object relatedId);
+
+      boolean isDirty();
+
+      RelationData getRelationData();
+   }
+
+   private static final RelationDataManager EMPTY_RELATION_MANAGER = new RelationDataManager()
+   {
+      public void addRelation(JDBCCMRFieldBridge field, Object id, JDBCCMRFieldBridge relatedField, Object relatedId)
+      {
+      }
+
+      public void removeRelation(JDBCCMRFieldBridge field, Object id, JDBCCMRFieldBridge relatedField, Object relatedId)
+      {
+      }
+
+      public boolean isDirty()
+      {
+         return false;
+      }
+
+      public RelationData getRelationData()
+      {
+         throw new UnsupportedOperationException();
+      }
+   };
+
+   public static class M2MRelationManager
+      implements RelationDataManager
+   {
+      private final JDBCCMRFieldBridge leftField;
+      private final JDBCCMRFieldBridge rightField;
+
+      private final TransactionLocal relationData = new TransactionLocal()
+      {
+         protected Object initialValue()
+         {
+            return new RelationData(leftField, rightField);
+         }
+      };
+
+      public M2MRelationManager(JDBCCMRFieldBridge leftField, JDBCCMRFieldBridge rightField)
+      {
+         this.leftField = leftField;
+         this.rightField = rightField;
+      }
+
+      public void addRelation(JDBCCMRFieldBridge field,
+                              Object id,
+                              JDBCCMRFieldBridge relatedField,
+                              Object relatedId)
+      {
+         final RelationData local = getRelationData();
+         local.addRelation(field, id, relatedField, relatedId);
+      }
+
+      public void removeRelation(JDBCCMRFieldBridge field,
+                                 Object id,
+                                 JDBCCMRFieldBridge relatedField,
+                                 Object relatedId)
+      {
+         RelationData local = getRelationData();
+         local.removeRelation(field, id, relatedField, relatedId);
+      }
+
+      public boolean isDirty()
+      {
+         RelationData local = getRelationData();
+         return local.isDirty();
+      }
+
+      public RelationData getRelationData()
+      {
+         final RelationData local = (RelationData)relationData.get();
+         return local;
       }
    }
 }

@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCIsModifiedCommand
 {
@@ -29,7 +29,7 @@ public final class JDBCIsModifiedCommand
 
    public boolean execute(EntityEnterpriseContext ctx)
    {
-      return bridge.isCreated(ctx);
+      return bridge.isModified(ctx);
    }
 }
 

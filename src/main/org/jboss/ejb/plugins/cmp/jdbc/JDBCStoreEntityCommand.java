@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCStoreEntityCommand
 {
@@ -52,7 +52,8 @@ public final class JDBCStoreEntityCommand
    {
       // scheduled for batch cascade-delete instance should not be updated
       // because foreign key fields could be updated to null and cascade-delete will fail.
-      if(!entity.isDirty(ctx) || entity.isScheduledForBatchCascadeDelete(ctx))
+      JDBCEntityBridge.FieldIterator dirtyIterator = entity.getDirtyIterator(ctx);
+      if(!dirtyIterator.hasNext() || entity.isScheduledForBatchCascadeDelete(ctx))
       {
          if(log.isTraceEnabled())
          {
@@ -61,8 +62,6 @@ public final class JDBCStoreEntityCommand
          }
          return;
       }
-
-      JDBCEntityBridge.FieldIterator dirtyIterator = entity.getDirtyIterator(ctx);
 
       // generate sql
       StringBuffer sql = new StringBuffer(200);
@@ -152,9 +151,8 @@ public final class JDBCStoreEntityCommand
       // check results
       if(rowsAffected != 1)
       {
-         throw new EJBException("Update failed. Expected one " +
-            "affected row: rowsAffected=" + rowsAffected +
-            "id=" + ctx.getId());
+         throw new EJBException("Update failed. Expected one affected row: rowsAffected=" +
+            rowsAffected + ", id=" + ctx.getId());
       }
 
       // Mark the updated fields as clean.

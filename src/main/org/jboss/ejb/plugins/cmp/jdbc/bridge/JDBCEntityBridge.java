@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -651,11 +651,6 @@ public class JDBCEntityBridge implements EntityBridge
       }
    }
 
-   public static boolean isCreated(EntityEnterpriseContext ctx)
-   {
-      return getEntityState(ctx).isCreated();
-   }
-
    public static boolean isEjbCreateDone(EntityEnterpriseContext ctx)
    {
       return getEntityState(ctx).ejbCreateDone;
@@ -671,17 +666,52 @@ public class JDBCEntityBridge implements EntityBridge
       getEntityState(ctx).ejbCreateDone = true;
    }
 
-   /**
-    * Returns the mask for dirty fields.
-    */
-   public boolean isDirty(EntityEnterpriseContext ctx)
+   public boolean isModified(EntityEnterpriseContext ctx)
    {
-      return getEntityState(ctx).isDirty(ctx);
+      boolean modified = false;
+      final EntityState entityState = getEntityState(ctx);
+      if(entityState.isCreated())
+      {
+         for(int i = 0; i < tableFields.length; ++i)
+         {
+            final JDBCCMPFieldBridge field = tableFields[i];
+            if(entityState.isCheckDirty(i) && field.isDirty(ctx))
+            {
+               modified = true;
+               break;
+            }
+         }
+
+         if(!modified)
+         {
+            for(int i = 0; i < cmrFields.length; ++i)
+            {
+               if(cmrFields[i].isDirty(ctx))
+               {
+                  modified = true;
+                  break;
+               }
+            }
+         }
+      }
+      return modified;
    }
 
    public FieldIterator getDirtyIterator(EntityEnterpriseContext ctx)
    {
-      return getEntityState(ctx).getDirtyIterator(ctx);
+      int dirtyFields = 0;
+      final EntityState entityState = getEntityState(ctx);
+      for(int i = 0; i < tableFields.length; ++i)
+      {
+         JDBCCMPFieldBridge field = tableFields[i];
+         if(entityState.isCheckDirty(i) && field.isDirty(ctx))
+         {
+            entityState.setUpdateRequired(i);
+            ++dirtyFields;
+         }
+      }
+
+      return dirtyFields > 0 ? getEntityState(ctx).getDirtyIterator(ctx) : EMPTY_FIELD_ITERATOR;
    }
 
    public boolean hasLockedFields(EntityEnterpriseContext ctx)
@@ -1195,12 +1225,30 @@ public class JDBCEntityBridge implements EntityBridge
       }
 
       /**
+       * Marks the field to be updated.
+       * @param fieldIndex  index of the field.
+       */
+      public void setUpdateRequired(int fieldIndex)
+      {
+         fieldFlags[fieldIndex] |= DIRTY;
+      }
+
+      /**
        * The field will be checked for dirty state at commit.
        * @param fieldIndex  index of the field.
        */
       public void setCheckDirty(int fieldIndex)
       {
          fieldFlags[fieldIndex] |= CHECK_DIRTY;
+      }
+
+      /**
+       * @param fieldIndex the index of the field that should be checked for dirty state.
+       * @return true if the field should be checked for dirty state.
+       */
+      public boolean isCheckDirty(int fieldIndex)
+      {
+         return (fieldFlags[fieldIndex] & CHECK_DIRTY) > 0;
       }
 
       /**
@@ -1221,23 +1269,9 @@ public class JDBCEntityBridge implements EntityBridge
          fieldFlags[fieldIndex] = tableFields[fieldIndex].getDefaultFlags();
       }
 
-      public boolean isDirty(EntityEnterpriseContext ctx)
-      {
-         int dirtyFields = 0;
-         for(int i = 0; i < fieldFlags.length; ++i)
-         {
-            if((fieldFlags[i] & CHECK_DIRTY) > 0 && tableFields[i].isDirty(ctx))
-            {
-               fieldFlags[i] |= DIRTY;
-               ++dirtyFields;
-            }
-         }
-         return dirtyFields > 0;
-      }
-
       public FieldIterator getDirtyIterator(EntityEnterpriseContext ctx)
       {
-         return new MaskFieldIterator(DIRTY | ADD_TO_SET_ON_UPDATE);
+         return new MaskFieldIterator((byte)(DIRTY | ADD_TO_SET_ON_UPDATE));
       }
 
       public boolean hasLockedFields()
@@ -1256,7 +1290,7 @@ public class JDBCEntityBridge implements EntityBridge
 
       public FieldIterator getLockedIterator(EntityEnterpriseContext ctx)
       {
-         return new MaskFieldIterator(LOCKED | ADD_TO_WHERE_ON_UPDATE);
+         return new MaskFieldIterator((byte)(LOCKED | ADD_TO_WHERE_ON_UPDATE));
       }
 
       public boolean lockValue(int fieldIndex)
@@ -1280,22 +1314,28 @@ public class JDBCEntityBridge implements EntityBridge
 
       private class MaskFieldIterator implements FieldIterator
       {
-         private final int flagMask;
+         private final byte flagMask;
          private int nextIndex = 0;
          private int curIndex = -1;
 
-         public MaskFieldIterator(int flagMask)
+         public MaskFieldIterator(byte flagMask)
          {
             this.flagMask = flagMask;
          }
 
          public boolean hasNext()
          {
-            boolean hasNext;
-            while((hasNext = nextIndex < fieldFlags.length)
-               && (fieldFlags[nextIndex] & flagMask) == 0)
+            while(nextIndex < fieldFlags.length)
+            {
+               if((fieldFlags[nextIndex] & flagMask) > 0)
+               {
+                  return true;
+               }
+
                ++nextIndex;
-            return hasNext;
+            }
+
+            return false;
          }
 
          public JDBCCMPFieldBridge next()

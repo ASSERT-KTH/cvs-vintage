@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +57,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  */
 public final class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -644,24 +643,15 @@ public final class JDBCStoreManager implements EntityPersistenceStore
 
    private void synchronizeRelationData()
    {
-      Map txData = getApplicationTxDataMap();
-      if(txData == null)
+      final JDBCCMRFieldBridge[] cmrFields = entityBridge.getCMRFields();
+      for(int i = 0; i < cmrFields.length; ++i)
       {
-         return;
-      }
-
-      Iterator iterator = txData.values().iterator();
-      while(iterator.hasNext())
-      {
-         Object obj = iterator.next();
-         if(obj instanceof RelationData)
+         final JDBCCMRFieldBridge.RelationDataManager relationManager = cmrFields[i].getRelationDataManager();
+         if(relationManager.isDirty())
          {
-            RelationData relationData = (RelationData)obj;
+            final RelationData relationData = relationManager.getRelationData();
 
-            // delete all removed pairs from relation table
             deleteRelations(relationData);
-
-            // insert all added pairs into the relation table
             insertRelations(relationData);
 
             relationData.addedRelations.clear();

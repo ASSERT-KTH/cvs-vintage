@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -80,12 +80,12 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
          cmpField.getFieldName(),
          cmpField.getFieldType(),
          cmpField.getJDBCType(),
-         cmpField.isReadOnly(),               // should always be false?
+         cmpField.isReadOnly(), // should always be false?
          cmpField.getReadTimeOut(),
          cmpField.getPrimaryKeyClass(),
          cmpField.getPrimaryKeyField(),
          cmpField,
-         null,                                // it should not be a foreign key
+         null, // it should not be a foreign key
          cmpField.getColumnName()
       );
       this.stateFactory = stateFactory;
@@ -201,7 +201,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
                   + getFieldName()
                   + " changed the value of a primary key field "
                   + cmpFieldIAmMappedTo.getFieldName()
-                  + "[" + fieldState.value + "]");
+                  + "[" + fieldState.value + "]"
+               );
             }
             else
             {
@@ -212,6 +213,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       else
       {
          if(cmrChainLink != null
+            && JDBCEntityBridge.isEjbCreateDone(ctx)
             && fieldState.isLoaded()
             && fieldState.isValueChanged(value))
          {
@@ -348,6 +350,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
        */
       public Object getValue()
       {
+         //if(checkDirtyAfterGet)
+         //   setCheckDirty();
          return value;
       }
 
@@ -555,7 +559,10 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
                // set foreign key to a new value
                cmrField.setForeignKey(ctx, newRelatedId);
                // put calculated relatedId to the waiting list
-               cmrField.getRelatedCMRField().addRelatedPKWaitingForMyPK(newRelatedId, ctx.getId());
+               if(ctx.getId() != null)
+               {
+                  cmrField.getRelatedCMRField().addRelatedPKWaitingForMyPK(newRelatedId, ctx.getId());
+               }
             }
          }
          catch(Exception e)

@@ -18,10 +18,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * committed these list are retrieved and used to update the relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public final class RelationData
-{
+public final class RelationData {
    private final JDBCCMRFieldBridge leftCMRField;
    private final JDBCCMRFieldBridge rightCMRField;
 
@@ -116,6 +115,11 @@ public final class RelationData
             }
          }
       }
+   }
+
+   public boolean isDirty()
+   {
+      return addedRelations.size() > 0 || removedRelations.size() > 0;
    }
 
    private RelationPair createRelationPair(
