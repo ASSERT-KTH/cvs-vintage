@@ -5,7 +5,7 @@
 
 <!-- This file contains a discussion of the host architecture -->
 <!-- in the jEdit Plugin API                                  -->
-<!-- $Id: host-design.xml,v 1.15 2002/05/19 08:31:13 spestov Exp $
+<!-- $Id: host-design.xml,v 1.16 2003/02/07 20:29:23 spestov Exp $
 -->
 
 <chapter id="host-design"><title>jEdit as a Plugin Host</title>
@@ -213,8 +213,8 @@ Additional class libraries for plugins</title>
     </funcsynopsis>
     <para>
       The jEdit startup routine calls this method for each loaded
-      plugin.  Plugins typically use this method to register information
-      with the EditBus and perform other initialization.
+      plugin. This method should return as quickly as possible to avoid
+      slowing down jEdit startup.
     </para>
   </listitem>
 
