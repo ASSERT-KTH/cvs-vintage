@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.111 2004/08/16 18:57:34 bobtarling Exp $
+// $Id: FigClass.java,v 1.112 2004/08/28 15:06:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,8 @@ import ru.novosoft.uml.MElementEvent;
  */
 
 public class FigClass extends FigNodeModelElement 
-        implements AttributesCompartmentContainer, OperationsCompartmentContainer{
+        implements AttributesCompartmentContainer, 
+        OperationsCompartmentContainer {
 
 
     ////////////////////////////////////////////////////////////////
