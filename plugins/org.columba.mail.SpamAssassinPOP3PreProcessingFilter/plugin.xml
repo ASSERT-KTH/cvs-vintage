@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="org.columba.mail.SpamAssassinPOP3PreProcessingFilter" name="My Hello World Plugin" description="Simple Example" version="1.0" >
- <extension name="org.columba.mail.pop3preprocessingfilter">
-  <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"/>
- </extension>
- <runtime type="java" jar="SpamAssassinPOP3preProcessingFilter.jar"/>
-</plugin>
