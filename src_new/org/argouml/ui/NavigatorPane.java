@@ -94,7 +94,7 @@ import ru.novosoft.uml.model_management.MModel;
  * note connected to individual UML artifacts and to diagrams
  * themselves.
  *
- * $Id: NavigatorPane.java,v 1.24 2003/04/11 14:23:06 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.25 2003/04/12 12:36:49 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -161,8 +161,6 @@ public class NavigatorPane
         
         _combo.addItemListener(this);
         
-        _tree.setRootVisible(false);
-        _tree.setShowsRootHandles(true);
         _tree.addTreeSelectionListener(this);
         _tree.addMouseListener(new NavigatorMouseListener());
         _tree.addKeyListener(new NavigatorKeyListener());
