@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.18 2003/05/03 09:24:18 mkl Exp $
+// $Id: FigPackage.java,v 1.19 2003/05/04 10:09:03 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -184,10 +184,7 @@ public class FigPackage extends FigNodeModelElement {
                                     && lDiagram.getName().startsWith(
                                         lsDefaultName)) {
                                     me.consume();
-                                    super.mouseClicked(me);
-                                    lPB.getNavigatorPane()
-                                       .addToHistory(
-                                        lDiagram);
+                                    super.mouseClicked(me);                                   
                                     lPB.setTarget(lDiagram);
                                     return;
                                 }
@@ -198,10 +195,7 @@ public class FigPackage extends FigNodeModelElement {
                         if (lFirst != null) {
                             me.consume();
                             super.mouseClicked(me);
-
-                            lPB.getNavigatorPane()
-                               .addToHistory(
-                               lFirst);
+                        
                             lPB.setTarget(lFirst);
                             return;
                         } else {
@@ -231,10 +225,7 @@ public class FigPackage extends FigNodeModelElement {
                                         lsDefaultName + "_" + lNew.getName();
 
                                     lP.addMember(lNew);
-
-                                    lPB.getNavigatorPane()
-                                       .addToHistory(
-                                        lNew);
+                                
                                     lPB.setTarget(lNew);
                                     /* change prefix */
                                     lNew.setName(diagramName);
