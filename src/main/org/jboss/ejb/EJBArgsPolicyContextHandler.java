@@ -28,7 +28,7 @@ public class EJBArgsPolicyContextHandler implements PolicyContextHandler
       throws PolicyContextException
    {
       Object context = null;
-      if( key.equalsIgnoreCase(EJB_ARGS_KEY) == false )
+      if( key.equalsIgnoreCase(EJB_ARGS_KEY) == true )
          context = ejbContext.get();
       return context;
    }

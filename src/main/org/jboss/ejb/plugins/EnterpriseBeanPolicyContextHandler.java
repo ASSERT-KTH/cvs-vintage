@@ -28,7 +28,7 @@ public class EnterpriseBeanPolicyContextHandler implements PolicyContextHandler
       throws PolicyContextException
    {
       Object context = null;
-      if( key.equalsIgnoreCase(EJB_CONTEXT_KEY) == false )
+      if( key.equalsIgnoreCase(EJB_CONTEXT_KEY) == true )
          context = ejbContext.get();
       return context;
    }

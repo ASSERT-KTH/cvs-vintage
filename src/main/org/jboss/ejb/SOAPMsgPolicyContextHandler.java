@@ -28,7 +28,7 @@ public class SOAPMsgPolicyContextHandler implements PolicyContextHandler
       throws PolicyContextException
    {
       Object context = null;
-      if( key.equalsIgnoreCase(SEI_ARGS_KEY) == false )
+      if( key.equalsIgnoreCase(SEI_ARGS_KEY) == true )
          context = ejbContext.get();
       return context;
    }
