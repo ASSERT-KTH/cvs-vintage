@@ -96,7 +96,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.61 2001/11/01 00:31:23 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.62 2001/11/01 00:55:38 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -104,18 +104,19 @@ public class ScarabModule
 {
     protected static final NumberKey ROOT_ID = new NumberKey("0");
 
+
+    /* removing the internal cache until it can be fixed using artifact_types
+    private List allRModuleAttributes;
+    private List activeRModuleAttributes;
     private Attribute[] activeAttributes;
     private Attribute[] dedupeAttributes;
     private Attribute[] quicksearchAttributes;
     private Attribute[] requiredAttributes;
-
-    // removing the internal cache until it can be fixed using artifact_types
-    // private List allRModuleAttributes;
-    // private List activeRModuleAttributes;
-    private List parentModules;
-
     private Map allRModuleOptionsMap = new HashMap();
     private Map activeRModuleOptionsMap = new HashMap();
+    */
+    private List parentModules;
+
 
     private String domain;
     
@@ -594,15 +595,10 @@ public class ScarabModule
     public Attribute[] getDedupeAttributes(IssueType issueType)
         throws Exception
     {
-        if ( dedupeAttributes == null )
-        {
-            Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.DEDUPE, true);
-            addActiveAndOrderByClause(crit, issueType);
-            dedupeAttributes = getAttributes(crit);
-        }
-
-        return dedupeAttributes;
+	Criteria crit = new Criteria(3)
+	    .add(RModuleAttributePeer.DEDUPE, true);
+	addActiveAndOrderByClause(crit, issueType);
+	return getAttributes(crit);
     }
 
 
@@ -614,14 +610,10 @@ public class ScarabModule
     public Attribute[] getQuickSearchAttributes(IssueType issueType)
         throws Exception
     {
-        if ( quicksearchAttributes == null )
-        {
-            Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.QUICK_SEARCH, true);
-            addActiveAndOrderByClause(crit, issueType);
-            quicksearchAttributes = getAttributes(crit);
-        }
-        return quicksearchAttributes;
+	Criteria crit = new Criteria(3)
+	    .add(RModuleAttributePeer.QUICK_SEARCH, true);
+	addActiveAndOrderByClause(crit, issueType);
+	return getAttributes(crit);
     }
 
 
@@ -634,14 +626,10 @@ public class ScarabModule
     public Attribute[] getRequiredAttributes(IssueType issueType)
         throws Exception
     {
-        if ( requiredAttributes == null )
-        {
-            Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.REQUIRED, true);
-            addActiveAndOrderByClause(crit, issueType);
-            requiredAttributes = getAttributes(crit);
-        }
-        return requiredAttributes;
+	Criteria crit = new Criteria(3)
+	    .add(RModuleAttributePeer.REQUIRED, true);
+	addActiveAndOrderByClause(crit, issueType);
+	return getAttributes(crit);
     }
 
     /**
@@ -652,13 +640,9 @@ public class ScarabModule
     public Attribute[] getActiveAttributes(IssueType issueType)
         throws Exception
     {
-        if ( activeAttributes == null )
-        {
-            Criteria crit = new Criteria(2);
-            addActiveAndOrderByClause(crit, issueType);
-            activeAttributes = getAttributes(crit);
-        }
-        return activeAttributes;
+	Criteria crit = new Criteria(2);
+	addActiveAndOrderByClause(crit, issueType);
+        return getAttributes(crit);
     }
 
     private void addActiveAndOrderByClause(Criteria crit, IssueType issueType)
@@ -734,35 +718,21 @@ public class ScarabModule
     public List getRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception
     {
-        List allRModuleOptions = (List)allRModuleOptionsMap.get(attribute);
-        if ( allRModuleOptions == null )
-        {
-            allRModuleOptions = getAllRModuleOptions(attribute);
-            allRModuleOptionsMap.put(attribute, allRModuleOptions);
-        }
+        List allRModuleOptions = getAllRModuleOptions(attribute);
 
         if ( activeOnly )
         {
             List activeRModuleOptions =
-                (List)activeRModuleOptionsMap.get(attribute);
-            if ( activeRModuleOptions == null )
-            {
-                activeRModuleOptions =
                     new ArrayList(allRModuleOptions.size());
-                for ( int i=0; i<allRModuleOptions.size(); i++ )
+            for ( int i=0; i<allRModuleOptions.size(); i++ )
+            {
+                RModuleOption rmo =
+                    (RModuleOption)allRModuleOptions.get(i);
+                if ( rmo.getActive() )
                 {
-                    RModuleOption rmo =
-                        (RModuleOption)allRModuleOptions.get(i);
-                    if ( rmo.getActive() )
-                    {
-                        activeRModuleOptions.add(rmo);
-                    }
+                    activeRModuleOptions.add(rmo);
                 }
-
-                activeRModuleOptionsMap
-                    .put(attribute, activeRModuleOptions);
             }
-
             return activeRModuleOptions;
         }
         else
