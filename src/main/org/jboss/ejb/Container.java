@@ -76,7 +76,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.135 $
+ * @version $Revision: 1.136 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -670,8 +670,8 @@ public abstract class Container
                  EJB_TIMEOUT,
                  new Object[]{pTimer},
                  null,
-                 SecurityAssociation.getPrincipal(),
-                 SecurityAssociation.getCredential()
+                 null,
+                 null
          );
          invocation.setType(InvocationType.LOCAL);
 
