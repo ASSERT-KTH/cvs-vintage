@@ -37,7 +37,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *  @see TxManager
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -51,9 +51,9 @@ public class TransactionManagerService
    // Attributes ----------------------------------------------------
 
    MBeanServer server;
+
+   int timeout = 300; // default tx timeout, dupl. in TM when it exists.
     
-   int timeout;
-   
    // Static --------------------------------------------------------
 
    static TxManager tm;
@@ -77,10 +77,9 @@ public class TransactionManagerService
    {
       // Get a reference to the TxManager singleton.
       tm = TxManager.getInstance();
-       
-      // Set timeout
-      tm.setTransactionTimeout(timeout);
-        
+      // Set its default timeout.
+      tm.setDefaultTransactionTimeout(timeout);
+
       // Bind reference to TM in JNDI
       // Our TM also implement the tx importer and exporter
       // interfaces, so we bind it under those names too.
@@ -106,11 +105,15 @@ public class TransactionManagerService
    }
     
    public int getTransactionTimeout() {
+      if (tm != null) // Get timeout value from TM (in case it was changed).
+         timeout = tm.getDefaultTransactionTimeout();
       return timeout;
    }
 
    public void setTransactionTimeout(int timeout) {
       this.timeout = timeout;
+      if (tm != null) // Update TM default timeout
+         tm.setDefaultTransactionTimeout(timeout);
    }
 
 
