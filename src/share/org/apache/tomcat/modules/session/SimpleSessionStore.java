@@ -119,7 +119,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	SimpleSessionManager sM = getManager( ctx );    
 
 	// remove all non-serializable objects from session
-	Enumeration sessionEnum=sM.getSessionIds();
+	Enumeration sessionEnum=sM.getSessions();
 	while( sessionEnum.hasMoreElements() ) {
 	    ServerSession session = (ServerSession)sessionEnum.nextElement();
 
