@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.14 2001/12/02 07:34:52 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.15 2001/12/03 01:17:45 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -660,6 +660,8 @@ public class FoldVisibilityManager
 		{
 			buffer.writeLock();
 
+			narrowed = false;
+
 			buffer._setVirtualLineCount(index,buffer.getLineCount());
 			for(int i = 0; i < buffer.getLineCount(); i++)
 			{
@@ -700,6 +702,8 @@ public class FoldVisibilityManager
 		try
 		{
 			buffer.writeLock();
+
+			narrowed = false;
 
 			// so that getFoldLevel() calling fireFoldLevelsChanged()
 			// won't break

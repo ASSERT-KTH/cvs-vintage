@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.42 2001/12/02 11:40:50 spestov Exp $
+ * @version $Id: Buffer.java,v 1.43 2001/12/03 01:17:45 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2808,6 +2808,62 @@ public class Buffer implements EBComponent
 		{
 			writeUnlock();
 		}
+	} //}}}
+
+	//{{{ getFoldAtLine() method
+	/**
+	 * Returns an array. The first element is the start line, the
+	 * second element is the end line, of the fold containing the
+	 * specified line number.
+	 * @param line The line number
+	 * @since jEdit 4.0pre3
+	 */
+	public int[] getFoldAtLine(int line)
+	{
+		int start, end;
+
+		if(isFoldStart(line))
+		{
+			start = line;
+			int foldLevel = getFoldLevel(line);
+
+			line++;
+
+			while(getFoldLevel(line) > foldLevel)
+			{
+				if(line == getLineCount() - 1)
+					break;
+				else
+					line++;
+			}
+			end = line;
+		}
+		else
+		{
+			start = line;
+			int foldLevel = getFoldLevel(line);
+			while(getFoldLevel(start) >= foldLevel)
+			{
+				if(start == 0)
+					break;
+				else
+					start--;
+			}
+
+			end = line;
+			while(getFoldLevel(end) >= foldLevel)
+			{
+				if(end == getLineCount() - 1)
+					break;
+				else
+					end++;
+			}
+
+			while(getLineLength(end) == 0 && end > start)
+				end--;
+		}
+
+		return new int[] { start, end };
 	} //}}}
 
 	//{{{ _getFoldVisibilityManager() method
