@@ -167,7 +167,9 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
+		<!-- redsolo - disabled this rule 
+		<module name="FinalParameters"/> 
+		-->
         <!--
         <module name="GenericIllegalRegexp">
             <property name="format" value="\s+$"/>
