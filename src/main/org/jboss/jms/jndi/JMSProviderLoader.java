@@ -33,7 +33,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -59,6 +59,9 @@ public class JMSProviderLoader
 
    /** The JNDI name to bind the adapter to. */
    protected String jndiName;
+   
+   /** The actual JNDI name the adapter is bound to */
+   private String bindName;
 
    /**
     * @jmx:managed-attribute
@@ -187,6 +190,7 @@ public class JMSProviderLoader
             String name = providerAdapter.getName();
             jndiName = "java:/" + name;
          }
+         bindName = jndiName;
          bind(context, jndiName, providerAdapter);
          log.info("Bound adapter to " + jndiName);
       }
@@ -200,12 +204,10 @@ public class JMSProviderLoader
       InitialContext context = new InitialContext();
       
       try {
-         // Unbind from JNDI
-         String name = providerAdapter.getName();
-         String jndiname = "java:/" + name;
-         context.unbind(jndiname);
+         // Unbind from JNDI with the actual name used to bind
+         context.unbind(bindName);
          if (log.isInfoEnabled())
-            log.info("unbound adapter " + name + " from " + jndiname);
+            log.info("unbound adapter " + name + " from " + bindName);
          
          //source.close();
          //log.log("XA Connection pool "+name+" shut down");

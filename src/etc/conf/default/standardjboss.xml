@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.48 2002/08/06 04:06:49 chirino Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.49 2002/08/15 03:27:58 schaefera Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -154,8 +154,8 @@
        <invoker-mbean>default</invoker-mbean>
        <proxy-factory>org.jboss.ejb.plugins.jms.JMSContainerInvoker</proxy-factory>
        <proxy-factory-config>
-	    <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
-	    <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+	    <JMSProviderAdapterJNDI>java:/DefaultJMSProvider</JMSProviderAdapterJNDI>
+	    <ServerSessionPoolFactoryJNDI>java:/StdJMSPool</ServerSessionPoolFactoryJNDI>
 	    <MaximumSize>15</MaximumSize>
 	    <MaxMessages>1</MaxMessages>
 	    <Optimized>True</Optimized>
