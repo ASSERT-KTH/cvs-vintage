@@ -68,6 +68,7 @@ import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.template.TemplateEmail;
+import org.apache.fulcrum.template.DefaultTemplateContext;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -98,7 +99,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.33 2002/01/22 21:38:01 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.34 2002/02/08 21:08:17 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -158,7 +159,8 @@ public class AssignIssue extends RequireLoginFirstAction
                             buf1.append(oldAttribute.getName()).append(".");
                             emailAction = buf1.toString();
                              
-                            StringBuffer buf2 = new StringBuffer("Deleted user ");
+                            StringBuffer buf2 = new StringBuffer("User " );
+                            buf2.append(user.getUserName() + " Deleted user ");
                             buf2.append(assignee.getUserName()).append(" from ");
                             buf2.append(oldAttribute.getName());
                             action = buf2.toString();
@@ -172,7 +174,8 @@ public class AssignIssue extends RequireLoginFirstAction
                             Criteria crit = new Criteria()
                                .add(AttributeValuePeer.ISSUE_ID, issue.getIssueId())
                                .add(AttributeValuePeer.VALUE, assignee.getUserName())
-                               .add(AttributeValuePeer.ATTRIBUTE_ID, newAttributeId);
+                               .add(AttributeValuePeer.ATTRIBUTE_ID, newAttributeId)
+                               .add(AttributeValuePeer.DELETED, false);
                             if (!issue.getAttributeValues(crit).isEmpty())
                             {
                                 data.setMessage("User " + assignee.getUserName() + 
@@ -183,15 +186,17 @@ public class AssignIssue extends RequireLoginFirstAction
                             else
                             {
                                 StringBuffer buf1 = new StringBuffer("You have been "
-                                                                     + "switched from ");
+                                       + "switched from attribute ");
                                 buf1.append(oldAttribute.getName()).append(" to ");
                                 buf1.append(newAttribute.getName()).append(".");
                                 emailAction = buf1.toString();
 
-                                StringBuffer buf2 = new StringBuffer("Switched user");
+                                StringBuffer buf2 = new StringBuffer();
+                                buf2.append("User " + user.getUserName());
+                                buf2.append(" has switched user ");
                                 buf2.append(assignee.getUserName()).append(" from ");
                                 buf2.append(oldAttribute.getName()).append(" to ");
-                                buf2.append(newAttribute.getName());
+                                buf2.append(newAttribute.getName() + ".");
                                 action = buf2.toString();
                                 attachment.setName(action);
                                 isChanged = true;
@@ -210,13 +215,21 @@ public class AssignIssue extends RequireLoginFirstAction
                                                 .EDIT_ISSUE__PK, 
                                                 user, attachment);
                              attVal.startTransaction(transaction);
+                             // Save activity record
+                             Activity activity = new Activity();
+                             activity.create(issue, attribute, action, 
+                                  transaction, 0, 0, null, null, null, 
+                                  null, "", "");
 
                              // Save assignee value
                              group.setProperties(attVal);
                              attVal.save();
-                             data.getParameters().add("isChanged", "true");
                              if (!emailAssignIssueToUser(issue, assignee, 
                                                     emailAction, context))
+                             {
+                                 data.setMessage(EMAIL_ERROR);
+                             }
+                             if (!notifyOthers(context, issue, action))
                              {
                                  data.setMessage(EMAIL_ERROR);
                              }
@@ -234,13 +247,14 @@ public class AssignIssue extends RequireLoginFirstAction
     public void doAdd(RunData data, TemplateContext context) 
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List issues = scarabR.getIssues();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
         String attributeId;
-        String userId;
+        String assigneeId;
         String action;
         String emailAction;
 
@@ -249,16 +263,16 @@ public class AssignIssue extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("add_user"))
             {
-                userId = key.substring(9);
-                ScarabUser user = scarabR.getUser(new NumberKey(userId));
-                attributeId = params.get("user_attr_" + userId);
+                assigneeId = key.substring(9);
+                ScarabUser assignee = scarabR.getUser(new NumberKey(assigneeId));
+                attributeId = params.get("user_attr_" + assigneeId);
               
                 if (attributeId == null)
                 {
                     data.setMessage("Missing user attribute data.");
                     return;
                 } 
-                else if (userId == null)
+                else if (assigneeId == null)
                 {
                     data.setMessage("Missing user data.");
                     return;
@@ -267,9 +281,11 @@ public class AssignIssue extends RequireLoginFirstAction
                 {
                     Attribute attribute = (Attribute)AttributePeer
                             .retrieveByPK(new NumberKey(attributeId));
-                    action = ("Added user " + user.getUserName()
-                                       + " to " + attribute.getName());
-                    emailAction = ("You have been added to " + attribute.getName());
+                    action = ("User " + user.getUserName() + " has added user " 
+                              + assignee.getUserName() + " to " 
+                              + attribute.getName() + ".");
+                    emailAction = ("You have been added to " 
+                                   + attribute.getName() + ".");
 
                     for (int k=0; k < issues.size(); k++)
                     {
@@ -277,7 +293,7 @@ public class AssignIssue extends RequireLoginFirstAction
                         Issue issue = (Issue)issues.get(k);
                         // Save attachment
                         Attachment attachment = new Attachment();
-                        attachment.setTextFields(user, issue, 
+                        attachment.setTextFields(assignee, issue, 
                                                  Attachment.MODIFICATION__PK);
                         attachment.setName(action);
                         attachment.save();
@@ -287,7 +303,7 @@ public class AssignIssue extends RequireLoginFirstAction
                         transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
                                            user, attachment);
                         attVal.startTransaction(transaction);
-                
+                       
                         // Save user value
                         boolean alreadyAssigned = false;
                         List assignees = issue.getAttributeValues(attribute);
@@ -295,7 +311,7 @@ public class AssignIssue extends RequireLoginFirstAction
                         {
                             AttributeValue assigneeAttVal = (AttributeValue)
                             assignees.get(j);
-                            if (assigneeAttVal.getUserId().toString().equals(userId))
+                            if (assigneeAttVal.getUserId().toString().equals(assigneeId))
                             {
                                 alreadyAssigned = true;
                             }
@@ -304,12 +320,17 @@ public class AssignIssue extends RequireLoginFirstAction
                         {
                             attVal.setIssue(issue);
                             attVal.setAttributeId(new NumberKey(attributeId));
-                            attVal.setUserId(new NumberKey(userId));
-                            attVal.setValue(user.getUserName());
+                            attVal.setUserId(new NumberKey(assigneeId));
+                            attVal.setValue(assignee.getUserName());
                             attVal.save();
-                            data.getParameters().add("isChanged", "true");
-                            if (!emailAssignIssueToUser(issue, user, 
-                                                         action, context))
+                            // Notify user of change
+                            if (!emailAssignIssueToUser(issue, assignee, 
+                                                         emailAction, context))
+                            {
+                                 data.setMessage(EMAIL_ERROR);
+                            }
+                            // Notify other associated users of change
+                            if (!notifyOthers(context, issue, action))
                             {
                                  data.setMessage(EMAIL_ERROR);
                             }
@@ -330,7 +351,7 @@ public class AssignIssue extends RequireLoginFirstAction
      * @param context <code>TemplateContext</code>
      */
     private boolean emailAssignIssueToUser(Issue issue, ScarabUser su,
-                                        String action, TemplateContext context)
+                                           String action, TemplateContext context)
         throws Exception
     {
         boolean success = true;
@@ -345,7 +366,6 @@ public class AssignIssue extends RequireLoginFirstAction
         TemplateEmail te = new TemplateEmail();
         te.setContext(new ContextAdapter(context));
         te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
-        //te.setCC(su.getFirstName() + " " + su.getLastName(), su.getEmail());
         te.setFrom(
             Turbine.getConfiguration()
                     .getString("scarab.email.assignissue.fromName",
@@ -369,4 +389,76 @@ public class AssignIssue extends RequireLoginFirstAction
         }
         return success;
     }
+
+    /** 
+        Sends email to the users associated with the issue.
+        Uses Assign email template.
+    */
+    public boolean notifyOthers( TemplateContext context, Issue issue, 
+                                 String action )
+         throws Exception
+    {
+        boolean success = true;
+        TemplateEmail te = new TemplateEmail();
+
+        // add data to context
+        context.put("issue", issue);
+        context.put("action", action);
+        te.setContext(new ContextAdapter(context));
+
+        te.setFrom(
+            Turbine.getConfiguration().getString
+                ("scarab.email.modifyissue.fromName", "Scarab System"), 
+            Turbine.getConfiguration().getString
+                ("scarab.email.modifyissue.fromAddress",
+                 "help@scarab.tigris.org"));
+
+        te.setSubject("[" + issue.getModule().getRealName().toUpperCase() 
+                      + "] Issue #" + issue.getUniqueId() + " modified");
+
+        te.setTemplate(Turbine.getConfiguration().
+           getString("scarab.email.assignissue.template",
+                     "email/AssignIssue.vm"));
+
+        // Get users for "to" field of email
+        // First add created User
+        ScarabUser createdByUser = issue.getCreatedBy();
+        if (createdByUser != null)
+        {
+            te.addTo(createdByUser.getEmail(),
+                     createdByUser.getFirstName() + " " 
+                     + createdByUser.getLastName());
+        }
+
+        // Then add users who are assigned to "email-to" attributes
+        List users = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
+        Iterator iter = users.iterator();
+        while ( iter.hasNext() ) 
+        {
+            ScarabUser toUser = (ScarabUser)iter.next();
+            te.addTo(toUser.getEmail(),
+                     toUser.getFirstName() + " " + toUser.getLastName());
+        }
+
+        // add users to cc field of email
+        users = issue.getUsersToEmail(AttributePeer.CC_TO);
+        iter = users.iterator();
+        while ( iter.hasNext() ) 
+        {
+            ScarabUser ccUser = (ScarabUser)iter.next();
+            te.addCc(ccUser.getEmail(),
+                     ccUser.getFirstName() + " " + ccUser.getLastName());
+        }
+
+        try
+        {
+            te.sendMultiple();
+        }
+        catch (SendFailedException e)
+        {
+            success = false;
+        }
+        return success;
+    }
+
 }
