@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.gui.DockableWindowManager;
  * Caches various plugin resources so we don't have to load them each time.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ResourceCache.java,v 1.5 2003/04/26 20:05:13 spestov Exp $
+ * @version $Id: ResourceCache.java,v 1.6 2003/04/29 03:21:49 spestov Exp $
  */
 class ResourceCache
 {
@@ -53,6 +53,8 @@ class ResourceCache
 
 		URL actionsURI;
 		String[] cachedActionNames;
+		URL browserActionsURI;
+		String[] cachedBrowserActionNames;
 		URL dockablesURI;
 		String[] cachedDockableNames;
 		boolean[] cachedDockableActionFlags;

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.246 2003/04/28 21:40:32 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.247 2003/04/29 03:21:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2417,7 +2417,6 @@ loop:		for(int i = 0; i < text.length(); i++)
 
 		if(select)
 		{
-			System.err.println(caret + ":" + newCaret);
 			RectParams params = getRectParams(caret,newCaret);
 			int extraStartVirt;
 			int extraEndVirt;
