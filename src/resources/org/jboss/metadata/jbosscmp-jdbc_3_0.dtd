@@ -171,7 +171,7 @@ The entity element contains the configuration of an entity
          remove-table?, read-only?, read-time-out?, row-locking?, 
          pk-constraint?, read-ahead?, list-cache-max?, fetch-size?, table-name?,
          cmp-field*, load-groups?, eager-load-group?, lazy-load-groups?, 
-         query*)>
+         query*, unknown-pk?)>
 
 <!--
 Name of the entity being configured.  This must match an entity declared
@@ -606,3 +606,13 @@ follows:
 -->
 <!ELEMENT function-sql (#PCDATA)>
 
+<!--
+Unknown primary key configuration
+-->
+<!ELEMENT unknown-pk ( key-factory, read-only?, read-time-out?, 
+   column-name?, (jdbc-type, sql-type)? )>
+
+<!--
+The name of the key factory.
+-->
+<!ELEMENT key-factory (#PCDATA)>
