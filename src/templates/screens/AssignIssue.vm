@@ -33,7 +33,6 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 #foreach ($issueId in $issueList)
   <input type="hidden" name="issue_ids" value="$issueId" />
-  <input type="hidden" name="id" value="$issueId" />
 #end
   
 <div class="functnbar">
@@ -203,7 +202,6 @@ $intake.declareGroups()
 <input type="hidden" name="action" value="AssignIssue" />
 #foreach ($issueId in $issueList)
  <input type="hidden" name="issue_ids" value="$issueId" />
- <input type="hidden" name="id" value="$issueId" />
 #end
 <input type="hidden" name="mod_ts" value="$now" />
 
