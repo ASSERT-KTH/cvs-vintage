@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public abstract class JDBCCommand
 {
@@ -104,7 +104,7 @@ public abstract class JDBCCommand
    /**
     * Gives compile-time control of tracing.
     */
-   public static boolean debug = true;
+   public static boolean debug = false;
 
    // Constructors --------------------------------------------------
 
