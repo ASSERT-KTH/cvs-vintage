@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -268,13 +268,15 @@ implements ContainerFactoryMBean, MBeanRegistration
 						// Set persistence manager
 						((StatefulSessionContainer)con).setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 						
+						// Set instance pools
+						con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+						
 						
 						// Create interceptors
-						con.addInterceptor(new LogInterceptor());
-						con.addInterceptor(new TxInterceptor());
-						//con.addInterceptor(new EntityInstanceInterceptor());
-						con.addInterceptor(new SecurityInterceptor());
-						//con.addInterceptor(new EntitySynchronizationInterceptor());
+						//con.addInterceptor(new LogInterceptor());
+						//con.addInterceptor(new TxInterceptor());
+						con.addInterceptor(new StatefulSessionInstanceInterceptor());
+						//con.addInterceptor(new SecurityInterceptor());
 						
 						con.addInterceptor(con.createContainerInterceptor());
 						
@@ -366,9 +368,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 			for (int i = 0; i < containers.size(); i++)
 			{
 				Container con = (Container)containers.get(i);
-				System.out.println("Binding container "+con.getMetaData().getJndiName());
-				System.out.println("to "+con.getContainerInvoker());
-
+   
                 // Use rebind to make sure you overwrite the name
 				rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
 					
