@@ -163,12 +163,12 @@
       #set ($assignedUser = $scarabR.getUser($userId))
 
       <td>
-        $!assignedUser.Name
+        <a href="mailto:$assignedUser.Email">$!assignedUser.Name</a>
         #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
             <strong>(disabled)</strong>
         #end
       </td>
-      <td><a href="mailto:$assignedUser.Email">$assignedUser.Email</td>
+      <td>$assignedUser.UserName</td>
       <td>$scarabR.getAttribute($attVal.AttributeId).Name </td>
       </tr>
    #end
