@@ -30,16 +30,58 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.util.PGPPassphraseDialog;
 
+/**
+ * This class is used to handle all PGP-actions in a way that the underlaying implementation is abstracted from the whole
+ * pgp process to run the action. There are severals PGP-Tools declared, but only GPG currently used. The PGPController
+ * offers function like verify, sign, decrypt and ancrypt of given Streams or Strings.
+ * <p>
+ * The PGPController use the {@link org.columba.mail.pgp.DefaultUtil DefaultUtil} to run the called method. It provides 
+ * function for reading results or error given from the DefaultUtil. It can be see as an abstract layer between high pgp 
+ * functions and the whole implementation which self is encapsulate by the DefaultUtil. 
+ * <p>
+ * To handle with pgp and all pgp-functions only use methods of this class and not from the DefaultUtil or the whole 
+ * implementation.
+ * @TODO  offering a function to say what pgp-tool will be used or give all methods the choise of the to use pgp-tool.
+ * @author waffel, fdietz, tstisch
+ *
+ */
 public class PGPController {
+	/**
+	 * The GPG PGP-Tool. It is implemented in {@link GnuPGUtil}.
+	 */
 	public final static int GPG = 0;
+	/**
+	 * currently not used
+	 */
 	public final static int PGP2 = 1;
+	/**
+	 * currently not used
+	 */
 	public final static int PGP5 = 2;
+	/**
+	 * currently not used
+	 */
 	public final static int PGP6 = 3;
 
+	/**
+	 * The Decrypt action used for decrypting messages.
+	 */
 	public final static int DECRYPT_ACTION = 0;
+	/**
+	 * The Encrypt action used for encrypting messages.
+	 */
 	public final static int ENCRYPT_ACTION = 1;
+	/**
+	 * The sign action used for signing messages.
+	 */
 	public final static int SIGN_ACTION = 2;
+	/**
+	 * The verify action used to verify a message.
+	 */
 	public final static int VERIFY_ACTION = 3;
+	/**
+	 * The encrypt and sign action used to encrypt and sign a message.
+	 */
 	public final static int ENCRYPTSIGN_ACTION = 4;
 
 	private int type;
@@ -62,14 +104,14 @@ public class PGPController {
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
 	 * at the moment there are only one tool - gpg, the gnu pgp programm which
-	 * comes with an commandline tool to do things with your pgp key
+	 * comes with an commandline tool to do things with your pgp key.
 	 * @see DefaultUtil
 	 */
 	private DefaultUtil[] utils = { new GnuPGUtil(),
 		// Enter new DefaultUtils here
 	};
 	/**
-	 * The default constructor for this class. The exit value is default 0
+	 * The default constructor for this class. The exit value is default 0.
 	 */
 	protected PGPController() {
 		exitVal = 0;
@@ -79,7 +121,7 @@ public class PGPController {
 	}
 	/**
 	 * Gives back an Instance of PGPController. This function controls, that only
-	 * one Instance is created in on columba session. If never before an Instance
+	 * one Instance is created in one columba session. If never before an Instance
 	 * is created, an Instance of Type PGPController is created and returned. Is
 	 * there is alrady an Instance, this instance is returned.
 	 * @return PGPController a new PGPController if there is no one created in one
@@ -96,12 +138,26 @@ public class PGPController {
 	/**
 	 * gives the return value from the pgp-program back. This can used for
 	 * controlling errors when signing ... messages
-	 * @return int exitValue, 0 means all ok, all other exit vlaues identifying errors
+	 * @return int exitValue, 0 means all ok, all other exit vlaues identifying errors. Errors can be obtained by the 
+     * @see #getPGPErrorStream()
 	 */
 	public int getReturnValue() {
 		return exitVal;
 	}
 
+	/**
+     * Decrypts a given InputStream. The methods asks the user for the passphrase. If the users cancels the dialog a
+     * {@link CancelledException} is thrown. The method asks recursive the user for the correct passphrase until
+     * the user cancels the dialog or gives the correct passphrase. If the are other problems like running the whole
+     * pgp-tool a {@link PGPException} is thrown. 
+     * <p>
+     * The decrypted InputStream is returned as a InputStream from which the decrypted message can be read. The Stream
+     * is given bacl from the DefaultUtil {@link DefaultUtil#getStreamResult()}. 
+	 * @param cryptMessage encrypted InputStream wich should be decrypted.
+	 * @param item The item which holds all necessary information like stored passphrase or the path to the pgp-tool.
+	 * @return a decrypted InputStream
+	 * @throws PGPException if the underlaying implementation throws an exception.
+	 */
 	public InputStream decrypt(InputStream cryptMessage, PGPItem item)
 		throws PGPException {
 
@@ -147,13 +203,14 @@ public class PGPController {
 	}
 	/**
 	 * Verify a given message with a given signature. Can the signature for the given message be verified the method
-	 * returns true, elso false. The given item should holding the path to the pgp-tool. While gpg dosn't yet supporting
+	 * returns true, else false. The given item should holding the path to the pgp-tool. While gpg dosn't yet supporting
 	 * a real stream based process to verify a given detached signature with a message the method creates a temporary
 	 * file which holds the signature. After the verify process the temporary file is deleted.
 	 * @param item PGPItem wich should holding the path to the pgp-tool
 	 * @param message The message for wich the given signature should be verify.
 	 * @param signature Signature wich should be verify for the given message.
 	 * @return true if the signature can be verify for the given message, else false.
+     * @see DefaultUtil#verify(PGPItem, InputStream, InputStream)
 	 */
 	public void verifySignature(
 		InputStream message,
@@ -185,19 +242,20 @@ public class PGPController {
 
 	}
 	/** 
-	 * Encryptes a given message  and returnes the encrypted Stream. The given pgp-item should have a entry with
-	 * all recipients seperated via space. The entry is called recipients. If an error occurse the error result is
+	 * Encryptes a given message  and returnes the encrypted message as an InputStream. The given pgp-item should have 
+     * a entry with all recipients seperated via space. The entry is called recipients. If an error occurse the error result is
 	 * shown to the user via a dialog.
 	 * @param message The message to be encrypt
 	 * @param item the item which holds information like path to pgp-tool and recipients for which the message should be
 	 * encrypted.
-	 * @return the encrypted message if all is ok, else an empty input-stream
-	 * TODO better using the exception mechanism instead of showing th user a dialog from this component.
+     * @exception PGPException The exception is thrown, if the exit-value from the whole gpg-program is != 0. 
+     * @see DefaultUtil#encrypt(PGPItem, InputStream)
+	 * @return the encrypted message if all is ok, else an empty input-stream. {@link DefaultUtil#getStreamResult()}
 	 */
 	public InputStream encrypt(InputStream pgpStream, PGPItem item)
 		throws PGPException {
 		int exitVal = -1;
-		String error = null;
+		String error = "";
 
 		try {
 
@@ -209,7 +267,7 @@ public class PGPController {
 			InputStream tempInputStream = getTempInputStream();
 
 			exitVal = utils[GPG].encrypt(item, tempInputStream);
-			System.out.println("exitVal=" + exitVal);
+			ColumbaLogger.log.debug("exitVal=" + exitVal);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
@@ -308,7 +366,7 @@ public class PGPController {
 	 * @return String the signed message with the sign string inside. Null, when
 	 * an error or an exit-value not equal 0 from the whole gpg-util is returned
 	 * @deprecated After ristretto is used in columba only Streams instead of Strings supported. Use 
-	 * sign(InputStream message, PGPItem item). 
+	 * {@link #sign(InputStream, PGPItem)}. 
 	 */
 	public String sign(String pgpMessage, PGPItem item) {
 		exitVal = -1;
@@ -414,6 +472,14 @@ public class PGPController {
 		return pgpMessage;
 	}
 
+	/**
+     * Creates a temporary file with the context of the given Stream. The given Stream is saved in the temporary file. The
+     * temporary file is used in recursive methods like  {@link #sign(InputStream, PGPItem)} . The file itselfs is saved in a
+     * internal variable and the internal variable is overidden when you call this method. The file should be deleted after a
+     * correct exit of the running VM {@link File#deleteOnExit()}. 
+	 * @param in Stream wich should be written to the temporary file. The file self is created via  {@link File#createTempFile(java.lang.String, java.lang.String)}.
+	 * @throws IOException If the file cannot be created or written. 
+	 */
 	protected void createTempFileFromStream(InputStream in)
 		throws IOException {
 		tempFile = File.createTempFile("columba-pgp", ".tmp");
@@ -426,10 +492,20 @@ public class PGPController {
 
 	}
 
+	/**
+     * Gives the content of a temporary file as an InputStream back. The temporary file is created with 
+     * {@link #createTempFileFromStream(InputStream)}. 
+	 * @return The contents of the file as a InputStream.
+	 * @throws IOException if the file cannot be read.
+	 */
 	protected InputStream getTempInputStream() throws IOException {
 		return new FileInputStream(tempFile);
 	}
 	
+	/**
+	 *  Removes all password saved in the current session. This is used if a recursive dialog asks often for a password in
+     * one session, then the password is saved in a internal Map. To clear the Map use this function.
+	 */
 	public void clearAllPassphrases()
 	{
 		passwordMap.clear();
