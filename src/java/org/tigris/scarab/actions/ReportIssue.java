@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.actions;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet <http://www.collab.net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -26,7 +26,7 @@ package org.tigris.scarab.actions;
  * 
  * 5. Products derived from this software may not use the "Tigris" or 
  * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
+ * prior written permission of CollabNet.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +43,7 @@ package org.tigris.scarab.actions;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
+ * individuals on behalf of CollabNet.
  */ 
 
 import java.util.Hashtable;
@@ -64,6 +64,8 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.localization.Localization;
+
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -90,7 +92,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.160 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.161 2003/02/26 00:42:49 dlr Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -127,11 +129,6 @@ public class ReportIssue extends RequireLoginFirstAction
                 l10n.format("ErrorExceptionMessage", e.getMessage()));
             setTarget(data, "entry,Wizard1.vm");
             return;
-        }
-        
-        if (!intake.isAllValid())
-        {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
 
         // we know we started at Wizard1 if we are here, Wizard3 needs
@@ -226,8 +223,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         if (issue == null)
         {
-            throw new Exception ("The Issue is not valid any longer. " + 
-                                     "Please try again.");
+            throw new Exception(Localization.getString("IssueNoLongerValid"));
         }
         IssueType issueType = issue.getIssueType();
         List requiredAttributes = issue.getModule()
@@ -281,7 +277,6 @@ public class ReportIssue extends RequireLoginFirstAction
                                        SequencedHashMap avMap)
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         boolean success = false;
         // set any required flags on attribute values
         setRequiredFlags(issue, intake, avMap);
@@ -292,18 +287,13 @@ public class ReportIssue extends RequireLoginFirstAction
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = 
                     intake.get("AttributeValue", aval.getQueryKey(), false);
-                String value = null;
                 if (group != null) 
                 {
-                    if (aval instanceof OptionAttribute) 
-                    {
-                        value = group.get("OptionId").toString();
-                    }
-                    else 
-                    {
-                        value = group.get("Value").toString();
-                    }
-                    if (value != null && value.toString().length() > 0)
+                    Field field = group.get(aval instanceof OptionAttribute ?
+                                            "OptionId" : "Value");
+                    String value = field.toString();
+
+                    if (value != null && value.length() > 0)
                     {
                         group.setProperties(aval);
                     }
@@ -313,7 +303,8 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage(l10n.get(ERROR_MESSAGE));
+            getScarabRequestTool(context).setAlertMessage(
+                getLocalizationTool(context).get(ERROR_MESSAGE));
         }
         return success;
     }
@@ -465,7 +456,7 @@ public class ReportIssue extends RequireLoginFirstAction
             else 
             {
                 // this would be an application or hacking error
-            }            
+            }
         }
     }
     

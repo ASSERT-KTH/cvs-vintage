@@ -268,7 +268,8 @@
         <field name="NumericValue" key="num" type="int" />
         <field name="UserIds" key="visids" type="NumberKey" multiValued="true"/>
         <field name="Value" key="val" type="String">
-            <rule name="maxLength" value="5000">intake_LengthMustBeLessThan5000CharactersUAttachmentOrComment</rule>
+           <rule name="mask" value="^$|\S">intake_ModuleRequiresDataForAttribute</rule>
+           <rule name="maxLength" value="5000">intake_LengthMustBeLessThan5000CharactersUAttachmentOrComment</rule>
            <required-message>intake_ModuleRequiresDataForAttribute</required-message>
         </field>
         <field name="Url" key="url" type="String" mapToProperty="Value">
