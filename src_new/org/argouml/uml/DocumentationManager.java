@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.16 2004/03/26 15:41:35 linus Exp $
+// $Id: DocumentationManager.java,v 1.17 2004/06/29 00:21:56 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,13 @@ package org.argouml.uml;
 import java.util.Collection;
 import java.util.Iterator;
 import org.argouml.model.ModelFacade;
+import org.argouml.util.MyTokenizer;
 
 public class DocumentationManager {
+
+    /** The system's native line-ends, for when things are written to file */
+    private static final String LINE_SEPARATOR =
+	System.getProperty("line.separator");
 
     public static String getDocs(Object o, String indent) {
         return getDocs(o, indent, "/** ", " *  ", " */");
@@ -236,10 +241,7 @@ public class DocumentationManager {
 				     String footer) {
 	StringBuffer result = new StringBuffer();
 	if (header != null) {
-	    result.append(header).append('\n');
-	}
-	if (prefix != null) {
-	    result.append(prefix);
+	    result.append(header).append(LINE_SEPARATOR);
 	}
 
 	if (ModelFacade.isAModelElement(o)) {
@@ -247,43 +249,45 @@ public class DocumentationManager {
 	    if (!comments.isEmpty()) {
 		for (Iterator iter = comments.iterator(); iter.hasNext(); ) {
 		    Object c = iter.next();
-		    String s =
-			(ModelFacade.getName(c) != null)
-			? ModelFacade.getName(c).trim()
-			: null;
-		    if (s != null && s.length() > 0) {
-			if (result.length() > 0) {
-			    result.append('\n');
-			}
-			result.append(s);
-		    }
+		    String s = ModelFacade.getName(c);
+		    appendComment(result, prefix, s);
 		}
+	    } else {
+		return "";
 	    }
-	}
-
-	// If there are no comments, just return an empty string.
-	if (result.length() == 0)
+	} else {
 	    return "";
-
-	// Let every line start with a prefix.
-	if (prefix != null) {
-	    for (int i = 0; i < result.length() - 1; i++) {
-		if (result.charAt(i) == '\n') {
-		    result.insert(i + 1, prefix);
-		}
-	    }
-	}
-
-	// I add a CR before the end of the comment, so I remove a CR at the
-	// end of the last note.
-	if (result.charAt(result.length() - 1) != '\n') {
-	    result.append('\n');
 	}
 
 	if (footer != null) {
-	    result.append(footer).append('\n');
+	    result.append(footer).append(LINE_SEPARATOR);
 	}
+
 	return result.toString();
+    }
+
+    /**
+     * Append a string to sb which is chopped into lines and each line
+     * prefixed with prefix.
+     */
+    private static void appendComment(StringBuffer sb, String prefix,
+				      String comment) {
+	if (comment == null) {
+	    return;
+	}
+
+	MyTokenizer tokens = new MyTokenizer(comment,
+					     "",
+					     MyTokenizer.LINE_SEPARATOR);
+
+	while (tokens.hasMoreTokens()) {
+	    String s = tokens.nextToken();
+	    if (!s.startsWith("\r") && !s.startsWith("\n")) {
+		sb.append(prefix);
+		sb.append(s);
+		sb.append(LINE_SEPARATOR);
+	    }
+	}
     }
 
 } /* end class DocumentationManager */
