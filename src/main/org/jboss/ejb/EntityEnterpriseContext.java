@@ -21,7 +21,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.9 $
+*	@version $Revision: 1.10 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -59,6 +59,7 @@ extends EnterpriseContext
 	
 	public void clear() {
 		
+		super.clear();
 		this.invoked = false;
 		this.valid = false;
 	}
