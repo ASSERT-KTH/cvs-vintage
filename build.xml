@@ -123,6 +123,7 @@
     <mkdir dir="${tomcat.build}/test"/>
     <mkdir dir="${tomcat.build}/test/classes"/>
     <mkdir dir="${tomcat.build}/test/lib"/>
+    <mkdir dir="${tomcat.build}/test/webpages"/>
 
     <copydir src="src/tests/webpages"
         dest="${tomcat.build}/test/webpages"/>
