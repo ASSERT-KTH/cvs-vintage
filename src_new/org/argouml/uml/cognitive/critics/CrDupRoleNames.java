@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrDupRoleNames.java,v 1.9 2003/08/30 23:23:49 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public class CrDupRoleNames extends CrUML {
 	    return NO_PROBLEM;
 	}
 
-        Iterator enum = ModelFacade.getConnections(dm);
+        Iterator enum = ModelFacade.getConnections(dm).iterator();
 
         // Loop through all the ends, comparing the name against those already
         // seen (ignoring any with no name).

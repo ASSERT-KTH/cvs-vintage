@@ -1,4 +1,4 @@
-// $Id: CrCircularAssocClass.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrCircularAssocClass.java,v 1.7 2003/08/30 23:23:49 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,19 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
 // File: CrCircularAssocClass.java
 // Classes: CrCircularAssocClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrCircularAssocClass.java,v 1.7 2003/08/30 23:23:49 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
-
-
 
 /** Well-formedness rule [2] for MAssociationClass. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */

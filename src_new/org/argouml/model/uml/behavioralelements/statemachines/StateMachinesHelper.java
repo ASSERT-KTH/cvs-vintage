@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.15 2003/06/30 18:00:20 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.16 2003/08/30 23:23:49 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,10 +190,14 @@ public class StateMachinesHelper {
         }
     }
     
-    public MState getTop(MStateMachine sm) {
+    public MState getTop(Object sm) {
+        
+        if(!(sm instanceof MStateMachine))
+            throw new IllegalArgumentException();
+        
         if (sm == null)
         	return null;
-        return sm.getTop();
+        return ((MStateMachine)sm).getTop();
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: CrCrossNamespaceAssoc.java,v 1.9 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.10 2003/08/30 23:23:49 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,7 @@ public class CrCrossNamespaceAssoc extends CrUML {
         // Get the Association and its connections.
         // Iterate over all the AssociationEnds and check that each connected
         // classifier is in the same sub-system or model
-        Iterator enum = ModelFacade.getConnections(dm);
+        Iterator enum = ModelFacade.getConnections(dm).iterator();
 
         while (enum.hasNext()) {
             // The next AssociationEnd, and its classifier. Check the
