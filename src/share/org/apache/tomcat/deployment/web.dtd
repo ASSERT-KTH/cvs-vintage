@@ -296,7 +296,10 @@ application. -->
 <!-- The role-name element contains the name of a role. This element
 must contain a non-empty string. -->
 
+<!-- XXX
+     this causes validation errors
 <!ELEMENT role-name (#PCDATA)>
+-->
 
 <!-- The security-role-ref element contains the declaration of a
 security role reference in the servlet's code. The contents of the
