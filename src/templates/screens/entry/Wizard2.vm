@@ -21,16 +21,14 @@
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma && $rma.Active)
-      #set ($attVals = $currentIssue.getAttributeValue($att))
-      #if (!$attVals)
+      #set ($attVal = $currentIssue.getAttributeValue($att))
+      #if (!$attVal)
         <th>---</th>
       #else
-      #foreach ($attVal in $attVals)
         <th>$attVal.RModuleAttribute.DisplayValue</th>
       #end
       #end
     #end
- #end
 #end
 </tr>
 #foreach ($group in $dedupeAttrGroups)
@@ -38,20 +36,18 @@
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma && $rma.Active)
-      #set ($attVals = $currentIssue.getAttributeValue($att))
-      #if (!$attVals)
+      #set ($attVal = $currentIssue.getAttributeValue($att))
+      #if (!$attVal)
         <td>---</td>
       #else
-      #foreach ($attVal in $attVals)
         #if ($attVal.Attribute.isOptionAttribute())
           #if ($attVal.isSet())
-             $attVal.AttributeOption.Name
+             <th>$attVal.AttributeOption.Name</th>
           #else
-            ---
+            <th>---</th>
           #end
         #else
-          $!attVal.Value
-        #end
+          <th>$!attVal.Value</th>
       #end
      #end
     #end
