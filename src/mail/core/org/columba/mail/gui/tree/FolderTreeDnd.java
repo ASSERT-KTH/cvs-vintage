@@ -58,8 +58,11 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.CopyMessageCommand;
+import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.tree.util.CArrowImage;
 import org.columba.mail.gui.tree.util.CTransferableTreePath;
 
@@ -715,23 +718,24 @@ public class FolderTreeDnd
 
 							//treeViewer.setSelected(sourceFolder);
 
-							/*
 							FolderCommandReference[] result =
 								new FolderCommandReference[2];
 							FolderCommandReference[] r1 =
-								(FolderCommandReference[]) tableController
+								(FolderCommandReference[]) treeController
+									.getMailFrameController()
+									.tableController
 									.getTableSelectionManager()
 									.getSelection();
 							FolderCommandReference r2 =
-								new FolderCommandReference(destFolder);
-							
+								new FolderCommandReference(target);
+
 							result[0] = r1[0];
 							result[1] = r2;
 							CopyMessageCommand c =
 								new CopyMessageCommand(result);
-							
+
 							MainInterface.processor.addOp(c);
-							*/
+
 							// FIXME
 							/*
 							FolderOperation op =
@@ -744,6 +748,23 @@ public class FolderTreeDnd
 						} else if (e.getDropAction() == 2) {
 							System.out.println("move action");
 
+							FolderCommandReference[] result =
+								new FolderCommandReference[2];
+							FolderCommandReference[] r1 =
+								(FolderCommandReference[]) treeController
+									.getMailFrameController()
+									.tableController
+									.getTableSelectionManager()
+									.getSelection();
+							FolderCommandReference r2 =
+								new FolderCommandReference(target);
+
+							result[0] = r1[0];
+							result[1] = r2;
+							MoveMessageCommand c =
+								new MoveMessageCommand(result);
+
+							MainInterface.processor.addOp(c);
 							//treeViewer.setSelected(sourceFolder);
 
 							// FIXME
@@ -805,11 +826,14 @@ public class FolderTreeDnd
 									"No valid folder for drop!");
 							} else {
 
-								System.out.println("------------> append at="+dest.getName());
-								
+								System.out.println(
+									"------------> append at="
+										+ dest.getName());
+
 								dest.append(source);
-								
-								MainInterface.treeModel.nodeStructureChanged(destParent);
+
+								MainInterface.treeModel.nodeStructureChanged(
+									destParent);
 								//MainInterface.treeModel.nodeStructureChanged(sourceParent);
 								/*
 								TreeNodeEvent updateEvent =
@@ -833,12 +857,14 @@ public class FolderTreeDnd
 									null,
 									"No valid folder for drop!");
 							} else if (sourceParent.equals(destParent)) {
-								ColumbaLogger.log.debug("-------------> insert at:"+destIndex);
-								ColumbaLogger.log.debug("-------------> insert from:"+sourceIndex);
-								
+								ColumbaLogger.log.debug(
+									"-------------> insert at:" + destIndex);
+								ColumbaLogger.log.debug(
+									"-------------> insert from:"
+										+ sourceIndex);
+
 								//destParent.insert(source, destIndex);
-								
-								
+
 								if (sourceIndex < destIndex) {
 									// move treenode up
 									destParent.insert(source, destIndex);
@@ -846,8 +872,9 @@ public class FolderTreeDnd
 									// move treenode down
 									destParent.insert(source, destIndex + 1);
 								}
-								
-								MainInterface.treeModel.nodeStructureChanged(destParent);
+
+								MainInterface.treeModel.nodeStructureChanged(
+									destParent);
 								// FIXME
 								/*
 								TreeNodeEvent updateEvent =
@@ -855,14 +882,14 @@ public class FolderTreeDnd
 								ainInterface.crossbar.fireTreeNodeChanged(updateEvent);
 								*/
 							} else { /*
-														if (type.equals("imap"))
-														{
-															JOptionPane.showMessageDialog(
-																MainInterface.mainFrame,
-																"No valid folder for drop!");
-														}
-														else
-														*/
+																					if (type.equals("imap"))
+																					{
+																						JOptionPane.showMessageDialog(
+																							MainInterface.mainFrame,
+																							"No valid folder for drop!");
+																					}
+																					else
+																					*/
 								if (sourceParent.equals(dest)) {
 									// insert treenode at position 0
 									// FIXME
@@ -931,22 +958,22 @@ public class FolderTreeDnd
 			if (!e.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
 				return false;
 				*/ /*
-										// Do this if you want to prohibit dropping onto the drag source...
-										Point pt = e.getLocation();
-										TreePath path = getClosestPathForLocation(pt.x, pt.y);
-										if (path.equals(_pathSource))
-											return false;
-							
-							*/ /*
-										// Do this if you want to select the best flavor on offer...
-										DataFlavor[] flavors = e.getCurrentDataFlavors();
-										for (int i = 0; i < flavors.length; i++ )
-										{
-											DataFlavor flavor = flavors[i];
-											if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-												return true;
-										}
-							*/
+													// Do this if you want to prohibit dropping onto the drag source...
+													Point pt = e.getLocation();
+													TreePath path = getClosestPathForLocation(pt.x, pt.y);
+													if (path.equals(_pathSource))
+														return false;
+										
+										*/ /*
+													// Do this if you want to select the best flavor on offer...
+													DataFlavor[] flavors = e.getCurrentDataFlavors();
+													for (int i = 0; i < flavors.length; i++ )
+													{
+														DataFlavor flavor = flavors[i];
+														if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+															return true;
+													}
+										*/
 			return true;
 		}
 
@@ -958,21 +985,21 @@ public class FolderTreeDnd
 			if (!e.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
 				return false;
 				*/ /*
-										// Do this if you want to prohibit dropping onto the drag source...
-										Point pt = e.getLocation();
-										TreePath path = getClosestPathForLocation(pt.x, pt.y);
-										if (path.equals(_pathSource))
-											return false;
-							*/ /*
-										// Do this if you want to select the best flavor on offer...
-										DataFlavor[] flavors = e.getCurrentDataFlavors();
-										for (int i = 0; i < flavors.length; i++ )
-										{
-											DataFlavor flavor = flavors[i];
-											if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-												return true;
-										}
-							*/
+													// Do this if you want to prohibit dropping onto the drag source...
+													Point pt = e.getLocation();
+													TreePath path = getClosestPathForLocation(pt.x, pt.y);
+													if (path.equals(_pathSource))
+														return false;
+										*/ /*
+													// Do this if you want to select the best flavor on offer...
+													DataFlavor[] flavors = e.getCurrentDataFlavors();
+													for (int i = 0; i < flavors.length; i++ )
+													{
+														DataFlavor flavor = flavors[i];
+														if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
+															return true;
+													}
+										*/
 			return true;
 		}
 
@@ -1024,72 +1051,72 @@ public class FolderTreeDnd
 				+ raOuter.x
 				+ AUTOSCROLL_MARGIN);
 	} /*
-				// Use this method if you want to see the boundaries of the
-				// autoscroll active region. Toss it out, otherwise.
-				public void paintComponent(Graphics g)
+					// Use this method if you want to see the boundaries of the
+					// autoscroll active region. Toss it out, otherwise.
+					public void paintComponent(Graphics g)
+					{
+						super.paintComponent(g);
+						Rectangle raOuter = getBounds();
+						Rectangle raInner = getParent().getBounds();
+						g.setColor(Color.red);
+						g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
+							raInner.width - 24, raInner.height - 24);
+					}
+				
+				*/ /*
+				
+				// TreeModelListener interface...
+				public void treeNodesChanged(TreeModelEvent e)
 				{
-					super.paintComponent(g);
-					Rectangle raOuter = getBounds();
-					Rectangle raInner = getParent().getBounds();
-					g.setColor(Color.red);
-					g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
-						raInner.width - 24, raInner.height - 24);
+				System.out.println("treeNodesChanged");
+				sayWhat(e);
+				// We dont need to reset the selection path, since it has not moved
 				}
-			
-			*/ /*
-			
-			// TreeModelListener interface...
-			public void treeNodesChanged(TreeModelEvent e)
-			{
-			System.out.println("treeNodesChanged");
-			sayWhat(e);
-			// We dont need to reset the selection path, since it has not moved
-			}
-			
-			public void treeNodesInserted(TreeModelEvent e)
-			{
-			System.out.println("treeNodesInserted ");
-			sayWhat(e);
-			
-			// We need to reset the selection path to the node just inserted
-			int nChildIndex = e.getChildIndices()[0];
-			TreePath pathParent = e.getTreePath();
-			tree.setSelectionPath(getChildPath(pathParent, nChildIndex));
-			}
-			
-			public void treeNodesRemoved(TreeModelEvent e)
-			{
-			System.out.println("treeNodesRemoved ");
-			sayWhat(e);
-			}
-			
-			public void treeStructureChanged(TreeModelEvent e)
-			{
-			System.out.println("treeStructureChanged ");
-			sayWhat(e);
-			}
-			
-			*/ /*
-			
-			// More helpers...
-			private TreePath getChildPath(TreePath pathParent, int nChildIndex)
-			{
-				TreeModel model =  tree.getModel();
-				return pathParent.pathByAddingChild(model.getChild(pathParent.getLastPathComponent(), nChildIndex));
-			}
-			*/
+				
+				public void treeNodesInserted(TreeModelEvent e)
+				{
+				System.out.println("treeNodesInserted ");
+				sayWhat(e);
+				
+				// We need to reset the selection path to the node just inserted
+				int nChildIndex = e.getChildIndices()[0];
+				TreePath pathParent = e.getTreePath();
+				tree.setSelectionPath(getChildPath(pathParent, nChildIndex));
+				}
+				
+				public void treeNodesRemoved(TreeModelEvent e)
+				{
+				System.out.println("treeNodesRemoved ");
+				sayWhat(e);
+				}
+				
+				public void treeStructureChanged(TreeModelEvent e)
+				{
+				System.out.println("treeStructureChanged ");
+				sayWhat(e);
+				}
+				
+				*/ /*
+				
+				// More helpers...
+				private TreePath getChildPath(TreePath pathParent, int nChildIndex)
+				{
+					TreeModel model =  tree.getModel();
+					return pathParent.pathByAddingChild(model.getChild(pathParent.getLastPathComponent(), nChildIndex));
+				}
+				*/
 
 	private boolean isRootPath(TreePath path) {
 		return tree.isRootVisible() && tree.getRowForPath(path) == 0;
 	} /*
-				private void sayWhat(TreeModelEvent e)
-				{
-					System.out.println(e.getTreePath().getLastPathComponent());
-					int[] nIndex = e.getChildIndices();
-					for (int i = 0; i < nIndex.length ;i++ )
+					private void sayWhat(TreeModelEvent e)
 					{
-						System.out.println(i+". "+nIndex[i]);
+						System.out.println(e.getTreePath().getLastPathComponent());
+						int[] nIndex = e.getChildIndices();
+						for (int i = 0; i < nIndex.length ;i++ )
+						{
+							System.out.println(i+". "+nIndex[i]);
+						}
 					}
-				}
-				*/
+					*/
 }

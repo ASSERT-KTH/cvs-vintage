@@ -44,7 +44,6 @@ import org.columba.mail.gui.table.menu.HeaderTableMenu;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.tree.FolderSelectionListener;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -132,7 +131,7 @@ public class TableController
 
 		menu = new HeaderTableMenu(this);
 
-		//headerTableDnd = new HeaderTableDnd(view);
+		headerTableDnd = new HeaderTableDnd(view);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
