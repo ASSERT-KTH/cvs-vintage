@@ -25,7 +25,6 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.core.main.MainInterface;
 
 class FilterListTable extends JTable {
-	private FilterListDataModel model;
 	private Config config;
 
 	public FilterListTable(FilterList filterList, ConfigFrame frame) {
@@ -40,6 +39,6 @@ class FilterListTable extends JTable {
 	}
 
 	public void update() {
-		model.fireTableDataChanged();
+		((FilterListDataModel)getModel()).fireTableDataChanged();
 	}
 }
