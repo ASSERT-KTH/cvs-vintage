@@ -656,11 +656,19 @@ public class Issue
             Attribute att = (Attribute) attributeList.get(i);
             attributeIdList.add(att.getAttributeId());
         }
-        Criteria crit = new Criteria()
-           .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
-           .add(AttributeValuePeer.ISSUE_ID, getIssueId())
-           .add(AttributeValuePeer.DELETED, 0);
-        return AttributeValuePeer.doSelect(crit);
+
+        if(!attributeIdList.isEmpty())
+        {
+            Criteria crit = new Criteria()
+                .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+                .add(AttributeValuePeer.ISSUE_ID, getIssueId())
+                .add(AttributeValuePeer.DELETED, 0);
+            return AttributeValuePeer.doSelect(crit);
+        }
+        else 
+        {
+            return new ArrayList(0);
+        }
     }
 
 
