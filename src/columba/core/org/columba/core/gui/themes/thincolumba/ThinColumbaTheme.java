@@ -153,7 +153,9 @@ public class ThinColumbaTheme extends DefaultCTheme {
 				"TableUI",
 				thinPackage + "ThinTableUI",
 				"TreeUI",
-				thinPackage + "ThinTreeUI" };
+				thinPackage + "ThinTreeUI",
+                                "WizardContentPaneUI",
+                                thinPackage + "ThinWizardContentPaneUI"};
 		table.putDefaults(map);
 
 		// antialiasing==0 -> no antialiasing
