@@ -117,9 +117,11 @@
 		<property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
 		<property name="storepass" value="columba"/>
 		<property name="keypass" value="columba"/>
-
+		<property name="webstart.codebase" value="http://columba.sourceforge.net/webstart" />
+		
 		<fileset dir="${basedir}" id="sign.jars" >
-			<include name="${basedir}\columba.jar"/>
+			<include name="columba.jar"/>
+			<include name="${manual.jar}"/>
 			<include name="${lib.forms}"/>
 			<include name="${lib.jscf}"/>
 			<include name="${lib.jargs}"/>
@@ -403,6 +405,61 @@
 		<signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
 			<fileset refid="sign.jars" />
 		</signjar>
+		
+		<copy toDir="${release.base}/webstart">
+			<fileset dir="${basedir}">
+				<include name="columba.jar"/>				
+				<include name="${manual.jar}"/>
+				<include name="${lib.forms}"/>
+				<include name="${lib.jscf}"/>
+				<include name="${lib.jargs}"/>
+				<include name="${lib.jwizz}"/>
+				<include name="${lib.jhall}"/>
+				<include name="${lib.ristretto}"/>
+				<include name="${lib.macchiato}"/>
+				<include name="${lib.frappucino}"/>
+				<include name="${lib.lucene}"/>			
+				<include name="${lib.plastic}"/>			
+				<include name="${lib.jdom}"/>			
+				<include name="${lib.jpim}"/>			
+				<include name="${lib.je}"/>		
+				<include name="${lib.jniwrap}"/>
+				<include name="${lib.jniwraplib}"/>
+				<include name="${lib.winpack}"/>
+			</fileset>
+			<fileset dir="${dist.webstart}" >
+				<include name="columba.jnlp" />
+				<include name="javahelp.jnlp" />
+				<include name="jniwrapper.jnlp" />
+			</fileset>
+		</copy>
+		
+		<copy toDir="${release.base}/webstart/images">
+			<fileset dir="${res.base}/org/columba/core/images">
+				<include name="icon32.gif"/>
+			</fileset>
+		</copy>
+		
+		<replace dir="${release.base}/webstart" includes="*.jnlp" >
+			<replacefilter token="@codebase@" value="${webstart.codebase}"/>			
+			<replacefilter token="@ristretto@" value="${lib.ristretto}"/>			
+			<replacefilter token="@jargs@" value="${lib.jargs}"/>			
+			<replacefilter token="@plastic@" value="${lib.plastic}"/>			
+			<replacefilter token="@usermanual@" value="${manual.jar}"/>			
+			<replacefilter token="@forms@" value="${lib.forms}"/>			
+			<replacefilter token="@jscf@" value="${lib.jscf}"/>			
+			<replacefilter token="@jdom@" value="${lib.jdom}"/>			
+			<replacefilter token="@frappucino@" value="${lib.frappucino}"/>			
+			<replacefilter token="@lucene@" value="${lib.lucene}"/>			
+			<replacefilter token="@jpim@" value="${lib.jpim}"/>				
+			<replacefilter token="@macchiato@" value="${lib.macchiato}"/>			
+			<replacefilter token="@je@" value="${lib.je}"/>			
+			<replacefilter token="@jwizz@" value="${lib.jwizz}"/>			
+			<replacefilter token="@jhall@" value="${lib.jhall}"/>			
+			<replacefilter token="@jniwrap@" value="${lib.jniwrap}"/>			
+			<replacefilter token="@winpack@" value="${lib.winpack}"/>							
+			<replacefilter token="@jniwraplib@" value="${lib.jniwraplib}"/>			
+		</replace>
 	</target>
 
 	<!-- only for build the class-files -->

@@ -2,7 +2,7 @@
 <!-- JNLP File for Columba -->
 <jnlp
  spec="1.0+"
- codebase="http://columba.sourceforge.net/webstart"
+ codebase="@codebase@"
  href="columba.jnlp">
  <information>
    <title>Columba</title>
@@ -10,27 +10,30 @@
    <homepage href="http://columba.sourceforge.net/"/>
    <description>Columba Email Client</description>
    <description kind="short">Java Email Client</description>
+   <icon href="images/icon32.gif"/>
    <offline-allowed/>
  </information>
  <security>
      <all-permissions/>
  </security>
  <resources>
-   <j2se version="1.4"/>
-   <j2se version="1.3"/>
+   <j2se version="1.4+"/>
    <jar href="columba.jar"/>
-   <jar href="lib/lucene-1.3-final.jar"/>
-   <jar href="lib/jargs.jar"/>
-   <jar href="lib/jwizz-0.1.2.jar"/>
-   <jar href="lib/plastic-1.2.0.jar"/>
-   <jar href="lib/usermanual.jar"/>
-   <jar href="lib/ristretto-1.0_RC2.jar" />
-   <jar href="lib/forms-1.0.3.jar" />
-   <jar href="lib/jscf-0.1.jar" />
-   <jar href="lib/jdom.jar" />
-   <jar href="lib/frappucino-1.0pre1.jar" />
-   <jar href="lib/macchiato-1.0pre1.jar" />
-   
+
+   <jar href="@ristretto@"/>
+   <jar href="@jargs@"/>
+   <jar href="@jwizz@"/>
+   <jar href="@plastic@"/>
+   <jar href="@usermanual@"/>
+   <jar href="@forms@"/>
+   <jar href="@jscf@"/>
+   <jar href="@jdom@"/>
+   <jar href="@frappucino@"/>
+   <jar href="@lucene@"/>
+   <jar href="@jpim@"/>
+   <jar href="@macchiato@"/>
+   <jar href="@je@"/>
+
    <!-- JavaHelp is signed by SUN already -->
    <!-- it therefor can't be in the same jnlp file -->
    <!-- because it is signed by someone else -->
@@ -45,7 +48,7 @@
    
  </resources>
  <resources os="Windows">
-    <nativelib href="lib/jniwraplib.jar"/>
+    <nativelib href="@jniwraplib@"/>
   </resources>
- <application-desc main-class="org.columba.core.main.Main"/>
+ <application-desc/>
 </jnlp>

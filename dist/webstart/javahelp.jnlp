@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp codebase="http://columba.sourceforge.net/webstart" href="javahelp.jnlp" spec="1.0+">
+<jnlp codebase="@codebase@" href="javahelp.jnlp" spec="1.0+">
   <information>
     <title>Java Help</title>
     <vendor>Sun Microsystems</vendor>
   </information>
 
   <resources>
-    <jar href="lib/jhall.jar" />
+    <jar href="@jhall@" />
   </resources>
 
   <component-desc/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp  spec="1.0+" codebase="http://columba.sourceforge.net/webstart" href="jnw.jnlp">
+<jnlp  spec="1.0+" codebase="@codebase@" href="jnw.jnlp">
   <information>
     <title>JNWrapper resources</title>
     <vendor>MIIK Ltd.</vendor>
@@ -11,8 +11,8 @@
       <all-permissions/>
   </security>
   <resources>
-    <jar href="lib/jniwrap-2.4.jar"/>
-    <jar href="lib/winpack.jar"/>
+    <jar href="@jniwrap@"/>
+    <jar href="@winpack@"/>
   </resources>
   <component-desc/>
 </jnlp>
