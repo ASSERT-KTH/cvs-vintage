@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.33 2003/04/30 05:28:55 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.34 2003/05/05 23:11:48 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -487,7 +487,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 
 			if (value instanceof OptionGroup)
 			{
-				name = ((OptionGroup)value).getName();
+				setText(((OptionGroup)value).getLabel());
 				this.setFont(groupFont);
 			}
 			else if (value instanceof OptionPane)
@@ -501,11 +501,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 				this.setFont(paneFont);
 			}
 
-			if (name == null)
-			{
-				setText(null);
-			}
-			else
+			if (name != null)
 			{
 				String label = jEdit.getProperty("options." +
 					name + ".label");

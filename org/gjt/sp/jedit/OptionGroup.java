@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * option pane instances.
  *
  * @author Mike Dillon
- * @version $Id: OptionGroup.java,v 1.6 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: OptionGroup.java,v 1.7 2003/05/05 23:11:47 spestov Exp $
  */
 public class OptionGroup
 {
@@ -58,10 +58,11 @@ public class OptionGroup
 	 * Creates an option group.
 	 * @param label The label
 	 * @param options A whitespace-separated list of option pane names
-	 * @since jEdit 4.2pre1
+	 * @since jEdit 4.2pre2
 	 */
-	public OptionGroup(String label, String options)
+	public OptionGroup(String name, String label, String options)
 	{
+		this.name = name;
 		this.label = label;
 		members = new Vector();
 

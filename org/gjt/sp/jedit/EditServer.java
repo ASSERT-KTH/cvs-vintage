@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.18 2003/04/19 03:48:14 spestov Exp $
+ * @version $Id: EditServer.java,v 1.19 2003/05/05 23:11:47 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -324,7 +324,7 @@ public class EditServer extends Thread
 						ns.setVariable("socket",client);
 						BeanShell.eval(null,ns,script);
 					}
-					catch(bsh.EvalError e)
+					catch(bsh.UtilEvalError e)
 					{
 						Log.log(Log.ERROR,this,e);
 					}
@@ -334,7 +334,7 @@ public class EditServer extends Thread
 						{
 							BeanShell.getNameSpace().setVariable("socket",null);
 						}
-						catch(bsh.EvalError e)
+						catch(bsh.UtilEvalError e)
 						{
 							Log.log(Log.ERROR,this,e);
 						}

@@ -22,9 +22,7 @@
 
 package org.gjt.sp.jedit;
 
-import bsh.BshMethod;
-import bsh.EvalError;
-import bsh.NameSpace;
+import bsh.*;
 import java.awt.Component;
 import org.gjt.sp.jedit.gui.BeanShellErrorDialog;
 import org.gjt.sp.util.Log;
@@ -40,7 +38,7 @@ import org.gjt.sp.util.Log;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: BeanShellAction.java,v 1.15 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: BeanShellAction.java,v 1.16 2003/05/05 23:11:47 spestov Exp $
  */
 public class BeanShellAction extends EditAction
 {
@@ -130,7 +128,7 @@ public class BeanShellAction extends EditAction
 			{
 				global.setVariable("_comp",null);
 			}
-			catch(EvalError err)
+			catch(UtilEvalError err)
 			{
 				Log.log(Log.ERROR,this,err);
 			}
