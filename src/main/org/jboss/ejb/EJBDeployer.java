@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.46 $</tt>
+ * @version <tt>$Revision: 1.47 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -364,6 +364,7 @@ public class EJBDeployer
    public void init(DeploymentInfo di)
       throws DeploymentException
    {
+      log.debug("init, "+di.shortName);
       try
       {
          if( di.url.getProtocol().equalsIgnoreCase("file") )
@@ -440,6 +441,7 @@ public class EJBDeployer
    public synchronized void create(DeploymentInfo di)
       throws DeploymentException
    {
+      log.debug("create, "+di.shortName);
       ApplicationMetaData metaData = null;
       try
       {
@@ -471,17 +473,17 @@ public class EJBDeployer
             // add a listener so we can log the results
             verifier.addVerificationListener(new VerificationListener()
                {
-                  Logger log = Logger.getLogger(EJBDeployer.class,
+                  Logger verifierLog = Logger.getLogger(EJBDeployer.class,
                      "verifier" );
 
                   public void beanChecked(VerificationEvent event)
                   {
-                     log.debug( "Bean checked: " + event.getMessage() );
+                     verifierLog.debug( "Bean checked: " + event.getMessage() );
                   }
 
                   public void specViolation(VerificationEvent event)
                   {
-                     log.warn( "EJB spec violation: " +
+                     verifierLog.warn( "EJB spec violation: " +
                         (verifierVerbose ? event.getVerbose() : event.getMessage()));
                   }
                });
@@ -584,6 +586,8 @@ public class EJBDeployer
    public void stop(DeploymentInfo di)
       throws DeploymentException
    {
+      log.debug("init, "+di.shortName);
+
       try
       {
          serviceController.stop(di.deployedObject);
