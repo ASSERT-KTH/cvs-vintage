@@ -83,7 +83,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.27 2002/07/23 21:50:23 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.28 2002/07/25 17:13:31 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -119,12 +119,12 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                     {
                         int order1 = ((Integer)orderMap.get(o1)).intValue();
                         int order2 = ((Integer)orderMap.get(o2)).intValue();
-                        int result = order2 - order1;
+                        int result = order1 - order2;
                         if (result == 0) 
                         {
                             Attribute a1 = (Attribute)o1;
                             Attribute a2 = (Attribute)o2;
-                        result = a1.getName().compareTo(a2.getName());
+                            result = a1.getName().compareTo(a2.getName());
                         }
                         return result;
                     }
