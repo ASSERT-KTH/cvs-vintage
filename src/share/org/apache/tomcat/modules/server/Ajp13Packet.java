@@ -140,14 +140,18 @@ public class Ajp13Packet {
     public int checkIn() {
 	pos = 0;
 	int mark = getInt();
-	len      = getInt();
 	
 	if( mark != 0x1234 ) {
 	    // XXX Logging
-	    System.out.println("BAD packet " + mark);
-	    dump( "In: " );
+        System.err.println( "Ajp13Packet: invalid packet header : " + mark);
+        // We only get 4 bytes, not necessary to dump this stuff with dump
+	    // dump( "In: " );
+        // Bug #2927
 	    return -1;
 	}
+
+	len = getInt();
+
 	return len;
     }
 
