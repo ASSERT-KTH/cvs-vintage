@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.26 2002/09/17 15:34:34 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.27 2002/09/19 09:45:00 lqd Exp $
  */
 
 
@@ -46,13 +46,15 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
    extends AbstractVerifier
 {
    private static final String msgBundle = "EJB20Messages.properties";
+
+   protected EJBVerifier11 cmp1XVerifier;
 
    // The classes for an EJB
    protected Class bean;
@@ -67,6 +69,7 @@ public class EJBVerifier20
    public EJBVerifier20(VerificationContext context)
    {
       super( context, new DefaultEventFactory(msgBundle) );
+      cmp1XVerifier = new EJBVerifier11(context);
    }
 
 /*
@@ -125,11 +128,7 @@ public class EJBVerifier20
    {
       if (entity.isCMP1x())
       {
-         // Workaround for CMP 1.x Beans inside a 2.0 .jar file: the
-         // EJBVerifier11 is too strict in this situation; just pretend
-         // that the Bean is OK and continue
-         fireBeanVerifiedEvent( entity, "Bean *not* checked, CMP 1.x " +
-            "Bean inside a 2.0 JAR not yet supported!" );
+         cmp1XVerifier.checkEntity( entity );
       }
       else
       {
