@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.136 2002/12/10 23:25:58 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.137 2002/12/11 00:54:40 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -316,6 +316,7 @@ public class ModifyIssue extends BaseModifyIssue
                         activitySet = issue
                             .doChangeUrlDescription(activitySet, user, 
                                                     attachment, oldDescription);
+                        scarabR.setConfirmMessage(l10n.get("UrlSaved"));
                     }
                     if (!oldURL.equals(newURL))
                     {
@@ -324,6 +325,7 @@ public class ModifyIssue extends BaseModifyIssue
                         activitySet = issue
                             .doChangeUrlUrl(activitySet, user, 
                                             attachment, oldURL);
+                        scarabR.setConfirmMessage(l10n.get("UrlSaved"));
                     }
                 }
             }
