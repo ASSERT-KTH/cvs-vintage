@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.23 2003/09/16 20:07:59 thierrylach Exp $
+// $Id: Argo.java,v 1.24 2003/10/12 16:44:13 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,8 @@ public class Argo
     public static final String ARGOINI = "/org/argouml/argo.ini";
 
     /** Key for menu resource bundle.
+     *
+     * @deprecated in 0.15.1. Replaced by menu and action properties.
      */
     public static final String MENU_BUNDLE = "CoreMenu";
 
