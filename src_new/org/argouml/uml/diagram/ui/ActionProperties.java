@@ -1,4 +1,4 @@
-// $Id: ActionProperties.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: ActionProperties.java,v 1.3 2004/08/14 19:28:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,15 +39,19 @@ public class ActionProperties extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static ActionProperties SINGLETON = new ActionProperties(); 
+    private static ActionProperties singleton = new ActionProperties(); 
 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     protected ActionProperties() { 
         super(Translator.localize("action.properties"), HAS_ICON);
-        String localMnemonic = Translator.localize("action.properties.mnemonic");
+        String localMnemonic = 
+            Translator.localize("action.properties.mnemonic");
         if (localMnemonic != null && localMnemonic.length() == 1) {
             putValue(Action.MNEMONIC_KEY, new Integer(localMnemonic.charAt(0)));
         }        
@@ -57,14 +61,28 @@ public class ActionProperties extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	if (pb == null) return;
 	pb.selectTabNamed("action.properties");
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() { 
 	return true; 
+    }
+
+
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionProperties getSingleton() {
+        return singleton;
     }
 } /* end class ActionProperties */
 

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.108 2004/08/14 15:26:11 mvw Exp $
+// $Id: FigClass.java,v 1.109 2004/08/14 19:28:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,8 +300,8 @@ public class FigClass extends FigNodeModelElement {
             showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
         }
 
-        showMenu.add(ActionEdgesDisplay.ShowEdges);
-        showMenu.add(ActionEdgesDisplay.HideEdges);
+        showMenu.add(ActionEdgesDisplay.getShowEdges());
+        showMenu.add(ActionEdgesDisplay.getHideEdges());
 
         popUpActions.insertElementAt(showMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);

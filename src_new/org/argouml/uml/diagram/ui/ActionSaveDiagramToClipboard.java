@@ -1,4 +1,4 @@
-// $Id: ActionSaveDiagramToClipboard.java,v 1.2 2004/02/29 12:35:45 linus Exp $
+// $Id: ActionSaveDiagramToClipboard.java,v 1.3 2004/08/14 19:28:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,10 @@ public class ActionSaveDiagramToClipboard
     extends AbstractAction
     implements ClipboardOwner {
     
-    /** get diagram image and put in system clipboard. */
+    /** get diagram image and put in system clipboard. 
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent actionEvent) {
         
         Image diagramGifImage = getImage();
@@ -102,7 +105,11 @@ public class ActionSaveDiagramToClipboard
         return diagramGifImage;
     }
     
-    /** do nothing */
+    /** do nothing
+     * 
+     * @see java.awt.datatransfer.ClipboardOwner#lostOwnership(
+     * java.awt.datatransfer.Clipboard, java.awt.datatransfer.Transferable)
+     */
     public void lostOwnership(Clipboard clipboard, Transferable transferable) {
     }
 }
@@ -112,7 +119,7 @@ public class ActionSaveDiagramToClipboard
  */
 class ImageSelection implements Transferable {
     
-    public static DataFlavor imageFlavor;
+    private static DataFlavor imageFlavor;
     private DataFlavor [] supportedFlavors = {imageFlavor};
     
     // the diagram image data

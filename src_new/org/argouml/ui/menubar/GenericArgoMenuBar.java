@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.52 2004/07/17 22:29:05 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.53 2004/08/14 19:28:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -455,7 +455,7 @@ public class GenericArgoMenuBar extends JMenuBar
 
         _edit.addSeparator();
 
-        JMenuItem removeItem = _edit.add(ActionDeleteFromDiagram.SINGLETON);
+        JMenuItem removeItem = _edit.add(ActionDeleteFromDiagram.getSingleton());
         setMnemonic(removeItem, "Remove from Diagram");
         setAccelerator(removeItem, delKey);
 
@@ -697,7 +697,7 @@ public class GenericArgoMenuBar extends JMenuBar
             editToolbar.add(ActionCopy.getInstance());
             editToolbar.add(ActionPaste.getInstance());
             editToolbar.addFocusListener(ActionPaste.getInstance());
-            editToolbar.add(ActionDeleteFromDiagram.SINGLETON);
+            editToolbar.add(ActionDeleteFromDiagram.getSingleton());
             editToolbar.add(NavigateTargetBackAction.getInstance());
             editToolbar.add(NavigateTargetForwardAction.getInstance());
         }
