@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.3 2004/08/29 17:03:26 mvw Exp $
+// $Id: WizAddOperation.java,v 1.4 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class WizAddOperation extends Wizard {
 	"Please change the name of the offending model element.";
     private String suggestion = "suggestion";
     private String origSuggest = "suggestion";
-    private boolean mustEdit = false;
+    //private boolean mustEdit = false;
     
     /** Creates a new instance of WizAddOperation */
     public WizAddOperation() {
@@ -81,7 +81,7 @@ public class WizAddOperation extends Wizard {
      */
     public Object getModelElement() {
         if (getToDoItem() != null) {
-            VectorSet offs = _item.getOffenders();
+            VectorSet offs = item.getOffenders();
             if (offs.size() >= 1) {
                 Object me = /*(MModelElement)*/ offs.elementAt(0);
                 return me;
@@ -119,7 +119,7 @@ public class WizAddOperation extends Wizard {
     /**
      * @param b
      */
-    public void setMustEdit(boolean b) { mustEdit = b; }
+    //public void setMustEdit(boolean b) { mustEdit = b; }
     
     /** 
      * Create a new panel for the given step.

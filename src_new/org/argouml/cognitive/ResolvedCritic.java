@@ -1,4 +1,4 @@
-// $Id: ResolvedCritic.java,v 1.9 2004/09/05 10:32:30 mvw Exp $
+// $Id: ResolvedCritic.java,v 1.10 2004/09/18 17:13:24 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,11 +136,11 @@ public class ResolvedCritic
      * related objects that that object has.
      *
      * <p>Formally that is inconsistent with equals as specified in
-     * java.lang.Object, but it was probably practical somehow.
+     * java.lang.Object, but it was probably practical somehow.<p>
      *
-     * @param	obj	Object to compare to.
-     * @return	True if equal according to the description, false
-     *		otherwise.
+     * The param obj is the Object to compare to.
+     * Returns true if equal according to the description, false
+     * otherwise.
      *
      * @see java.lang.Object#equals(java.lang.Object)
      */

@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.34 2004/08/16 16:50:28 mvw Exp $
+// $Id: ProjectManager.java,v 1.35 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,15 @@ import org.argouml.ui.ArgoDiagram;
  */
 public final class ProjectManager {
 
+    /**
+     * The name of the property that defines the current project.
+     */
     public static final String CURRENT_PROJECT_PROPERTY_NAME =
         "currentProject";
     
+    /**
+     * The name of the property that defines the save state.
+     */
     public static final String SAVE_STATE_PROPERTY_NAME = "saveState";
 
     /** logger */

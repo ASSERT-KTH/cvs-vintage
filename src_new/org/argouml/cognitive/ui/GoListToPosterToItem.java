@@ -1,4 +1,4 @@
-// $Id: GoListToPosterToItem.java,v 1.10 2004/09/05 13:18:07 mvw Exp $
+// $Id: GoListToPosterToItem.java,v 1.11 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,7 +94,8 @@ public class GoListToPosterToItem implements TreeModel {
      * @return the children
      */
     public Vector getChildren(Object parent) {
-	VectorSet allPosters = Designer.theDesigner().getToDoList().getPosters();
+	VectorSet allPosters = 
+	    Designer.theDesigner().getToDoList().getPosters();
 	if (parent instanceof ToDoList) {
 	    return allPosters.asVector();
 	}

@@ -1,4 +1,4 @@
-// $Id: ToDoListListener.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ToDoListListener.java,v 1.4 2004/09/18 17:13:24 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,30 @@ package org.argouml.cognitive;
 
 
 
+/**
+ * These are the methods you have to implement if you want 
+ * to get notified when the todo list changes.
+ *
+ */
 public interface ToDoListListener extends java.util.EventListener {
+    
+    /**
+     * @param tde the todo list event
+     */
     void toDoListChanged(ToDoListEvent tde);
+    
+    /**
+     * @param tde the todo list event
+     */
     void toDoItemsChanged(ToDoListEvent tde);
+    
+    /**
+     * @param tde the todo list event
+     */
     void toDoItemsAdded(ToDoListEvent tde);
+    
+    /**
+     * @param tde the todo list event
+     */
     void toDoItemsRemoved(ToDoListEvent tde);
 } /* end interface ToDoListListener */

@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.28 2004/09/05 13:18:09 mvw Exp $
+// $Id: Designer.java,v 1.29 2004/09/18 17:13:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -373,29 +373,53 @@ public class Designer
         critiqueASAP(pce.getSource(), pce.getPropertyName());
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     * 
+     * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
+     */
     public void propertySet(MElementEvent mee) {
         critiqueASAP(mee.getSource(),
 		     org.argouml.model.ModelFacade.getName(mee.getOldValue()));
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     *  
+     * @see ru.novosoft.uml.MElementListener#listRoleItemSet(ru.novosoft.uml.MElementEvent)
+     */
     public void listRoleItemSet(MElementEvent mee) {
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     * 
+     * @see ru.novosoft.uml.MElementListener#recovered(ru.novosoft.uml.MElementEvent)
+     */
     public void recovered(MElementEvent mee) {
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     * 
+     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
+     */
     public void removed(MElementEvent mee) {
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     * 
+     * @see ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
+     */
     public void roleAdded(MElementEvent mee) {
     }
     
-    /** TODO: remove this */
+    /** 
+     * TODO: remove this
+     * 
+     * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
+     */
     public void roleRemoved(MElementEvent mee) {
     }
     

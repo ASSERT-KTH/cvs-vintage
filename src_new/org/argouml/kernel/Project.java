@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.114 2004/09/13 21:11:30 bobtarling Exp $
+// $Id: Project.java,v 1.115 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -806,7 +806,8 @@ public class Project implements java.io.Serializable, TargetListener {
 
     /**
      * @param me the given modelelement
-     * @return 
+     * @return the total number of presentation 
+     *         for the given modelelement in the project
      */
     public int getPresentationCountFor(Object me) {
         
@@ -1304,9 +1305,9 @@ public class Project implements java.io.Serializable, TargetListener {
     }
     
     /**
-     * @param persistenceVersion The persistenceVersion to set.
+     * @param pv The persistenceVersion to set.
      */
-    public void setPersistenceVersion(int persistenceVersion) {
-        this.persistenceVersion = persistenceVersion;
+    public void setPersistenceVersion(int pv) {
+        this.persistenceVersion = pv;
     }
 } /* end class Project */

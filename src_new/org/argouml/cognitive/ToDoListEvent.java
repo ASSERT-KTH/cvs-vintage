@@ -1,4 +1,4 @@
-// $Id: ToDoListEvent.java,v 1.4 2004/09/07 18:50:06 mvw Exp $
+// $Id: ToDoListEvent.java,v 1.5 2004/09/18 17:13:24 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,10 @@ package org.argouml.cognitive;
 
 import java.util.Vector;
 
+/**
+ * Event issued when the todo list changes.
+ *
+ */
 public class ToDoListEvent {
 
     private Vector items;

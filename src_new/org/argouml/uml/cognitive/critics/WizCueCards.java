@@ -1,4 +1,4 @@
-// $Id: WizCueCards.java,v 1.7 2004/08/29 17:03:26 mvw Exp $
+// $Id: WizCueCards.java,v 1.8 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizCueCards.java
 // Classes: WizCueCards
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizCueCards.java,v 1.7 2004/08/29 17:03:26 mvw Exp $
+// $Id: WizCueCards.java,v 1.8 2004/09/18 17:13:23 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -58,8 +58,8 @@ public class WizCueCards extends Wizard {
      * @return the offending modelelement
      */
     public Object getModelElement() {
-	if (_item != null) {
-	    VectorSet offs = _item.getOffenders();
+	if (item != null) {
+	    VectorSet offs = item.getOffenders();
 	    if (offs.size() >= 1) {
 		Object me = /*(MModelElement)*/ offs.elementAt(0);
 		return me;
@@ -69,7 +69,7 @@ public class WizCueCards extends Wizard {
     }
 
     /**
-     * @param s
+     * @param s the text for the wizard step
      */
     public void addCue(String s) { cues.addElement(s); }
 
@@ -102,7 +102,7 @@ public class WizCueCards extends Wizard {
      * @see org.argouml.kernel.Wizard#canFinish()
      */
     public boolean canFinish() {
-	return _step == getNumSteps();
+	return step == getNumSteps();
     }
 
 

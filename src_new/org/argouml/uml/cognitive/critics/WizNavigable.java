@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.10 2004/08/29 17:03:26 mvw Exp $
+// $Id: WizNavigable.java,v 1.11 2004/09/18 17:13:23 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.10 2004/08/29 17:03:26 mvw Exp $
+// $Id: WizNavigable.java,v 1.11 2004/09/18 17:13:23 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -69,8 +69,8 @@ public class WizNavigable extends Wizard {
      * @return the offending modelelement
      */
     public Object getModelElement() {
-	if (_item != null) {
-	    VectorSet offs = _item.getOffenders();
+	if (item != null) {
+	    VectorSet offs = item.getOffenders();
 	    if (offs.size() >= 1) {
 		Object me = /*(MModelElement)*/ offs.elementAt(0);
 		return me;
@@ -122,7 +122,7 @@ public class WizNavigable extends Wizard {
 	case 1:
 	    if (step1 == null) {
 		step1 = new WizStepChoice(this, instructions, getOptions());
-		step1.setTarget(_item);
+		step1.setTarget(item);
 	    }
 	    return step1;
 	}
@@ -167,8 +167,8 @@ public class WizNavigable extends Wizard {
      */
     public boolean canFinish() {
 	if (!super.canFinish()) return false;
-	if (_step == 0) return true;
-	if (_step == 1 && step1 != null && step1.getSelectedIndex() != -1)
+	if (step == 0) return true;
+	if (step == 1 && step1 != null && step1.getSelectedIndex() != -1)
 	    return true;
 	return false;
     }
