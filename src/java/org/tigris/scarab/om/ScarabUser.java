@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 import java.util.List;
+import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -59,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.42 2001/10/24 06:08:23 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.43 2001/10/24 15:50:35 jon Exp $
  */
 public interface ScarabUser extends User
 {
