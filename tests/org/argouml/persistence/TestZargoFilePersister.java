@@ -1,4 +1,4 @@
-// $Id: TestZargoFilePersister.java,v 1.6 2005/01/16 02:06:39 bobtarling Exp $
+// $Id: TestZargoFilePersister.java,v 1.7 2005/01/17 20:26:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,11 +68,10 @@ public class TestZargoFilePersister extends TestCase {
      * @param filename of the project file to load
      * @throws OpenException if something goes wrong.
      */
-    private Project doLoad(String filename)
-            throws OpenException {
+    private Project doLoad(String filename) throws OpenException {
         URL url = TestZargoFilePersister.class.getResource(filename);
         ZargoFilePersister persister = new ZargoFilePersister();
-        Project p = persister.doLoad(new File(url.getFile()), null, null);
+        Project p = persister.doLoad(new File(url.getFile()));
         assertTrue("Load Status for " + filename + ".",
                LastLoadInfo.getInstance().getLastLoadStatus());
         return p;
@@ -116,7 +115,7 @@ public class TestZargoFilePersister extends TestCase {
         try {
             file = new File("/testmodels/Garbage.zargo");
             ZargoFilePersister persister = new ZargoFilePersister();
-            persister.doLoad(file, null, null);
+            persister.doLoad(file);
             assertTrue("Load Status",
                     !LastLoadInfo.getInstance().getLastLoadStatus());
         } catch (OpenException io) {

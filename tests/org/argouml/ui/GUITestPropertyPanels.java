@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.20 2005/01/16 02:06:40 bobtarling Exp $
+// $Id: GUITestPropertyPanels.java,v 1.21 2005/01/17 20:26:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,11 +137,9 @@ public class GUITestPropertyPanels extends TestCase {
 
         p = ProjectManager.getManager().makeEmptyProject();
         File testfile = new File(projectFile);
-        System.err.println("GUITestPropertyPanels file = " + projectFile);
-        System.err.println("GUITestPropertyPanels file exists = " + testfile.exists());
 
         ZargoFilePersister persister = new ZargoFilePersister();
-        p = persister.doLoad(testfile, null, null);
+        p = persister.doLoad(testfile);
         ProjectManager.getManager().setCurrentProject(p);
         Object model = p.getRoot();
         Collection me = Model.getUmlHelper().getModelManagement().
