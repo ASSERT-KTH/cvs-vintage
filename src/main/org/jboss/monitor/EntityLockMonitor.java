@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Arrays;
 import javax.management.JMException;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
@@ -42,7 +43,7 @@ import javax.naming.Reference;
  *
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntityLockMonitor
    extends ServiceMBeanSupport
@@ -77,6 +78,53 @@ public class EntityLockMonitor
    {}
 
    protected HashMap monitor = new HashMap();
+   protected long contenders = 0;
+   protected long maxContenders = 0;
+   protected ArrayList times = new ArrayList();
+   protected long contentions = 0;
+   protected long total_time = 0;
+   protected long sumContenders = 0;
+   public synchronized void incrementContenders()
+   {
+      contentions++;
+      contenders++;
+      if (contenders > maxContenders) maxContenders = contenders;
+      sumContenders += contenders;
+   }
+   public synchronized void decrementContenders(long time)
+   {
+      times.add(new Long(time));
+      contenders--;
+   }
+   public synchronized long getAverageContenders()
+   {
+      if (contentions == 0) return 0;
+      return sumContenders / contentions;
+   }
+   public synchronized long getMaxContenders()
+   {
+      return maxContenders;
+   }
+
+   public synchronized long getMedianWaitTime()
+   {
+      if (times.size() < 1) return 0;
+
+      Long[] alltimes = (Long[])times.toArray(new Long[times.size()]);
+      long[] thetimes = new long[alltimes.length];
+      for (int i = 0; i < thetimes.length; i++)
+      {
+         thetimes[i] = alltimes[i].longValue();
+      }
+      Arrays.sort(thetimes);
+      return thetimes[thetimes.length / 2];
+   }
+
+   public synchronized long getTotalContentions()
+   {
+      return contentions;
+   }
+
    public LockMonitor getEntityLockMonitor(String ejbName)
    {
       LockMonitor lm = null;
@@ -85,7 +133,7 @@ public class EntityLockMonitor
          lm = (LockMonitor)monitor.get(ejbName);
          if (lm == null)
          {
-            lm = new LockMonitor();
+            lm = new LockMonitor(this);
             monitor.put(ejbName, lm);
          }
       }
@@ -124,8 +172,15 @@ public class EntityLockMonitor
       return rtn.toString();
    }
    
-   public void clearMonitor()
+   public synchronized void clearMonitor()
    {
+      contenders = 0;
+      maxContenders = 0;
+      times.clear();
+      contentions = 0;
+      total_time = 0;
+      sumContenders = 0;
+
       synchronized(monitor)
       {
          Iterator it = monitor.keySet().iterator();

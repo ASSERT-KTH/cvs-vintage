@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -54,6 +54,13 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    private boolean isReadOnlyTxLock = true;
 
    private int txIdGen = 0;
+   protected LockMonitor lockMonitor = null;
+
+   public void setContainer(Container container) 
+   { 
+      this.container = container; 
+      lockMonitor = container.getLockManager().getLockMonitor();
+   }
    private class TxLock
    {
 
@@ -185,19 +192,14 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
          //Next test is independent of whether the context is locked or not, it is purely transactional
          // Is the instance involved with another transaction? if so we implement pessimistic locking
-         LockMonitor lockMonitor = container.getLockManager().getLockMonitor();
+         long startWait = System.currentTimeMillis();
          try
          {
-            long startWait = System.currentTimeMillis();
             wasThreadScheduled = waitForTx(miTx, trace);
             if (wasThreadScheduled && lockMonitor != null)
             {
                long endWait = System.currentTimeMillis() - startWait;
-               synchronized (lockMonitor)
-               {
-                  lockMonitor.total_time += endWait;
-                  lockMonitor.num_contentions++;
-               }
+               lockMonitor.finishedContending(endWait);
             }
          }
          catch (Exception throwable)
@@ -209,6 +211,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                   lockMonitor.timeouts++;
                }
             }
+            long endWait = System.currentTimeMillis() - startWait;
+            lockMonitor.finishedContending(endWait);
             throw throwable;
          }
       }
