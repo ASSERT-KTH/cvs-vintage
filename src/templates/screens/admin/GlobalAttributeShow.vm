@@ -18,6 +18,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 #end
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
+#*
 #macro (sort $shortName $longName)
      #if ($sortColumn.equals($shortName))
         #if ($sortPolarity.equals("desc"))
@@ -32,6 +33,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
         <a href="$sortLink">$longName</a>
      #end
 #end
+*#
 
 ## PAGINATION
 ## if results exceed limit, get subset list

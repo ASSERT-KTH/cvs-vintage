@@ -8,7 +8,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="global" />
 
 <div class="functnbar">
@@ -25,20 +25,16 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <th>Description</th>
 </tr>
 #foreach ($issueType in $scarabG.AllIssueTypes)
-#set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($group.Deleted)</td>
-<td>
-    <input type="text" name="$group.Name.Key" value="$group.Name.Value">
-    #fieldErrorMsg($group.Name "")
+<td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
-<td>#textAreaMedium("$group.Description.Key" $group.Description)</td>
+<td>$issueType.Description</td>
 </tr>
 #end
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doSave" />

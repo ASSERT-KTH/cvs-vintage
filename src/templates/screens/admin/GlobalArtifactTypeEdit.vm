@@ -3,8 +3,9 @@
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
 #set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE))
 
-#macro (ArtifactTypeCreateBar $var)
+#macro (GlobalArtifactTypeEdit $var)
 <div class="functnbar$var">
+      <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
       <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
 </div>
@@ -14,14 +15,17 @@
 
 <h2>$page.Title</h2>
 
-<form method="post" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
+<form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 #if (!$lastTemplate.equals(""))
-  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE"" value="$lastTemplate" />
+  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="$lastTemplate" />
+#end
+#if ($issueType.IssueTypeId)
+  <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
 #end
   
 
-#ArtifactTypeCreateBar()
+#GlobalArtifactTypeEdit()
 
 <h3>Issue type details</h3>
 <div class="axial">
@@ -42,7 +46,7 @@
   </table>
 </div>
 
-#ArtifactTypeCreateBar("2")
+#GlobalArtifactTypeEdit("2")
 
 $intake.declareGroups()
 </form>
