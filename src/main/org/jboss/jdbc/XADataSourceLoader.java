@@ -29,12 +29,13 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
         implements XADataSourceLoaderMBean {
     private XAPoolDataSource source;
+    private String url;
 
     public XADataSourceLoader() {}
 
@@ -53,6 +54,7 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     }
 
     public void setURL(String url) {
+        this.url = url == null ? "" : url;  // Save URL, so it doesn't disappear from the JCML file
         XADataSource vendorSource = (XADataSource)source.getDataSource();
         try {
             Class cls = vendorSource.getClass();
@@ -66,14 +68,18 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     }
 
     public String getURL() {
+        String result = "";
         XADataSource vendorSource = (XADataSource)source.getDataSource();
         try {
             Class cls = vendorSource.getClass();
             Method getURL = cls.getMethod("getURL", new Class[0]);
-            return (String) getURL.invoke(vendorSource, new Object[0]);
+            result =  (String) getURL.invoke(vendorSource, new Object[0]);
         } catch(Exception e) {
-            return "";
+            log.error("There seems to be a problem with the JDBC URL: "+e);
         }
+        if(result == null || result.length() == 0)
+            result = url;
+        return result;
     }
 
     public void setProperties(String properties) {
