@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.4 2002/03/13 19:24:16 dlr Exp $
+# $Id: create-db.sh,v 1.5 2002/03/13 20:24:34 dlr Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -24,13 +24,13 @@ do
     --username|-u)
         username="$2"
         shift;;
-    --password|-W)
+    --password|-p)
         password=t
         ;;
     --host|-h)
         HOSTNAME="$2"
         shift;;
-    --port|-p)
+    --port|-P)
         port="$2"
         shift;;
     --name|-n)

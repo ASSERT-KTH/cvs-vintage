@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.33 2002/03/11 21:43:12 jon Exp $
+$Id: README.txt,v 1.34 2002/03/13 20:24:34 dlr Exp $
 
 Welcome to Scarab!
 
@@ -218,7 +218,7 @@ or edit the create-mysql-database.bat script (Win32) in order to specify
 these settings to the MySQL client. For example:
 
     cd src/sql
-    ./create-db.sh -u jon --password -p 3306 -h mysql.server.com mysql
+    ./create-db.sh -u jon --password -P 3306 -h mysql.server.com mysql
 
 Also make sure to define your own scarab.database.* properties in your
 local build.properties (see above for the explanation about how to use
