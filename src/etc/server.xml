@@ -62,11 +62,6 @@
         <!-- Check permissions using a simple xml file  -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleRealm" debug="0" />
 
-        <!-- Set extra headers - like Date: and ServletEngine, plus version 0 cookies
-             Most of this is not needed, but it was allways here. There are better 
-             ways to do that -->
-        <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
-
         <Connector className="org.apache.tomcat.service.PoolTcpConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
             <Parameter name="port" value="8080"/>

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.5 2000/05/23 20:58:27 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/23 20:58:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.6 2000/05/24 01:58:17 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/24 01:58:17 $
  *
  * ====================================================================
  *
@@ -106,6 +106,9 @@ public class MimeHeaderField {
      */
     protected final HttpDate dateValue = new HttpDate(0);
 
+    StringBuffer sb=null;
+    // Will be used to conver date value - _never_ call toString()
+    
     /**
      * The header field value type.
      */
@@ -218,11 +221,18 @@ public class MimeHeaderField {
 	}
     }
 
+    public MessageString getNameMessageString() {
+	return name;
+    }
+
+    public MessageString getValueMessageString() {
+	return value;
+    }
+
     /**
      * Returns the integer value of the header field.
      * @exception NumberFormatException if the integer format was invalid
      */
-
     public int getIntValue()
 	throws NumberFormatException
     {

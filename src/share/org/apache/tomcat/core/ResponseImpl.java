@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.27 2000/05/23 21:39:51 costin Exp $
- * $Revision: 1.27 $
- * $Date: 2000/05/23 21:39:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.28 2000/05/24 01:58:14 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/05/24 01:58:14 $
  *
  * ====================================================================
  *
@@ -82,9 +82,11 @@ import org.apache.tomcat.facade.*;
 public class ResponseImpl implements Response {
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
+    static final Locale DEFAULT_LOCALE=new Locale(Constants.LOCALE_DEFAULT, "");
 
     protected Request request;
     protected HttpServletResponse responseFacade;
+
     protected Vector userCookies = new Vector();
     protected String contentType = Constants.DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
@@ -92,9 +94,10 @@ public class ResponseImpl implements Response {
     protected String sessionId;
     protected int contentLength = -1;
     protected int status = 200;
-    private Locale locale = new Locale(Constants.LOCALE_DEFAULT, "");
+    private Locale locale = DEFAULT_LOCALE;
 
     protected MimeHeaders headers = new MimeHeaders();
+
     protected BufferedServletOutputStream out;
     protected PrintWriter writer;
 
@@ -104,8 +107,9 @@ public class ResponseImpl implements Response {
     protected boolean committed = false;
     
     boolean notIncluded=true;
-    
-    StringBuffer body=new StringBuffer();
+
+    // default implementation will just append everything here
+    StringBuffer body=null;
 
     public ResponseImpl() {
 	out=new BufferedServletOutputStream();
@@ -149,14 +153,12 @@ public class ResponseImpl implements Response {
     public boolean isStarted() {
 	return started;
     }
-
-    static final Locale defaultLocale=new Locale(Constants.LOCALE_DEFAULT, "");
     
     public void recycle() {
 	userCookies.removeAllElements(); // XXX reuse !!!
 	contentType = Constants.DEFAULT_CONTENT_TYPE;
 	contentLanguage = null;
-        locale = defaultLocale;
+        locale = DEFAULT_LOCALE;
 	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
@@ -168,7 +170,7 @@ public class ResponseImpl implements Response {
 	committed = false;
 	notIncluded=true;
 	// adapter
-	body.setLength(0);
+	body=null;
 	if( out != null ) out.recycle();
 
 
@@ -342,7 +344,7 @@ public class ResponseImpl implements Response {
         //
 	userCookies.removeAllElements();  // keep system (session) cookies
 	contentType = Constants.DEFAULT_CONTENT_TYPE;
-        locale = new Locale(Constants.LOCALE_DEFAULT, "");
+        locale = DEFAULT_LOCALE;
 	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
@@ -350,6 +352,7 @@ public class ResponseImpl implements Response {
 	if (usingWriter == true && writer != null)
 	    writer.flush();
 
+	body=null;
 	// Reset the stream
 	out.reset();
 
@@ -507,8 +510,10 @@ public class ResponseImpl implements Response {
      */
     public void doWrite( byte buffer[], int pos, int count) throws IOException {
         // XXX fix if charset is other than default.
-        body.append(new String(buffer, pos, count, 
-                    Constants.DEFAULT_CHAR_ENCODING) );
+        if( body==null)
+	    body=new StringBuffer();
+	body.append(new String(buffer, pos, count, 
+			       Constants.DEFAULT_CHAR_ENCODING) );
     }
 
     public StringBuffer getBody() {

@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.1 2000/05/24 01:58:17 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/05/24 01:58:17 $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -58,37 +62,74 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.util;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.facade.*;
-import java.io.*;
-import java.net.*;
-import java.security.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.text.*;
+import org.apache.tomcat.core.Constants;
 
 /**
- *   Control for facades - this is the only "gate" between servlets
- *   and tomcat.
+ *  Common place for date utils.
+ *
+ * @author dac@eng.sun.com
+ * @author Jason Hunter [jch@eng.sun.com]
+ * @author James Todd [gonzo@eng.sun.com]
+ * @author Costin Manolache
  */
-public interface FacadeManager {
-    public static final String FACADE_ATTRIBUTE="org.apache.tomcat.facade";
+public class DateTool {
+
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.util");
+
+    /** US locale - all HTTP dates are in english
+     */
+    public final static Locale LOCALE_US = Locale.US;
+
+    /** GMT timezone - all HTTP dates are on GMT
+     */
+    public final static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+
+    /** format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
+     */
+    public final static String RFC1123_PATTERN =
+        "EEE, dd MMM yyyyy HH:mm:ss z";
+
+    // format for RFC 1036 date string -- "Sunday, 06-Nov-94 08:49:37 GMT"
+    private final static String rfc1036Pattern =
+        "EEEEEEEEE, dd-MMM-yy HH:mm:ss z";
+
+    // format for C asctime() date string -- "Sun Nov  6 08:49:37 1994"
+    private final static String asctimePattern =
+        "EEE MMM d HH:mm:ss yyyyy";
+
+    /** Pattern used for old cookies
+     */
+    public final static String OLD_COOKIE_PATTERN = "EEE, dd-MMM-yyyy HH:mm:ss z";
     
-    public ServletContext createServletContextFacade(Context ctx);
     
-    public  HttpServletRequest createHttpServletRequestFacade(Request req);
-
-    public  HttpServletResponse createHttpServletResponseFacade(Response res);
-
-    public ServletConfig createServletConfig(ServletWrapper sw);
-
-    public  void recycle( Request req );
-
-    public  Request getRealRequest( HttpServletRequest req ); 
-
-    public Context getRealContext( ServletContext ctx );
-
+    /** DateFormat to be used to format dates
+     */
+    public final static SimpleDateFormat rfc1123Format =
+	new SimpleDateFormat(RFC1123_PATTERN, LOCALE_US);
+    
+    /** DateFormat to be used to format old netscape cookies
+     */
+    public final static SimpleDateFormat oldCookieFormat =
+	new SimpleDateFormat(OLD_COOKIE_PATTERN, LOCALE_US);
+    
+    public final static SimpleDateFormat rfc1036Format =
+	new SimpleDateFormat(rfc1036Pattern, LOCALE_US);
+    
+    public final static SimpleDateFormat asctimeFormat =
+	new SimpleDateFormat(asctimePattern, LOCALE_US);
+    
+    static {
+	rfc1123Format.setTimeZone(GMT_ZONE);
+	oldCookieFormat.setTimeZone(GMT_ZONE);
+	rfc1036Format.setTimeZone(GMT_ZONE);
+	asctimeFormat.setTimeZone(GMT_ZONE);
+    }
+    
 }
-    

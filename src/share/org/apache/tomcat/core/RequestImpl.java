@@ -516,7 +516,16 @@ public class RequestImpl  implements Request {
 
     // -------------------- Attributes
     public Object getAttribute(String name) {
-        return attributes.get(name);
+        Object value=attributes.get(name);
+	if( value != null )
+	    return value;
+
+	// allow access to FacadeManager for servlets 
+	// ( this way you don't need to deal with init ).
+	if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
+	    return context.getAttribute( name ); 
+	}
+	return null;
     }
 
     public void setAttribute(String name, Object value) {

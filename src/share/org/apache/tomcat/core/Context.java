@@ -376,7 +376,7 @@ public class Context {
 	    if(name.equals("org.apache.tomcat.classloader")) {
 		return this.getServletLoader();
 	    }
-	    if( name.equals("org.apache.tomcat.facade")) {
+	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
 		if( ! allowAttribute(name) ) return null;
 		return this.getFacadeManager();
 	    }
