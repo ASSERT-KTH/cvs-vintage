@@ -87,9 +87,9 @@ $l10n.NoTemplates
   </td>
   <td>
   #if (!$template.Approved)
-    $l10n.Personal ($l10n.UntilApproved)
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.NextEntryTemplate)">$l10n.Personal ($l10n.UntilApproved)</a>
   #else
-    $template.Scope.Name
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.NextEntryTemplate)">$template.Scope.Name</a>
   #end
   </td>
    <td>

@@ -11,9 +11,7 @@
      #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
        <h2>$currentIssue.UniqueId</h2>
        <form method="post" action="$action" enctype="multipart/form-data">
-       #foreach ($issueId in $issueList)
          <input type="hidden" name="issue_ids" value="$issueId" />
-       #end
        #printCollisionInfo()
        $intake.newForm()
        $renderer.render("viewIssue", "ViewIssueBody.vm")
