@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.62 2003/03/04 13:14:44 lepekhine Exp $
+// $Id: Modeller.java,v 1.63 2003/03/05 07:21:25 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -355,7 +355,7 @@ public class Modeller
     public void popClassifier()
     {
         // now create diagram if it doesn't exists in project
-	if (getDiagram() != null) {
+	if (getDiagram() != null && currentPackageName != null) {
            getDiagram().selectClassDiagram(currentPackage, currentPackageName);
         }
         // add the current classifier to the diagram.
