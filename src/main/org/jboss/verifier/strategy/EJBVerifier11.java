@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.7 2000/06/11 18:12:39 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.8 2000/06/11 21:22:26 juha Exp $
  */
 
 
@@ -27,8 +27,10 @@ package org.jboss.verifier.strategy;
 import java.util.Iterator;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.lang.reflect.*;
-
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Field;
 
 // non-standard class dependencies
 import org.gjt.lindfors.pattern.StrategyContext;
@@ -51,7 +53,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -103,8 +105,8 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
         beanVerified   = verifySessionBean(session);
-        homeVerified   = verifySessionHome(session.getHome());
-        remoteVerified = verifySessionRemote(session.getRemote());
+        homeVerified   = verifySessionHome(session);
+        remoteVerified = verifySessionRemote(session);
 
 
         if ( beanVerified && homeVerified && remoteVerified &&
@@ -187,20 +189,78 @@ public class EJBVerifier11 extends AbstractVerifier {
  *****************************************************************************
  */
 
-    private boolean verifySessionHome(String name) {
+    private boolean verifySessionHome(Session session) {
+
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
+
+        String name = session.getHome();
+        
+        try {
+            Class home = classloader.loadClass(name);
+
+            /*
+             * The home interface of a stateless session bean MUST have one
+             * create() method that takes no arguments.
+             *
+             * The create() method MUST return the session bean's remote
+             * interface.
+             *
+             * There CAN NOT be other create() methods in the home interface.
+             *
+             * Spec 6.8
+             */
+             if (isStateless(session)) {
+                 
+                 if (!hasDefaultCreateMethod(home)) {
+                    fireSpecViolationEvent(SECTION_6_8_a, name);
+
+                    status = false;
+                 }
+                 
+                 if (!hasRemoteReturnType(getDefaultCreateMethod(home))) {
+                     fireSpecViolationEvent(SECTION_6_8_b, name);
+                     
+                     status = false;
+                 }
+                 
+                 if (hasMoreThanOneCreateMethods(home)) {
+                     fireSpecViolationEvent(SECTION_6_8_c, name);
+                     
+                     status = false;
+                 }   
+             }
+             
+             
+        }
+        catch (ClassNotFoundException e) {
+
+            VerificationEvent event =
+                    factory.createSpecViolationEvent(context, DTD_HOME, name);
+
+            context.fireBeanChecked(event);
+
+            status = false;
+        }
+        
+        return status;
+
+    }
+
+    
+    
+    private boolean verifySessionRemote(Session session) {
 
         // NO IMPLEMENTATION
 
         return true;
     }
 
-    private boolean verifySessionRemote(String name) {
-
-        // NO IMPLEMENTATION
-
-        return true;
-    }
-
+    
+    
     private boolean verifySessionBean(Session session) {
 
         /*
@@ -415,108 +475,10 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
 
-    /*
-     * Searches for an instance of a public ejbCreate method from the class
-     */
-    private boolean hasEJBCreateMethod(Class c) {
-
-        try {
-            Method[] method = c.getMethods();
-
-            for (int i = 0; i < method.length; ++i) {
-
-                String name = method[i].getName();
-
-                if (name.equals(EJB_CREATE_METHOD))
-                    // check the requirements for ejbCreate methods (spec 6.10.3)
-                    // check for public modifier done by getMethods() call
-                    // (it only returns public member methods)
-                    if (!isStaticMember(method[i])
-                            && !isFinalMember(method[i])
-                            && hasVoidReturnType(method[i]))
-
-                        return true;
-            }
-        }
-        catch (SecurityException e) {
-            System.err.println(e);
-            // [TODO]   Can be thrown by the getMethods() call if access is
-            //          denied --> createVerifierWarningEvent
-        }
-
-        return false;
-    }
 
 
 
-    /*
-     * Finds java.ejb.SessionBean interface from the class
-     */
-    private boolean hasSessionBeanInterface(Class c) {
 
-        Class[] interfaces = c.getInterfaces();
-
-        for (int i = 0; i < interfaces.length; ++i) {
-
-            if ((SESSIONBEAN_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-
-        return false;
-    }
-
-
-
-    /*
-     * Finds javax.ejb.SessionSynchronization interface from the class
-     */
-    private boolean hasSessionSynchronizationInterface(Class c) {
-
-        Class[] interfaces = c.getInterfaces();
-
-        for (int i = 0; i < interfaces.length; ++i) {
-
-            if ( (SESSIONSYNCHRONIZATION_INTERFACE).equals(interfaces[i].getName()) )
-                return true;
-        }
-
-        return false;
-    }
-
-
-    private boolean hasDefaultConstructor(Class c) {
-        try {
-            c.newInstance();
-        } catch(Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-
-    private boolean hasFinalizer(Class c) {
-
-        try {
-            Method finalizer = c.getDeclaredMethod("finalize", new Class[0]);
-
-            if (finalizer.getModifiers() != Modifier.PROTECTED)
-                return false;
-        }
-
-        catch (NoSuchMethodException e) {
-            return false;
-        }
-
-        catch (SecurityException e) {
-            System.err.println(e);
-            // [TODO]   Can be thrown by the getDeclaredMethod() call if access is
-            //          denied --> createVerifierWarningEvent
-
-            return false;
-        }
-
-        return true;
-    }
 
     private boolean isAllFieldsPublic(Class c) {
         try {
@@ -541,13 +503,6 @@ public class EJBVerifier11 extends AbstractVerifier {
         return false;
     }
 
-    private boolean isStateful(Session session) {
-
-        if (STATEFUL_SESSION.equals(session.getSessionType()))
-            return true;
-
-        return false;
-    }
 
 
 
@@ -569,32 +524,6 @@ public class EJBVerifier11 extends AbstractVerifier {
     }
 
 
-    private boolean isPublicClass(Class c) {
-
-        if (c.getModifiers() == Modifier.PUBLIC)
-            return true;
-
-        return false;
-    }
-
-
-    private boolean isFinalClass(Class c) {
-
-        if (c.getModifiers() == Modifier.FINAL)
-            return true;
-
-        return false;
-    }
-
-
-    private boolean isAbstractClass(Class c) {
-
-        if (c.getModifiers() == Modifier.ABSTRACT)
-            return true;
-
-        return false;
-    }
-
 
     private void fireSpecViolationEvent(String section, String name) {
 
@@ -614,20 +543,6 @@ public class EJBVerifier11 extends AbstractVerifier {
      *
      ****************************************************************
      */
-    private final static String SESSIONBEAN_INTERFACE =
-        "javax.ejb.SessionBean";
-
-    private final static String SESSIONSYNCHRONIZATION_INTERFACE =
-        "javax.ejb.SessionSynchronization";
-
-    private final static String EJB_CREATE_METHOD     =
-        "ejbCreate";
-
-
-
-    /*
-     * Specification entries
-     */
     public final static String SECTION_6_5_1         =
         "Section 6.5.1 Required Sessionbean interface";
 
@@ -643,6 +558,15 @@ public class EJBVerifier11 extends AbstractVerifier {
     public final static String SECTION_6_6_1         =
         "Section 6.6.1 Operations allowed in the methods of a stateful session bean class";
 
+    public final static String SECTION_6_8_a         =
+        "Section 6.8 Stateless session beans (must have one create)";
+        
+    public final static String SECTION_6_8_b         = 
+        "Section 6.8 Stateless session beans (must return remote interface)";
+        
+    public final static String SECTION_6_8_c         =
+        "Section 6.9 Stateless session beans (must not have other creates)";
+        
     public final static String SECTION_6_10_2_a      =
         "Section 6.10.2 Session bean class (public class)";
 
@@ -670,23 +594,6 @@ public class EJBVerifier11 extends AbstractVerifier {
     public final static String SECTION_9_4_7_2_b     =
         "Section 9.4.7.2 Primary key class (fields not public)";
 
-    /*
-     * Ejb-jar DTD
-     */
-    public final static String DTD_EJB_CLASS         =
-        "Deployment descriptor DTD: ejb-class";
-
-    public final static String BEAN_MANAGED_TX       =
-        "Bean";
-
-    public final static String CONTAINER_MANAGED_TX  =
-        "Container";
-
-    public final static String STATEFUL_SESSION      =
-        "Stateful";
-
-    public final static String STATELESS_SESSION     =
-        "Stateless";
 
 }
 
