@@ -44,71 +44,43 @@ package org.tigris.scarab.util.word;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
-import org.apache.turbine.Turbine;
+import org.apache.fulcrum.TurbineServices;
+import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.util.Log;
 
-
 /**
- *  Returns an instance of the SearchIndex specified in Scarab.properties
- *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.18 2004/11/14 21:07:00 dep4b Exp $
+ * Returns an instance of the SearchIndex specified in Scarab.properties
+ * 
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally </a>
+ * @version $Id: SearchFactory.java,v 1.19 2004/11/23 08:28:27 dep4b Exp $
  */
-public class SearchFactory
-{
-    private static Class searchIndex;
+public class SearchFactory {
+    private static SearchIndex searchIndex;
 
-    static
-    {
-       
-       
-        String className = Turbine.getConfiguration()
-            .getString(SearchIndex.CLASS_NAME);
-        Class si = null;
-        try
-        {
-            si = Class.forName(className);
-        }
-        catch (Exception e)
-        {
-            String err;
-            if (className == null || className.trim().length() == 0)
-            {
-                err = "An indexer and search engine has not been specified";
-            }
-            else
-            {
-                err = "Unable to to create '" + className + '\'';
-            }
-            err += ": Text will not be searchable: " + e;
-            Log.get().warn(err);
-        }
-        searchIndex = si;
-    }
+    public static SearchIndex getInstance() throws InstantiationException {
 
-    public static SearchIndex getInstance()
-        throws InstantiationException
-    {
-        SearchIndex si = null;
-        if (searchIndex != null)
-        {
-            try
-            {
-                si = (SearchIndex) searchIndex.newInstance();
-            }
-            catch (Exception e)
-            {
-                String str = "Could not create new instance of SearchIndex. " +
-                    "Could be a result of insufficient permission " +
-                    "to write the Index to the disk. The default is to " +
-                    "write the Index into the WEB-INF/index directory.";
+        if (searchIndex == null) {
+            try {
+                YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                        YaafiComponentService.SERVICE_NAME);
+                searchIndex = (SearchIndex) yaafi.lookup(SearchIndex.class.getName());
+            } catch (Exception e) {
+                String str = "Could not create new instance of SearchIndex. "
+                        + "Could be a result of insufficient permission "
+                        + "to write the Index to the disk. The default is to "
+                        + "write the Index into the WEB-INF/index directory.";
                 Log.get().error(str, e);
                 throw new InstantiationException(str); //EXCEPTION
             }
+
         }
-        return si;
+        return searchIndex;
+    }
+    
+    public static void setSearchIndex(SearchIndex searchIndex){
+        SearchFactory.searchIndex = searchIndex;
     }
 }
 

@@ -56,14 +56,13 @@ import org.tigris.scarab.om.Attachment;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.14 2003/03/28 00:54:59 jon Exp $
+ * @version $Id: SearchIndex.java,v 1.15 2004/11/23 08:28:27 dep4b Exp $
  */
 public interface SearchIndex
 {
     String PARSE_ERROR = 
         "Search engine could not parse the query: ";
-    String INDEX_PATH = "searchindex.path";
-    String CLASS_NAME = "searchindex.class";
+    String INDEX_PATH = "path";
     String VALUE_ID = "valid";
     String ISSUE_ID = "issid";
     String ATTRIBUTE_ID = "attid";

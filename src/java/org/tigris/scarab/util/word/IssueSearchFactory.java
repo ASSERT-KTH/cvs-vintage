@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @since 0.16.25
- * @version $Id: IssueSearchFactory.java,v 1.6 2004/05/10 21:04:50 dabbous Exp $
+ * @version $Id: IssueSearchFactory.java,v 1.7 2004/11/23 08:28:27 dep4b Exp $
  */
 public class IssueSearchFactory
 {
@@ -94,9 +94,11 @@ public class IssueSearchFactory
      */
     int getMaxInstances()
     {
-        int max = Turbine.getConfiguration()
-            .getInt("scarab.concurrent.search.max", -1);
-        return max;
+        System.out.println("\n\n\nShouldbe avalon component\n\ncommented out\n");
+        //int max = Turbine.getConfiguration()
+        //    .getInt("scarab.concurrent.search.max", -1);
+        //return max;
+        return 2;
     }
 
     /**
@@ -110,10 +112,13 @@ public class IssueSearchFactory
      */
     int getMaxWait()
     {
-        int max = Turbine.getConfiguration()
-            .getInt("scarab.concurrent.search.wait", -1);
+        System.out.println("\n\n\nShouldbe avalon component\n\ncommented out\n");
+        //int max = Turbine.getConfiguration()
+        //    .getInt("scarab.concurrent.search.wait", -1);
+        int max = -1;
         max *= 1000;
         return max;
+        
     }
 
     public IssueSearch getInstance(Issue issue, ScarabUser searcher)

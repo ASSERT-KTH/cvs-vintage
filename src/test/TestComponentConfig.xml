@@ -26,4 +26,5 @@
    </pool>
    <factory/>   
    <scarabCache/> 
+   <searchIndex path="target/sandbox/searchindexes"/>    
 </componentConfig>

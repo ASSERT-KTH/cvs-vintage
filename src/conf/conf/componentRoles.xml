@@ -59,4 +59,9 @@
         default-class="org.tigris.scarab.services.cache.DefaultScarabCacheService"
         early-init="true"
     />        
+    
+    <role
+        name="org.tigris.scarab.util.word.SearchIndex"
+        shorthand="searchIndex"
+        default-class="org.tigris.scarab.util.word.LuceneSearchIndex"/>     
 </role-list>

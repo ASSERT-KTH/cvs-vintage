@@ -26,4 +26,9 @@
    </pool>
    <factory/>
    <scarabCache/>    
+   <!--
+   # Path for writing index, if starts with a '/', the path is assumed to be 
+   # absolute, otherwise it will be created relative to the webapp root.
+-->
+   <searchIndex path="WEB-INF/index"/>  
 </componentConfig>
