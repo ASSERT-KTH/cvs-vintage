@@ -79,6 +79,10 @@ import org.tigris.scarab.workflow.Workflow;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.IssueIdParser;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.SkipFiltering;
+import org.tigris.scarab.util.SimpleSkipFiltering;
+import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.util.ScarabUtil;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
@@ -98,7 +102,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.50 2003/01/24 20:02:40 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.51 2003/01/31 19:37:13 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -536,6 +540,20 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             Log.get().warn("Could not linkify text: " + text, e);
         }
         return result;
+    }
+
+    public SkipFiltering getCommentText(String text, ScarabLink link, Module currentModule)
+    {
+        SkipFiltering sf = null;
+        try
+        {
+            sf = new SimpleSkipFiltering(ScarabUtil.linkifyText(text, link, currentModule));
+        }
+        catch (Exception e)
+        {
+            sf = new SimpleSkipFiltering(text);
+        }
+        return sf;
     }
 
     /**
