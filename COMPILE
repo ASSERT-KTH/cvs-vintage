@@ -1,19 +1,33 @@
-use the compile script:
 
-./compile.sh
-
-watch out: this script has to be made executable with the chmod u+x command...
+ if you have ant (http://www.apache.org) installed just run "ant" 
 
 
-compile it manually:
-
-javac org/columba/main/Main.java -classpath .:./ext/parser.jar:./ext/jaxp.jar
-
-javac org/columba/gui/themes/*.java
-
-javac org/columba/gui/themes/thincolumba/*.java
-
-javac org/columba/gui/themes/contrastcolumba/*.java
+ or use the compile script:
+  ./compile.sh
 
 
+ watch out: this script has to be made executable with the chmod u+x command...
+
+
+
+
+ or compile it manually:
+
+ javac org\columba\main\Main.java 
+ javac org\columba\gui\themes\*.java
+ javac org\columba\gui\themes\thincolumba\*.java
+ javac org\columba\gui\themes\contrastcolumba\*.java
+ javac org\columba\folder\*.java
+ javac org\columba\folder\columba\*.java 
+ javac org\columba\folder\encryption\*.java 
+ javac org\columba\folder\gui\*.java 
+ javac org\columba\folder\imap\*.java 
+ javac org\columba\folder\outbox\*.java
+ javac org\columba\folder\temp\*.java 
+ javac org\columba\folder\virtual\*.java 
+ javac org\columba\pop3\*.java
+
+
+ JDK1.3 users need to adjust their classpath in order to
+ compile Columba. See the README_JDK1.3 for more information.
 
