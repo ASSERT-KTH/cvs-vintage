@@ -79,7 +79,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.10 2001/10/16 17:54:49 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.11 2001/10/18 21:29:00 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -212,7 +212,6 @@ public class LuceneAdaptor
             for ( int i=0; i<hits.length(); i++) 
             {
                 deduper.add( hits.doc(i).get(ISSUE_ID) );
-System.out.println("retrieving valId: " + hits.doc(i).get(VALUE_ID) );
             }
             
             issueIds = new NumberKey[deduper.size()];
