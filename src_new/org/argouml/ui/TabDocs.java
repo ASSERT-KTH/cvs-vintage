@@ -1,4 +1,4 @@
-// $Id: TabDocs.java,v 1.8 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: TabDocs.java,v 1.9 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.uml.DocumentationManager;
 import org.tigris.gef.presentation.Fig;
 
 public class TabDocs extends TabText {
-    protected static Logger cat = 
+    protected static final Logger LOG = 
         Logger.getLogger(TabDocs.class);
     ////////////////////////////////////////////////////////////////
     // constructor

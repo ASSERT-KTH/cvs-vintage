@@ -1,4 +1,4 @@
-// $Id: DesignIssuesDialog.java,v 1.8 2004/07/17 16:23:57 mvw Exp $
+// $Id: DesignIssuesDialog.java,v 1.9 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,9 +56,6 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
 
     ////////////////////////////////////////////////////////////////
     // constants
-    private final int WIDTH = 320;
-    private final int HEIGHT = 400;
-
     ////////////////////////////////////////////////////////////////
     // instance variables
     private JPanel  _mainPanel = new JPanel();
@@ -70,6 +67,9 @@ public class DesignIssuesDialog extends ArgoDialog implements ChangeListener {
 
     public DesignIssuesDialog(Frame parent) {
         super(parent, Translator.localize("dialog.title.design-issues"), false);
+
+        final int WIDTH = 320;
+        final int HEIGHT = 400;
 
         initMainPanel();
 

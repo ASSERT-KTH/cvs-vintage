@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.32 2004/07/18 18:56:03 kataka Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.33 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
      * class. This will be removed.
      */
-    protected static Logger cat = Logger.getLogger(UMLDeploymentDiagram.class);
+    private static final Logger LOG = Logger.getLogger(UMLDeploymentDiagram.class);
 
     ////////////////
     // actions for toolbar

@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.54 2004/06/29 23:38:46 d00mst Exp $
+// $Id: Import.java,v 1.55 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -489,9 +489,6 @@ public class Import {
      * ImportStatusScreen, in order to cancel long import runs.<p>
      */
     class ImportRun implements Runnable {
-	/** logger */
-	private Logger cat = Logger.getLogger(ImportRun.class);
-        
         Vector _filesLeft;
         
         int _countFiles;

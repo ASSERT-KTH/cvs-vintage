@@ -1,4 +1,4 @@
-// $Id: ActionImportFromSources.java,v 1.15 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: ActionImportFromSources.java,v 1.16 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: ActionImportFromSources.java,v 1.15 2003/09/04 20:11:44 thierrylach Exp $
+//$Id: ActionImportFromSources.java,v 1.16 2004/08/03 01:25:44 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -37,14 +37,14 @@ import org.argouml.uml.reveng.Import;
  */
 public class ActionImportFromSources extends UMLAction {
     
-    protected static Logger cat =
-	Logger.getLogger(org.argouml.uml.ui.ActionImportFromSources.class);
+    private static final Logger LOG =
+        Logger.getLogger(ActionImportFromSources.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables
 
     public static ActionImportFromSources SINGLETON =
-	new ActionImportFromSources(); 
+        new ActionImportFromSources(); 
 
 
     ////////////////////////////////////////////////////////////////

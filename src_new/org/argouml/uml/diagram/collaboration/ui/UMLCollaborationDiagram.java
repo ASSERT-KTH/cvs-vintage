@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.43 2004/07/18 18:56:03 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.44 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,10 +54,8 @@ import org.tigris.gef.presentation.Fig;
 public class UMLCollaborationDiagram extends UMLDiagram {
 
     /** for logging */
-    private static final Logger cat =
-        Logger.getLogger(
-            "org.argouml.uml.diagram.collaboration.ui."
-                + "UMLCollaborationDiagram");
+    private static final Logger LOG =
+        Logger.getLogger(UMLCollaborationDiagram.class);
 
     ////////////////
     // actions for toolbar

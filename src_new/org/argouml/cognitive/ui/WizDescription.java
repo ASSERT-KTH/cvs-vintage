@@ -1,4 +1,4 @@
-// $Id: WizDescription.java,v 1.16 2004/05/20 11:12:21 linus Exp $
+// $Id: WizDescription.java,v 1.17 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.i18n.Translator;
 
 public class WizDescription extends WizStep {
     /** logger */
-    private static Logger cat = Logger.getLogger(WizDescription.class);
+    private static final Logger LOG = Logger.getLogger(WizDescription.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables

@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.40 2004/07/18 18:56:03 kataka Exp $
+// $Id: StateDiagramGraphModel.java,v 1.41 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,12 +50,6 @@ import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         VetoableChangeListener {
-
-    /**
-     * @deprecated by Linus Tolke as of 0.16. Will be private.
-     */
-    protected static Logger cat = Logger
-            .getLogger(StateDiagramGraphModel.class);
 
     /**
      * The "home" UML model of this diagram, not all ModelElements in

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.27 2004/06/24 06:25:45 linus Exp $
+// $Id: ActionSaveProject.java,v 1.28 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ import org.argouml.ui.menubar.GenericArgoMenuBar;
  */
 public class ActionSaveProject extends UMLAction {
     /** logger */
-    private static Logger cat = Logger.getLogger(ActionSaveProject.class);
+    private static final Logger LOG = Logger.getLogger(ActionSaveProject.class);
   
     ////////////////////////////////////////////////////////////////
     // static variables

@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.6 2004/06/24 06:25:43 linus Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.7 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,8 +49,8 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
     // static variables
 
     /** logger */
-    private static Logger cat = 
-	Logger.getLogger(ActionDeleteFromDiagram.class);
+    private static final Logger LOG = 
+        Logger.getLogger(ActionDeleteFromDiagram.class);
 
     public static ActionDeleteFromDiagram SINGLETON =
         new ActionDeleteFromDiagram();

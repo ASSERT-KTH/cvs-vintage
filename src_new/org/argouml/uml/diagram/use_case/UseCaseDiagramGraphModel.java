@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.41 2004/07/18 18:56:05 kataka Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.42 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,24 +43,9 @@ import org.argouml.uml.diagram.UMLMutableGraphSupport;
  * This class handles only UML Use Case Diagrams.<p>
  */
 public class UseCaseDiagramGraphModel
-    extends UMLMutableGraphSupport
-    implements VetoableChangeListener
-{
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
-	Logger.getLogger(UseCaseDiagramGraphModel.class);
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // instance variables
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    
-
+        extends UMLMutableGraphSupport
+        implements VetoableChangeListener {
+	
     /**
      * The "home" UML model of this diagram, not all ModelElements in
      * this graph are in the home model, but if they are added and

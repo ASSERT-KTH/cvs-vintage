@@ -1,4 +1,4 @@
-// $Id: SPFigEdgeModelElement.java,v 1.9 2004/05/18 19:21:12 mkl Exp $
+// $Id: SPFigEdgeModelElement.java,v 1.10 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,10 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemListener;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
@@ -41,7 +38,7 @@ import org.tigris.gef.ui.ColorRenderer;
 public class SPFigEdgeModelElement extends StylePanelFig implements
         ItemListener {
 
-    protected static Logger cat = Logger.getLogger(SPFigEdgeModelElement.class);
+    private static final Logger LOG = Logger.getLogger(SPFigEdgeModelElement.class);
 
     SpacerPanel _spacer = new SpacerPanel();
 

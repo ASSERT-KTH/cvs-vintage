@@ -1,4 +1,4 @@
-// $Id: UMLReflectionBooleanProperty.java,v 1.14 2004/02/28 12:29:44 linus Exp $
+// $Id: UMLReflectionBooleanProperty.java,v 1.15 2004/08/03 01:25:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,13 +40,6 @@ import org.argouml.kernel.*;
  * that used reflection a lot.
  */
 public class UMLReflectionBooleanProperty extends UMLBooleanProperty {
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
-	Logger.getLogger(UMLReflectionBooleanProperty.class);
-
     private Method _getMethod;
     private Method _setMethod;
     private static final Object[] _noArg = {};

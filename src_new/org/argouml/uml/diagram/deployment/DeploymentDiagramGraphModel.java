@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.33 2004/07/18 18:56:03 kataka Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.34 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,8 @@ import org.apache.log4j.Logger;
 public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
-    protected static Logger cat =
-	Logger.getLogger(DeploymentDiagramGraphModel.class);
+    private static final Logger LOG =
+	    Logger.getLogger(DeploymentDiagramGraphModel.class);
 
     /** The "home" UML model of this diagram, not all ModelElements in this
      *  graph are in the home model, but if they are added and don't

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.30 2004/07/18 18:56:03 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.31 2004/08/03 01:25:45 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -368,12 +368,6 @@ public class SequenceDiagramGraphModel
         }
     }
 
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
-        Logger.getLogger(SequenceDiagramGraphModel.class);
     ////////////////////////////////////////////////////////////////
     // instance variables
 
