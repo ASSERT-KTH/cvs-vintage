@@ -1,37 +1,60 @@
+##set ( $action = $link.setPage("IssueList.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm") )
 
-      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD  BGCOLOR="#999999" COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
-        </TR>
+	<h3>Search Results</h3>
+	
+	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+	
+<form>
+      <div class="functnbar">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+         <td><input type="submit" value="bulk edit selected issues" class="buttonfunc" />&#160;<input type="submit" value="bulk reassign" class="buttonfunc" /></td>
+        </tr>
+       </table>
+      </div>
+	
+<P>
 
-        <TR>
-          <TD>Issue ID#</TD>
-          <TD>Issue Summary</TD>
-        </TR>
+	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="#">add/remove attributes from view</a>)</div>
 
+
+	<div class="datatable">
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap"><a href="#"><img src="scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+		<th><a href="#" class="header" title="sort">issue ID:</a></th>
+		<th><a href="#" class="header" title="sort">issue summary:</a></th>
+		<th><a href="#" class="header" title="sort">attribute name:</a></th>
+		<th><a href="#" class="header" title="sort">attribute x:</a></th>
+		</tr>
+		
 #foreach ($issue in $issueList)
-
-    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.UniqueId).setPage("IssueView.vm").toString() )
-
-
-        <TR>
-          <TD>
-            <a href="$issueLink">$issue.UniqueId</a>
-
-          </TD>
-          <TD>
-
-        $issue.ModuleAttributeValuesMap.get("SUMMARY").Value
-
-          </TD>
-        </TR>
-
-
-        <TR>
-          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
-                <SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>			
-
+    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
+$issue.IssueId
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+		<td><input type="checkbox" /></td>
+		<td>$issue.UniqueId</td>
+		<td><a href="$issueLink">$issue.ModuleAttributeValuesMap.get("SUMMARY").Value</strong></a></td>
+		<td></td>
+		<td>busted</td>
+		<td>priority 1</td>
+		</tr>
+		
 #end
+		</table>
+	</div>
+	<div class="misc">issues per page:&#160; <input type="radio" name="foo" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100</div>
+	
+	<div class="functnbar">
+		<table width="100%" cellpadding="3" cellspacing="2" border="1">
+		<tr>
+		<td><input type="submit" value="bulk edit selected issues" class="button" />&nbsp;<input type="submit" value="bulk reassign" class="button" /></td>
+		</tr>
+		</table>
+	</div>
 
-      </TABLE>
+</form>
