@@ -291,11 +291,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			try {
 				// this is a HTML message
 
-				// FIXME: this leads to null-pointer exceptions!
-				//body = HtmlParser.htmlToText(bodyText);
-
 				// try to fix broken html-strings
-				body = HtmlParser.validateHTMLString(body);
+				body = HtmlParser.validateHTMLString(bodyText);
 				LOG.info("validated bodytext:\n" + body);
 
 				// create temporary file
