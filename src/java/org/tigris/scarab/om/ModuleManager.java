@@ -4,6 +4,8 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.Serializable;
 
 import org.apache.torque.Torque;
@@ -63,6 +65,37 @@ public class ModuleManager
         }
         return (Module) result.get(0);
     }
+
+    /**
+     * Create a list of Modules from the given list of issues.  Each
+     * Module in the list of issues will only occur once in the list of 
+     * Modules.
+     *
+     * @param issues a <code>List</code> value
+     * @return a <code>List</code> value
+     * @exception TorqueException if an error occurs
+     */
+    public static List getInstancesFromIssueList(List issues)
+        throws TorqueException
+    {
+        if (issues == null) 
+        {
+            throw new IllegalArgumentException("Null issue list is not allowed.");
+        }        
+
+        List modules = new ArrayList();
+        Iterator i = issues.iterator();
+        if (i.hasNext()) 
+        {
+            Module module = ((Issue)i.next()).getModule();
+            if (module != null && !modules.contains(module)) 
+            {
+                modules.add(module);
+            }
+        }
+        return modules;
+    }
+
 
     /**
      * Notify other managers with relevant CacheEvents.
