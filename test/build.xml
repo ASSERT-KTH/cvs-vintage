@@ -178,10 +178,8 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="run.tests" description="Lauch all the test">
-    <ant antfile="conform/carol_all_tests.xml" target="test.local"/>
-    <ant antfile="conform/carol_all_tests.xml" target="test.single"/>
-    <ant antfile="conform/carol_all_tests.xml" target="test.multiple"/>
+  <target name="run.tests" description="Launch all the tests">
+    <ant antfile="conform/carol_all_tests.xml" target="test.all"/>
   </target> 
 
   <!-- **********************************-->
