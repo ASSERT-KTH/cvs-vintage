@@ -158,7 +158,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.40 $
+@version $Revision: 1.41 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -196,7 +196,7 @@ public abstract class AbstractWebContainer
    public AbstractWebContainer()
    {
    }
-   
+
    public boolean accepts(DeploymentInfo sdi) 
    {
       String warFile = sdi.url.getFile();
@@ -851,7 +851,7 @@ public abstract class AbstractWebContainer
    /** Use reflection to access a URL[] getURLs method so that non-URLClassLoader
     *class loaders that support this method can provide info.
     */
-   private URL[] getClassLoaderURLs(ClassLoader cl)
+   protected URL[] getClassLoaderURLs(ClassLoader cl)
    {
       URL[] urls = {};
       try
@@ -973,11 +973,23 @@ public abstract class AbstractWebContainer
          int suffix = webContext.indexOf(".war");
          if( suffix > 0 )
             webContext = webContext.substring(0, suffix);
+          // Strip any '<int-value>.' prefix   
+          int index = 0;   
+          for(; index < webContext.length(); index ++)   
+          {   
+             char c = webContext.charAt(index);   
+             if( Character.isDigit(c) == false && c != '.' )   
+                break;   
+          }   
+          webContext = webContext.substring(index);   
       }
 
       // Servlet containers are anal about the web context starting with '/'
       if( webContext.length() > 0 && webContext.charAt(0) != '/' )
          webContext = "/" + webContext;
+      // And also the default root context must be an empty string, not '/'
+      else if( webContext.equals("/") )
+         webContext = "";
       metaData.setContextRoot(webContext);
 
       return metaData;
