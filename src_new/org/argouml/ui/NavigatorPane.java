@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.68 2004/07/24 10:40:32 linus Exp $
+// $Id: NavigatorPane.java,v 1.69 2004/08/21 07:09:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class NavigatorPane
     private static final String BUNDLE = "statusmsg";
     
     /** for collecting user statistics */
-    public static int _clicksInNavPane = 0;
+    private static int clicksInNavPane = 0;
     /** for collecting user statistics */
-    public static int _navPerspectivesChanged = 0;
+    private static int navPerspectivesChanged = 0;
     
     ////////////////////////////////////////////////////////////////
     // constructors

@@ -1,4 +1,4 @@
-// $Id: PerspectiveSupport.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: PerspectiveSupport.java,v 1.5 2004/08/21 07:09:02 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.i18n.Translator;
  * Helper class for tree models that provides help building perspectives
  * out of gorules.
  *
- * <p>$Id: PerspectiveSupport.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
+ * <p>$Id: PerspectiveSupport.java,v 1.5 2004/08/21 07:09:02 mvw Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003
@@ -61,7 +61,6 @@ public class PerspectiveSupport {
         _goRules = new Vector();
     }
     
-    /** needs documenting */
     public PerspectiveSupport(String name, Vector subs) {
         this(name);
         _goRules = subs;
@@ -91,13 +90,19 @@ public class PerspectiveSupport {
     
     // ----------- name -------------------------
     
-    /** needs documenting */
+
+    /**
+     * @return the name
+     */
     public String getName() { return _name; }
     
-    /** needs documenting */
+
+    /**
+     * @param s the name
+     */
     public void setName(String s) { _name = s; }
     
-    /** needs documenting */
+
     public String toString() {
         if (getName() != null) return getName();
         else return super.toString();
