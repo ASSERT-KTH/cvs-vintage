@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.10 2002/01/14 22:19:35 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.11 2002/01/18 22:26:07 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 

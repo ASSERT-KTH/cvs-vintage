@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeTest.java,v 1.1 2001/09/11 03:41:47 jon Exp $
+ * @version $Id: AttributeTest.java,v 1.2 2002/01/18 22:26:17 jon Exp $
  */
 public class AttributeTest extends BaseTestCase
 {

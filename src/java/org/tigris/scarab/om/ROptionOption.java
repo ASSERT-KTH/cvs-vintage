@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -69,7 +69,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.6 2001/09/20 10:33:07 jon Exp $
+  * @version $Id: ROptionOption.java,v 1.7 2002/01/18 22:26:07 jon Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption

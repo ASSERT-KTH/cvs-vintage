@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -71,7 +71,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.26 2001/10/24 06:05:55 jon Exp $
+ * @version $Id: Login.java,v 1.27 2002/01/18 22:26:02 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {

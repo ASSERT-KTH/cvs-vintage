@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -58,7 +58,7 @@ import org.apache.torque.om.BaseObject;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.14 2001/09/12 21:19:01 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.15 2002/01/18 22:26:07 jon Exp $    
 */
 public abstract class BaseScarabObject extends BaseObject
 {

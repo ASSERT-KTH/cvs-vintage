@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.8 2001/12/03 16:55:04 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.9 2002/01/18 22:26:07 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable

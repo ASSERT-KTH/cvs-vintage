@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.base;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.18 2001/12/31 23:43:02 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.19 2002/01/18 22:26:05 jon Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {

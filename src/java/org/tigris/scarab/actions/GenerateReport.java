@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.11 2002/01/11 00:42:47 elicia Exp $
+    @version $Id: GenerateReport.java,v 1.12 2002/01/18 22:26:02 jon Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction

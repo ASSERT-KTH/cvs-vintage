@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.2 2002/01/15 21:19:46 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.3 2002/01/18 22:26:04 jon Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {

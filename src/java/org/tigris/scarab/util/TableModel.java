@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -58,7 +58,7 @@ import java.util.Date;
  * 
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TableModel.java,v 1.2 2001/10/16 00:47:32 jmcnally Exp $
+ * @version $Id: TableModel.java,v 1.3 2002/01/18 22:26:13 jon Exp $
  */
 public abstract class TableModel
     // implements Retrievable

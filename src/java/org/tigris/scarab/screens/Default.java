@@ -1,7 +1,7 @@
 package org.tigris.scarab.screens;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -72,7 +72,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.39 2002/01/14 23:06:31 jon Exp $
+ * @version $Id: Default.java,v 1.40 2002/01/18 22:26:12 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {

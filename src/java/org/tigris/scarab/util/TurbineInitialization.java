@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -60,7 +60,7 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.3 2001/12/15 00:11:19 jon Exp $
+ * @version $Id: TurbineInitialization.java,v 1.4 2002/01/18 22:26:13 jon Exp $
  */
 public class TurbineInitialization
 {

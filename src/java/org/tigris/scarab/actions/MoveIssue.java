@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.19 2002/01/18 20:26:24 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.20 2002/01/18 22:26:03 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {

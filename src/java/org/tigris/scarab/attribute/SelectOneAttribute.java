@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -51,7 +51,7 @@ package org.tigris.scarab.attribute;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.8 $ $Date: 2001/10/20 00:51:05 $
+ * @version $Revision: 1.9 $ $Date: 2002/01/18 22:26:06 $
  */
 public abstract class SelectOneAttribute extends OptionAttribute
 {

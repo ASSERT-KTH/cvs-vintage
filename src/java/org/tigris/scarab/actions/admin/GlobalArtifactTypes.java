@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.7 2001/12/31 23:43:02 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.8 2002/01/18 22:26:04 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {

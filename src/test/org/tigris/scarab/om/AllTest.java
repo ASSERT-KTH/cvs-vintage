@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -54,7 +54,7 @@ import junit.framework.TestSuite;
  * Used for running all of the tests at once.
  *
  * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
- * @version $Id: AllTest.java,v 1.4 2001/10/15 02:37:31 mumbly Exp $
+ * @version $Id: AllTest.java,v 1.5 2002/01/18 22:26:17 jon Exp $
  */
 public class AllTest extends BaseTestCase
 {

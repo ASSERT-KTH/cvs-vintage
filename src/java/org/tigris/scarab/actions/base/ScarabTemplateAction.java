@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.base;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -66,7 +66,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.11 2002/01/01 00:32:35 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.12 2002/01/18 22:26:05 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {

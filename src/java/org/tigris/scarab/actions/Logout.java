@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -60,7 +60,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.9 2001/09/30 18:31:38 jon Exp $
+    @version $Id: Logout.java,v 1.10 2002/01/18 22:26:02 jon Exp $
 */
 public class Logout extends ScarabTemplateAction
 {

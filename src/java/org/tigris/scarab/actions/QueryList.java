@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -75,7 +75,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.8 2002/01/11 00:42:47 elicia Exp $
+    @version $Id: QueryList.java,v 1.9 2002/01/18 22:26:03 jon Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {

@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -56,7 +56,7 @@ package org.tigris.scarab.util;
  * #end
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: OptionModel.java,v 1.1 2001/10/16 01:12:21 jmcnally Exp $
+ * @version $Id: OptionModel.java,v 1.2 2002/01/18 22:26:13 jon Exp $
  */
 public class OptionModel
 {

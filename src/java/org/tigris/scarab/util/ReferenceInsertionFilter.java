@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -58,7 +58,7 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * only filter references that need to be filtered. But it is a start.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.3 2002/01/18 17:55:20 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.4 2002/01/18 22:26:13 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler

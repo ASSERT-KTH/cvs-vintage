@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -55,7 +55,7 @@ import org.apache.turbine.TurbineException;
     exceptions
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ScarabException.java,v 1.3 2001/07/17 21:40:31 jon Exp $
+    @version $Id: ScarabException.java,v 1.4 2002/01/18 22:26:13 jon Exp $
 */
 public class ScarabException extends TurbineException
 {

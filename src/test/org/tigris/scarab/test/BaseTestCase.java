@@ -1,7 +1,7 @@
 package org.tigris.scarab.test;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -73,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.8 2001/10/24 06:11:00 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.9 2002/01/18 22:26:18 jon Exp $
  */
 public class BaseTestCase extends TestCase
 {

@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -60,7 +60,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.6 2001/10/28 19:57:27 jmcnally Exp $
+ * @version $Id: RQueryUser.java,v 1.7 2002/01/18 22:26:07 jon Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser

@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -60,7 +60,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * and redirect to the defined template.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Redirect.java,v 1.1 2002/01/15 22:53:38 jon Exp $
+ * @version $Id: Redirect.java,v 1.2 2002/01/18 22:26:03 jon Exp $
  */
 public class Redirect extends RequireLoginFirstAction
 {

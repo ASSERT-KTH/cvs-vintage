@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions.admin;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.3 2002/01/03 17:16:39 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.4 2002/01/18 22:26:04 jon Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {

@@ -1,7 +1,7 @@
 package org.tigris.scarab.tools;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.11 2002/01/18 17:23:45 jmcnally Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.12 2002/01/18 22:26:13 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {

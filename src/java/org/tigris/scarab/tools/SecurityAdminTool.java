@@ -1,7 +1,7 @@
 package org.tigris.scarab.tools;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -85,7 +85,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.2 2001/12/04 23:15:24 dr Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.3 2002/01/18 22:26:13 jon Exp $
  */
 public class SecurityAdminTool implements SecurityAdminScope
 {

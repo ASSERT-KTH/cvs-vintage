@@ -1,7 +1,7 @@
 package org.tigris.scarab.actions;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -68,7 +68,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * the user to confirm their registration by going to the Confirm.vm page.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RegisterConfirm.java,v 1.26 2002/01/16 01:34:15 jon Exp $
+ * @version $Id: RegisterConfirm.java,v 1.27 2002/01/18 22:26:03 jon Exp $
  */
 public class RegisterConfirm extends ScarabTemplateAction
 {

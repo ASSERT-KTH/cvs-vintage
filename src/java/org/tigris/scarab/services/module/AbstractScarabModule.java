@@ -1,7 +1,7 @@
 package org.tigris.scarab.services.module;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.14 2002/01/17 03:14:03 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.15 2002/01/18 22:26:12 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject

@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.37 2002/01/15 03:04:26 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.38 2002/01/18 22:26:07 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute

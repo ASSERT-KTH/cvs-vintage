@@ -1,7 +1,7 @@
 package org.tigris.scarab.util.xml;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -55,7 +55,7 @@ import org.apache.commons.util.StringUtils;
 
 /**
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExport.java,v 1.4 2001/12/13 22:06:57 kminshull Exp $
+ * @version $Id: XMLExport.java,v 1.5 2002/01/18 22:26:14 jon Exp $
  */
 public class XMLExport
 {

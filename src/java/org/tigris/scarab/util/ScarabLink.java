@@ -1,7 +1,7 @@
 package org.tigris.scarab.util;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.28 2002/01/11 22:51:19 dlr Exp $
+    @version $Id: ScarabLink.java,v 1.29 2002/01/18 22:26:13 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable

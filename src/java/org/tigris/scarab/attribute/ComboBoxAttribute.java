@@ -1,7 +1,7 @@
 package org.tigris.scarab.attribute;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -51,6 +51,6 @@ package org.tigris.scarab.attribute;
  *  used for Severity, Priority, Platform and the like.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Id: ComboBoxAttribute.java,v 1.6 2001/08/02 07:11:37 jon Exp $ 
+ * @version $Id: ComboBoxAttribute.java,v 1.7 2002/01/18 22:26:06 jon Exp $ 
  */
 public class ComboBoxAttribute extends SelectOneAttribute {}

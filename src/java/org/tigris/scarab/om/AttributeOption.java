@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -85,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.21 2001/11/09 18:51:28 elicia Exp $
+  * @version $Id: AttributeOption.java,v 1.22 2002/01/18 22:26:07 jon Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
