@@ -30,7 +30,7 @@ import org.apache.log4j.NDC;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
  * Revisions:
  * 20010619 scott.stark: use the full service class name as the log4j
@@ -75,7 +75,12 @@ public abstract class ServiceMBeanSupport
    {
       return states[state];
    }
-   
+ 
+   public Logger getLog()
+   {
+      return log;
+   }
+
    public void init()
       throws Exception
    {
