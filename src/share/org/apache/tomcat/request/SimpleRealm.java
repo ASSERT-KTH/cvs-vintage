@@ -1,4 +1,5 @@
 /*
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -84,12 +85,13 @@ public class SimpleRealm extends  BaseInterceptor {
     MemoryRealm memoryRealm;
     ContextManager cm;
     int reqRolesNote;
-    
+    int reqRealmSignNote;
+    String filename;
     public SimpleRealm() {
     }
 
     /** Set the context manager. To keep it simple we don't support
-     *  dynamic add/remove for this interceptor. 
+     *  dynamic add/remove for this interceptor.
      */
     public void setContextManager( ContextManager cm ) {
 	super.setContextManager( cm );
@@ -97,9 +99,11 @@ public class SimpleRealm extends  BaseInterceptor {
 	this.cm=cm;
 	// set-up a per/container note for maps
 	try {
-	    // XXX make the name a "global" static - 
+	    // XXX make the name a "global" static -
 	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 					 "required.roles");
+            reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                                   , "realm.sign");
 	} catch( TomcatException ex ) {
 	    log("getting note for " + cm, ex);
 	    throw new RuntimeException( "Invalid state ");
@@ -110,7 +114,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	throws TomcatException
     {
 	if( memoryRealm==null) {
-	    memoryRealm = new MemoryRealm(ctx);
+	    memoryRealm = new MemoryRealm(ctx,filename);
 	    try {
 		memoryRealm.readMemoryRealm(ctx);
 	    } catch(Exception ex ) {
@@ -119,7 +123,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	    }
 	}
     }
-	    
+
     public int authenticate( Request req, Response response )
     {
 	// Extract the credentials
@@ -133,24 +137,31 @@ public class SimpleRealm extends  BaseInterceptor {
 	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
 	if( memoryRealm.checkPassword( user, password ) ) {
 	    req.setRemoteUser( user );
+            req.setNote(reqRealmSignNote,this);
 	    if( debug > 0 ) log( "Auth ok, user=" + user );
 	}
 	return 0;
     }
-    
+
     public int authorize( Request req, Response response, String roles[] )
     {
 	if( roles==null || roles.length==0 ) {
 	    // request doesn't need authentication
 	    return 0;
 	}
-	
+
 	Context ctx=req.getContext();
 
 	String userRoles[]=null;
-	String user=req.getRemoteUser(); 
+	String user=req.getRemoteUser();
 	if( user==null )
 	    return 401;
+
+        if( ! this.equals(req.getNote(reqRealmSignNote)) ){
+                return 0;
+        }
+
+
 
 	if( debug > 0 ) log( "Controled access for " + user + " " +
 			     req + " " + req.getContainer() );
@@ -162,9 +173,17 @@ public class SimpleRealm extends  BaseInterceptor {
 
 	if( SecurityTools.haveRole( userRoles, roles ))
 	    return 0;
-	
+
 	if( debug > 0 ) log( "UnAuthorized " + roles[0] );
  	return 401;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String newFilename) {
+        filename = newFilename;
     }
 }
 
@@ -175,17 +194,19 @@ class MemoryRealm {
     Hashtable roles=new Hashtable();
     // user -> roles
     Hashtable userRoles= new Hashtable();
+    String filename;
     Context ctx;
     int debug=0;
-    
-    MemoryRealm(Context ctx) {
+
+    MemoryRealm(Context ctx,String fn) {
 	this.ctx=ctx;
+        filename=fn;
     }
 
     public Hashtable getRoles() {
     	return roles;
     }
-    
+
     public void addUser(String name, String pass, String groups ) {
 	if( ctx.getDebug() > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
@@ -214,7 +235,7 @@ class MemoryRealm {
 	}
 	thisUserRoles.addElement( role );
     }
-    
+
     public boolean checkPassword( String user, String pass ) {
 	if( user==null ) return false;
 	if( debug > 0 ) ctx.log( "check " + user+ " " + pass + " " + passwords.get( user ));
@@ -230,18 +251,22 @@ class MemoryRealm {
 	}
 	return roles;
     }
-    
+
     public boolean userInRole( String user, String role ) {
 	Vector users=(Vector)roles.get(role);
 	if( debug > 0 ) ctx.log( "check role " + user+ " " + role + " "  );
 	if(users==null) return false;
 	return users.indexOf( user ) >=0 ;
     }
-
     void readMemoryRealm(Context ctx) throws Exception {
 	ContextManager cm=ctx.getContextManager();
 	String home=cm.getHome();
-	File f=new File( home + "/conf/tomcat-users.xml");
+        File f;
+        if (filename != null)
+            f=new File( home + File.separator + filename );
+        else
+            f=new File( home + "/conf/tomcat-users.xml");
+            
 	if( ! f.exists() ) {
 	    ctx.log( "File not found  " + f );
 	    return;
@@ -249,7 +274,7 @@ class MemoryRealm {
 	XmlMapper xh=new XmlMapper();
 	if( ctx.getDebug() > 5 ) xh.setDebug( 2 );
 
-	// call addUser using attributes as parameters 
+	// call addUser using attributes as parameters
 	xh.addRule("tomcat-users/user",
 		   new XmlAction() {
 			   public void start(SaxContext sctx) throws Exception {

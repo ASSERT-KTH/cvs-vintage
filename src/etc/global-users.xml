@@ -1,0 +1,3 @@
+<tomcat-users>
+  <user name="root" password="changethis" roles="tomcat,role1,tomcat_admin,tomcat_root" />
+</tomcat-users>

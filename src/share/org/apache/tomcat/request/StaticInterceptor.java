@@ -355,7 +355,7 @@ class DirHandler extends Handler  {
 	Request subReq=req;
 	if( inInclude ) subReq = req.getChild();
 	Context ctx=req.getContext();
-	String pathInfo=subReq.getPathInfo();
+	String pathInfo=subReq.getServletPath();
 	if( pathInfo == null ) pathInfo="";
 	String absPath=ctx.getRealPath( pathInfo );
 	File file = new File( absPath );

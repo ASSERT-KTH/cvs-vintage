@@ -180,9 +180,11 @@
 
         <!-- Check permissions using the simple xml file. You can 
              plug more advanced authentication modules.
+             uncomment below to have a global tomcat Realm.
           -->
         <RequestInterceptor 
             className="org.apache.tomcat.request.SimpleRealm" 
+            filename="conf/global-users.xml"
             debug="0" />
 
        <!-- UnComment the following and comment out the
@@ -275,6 +277,10 @@
                  docBase="webapps/examples" 
                  debug="0" 
                  reloadable="true" > 
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.SimpleRealm" 
+            filename="conf/example-users.xml"
+            debug="0" />
         </Context>
 
         <!-- Admin context will use tomcat.core to add/remove/get info about
@@ -290,6 +296,10 @@
                  debug="0" 
                  reloadable="true" 
                  trusted="false" > 
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.SimpleRealm" 
+            filename="conf/admin-users.xml"
+            debug="0" />
         </Context>
 
         <!-- Virtual host example - 

@@ -1,4 +1,5 @@
 /*
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -25,7 +26,7 @@
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -98,7 +99,7 @@ public final class JDBCRealm extends BaseInterceptor {
 
     ContextManager cm;
     int reqRolesNote;
-
+    int reqRealmSignNote;
     // ----------------------------------------------------- Instance Variables
 
     /**
@@ -509,6 +510,8 @@ public final class JDBCRealm extends BaseInterceptor {
           // XXX make the name a "global" static - after everything is stable!
           reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
                 , "required.roles");
+          reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                , "realm.sign");
       } catch( TomcatException ex ) {
           log("setting up note for " + cm, ex);
           throw new RuntimeException( "Invalid state ");
@@ -522,10 +525,11 @@ public final class JDBCRealm extends BaseInterceptor {
         // This realm will use only username and password callbacks
         String user=(String)cred.get("username");
         String password=(String)cred.get("password");
-	
+
 	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
 	    req.setRemoteUser( user );
+            req.setNote(reqRealmSignNote,this);
 	}
 	return 0;
     }
@@ -542,8 +546,13 @@ public final class JDBCRealm extends BaseInterceptor {
         String userRoles[]=null;
 
 	String user=req.getRemoteUser();
+
 	if( user==null )
             return 401; //HttpServletResponse.SC_UNAUTHORIZED
+
+        if( this.equals(req.getNote(reqRealmSignNote)) ){
+                return 0;
+        }
 
 	if( debug > 0 )
             log( "Controled access for " + user + " " + req + " "
