@@ -86,6 +86,33 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	ep.setConnectionHandler( this );
     }
 
+    public void engineInit(ContextManager cm )
+	throws TomcatException
+    {
+	super.engineInit( cm );
+	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
+	for( int i=0; i<ci.length; i++ ) {
+	    Object con=ci[i];
+	    if( con instanceof  Ajp12Interceptor ) {
+		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
+		int portInt=tcpCon.getPort();
+		InetAddress address=tcpCon.getAddress();
+		try {
+		    PrintWriter stopF=new PrintWriter
+			(new FileWriter(cm.getHome() + "/conf/ajp12.id"));
+		    stopF.println( portInt );
+		    if( address==null )
+			stopF.println( "" );
+		    else
+			stopF.println( address.toString() );
+		    stopF.close();
+		} catch( IOException ex ) {
+		    log( "Can't create ajp12.id " + ex );
+		}
+	    }
+	}
+    }
+
     // -------------------- Handler implementation --------------------
 
     public Object[] init() {

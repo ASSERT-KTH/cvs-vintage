@@ -259,7 +259,7 @@ public class EmbededTomcat {
 	"org.apache.tomcat.context.PolicyInterceptor",
 	"org.apache.tomcat.context.LoaderInterceptor12",
 	"org.apache.tomcat.context.ErrorHandler",
-	"org.apache.tomcat.context.WorkDirInterceptor",
+	"org.apache.tomcat.modules.config.WorkDirSetup",
 	"org.apache.tomcat.modules.session.SessionId",
 	"org.apache.tomcat.request.SimpleMapper1",
 	"org.apache.tomcat.request.InvokerInterceptor",

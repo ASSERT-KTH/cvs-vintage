@@ -78,6 +78,7 @@ public class WorkDirSetup extends BaseInterceptor {
     boolean cleanWorkDir=false;
     String workdirBase=null;
     boolean useWebInf=false;
+    boolean oldStyle=false;
     
     public WorkDirSetup() {
     }
@@ -106,6 +107,10 @@ public class WorkDirSetup extends BaseInterceptor {
 
     public void setUseWebInf( boolean useWebInf ) {
 	this.useWebInf = useWebInf;
+    }
+
+    public void setOldStyle( boolean b ) {
+	this.oldStyle=b;
     }
     
     // -------------------- Callbacks --------------------
@@ -186,6 +191,8 @@ public class WorkDirSetup extends BaseInterceptor {
 	if( base==null )
 	    base=cm.getWorkDir();
 
+	File workDirF=null;
+
 	StringBuffer sb=new StringBuffer();
 	sb.append(cm.getWorkDir());
 	sb.append(File.separator);
@@ -194,11 +201,17 @@ public class WorkDirSetup extends BaseInterceptor {
 	    sb.append( "DEFAULT" );
 	else
 	    sb.append( host );
-	File hostD=new File( sb.toString());
-	hostD.mkdirs();
-
-	File workDirF=new File( hostD, URLEncoder.encode( ctx.getPath() ));
 	
+
+	if( oldStyle ) {
+	    sb.append(URLEncoder.encode( ctx.getPath() ));
+	    workDirF=new File(sb.toString());
+	} else {
+	    File hostD=new File( sb.toString());
+	    hostD.mkdirs();
+	    
+	    workDirF=new File( hostD, URLEncoder.encode( ctx.getPath() ));
+	}
 	ctx.setWorkDir( workDirF );
     }
 

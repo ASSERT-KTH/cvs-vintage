@@ -145,6 +145,22 @@ public final class DefaultCMSetter extends BaseInterceptor {
         initLoggers(cm.getLoggers());
     }
 
+    /** Generate a random number
+     */
+    public void engineStart( ContextManager cm )
+	throws TomcatException
+    {
+	try {
+	    PrintWriter stopF=new PrintWriter
+		(new FileWriter(cm.getHome() + "/conf/random.txt"));
+	    stopF.println( Math.random() );
+	    stopF.close();
+	} catch( IOException ex ) {
+	    log( "Can't create stop file " + ex );
+	}
+    }
+    
+
     private void initLoggers(Hashtable Loggers){
         if( Loggers!=null ){
             Enumeration el=Loggers.elements();

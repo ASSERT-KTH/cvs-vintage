@@ -131,7 +131,7 @@
 
 
         <ContextInterceptor 
-            className="org.apache.tomcat.context.WorkDirInterceptor" />
+            className="org.apache.tomcat.modules.config.WorkDirSetup" />
 
         <!-- Request processing -->
         <!-- Session interceptor will extract the session id from cookies and 

@@ -60,7 +60,6 @@ package org.apache.tomcat.modules.config;
 
 import java.beans.*;
 import java.io.*;
-import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.Hashtable;
 import java.util.*;
@@ -69,6 +68,7 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 
