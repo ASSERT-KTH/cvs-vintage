@@ -51,7 +51,7 @@ public class IMAPInputStream extends BufferedInputStream {
 
 		readResponseString();
 
-		return toString(buffer, 0, idx);
+		return new String(buffer, 0, idx, "ISO8859_1");
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class IMAPInputStream extends BufferedInputStream {
 				digit = Character.digit((char) b[i++], radix);
 				if (digit < 0) {
 					throw new NumberFormatException(
-						"illegal number: " + toString(b, start, end));
+						"illegal number: " + new String(b, start, end));
 				} else {
 					result = -digit;
 				}

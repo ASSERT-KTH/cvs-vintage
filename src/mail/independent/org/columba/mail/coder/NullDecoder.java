@@ -33,7 +33,7 @@ public class NullDecoder extends Decoder {
 
     public String decode( String input, String charset) throws UnsupportedEncodingException {
     	if( charset != null ) {
-	    	return new String( input.getBytes(), charset );
+	    	return new String( input.getBytes(charset), charset );
     	}
     	return input;
     }

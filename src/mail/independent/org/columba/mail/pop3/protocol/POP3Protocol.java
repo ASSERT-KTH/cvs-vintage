@@ -115,8 +115,14 @@ public class POP3Protocol {
 
 	public boolean openPort(String host, int port) throws IOException {
 		socket = new Socket(host, port);
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+		
+		// All Readers shall use ISO8859_1 Encoding in order to ensure
+		// 1) ASCII Chars represented right to ensure working parsers
+		// 2) No mangling of the received bytes to be able to convert
+		//    the received bytes to another charset
+		
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"ISO8859_1"));
+		out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"ISO8859_1"));
 
 		//connected = true;
 		security = null;
