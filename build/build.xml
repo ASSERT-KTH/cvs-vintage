@@ -1626,12 +1626,20 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <target name="datadump" depends="sql,compile">
         <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
-            target="project-datadump">
+            target="datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf}/lib"/>
             <property name="build.properties"
                       value="${torque.dir.scarab}/build.properties"/> 
             <property name="outputDirectory" value="schema"/> 
+            <property name="torque.database.driver"
+	              value="${scarab.database.jdbc.driver}"/>
+            <property name="torque.database.url"
+	              value="${scarab.database.url}"/>
+            <property name="torque.database.user"
+	              value="${scarab.database.user}"/>
+            <property name="torque.database.password"
+	              value="${scarab.database.password}"/>
         </ant>
         <move file="${torque.dir.scarab}/schema/${project}-${project}-all-data.xml"
             tofile="${src.sql.dir}/${project}-${project}-all-data.xml"/>
