@@ -15,8 +15,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -31,19 +33,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import java.io.File;
+
 import java.text.MessageFormat;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
+import javax.swing.*;
 import javax.swing.KeyStroke;
-
 
 /**
  * Password dialog asks user the password.
@@ -58,7 +53,6 @@ public class PasswordDialog implements ActionListener {
     private JCheckBox checkbox;
     private String user;
     private String host;
-    private boolean save;
     private JButton okButton;
     private JButton cancelButton;
     private JButton helpButton;
@@ -139,6 +133,8 @@ public class PasswordDialog implements ActionListener {
         checkbox = new JCheckBox(MailResourceLoader.getString("dialog",
                     "password", "save_password"));
         checkbox.setSelected(save);
+        checkbox.setActionCommand("SAVE");
+        checkbox.addActionListener(this);
 
         dialog = new JDialog(new JFrame(), true);
         dialog.setTitle(MailResourceLoader.getString("dialog", "password",
@@ -204,7 +200,7 @@ public class PasswordDialog implements ActionListener {
     }
 
     public boolean getSave() {
-        return save;
+        return checkbox.isSelected();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -214,14 +210,30 @@ public class PasswordDialog implements ActionListener {
             password = passwordField.getPassword();
 
             //user = loginTextField.getText();
-            save = checkbox.isSelected();
-
             //loginMethod = (String) loginMethodComboBox.getSelectedItem();
             bool = true;
             dialog.dispose();
         } else if (action.equals("CANCEL")) {
             bool = false;
             dialog.dispose();
+        } else if (action.equals("SAVE")) {
+            if (!checkbox.isSelected()) {
+                return;
+            } else {
+                File configPath = MainInterface.config.getConfigDirectory();
+                File defaultConfigPath = MainInterface.config.getDefaultConfigPath();
+                while (!configPath.equals(defaultConfigPath)) {
+                    configPath = configPath.getParentFile();
+                    if (configPath == null) {
+                        JOptionPane.showMessageDialog(dialog, MailResourceLoader.getString(
+                                    "dialog","password", "warn_save_msg"),
+                                MailResourceLoader.getString(
+                                    "dialog", "password", "warn_save_title"),
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+            }
         }
     }
 }
