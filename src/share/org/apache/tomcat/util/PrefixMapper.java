@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.8 2001/02/20 03:14:10 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/02/20 03:14:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.9 2001/03/31 21:48:00 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/03/31 21:48:00 $
  *
  * ====================================================================
  *
@@ -84,6 +84,7 @@ import java.util.*;
  */
 public class PrefixMapper {
     // host -> PrefixMapper for virtual hosts
+    // hosts are stored in lower case ( the "common" case )
     SimpleHashtable vhostMaps=new SimpleHashtable();
 
 
@@ -117,15 +118,12 @@ public class PrefixMapper {
     public void setMapCache( boolean v ) {
 	mapCacheEnabled=v;
     }
-    
-//     public void removeMapping( String host, String path ) {
-// 	// XXX not implemented
-//     }
 
     /** Remove all mappings matching path
      */
     public void removeAllMappings( String host, String path ) {
 	PrefixMapper vmap=this;
+	host=host.toLowerCase();
 	if( host!=null ) {
 	    vmap=(PrefixMapper)vhostMaps.get(host);
 	}
@@ -167,6 +165,7 @@ public class PrefixMapper {
 	if( host == null )
 	    prefixMappedServlets.put( path, target);
 	else {
+	    host=host.toLowerCase();
 	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
 	    if( vmap == null ) {
 		vmap=new PrefixMapper();
@@ -183,6 +182,7 @@ public class PrefixMapper {
 	if( host==null )
 	    exactMappedServlets.put( path, target);
 	else {
+	    host=host.toLowerCase();
 	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
 	    if( vmap == null ) {
 		vmap=new PrefixMapper();
@@ -209,6 +209,10 @@ public class PrefixMapper {
 	PrefixMapper myMap=null;
 	if( host!=null )
 	    myMap=(PrefixMapper)vhostMaps.get( host );
+	if( myMap==null ) {
+	    myMap=(PrefixMapper)vhostMaps.get( host.toLowerCase() );
+	}
+	
 	if( myMap==null ) myMap = this; // default server
 
 	
