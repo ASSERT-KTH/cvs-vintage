@@ -8,26 +8,16 @@ $page.setTitle("Attribute Editor")
 
 <h1>Add / Edit Attribute</h1>
 
-<p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+<p>
+Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
+</p>
 
   <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+    <input type="hidden" name="action" value="admin.ModifyAttributes"/>
+    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm"/>
+    <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
 
-<div class="functnbar">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<td>edit&#160;<input type="submit" value="previous" class="buttonfunc" />&#160;<input type="submit" value="next" class="buttonfunc" />&#160;attribute</td>
-</tr>
-</table>
-</div>
-
-<div class="grouper">
-<div class="datatitle">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<td>General Info</td>
-</tr>
-</table>
-</div>
+#datatitle ( "General Info" )
 
 <div class="listtable">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -67,18 +57,23 @@ $page.setTitle("Attribute Editor")
 </div>
 </div>
 
+#set ( $maxNum = $attOptions.size() )
+
 <div class="grouper">
 <div class="datatable">
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
 <tr>
+#if ( $maxNum > 0 )
  <th>delete:</th>
  <th>id:</th>
+#else
+ <th colspan="2">&nbsp;</th>
+#end
  <th>parent id:</th>
  <th>attribute option:</th>
  <th>numeric order:</th>
 </tr>
 
-#set ( $maxNum = $attOptions.size() )
 #foreach ($option in $attOptions)
 #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
@@ -97,10 +92,34 @@ $page.setTitle("Attribute Editor")
 </tr>
 #end
 
-</table>
-</div>
-</div>
+#set ( $newOption = $scarabR.AttributeOption )
+#set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
+<tr class="a">
+     <td colspan="2">New</td>
+     <td>
+        <input type="text" name="$intakeOption.ParentIds.Key" 
+                value="$intakeOption.ParentIds" size="5">
+     </td>
+     <td><input type="text" size="25" class="text" name="$intakeOption.NewName.Key" value="$intakeOption.NewName"/></td>
+     <td>
+#set ( $maxNum = $maxNum + 1 )
+#if ($intakeOption.NumericValue.Value != 0)
+    #set ( $selected = $intakeOption.NumericValue.Value )
+#else
+    #set ( $selected = $maxNum )
+#end
+#numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $selected 1 )
+     </td>
+</tr>
 
+
+</table>
+  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
+        value="Save"/>
+
+</div>
+</div>
+$intake.declareGroups()
 </form>
 
 #*
