@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -54,6 +55,7 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
 import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.treetable.Tree;
@@ -299,7 +301,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu() {
-		menu = new ColumbaPopupMenu(frameController, "org/columba/mail/action/table_contextmenu.xml");
+		menu = new ColumbaPopupMenu(frameController,
+				"org/columba/mail/action/table_contextmenu.xml");
 	}
 
 	/**
@@ -335,7 +338,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		LOG.info("source folder=" + folder.getName());
 
 		// get current selection
-		FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection();
+		FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator) frameController)
+				.getTableSelection();
 		AbstractFolder srcFolder = r.getFolder();
 
 		// its always possible that no folder is currenlty selected
@@ -343,18 +347,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 			LOG.info("selected folder=" + srcFolder.getName());
 		}
 
-		// make tree visible
-		if (getFrameController() instanceof TreeViewOwner) {
-			if (srcFolder != null) {
-				((TreeViewOwner) getFrameController()).getTreeController()
-						.getView()
-						.makeVisible(srcFolder.getSelectionTreePath());
-			}
-		}
-
 		// update infopanel (gray panel below the toolbar)
 		// showing total/unread/recent messages count
-		if (getFrameController()  instanceof MailFrameMediator) {
+		if (getFrameController() instanceof MailFrameMediator) {
 			if (srcFolder != null) {
 				((ThreePaneMailFrameController) getFrameController())
 						.getFolderInfoPanel().setFolder(srcFolder);
@@ -371,6 +366,23 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		case TableModelChangedEvent.SET: {
 			updateManager.set(event.getHeaderList());
 
+			if (getTableModelThreadedView().isEnabled()) {
+
+				// expand all unread message nodes
+				for (int i = 0; i < getView().getRowCount(); i++) {
+					System.out.println("i=" + i + " count="
+							+ getView().getRowCount());
+
+					TreePath path = getView().getTree().getPathForRow(i);
+					MessageNode node = (MessageNode) path
+							.getLastPathComponent();
+					ColumbaHeader h = node.getHeader();
+					boolean unseen = !h.getFlags().getSeen();
+					if (unseen) {
+						getView().getTree().expandPath(path);
+					}
+				}
+			}
 			break;
 		}
 
@@ -495,7 +507,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	public void clear() {
 		// clear model
 		updateManager.set(null);
-		
+
 	}
 
 	/** *********** implement getter/setter methods ******************** */
@@ -705,7 +717,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		if (arg0.getValueIsAdjusting())
 			return;
 
-		
 		// @author fdietz
 		// bug #983931, message jumps while downloading new messages
 		if (getView().getSelectedNodes().length == 0) {
@@ -716,7 +727,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 				// -> skip to fix above bug
 				return;
 		}
-		
 
 		// rememember selected nodes
 		previouslySelectedNodes = getView().getSelectedNodes();

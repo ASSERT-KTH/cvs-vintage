@@ -348,6 +348,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
         super.selectAll();
     }
     
+    
     /**
      * Scroll table to row and request focus.
      * 
