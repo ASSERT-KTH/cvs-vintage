@@ -14,13 +14,11 @@ import org.jnp.server.Main;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-/**
- *   <description> 
+/** A JBoss service that starts the jnp JNDI server.
  *      
- *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -60,6 +58,26 @@ public class NamingService
       return naming.getRmiPort();
    }
 
+    public String getClientSocketFactory()
+    {
+        return naming.getClientSocketFactory();
+    }
+    public void setClientSocketFactory(String factoryClassName)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        naming.setClientSocketFactory(factoryClassName);
+    }
+
+    public String getServerSocketFactory()
+    {
+        return naming.getServerSocketFactory();
+    }
+    public void setServerSocketFactory(String factoryClassName)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        naming.setServerSocketFactory(factoryClassName);
+    }
+
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
@@ -70,7 +88,7 @@ public class NamingService
    {
       return "Naming";
    }
-   
+
    public void initService()
       throws Exception
    {
@@ -91,7 +109,7 @@ public class NamingService
       ctx.rebind("comp", envRef);
       log.log("Naming started on port "+naming.getPort());
    }
-      
+
    public void stopService()
    {
       naming.stop();
