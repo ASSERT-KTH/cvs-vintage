@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.34 2003/02/18 22:03:20 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.35 2003/03/22 22:52:09 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -693,6 +693,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		{
 			String directory = this.directory.getText();
 			this.directory.addCurrentToHistory();
+			directory = MiscUtilities.constructPath(
+				view.getBuffer().getDirectory(),directory);
 
 			if((VFSManager.getVFSForPath(directory).getCapabilities()
 				& VFS.LOW_LATENCY_CAP) == 0)

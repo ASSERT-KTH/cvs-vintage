@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recursive directory search.
  * @author Slava Pestov
- * @version $Id: DirectoryListSet.java,v 1.5 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: DirectoryListSet.java,v 1.6 2003/03/22 22:52:09 spestov Exp $
  */
 public class DirectoryListSet extends BufferListSet
 {
@@ -52,16 +52,46 @@ public class DirectoryListSet extends BufferListSet
 		return directory;
 	} //}}}
 
+	//{{{ setDirectory() method
+	/**
+	 * @since jEdit 4.2pre1
+	 */
+	public void setDirectory(String directory)
+	{
+		this.directory = directory;
+		invalidateCachedList();
+	} //}}}
+
 	//{{{ getFileFilter() method
 	public String getFileFilter()
 	{
 		return glob;
 	} //}}}
 
+	//{{{ setFileFilter() method
+	/**
+	 * @since jEdit 4.2pre1
+	 */
+	public void setFileFilter(String glob)
+	{
+		this.glob = glob;
+		invalidateCachedList();
+	} //}}}
+
 	//{{{ isRecursive() method
 	public boolean isRecursive()
 	{
 		return recurse;
+	} //}}}
+
+	//{{{ setRecursive() method
+	/**
+	 * @since jEdit 4.2pre1
+	 */
+	public void setRecursive(boolean recurse)
+	{
+		this.recurse = recurse;
+		invalidateCachedList();
 	} //}}}
 
 	//{{{ getCode() method

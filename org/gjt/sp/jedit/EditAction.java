@@ -39,7 +39,7 @@ import java.awt.Component;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.17 2003/03/22 21:44:36 spestov Exp $
+ * @version $Id: EditAction.java,v 1.18 2003/03/22 22:52:08 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -82,7 +82,7 @@ public abstract class EditAction
 	 */
 	public String getMouseOverText()
 	{
-		return null;
+		return jEdit.getProperty("action.caption",new String[] { getName() });
 	} //}}}
 
 	//{{{ invoke() method

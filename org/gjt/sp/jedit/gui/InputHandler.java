@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.15 2003/03/22 21:44:37 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.16 2003/03/22 22:52:09 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -203,6 +203,7 @@ public abstract class InputHandler extends KeyAdapter
 		// remember the last executed action
 		if(!action.noRememberLast())
 		{
+			HistoryModel.getModel("action").addItem(action.getName());
 			if(lastAction == action)
 				lastActionCount++;
 			else
