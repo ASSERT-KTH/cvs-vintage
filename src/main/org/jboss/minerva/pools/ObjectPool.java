@@ -25,7 +25,7 @@ import java.util.*;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -132,7 +132,9 @@ public class ObjectPool implements PoolEventListener {
      *    Occurs when you try to set the name of the pool more than once.
      */
     public void setName(String name) {
-        if(poolName != null)
+        if(name == null || name.length() == 0)
+            throw new IllegalArgumentException("Cannot set pool name to null or empty!");
+        if(poolName != null && !poolName.equals(name))
             throw new IllegalStateException("Cannot change pool name once set!");
         poolName = name;
     }
@@ -151,8 +153,13 @@ public class ObjectPool implements PoolEventListener {
 
     /**
      * Sets a log writer used to record pool events.
+     * @throws java.lang.IllegalStateException
+     *    Occurs when you try to set the log writer after the pool has been
+     *    initialized.
      */
     public void setLogWriter(PrintWriter writer) throws java.sql.SQLException {
+        if(objects != null)
+            throw new IllegalStateException(INITIALIZED);
         logWriter = writer;
     }
 
@@ -479,6 +486,9 @@ public class ObjectPool implements PoolEventListener {
      * @see #setBlocking
      */
     public Object getObject() {
+        if(objects == null)
+            throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
+
         while(true) {
             Iterator it = new HashSet(objects.values()).iterator();
             while(it.hasNext()) {
@@ -499,7 +509,7 @@ public class ObjectPool implements PoolEventListener {
 
             // Serialize creating new connections
             synchronized(objects) {  // Don't let 2 threads add at the same time
-                if(minSize == 0 || objects.size() < maxSize) {
+                if(maxSize == 0 || objects.size() < maxSize) {
                     Object ob = factory.createObject();
                     ObjectRecord rec = new ObjectRecord(ob);
                     objects.put(ob, rec);
@@ -509,7 +519,7 @@ public class ObjectPool implements PoolEventListener {
                         ((PooledObject)result).addPoolEventListener(this);
                     log("Pool "+this+" gave out new object: "+result);
                     return result;
-                } else System.out.println("Object Pool "+poolName+" is full ("+objects.size()+"/"+maxSize+")!");
+                } else log("Pool "+poolName+" is full ("+objects.size()+"/"+maxSize+")!");
             }
 
             if(blocking) {
@@ -532,13 +542,28 @@ public class ObjectPool implements PoolEventListener {
      * Sets the last used time for an object in the pool that is currently
      * in use.  If the timestamp parameter is not set, this call does nothing.
      * Otherwise, the object is marked as last used at the current time.
+     * @throws java.lang.IllegalArgumentException
+     *         Occurs when the object is not recognized by the factory or not
+     *         in the pool.
+     * @throws java.lang.IllegalStateException
+     *         Occurs when the object is not currently in use.
      * @see #setTimestampUsed
      */
     public void setLastUsed(Object object) {
         if(!trackLastUsed) return;
-        Object ob = factory.translateObject(object);
-        ObjectRecord rec = (ObjectRecord)objects.get(ob);
-        rec.setLastUsed();
+        Object ob = null;
+        try {
+            ob = factory.translateObject(object);
+        } catch(Exception e) {
+            throw new IllegalArgumentException("Pool "+getName()+" does not recognize object for last used time: "+object);
+        }
+        ObjectRecord rec = ob == null ? null : (ObjectRecord)objects.get(ob);
+        if(rec == null)
+            throw new IllegalArgumentException("Pool "+getName()+" does not recognize object for last used time: "+object);
+        if(rec.isInUse())
+            rec.setLastUsed();
+        else
+            throw new IllegalStateException("Cannot set last updated time for an object that's not in use!");
     }
 
     /**
@@ -550,6 +575,8 @@ public class ObjectPool implements PoolEventListener {
      *    Occurs when the object is not in this pool.
      */
     public void releaseObject(Object object) {
+        if(objects == null)
+            throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
         synchronized(object) {
             Object pooled = null;
             try {
