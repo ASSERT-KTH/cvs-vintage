@@ -250,7 +250,10 @@ public class JspInterceptor extends BaseInterceptor {
 		
 	    // we will compile ourself
 	    compiler.setJavaCompiler( null );
-	    
+
+	    // record time of attempted translate-and-compile
+	    jspInfo.touch();
+
 	    synchronized ( this ) {
 		compiler.compile();
 	    }
@@ -258,7 +261,6 @@ public class JspInterceptor extends BaseInterceptor {
 	    javac( createJavaCompiler( options ), ctxt, mangler );
 	    
 	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
-	    jspInfo.touch();
 	} catch( Exception ex ) {
 	    log("compile: req="+req+", jspInfo=" + jspInfo, ex);
 	}
@@ -382,7 +384,7 @@ class JspInfo {
     String mapPath; // In even of server reload, keep last version
 
     File jspSource; // used to avoid File allocation for lastModified
-    long compileTime;// tstamp - avoid one extra access
+    long compileTime;// tstamp of last compile attemp
 
     JspInfo( Request req ) {
 	init( req );
@@ -567,11 +569,17 @@ class JspInfo {
 
     /** After a startup we read the compile time from the class
 	file lastModified. No further access to that file is done.
+	If class file doesn't exist, use java file lastModified if
+	it exists.  We don't need to re-translate if the java file
+	has not expired.
     */
     void updateCompileTime() {
 	File f=new File( realClassPath );
 	compileTime=0;
-	if( ! f.exists() ) return;
+	if( ! f.exists() ) {
+	    f=new File( javaFilePath );
+	    if ( ! f.exists() ) return;
+	}
 	compileTime=f.lastModified();
     }
 
