@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.3 2004/08/09 05:48:35 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.4 2004/10/03 07:12:44 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,9 +251,9 @@ abstract class NSUMLEventListener implements MElementListener {
     /**
      * Contains a WeakReference.
      */
-    Reference listenerRef;
-    Object element;
-    String[] events;
+    private Reference listenerRef;
+    private Object element;
+    private String[] events;
 
     /**
      * Constructor for the NSUMLEventListener.
