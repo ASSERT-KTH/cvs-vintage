@@ -58,8 +58,6 @@
  */ 
 package org.apache.tomcat.util;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -79,6 +77,4 @@ public class RecycleBufferedInputStream extends BufferedInputStream {
 	this.in=null;
 	this.count=0;
     }
-
-    
 }

@@ -663,6 +663,8 @@ public class RequestImpl  implements Request {
     }
 
     // -------------------- Utils - facade for RequestUtil
+    /** @deprecated
+     */
     public BufferedReader getReader()
 	throws IOException
     {
@@ -737,6 +739,7 @@ public class RequestImpl  implements Request {
         notAuthenticated=true;
 	userRoles=null;
 	reqRoles=null;
+	in=null;
     }
 
     public MimeHeaders getMimeHeaders() {
@@ -761,7 +764,13 @@ public class RequestImpl  implements Request {
 
 
     public ServletInputStream getInputStream() throws IOException {
-    	return in;
+	// will be removed from here
+	return getFacade().getInputStream();
+	// 	if( in==null ) {
+	// 	    in=new BufferedServletInputStream( this );
+	// 	    ((BufferedServletInputStream)in).initLimit();
+	// 	}
+	//     	return in;
     }
 
     public int getServerPort() {

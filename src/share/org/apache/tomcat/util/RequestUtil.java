@@ -148,6 +148,8 @@ public class RequestUtil {
 	return combined;
     }
 
+    /** @deprecated
+     */
     public static BufferedReader getReader(Request request) throws IOException {
         // XXX
 	// this won't work in keep alive scenarios. We need to provide

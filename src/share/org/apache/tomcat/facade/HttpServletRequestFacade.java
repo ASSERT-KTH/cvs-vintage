@@ -88,7 +88,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     private Request request;
 
     HttpSessionFacade sessionFacade;
-    ServletInputStreamFacade isFacade=null;
+    ServletInputStreamFacade isFacade=new ServletInputStreamFacade();
+    boolean isFacadeInitialized=false;
     BufferedReader reader;
     
     private boolean usingStream = false;
@@ -98,6 +99,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
      */
     HttpServletRequestFacade(Request request) {
         this.request = request;
+	isFacade.setRequest( request );
     }
 
     /** Not public - is called only from FacadeManager on behalf of Request
@@ -107,6 +109,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	usingStream=false;
 	if( sessionFacade!=null) sessionFacade.recycle();
 	if( isFacade != null ) isFacade.recycle();
+	isFacadeInitialized=false;
     }
 
     /** Not public - is called only from FacadeManager
@@ -191,15 +194,19 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	}
 	usingStream = true;
 
-	if( isFacade!=null) return isFacade;
-	if( request.getInputBuffer() != null ) {
-	    isFacade=new ServletInputStreamFacade();
-	    isFacade.setRequest( request );
-	    return isFacade;
+	//if( isFacade!=null) return isFacade;
+	//if( request.getInputBuffer() != null ) {
+	//isFacade=new ServletInputStreamFacade();
+	//isFacade.setRequest( request );
+	if( ! isFacadeInitialized ) {
+	    isFacade.prepare();
+	    isFacadeInitialized=true;
 	}
+	return isFacade;
+	//	}
 
 	// old mechanism
-	return request.getInputStream();
+	//	return request.getInputStream();
     }
 
     /** Adapter: Tomcat Request doesn't deal with header to int conversion.
@@ -272,19 +279,26 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	}
 	usingReader = true;
 
-	// old mechanism
-	if( isFacade==null && request.getInputBuffer() == null )
-	    return request.getReader();
+	// 	// old mechanism
+	// 	if( isFacade==null && request.getInputBuffer() == null )
+	// 	    return request.getReader();
 
 	// New mechanism, based on exposed Buffers
-	if(  isFacade == null ) {
-	    isFacade=new ServletInputStreamFacade();
-	}
+	// 	if(  isFacade == null ) {
+	// 	    isFacade=new ServletInputStreamFacade();
+	// 	}
 
-	isFacade.setRequest( request );
 	if( reader != null ) return reader; // method already called 
 
-	// from RequestUtil.
+	if( ! isFacadeInitialized ) {
+	    isFacade.prepare();
+	    isFacadeInitialized=true;
+	}
+
+	// isFacade.setRequest( request );
+
+	// from RequestUtil. Note that InputStreamFacade
+	// provide contentLength limiting
 	// XXX  provide recycleable objects
 	String encoding = request.getCharacterEncoding();
         if (encoding == null) {

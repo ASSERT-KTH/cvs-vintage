@@ -66,7 +66,13 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 
 /**
+ * This is the input stream returned by ServletRequest.getInputStream().
+ * It is the adapter between the ServletInputStream interface expected
+ * by webapps and Request.doRead() methods. It will also use
+ * the ByteBuffer.
  *
+ * This will also deal with the "contentLength" limit.
+ * <b>Important</b> Only the methods in ServletInputStream can be public.
  */
 public class ServletInputStreamFacade extends ServletInputStream {
     private int bytesRead = 0;
@@ -78,6 +84,14 @@ public class ServletInputStreamFacade extends ServletInputStream {
     ServletInputStreamFacade() {
     }
 
+    void prepare() {
+	int contentLength = reqA.getContentLength();
+	if (contentLength != -1) {
+	    limit=contentLength;
+	}
+	bytesRead=0;
+    }
+    
     void setRequest(Request reqA ) {
 	this.reqA=reqA;
 	inBuffer=reqA.getInputBuffer();
@@ -87,15 +101,32 @@ public class ServletInputStreamFacade extends ServletInputStream {
 	
     }
 
-    void init() {
-	limit=req.getContentLength();
-	bytesRead=0;
+    /** Read a byte. Detect if a ByteBuffer is used, if not
+     *  use the old method.
+     */
+    private int doRead() throws IOException {
+	if( inBuffer!=null ) return inBuffer.read();
+	return reqA.doRead();
     }
-    
+
+    private int doRead(byte[] b, int off, int len) throws IOException {
+	if( inBuffer!=null ) return inBuffer.read(b,off,len);
+	return reqA.doRead(b,off,len);
+    }
+
     // -------------------- ServletInputStream methods 
-    
+
     public int read() throws IOException {
-	return inBuffer.read();
+	if (limit != -1) {
+	    if (bytesRead < limit) {
+		bytesRead++;
+		return doRead();
+	    } else {
+		return -1;
+	    }
+	} else {
+	    return doRead();
+	}
     }
 
     public int read(byte[] b) throws IOException {
@@ -103,7 +134,21 @@ public class ServletInputStreamFacade extends ServletInputStream {
     }
 
     public int read(byte[] b, int off, int len) throws IOException {
-	return inBuffer.read(b, off, len);
+	if (limit != -1) {
+	    if (bytesRead == limit) {
+		return -1;
+	    }
+	    if (bytesRead + len > limit) {
+		len = limit - bytesRead;
+	    }
+	    int numRead = doRead(b, off, len);
+	    if (numRead > 0) {
+		bytesRead += numRead;
+	    }
+	    return numRead;
+	} else {
+	    return doRead(b, off, len);
+	}
     }
     
 

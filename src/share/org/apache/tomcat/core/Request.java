@@ -268,11 +268,16 @@ public interface Request  {
     // -------------------- Input --------------------
 
     // XXX review - do we need both reader and IS ?
+    /** @deprecated
+     */
     public BufferedReader getReader() 	throws IOException;
 
+    /** @deprecated
+     */
     public ServletInputStream getInputStream() 	throws IOException;
 
     public  int doRead( byte b[], int off, int len ) throws IOException;
+    public  int doRead() throws IOException;
 
     // -------------------- Internal methods --------------------
     /** Support for "pools"

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.10 2000/07/11 03:48:56 alex Exp $
- * $Revision: 1.10 $
- * $Date: 2000/07/11 03:48:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.11 2000/07/29 18:44:01 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/07/29 18:44:01 $
  *
  * ====================================================================
  *
@@ -161,13 +161,6 @@ public class JNIConnectionHandler {
     		    return;
     	    }
 
-    	    int contentLength = reqA.getFacade().getIntHeader("content-length");
-    	    if (contentLength != -1) {
-    		    BufferedServletInputStream sis =
-    		        (BufferedServletInputStream)reqA.getInputStream();
-    		    sis.setLimit(contentLength);
-    	    }
-
     	    contextM.service( reqA, resA );
     	} catch(Exception ex) {
     	    ex.printStackTrace();
@@ -323,14 +316,14 @@ class JNIRequestAdapter extends RequestImpl {
 	    contentType = headers.getHeader("content-type");
     }
 
-    public ServletInputStream getInputStream() throws IOException {
-        if(contentLength <= 0) {
-            throw new IOException("Empty input stream");
-        }
+//     public ServletInputStream getInputStream() throws IOException {
+//         if(contentLength <= 0) {
+//             throw new IOException("Empty input stream");
+//         }
 
-        in = new BufferedServletInputStream(this);
-    	return in;
-    }
+//         in = new BufferedServletInputStream(this);
+//     	return in;
+//     }
 }
 
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.8 2000/05/26 17:32:04 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/05/26 17:32:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.9 2000/07/29 18:43:54 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/07/29 18:43:54 $
  *
  * ====================================================================
  * 
@@ -96,6 +96,16 @@ public class BufferedServletInputStream extends ServletInputStream {
     public BufferedServletInputStream( Request reqA ) {
 	setRequest(reqA);
     }
+
+    /** prepare the buffer for a new use
+     */
+    void initLimit() {
+	int contentLength = reqA.getContentLength();
+	if (contentLength != -1) {
+	    setLimit(contentLength);
+	}
+
+    }
     
     public void setRequest(Request reqA ) {
 	this.reqA=(RequestImpl)reqA;
@@ -111,7 +121,7 @@ public class BufferedServletInputStream extends ServletInputStream {
 	return reqA.doRead( b, off, len );
     }    
     
-    public void setLimit(int limit) {
+    void setLimit(int limit) {
 	bytesRead = 0;
 	this.limit = limit;
     }
@@ -152,22 +162,4 @@ public class BufferedServletInputStream extends ServletInputStream {
     }
     
 
-//     /**
-//      * @deprecated Not part of Servlet API, without it we can avoid a lot of GC.
-//      */
-//     public String readLine() throws IOException {
-
-// 	// don't need to do any limit checking here
-// 	// as the superclasses' readLine(buf, off, len)
-// 	// method delegates back to our our read() method
-// 	// which does check for limits.
-	
-// 	byte[] buf = new byte[1024];
-// 	int count = readLine(buf, 0, buf.length);
-// 	if (count >= 0) {
-// 	    return new String(buf, 0, count, Constants.DEFAULT_CHAR_ENCODING);
-// 	} else {
-// 	    return ""; 
-// 	}
-//     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.6 2000/07/11 03:48:56 alex Exp $
- * $Revision: 1.6 $
- * $Date: 2000/07/11 03:48:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.7 2000/07/29 18:44:01 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/07/29 18:44:01 $
  *
  * ====================================================================
  *
@@ -232,7 +232,7 @@ public class Ajp13ConnectorRequest extends RequestImpl
 
         contentLength = headers.getIntHeader("content-length");
         contentType = headers.getHeader("content-type");
-    	((BufferedServletInputStream)this.in).setLimit(contentLength);
+	//    	((BufferedServletInputStream)this.in).setLimit(contentLength);
     	if(contentLength > 0) {
     		/* Read present data */
     		int err = con.receive(msg);
@@ -280,7 +280,7 @@ public class Ajp13ConnectorRequest extends RequestImpl
     {
         this.con = con;
         pos = 0;
-        this.in = new BufferedServletInputStream(this);
+	//        this.in = new BufferedServletInputStream(this);
     }   
     
     public void refeelReadBuffer() throws IOException 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.20 2000/07/25 12:44:05 nacho Exp $
- * $Revision: 1.20 $
- * $Date: 2000/07/25 12:44:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.21 2000/07/29 18:44:03 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/07/29 18:44:03 $
  *
  * ====================================================================
  *
@@ -95,7 +95,6 @@ public class HttpRequestAdapter extends RequestImpl {
 	    sin = new RecycleBufferedInputStream ( socket.getInputStream());
 	else
 	    sin.setInputStream( socket.getInputStream());
-	in = new BufferedServletInputStream(this);
         this.socket = socket;
     	moreRequests = true;
     }
@@ -123,14 +122,29 @@ public class HttpRequestAdapter extends RequestImpl {
 	return sin.read(b, off, len);
     }
 
+    // cut&paste from ServletInputStream - but it's as inefficient as before
+    public int readLine(InputStream in, byte[] b, int off, int len) throws IOException {
+
+	if (len <= 0) {
+	    return 0;
+	}
+	int count = 0, c;
+
+	while ((c = in.read()) != -1) {
+	    b[off++] = (byte)c;
+	    count++;
+	    if (c == '\n' || count == len) {
+		break;
+	    }
+	}
+	return count > 0 ? count : -1;
+    }
+    
+
+    
     public void readNextRequest(Response response) throws IOException {
 
-	// Odd, but works: we use the ServletInputStream, which uses doRead.
-	// We do implement doRead in Http protocol to return from the input
-	// stream - it works for the normal body but also for the HTTP
-	// head. The limit is set after ( and if ) we have a content-length.
-	
-	count = in.readLine(buf, 0, buf.length);
+	count = readLine(sin,buf, 0, buf.length);
 
 	if (count < 0 ) {
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -169,7 +183,7 @@ public class HttpRequestAdapter extends RequestImpl {
 		int len = buf.length - off;
 
 		if (len > 0) {
-		    len = in.readLine(buf, off, len);
+		    len = readLine(sin,buf, off, len);
 
 		    if (len == -1) {
                         String msg =
