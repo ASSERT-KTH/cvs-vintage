@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entdeploy.xml,v 1.18 2004/01/19 17:17:20 mvw Exp $ -->
+<!-- $Id: ref_entdeploy.xml,v 1.19 2004/06/26 09:11:34 linus Exp $ -->
 
 <!--
 
@@ -183,7 +183,10 @@ ArgoUML.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para></listitem>
+          <listitem>
+            <para>&constraintssupport;
+</para>
+          </listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
@@ -593,7 +596,9 @@ How do I create a generalisation between nodes? See issue ... -->
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para>
+          <listitem>
+            <para>&constraintssupport;
+</para>
           </listitem>
         </varlistentry>
 
@@ -846,7 +851,10 @@ How do I create a generalisation between nodes? See issue ... -->
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para></listitem>
+          <listitem>
+            <para>&constraintssupport;
+</para>
+          </listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
@@ -1216,7 +1224,9 @@ How do I create a generalisation between nodes? See issue ... -->
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para>
+          <listitem>
+            <para>&constraintssupport;
+</para>
           </listitem>
         </varlistentry>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entseq.xml,v 1.13 2004/01/04 14:46:52 mvw Exp $ -->
+<!-- $Id: ref_entseq.xml,v 1.14 2004/06/26 09:12:07 linus Exp $ -->
 
 <!--
 
@@ -171,7 +171,9 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para>
+          <listitem>
+            <para>&constraintssupport;
+</para>
           </listitem>
         </varlistentry>
 
@@ -590,7 +592,10 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para></listitem>
+          <listitem>
+            <para>&constraintssupport;
+</para>
+          </listitem>
         </varlistentry>
 
         <!-- Entry for Tagged Values tab -->
@@ -980,7 +985,9 @@ need it because they are still working with &argouml; 0.10.1.
         <varlistentry>
           <term><literal>Constraints</literal></term>
 
-          <listitem><para>&constraints_support;</para>
+          <listitem>
+            <para>&constraintssupport;
+</para>
           </listitem>
         </varlistentry>
 
