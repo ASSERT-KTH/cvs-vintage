@@ -602,6 +602,15 @@ final class JasperLiaison {
 			       ctx.getAbsolutePath(),
 			       jspFile );
 
+
+            // If unsafe path or JSP file doesn't exist, return "not found"
+            // Avoids creating work directories for non-existent JSP files
+            String path=mangler.getJspFilePath();
+            if( path == null )
+                return 404;
+            File f = new File( path );
+            if( !f.exists() )
+                return 404;
 	    // register the handler as dependent on the jspfile 
 	    if( dep==null ) {
 		dep=setDependency( ctx, mangler, handler );
@@ -618,15 +627,6 @@ final class JasperLiaison {
 		if( ! dep.isExpired() )
 		    return 0;
 	    }
-
-            // If unsafe path or JSP file doesn't exist, return "not found"
-            // Avoids creating work directories for non-existent JSP files
-            String path=mangler.getJspFilePath();
-            if( path == null )
-                return 404;
-            File f = new File( path );
-            if( !f.exists() )
-                return 404;
 
 	    //	    if( debug > 3) 
 	    ctx.log( "Compiling: " + jspFile + " to " +
