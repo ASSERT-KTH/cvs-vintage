@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -48,6 +48,7 @@ public class JDBCDataSource
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
+   private ObjectName mJdbcDriver;
    
    // Static --------------------------------------------------------
    
@@ -225,6 +226,13 @@ public class JDBCDataSource
       }
    }
    
+   // javax.management.j2ee.JDBCDataSource implementation -----------------
+   
+   public ObjectName getJdbcDriver()
+   {
+      return mJdbcDriver;
+   }
+   
    // org.jboss.ServiceMBean overrides ------------------------------------
    
    public void postRegister( Boolean pRegisterationDone ) {
@@ -239,26 +247,26 @@ public class JDBCDataSource
          jme.printStackTrace();
       }
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 0 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JDBC DataSource Resource created"
-         ).getNotification()
+         )
       );
    }
    
    public void preDeregister() {
       getLog().info( "JDBCDataSource.preDeregister(): " + getName() );
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 1 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JDBC DataSource Resource deleted"
-         ).getNotification()
+         )
       );
    }
    

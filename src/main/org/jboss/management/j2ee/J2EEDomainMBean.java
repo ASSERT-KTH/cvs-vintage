@@ -6,14 +6,14 @@
  */
 package org.jboss.management.j2ee;
 
-import javax.management.j2ee.J2EEManagement;
+import javax.management.j2ee.J2EEDomain;
 
 /**
- * MBean Mangement Inteface for {@link org.jboss.management.j2ee.J2EEManagement
- * J2EEManagement}.
+ * MBean Mangement Inteface for {@link org.jboss.management.j2ee.J2EEDomain
+ * J2EEDomain}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -22,7 +22,7 @@ import javax.management.j2ee.J2EEManagement;
  * <li> Creation
  * </ul>
  **/
-public interface J2EEManagementMBean
-   extends J2EEManagement, J2EEManagedObjectMBean
+public interface J2EEDomainMBean
+   extends J2EEDomain, J2EEManagedObjectMBean
 {
 }

@@ -52,12 +52,12 @@ import org.jboss.management.j2ee.J2EEManagedObject;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
 *           type="Stateless"
-*           jndi-name="ejb/mgmt/J2EEManagement"
+*           jndi-name="ejb/mgmt/J2EEDomain"
 * @--ejb:interface generate="none"
 *                remote-class="javax.management.j2ee.Management"
 * @ejb:interface extends="javax.management.j2ee.Management"

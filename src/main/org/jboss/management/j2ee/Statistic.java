@@ -11,54 +11,67 @@ package org.jboss.management.j2ee;
 *
 * @author Marc Fleury
 **/
-public class Statistic
+public abstract class Statistic
    implements javax.management.j2ee.Statistic
 {
-   // -------------------------------------------------------------------------
-   // Members
-   // -------------------------------------------------------------------------  
-
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
+   
    protected String mName;
    protected String mUnit;
    protected String mDescription;
-
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   protected long mStartTime;
+   protected long mLastSampleTime;
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
    /**
-   * Default (no-args) constructor
+   * Default constructor
+   *
+   * @param pName Name of the statistic
+   * @param pUnit Unit description used in this statistic
+   * @param pDescription Human description of the statistic
    **/
    public Statistic( String pName, String pUnit, String pDescription ) {
       mName = pName;
       mUnit = pUnit;
       mDescription = pDescription;
    }
-
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
-
-   /**
-   * @return Name of the Statistics
-   **/
+   
+   // Public --------------------------------------------------------
+   
+   // javax.management.j2ee.Statistics implementation ---------------
+   
    public String getName() {
       return mName;
    }
 
-   /**
-   * @return Unit of Measurement. For TimeStatistics valid values are "HOUR",
-   *         "MINUTE", "SECOND", "MILLISECOND", "MICROSECOND", "NANOSECOND"
-   **/
    public String getUnit() {
       return mUnit;
    }
 
-   /**
-   * @return A human-readable description
-   **/
    public String getDescription() {
       return mDescription;
    }
-
+   
+   public long getStartTime() {
+      return mStartTime;
+   }
+   
+   public long getLastSampleTime() {
+      return mLastSampleTime;
+   }
+   
+   // Y overrides ---------------------------------------------------
+   
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }

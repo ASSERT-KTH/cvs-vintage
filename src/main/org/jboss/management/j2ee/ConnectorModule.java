@@ -25,7 +25,7 @@ import java.security.InvalidParameterException;
 * JBoss specific implementation.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class ConnectorModule
   extends J2EEModule
@@ -67,14 +67,14 @@ public class ConnectorModule
    // ConnectorModule Implementation
    // -------------------------------------------------------------------------  
 
-   public ResourceAdapter[] getResourceAdapters() {
-      return (ResourceAdapter[]) mResourceAdapters.toArray( new ResourceAdapter[ 0 ] );
+   public ObjectName[] getResourceAdapters() {
+      return (ObjectName[]) mResourceAdapters.toArray( new ResourceAdapter[ 0 ] );
    }
    
-   public ResourceAdapter getResourceAdapter( int pIndex ) {
+   public ObjectName getResourceAdapter( int pIndex ) {
       if( pIndex >= 0 && pIndex < mResourceAdapters.size() )
       {
-         return (ResourceAdapter) mResourceAdapters.get( pIndex );
+         return (ObjectName) mResourceAdapters.get( pIndex );
       }
       else
       {

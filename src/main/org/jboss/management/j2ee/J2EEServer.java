@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -37,7 +37,7 @@ public class J2EEServer
    
    // Attributes ----------------------------------------------------
    
-   private List mApplications = new ArrayList();
+   private List mDeployedObjects = new ArrayList();
    
    private List mResources = new ArrayList();
    
@@ -45,75 +45,80 @@ public class J2EEServer
    
    private List mJVMs = new ArrayList();
    
-   private String mJ2eeVendor = null;
+   private String mServerVendor = null;
    
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
    
-   public J2EEServer( String pName, ObjectName pDomain, String pJ2eeVendor )
+   public J2EEServer( String pName, ObjectName pDomain, String pServerVendor )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
       super( "J2EEServer", pName, pDomain );
-      mJ2eeVendor = pJ2eeVendor;
+      mServerVendor = pServerVendor;
    }
    
    // Public --------------------------------------------------------
-
-   public ObjectName[] getApplications() {
-      return (ObjectName[]) mApplications.toArray( new ObjectName[ 0 ] );
+   
+   public ObjectName[] getDeployedObjects()
+   {
+      return (ObjectName[]) mDeployedObjects.toArray( new ObjectName[ 0 ] );
    }
-
-   public ObjectName getApplication( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mApplications.size() ) {
-         return (ObjectName) mApplications.get( pIndex );
+   
+   public ObjectName getDeployedObject( int pIndex )
+   {
+      if( pIndex >= 0 && pIndex < mDeployedObjects.size() ) {
+         return (ObjectName) mDeployedObjects.get( pIndex );
       }
       return null;
    }
-
-   public ObjectName[] getNodes() {
-      return (ObjectName[]) mNodes.toArray( new ObjectName[ 0 ] );
-   }
-
-   public ObjectName getNode( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mNodes.size() ) {
-         return (ObjectName) mNodes.get( pIndex );
-      }
-      return null;
-   }
-
+   
    public ObjectName[] getResources() {
       return (ObjectName[]) mResources.toArray( new ObjectName[ 0 ] );
    }
-
+   
    public ObjectName getResource( int pIndex ) {
       if( pIndex >= 0 && pIndex < mResources.size() ) {
          return (ObjectName) mResources.get( pIndex );
       }
       return null;
    }
-
+   
+   public ObjectName[] getNodes() {
+      return (ObjectName[]) mNodes.toArray( new ObjectName[ 0 ] );
+   }
+   
+   public ObjectName getNode( int pIndex ) {
+      if( pIndex >= 0 && pIndex < mNodes.size() ) {
+         return (ObjectName) mNodes.get( pIndex );
+      }
+      return null;
+   }
+   
    public ObjectName[] getJavaVMs() {
       return (ObjectName[]) mJVMs.toArray( new ObjectName[ 0 ] );
    }
-
+   
    public ObjectName getJavaVM( int pIndex ) {
       if( pIndex >= 0 && pIndex < mJVMs.size() ) {
          return (ObjectName) mJVMs.get( pIndex );
       }
       return null;
    }
-
-   public String getJ2eeVendor() {
-      return mJ2eeVendor;
+   
+   public String getServerVendor() {
+      return mServerVendor;
    }
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "J2EEApplication".equals( lType ) ) {
-         mApplications.add( pChild );
+      if(
+         "J2EEApplication".equals( lType ) ||
+         "J2EEModule".equals( lType )
+      ) {
+         mDeployedObjects.add( pChild );
       } else if( "Node".equals( lType ) ) {
          mNodes.add( pChild );
       } else if( "JVM".equals( lType ) ) {
@@ -133,8 +138,11 @@ public class J2EEServer
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "J2EEApplication".equals( lType ) ) {
-         mApplications.remove( pChild );
+      if(
+         "J2EEApplication".equals( lType ) ||
+         "J2EEModule".equals( lType )
+      ) {
+         mDeployedObjects.remove( pChild );
       } else if( "Node".equals( lType ) ) {
          mNodes.remove( pChild );
       } else if( "JVM".equals( lType ) ) {
@@ -154,11 +162,11 @@ public class J2EEServer
 
    public String toString() {
       return "J2EEServer { " + super.toString() + " } [ " +
-         "applications: " + mApplications +
+         "depoyed objects: " + mDeployedObjects +
          ", resources: " + mResources +
          ", nodes: " + mNodes +
          ", JVMs: " + mJVMs +
-         ", J2EE vendor: " + mJ2eeVendor +
+         ", J2EE vendor: " + mServerVendor +
          " ]";
    }
 

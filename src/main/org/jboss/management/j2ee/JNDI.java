@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JNDI JNDI}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -204,25 +204,25 @@ public class JNDI
          jme.printStackTrace();
       }
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 0 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JNDI Resource created"
-         ).getNotification()
+         )
       );
    }
    
    public void preDeregister() {
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 1 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JNDI Resource deleted"
-         ).getNotification()
+         )
       );
    }
    
@@ -257,13 +257,13 @@ public class JNDI
                }
                // Now send the event to the JSR-77 listeners
                sendNotification(
-                  new J2EEManagementEvent(
+                  new Notification(
                      sTypes[ getState() + 2 ],
                      getName(),
                      1,
                      System.currentTimeMillis(),
                      "State changed"
-                  ).getNotification()
+                  )
                );
             }
          }

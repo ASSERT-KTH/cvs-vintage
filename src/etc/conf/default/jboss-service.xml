@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.17 2001/11/27 04:03:51 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.18 2001/12/10 06:27:48 schaefera Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -74,7 +74,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.management.j2ee.SingleJBossServerManagement"
-	 name="SingleJBoss:type=J2EEManagement,name=Manager" >
+	 name="SingleJBoss:type=J2EEDomain,name=Manager" >
   </mbean>
 
   <!-- ==================================================================== -->

@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -85,7 +85,7 @@ public abstract class J2EEManagedObject
    // Constructors --------------------------------------------------
    
    /**
-   * Constructor for the root J2EEManagement object
+   * Constructor for the root J2EEDomain object
    *
    * @param pDomainName Name of the domain
    * @param pType Type of the Managed Object which must be defined

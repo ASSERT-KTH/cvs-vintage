@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
 * Represents the single JBoss server management domain
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * </ul>
  **/
 public class SingleJBossServerManagement
-   extends J2EEManagement
+   extends J2EEDomain
 {
    /** Class logger. */
    private static final Logger log =
@@ -84,28 +84,15 @@ public class SingleJBossServerManagement
                   "Localhost",
                   lServer,
                   "PC Pentium 4",
-                  "Windows 2000"
+                  "Windows 2000",
+                  new String[] { "127.0.0.1" }
                },
                new String[] {
                   String.class.getName(),
                   ObjectName.class.getName(),
                   String.class.getName(),
-                  String.class.getName()
-               }
-            ).getObjectName();
-            // Create its IP-Address
-            ObjectName lIpAddress = getServer().createMBean(
-               "org.jboss.management.j2ee.IpAddress",
-               null,
-               new Object[] {
-                  "Localhost",
-                  lNode,
-                  "127.0.0.1"
-               },
-               new String[] {
                   String.class.getName(),
-                  ObjectName.class.getName(),
-                  String.class.getName()
+                  String[].class.getName()
                }
             ).getObjectName();
          }

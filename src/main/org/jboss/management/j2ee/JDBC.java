@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBC JDBC}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -253,35 +253,35 @@ public class JDBC
    public void postRegister( Boolean pRegisterationDone ) {
       super.postRegister( pRegisterationDone );
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 0 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JDBC Resource created"
-         ).getNotification()
+         )
       );
    }
    
    public void preDeregister() {
       sendNotification(
-         new J2EEManagementEvent(
+         new Notification(
             sTypes[ 1 ],
             getName(),
             1,
             System.currentTimeMillis(),
             "JDBC Resource deleted"
-         ).getNotification()
+         )
       );
    }
    
    // javax.management.j2ee.JDBC implementation ---------------------
    
-   public ObjectName[] getDataSources() {
+   public ObjectName[] getJdbcDataSources() {
       return (ObjectName[]) mDatasources.toArray( new ObjectName[ mDatasources.size() ] );
    }
    
-   public ObjectName getDataSource( int pIndex ) {
+   public ObjectName getJdbcDataSource( int pIndex ) {
       if( pIndex >= 0 && pIndex < mDatasources.size() ) {
          return (ObjectName) mDatasources.get( pIndex );
       }

@@ -21,7 +21,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.Node Node}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -53,7 +53,7 @@ public class Node
    *
    * @throws InvalidParameterException If list of IPAddresses or Java VMs is null or empty
    **/
-   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType )
+   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType, String[] pIpAddresses )
       throws
          MalformedObjectNameException,
          InvalidParentException
@@ -61,6 +61,7 @@ public class Node
       super( "Node", pName, pServer );
       mHardwareType = pHardwareType;
       mOSType = pOsType;
+      mIPAddressList.addAll( Arrays.asList( pIpAddresses ) );
    }
 
    // -------------------------------------------------------------------------
@@ -75,13 +76,13 @@ public class Node
       return mOSType;
    }
 
-   public ObjectName[] getIpAddresses() {
-      return (ObjectName[]) mIPAddressList.toArray( new ObjectName[ 0 ] );
+   public String[] getIpAddresses() {
+      return (String[]) mIPAddressList.toArray( new ObjectName[ 0 ] );
    }
 
-   public ObjectName getIpAddress( int pIndex ) {
+   public String getIpAddress( int pIndex ) {
       if( pIndex >= 0 && pIndex < mIPAddressList.size() ) {
-         return (ObjectName) mIPAddressList.get( pIndex );
+         return (String) mIPAddressList.get( pIndex );
       } else {
          return null;
       }
@@ -90,17 +91,11 @@ public class Node
    public void addChild( ObjectName pChild ) {
       Hashtable lProperties = pChild.getKeyPropertyList();
       String lType = lProperties.get( "type" ) + "";
-      if( "IpAddress".equals( lType ) ) {
-         mIPAddressList.add( pChild );
-      }
    }
    
    public void removeChild( ObjectName pChild ) {
       Hashtable lProperties = pChild.getKeyPropertyList();
       String lType = lProperties.get( "type" ) + "";
-      if( "IpAddress".equals( lType ) ) {
-         mIPAddressList.remove( pChild );
-      }
    }
 
    public String toString() {

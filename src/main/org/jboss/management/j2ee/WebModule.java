@@ -25,7 +25,7 @@ import java.security.InvalidParameterException;
  * {@link javax.management.j2ee.WebModule WebModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -56,7 +56,7 @@ public class WebModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public WebModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, Servlet[] pServlets )
+   public WebModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, ObjectName[] pServlets )
       throws
          MalformedObjectNameException,
          InvalidParentException
@@ -72,14 +72,14 @@ public class WebModule
    // WebModule Implementation
    // -------------------------------------------------------------------------  
 
-   public Servlet[] getServlets() {
-      return (Servlet[]) mServlets.toArray( new Servlet[ 0 ] );
+   public ObjectName[] getServlets() {
+      return (ObjectName[]) mServlets.toArray( new Servlet[ 0 ] );
    }
    
-   public Servlet getServlet( int pIndex ) {
+   public ObjectName getServlet( int pIndex ) {
       if( pIndex >= 0 && pIndex < mServlets.size() )
       {
-         return (Servlet) mServlets.get( pIndex );
+         return (ObjectName) mServlets.get( pIndex );
       }
       else
       {
