@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class NamingAlias
    extends ServiceMBeanSupport
@@ -139,7 +139,13 @@ public class NamingAlias
                fromCtx = fromCtx.createSubcontext(comp);
             }
          }
+
+         log.debug("atom: " + atom);
+         log.debug("link: " + link);
+         
          fromCtx.rebind(atom, link);
+
+         log.info("Bound link " + fromName + " to " + toName);
       }
    }
    
