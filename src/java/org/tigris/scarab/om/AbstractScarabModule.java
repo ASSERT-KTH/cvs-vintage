@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.40 2002/07/03 00:41:28 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.41 2002/07/03 21:22:08 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1651,12 +1651,15 @@ try{
         // Create default groups
         AttributeGroup ag = createNewGroup(issueType);
         ag.setOrder(1);
+        ag.setDedupe(true);
+        ag.setDescription(null);
         ag.save();
         AttributeGroup ag2 = createNewGroup(issueType);
         ag2.setOrder(3);
+        ag2.setDedupe(false);
+        ag2.setDescription(null);
         ag2.save();
     }
-
 
     public RModuleIssueType getRModuleIssueType(IssueType issueType)
         throws Exception
