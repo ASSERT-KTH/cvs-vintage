@@ -36,8 +36,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
-import org.jboss.proxy.Proxies;
-import org.jboss.proxy.InvocationHandler;
+import org.jboss.proxy.compiler.Proxies;
+import org.jboss.proxy.compiler.InvocationHandler;
 
 
 /**
@@ -51,7 +51,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
