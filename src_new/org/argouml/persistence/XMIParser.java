@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.6 2005/02/20 20:10:14 bobtarling Exp $
+// $Id: XMIParser.java,v 1.7 2005/03/18 12:07:41 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.persistence;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import org.argouml.kernel.Project;
 import org.argouml.model.Model;
 import org.argouml.model.XmiReader;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * XMI is an XML based exchange format between UML tools.
