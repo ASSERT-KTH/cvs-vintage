@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.6 2004/08/13 18:43:20 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.7 2004/08/15 22:07:27 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -100,6 +100,26 @@ public class JavaWsdlMapping
       }
 
       return typeMapping;
+   }
+
+   /** Get the exception mapping fo a given wsdl message
+    */
+   public ExceptionMapping getExceptionMappingForMessageQName(QName wsdlMessage)
+   {
+      ExceptionMapping exMapping = null;
+
+      if (wsdlMessage != null)
+      {
+         Iterator it = exceptionMappings.iterator();
+         while (it.hasNext())
+         {
+            ExceptionMapping mapping = (ExceptionMapping)it.next();
+            if (wsdlMessage.equals(mapping.getWsdlMessage()))
+               exMapping = mapping;
+         }
+      }
+
+      return exMapping;
    }
 
    /** Get the port type qname for a given service endpoint infterface
