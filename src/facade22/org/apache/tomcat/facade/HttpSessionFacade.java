@@ -152,10 +152,7 @@ final class HttpSessionFacade implements HttpSession {
      */
     public void invalidate() {
 	checkValid();
-	ServerSessionManager ssm=realSession.getSessionManager();
-	ssm.removeSession( realSession );
-	realSession.removeAllAttributes();
-	realSession.getTimeStamp().setValid( false );
+ 	realSession.getTimeStamp().setValid( false );
     }
 
     /**

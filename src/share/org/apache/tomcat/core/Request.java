@@ -565,13 +565,20 @@ public class Request {
 
     
     public ServerSession getSession(boolean create) {
+
+
 	if( serverSession!=null ) {
-	    // if not null, it is validated by the session module
-	    return serverSession;
+             /// XXX a forwarded request whose session was invalidated
+            if (!serverSession.getTimeStamp().isValid() && create){
+                 serverSession.getSessionManager().removeSession( serverSession );
+                 serverSession=null;
+            } else
+                // if not null, it is validated by the session module
+        	return serverSession;
 	}
 
 	if( ! create ) return null;
-
+        
 	BaseInterceptor reqI[]= getContainer().
 	    getInterceptors(Container.H_newSessionRequest);
 
