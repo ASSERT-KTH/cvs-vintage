@@ -5,10 +5,8 @@
    <!--HSQLService database="./target/scarab" dbname="scarab" trace="true" 
         silent="false" start="false" port="9001">
    </HSQLService-->
-    <!-- Torque Component -->
-    <torque>
-       <configfile>/WEB-INF/conf/Torque.properties</configfile>
-    </torque>
+    <!-- Torque Component initialized from the Turbine runtime properties -->
+    <torque/>
     <mimetype mimetypes="/WEB-INF/conf/mime.types"/>
     <upload repository="WEB-INF" sizeMax="157286400" sizeThreshold="8192"/>
     <parser/>   
@@ -29,6 +27,6 @@
    <!--
    # Path for writing index, if starts with a '/', the path is assumed to be 
    # absolute, otherwise it will be created relative to the webapp root.
--->
+   -->
    <searchIndex path="WEB-INF/index"/>  
 </componentConfig>

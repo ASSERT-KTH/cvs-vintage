@@ -123,3 +123,6 @@ BaseUserVotePeer.java
 BaseTransitionManager.java
 BaseTransition.java
 BaseTransitionPeer.java
+BaseRAttributeRequirement.java
+BaseRAttributeRequirementManager.java
+BaseRAttributeRequirementPeer.java
