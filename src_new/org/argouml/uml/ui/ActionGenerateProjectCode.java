@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.15 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.16 2004/09/16 17:51:08 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class ActionGenerateProjectCode extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionGenerateProjectCode SINGLETON =
+    private static final ActionGenerateProjectCode SINGLETON =
 	new ActionGenerateProjectCode();
 
 
@@ -133,6 +133,14 @@ public class ActionGenerateProjectCode extends UMLAction {
 	    parent = ModelFacade.getNamespace(parent);
 	}
 	return false;
+    }
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionGenerateProjectCode getSingleton() {
+        return SINGLETON;
     }
 
 } /* end class ActionGenerateProjectCode */

@@ -1,4 +1,4 @@
-// $Id: ActionGenerationSettings.java,v 1.6 2004/08/16 19:30:58 mvw Exp $
+// $Id: ActionGenerationSettings.java,v 1.7 2004/09/16 17:51:08 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class ActionGenerationSettings extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionGenerationSettings SINGLETON =
+    private static final ActionGenerationSettings SINGLETON =
 	new ActionGenerationSettings();
 
     ////////////////////////////////////////////////////////////////
@@ -71,5 +71,12 @@ public class ActionGenerationSettings extends UMLAction {
 	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	return super.shouldBeEnabled() 
 	    && (activeDiagram instanceof UMLDiagram);
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionGenerationSettings getSingleton() {
+        return SINGLETON;
     }
 } /* end class ActionGenerationSettings */

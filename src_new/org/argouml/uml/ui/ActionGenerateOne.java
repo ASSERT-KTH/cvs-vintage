@@ -1,4 +1,4 @@
-// $Id: ActionGenerateOne.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionGenerateOne.java,v 1.11 2004/09/16 17:51:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class ActionGenerateOne extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionGenerateOne SINGLETON = new ActionGenerateOne();
+    private static final ActionGenerateOne SINGLETON = new ActionGenerateOne();
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -141,5 +141,12 @@ public class ActionGenerateOne extends UMLAction {
         }
         return foundOne;
         */
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionGenerateOne getSingleton() {
+        return SINGLETON;
     }
 } /* end class ActionGenerateOne */
