@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.21 2004/11/01 19:55:25 mvw Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.22 2004/11/14 21:43:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -310,10 +310,9 @@ public final class ResourceLoaderWrapper {
                 new StringNamespace(new String[] {"org"});
             StringNamespace ru = new StringNamespace(new String[] {"ru"});
             
+            String cName = sns.popNamespaceElement().toString();
             if (ru.equals(sns.getCommonNamespace(ru))
                     || org.equals(sns.getCommonNamespace(org))) {
-            
-                String cName = sns.popNamespaceElement().toString();
             
                 if (cName.startsWith("UML")) {
                     cName = cName.substring(3);
@@ -324,16 +323,17 @@ public final class ResourceLoaderWrapper {
                 if (cName.endsWith("Impl")) {
                     cName = cName.substring(0, cName.length() - 4);
                 }
-                icon = lookupIconResource(cName);
-                if (icon == null) {
-                    LOG.warn("Can't find icon for " + cName);
-                } else {
-                    synchronized (iconCache) {
-                        iconCache.put(value.getClass(), icon);
-                    }
+            }
+            icon = lookupIconResource(cName);
+            if (icon == null) {
+                LOG.warn("Can't find icon for " + cName);
+            } else {
+                synchronized (iconCache) {
+                    iconCache.put(value.getClass(), icon);
                 }
             }
-	}
+            
+        }
 	return icon;
     }
 }
