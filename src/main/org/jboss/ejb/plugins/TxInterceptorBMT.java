@@ -49,7 +49,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -242,10 +242,10 @@ extends AbstractInterceptor
 					case Status.STATUS_PREPARED: 
           			
 						// cf ejb1.1 11.6.1
-						Logger.debug("Application error: CMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
+						Logger.debug("Application error: BMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
 					    
 						// the instance interceptor will discard the instance
-						throw new RemoteException("Application error: CMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
+						throw new RemoteException("Application error: BMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
 				}
 			}
 		}
