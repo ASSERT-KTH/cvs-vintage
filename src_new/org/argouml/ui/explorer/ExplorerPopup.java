@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.10 2004/12/08 18:27:38 bobtarling Exp $
+// $Id: ExplorerPopup.java,v 1.11 2004/12/12 10:56:34 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,8 @@ public class ExplorerPopup extends JPopupMenu {
                     ? ((UMLStateDiagram) activeDiagram).getStateMachine()
                     : null;
                 
-                if ((classifierSelected && !dataTypeSelected && !classifierAndRelationShipSelected)
+                if ((classifierSelected && !dataTypeSelected 
+                    && !classifierAndRelationShipSelected)
                         || (packageSelected && selectedItem != projectModel)
                         || (stateVertexSelected && stateDiagramActive
                             && diagramStateMachine == selectedStateMachine)
