@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.MissingResourceException;
 
 import javax.swing.JTable;
 import javax.swing.event.MouseInputListener;
@@ -33,16 +33,7 @@ import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.TreeTable;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
-import org.columba.mail.gui.table.plugins.BooleanRenderer;
-import org.columba.mail.gui.table.plugins.CommonHeaderRenderer;
-import org.columba.mail.gui.table.plugins.DateHeaderRenderer;
-import org.columba.mail.gui.table.plugins.FlaggedRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableCommonRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableDateRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableSizeRenderer;
-import org.columba.mail.gui.table.plugins.PriorityRenderer;
-import org.columba.mail.gui.table.plugins.StatusRenderer;
+import org.columba.mail.gui.table.plugins.*;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelThreadedView;
@@ -66,8 +57,6 @@ public class TableView extends TreeTable {
 	//private ListSelectionModel listSelectionModel;
 
 	private String column;
-
-	//private JTreeTable table;
 
 	private List tableModelPlugins;
 
@@ -95,8 +84,6 @@ public class TableView extends TreeTable {
 
 		tableModelThreadedView = new TableModelThreadedView(headerTableModel);
 
-		//table = new JTreeTable( headerTableModel );
-
 		//setUI(new ColumbaBasicTableUI());
 
 		headerTableModel.registerPlugin(tableModelFilteredView);
@@ -114,37 +101,30 @@ public class TableView extends TreeTable {
 		}
 
 		adjustColumn();
-
 	}
 
 	protected void addMouseListenerToHeaderInTable() {
-
-		final JTable tableView = this;
-
-		tableView.setColumnSelectionAllowed(false);
+		setColumnSelectionAllowed(false);
 
 		MouseAdapter listMouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				TableColumnModel columnModel = tableView.getColumnModel();
+				TableColumnModel columnModel = getColumnModel();
 				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-				int column = tableView.convertColumnIndexToModel(viewColumn);
+				int column = convertColumnIndexToModel(viewColumn);
 
 				if (e.getClickCount() == 1 && column != -1) {
 					getTableModelSorter().setSortingColumn(column);
 					headerTableModel.update();
-
 				}
 			}
 		};
 
-		JTableHeader th = tableView.getTableHeader();
+		JTableHeader th = getTableHeader();
 		th.addMouseListener(listMouseListener);
-
 	}
 
 	public void enableThreadedView(boolean b) {
-
-		if (b == true) {
+		if (b) {
 			//tree.setRootVisible(true);
 
 			TableColumn tc = null;
@@ -177,7 +157,6 @@ public class TableView extends TreeTable {
 					"headerTable->registerRenderer: " + ex.getMessage());
 			}
 		}
-
 	}
 
 	/**
@@ -231,7 +210,6 @@ public class TableView extends TreeTable {
 	}
 
 	protected void initRenderer(boolean b) throws Exception {
-
 		TableItem tableItem =
 			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
 
