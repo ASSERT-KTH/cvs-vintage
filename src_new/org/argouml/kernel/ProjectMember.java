@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.24 2004/09/18 17:13:23 mvw Exp $
+// $Id: ProjectMember.java,v 1.25 2004/12/23 18:27:53 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+
+import org.argouml.persistence.SaveException;
 
 /**
  * A member of the project.

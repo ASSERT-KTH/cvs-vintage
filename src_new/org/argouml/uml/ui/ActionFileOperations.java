@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.3 2004/12/19 20:05:31 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.4 2004/12/23 18:27:53 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,12 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.LastLoadInfo;
-import org.argouml.kernel.OpenException;
-import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectFilePersister;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.persistence.LastLoadInfo;
+import org.argouml.persistence.OpenException;
+import org.argouml.persistence.PersistenceManager;
+import org.argouml.persistence.ProjectFilePersister;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -133,7 +133,7 @@ public abstract class ActionFileOperations extends UMLAction {
      * @return true if the file was successfully opened
      */
     public boolean loadProject(URL url) {
-        PersisterManager pm = new PersisterManager();
+        PersistenceManager pm = new PersistenceManager();
         Project oldProject = ProjectManager.getManager().getCurrentProject();
         boolean success = true;
         

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.5 2004/12/19 20:05:34 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.6 2004/12/23 18:27:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,11 +39,11 @@ import org.argouml.cognitive.ResolvedCritic;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.kernel.SaveException;
 import org.argouml.ocl.OCLExpander;
-import org.argouml.xml.todo.ResolvedCriticXMLHelper;
-import org.argouml.xml.todo.ToDoItemXMLHelper;
-import org.argouml.xml.todo.TodoParser;
+import org.argouml.persistence.ResolvedCriticXMLHelper;
+import org.argouml.persistence.SaveException;
+import org.argouml.persistence.ToDoItemXMLHelper;
+import org.argouml.persistence.TodoParser;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.TemplateReader;
 
@@ -60,7 +60,7 @@ public class ProjectMemberTodoList extends ProjectMember {
     private static final Logger LOG =
         Logger.getLogger(ProjectMemberTodoList.class);
 
-    private static final String TO_DO_TEE = "/org/argouml/xml/dtd/todo.tee";
+    private static final String TO_DO_TEE = "/org/argouml/persistence/todo.tee";
     private static final String TO_DO_EXT = ".todo";
 
     /**

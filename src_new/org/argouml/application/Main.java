@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.106 2004/12/11 18:27:30 mvw Exp $
+// $Id: Main.java,v 1.107 2004/12/23 18:27:54 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,10 +53,10 @@ import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.cognitive.AbstractCognitiveTranslator;
 import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.moduleloader.ModuleLoader2;
+import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
@@ -235,7 +235,7 @@ public class Main {
         URL urlToOpen = null;
 
         if (projectName != null) {
-            projectName = (new PersisterManager()).fixExtension(projectName);
+            projectName = (new PersistenceManager()).fixExtension(projectName);
             urlToOpen = projectUrl(projectName, urlToOpen);
         }
 

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.28 2004/12/11 20:50:30 bobtarling Exp $
+// $Id: ProjectMemberModel.java,v 1.29 2004/12/23 18:27:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,9 @@ import java.io.Writer;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.kernel.SaveException;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.XmiWriter;
+import org.argouml.persistence.SaveException;
 import org.xml.sax.SAXException;
 
 /**

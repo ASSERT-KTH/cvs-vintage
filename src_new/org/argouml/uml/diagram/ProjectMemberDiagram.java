@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.28 2004/11/14 08:14:38 linus Exp $
+// $Id: ProjectMemberDiagram.java,v 1.29 2004/12/23 18:27:55 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import java.io.Writer;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.kernel.SaveException;
+import org.argouml.persistence.SaveException;
 import org.argouml.ui.ArgoDiagram;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.OCLExpander;
@@ -54,7 +54,7 @@ public class ProjectMemberDiagram extends ProjectMember {
 
     private static final String MEMBER_TYPE = "pgml";
     private static final String FILE_EXT = "." + MEMBER_TYPE;
-    private static final String PGML_TEE = "/org/argouml/xml/dtd/PGML.tee";
+    private static final String PGML_TEE = "/org/argouml/persistence/PGML.tee";
 
     ////////////////////////////////////////////////////////////////
     // instance variables

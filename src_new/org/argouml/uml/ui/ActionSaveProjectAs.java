@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.27 2004/12/11 11:22:32 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.28 2004/12/23 18:27:54 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,10 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.AbstractFilePersister;
-import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.persistence.AbstractFilePersister;
+import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.osdep.OsUtil;
 
@@ -96,7 +96,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
     protected File getNewFile() {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
-        PersisterManager pm = new PersisterManager();
+        PersistenceManager pm = new PersistenceManager();
 
         JFileChooser chooser = null;
         URL url = p.getURL();

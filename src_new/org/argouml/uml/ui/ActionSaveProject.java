@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.37 2004/12/11 12:15:49 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.38 2004/12/23 18:27:54 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,10 +37,10 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.PersisterManager;
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectFilePersister;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.persistence.PersistenceManager;
+import org.argouml.persistence.ProjectFilePersister;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 
@@ -118,7 +118,7 @@ public class ActionSaveProject extends ActionFileOperations {
     public boolean trySave(boolean overwrite, File file) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
-	PersisterManager pm = new PersisterManager();
+	PersistenceManager pm = new PersistenceManager();
 
 	try {
 	    if (file.exists() && !overwrite) {
