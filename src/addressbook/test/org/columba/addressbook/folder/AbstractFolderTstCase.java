@@ -29,8 +29,6 @@ import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.folder.FolderTstHelper;
-import org.columba.mail.main.MailMain;
 
 /**
  * @author fdietz

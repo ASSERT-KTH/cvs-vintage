@@ -31,8 +31,8 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
@@ -62,7 +62,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 		conversation = new ConversationController(this);
 
 		try {
-			((ActionPluginHandler) MainInterface.pluginManager
+			((ActionPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.core.action"))
 					.addActionList("org/columba/chat/action/action.xml");
 		} catch (PluginHandlerNotFoundException ex) {

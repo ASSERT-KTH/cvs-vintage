@@ -24,8 +24,8 @@ import org.columba.chat.config.Account;
 import org.columba.chat.config.Config;
 import org.columba.chat.ui.dialog.AccountDialog;
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
@@ -53,6 +53,6 @@ public class ConnectAction extends AbstractColumbaAction {
 		if ((account.getHost() == null) || (account.getId() == null) )
 			new AccountDialog(account);
 
-		MainInterface.processor.addOp(new ConnectCommand(getFrameMediator()));
+		CommandProcessor.getInstance().addOp(new ConnectCommand(getFrameMediator()));
 	}
 }

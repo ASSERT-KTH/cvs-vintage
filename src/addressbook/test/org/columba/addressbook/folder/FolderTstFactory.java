@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.mail.folder.FolderTstHelper;
 
 /**
  * @author fdietz
