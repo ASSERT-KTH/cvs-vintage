@@ -576,6 +576,24 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Test to make sure the database connection works                    -->
+    <!-- ================================================================== -->
+    <target name="test-db-connection" depends="sql">
+        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.username}"
+            password="${scarab.database.password}">
+            <classpath refid="classpath"/>
+        CREATE TABLE scarab_test (
+          scarab_test integer
+        );
+        drop table scarab_test;
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
     <target name="create-db-schema" depends="db-type-check,sql" 
