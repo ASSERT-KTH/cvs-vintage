@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.1 1999/03/11 01:50:12 jrobbins Exp $ -->
+<!-- $Id: argo.tee,v 1.2 1999/04/20 01:53:19 jrobbins Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -39,6 +39,10 @@
 
   <historyfile name="<ocl>self.historyFile</ocl>" />
 
+  <stats>
+    <ocl>self.stats</ocl>
+  </stats>
+
 </argo>
 ]]>
 </template>
@@ -51,6 +55,14 @@
   type="<ocl>self.type</ocl>"
   name="<ocl>self.name</ocl>"
 />
+]]>
+</template>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<template class="uci.uml.ui.UsageStatistic">
+<![CDATA[
+<stat name="<ocl>self.name</ocl>"
+     value="<ocl>self.value</ocl>" />
 ]]>
 </template>
 

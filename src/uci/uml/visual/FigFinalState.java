@@ -24,7 +24,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.10 1999/03/17 03:22:14 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.11 1999/04/20 01:52:59 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -109,6 +109,10 @@ public class FigFinalState extends FigStateVertex {
   /** Final states are fixed size. */
   public boolean isResizable() { return false; }
 
+  public Selection makeSelection() {
+    return new SelectionMoveClarifiers(this);
+  }
+
   public void setLineColor(Color col) { _outCircle.setLineColor(col); }
   public Color getLineColor() { return _outCircle.getLineColor(); }
 
@@ -123,7 +127,7 @@ public class FigFinalState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // Event handlers
-  
+
   public void mouseClicked(MouseEvent me) { }
   public void keyPressed(KeyEvent ke) { }
 

@@ -33,9 +33,9 @@ import uci.uml.Model_Management.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Behavioral_Elements.State_Machines.*;
 
-public class GoStateToOutgoingTrans implements TreeModelPrereqs {
+public class GoStateToInternalTrans implements TreeModelPrereqs {
 
-  public String toString() { return "State->Outgoing Transitions"; }
+  public String toString() { return "State->Internal Transitions"; }
 
   public Object getRoot() {
     System.out.println("getRoot should never be called");
@@ -43,35 +43,42 @@ public class GoStateToOutgoingTrans implements TreeModelPrereqs {
   }
   public void setRoot(Object r) { }
 
-  //needs-more-work: should not include internal transitions
-
   public Object getChild(Object parent, int index) {
-    if (parent instanceof StateVertex) {
-      Vector outgoing = ((StateVertex)parent).getOutgoing();
-      return (outgoing == null) ? null : outgoing.elementAt(index);
-    }
-    System.out.println("getChild should never be get here GoStateToOutgoingTrans");
-    return null;
+    Vector children = getChildren(parent);
+    return (children == null) ? null : children.elementAt(index);
   }
 
   public int getChildCount(Object parent) {
-    if (parent instanceof StateVertex) {
-      Vector outgoing = ((StateVertex)parent).getOutgoing();
-      return (outgoing == null) ? 0 : outgoing.size();
-    }
-    return 0;
+    Vector children = getChildren(parent);
+    return (children == null) ? 0 : children.size();
   }
 
   public int getIndexOfChild(Object parent, Object child) {
-    if (parent instanceof StateVertex) {
-      Vector outgoing = ((StateVertex)parent).getOutgoing();
-      return (outgoing == null) ? -1 : outgoing.indexOf(child);
-    }
-    return -1;
+    Vector children = getChildren(parent);
+    return (children == null) ? -1 : children.indexOf(child);
   }
 
   public boolean isLeaf(Object node) {
     return !(node instanceof StateVertex && getChildCount(node) > 0);
+  }
+
+  public Vector getChildren(Object parent) {
+    if (!(parent instanceof State)) return null;
+    State st = (State) parent;
+    //return st.getInternalTransition();
+
+    Vector in = st.getIncoming();
+    Vector out = st.getOutgoing();
+
+    if (in == null || in.size() == 0) return null;
+    if (out == null || out.size() == 0) return null;
+    Vector children = new Vector();
+    int size = in.size();
+    for (int i = 0; i < size; i++) {
+      Object t = in.elementAt(i);
+      if (out.contains(t)) children.addElement(t);
+    }
+    return children;
   }
 
   public void valueForPathChanged(TreePath path, Object newValue) { }
@@ -90,4 +97,4 @@ public class GoStateToOutgoingTrans implements TreeModelPrereqs {
   }
 
 
-} /* end class GoStateToOutgoingTrans */
+} /* end class GoStateToInternalTrans */

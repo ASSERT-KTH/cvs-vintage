@@ -24,25 +24,35 @@
 
 
 
-package uci.uml.ui;
+// File: SelectionNodeClarifiers.java
+// Classes: SelectionNodeClarifiers
+// Original Author: jrobbins@ics.uci.edu
+// $Id: SelectionNodeClarifiers.java,v 1.1 1999/04/20 01:53:07 jrobbins Exp $
 
-import java.awt.*;
-import java.awt.event.*;
+package uci.uml.visual;
+
 import java.util.*;
-import uci.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import java.awt.*;
 
-public class TabTable extends TabProps {
+import uci.gef.*;
+
+
+public class SelectionNodeClarifiers extends SelectionResize {
 
   ////////////////////////////////////////////////////////////////
-  // constructor
-  public TabTable() {
-    super("Table", "table.TablePanel");
+  // constructors
+
+  /** Construct a new SelectionNodeClarifiers for the given Fig */
+  public SelectionNodeClarifiers(Fig f) { super(f); }
+
+  /** Paint the handles at the four corners and midway along each edge
+   * of the bounding box.  */
+  public void paint(Graphics g) {
+    ((FigNodeModelElement)_content).paintClarifiers(g);
+    super.paint(g);
   }
 
-  protected void initPanels() {
-    // dont preload any table panels
-  }
-} /* end class TabTable */
+  
+  
+} /* end class SelectionNodeClarifiers */
+

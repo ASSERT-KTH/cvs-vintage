@@ -26,7 +26,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.32 1999/03/20 04:36:57 jrobbins Exp $
+// $Id: FigClass.java,v 1.33 1999/04/20 01:52:57 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -114,6 +114,10 @@ public class FigClass extends FigNodeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // accessors
+
+  public Selection makeSelection() {
+    return new SelectionClass(this);
+  }
 
   public void setOwner(Object node) {
     super.setOwner(node);
@@ -235,6 +239,14 @@ public class FigClass extends FigNodeModelElement {
     return new Dimension(w, h);
   }
 
+  public void translate(int dx, int dy) {
+    super.translate(dx, dy);
+    Editor ce = Globals.curEditor();
+    Selection sel = ce.getSelectionManager().findSelectionFor(this);
+    if (sel instanceof SelectionClass)
+      ((SelectionClass)sel).hideButtons();
+  }
+
   /* Override setBounds to keep shapes looking right */
   // modified by Eric Lefevre 13 Mar 1999
   public void setBounds(int x, int y, int w, int h) {
@@ -288,6 +300,14 @@ public class FigClass extends FigNodeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // user interaction methods
+
+  public void mousePressed(MouseEvent me) {
+    super.mousePressed(me);
+    Editor ce = Globals.curEditor();
+    Selection sel = ce.getSelectionManager().findSelectionFor(this);
+    if (sel instanceof SelectionClass)
+      ((SelectionClass)sel).hideButtons();
+  }
 
   public void setEnclosingFig(Fig encloser) {
     super.setEnclosingFig(encloser);
@@ -367,5 +387,3 @@ public class FigClass extends FigNodeModelElement {
   }
 
 } /* end class FigClass */
-
-

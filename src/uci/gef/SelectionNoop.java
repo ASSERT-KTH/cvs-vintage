@@ -27,7 +27,7 @@
 // File: SelectionNoop.java
 // Classes: SelectionNoop
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionNoop.java,v 1.7 1999/02/19 22:19:35 jrobbins Exp $
+// $Id: SelectionNoop.java,v 1.8 1999/04/20 01:52:00 jrobbins Exp $
 
 package uci.gef;
 
@@ -69,7 +69,10 @@ public class SelectionNoop extends Selection {
   }
 
   /** Returns -2 as a special code to indicate that the Fig cannot be moved. */
-  public int hitHandle(Rectangle r) { return -2; }
+  public void hitHandle(Rectangle r, Handle h) {
+    h.index = -2;
+    h.instructions = "Object cannot be moved or resized";
+  }
 
 
   static final long serialVersionUID = 5762844795338457292L;

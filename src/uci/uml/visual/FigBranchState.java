@@ -24,7 +24,7 @@
 // File: FigBranchState.java
 // Classes: FigBranchState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigBranchState.java,v 1.7 1999/03/17 03:22:09 jrobbins Exp $
+// $Id: FigBranchState.java,v 1.8 1999/04/20 01:52:56 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -111,6 +111,10 @@ public class FigBranchState extends FigStateVertex {
   /** Initial states are fixed size. */
   public boolean isResizable() { return false; }
 
+  public Selection makeSelection() {
+    return new SelectionMoveClarifiers(this);
+  }
+
   public void setLineColor(Color col) { _head.setLineColor(col); }
   public Color getLineColor() { return _head.getLineColor(); }
 
@@ -125,7 +129,7 @@ public class FigBranchState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // Event handlers
-  
+
   public void mouseClicked(MouseEvent me) { }
   public void keyPressed(KeyEvent ke) { }
 

@@ -21,28 +21,19 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-
 package uci.uml.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import uci.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-public class TabTable extends TabProps {
+public class UsageStatistic {
+  ////////////////////////////////////////////////////////////////
+  // instance variables
+  public String name;
+  public int value;
 
   ////////////////////////////////////////////////////////////////
   // constructor
-  public TabTable() {
-    super("Table", "table.TablePanel");
+  public UsageStatistic(String n, int v) {
+    name = n;
+    value = v;
   }
 
-  protected void initPanels() {
-    // dont preload any table panels
-  }
-} /* end class TabTable */
+} /* end class UsageStatistic */

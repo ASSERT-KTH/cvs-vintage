@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.12 1999/03/17 03:22:06 jrobbins Exp $
+// $Id: FigActor.java,v 1.13 1999/04/20 01:52:55 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -123,6 +123,10 @@ public class FigActor extends FigNodeModelElement {
 
   /** Returns true if this Fig can be resized by the user. */
   public boolean isResizable() { return false; }
+
+  public Selection makeSelection() {
+    return new SelectionMoveClarifiers(this);
+  }
 
   public void setLineColor(Color col) {
     _head.setLineColor(col);

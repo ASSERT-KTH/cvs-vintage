@@ -27,7 +27,7 @@
 // File: SelectionRotate.java
 // Classes: SelectionRotate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionRotate.java,v 1.6 1999/02/19 22:19:39 jrobbins Exp $
+// $Id: SelectionRotate.java,v 1.7 1999/04/20 01:52:02 jrobbins Exp $
 
 package uci.gef;
 
@@ -63,7 +63,10 @@ public class SelectionRotate extends Selection {
 
   /** Returns -2 to indicate that the user did not click on a handle
    *  or the body of the Fig. Needs-more-work. */
-  public int hitHandle(Rectangle r) { return -2; }
+  public void hitHandle(Rectangle r, Handle h) {
+    h.index = -2;
+    h.instructions = "Object cannot be rotated";
+  }
 
   static final long serialVersionUID = -1661014460931572067L;
 } /* end class SelectionRotate */

@@ -27,7 +27,7 @@
 // File: SelectionMove.java
 // Classes: SelectionMove
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionMove.java,v 1.7 1999/02/19 22:19:34 jrobbins Exp $
+// $Id: SelectionMove.java,v 1.8 1999/04/20 01:51:59 jrobbins Exp $
 
 package uci.gef;
 
@@ -72,7 +72,10 @@ public class SelectionMove extends Selection {
 
   /** Return -1 as a special code to indicate that the user clicked in
    *  the body of the Fig and wants to drag it around. */
-  public int hitHandle(Rectangle r) { return -1; }
+  public void hitHandle(Rectangle r, Handle h) {
+    h.index = -1;
+    h.instructions = "Move Object(s)";
+  }
 
 
   static final long serialVersionUID = -3988412251995936654L;

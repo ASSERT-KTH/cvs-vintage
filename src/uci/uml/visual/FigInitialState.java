@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.10 1999/03/17 03:22:16 jrobbins Exp $
+// $Id: FigInitialState.java,v 1.11 1999/04/20 01:53:00 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -103,6 +103,10 @@ public class FigInitialState extends FigStateVertex {
 
   /** Initial states are fixed size. */
   public boolean isResizable() { return false; }
+
+  public Selection makeSelection() {
+    return new SelectionMoveClarifiers(this);
+  }
 
   public void setLineColor(Color col) { _head.setLineColor(col); }
   public Color getLineColor() { return _head.getLineColor(); }

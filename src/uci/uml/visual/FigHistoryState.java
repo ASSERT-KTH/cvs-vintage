@@ -24,7 +24,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigHistoryState.java,v 1.4 1999/03/17 03:22:15 jrobbins Exp $
+// $Id: FigHistoryState.java,v 1.5 1999/04/20 01:53:00 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -119,6 +119,10 @@ public class FigHistoryState extends FigStateVertex {
   /** History states are fixed size. */
   public boolean isResizable() { return false; }
 
+  public Selection makeSelection() {
+    return new SelectionMoveClarifiers(this);
+  }
+
   public void setLineColor(Color col) { _head.setLineColor(col); }
   public Color getLineColor() { return _head.getLineColor(); }
 
@@ -133,7 +137,7 @@ public class FigHistoryState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // Event handlers
-  
+
   public void mouseClicked(MouseEvent me) { }
   public void keyPressed(KeyEvent ke) { }
 
