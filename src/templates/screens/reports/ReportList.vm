@@ -34,7 +34,7 @@ Click on "Availability" to execute report.
 <td>Personal profile</a></td>
 <td>
  #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
-<a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+<a href="mailto:$createdUser.Email">$createdUser.Name</a></td>
 </tr>
 #end
 
