@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LocaleToCharsetMap.java,v 1.1 1999/10/09 00:30:14 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:14 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -70,7 +66,7 @@
  *
  */
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.util;
 
 import java.util.*;
 

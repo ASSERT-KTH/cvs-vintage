@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.4 1999/11/02 17:37:19 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/02 17:37:19 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,9 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.util;
 
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
