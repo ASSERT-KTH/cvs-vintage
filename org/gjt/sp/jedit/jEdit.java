@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.1 2001/09/02 05:37:23 spestov Exp $
+ * @version $Id: jEdit.java,v 1.2 2001/09/03 05:58:06 spestov Exp $
  */
 public class jEdit
 {
@@ -61,7 +61,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.00.01.00";
+		return "03.02.99.02";
 	}
 
 	/**
@@ -386,7 +386,7 @@ public class jEdit
 
 				// show tip of the day
 				if(jEdit.getBooleanProperty("firstTime"))
-					new HelpViewer("welcome.html");
+					new HelpViewer("jeditresource:/doc/welcome.html");
 				else if(jEdit.getBooleanProperty("tip.show"))
 					new TipOfTheDay(view);
 

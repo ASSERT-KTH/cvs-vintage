@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * to the standard error stream. This class can also optionally redirect
  * standard output and error to the log.
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.1 2001/09/02 05:38:25 spestov Exp $
+ * @version $Id: Log.java,v 1.2 2001/09/03 05:58:06 spestov Exp $
  */
 public class Log
 {
@@ -105,7 +105,8 @@ public class Log
 		String[] props = {
 			"java.version", "java.vendor",
 			"java.compiler", "os.name", "os.version",
-			"os.arch", "user.home", "java.class.path",
+			"os.arch", "user.home", "java.home",
+			"java.class.path",
 			};
 		for(int i = 0; i < props.length; i++)
 		{
