@@ -99,7 +99,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.22 2003/07/29 04:49:17 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.23 2003/07/29 17:29:25 dlr Exp $
  */
 public class ImportIssues
     implements ErrorHandler
@@ -445,6 +445,8 @@ public class ImportIssues
                         importErrors = new ArrayList(1);
                     }
 
+                    // FIXME: This is a bogus error message to report
+                    // for an unrecognized code.
                     Object[] args = { si.getModule().getName(),
                                       currentModule.getName() };
                     String error = Localization.format
