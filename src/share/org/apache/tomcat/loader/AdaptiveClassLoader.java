@@ -118,7 +118,7 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000/06/15 00:26:47 $
+ * @version $Revision: 1.8 $ $Date: 2000/06/15 18:50:43 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -263,10 +263,10 @@ public class AdaptiveClassLoader extends ClassLoader {
         }
 
        // Install the SecurityManager if not already installed
-       if( generationCounter == 0 && sm == null ) {
-           sm = System.getSecurityManager();
-	   //	   System.out.println("XXX AdaptiveClassLoader: " + sm );
-       }
+	//        if( generationCounter == 0 && sm == null ) {
+	//            sm = System.getSecurityManager();
+	// 	   //	   System.out.println("XXX AdaptiveClassLoader: " + sm );
+	//        }
 
         // Store the class repository for use
         this.repository = classRepository;
@@ -319,8 +319,11 @@ public class AdaptiveClassLoader extends ClassLoader {
      * @param className The name of the class to check for modification.
      */
     public synchronized boolean shouldReload(String classname) {
+	return checkExpired( classname );
+    }
 
-        ClassCacheEntry entry = (ClassCacheEntry) cache.get(classname);
+    protected boolean checkExpired(String classname ) {
+	ClassCacheEntry entry = (ClassCacheEntry) cache.get(classname);
 
         if (entry == null) {
             // class wasn't even loaded

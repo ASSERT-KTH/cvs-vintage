@@ -83,28 +83,58 @@ import org.apache.tomcat.logging.*;
  * @author costin@dnt.ro
  */
 public class PolicyInterceptor extends BaseInterceptor {
-
+    String securityManagerClass="java.lang.SecurityManager";
+    String policyFile=null;
+    
     public PolicyInterceptor() {
     }
 
+    public void setSecurityManagerClass(String cls) {
+	securityManagerClass=cls;
+    }
+
+    public void setPolicyFile( String pf) {
+	policyFile=pf;
+    }
+    
+    /** Set the security manager, so that policy will be used
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+	if( System.getSecurityManager() != null ) return;
+	try {
+	    Class c=Class.forName(securityManagerClass);
+	    Object o=c.newInstance();
+	    System.setSecurityManager((SecurityManager)o);
+	    // 	    System.out.println("Security Manager set to " +
+	    // 			       securityManagerClass);
+	} catch( ClassNotFoundException ex ) {
+	    System.out.println("SecurityManager Class not found: " +
+			       securityManagerClass);
+	} catch( Exception ex ) {
+            System.out.println("SecurityManager Class could not be loaded: " +
+			       securityManagerClass);
+	}
+    }
+
+    
     /** Add a default set of permissions to the context
      */
-    protected void addDefaultPermissions( Context context, Permissions p ) {
-        String base = context.getDocBase();
-
+    protected void addDefaultPermissions( Context context,String base,
+					  Permissions p )
+    {
 	// Add default read "-" FilePermission for docBase, classes, lib
 	// Default per context permissions
-	FilePermission fp = new FilePermission(base + "-", "read");
+	FilePermission fp = new FilePermission(base + "/-", "read");
 	if( fp != null )
 	    p.add((Permission)fp);
-
+	
     }
     
     public void contextInit( Context context)
 	throws TomcatException
     {
-	SecurityManager sm = System.getSecurityManager();
-	if( sm==null ) return;
+	//	SecurityManager sm = System.getSecurityManager();
+	//	if( sm==null ) return;
 
 	ContextManager cm = context.getContextManager();
 	String base = context.getDocBase();
@@ -132,10 +162,11 @@ public class PolicyInterceptor extends BaseInterceptor {
 		}
 	    }
 	    
-	    addDefaultPermissions( context, p);
+	    addDefaultPermissions( context, dir.getAbsolutePath(), p);
 	
 	    /** Add whatever permissions are specified in the policy file
 	     */
+	    Policy.getPolicy().refresh();
 	    PermissionCollection pFileP=Policy.getPolicy().getPermissions(cs);
 	    if( pFileP!= null ) {
 		Enumeration enum=pFileP.elements();

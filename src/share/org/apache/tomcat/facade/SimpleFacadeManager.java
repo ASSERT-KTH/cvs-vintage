@@ -99,24 +99,24 @@ public final class SimpleFacadeManager implements FacadeManager {
     }
 
     public ServletContext createServletContextFacade(Context ctx) {
-	if( ctx != this.ctx ) return null; // throw
+	//if( ctx != this.ctx ) return null; // throw
 	return new ServletContextFacade(ctx.getContextManager() , ctx);
     }
 
     public HttpServletRequest createHttpServletRequestFacade(Request req) {
 	Context reqCtx=req.getContext();
-	if( reqCtx != ctx && reqCtx != null ) return null; // throw
+	//	if( reqCtx != ctx && reqCtx != null ) return null; // throw
 	return new HttpServletRequestFacade(req);
     }
 
     public HttpServletResponse createHttpServletResponseFacade(Response res) {
 	Context resCtx=res.getRequest().getContext();
-	if( resCtx != ctx && resCtx != null ) return null; // throw
+	//if( resCtx != ctx && resCtx != null ) return null; // throw
 	return new HttpServletResponseFacade(res);
     }
 
     public void recycle( Request rreq ) {
-	if( rreq.getContext() != ctx ) return; // throw
+	//if( rreq.getContext() != ctx ) return; // throw
 	
 	HttpServletRequest req=rreq.getFacade();
 	if( ! (req instanceof HttpServletRequestFacade))
@@ -146,24 +146,24 @@ public final class SimpleFacadeManager implements FacadeManager {
 	    // A user can't create HttpServletRequest objects ( I hope )
 	    return rreq;
 	}
-	if( rreq.getContext() != ctx ) {
-	    System.out.println("XXX " + ctx.getPath() + " " + rreq.getContext() + " " + rreq);
-	    ctx.log( "Attempt to get the real request from wrong context");
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	    return null;
-	}
+	// 	if( rreq.getContext() != ctx ) {
+	// 	    System.out.println("XXX " + ctx.getPath() + " " + rreq.getContext() + " " + rreq);
+	// 	    ctx.log( "Attempt to get the real request from wrong context");
+	// 	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	// 	    return null;
+	// 	}
 	return rreq;
     }
 
     public Context getRealContext( ServletContext sctx ) {
 	Context realSctx=((ServletContextFacade)sctx).getRealContext();
-	if( realSctx != ctx ) return null;
+	//	if( realSctx != ctx ) return null;
 	return realSctx;
     }
 
 
     public ServletConfig createServletConfig(ServletWrapper sw) {
-	if( sw.getContext() != ctx ) return null;
+	//	if( sw.getContext() != ctx ) return null;
 	return new ServletConfigImpl(sw);
     }
 

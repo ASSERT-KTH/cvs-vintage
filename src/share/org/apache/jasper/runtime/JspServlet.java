@@ -254,6 +254,8 @@ public class JspServlet extends HttpServlet {
 
 	    loader.setParentClassLoader(parentClassLoader);
 	    loader.setOptions(options);
+	    Object pd=context.getAttribute("org.apache.tomcat.protection_domain");
+	    loader.setProtectionDomain( pd );
 	}
 	if (firstTime) {
 	    firstTime = false;
@@ -463,9 +465,10 @@ public class JspServlet extends HttpServlet {
         } catch (JasperException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new JasperException(Constants.getString("jsp.error.unable.compile"),
+	    ex.printStackTrace();
+	    throw new JasperException(Constants.getString("jsp.error.unable.compile"),
                                       ex);
-        }
+	}
 
 	// Reload only if it's outdated
 	if((jspClass == null) || outDated) {

@@ -81,12 +81,26 @@ public class AdaptiveClassLoader12 extends AdaptiveClassLoader {
 
     protected Class doDefineClass(String name, byte classData[], Object pd )
     {
-	if( sm != null ) {
-	    return defineClass(name, classData, 0, classData.length,
-			       (ProtectionDomain)pd);
-	} else {
-	    return  defineClass(name, classData, 0, classData.length);
-	}
+	//	System.out.println("XXX defineClass12 " + pd );
+	// 	if( sm != null ) {
+	return defineClass(name, classData, 0, classData.length,
+			   (ProtectionDomain)pd);
+	// } else {
+	// 	    return  defineClass(name, classData, 0, classData.length);
+	// 	}
+    }
+
+    public boolean shouldReload( String classname ) {
+	final String classnameF=classname;
+	Boolean b = (Boolean)AccessController.doPrivileged(new
+	    PrivilegedAction() {
+		public Object run() 
+		{
+		    return new Boolean( checkExpired( classnameF ));
+		} 
+	    });
+	return b.booleanValue();
+
     }
 
 }

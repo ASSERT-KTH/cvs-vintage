@@ -376,7 +376,7 @@ public class Context {
 		String cp= getServletLoader().getClassPath();
 		return cp;
 	    }
-	    if( name.equals( Constants.ATTRIB_JSP_ProtectionDomain) ) {
+	    if( name.equals( "org.apache.tomcat.protection_domain") ) {
 		return getProtectionDomain();
 	    }
 	    if(name.equals("org.apache.tomcat.classloader")) {

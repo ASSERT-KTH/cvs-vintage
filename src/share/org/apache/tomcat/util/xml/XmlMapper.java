@@ -437,6 +437,7 @@ public class XmlMapper
 	    if( is!= null )
 		return new InputSource(is);
 	    System.out.println("XXX resource not found !!! " + dtd);
+	    System.out.println(this.getClass().getClassLoader().getClass().getName());
 	}
 	
 	log("Can't find resource for entity: " + publicId + " --> " + systemId + " \"" + dtd +"\"");

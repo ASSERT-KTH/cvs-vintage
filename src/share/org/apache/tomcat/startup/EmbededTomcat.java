@@ -50,7 +50,7 @@ public class EmbededTomcat { // extends WebService
     String workDir;
     
     // configurable properties
-    int debug=0;
+    int debug=21;
     
     public EmbededTomcat() {
     }

@@ -100,7 +100,7 @@ public class JspLoader12 extends JspLoader {
     protected  Class defClass(String className, byte[] classData) {
         // If a SecurityManager is being used, set the ProtectionDomain
         // for this clas when it is defined.
-        Object pd = options.getProtectionDomain();
+	//	System.out.println("JspLoader12: " + className + " " + pd );
         if( pd != null ) {
 	    return defineClass(className, classData, 0,
 			       classData.length,

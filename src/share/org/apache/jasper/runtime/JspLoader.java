@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.10 2000/06/15 00:26:43 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/06/15 00:26:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.11 2000/06/15 18:50:06 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/06/15 18:50:06 $
  *
  * ====================================================================
  * 
@@ -105,7 +105,7 @@ import javax.servlet.http.*;
 public class JspLoader extends ClassLoader {
     ClassLoader parent;
     Options options;
-    
+    Object pd;
 
     /*
      * This should be factoried out
@@ -123,6 +123,10 @@ public class JspLoader extends ClassLoader {
 	this.options = options;
     }
 
+    public void setProtectionDomain( Object pd ) {
+	this.pd=pd;
+    }
+    
     protected synchronized Class loadClass(String name, boolean resolve)
 	throws ClassNotFoundException
     {
