@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.81 2001/12/27 22:37:48 dr Exp $
+ * @version $Id: ScarabModule.java,v 1.82 2002/01/10 01:08:15 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -111,30 +111,55 @@ public class ScarabModule
      */
     public ScarabUser[] getUsers(String permission)
     {
+        List perms = new ArrayList(1);
+        perms.add(permission);
+        return getUsers(perms);
+    }
+
+    /**
+     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(List)
+     */
+    public ScarabUser[] getUsers(List permissions)
+    {
+        ScarabUser[] scarabUsers = null;
         Criteria crit = new Criteria();
         crit.setDistinct();
-        crit.add(TurbinePermissionPeer.NAME, permission);
-        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
-                     TurbineRolePermissionPeer.PERMISSION_ID);
-        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
-                     TurbineUserGroupRolePeer.ROLE_ID);
-        crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
-                 ((Persistent)this).getPrimaryKey());
-        crit.addJoin(ScarabUserImplPeer.USER_ID, 
-                     TurbineUserGroupRolePeer.USER_ID);
-        ScarabUser[] scarabUsers = null;
-        try
+        if ( permissions.size() == 1 ) 
         {
-            User[] users = TurbineSecurity.getUsers(crit);
-            scarabUsers = new ScarabUser[users.length];
-            for ( int i=scarabUsers.length-1; i>=0; i--) 
+            crit.add(TurbinePermissionPeer.NAME, permissions.get(0));
+        }
+        else if (permissions.size() > 1)
+        {
+            crit.addIn(TurbinePermissionPeer.NAME, permissions);
+        }      
+
+        if (permissions.size() >= 1)
+        {
+            crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                         TurbineRolePermissionPeer.PERMISSION_ID);
+            crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                         TurbineUserGroupRolePeer.ROLE_ID);
+            crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
+                     ((Persistent)this).getPrimaryKey());
+            crit.addJoin(ScarabUserImplPeer.USER_ID, 
+                         TurbineUserGroupRolePeer.USER_ID);
+            try
             {
-                scarabUsers[i] = (ScarabUser)users[i];
+                User[] users = TurbineSecurity.getUsers(crit);
+                scarabUsers = new ScarabUser[users.length];
+                for ( int i=scarabUsers.length-1; i>=0; i--) 
+                {
+                    scarabUsers[i] = (ScarabUser)users[i];
+                }
+            }
+            catch (Exception e)
+            {
+                Log.error("An exception prevented retrieving any users", e);
             }
         }
-        catch (Exception e)
+        else 
         {
-            Log.error("An exception prevented retrieving any users", e);
+            scarabUsers = new ScarabUser[0];
         }
         return scarabUsers;
     }
