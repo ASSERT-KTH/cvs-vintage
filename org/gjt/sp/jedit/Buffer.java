@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.178 2003/05/30 00:49:52 spestov Exp $
+ * @version $Id: Buffer.java,v 1.179 2003/06/03 21:48:20 spestov Exp $
  */
 public class Buffer
 {
@@ -3878,7 +3878,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 				if(!getPath().equals(oldPath))
 				{
-					jEdit.updatePosition(Buffer.this);
+					jEdit.updatePosition(oldPath,Buffer.this);
 					setMode();
 				}
 				else
