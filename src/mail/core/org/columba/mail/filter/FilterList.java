@@ -26,6 +26,13 @@ public class FilterList extends DefaultItem {
 	public FilterList(XmlElement root) {
 		super(root);
 	}
+    
+    /**
+     * Creates an empty filter list.
+     */
+    public FilterList() {
+        super(new XmlElement("filterlist"));
+    }
 
 	/*
 	public FilterList( Folder folder )
@@ -124,6 +131,18 @@ public class FilterList extends DefaultItem {
 		
 		//list.add(f);
 	}
+    
+    /**
+     * Adds all filters in the supplied list to this filter list.
+     * @param list a list containing other filters to add to this list.
+     */
+    public void addAll(FilterList list) {
+        int size = list.count();
+        for (int i = 0; i < size; i++) {
+            Filter newFilter = list.get(i);
+            add(newFilter);
+        }
+    }
 	
 	/**
 	 * Remove the <code>Filter</code> from the list.
@@ -212,9 +231,7 @@ public class FilterList extends DefaultItem {
 	}
 
 	public int count() {
-
 		return getChildCount();
-
 	}
 	
 	/**
@@ -234,5 +251,4 @@ public class FilterList extends DefaultItem {
 		getRoot().removeElement(index);
 
 	}
-
 }
