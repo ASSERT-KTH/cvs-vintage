@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.40 2002/07/12 18:28:46 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.41 2002/07/12 21:53:34 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -295,17 +295,19 @@ public abstract class AbstractScarabUser
     public List getMoveToModules(Module currentModule)
         throws Exception
     {
-        List copyToModules = new ArrayList();
+        List moveToModules = new ArrayList();
         Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
         for (int i=0; i<userModules.length; i++)
         {
              Module module = (Module)userModules[i];
-             if (!module.isGlobalModule())
+             if (!module.getModuleId().equals(currentModule.getModuleId())
+                 && !module.isGlobalModule())
+             if (!module.getModuleId().toString().equals("0"))
              {
-                 copyToModules.add(module);
+                 moveToModules.add(module);
              }
          }
-         return copyToModules;
+         return moveToModules;
     }
 
     /**
