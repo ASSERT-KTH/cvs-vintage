@@ -151,7 +151,7 @@ public abstract class MessageFolder extends AbstractFolder implements
     public MessageFolder(String name, String type, String path) {
         super(name, type);
 
-        String dir = path + getUid();
+        String dir = path + System.getProperty("file.separator")+getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
