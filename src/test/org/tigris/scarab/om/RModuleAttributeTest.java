@@ -53,7 +53,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleAttributeTest.java,v 1.3 2002/11/04 23:41:56 elicia Exp $
+ * @version $Id: RModuleAttributeTest.java,v 1.4 2003/06/24 19:01:48 jmcnally Exp $
  */
 public class RModuleAttributeTest extends BaseTestCase
 {
@@ -107,7 +107,7 @@ public class RModuleAttributeTest extends BaseTestCase
     private void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
-        rma.delete(getUser1());
+        rma.delete();
         assertEquals(11,getModule().getRModuleAttributes(getDefaultIssueType()).size());
     }
 }
