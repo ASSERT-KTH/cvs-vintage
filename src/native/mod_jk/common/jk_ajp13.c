@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                           *
+ * Version:     $Revision: 1.6 $                                           *
  ***************************************************************************/
 
 
@@ -99,6 +99,7 @@
  *                        | "LOCK"
  *                        | "UNLOCK"
  *                        | "ACL"
+ *                        | "REPORT"
  * 
  */
 #define SC_M_OPTIONS            (unsigned char)1
@@ -116,6 +117,7 @@
 #define SC_M_LOCK               (unsigned char)13
 #define SC_M_UNLOCK             (unsigned char)14
 #define SC_M_ACL		(unsigned char)15
+#define SC_M_REPORT             (unsigned char)16
 
 
 /*
@@ -243,6 +245,8 @@ int sc_for_req_method(const char *method,
 	*sc = SC_M_UNLOCK;
     } else if(0 == strcmp(method, "ACL")) {
 	*sc = SC_M_ACL;
+    } else if(0 == strcmp(method, "REPORT")) {
+	*sc = SC_M_REPORT;
     } else {
         rc = JK_FALSE;
     }
