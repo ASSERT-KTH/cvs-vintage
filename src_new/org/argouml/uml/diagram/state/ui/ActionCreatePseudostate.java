@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.11 2004/06/24 06:25:42 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.12 2004/08/02 11:34:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,21 @@ import java.util.Hashtable;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.model.ModelFacade;
 
+/**
+ * An Action to create a Pseudostate of some kind
+ *
+ */
 public class ActionCreatePseudostate extends CmdCreateNode {
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
     /** Construct a new Cmd with the given classes for the NetNode
-     *  and its FigNode. */
+     *  and its FigNode. 
+     * 
+     * @param kind the pseudostatekind
+     * @param name the name of this kind of pseudostate
+     */
     public ActionCreatePseudostate(Object kind, String name) {
 	super(new Hashtable(), name);
         
@@ -55,8 +63,11 @@ public class ActionCreatePseudostate extends CmdCreateNode {
     // Cmd API
 
     /** Actually instanciate the NetNode and FigNode objects and
-     * set the global next mode to ModePlace */
-    // TODO: should call super, reduce code volume!
+     * set the global next mode to ModePlace 
+     * TODO: should call super, reduce code volume!
+     *
+     * @see org.tigris.gef.graph.GraphFactory#makeNode()
+     */
     public Object makeNode() {
 	Object newNode = super.makeNode();
 	Object kind = _args.get("kind");
