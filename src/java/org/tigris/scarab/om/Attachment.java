@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.51 2002/12/20 00:07:35 jon Exp $
+ * @version $Id: Attachment.java,v 1.52 2003/01/29 01:09:23 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -387,6 +387,12 @@ public class Attachment
     public void copyFileTo(String path)
         throws Exception
     {
+        copyFileFromTo(getFullPath(), path);
+    }
+
+    public void copyFileFromTo(String from, String path)
+        throws Exception
+    {
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         try
@@ -397,7 +403,7 @@ public class Attachment
                 f.getParentFile().mkdirs();
             }
             
-            in = new BufferedInputStream(new FileInputStream(getFullPath()));
+            in = new BufferedInputStream(new FileInputStream(from));
             out = new BufferedOutputStream(new FileOutputStream(f));
             byte[] bytes = new byte[2048];
             int s = 0;
