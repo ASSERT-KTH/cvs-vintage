@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.6 2000/03/01 20:55:06 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/03/01 20:55:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.7 2000/05/12 01:28:15 jon Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/12 01:28:15 $
  *
  * ====================================================================
  *
@@ -93,11 +93,11 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.6 $ $Date: 2000/03/01 20:55:06 $
+ * @version $Revision: 1.7 $ $Date: 2000/05/12 01:28:15 $
  */
 
 final class StandardSession
-    implements HttpSession, Session {
+    implements HttpSession, Session, Serializable {
 
 
     // ----------------------------------------------------------- Constructors
