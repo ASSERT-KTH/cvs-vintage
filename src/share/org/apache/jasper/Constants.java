@@ -61,9 +61,11 @@ import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
 import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.res.StringManager;
  
 /**
- * Some constants and other global data that are used by the compiler and the runtime.
+ * Some constants and other global data that are used by the compiler
+ * and the runtime.
  *
  * @author Anil K. Vijendran
  * @author Harish Prabandham
@@ -186,15 +188,11 @@ public class Constants {
     /**
      * This is where all our error messages and such are stored. 
      */
-    private static ResourceBundle resources;
+    private static StringManager resources;
     
     private static void initResources() {
-	try {
-	    resources =
-		ResourceBundle.getBundle("org.apache.jasper.resources.messages");
-	} catch (MissingResourceException e) {
-	    throw new Error("Fatal Error: missing resource bundle: "+e.getClassName());
-	}
+        resources = StringManager.getManager(
+                    "org.apache.jasper.resources");
     }
 
     /**
@@ -209,34 +207,10 @@ public class Constants {
      * Format the string that is looked up using "key" using "args". 
      */
     public static final String getString(String key, Object[] args) {
-        if (resources == null) 
+        if(resources==null){
             initResources();
-        
-        try {
-            String msg = resources.getString(key);
-            if (args == null)
-                return msg;
-	    if( msg==null ) {
-		//System.out.println("Can't find resource for " + key );
-		return key;
-	    }
-            MessageFormat form = new MessageFormat(msg);
-	    // JDK1.1 will throw NullPointer if args[0] == null
-	    // JDK1.2+ will work fine.
-	    
-	    //System.out.println(" XXX " + msg + " "+key + " " +args.length );
-	    if( args.length >0 ) {
-		for( int i=0; i< args.length; i++ ) {
-		    if( args[i]==null ) {
-			//System.out.println("Null argument " +msg + " " + key);
-			return msg;
-		    }
-		}
-	    }
-            return form.format(args);
-        } catch (MissingResourceException ignore) {
-            throw new Error("Fatal Error: missing resource: "+ignore.getClassName());
         }
+        return resources.getString(key,args);
     }
 
     /** 
