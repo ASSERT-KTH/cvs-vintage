@@ -1,22 +1,22 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.9 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.10 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.logging.Logger;
-import org.jboss.tm.TxManager;
-import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxy;
+import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.tm.TxManager;
 
 import javax.ejb.EJBException;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
 import javax.ejb.TimerService;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +60,7 @@ public class TimerServiceImpl implements TimerService
       try
       {
          InitialContext iniCtx = new InitialContext();
-         transactionManager = (TransactionManager) iniCtx.lookup("java:/TransactionManager");
+         transactionManager = (TransactionManager)iniCtx.lookup("java:/TransactionManager");
       }
       catch (Exception e)
       {
@@ -210,7 +210,7 @@ public class TimerServiceImpl implements TimerService
          Iterator it = timers.values().iterator();
          while (it.hasNext())
          {
-            TimerImpl timer = (TimerImpl) it.next();
+            TimerImpl timer = (TimerImpl)it.next();
             if (timer.isActive())
                activeTimers.add(timer);
          }
@@ -234,7 +234,7 @@ public class TimerServiceImpl implements TimerService
     */
    public Timer getTimer(TimerHandle handle)
    {
-      TimerImpl timer = (TimerImpl) timers.get(handle);
+      TimerImpl timer = (TimerImpl)timers.get(handle);
       if (timer != null && timer.isActive())
          return timer;
       else
@@ -246,7 +246,7 @@ public class TimerServiceImpl implements TimerService
     */
    public void killTimer(TimerHandle handle)
    {
-      TimerImpl timer = (TimerImpl) timers.get(handle);
+      TimerImpl timer = (TimerImpl)timers.get(handle);
       if (timer != null)
       {
          removeTimer(timer);
@@ -264,7 +264,7 @@ public class TimerServiceImpl implements TimerService
          Iterator it = timers.values().iterator();
          while (it.hasNext())
          {
-            TimerImpl timer = (TimerImpl) it.next();
+            TimerImpl timer = (TimerImpl)it.next();
             it.remove();
             timer.killTimer();
          }

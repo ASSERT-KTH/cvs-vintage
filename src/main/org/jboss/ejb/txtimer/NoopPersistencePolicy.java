@@ -6,17 +6,14 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: NoopPersistencePolicy.java,v 1.2 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: NoopPersistencePolicy.java,v 1.3 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
-import javax.ejb.Timer;
-import javax.management.ObjectName;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
-import java.io.Serializable;
-import java.sql.SQLException;
 
 /**
  * This service implements a PersistencePolicy that does not persist the timer.
@@ -32,19 +29,21 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
    private static Logger log = Logger.getLogger(NoopPersistencePolicy.class);
 
 
-   /** Creates the timer in  persistent storage.
+   /**
+    * Creates the timer in  persistent storage.
     *
     * @param timedObjectId The timed object id
     * @param firstEvent    The point in time at which the first txtimer expiration must occur.
-    * @param firstEvent The point in time at which the first txtimer expiration must occur.
-    * @param periode  The number of milliseconds that must elapse between txtimer expiration notifications.
+    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param periode       The number of milliseconds that must elapse between txtimer expiration notifications.
     */
    public void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info)
    {
       log.debug("Noop on createTimer");
    }
 
-   /** Removes the timer from persistent storage.
+   /**
+    * Removes the timer from persistent storage.
     *
     * @param timedObjectId The timed object id
     * @param firstEvent    The point in time at which the first txtimer expiration must occur.
@@ -54,7 +53,8 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
       log.debug("Noop on destroyTimer");
    }
 
-   /** Restore the persistet timers
+   /**
+    * Restore the persistet timers
     */
    public void restoreTimers()
    {

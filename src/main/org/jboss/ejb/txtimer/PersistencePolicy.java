@@ -6,16 +6,11 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: PersistencePolicy.java,v 1.2 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: PersistencePolicy.java,v 1.3 2004/09/10 14:37:16 tdiesler Exp $
 
-import org.jboss.mx.util.ObjectNameFactory;
-
-import javax.ejb.Timer;
-import javax.ejb.TimerHandle;
-import javax.management.ObjectName;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.io.Serializable;
 
 /**
  * Timers are persistent objects. In the event of a container crash, any single-event timers that have expired

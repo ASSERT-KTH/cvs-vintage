@@ -6,12 +6,9 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectInvokerImpl.java,v 1.5 2004/08/08 23:06:07 starksm Exp $
+// $Id: TimedObjectInvokerImpl.java,v 1.6 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.MessageDrivenContainer;
-import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;

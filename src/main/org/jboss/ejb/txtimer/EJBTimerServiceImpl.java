@@ -6,12 +6,12 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceImpl.java,v 1.3 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: EJBTimerServiceImpl.java,v 1.4 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
-import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxy;
+import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.system.ServiceMBeanSupport;
 
 import javax.ejb.Timer;
@@ -51,7 +51,9 @@ public class EJBTimerServiceImpl
    // The TimedObjectInvoker class name
    private String timedObjectInvokerClassName;
 
-   /** Get the object name of the retry policy.
+   /**
+    * Get the object name of the retry policy.
+    *
     * @jmx.managed-attribute
     */
    public ObjectName getRetryPolicy()
@@ -59,7 +61,9 @@ public class EJBTimerServiceImpl
       return retryPolicyName;
    }
 
-   /** Set the object name of the retry policy.
+   /**
+    * Set the object name of the retry policy.
+    *
     * @jmx.managed-attribute
     */
    public void setRetryPolicy(ObjectName retryPolicyName)
@@ -67,7 +71,9 @@ public class EJBTimerServiceImpl
       this.retryPolicyName = retryPolicyName;
    }
 
-   /** Get the object name of the persistence policy.
+   /**
+    * Get the object name of the persistence policy.
+    *
     * @jmx.managed-attribute
     */
    public ObjectName getPersistencePolicy()
@@ -75,7 +81,9 @@ public class EJBTimerServiceImpl
       return persistencePolicyName;
    }
 
-   /** Set the object name of the persistence policy.
+   /**
+    * Set the object name of the persistence policy.
+    *
     * @jmx.managed-attribute
     */
    public void setPersistencePolicy(ObjectName persistencePolicyName)
@@ -235,6 +243,7 @@ public class EJBTimerServiceImpl
 
    /**
     * List the timers registered with all TimerService objects
+    *
     * @jmx.managed-operation
     */
    public String listTimers()

@@ -6,13 +6,13 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceLocator.java,v 1.5 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: EJBTimerServiceLocator.java,v 1.6 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
-import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxy;
 import org.jboss.mx.util.MBeanProxyCreationException;
+import org.jboss.mx.util.MBeanServerLocator;
 
 import javax.ejb.Timer;
 import javax.ejb.TimerService;

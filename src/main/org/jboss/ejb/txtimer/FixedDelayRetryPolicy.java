@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: FixedDelayRetryPolicy.java,v 1.5 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: FixedDelayRetryPolicy.java,v 1.6 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
@@ -64,7 +64,7 @@ public class FixedDelayRetryPolicy extends ServiceMBeanSupport implements FixedD
       // check if the delay is appropriate
       if (timer instanceof TimerImpl)
       {
-         TimerImpl txTimer = (TimerImpl) timer;
+         TimerImpl txTimer = (TimerImpl)timer;
 
          long periode = txTimer.getPeriode();
          if (0 < periode && periode / 2 < delay)

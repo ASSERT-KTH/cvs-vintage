@@ -6,9 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: RetryPolicy.java,v 1.1 2004/09/09 22:04:29 tdiesler Exp $
-
-import org.jboss.mx.util.ObjectNameFactory;
+// $Id: RetryPolicy.java,v 1.2 2004/09/10 14:37:16 tdiesler Exp $
 
 import javax.ejb.Timer;
 
@@ -23,7 +21,8 @@ import javax.ejb.Timer;
  */
 public interface RetryPolicy
 {
-   /** Invokes the ejbTimeout method on the TimedObject with the given id.
+   /**
+    * Invokes the ejbTimeout method on the TimedObject with the given id.
     *
     * @param invoker the invoker for the TimedObject
     * @param timer   the Timer that is passed to ejbTimeout

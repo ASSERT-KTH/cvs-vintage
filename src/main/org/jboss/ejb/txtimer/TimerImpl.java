@@ -6,18 +6,18 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.9 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.10 2004/09/10 14:37:16 tdiesler Exp $
 
-import org.jboss.logging.Logger;
 import org.jboss.ejb.AllowedOperationsAssociation;
+import org.jboss.logging.Logger;
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.TimerHandle;
+import javax.management.ObjectName;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
-import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
@@ -253,7 +253,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       if (obj == this) return true;
       if (obj instanceof TimerImpl)
       {
-         TimerImpl other = (TimerImpl) obj;
+         TimerImpl other = (TimerImpl)obj;
          return hashCode() == other.hashCode();
       }
       return false;
@@ -346,14 +346,15 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
       ObjectName containerId = timedObjectId.getContainerId();
       Object instancePk = timedObjectId.getInstancePk();
-      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(containerId, instancePk);
+      TimerServiceImpl timerService = (TimerServiceImpl)ejbTimerService.getTimerService(containerId, instancePk);
       if (timerService == null)
          throw new NoSuchObjectLocalException("Cannot find TimerService: " + timedObjectId);
 
       return timerService;
    }
 
-   /** Throws NoSuchObjectLocalException if the txtimer was canceled or has expired
+   /**
+    * Throws NoSuchObjectLocalException if the txtimer was canceled or has expired
     */
    private void assertTimedOut()
    {
@@ -363,7 +364,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
          throw new NoSuchObjectLocalException("Timer was canceled");
    }
 
-   /** Throws an IllegalStateException if the Timer method call is not allowed in the current context
+   /**
+    * Throws an IllegalStateException if the Timer method call is not allowed in the current context
     */
    private void assertAllowedOperation(String timerMethod)
    {

@@ -6,13 +6,12 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectId.java,v 1.5 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: TimedObjectId.java,v 1.6 2004/09/10 14:37:16 tdiesler Exp $
 
 import org.jboss.mx.util.ObjectNameFactory;
 
 import javax.management.ObjectName;
 import java.io.Serializable;
-import java.util.StringTokenizer;
 
 /**
  * The combined TimedObjectId consists of a String that identifies

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.25 2004/09/10 14:05:44 tdiesler Exp $ -->
+<!-- $Id: log4j.xml,v 1.26 2004/09/10 14:37:15 tdiesler Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -165,10 +165,6 @@
    <!-- Limit apache axis to INFO as its DEBUG is even more verbose -->
    <category name="org.apache.axis">
       <priority value="INFO"/>
-   </category>
-
-   <category name="org.jboss.ejb.txtimer">
-      <priority value="debug"/>
    </category>
 
    <!-- Limit JBoss categories

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.7 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.8 2004/09/10 14:37:16 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 
 /**
  * An implementation of the TimerHandle
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */
@@ -64,7 +64,7 @@ public class TimerHandleImpl implements TimerHandle
    /**
     * Construct a handle from external form
     */
-   private TimerHandleImpl (String externalForm)
+   private TimerHandleImpl(String externalForm)
    {
       if (externalForm.startsWith("[") == false || externalForm.endsWith("]") == false)
          throw new IllegalArgumentException("Square brackets expected arround: " + externalForm);
@@ -167,11 +167,11 @@ public class TimerHandleImpl implements TimerHandle
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
       ObjectName containerId = timedObjectId.getContainerId();
       Object instancePk = timedObjectId.getInstancePk();
-      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(containerId, instancePk);
+      TimerServiceImpl timerService = (TimerServiceImpl)ejbTimerService.getTimerService(containerId, instancePk);
       if (timerService == null)
          throw new NoSuchObjectLocalException("TimerService not available: " + timedObjectId);
 
-      TimerImpl timer = (TimerImpl) timerService.getTimer(this);
+      TimerImpl timer = (TimerImpl)timerService.getTimer(this);
       if (timer == null || timer.isActive() == false)
          throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 
@@ -186,7 +186,7 @@ public class TimerHandleImpl implements TimerHandle
       if (obj == this) return true;
       if (obj instanceof TimerHandleImpl)
       {
-         TimerHandleImpl other = (TimerHandleImpl) obj;
+         TimerHandleImpl other = (TimerHandleImpl)obj;
          return hashCode() == other.hashCode();
       }
       return false;

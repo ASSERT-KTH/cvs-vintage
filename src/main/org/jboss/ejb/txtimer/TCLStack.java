@@ -1,23 +1,26 @@
 package org.jboss.ejb.txtimer;
 
-import java.util.Stack;
-import java.util.EmptyStackException;
-import java.security.PrivilegedAction;
-import java.security.AccessController;
-
 import org.jboss.logging.Logger;
 
-/** An encapsulation of thread context class loader PrivilegedAction for
- * getting and setting the TCL. 
- * 
- * @version $Revision: 1.1 $
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.EmptyStackException;
+import java.util.Stack;
+
+/**
+ * An encapsulation of thread context class loader PrivilegedAction for
+ * getting and setting the TCL.
+ *
  * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.2 $
  */
 class TCLStack
 {
    private static final Logger log = Logger.getLogger(TCLStack.class);
 
-   /** The thread local stack of class loaders. */
+   /**
+    * The thread local stack of class loaders.
+    */
    private static final ThreadLocal stackTL = new ThreadLocal()
    {
       protected Object initialValue()
@@ -26,13 +29,16 @@ class TCLStack
       }
    };
 
-   /** Get the stack from the thread lcoal. */
+   /**
+    * Get the stack from the thread lcoal.
+    */
    private static Stack getStack()
    {
-      return (Stack) stackTL.get();
+      return (Stack)stackTL.get();
    }
 
-   /** Push the current TCL and set the given CL to the TCL. If the cl
+   /**
+    * Push the current TCL and set the given CL to the TCL. If the cl
     * argument is null then the current TCL is not updated and pop will leave
     * the current TCL the same as entry into push.
     *
@@ -44,7 +50,7 @@ class TCLStack
 
       // push the old cl and set the new cl
       ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      if( cl != null )
+      if (cl != null)
       {
          SetTCLAction.setContextClassLoader(cl);
       }
@@ -59,17 +65,17 @@ class TCLStack
 
    /**
     * Pop the last CL from the stack and make it the TCL.
-    *
+    * <p/>
     * <p>If the stack is empty, then no change is made to the TCL.
     *
-    * @return   The previous CL or null if there was none.
+    * @return The previous CL or null if there was none.
     */
    static ClassLoader pop()
    {
       // get the last cl in the stack & make it the current
       try
       {
-         ClassLoader cl = (ClassLoader) getStack().pop();
+         ClassLoader cl = (ClassLoader)getStack().pop();
          ClassLoader oldCL = GetTCLAction.getContextClassLoader();
 
          SetTCLAction.setContextClassLoader(cl);
@@ -91,36 +97,42 @@ class TCLStack
 
    static ClassLoader getContextClassLoader()
    {
-      return GetTCLAction.getContextClassLoader();      
+      return GetTCLAction.getContextClassLoader();
    }
 
    private static class GetTCLAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetTCLAction();
+
       public Object run()
       {
          ClassLoader loader = Thread.currentThread().getContextClassLoader();
          return loader;
       }
+
       static ClassLoader getContextClassLoader()
       {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
+         ClassLoader loader = (ClassLoader)AccessController.doPrivileged(ACTION);
          return loader;
       }
    }
+
    private static class SetTCLAction implements PrivilegedAction
    {
       ClassLoader loader;
+
       SetTCLAction(ClassLoader loader)
       {
          this.loader = loader;
       }
+
       public Object run()
       {
          Thread.currentThread().setContextClassLoader(loader);
          loader = null;
          return null;
       }
+
       static void setContextClassLoader(ClassLoader loader)
       {
          PrivilegedAction action = new SetTCLAction(loader);
