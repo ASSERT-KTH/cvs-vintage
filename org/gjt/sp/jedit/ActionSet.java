@@ -24,7 +24,7 @@ import java.util.*;
 /**
  * A set of actions..
  * @author Slava Pestov
- * @version $Id: ActionSet.java,v 1.2 2001/09/21 08:09:51 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.3 2001/09/30 09:25:52 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -130,6 +130,11 @@ public class ActionSet
 			retVal[i++] = (EditAction)enum.nextElement();
 		}
 		return retVal;
+	}
+
+	public String toString()
+	{
+		return label;
 	}
 
 	// package-private members
