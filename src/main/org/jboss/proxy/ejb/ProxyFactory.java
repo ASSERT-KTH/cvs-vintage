@@ -8,6 +8,8 @@
 package org.jboss.proxy.ejb;
 
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,7 +65,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -103,6 +105,9 @@ public class ProxyFactory
 
    // A pointer to the container this proxy factory is dedicated to
    protected Container container;
+
+   protected Constructor proxyClassConstructor;
+
 
    // Container plugin implementation -----------------------------------------
 
@@ -343,6 +348,18 @@ public class ProxyFactory
                   client
                   );
          }
+         else
+         {
+            // this is faster than newProxyInstance
+            Class[] intfs = {pfc.getRemoteClass()};
+            Class proxyClass = Proxy.getProxyClass(pfc.getRemoteClass().getClassLoader(), intfs);
+            final Class[] constructorParams =
+                    {InvocationHandler.class};
+
+            proxyClassConstructor = proxyClass.getConstructor(constructorParams);
+
+         }
+
 
          // Bind the home in the JNDI naming space
          rebindHomeProxy();
@@ -423,7 +440,7 @@ public class ProxyFactory
    {
       // Create a stack from the description (in the future) for now we hardcode it
       InvocationContext context = new InvocationContext();
-      
+
       context.setObjectName(jmxNameHashInteger);
       context.setCacheId(id);
       context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
@@ -442,14 +459,15 @@ public class ProxyFactory
          throw new NestedRuntimeException("Failed to load interceptor chain", e);
       }
 
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
-      return (EJBObject)Proxy.newProxyInstance(
-         // Classloaders
-         pfc.getRemoteClass().getClassLoader(),
-         // Interfaces
-         new Class[] { pfc.getRemoteClass() },
-         // Proxy as invocation handler
-         client);
+      try
+      {
+         return (EJBObject)proxyClassConstructor.newInstance(new Object[] {client});
+      }
+      catch (Exception ex)
+      {
+         throw new NestedRuntimeException(ex);
+      }
+
    }
 
    /** Create an EJBObject proxy for an entity given its primary key.
@@ -477,14 +495,14 @@ public class ProxyFactory
          throw new NestedRuntimeException("Failed to load interceptor chain", e);
       }
 
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
-      return (EJBObject)Proxy.newProxyInstance(
-         // Classloaders
-         pfc.getRemoteClass().getClassLoader(),
-         // Interfaces
-         new Class[] { pfc.getRemoteClass() },
-         // Proxy as invocation handler
-         client);
+      try
+      {
+         return (EJBObject)proxyClassConstructor.newInstance(new Object[] {client});
+      }
+      catch (Exception ex)
+      {
+         throw new NestedRuntimeException(ex);
+      }
    }
 
    /** Create a Collection EJBObject proxies for an entity given its primary keys.
@@ -493,7 +511,6 @@ public class ProxyFactory
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
 
       while(idEnum.hasNext())
       {
@@ -518,11 +535,15 @@ public class ProxyFactory
             throw new NestedRuntimeException(
                   "Failed to load interceptor chain", e);
          }
-         
-         list.add(Proxy.newProxyInstance(
-                  pfc.getRemoteClass().getClassLoader(),
-                  new Class[] { pfc.getRemoteClass() },
-                  client));
+
+         try
+         {
+            list.add(proxyClassConstructor.newInstance(new Object[] {client}));
+         }
+         catch (Exception ex)
+         {
+            throw new NestedRuntimeException(ex);
+         }
       }
       return list;
    }
