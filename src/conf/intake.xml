@@ -132,7 +132,7 @@
         <field name="ResultsPerPage" key="rpp" type="int"/>
 </group>
 
-<group name="Module" key="mod" mapToObject="om.Module">
+<group name="Module" key="mod" mapToObject="om.ScarabModule">
         <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
