@@ -20,9 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 
 /**
@@ -37,8 +35,6 @@ import org.columba.mail.folder.virtual.VirtualFolder;
 public class CompoundCommand extends Command {
 	protected List commandList;
 
-	protected List referenceList;
-
 	/**
 	 * Constructor for CompoundCommand. Caution : Never use this command with
 	 * Virtual Folders!
@@ -49,7 +45,6 @@ public class CompoundCommand extends Command {
 	public CompoundCommand() {
 		super(null, null);
 		commandList = new Vector();
-		referenceList = new Vector();
 
 		priority = Command.NORMAL_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
@@ -57,13 +52,6 @@ public class CompoundCommand extends Command {
 
 	public void add(Command c) {
 		commandList.add(c);
-
-		FolderCommandReference commandRefs = (FolderCommandReference) c
-				.getReference();
-
-		if (!referenceList.contains(commandRefs.getFolder())) {
-			referenceList.add(commandRefs.getFolder());
-		}
 
 	}
 
@@ -79,54 +67,38 @@ public class CompoundCommand extends Command {
 		}
 	}
 
-	//	/**
-	//	 * @see org.columba.core.command.Command#canBeProcessed(int)
-	//	 */
-	//	public boolean canBeProcessed(int operationMode) {
-	//
-	//		boolean result = true;
-	//		Command c;
-	//		for (int i = 0; i < commandList.size(); i++) {
-	//			c = (Command) commandList.get(i);
-	//			result &= c.canBeProcessed(operationMode);
-	//		}
-	//
-	//		if (!result) {
-	//
-	//			releaseAllFolderLocks(operationMode);
-	//		}
-	//
-	//		return result;
-	//	}
-	//
-	//	/**
-	//	 * @see org.columba.core.command.Command#releaseAllFolderLocks(int)
-	//	 */
-	//	public void releaseAllFolderLocks(int operationMode) {
-	//		Command c;
-	//		for (int i = 0; i < commandList.size(); i++) {
-	//			c = (Command) commandList.get(i);
-	//			c.releaseAllFolderLocks(operationMode);
-	//		}
-	//	}
-
 	/**
-	 * @see org.columba.core.command.Command#getReferences()
+	 * @see org.columba.core.command.Command#canBeProcessed()
 	 */
-	public DefaultCommandReference[] getReferences() {
-		FolderCommandReference[] refs = new FolderCommandReference[referenceList
-				.size()];
-
-		for (int i = 0; i < referenceList.size(); i++) {
-			refs[i] = new FolderCommandReference((AbstractFolder) referenceList
-					.get(i));
+	public boolean canBeProcessed() {
+		boolean result = true;
+		Command c;
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
+			result &= c.canBeProcessed();
 		}
 
-		return refs;
+		if (!result) {
+
+			releaseAllFolderLocks();
+		}
+
+		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * @see org.columba.core.command.Command#releaseAllFolderLocks()
+	 */
+	public void releaseAllFolderLocks() {
+		Command c;
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
+			c.releaseAllFolderLocks();
+		}
+	}
+
+	
+	/**
 	 * 
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
@@ -136,8 +108,6 @@ public class CompoundCommand extends Command {
 		for (Iterator it = commandList.iterator(); it.hasNext();) {
 			c = (Command) it.next();
 
-			//		for (int i = 0; i < commandList.size(); i++) {
-			//			c = (Command) commandList.get(i);
 			c.updateGUI();
 		}
 	}
