@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Right-click context menu editor.
  * @author Slava Pestov
- * @version $Id: ContextOptionPane.java,v 1.9 2003/08/08 02:22:18 spestov Exp $
+ * @version $Id: ContextOptionPane.java,v 1.10 2003/10/11 02:21:37 spestov Exp $
  */
 public class ContextOptionPane extends AbstractOptionPane
 {
@@ -79,22 +79,22 @@ public class ContextOptionPane extends AbstractOptionPane
 		buttons.setLayout(new BoxLayout(buttons,BoxLayout.X_AXIS));
 		ActionHandler actionHandler = new ActionHandler();
 		add = new RolloverButton(GUIUtilities.loadIcon("Plus.png"));
-		add.setToolTipText(jEdit.getProperty("options.context.add"));
+		add.setToolTipText(jEdit.getProperty("common.add"));
 		add.addActionListener(actionHandler);
 		buttons.add(add);
 		buttons.add(Box.createHorizontalStrut(6));
 		remove = new RolloverButton(GUIUtilities.loadIcon("Minus.png"));
-		remove.setToolTipText(jEdit.getProperty("options.context.remove"));
+		remove.setToolTipText(jEdit.getProperty("common.remove"));
 		remove.addActionListener(actionHandler);
 		buttons.add(remove);
 		buttons.add(Box.createHorizontalStrut(6));
 		moveUp = new RolloverButton(GUIUtilities.loadIcon("ArrowU.png"));
-		moveUp.setToolTipText(jEdit.getProperty("options.context.moveUp"));
+		moveUp.setToolTipText(jEdit.getProperty("common.moveUp"));
 		moveUp.addActionListener(actionHandler);
 		buttons.add(moveUp);
 		buttons.add(Box.createHorizontalStrut(6));
 		moveDown = new RolloverButton(GUIUtilities.loadIcon("ArrowD.png"));
-		moveDown.setToolTipText(jEdit.getProperty("options.context.moveDown"));
+		moveDown.setToolTipText(jEdit.getProperty("common.moveDown"));
 		moveDown.addActionListener(actionHandler);
 		buttons.add(moveDown);
 		buttons.add(Box.createGlue());
