@@ -456,12 +456,15 @@
     </jar>
 
     <!-- Add jakarta-tomcat-connectors utils -->
-    <!-- Includes the tomcat-utils.jar and common-logging.jar -->
     <copy todir="${tomcat.build}/lib/common">
       <fileset dir="${jtc.util.build}/lib">
         <include name="*.jar"/>
       </fileset>
     </copy>
+
+    <!-- Copy commons-logging-api.jar since tomcat-util depends on it -->
+    <copy todir="${tomcat.build}/lib/common"
+          file="${commons-logging.jar}"/>
 
     <!-- All tomcat3 specific utils -->
     <jar jarfile="${tomcat.build}/lib/container/container_util.jar" >
