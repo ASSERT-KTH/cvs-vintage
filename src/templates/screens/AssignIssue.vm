@@ -60,12 +60,11 @@
 
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
-<p>
-<a href="#add">Click here</a> to select users to associate with this issue
-</p>
+<p>$l10n.format("ClickHereToSelectUsers", $issueListSize)</p>
+
 <div class="colbar">
 <ul>
-<li>Changes are not saved to the issue until you select "Done"</li>
+$l10n.ChangesSavedOnDone
 </ul>
 </div>
 
@@ -73,7 +72,6 @@
 #set ($pair = $assoUsers.get($issue.IssueId))
     #if ($pair.size() == 0)
      <p class="alert">$l10n.NoneAssigned.</p>
-     <p>$l10n.format("ClickHereToSelectUsers", $issueListSize)</p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
