@@ -16,9 +16,16 @@ import org.xml.sax.*;
 import org.apache.tomcat.util.collections.*;
 
 /**
- * Starter for Tomcat using XML.
- * Based on Ant.
- *
+ * Main entry point to several Tomcat functions. Uses EmbededTomcat to
+ * start and init tomcat, and special functiosn to stop, configure, etc.
+ * 
+ * It is intended as a replacement for the shell command - EmbededTomcat
+ * is the "real" tomcat-specific object that deals with tomcat internals,
+ * this is just a wrapper.
+ * 
+ * It can be used in association with Main.java - in order to set the
+ * CLASSPATH.
+ * 
  * @author costin@dnt.ro
  */
 public class Tomcat {
@@ -28,14 +35,16 @@ public class Tomcat {
 
     private String action="start";
 
+    EmbededTomcat tomcat=new EmbededTomcat();
+
     String home=null;
-    String install=null;
-    String args[];
-    ClassLoader parentClassLoader;
-    boolean sandbox=false;
     
+    String args[];
+
     // null means user didn't set one
     String configFile=null;
+    boolean fastStart=false;
+    
     // relative to TOMCAT_HOME
     static final String DEFAULT_CONFIG="conf/server.xml";
     SimpleHashtable attributes=new SimpleHashtable();
@@ -47,10 +56,11 @@ public class Tomcat {
     
     public void setHome(String home) {
 	this.home=home;
+	tomcat.setHome( home );
     }
     
     public void setInstall(String install) {
-	this.install=install;
+	tomcat.setInstall(install);
     }
     
     public void setArgs(String args[]) {
@@ -63,12 +73,25 @@ public class Tomcat {
     }
 
     public void setSandbox( boolean b ) {
-	sandbox=b;
+	tomcat.setSandbox( b );
     }
     
     public void setParentClassLoader( ClassLoader cl ) {
-	parentClassLoader=cl;
+	tomcat.setParentClassLoader(cl);
     }
+
+    public void setCommonClassLoader( ClassLoader cl ) {
+	tomcat.setCommonClassLoader( cl );
+    }
+
+    public void setAppsClassLoader( ClassLoader cl ) {
+	tomcat.setAppsClassLoader( cl );
+    }
+
+    public void setContainerClassLoader( ClassLoader cl ) {
+	tomcat.setContainerClassLoader( cl );
+    }
+    
     // -------------------- main/execute --------------------
     
     public static void main(String args[] ) {
@@ -88,13 +111,13 @@ public class Tomcat {
 	    setAction("help");
 	}
 	if( "stop".equals( action )){
-	    stop();
+	    stopTomcat();
 	} else if( "enableAdmin".equals( action )){
 	    enableAdmin();
 	} else if( "help".equals( action )) {
 	    printUsage();
 	} else if( "start".equals( action )) {
-	    start();
+	    startTomcat();
 	}
     }
 
@@ -118,7 +141,7 @@ public class Tomcat {
 	pw.close();
     }
 	
-    public void stop() throws Exception {
+    public void stopTomcat() throws TomcatException {
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    StopTomcat task=
@@ -126,36 +149,43 @@ public class Tomcat {
 
 	    task.execute();     
 	}
-	catch (TomcatException te) {
-	    if (te.getRootCause() instanceof java.net.ConnectException)
-		System.out.println(sm.getString("tomcat.connectexception"));
-	    else
-		throw te;
+	catch (Exception te) {
+	    if( te instanceof TomcatException ) {
+		if (((TomcatException)te).getRootCause() instanceof java.net.ConnectException)
+		    System.out.println(sm.getString("tomcat.connectexception"));
+		else
+		    throw (TomcatException)te;
+	    } else
+		throw new TomcatException( te );
 	}
 	return;
     }
 
-    public void start() throws Exception {
-	EmbededTomcat tcat=new EmbededTomcat();
-
-	PathSetter pS=new PathSetter();
-	tcat.addInterceptor( pS );
+    public void startTomcat() throws TomcatException {
+	if( tomcat==null ) tomcat=new EmbededTomcat();
 	
-	ServerXmlReader sxmlConf=new ServerXmlReader();
-	sxmlConf.setConfig( configFile );
-	tcat.addInterceptor( sxmlConf );
-        ClassLoader cl=parentClassLoader;
+	if( ! tomcat.isInitialized() ) {
+	    long time1=System.currentTimeMillis();
+	    PathSetter pS=new PathSetter();
+	    tomcat.addInterceptor( pS );
 
-        if (cl==null) cl=this.getClass().getClassLoader();
+	    ServerXmlReader sxmlConf=new ServerXmlReader();
+	    sxmlConf.setConfig( configFile );
+	    tomcat.addInterceptor( sxmlConf );
 
-        tcat.getContextManager().setParentLoader(cl);
-	if( sandbox )
-	    tcat.getContextManager().setProperty( "sandbox", "true");
-	tcat.initContextManager();
+	    tomcat.initContextManager();
 
-	tcat.start();
+	    long time2=System.currentTimeMillis();
+	    tomcat.log("Init time "  + (time2-time1));
+	}
+
+	long time3=System.currentTimeMillis();
+	tomcat.start();
+	long time4=System.currentTimeMillis();
+	tomcat.log("Startup " + ( time4-time3 ));
     }
 
+    
     // -------------------- Command-line args processing --------------------
 
 
@@ -182,9 +212,11 @@ public class Tomcat {
 	    } else if (arg.equals("-stop")) {
 		action="stop";
 	    } else if (arg.equals("-sandbox")) {
-		sandbox=true;
+		setSandbox(true);
 	    } else if (arg.equals("-security")) {
-		sandbox=true;
+		setSandbox(true);
+	    } else if (arg.equals("-fastStart")) {
+		fastStart=true;
 	    } else if (arg.equals("-enableAdmin")) {
 		action="enableAdmin";
 	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
@@ -198,15 +230,13 @@ public class Tomcat {
 	    } else if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
-		    System.getProperties().put(
-				ContextManager.TOMCAT_HOME, args[i]);
+		    setHome( args[i] );
 		else
 		    return false;
 	    } else if (arg.equals("-i") || arg.equals("-install")) {
 		i++;
 		if (i < args.length)
-		    System.getProperties().put(
-				ContextManager.TOMCAT_INSTALL, args[i]);
+		    setInstall( args[i] );
 		else
 		    return false;
 	    }
@@ -222,9 +252,15 @@ public class Tomcat {
 	    setInstall( (String)o);
 	else if("args".equals( s ) ) 
 	    setArgs((String[])o);
-	else if( "parentClassLoader".equals( s ) ) {
+	else if( "parentClassLoader".equals( s ) ) 
 	    setParentClassLoader((ClassLoader)o);
-	} else {
+	else if( "appsClassLoader".equals( s ) ) 
+	    setAppsClassLoader((ClassLoader)o);
+	else if( "commonClassLoader".equals( s ) ) 
+	    setCommonClassLoader((ClassLoader)o);
+	else if( "containerClassLoader".equals( s ) ) 
+	    setContainerClassLoader((ClassLoader)o);
+	else {
 	    System.out.println("Tomcat: setAttribute " + s + "=" + o);
 	    attributes.put(s,o);
 	}
