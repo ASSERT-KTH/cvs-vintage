@@ -141,20 +141,20 @@
       <classpath refid="carol.classpath"/>
       <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
     </javac> 
-</target>
+  </target>
 
-<condition property="stub.already.compiled">
+  <condition property="stub.already.compiled">
     <and>
       <uptodate property="JNDIResourceWrapper.done"
-              targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
-              srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
-<uptodate property="JNDIResourceWrapper.done"
-              targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
-              srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
+                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+      <uptodate property="JNDIResourceWrapper.done"
+                targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.class"
+                srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIReferenceWrapper.java" />
     </and>
   </condition>
 
-<target name="compile.stub.jeremie"
+  <target name="compile.stub.jeremie"
       description="build stub and skeleton "
       unless="stub.already.compiled" > 
     <!-- for jeremie -->
