@@ -319,6 +319,49 @@ public class Issue
         return allValuesMap;
     }
 
+    /**
+     * If there is an Attribute called "Assigned To" that has a value 
+     * Returns a list of values for this attribute.
+     */
+    public List getAssignedTo() throws Exception
+    {
+        ArrayList assignees = new ArrayList();
+        Criteria crit = new Criteria()
+            .addJoin(AttributeValuePeer.ATTRIBUTE_ID, 
+                     AttributePeer.ATTRIBUTE_ID)        
+            .add(AttributePeer.ATTRIBUTE_NAME, "Assigned To");
+        List attValues = getAttributeValues(crit);
+        for ( int i=0; i<attValues.size(); i++ ) 
+        {
+            AttributeValue attVal = (AttributeValue) attValues.get(i);
+            //TurbineUser user = TurbineUserPeer.retrieveByPK(new NumberKey(attValues.get(i)));
+            assignees.add(attVal.getValue());
+        }
+        return assignees;
+    }
+        
+    /**
+     * Returns a list of Attachment objects with type "Comment"
+     * That are associated with this issue.
+     */
+    public Vector getComments() throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttachmentPeer.ISSUE_ID, getIssueId());
+        Vector results = AttachmentPeer.doSelect(crit);
+        return  AttachmentPeer.doSelect(crit);
+    }
+
+    /**
+     * Returns list of Activity objects associated with this Issue.
+     */
+    public Vector getActivity() throws Exception  
+    {
+        Criteria crit = new Criteria()
+            .add(ActivityPeer.ISSUE_ID, getIssueId());
+        return ActivityPeer.doSelect(crit);
+    }
+        
 
     public boolean containsMinimumAttributeValues()
         throws Exception
