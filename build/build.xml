@@ -47,7 +47,7 @@
     <!-- ================================================================== -->
     <target name="check_for_optional_packages">
         <available property="lucene.present"
-                   classname="com.lucene.document.Document">
+                   classname="org.apache.lucene.document.Document">
             <classpath refid="classpath"/>
         </available>
         <available property="junit.present"
