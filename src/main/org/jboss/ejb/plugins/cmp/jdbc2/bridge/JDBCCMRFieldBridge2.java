@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -874,6 +874,7 @@ public class JDBCCMRFieldBridge2
                Object relatedId = getPrimaryKey(iter.next());
                addRelatedId(ctx, relatedId);
                relatedCMRField.invokeAddRelatedId(relatedId, ctx.getId());
+               loader.addRelatedId(ctx, relatedId);
             }
          }
       }
