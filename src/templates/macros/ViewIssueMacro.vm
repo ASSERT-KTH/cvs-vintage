@@ -214,8 +214,10 @@
   #set ($comments = $currentIssue.getComments(false))
 #end
 
-#if (!$comments.isEmpty() || $canEdit)
 <h3>Comments</h3>
+#if ($comments.isEmpty() && !$canEdit)
+There are no comments in this issue.
+#else
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
@@ -264,12 +266,16 @@
 ## URL/Attachment/Dependency Tab
 #if ($tab.equals("4") || $tab.equals("all"))
 ## URLS
-#if (!$currentIssue.Urls.isEmpty() || $canEdit)
 <h3>Related links</h3>
+#if ($currentIssue.Urls.isEmpty() && !$canEdit)
+    There are no links in this issue.
+#else
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      #if (!$currentIssue.Urls.isEmpty())
-     <th>&#160;</th>
+         #if ($canEdit)
+             <th>&#160;</th>
+         #end
      <th>Link</th>
      #end
      #if ($canEdit)
@@ -279,13 +285,11 @@
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
-     <td>
      #if ($canEdit)
+     <td>
        <input type="checkbox" name="url_delete_$url.AttachmentId" />
-     #else
-       &#160;
-     #end
      </td>
+     #end
      <td><a href="$url.Name">$url.DataAsString</a> </td>
       #set ($urlGroup = $intake.Attachment.mapTo($url))
      #if ($canEdit)
@@ -314,13 +318,13 @@
    </tr>
    #end
  </table>
-<div class="functnbar3">
   #if ($canEdit)
+<div class="functnbar3">
   <input type="submit" value="Save" name="eventSubmit_doSaveurl" />&#160;
   <input type="submit" value="Add link" name="eventSubmit_doSubmiturl" />&#160;
   <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
-  #end
 </div>
+  #end
 #end
 
 ## ATTACHMENT
@@ -328,12 +332,17 @@
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
 #set ($attachments = $currentIssue.ExistingAttachments)
-#if ($attachments.size() > 0 || $canEdit)
-    <h3>Attachments</h3>
+
+<h3>Attachments</h3>
+#if ($attachments.isEmpty() && !$canEdit)
+There are no attachments for this issue.
+#else
  #if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-     <th>&#160;</th>
+     #if ($canEdit)
+         <th>&#160;</th>
+     #end
      <th>Name</th>
      <th>Description</th>
      <th>Type</th>
@@ -341,11 +350,11 @@
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
      #if ($file.TypeId.toString().equals("1"))
+       #if ($canEdit)
        <td>
-         #if ($canEdit)
            <input type="checkbox" name="file_delete_$file.AttachmentId" />
-         #end
        </td>
+       #end
 ## We add the filename here in case the file is saved, it gives a nice default name
        <td><a href="$link.setPage("ViewAttachment.vm").setPathInfo("attachId", $file.QueryKey).addPathInfo("filename", $file.FileName)"  
          onClick="fileWindow=window.open('',
@@ -425,9 +434,14 @@
     
 ## DEPENDENCIES
 <h3>Dependencies</h3>
+#if ($currentIssue.Children.isEmpty() && $currentIssue.Parents.isEmpty() && !$canEdit)
+There are no dependencies for this issue.
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
+#if ($canEdit)
  <th> &nbsp; </th>
+#end
  <th>Issue ID #</th>
  <th>Relationship</th>
  <th>Type</th>
@@ -437,7 +451,9 @@
   #set ($parent = $scarabR.getIssueByPk($depend.ObservedId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
   #indexedRows($velocityCount)
-<td>#booleanCheckbox($dependGroup.Deleted)</td>
+#if ($canEdit)
+    <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#end
 <td>$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
 <td>Parent</td>
 <td>
@@ -463,7 +479,9 @@
   #set ($child = $scarabR.getIssueByPk($depend.ObserverId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
   #indexedRows($velocityCount)
-<td>#booleanCheckbox($dependGroup.Deleted)</td>
+#if ($canEdit)
+    <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#end
 <td> $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
 <td>Child</td>
 <td> 
@@ -485,6 +503,8 @@
 </tr>
 #end
 
+
+#if ($canEdit)
 #set ($newDependGroup = $intake.Depend.Default)
 <tr class="a">
 <td>&nbsp;</td>
@@ -512,15 +532,18 @@
  </select>
 </td>
 </tr>
+#end
 </table>
+
+#if ($canEdit)
 <div class="functnbar3">
-  #if ($canEdit)
    <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />&nbsp;
    <input type="submit" value="Add new child" name="eventSubmit_doAdddependency" />&nbsp;
    <input type="submit" value="Delete selected"  name="eventSubmit_doUpdatedependencies" />
-  #end
 </div>
+#end
 
+#end
 #end
 
 #if ($tab.equals("5") || $tab.equals("all"))
