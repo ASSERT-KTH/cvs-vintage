@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.2 1999/11/11 23:28:13 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/11 23:28:13 $
  *
  * ====================================================================
  *
@@ -142,6 +142,9 @@ public class MsgBuffer {
     public void appendBytes( byte b[], int off, int len ) {
 	BuffTool.addInt( buff, pos, len );
 	pos+=2;
+	if( pos + len > buff.length ) {
+	    System.out.println("Buffer overflow " + buff.length + " " + pos + " " + len );
+	}
 	System.arraycopy( b, off, buff, pos, len);
 	buff[pos+len]=0;
 	pos+=len;

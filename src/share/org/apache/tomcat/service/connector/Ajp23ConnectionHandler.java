@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.3 1999/10/28 16:57:48 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 16:57:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.4 1999/11/11 23:28:06 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/11 23:28:06 $
  *
  * ====================================================================
  *
@@ -146,7 +146,7 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 }
 
 class TcpConnector implements MsgConnector {
-    public static final int MAX_PACKET_SIZE=4096;
+    public static final int MAX_PACKET_SIZE=8192;
     public static final int H_SIZE=4;
     OutputStream out;
     InputStream in;
