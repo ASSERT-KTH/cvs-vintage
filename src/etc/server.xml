@@ -75,7 +75,6 @@
         <!-- you can add javaCompiler="jikes" -->
         <JspInterceptor keepGenerated="true"
 			largeFile="false"
-			sendErrToClient="true"
 			useJspServlet="false"
 			/>
         
