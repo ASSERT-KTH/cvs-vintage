@@ -73,8 +73,6 @@ import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -89,7 +87,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.116 2003/03/20 01:07:06 dlr Exp $
+ * @version $Id: Search.java,v 1.117 2003/03/22 18:35:50 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {

@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.281 2003/03/21 18:21:19 jon Exp $
+ * @version $Id: Issue.java,v 1.282 2003/03/22 18:35:50 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3415,7 +3415,7 @@ public class Issue
         String newName = newDepend.getDependType().getName();
         // check to see if something changed
         // only change dependency type for non-deleted deps
-        if (!newName.equals(oldName) && newDepend.getDeleted() == false)
+        if (!newName.equals(oldName) && !newDepend.getDeleted())
         {
             Issue otherIssue = IssueManager
                             .getInstance(newDepend.getObserverId(), false);

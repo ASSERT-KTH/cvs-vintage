@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.65 2003/03/21 17:59:13 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.66 2003/03/22 18:35:50 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1349,7 +1349,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setAssociatedUsersMap(HashMap)
+     * @see org.tigris.scarab.om.ScarabUser#setAssociatedUsersMap(Map)
      */
     public void setAssociatedUsersMap(Map associatedUsers)
         throws Exception
@@ -1363,6 +1363,7 @@ public abstract class AbstractScarabUser
             setAssociatedUsersMap(getThreadKey(), associatedUsers);
         }
     }
+
     private void setAssociatedUsersMap(Object key, Map associatedUsers)
         throws Exception
     {

@@ -48,18 +48,13 @@ package org.tigris.scarab.screens.admin;
  */
 
 // Core Java Stuff
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Iterator;
 
 // Turbine & Apache Commons Stuff
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateContext;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.betwixt.XMLIntrospector;
-import org.apache.commons.betwixt.io.BeanReader;
-import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -70,7 +65,6 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.xmlissues.ImportIssues;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
@@ -80,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *
  * @author     <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
  * @created    December 4, 2002
- * @version    $Id: XMLImportIssuesResults.java,v 1.2 2003/03/20 00:57:31 jon Exp $
+ * @version    $Id: XMLImportIssuesResults.java,v 1.3 2003/03/22 18:35:50 jon Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
@@ -90,13 +84,12 @@ public class XMLImportIssuesResults extends Default
     private final static Log log 
         = LogFactory.getLog(XMLImportIssuesResults.class);
 
-    private final static int MIN_XML_SIZE = 1;
-    private final static int RESULT_OK = 0;
-    private final static int RESULT_ERROR_EXCEPTION = 100;
-    private final static int RESULT_ERROR_XML_MISSING = 101;
-    private final static int RESULT_ERROR_UNAUTHORIZED = 102;
-    private final static int RESULT_ERROR_INVALID_ISSUE_DATA = 103;
-
+    private static final int MIN_XML_SIZE = 1;
+    private static final int RESULT_OK = 0;
+    private static final int RESULT_ERROR_EXCEPTION = 100;
+    private static final int RESULT_ERROR_XML_MISSING = 101;
+    private static final int RESULT_ERROR_UNAUTHORIZED = 102;
+    private static final int RESULT_ERROR_INVALID_ISSUE_DATA = 103;
 
     /**
      * Builds up the context for display of variables on the page.

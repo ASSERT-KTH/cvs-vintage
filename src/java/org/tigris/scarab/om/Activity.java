@@ -56,7 +56,6 @@ import org.apache.torque.util.Criteria;
 import java.sql.Connection;
 
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
@@ -64,7 +63,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.43 2003/03/07 16:39:53 jmcnally Exp $
+ * @version $Id: Activity.java,v 1.44 2003/03/22 18:35:50 jon Exp $
  */
 public class Activity 
     extends BaseActivity

@@ -73,11 +73,11 @@ import org.apache.commons.logging.LogFactory;
  * parsed.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.26 2003/03/20 00:57:32 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.27 2003/03/22 18:35:51 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
-    private final static Log log = LogFactory.getLog(ScarabIssues.class);
+    private static final Log log = LogFactory.getLog(ScarabIssues.class);
 
     private Module module = null;
 

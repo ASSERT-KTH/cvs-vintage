@@ -55,9 +55,6 @@ import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 
-import org.apache.fulcrum.TurbineServices;
-import org.apache.fulcrum.velocity.VelocityService;
-
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
@@ -69,7 +66,7 @@ import org.tigris.scarab.om.GlobalParameterManager;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.22 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: Email.java,v 1.23 2003/03/22 18:35:50 jon Exp $
  */
 public class Email
 {

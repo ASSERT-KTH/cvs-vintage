@@ -46,15 +46,13 @@ package org.tigris.scarab.om;
  * individuals on behalf of CollabNet.
  */
 
-import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.Persistent;
 
 /** 
  * This class manages OptionRelationship objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: OptionRelationshipManager.java,v 1.2 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: OptionRelationshipManager.java,v 1.3 2003/03/22 18:35:50 jon Exp $
  */
 public class OptionRelationshipManager
     extends BaseOptionRelationshipManager

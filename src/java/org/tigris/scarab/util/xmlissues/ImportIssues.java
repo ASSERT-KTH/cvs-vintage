@@ -84,7 +84,7 @@ import org.tigris.scarab.util.xmlissues.ScarabIssues;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.7 2003/03/20 00:57:32 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.8 2003/03/22 18:35:51 jon Exp $
  */
 public class ImportIssues
 {
@@ -183,9 +183,8 @@ public class ImportIssues
     /**
      * Run an import.
      *
-     * Assumes we're up and running inside of turbine.
-     *
-     * @param importFile File to import.
+     * Assumes you've already set the xml file we're to run the import with
+     * by calling  {@link #setXmlFile}.
      *
      * @return List of errors if any.
      *

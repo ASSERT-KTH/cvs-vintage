@@ -73,7 +73,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.62 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: Module.java,v 1.63 2003/03/22 18:35:50 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -85,7 +85,7 @@ public interface Module
      */
     static String NAME_DELIMINATOR = " > ";
 
-    static final NumberKey ROOT_ID = new NumberKey("0");
+    static NumberKey ROOT_ID = new NumberKey(0);
 
     static String USER = "user";
     static String NON_USER = "non-user";
@@ -130,7 +130,7 @@ public interface Module
      * size, and not postfiltering the list. This is extremely helpful
      * with large user datasets. 
      */
-    public ScarabPaginatedList getUsers(String name, String username,  
+    ScarabPaginatedList getUsers(String name, String username,  
                                         MITList mitList,
                                         int offset, int resultSize, 
                                         String sortColumn, String sortPolarity)

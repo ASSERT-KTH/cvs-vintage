@@ -83,7 +83,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.55 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: Attachment.java,v 1.56 2003/03/22 18:35:50 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -282,7 +282,7 @@ public class Attachment
     /**
      * creates the directory given by path, if it does not already exist
      */
-    private synchronized static void mkdirs(File path)
+    private static synchronized void mkdirs(File path)
     {
         if (!path.exists()) 
         {
