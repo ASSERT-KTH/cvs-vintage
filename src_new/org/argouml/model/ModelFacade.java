@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.19 2003/02/02 20:47:41 kataka Exp $
+// $Id: ModelFacade.java,v 1.20 2003/02/03 07:22:27 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -518,6 +518,10 @@ public class ModelFacade {
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
+    
+    public static boolean isTop(Object handle) {
+        return isACompositeState(handle) && ((MCompositeState)handle).getStateMachine() != null;
+    }
 
     /** Recognizer for type.
      *
@@ -691,15 +695,8 @@ public class ModelFacade {
      * @returns the namespace (or null)
      */
     public static Object getNamespace(Object handle) {
-        if (handle == null)
-            return null;
-        if (handle instanceof MModel)
-            return handle;
-        if (handle instanceof MSubsystem)
-            return handle;
         if (handle instanceof MModelElement)
-            return getNamespace(((MModelElement)handle).getNamespace());
-
+            return ((MModelElement)handle).getNamespace();
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
