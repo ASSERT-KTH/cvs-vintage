@@ -34,19 +34,19 @@ import org.jboss.deployment.DeploymentException;
 
 import org.jboss.management.j2ee.J2EEDeployedObject;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.jmx.MBeanProxy;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.util.jmx.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
+
 import org.w3c.dom.Element;
 
 //import org.jboss.management.j2ee.EjbModule;
@@ -55,8 +55,6 @@ import org.w3c.dom.Element;
  * A EJBDeployer is used to deploy EJB applications. It can be given a
  * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
  * containers and make them available for invocation.
- *
- * <p>Now also works with message driven beans.
  *
  * @see Container
  *
@@ -67,36 +65,32 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- * @version $Revision: 1.19 $ 
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version <tt>$Revision: 1.20 $</tt>
  */
 public class EJBDeployer
    extends SubDeployerSupport
    implements EJBDeployerMBean
 {
-   // Attributes ----------------------------------------------------
-   
    private ServiceControllerMBean serviceController;
-   /**
-   * A map of current deployments. 
-   */
-   HashMap deployments = new HashMap();
+
+   /** A map of current deployments. */
+   private HashMap deployments = new HashMap();
    
    /** Verify EJB-jar contents on deployments */
-   boolean verifyDeployments = false;
+   private boolean verifyDeployments;
    
    /** Enable verbose verification. */
-   boolean verifierVerbose = false;
+   private boolean verifierVerbose;
    
    /** Enable metrics interceptor */
-   boolean metricsEnabled = false;
+   private boolean metricsEnabled;
    
    /** Enable JMS monitoring of the bean cache */
-   private boolean m_beanCacheJMSMonitoring;
+   private boolean beanCacheJMSMonitoring;
    
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
-   
-   // Public --------------------------------------------------------
    
    /**
     * Returns the deployed applications.
@@ -106,20 +100,10 @@ public class EJBDeployer
       return deployments.values().iterator();
    }
    
-   /**
-    * Implements the abstract <code>getObjectName()</code> method in superclass
-    * to return this service's name.
-    *
-    * @param server
-    * @param name
-    * @return
-    *
-    * @throws MalformedObjectNameException
-    */
-   public ObjectName getObjectName( MBeanServer server, ObjectName name )
+   public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws MalformedObjectNameException
    {
-      return OBJECT_NAME;
+      return name == null ? OBJECT_NAME : name;
    }
    
    /**
@@ -145,7 +129,6 @@ public class EJBDeployer
       for (Iterator modules = deployments.values().iterator(); modules.hasNext(); )
       {
          DeploymentInfo di = (DeploymentInfo) modules.next();
-         
          stop(di);
       }
 
@@ -153,7 +136,6 @@ public class EJBDeployer
       for (Iterator modules = new ArrayList(deployments.values()).iterator(); modules.hasNext(); )
       {
          DeploymentInfo di = (DeploymentInfo) modules.next();
-         
          destroy(di);
       }
       deployments.clear();
@@ -163,92 +145,93 @@ public class EJBDeployer
    }
 
    /**
-   * Enables/disables the application bean verification upon deployment.
-   *
-   * @param   verify  true to enable; false to disable
-   */
-   public void setVerifyDeployments( boolean verify )
+    * Enables/disables the application bean verification upon deployment.
+    *
+    * @param   verify  true to enable; false to disable
+    */
+   public void setVerifyDeployments(boolean verify)
    {
       verifyDeployments = verify;
    }
    
    /**
-   * Returns the state of bean verifier (on/off)
-   *
-   * @return   true if enabled; false otherwise
-   */
+    * Returns the state of bean verifier (on/off)
+    *
+    * @return   true if enabled; false otherwise
+    */
    public boolean getVerifyDeployments()
    {
       return verifyDeployments;
    }
    
    /**
-   * Enables/disables the verbose mode on the verifier.
-   *
-   * @param   verbose  true to enable; false to disable
-   */
-   public void setVerifierVerbose( boolean verbose )
+    * Enables/disables the verbose mode on the verifier.
+    *
+    * @param   verbose  true to enable; false to disable
+    */
+   public void setVerifierVerbose(boolean verbose)
    {
       verifierVerbose = verbose;
    }
    
    /**
-   * Returns the state of the bean verifier (verbose/non-verbose mode)
-   *
-   * @return true if enabled; false otherwise
-   */
+    * Returns the state of the bean verifier (verbose/non-verbose mode)
+    *
+    * @return true if enabled; false otherwise
+    */
    public boolean getVerifierVerbose()
    {
       return verifierVerbose;
    }
    
    /**
-   * Enables/disables the metrics interceptor for containers.
-   *
-   * @param enable  true to enable; false to disable
-   */
-   public void setMetricsEnabled( boolean enable )
+    * Enables/disables the metrics interceptor for containers.
+    *
+    * @param enable  true to enable; false to disable
+    */
+   public void setMetricsEnabled(boolean enable)
    {
       metricsEnabled = enable;
    }
    
    /**
-   * Checks if this container factory initializes the metrics interceptor.
-   *
-   * @return   true if metrics are enabled; false otherwise
-   */
+    * Checks if this container factory initializes the metrics interceptor.
+    *
+    * @return   true if metrics are enabled; false otherwise
+    */
    public boolean isMetricsEnabled()
    {
       return metricsEnabled;
    }
    
    /**
-   * Set JMS monitoring of the bean cache.
-   */
-   public void setBeanCacheJMSMonitoringEnabled( boolean enable )
+    * Set JMS monitoring of the bean cache.
+    */
+   public void setBeanCacheJMSMonitoringEnabled(boolean enable)
    {
-      m_beanCacheJMSMonitoring = enable;
+      beanCacheJMSMonitoring = enable;
    }
    
    public boolean isBeanCacheJMSMonitoringEnabled()
    {
-      return m_beanCacheJMSMonitoring;
+      return beanCacheJMSMonitoring;
    }
+   
    /**
-   * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
-   * jboss-web.dtd conforming documents should be validated
-   * against the DTD.
-   */
+    * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
+    * jboss-web.dtd conforming documents should be validated
+    * against the DTD.
+    */
    public boolean getValidateDTDs()
    {
       return validateDTDs;
    }
    
    /**
-   * Set the flag indicating that ejb-jar.dtd, jboss.dtd &
-   * jboss-web.dtd conforming documents should be validated
-   * against the DTD.
-   */
+    * Set the flag indicating that ejb-jar.dtd, jboss.dtd &
+    * jboss-web.dtd conforming documents should be validated
+    * against the DTD.
+    */
    public void setValidateDTDs(boolean validate)
    {
       this.validateDTDs = validate;
@@ -256,7 +239,6 @@ public class EJBDeployer
    
    public boolean accepts(DeploymentInfo di) 
    {
-      
       // To be accepted the deployment's root name must end in jar
       String urlStr = di.url.getFile();
       if (!urlStr.endsWith("jar") && !urlStr.endsWith("jar/")) return false;
@@ -267,46 +249,44 @@ public class EJBDeployer
       {
          URL dd = di.localCl.getResource("META-INF/ejb-jar.xml");
          
-         if (dd == null) return false;
-            
-         else return true;
-      
+         if (dd != null) {
+            return true;
+         }
       }
-      catch (Exception e) { return false;}
+      catch (Exception ignore) {}
+      
+      return false;
    }
    
-   
-   
    public void init(DeploymentInfo di) 
-   throws DeploymentException
+      throws DeploymentException
    {
       try {
-         //Resolve what to watch      
-         if (di.url.getProtocol().startsWith("http"))
+         if (di.url.getProtocol().equalsIgnoreCase("file"))
          {
-            // We watch the top only, no directory support
-            di.watch = di.url;
-         
-         }
-         else if(di.url.getProtocol().startsWith("file"))
-         {
-            
             File file = new File (di.url.getFile());
             
             // If not directory we watch the package
-            if (!file.isDirectory()) di.watch = di.url;
-               
+            if (!file.isDirectory()) {
+               di.watch = di.url;
+            }
             // If directory we watch the xml files
-            else di.watch = new URL(di.url, "META-INF/ejb-jar.xml");
-         }    
+            else {
+               di.watch = new URL(di.url, "META-INF/ejb-jar.xml");
+            }
+         }
+         else {
+            // We watch the top only, no directory support
+            di.watch = di.url;
+         }
       }
-      catch (Exception e) {throw new DeploymentException("problem in init"+e.getMessage());}
+      catch (Exception e) {
+         throw new DeploymentException("failed to initialize", e);
+      }
       
       // invoke super-class initialization
       processNestedDeployments(di);
    }
-   
-   
    
    public synchronized void create(DeploymentInfo di)
       throws DeploymentException
@@ -318,59 +298,77 @@ public class EJBDeployer
          // Create a file loader with which to load the files
          XmlFileLoader efm = new XmlFileLoader(validateDTDs);
          
-         efm.setClassLoader( di.localCl );
+         efm.setClassLoader(di.localCl);
          
          // Load XML
-         di.metaData =  efm.load();
+         di.metaData = efm.load();
       }
       catch (Exception e) {
          log.error("Problem loading metaData ", e);
       }
       
-      // Check validity
-      NDC.push("Verifier" );
       // wrapping this into a try - catch block to prevent errors in
       // verifier from stopping the deployment
-      try
+      
+      if (verifyDeployments)
       {
-         if( verifyDeployments )
+         // Check validity
+         NDC.push("Verifier");
+               
+         try
          {
             BeanVerifier verifier = new BeanVerifier();
-            verifier.addVerificationListener( new DeployListener ());
+
+            // add a listener so we can log the results
+            verifier.addVerificationListener(new VerificationListener()
+               {
+                  Logger log = Logger.getLogger(EJBDeployer.class, "verifier");
+      
+                  public void beanChecked(VerificationEvent event)
+                  {
+                     log.debug("Bean checked: " + event.getMessage());
+                  }
+      
+                  public void specViolation(VerificationEvent event)
+                  {
+                     log.warn("EJB spec violation: " +
+                              (verifierVerbose ? event.getVerbose() : event.getMessage()));
+                  }
+               });
+            
             if (debug) {
                log.debug("Verifying " + di.url);
             }
             
-            verifier.verify( di.url, (ApplicationMetaData) di.metaData, di.ucl );
+            verifier.verify(di.url, (ApplicationMetaData) di.metaData, di.ucl);
+         }
+         catch (Throwable t)
+         {
+            log.warn("Verify failed; continuing", t );
+         }
+         finally
+         {
+            // unset verifier context
+            NDC.pop();
          }
       }
-      catch( Throwable t )
-      {
-         log.error("Verify failed", t );
-      }
-      
-      // unset verifier log
-      NDC.pop();
       
       // Create application
-      //remove reserved object name letters.  Let's hope no one takes advantage of the ambiguity.
-      String urlname = di.url.toString().replace(':', '%').replace('*', '%').replace('?', '%').replace(',', '%').replace('=', '%');
-      ObjectName ejbModule = ObjectNameFactory.create(EjbModule.BASE_EJB_MODULE_NAME + ",url=" + urlname);
 
       try
       {
-         
+         // remove reserved object name letters.  Let's hope no one takes advantage of the ambiguity.
+         ObjectName ejbModule = ObjectNameConverter.convert(EjbModule.BASE_EJB_MODULE_NAME +
+                                                            ",url=" + di.url);
          server.createMBean(EjbModule.class.getName(),
                             ejbModule,
                             new Object[] {di},
                             new String[] {di.getClass().getName()});
          di.deployedObject = ejbModule;
-
       
          if (debug) {
             log.debug( "Deploying: " + di.url );
          }
-         
          
          // Init application
          serviceController.create(ejbModule);
@@ -378,8 +376,7 @@ public class EJBDeployer
       catch (Exception e)
       {
          throw new DeploymentException("error in create of EjbModule: " + di.url, e);
-      } // end of catch
-      
+      }
    }
 
    public synchronized void start(DeploymentInfo di) throws DeploymentException
@@ -400,9 +397,8 @@ public class EJBDeployer
          //this is obsolete!!
          deployments.put(di.url, di);
       }
-      catch( Exception e )
+      catch (Exception e)
       {
-         log.error("Could not deploy " + di.url, e);
          stop(di);
          destroy(di);
          
@@ -420,38 +416,35 @@ public class EJBDeployer
       catch (Exception e)
       {
          throw new DeploymentException("problem stopping ejb module: " + di.url, e);
-      } // end of try-catch
+      }
    }
-
 
    public void destroy(DeploymentInfo di) 
       throws DeploymentException
    {
-      deployments.remove( di.url );
+      deployments.remove(di.url);
+      
       try 
       {
-         
          serviceController.destroy(di.deployedObject);
          serviceController.remove(di.deployedObject);
       }
       catch (Exception e)
       {
          throw new DeploymentException("problem destroying ejb module: " + di.url, e);
-      } // end of try-catch
+      }
    }
-
    
    /**
-   * Is the aplication with this url deployed.
-   *
-   * @param url
-   *
-   * @throws MalformedURLException
-   */
-   public boolean isDeployed( String url )
-   throws MalformedURLException
+    * Is the aplication with this url deployed.
+    *
+    * @param url
+    *
+    * @throws MalformedURLException
+    */
+   public boolean isDeployed(String url) throws MalformedURLException
    {
-      return isDeployed( new URL( url ) );
+      return isDeployed(new URL(url));
    }
    
    /**
@@ -463,32 +456,6 @@ public class EJBDeployer
    public boolean isDeployed(URL url)
    {
       return deployments.get(url) != null;
-   }
-   
-   /**
-    * A callback listener for the EJB verifier.
-    */
-   class DeployListener implements VerificationListener
-   {
-      /* Accessing the EJBDeployer.log directory is
-       * causing a NoSuchMethodError when the log is used
-       * so obtain it via the getLog() method and then use
-       * logger
-       */
-      private final Logger logger = EJBDeployer.this.getLog();
-      
-      public void beanChecked( VerificationEvent event )
-      {
-         logger.debug( event.getMessage() );
-      }
-      
-      public void specViolation( VerificationEvent event )
-      {
-         if( verifierVerbose )
-            logger.info( event.getVerbose() );
-         else
-            logger.info( event.getMessage() );
-      }
    }
 }
 
