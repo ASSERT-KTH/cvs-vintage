@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.util.MailResourceLoader;
 
 public class ComposerPanel extends JPanel implements ActionListener {
 
@@ -44,8 +45,7 @@ public class ComposerPanel extends JPanel implements ActionListener {
 	}
 
 	public void updateComponents(boolean b) {
-
-		if (b == true) {
+		if (b) {
 			String path =
 				MailConfig.getComposerOptionsConfig().getSpellcheckItem().get(
 					"executable");
@@ -62,8 +62,10 @@ public class ComposerPanel extends JPanel implements ActionListener {
 		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		JPanel spellPanel = new JPanel();
 		spellPanel.setLayout(new BoxLayout(spellPanel, BoxLayout.X_AXIS));
-		//LOCALIZE
-		spellLabel = new JLabel("Path to aspell executable:");
+		spellLabel = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "aspell_path"));
 		spellPanel.add(spellLabel);
 		spellPanel.add(Box.createHorizontalStrut(5));
 		spellButton = new JButton("aspell.exe");
@@ -74,17 +76,18 @@ public class ComposerPanel extends JPanel implements ActionListener {
 		add(spellPanel, BorderLayout.NORTH);
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-		//LOCALIZE
-		emptySubjectCheckBox =
-			new JCheckBox("Ask when sending message with empty subject");
+		emptySubjectCheckBox = new JCheckBox(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "ask_on_empty_subject"));
 		emptySubjectCheckBox.setEnabled(false);
 		centerPanel.add(emptySubjectCheckBox);
 		centerPanel.add(Box.createVerticalGlue());
 		add(centerPanel, BorderLayout.CENTER);
-		//LOCALIZE
-		JLabel restartLabel =
-			new JLabel(
-				"These options affect only new composer windows.",
+		JLabel restartLabel = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "changes_affect_new_composer"),
 				SwingConstants.CENTER);
 		add(restartLabel, BorderLayout.SOUTH);
 	}
@@ -100,9 +103,7 @@ public class ComposerPanel extends JPanel implements ActionListener {
 				File file = fc.getSelectedFile();
 
 				spellButton.setText(file.getPath());
-
 			}
-
 		}
 	}
 }
