@@ -11,6 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -24,7 +26,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard berg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class SessionObjectInputStream
    extends ObjectInputStream
@@ -37,14 +39,14 @@ public class SessionObjectInputStream
       throws IOException
    {
       super(in);
-      enableResolveObject(true);
-      
+      EnableResolveObjectAction.enableResolveObject(this);
+
       this.ctx = ctx;
       
       // cache the application classloader
-      appCl = Thread.currentThread().getContextClassLoader();
+      appCl = SecurityActions.getContextClassLoader();
    }
-      
+
    // ObjectInputStream overrides -----------------------------------
    protected Object resolveObject(Object obj)
       throws IOException
@@ -125,5 +127,23 @@ public class SessionObjectInputStream
        return clazz;
    }
 
+   private static class EnableResolveObjectAction implements PrivilegedAction
+   {
+      SessionObjectInputStream is;
+      EnableResolveObjectAction(SessionObjectInputStream is)
+      {
+         this.is = is;
+      }
+      public Object run()
+      {
+         is.enableResolveObject(true);
+         return null;
+      }
+      static void enableResolveObject(SessionObjectInputStream is)
+      {
+         EnableResolveObjectAction action = new EnableResolveObjectAction(is);
+         AccessController.doPrivileged(action);
+      }
+   }
 }
 

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.RemoteStub;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBHome;
 import javax.ejb.Handle;
@@ -20,12 +22,13 @@ import javax.transaction.UserTransaction;
 
 
 /**
- * The SessionObjectOutputStream is used to serialize stateful session beans when they are passivated
+ * The SessionObjectOutputStream is used to serialize stateful session beans
+ * when they are passivated
  *      
  * @see org.jboss.ejb.plugins.SessionObjectInputStream
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard berg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class SessionObjectOutputStream
    extends ObjectOutputStream
@@ -35,9 +38,9 @@ public class SessionObjectOutputStream
       throws IOException
    {
       super(out);
-      enableReplaceObject(true);
+      EnableReplaceObjectAction.enableReplaceObject(this);
    }
-      
+
    // ObjectOutputStream overrides ----------------------------------
    protected Object replaceObject(Object obj)
       throws IOException
@@ -80,6 +83,25 @@ public class SessionObjectOutputStream
       }
 
       return replacement;
+   }
+
+   private static class EnableReplaceObjectAction implements PrivilegedAction
+   {
+      SessionObjectOutputStream os;
+      EnableReplaceObjectAction(SessionObjectOutputStream os)
+      {
+         this.os = os;
+      }
+      public Object run()
+      {
+         os.enableReplaceObject(true);
+         return null;
+      }
+      static void enableReplaceObject(SessionObjectOutputStream os)
+      {
+         EnableReplaceObjectAction action = new EnableReplaceObjectAction(os);
+         AccessController.doPrivileged(action);
+      }
    }
 }
 
