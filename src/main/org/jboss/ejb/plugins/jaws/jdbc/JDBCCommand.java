@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.43 $ 
+ * @version $Revision: 1.44 $ 
  * 
  *   <p><b>Revisions:</b>
  *
@@ -422,6 +422,11 @@ public abstract class JDBCCommand
         result = rs.getObject(idx);
         if(result == null)
             return null;
+
+      if(destination == java.math.BigInteger.class
+         && result.getClass() == java.math.BigDecimal.class) {
+         return ((java.math.BigDecimal)result).toBigInteger();
+      }
 
         if(destination.isAssignableFrom(result.getClass()) && !result.getClass().equals(MarshalledObject.class) )
             return result;
