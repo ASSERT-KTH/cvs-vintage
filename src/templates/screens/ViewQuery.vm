@@ -1,0 +1,47 @@
+<div class="app" id="viewquery">
+
+<p class="infomark"><em>$l10n.ReadOnlyViewOfQuery</em></p>
+#set ($currentQuery = $scarabR.getQuery())
+
+<form action="$link.setPage("ViewQuery.vm").setAction("Search")" method="post">
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,Approval.vm" />
+
+<div class="functnbar">
+   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+<h3>$l10n.format("QueryAndName", $currentQuery.Name)</h3>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+  <tr>
+   <th width="120">* $l10n.Name</th>
+   <td>
+       $currentQuery.Name
+   </td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.Description</th>
+   <td>$currentQuery.Description</td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.Availability</th>
+   <td>
+#if (!$data.User.CurrentMITList || $data.User.CurrentMITList.isSingleModule())
+    $currentQuery.Scope.Name
+#else
+    $l10n.CrossModuleQueriesHavePersonalScope
+#end
+   </td>
+  </tr>
+ </table>
+</div>
+
+#advancedQuery(false)
+
+<div class="functnbar2">
+   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+</form>
+</div>
