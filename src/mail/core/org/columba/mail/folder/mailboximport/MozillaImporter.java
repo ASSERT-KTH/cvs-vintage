@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
@@ -26,12 +27,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-
 /**
  * @version 1.0
  * @author
  */
-public class MozillaImporter extends DefaultMailboxImporter {
+public class MozillaImporter extends AbstractMailboxImporter {
     public MozillaImporter() {
         super();
     }
@@ -57,13 +57,13 @@ public class MozillaImporter extends DefaultMailboxImporter {
         // parse line by line
         while ((str = in.readLine()) != null) {
             // if user cancelled task exit immediately
-            if (worker.cancelled() == true) {
+            if (worker.cancelled()) {
                 return;
             }
 
             // if line doesn't start with "From" or line length is 0
             //  -> save everything in StringBuffer
-            if ((str.startsWith("From ") == false) || (str.length() == 0)) {
+            if (!str.startsWith("From ") || str.length() == 0) {
                 strbuf.append(str + "\n");
             } else {
                 // line contains "-" (mozilla mbox style)
@@ -88,7 +88,7 @@ public class MozillaImporter extends DefaultMailboxImporter {
 
         // save last message, because while loop aborted before being able to
         // save message
-        if ((sucess == true) && (strbuf.length() > 0)) {
+        if (sucess && strbuf.length() > 0) {
             saveMessage(strbuf.toString(), worker, getDestinationFolder());
         }
 

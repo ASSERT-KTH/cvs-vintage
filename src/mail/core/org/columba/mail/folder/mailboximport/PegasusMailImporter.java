@@ -16,6 +16,7 @@
 //
 //All Rights Reserved.dation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
+
 package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
@@ -27,12 +28,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-
 /**
  * @version 1.0
  * @author
  */
-public class PegasusMailImporter extends DefaultMailboxImporter {
+public class PegasusMailImporter extends AbstractMailboxImporter {
     public PegasusMailImporter() {
         super();
     }

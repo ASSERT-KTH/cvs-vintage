@@ -29,13 +29,13 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.core.facade.DialogFacade;
 
 /**
  * @author frd
  */
-public class MozillaMailImportFilter extends DefaultMailboxImporter {
+public class MozillaMailImportFilter extends AbstractMailboxImporter {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail");
@@ -132,17 +132,9 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 			File file = list[i];
 			LOG.fine("mailbox=" + file.getPath());
 
-			if (file == null)
-				continue;
-
 			// skip these config files
-			if (file.getName().endsWith(".msf"))
+			if (file.getName().endsWith(".msf") || file.getName().endsWith(".dat"))
 				continue;
-			if (file.getName().endsWith(".dat"))
-				continue;
-
-			if (file.isDirectory()) {
-			}
 
 			if (file.getName().endsWith(".sbd")) {
 				// directory found
@@ -212,7 +204,6 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 					DialogFacade.showExceptionDialog(ex);
 				}
 			}
-
 		}
 	}
 

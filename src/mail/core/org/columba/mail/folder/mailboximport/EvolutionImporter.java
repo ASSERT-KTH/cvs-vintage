@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
@@ -26,12 +27,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-
 /**
  * @version 1.0
  * @author
  */
-public class EvolutionImporter extends DefaultMailboxImporter {
+public class EvolutionImporter extends AbstractMailboxImporter {
     public EvolutionImporter() {
         super();
     }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
@@ -30,41 +31,30 @@ import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
-
-public abstract class DefaultMailboxImporter {
+/**
+ * This is the base class for mailbox importers.
+ */
+public abstract class AbstractMailboxImporter {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
+    
     protected MessageFolder destinationFolder;
     protected File[] sourceFiles;
+    protected int counter = 0;
 
-    //protected TempFolder tempFolder;
-    protected int counter;
-
-    public DefaultMailboxImporter(MessageFolder destinationFolder, File[] sourceFiles) {
-        this.destinationFolder = destinationFolder;
-        this.sourceFiles = sourceFiles;
-
-        init();
+    public AbstractMailboxImporter(MessageFolder destinationFolder, File[] sourceFiles) {
+        this();
+        setDestinationFolder(destinationFolder);
+        setSourceFiles(sourceFiles);
     }
 
     /**
      * Default constructor
-     * <p>
-     * Note that plugins have to use both constructors.
-     *
      */
-    public DefaultMailboxImporter() {
-    }
+    public AbstractMailboxImporter() {}
 
-    public void init() {
-        counter = 0;
-
-        //tempFolder = new TempFolder();
-    }
-
-    /*********** overwrite the following methods **************************/
     /**
-     * overwrite this method to specify type
+     * Override this method to specify type.
      * the wizard dialog will open the correct file/directory dialog automatically
      */
     public int getType() {
@@ -72,42 +62,43 @@ public abstract class DefaultMailboxImporter {
     }
 
     /**
-     * this method does all the import work
+     * Override this method to do the actual import work. In here, the messages
+     * should be read and passed to the folder using saveMessage.
      */
     public abstract void importMailboxFile(File file,
         WorkerStatusController worker, MessageFolder destFolder)
         throws Exception;
 
     /**
-     * enter a description which will be shown
-     * to the user here
+     * Override this method to provide an adequate description to the user.
      */
-    public String getDescription() {
-        return "";
-    }
+    public abstract String getDescription();
 
     /*********** intern methods (no need to overwrite these) ****************/
+    /**
+     * Sets the source files/directories.
+     */
     public void setSourceFiles(File[] files) {
         this.sourceFiles = files;
     }
 
     /**
-     * set destination folder
+     * Set the destination folder.
      */
     public void setDestinationFolder(MessageFolder folder) {
         destinationFolder = folder;
     }
 
     /**
-     *  counter for successfully imported messages
+     * Returns the number of successfully imported messages so far.
      */
     public int getCount() {
         return counter;
     }
 
     /**
-     *  this method calls your overridden importMailbox(File)-method
-     *  and handles exceptions
+     * This method calls your overridden importMailbox(File)-method
+     * and handles exceptions.
      */
     public void run(WorkerStatusController worker) {
         worker.setDisplayText("Importing messages...");
@@ -117,7 +108,7 @@ public abstract class DefaultMailboxImporter {
         if (getCount() == 0) {
             NotifyDialog dialog = new NotifyDialog();
             dialog.showDialog(
-                "Message import failed! No messages were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
+                "Message import failed! No messages were added to the folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or the messagebox simply didn't contain any messages.");
 
             return;
         } else if (getCount() > 0) {
@@ -129,13 +120,9 @@ public abstract class DefaultMailboxImporter {
     }
 
     /**
-     *
-     * Import all mailbox files in Columba
-     *
-     * This method makes use of the importMailbox method
-     * you have to overwrite and simple iterates over all
-     * given files/directories
-     *
+     * Import all mailbox files in Columba. This method makes use of the
+     * importMailbox method you have to override and simply iterates over all
+     * given files/directories.
      *
      * @param worker
      */
@@ -161,7 +148,7 @@ public abstract class DefaultMailboxImporter {
     }
 
     /**
-     * use this method to save a message to the specified destination folder
+     * Use this method to save a message in the specified destination folder.
      */
     protected void saveMessage(String rawString, WorkerStatusController worker,
         MessageFolder destFolder) throws Exception {
@@ -170,7 +157,6 @@ public abstract class DefaultMailboxImporter {
          * directly. Ensures size is set correctly by addMessage (bug #843657)
          */
 
-        //destFolder.addMessage(rawString);
         SourceInputStream in = new SourceInputStream(new CharSequenceSource(
                     rawString));
         destFolder.addMessage(in);
@@ -181,14 +167,14 @@ public abstract class DefaultMailboxImporter {
     }
 
     /**
-     * @return Folder
+     * Returns the folder new messages will be added to.
      */
     public MessageFolder getDestinationFolder() {
         return destinationFolder;
     }
 
     /**
-     * @return File[]
+     * Returns the source files/directories new messages will be read from.
      */
     public File[] getSourceFiles() {
         return sourceFiles;

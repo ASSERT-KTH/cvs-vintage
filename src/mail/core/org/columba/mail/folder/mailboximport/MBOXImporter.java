@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
@@ -24,8 +25,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-
-public class MBOXImporter extends DefaultMailboxImporter {
+public class MBOXImporter extends AbstractMailboxImporter {
     public MBOXImporter() {
         super();
     }
@@ -80,9 +80,6 @@ public class MBOXImporter extends DefaultMailboxImporter {
         in.close();
     }
 
-    /* (non-Javadoc)
- * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
- */
     public String getDescription() {
         return MailResourceLoader.getString("dialog", "mailboximport",
             "MBOX_description");
