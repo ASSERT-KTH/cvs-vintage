@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.19 2005/02/16 23:47:11 bobtarling Exp $
+// $Id: ToDoItem.java,v 1.20 2005/03/10 20:18:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,18 +53,24 @@ public class ToDoItem implements Serializable, WizardItem {
 
     ////////////////////////////////////////////////////////////////
     // constants
+
     /**
-     * The highest priority todoitem of 3 levels.
+     * The interruptive priority todoitem of 4 levels.
+     */
+    public static final int INTERRUPTIVE_PRIORITY = 9;
+
+    /**
+     * The high priority todoitem of 4 levels.
      */
     public static final int HIGH_PRIORITY = 1;
 
     /**
-     * The medium priority todoitem of 3 levels.
+     * The medium priority todoitem of 4 levels.
      */
     public static final int MED_PRIORITY = 2;
 
     /**
-     * The lowest priority todoitem of 3 levels.
+     * The lowest priority todoitem of 4 levels.
      */
     public static final int LOW_PRIORITY = 3;
 
