@@ -24,7 +24,7 @@
 // File: FigPermission.java
 // Classes: FigPermission
 // Original Author: Markus Klink
-// $Id: FigPermission.java,v 1.1 2002/10/18 11:47:20 mkl Exp $
+// $Id: FigPermission.java,v 1.2 2002/10/22 08:48:45 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -38,17 +38,21 @@ import org.tigris.gef.presentation.*;
 
 public class FigPermission extends FigDependency {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
-  protected ArrowHeadGreater endArrow;
+    ////////////////////////////////////////////////////////////////
+    // constructors
+    protected ArrowHeadGreater endArrow;
 
-  public FigPermission() {
-      super();
-  }
+    public FigPermission() {
+        super();
+    }
 
-  public FigPermission(Object edge) {
-      super(edge);
-  }
+    public FigPermission(Object edge) {
+        super(edge);
+    }
 
-} /* end class FigDependency */
+    public FigPermission(Object edge, Layer lay) {
+        super(edge,lay);
+    }
+        
+} /* end class FigPermission */
 

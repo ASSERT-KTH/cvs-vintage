@@ -24,7 +24,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.2 2002/07/26 06:59:12 mkl Exp $
+// $Id: FigDependency.java,v 1.3 2002/10/22 08:48:45 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -54,6 +54,12 @@ public class FigDependency extends FigEdgeModelElement {
     this();
     setOwner(edge);
   }
+
+    public FigDependency(Object edge, Layer lay) {
+        this();
+        setOwner(edge);
+        setLayer(lay);
+    }
 
   ////////////////////////////////////////////////////////////////
   // accessors
