@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.21 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: Registers.java,v 1.22 2004/09/01 22:52:05 spestov Exp $
  */
 public class Registers
 {
@@ -499,8 +499,12 @@ public class Registers
 	static
 	{
 		registers = new Register[256];
-		registers['$'] = new ClipboardRegister(Toolkit
-			.getDefaultToolkit().getSystemClipboard());
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		registers['$'] = new ClipboardRegister(
+			toolkit.getSystemClipboard());
+		Clipboard selection = toolkit.getSystemSelection();
+		if(selection != null)
+			registers['%'] = new ClipboardRegister(selection);
 	}
 
 	//{{{ loadRegisters() method

@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.111 2004/05/06 22:35:11 spestov Exp $
+ * @version $Id: View.java,v 1.112 2004/09/01 22:52:05 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1068,7 +1068,7 @@ public class View extends JFrame implements EBComponent
 		config.y = getY();
 		config.width = getWidth();
 		config.height = getHeight();
-		config.extState = GUIUtilities.getExtendedState(this);
+		config.extState = getExtendedState();
 
 		config.top = dockableWindowManager.getTopDockingArea().getCurrent();
 		config.left = dockableWindowManager.getLeftDockingArea().getCurrent();
@@ -1213,6 +1213,8 @@ public class View extends JFrame implements EBComponent
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowHandler());
+
+		setFocusTraversalPolicy(new MyFocusTraversalPolicy());
 
 		EditBus.addToBus(this);
 
@@ -1767,6 +1769,15 @@ loop:		for(;;)
 			this.width = width;
 			this.height = height;
 			this.extState = extState;
+		}
+	} //}}}
+
+	//{{{ MyFocusTraversalPolicy class
+	static class MyFocusTraversalPolicy extends LayoutFocusTraversalPolicy
+	{
+		public Component getDefaultComponent(Container focusCycleRoot)
+		{
+			return GUIUtilities.getView(focusCycleRoot).getTextArea();
 		}
 	} //}}}
 

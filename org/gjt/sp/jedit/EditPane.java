@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.51 2004/08/17 06:37:35 spestov Exp $
+ * @version $Id: EditPane.java,v 1.52 2004/09/01 22:52:05 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -380,26 +380,6 @@ public class EditPane extends JPanel implements EBComponent
 
 	//{{{ Private members
 
-	private static Method initBufferSwitcher;
-
-	static
-	{
-		if(OperatingSystem.hasJava14())
-		{
-			try
-			{
-				initBufferSwitcher = Java14.class
-					.getMethod("initBufferSwitcher",
-					new Class[] { EditPane.class,
-					BufferSwitcher.class });
-			}
-			catch(Exception e)
-			{
-				Log.log(Log.ERROR,EditPane.class,e);
-			}
-		}
-	}
-
 	//{{{ Instance variables
 	private boolean init;
 	private View view;
@@ -549,21 +529,6 @@ public class EditPane extends JPanel implements EBComponent
 			if(bufferSwitcher == null)
 			{
 				bufferSwitcher = new BufferSwitcher(this);
-				if(initBufferSwitcher != null)
-				{
-					try
-					{
-						initBufferSwitcher.invoke(
-							null,new Object[] {
-								EditPane.this,
-								bufferSwitcher
-							});
-					}
-					catch(Exception e)
-					{
-						Log.log(Log.ERROR,this,e);
-					}
-				}
 				add(BorderLayout.NORTH,bufferSwitcher);
 				bufferSwitcher.updateBufferList();
 				revalidate();

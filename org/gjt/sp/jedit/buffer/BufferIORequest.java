@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2003 Slava Pestov
+ * Copyright (C) 2000, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ package org.gjt.sp.jedit.buffer;
 //{{{ Imports
 import javax.swing.text.Segment;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.zip.*;
 import java.util.Vector;
 import org.gjt.sp.jedit.io.*;
@@ -35,7 +36,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.29 2004/09/01 21:57:16 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.30 2004/09/01 22:52:06 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -400,7 +401,7 @@ public class BufferIORequest extends WorkRequest
 						encoding = xmlPI.substring(
 							index + 10,endIndex);
 
-						if(MiscUtilities.isSupportedEncoding(encoding))
+						if(Charset.isSupported(encoding))
 						{
 							buffer.setProperty(Buffer.ENCODING,encoding);
 						}
