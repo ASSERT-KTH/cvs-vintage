@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.98 2002/06/14 01:31:52 dsundstrom Exp $ -->
+<!-- $Id: build.xml,v 1.99 2002/06/15 16:58:16 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -575,6 +575,15 @@
         <include name="org/jboss/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
+      </fileset>
+    </jar>
+
+    <!-- jboss-minimal.jar -->
+    <jar jarfile="${build.lib}/jboss-minimal.jar"
+         manifest="${build.etc}/manifest/version.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/logging/**"/>
+        <include name="org/jboss/naming/**"/>
       </fileset>
     </jar>
 
