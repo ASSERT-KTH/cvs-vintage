@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.4 2005/01/09 14:58:56 linus Exp $
+// $Id: FigAssociationClass.java,v 1.5 2005/02/02 19:34:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,58 +106,65 @@ public class FigAssociationClass
         final FigAssociationClass currentFig = this;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                currentFig.removePathItem(getMiddleGroup());
-                Editor editor = Globals.curEditor();
-                GraphModel graphModel = editor.getGraphModel();
-                MutableGraphModel mutableGraphModel = (MutableGraphModel)
-                        graphModel;
-                if (mutableGraphModel instanceof ClassDiagramGraphModel) {
-                    mutableGraphModel.addNode(currentFig.getOwner());
-                    int x = head.getX();
-                    int y = head.getY();
-                    ArgoDiagram diagram =
-                            ProjectManager.getManager().getCurrentProject().
-                            getActiveDiagram();
-                    Layer lay = diagram.getLayer();
-                    Rectangle drawingArea = ProjectBrowser.getInstance()
-                        .getEditorPane().getBounds();
+                ArgoDiagram diagram =
+                        ProjectManager.getManager().getCurrentProject().
+                        getActiveDiagram();
+                Layer lay = diagram.getLayer();
+                if (currentFig.getOwner() == null) {
+                    currentFig.removeFromDiagram();
+                }
+                else {
+                    currentFig.removePathItem(getMiddleGroup());
+                    Editor editor = Globals.curEditor();
+                    GraphModel graphModel = editor.getGraphModel();
+                    MutableGraphModel mutableGraphModel = (MutableGraphModel)
+                            graphModel;
+                    if (mutableGraphModel instanceof ClassDiagramGraphModel) {
+                        mutableGraphModel.addNode(currentFig.getOwner());
+                        int x = head.getX();
+                        int y = head.getY();
 
-                    Iterator nodes = lay.getContentsNoEdges().iterator();
-                    while (nodes.hasNext()) {
-                        Fig auxFig = (Fig) nodes.next();
-                        if (auxFig.getOwner().equals(currentFig.getOwner())
-                                && auxFig instanceof FigClassAssociationClass) {
-                            fig = (FigClassAssociationClass) auxFig;
-                            fig.setMainFig(currentFig);
-                            break;
+                        Rectangle drawingArea = ProjectBrowser.getInstance()
+                                .getEditorPane().getBounds();
+                        Iterator nodes = lay.getContentsNoEdges().iterator();
+                        while (nodes.hasNext()) {
+                            Fig auxFig = (Fig) nodes.next();
+                            if (auxFig.getOwner().equals(currentFig.getOwner())
+                                    && auxFig  
+                                    instanceof FigClassAssociationClass) {
+                                fig = (FigClassAssociationClass) auxFig;
+                                fig.setMainFig(currentFig);
+                                break;
+                            }
                         }
-                    }
-                    if (fig == null) {
-                        fig = new FigClassAssociationClass(currentFig);
-                        fig.setOwner(currentFig.getOwner());
-                        y = y - DISTANCE;
-                        if (y < 0)
-                            y = head.getY() + fig.getHeight() + DISTANCE;
-                        if (x + fig.getWidth() > drawingArea.getWidth())
-                            x = head.getX() - DISTANCE;
-                        fig.setLocation(x, y);
-                        lay.add(fig);
-                    }
+                        if (fig == null) {
+                            fig = new FigClassAssociationClass(currentFig);
+                            fig.setOwner(currentFig.getOwner());
+                            y = y - DISTANCE;
+                            if (y < 0)
+                                y = head.getY() + fig.getHeight() + DISTANCE;
+                            if (x + fig.getWidth() > drawingArea.getWidth())
+                                x = head.getX() - DISTANCE;
+                            fig.setLocation(x, y);
+                            lay.add(fig);
+                        }
 
-                    Iterator edges = lay.getContentsEdgesOnly().iterator();
-                    while (edges.hasNext()) {
-                        Fig auxFig = (Fig) edges.next();
-                        if (auxFig instanceof FigEdgeAssociationClass
-                                && auxFig.getOwner() == null) {
-                            lay.remove(auxFig);
-                            break;
+                        Iterator edges = lay.getContentsEdgesOnly().iterator();
+                        while (edges.hasNext()) {
+                            Fig auxFig = (Fig) edges.next();
+                            if (auxFig instanceof FigEdgeAssociationClass
+                                    && auxFig.getOwner() == null) {
+                                lay.remove(auxFig);
+                                break;
+                            }
                         }
+                        edge = 
+                            new FigEdgeAssociationClass(head, fig, currentFig);
+                        edge.setOwner(currentFig.getOwner());
+                        lay.add(edge);
+                        edge.damage();
+                        fig.damage();
                     }
-                    edge = new FigEdgeAssociationClass(head, fig, currentFig);
-                    edge.setOwner(currentFig.getOwner());
-                    lay.add(edge);
-                    edge.damage();
-                    fig.damage();
                 }
             }
         });
