@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.7 $
+* @version $Revision: 1.8 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -131,15 +131,6 @@ implements EARDeployerMBean
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
       
-      // Create the appropriate JSR-77 instance
-//      /*  
-      ObjectName lApplication = J2EEApplication.create(
-         server,
-         di.shortName,
-         di.url
-         // di.getApplicationDeploymentDescriptor()
-      );
-//      */
    }
    
    
@@ -149,14 +140,11 @@ implements EARDeployerMBean
       // now try to deploy
       log.info("Deploying J2EE application, create step: " + di.url);
       // Create the appropriate JSR-77 instance
-//      /*  
       ObjectName lApplication = J2EEApplication.create(
          server,
          di.shortName,
          di.url
-         // di.getApplicationDeploymentDescriptor()
       );
-//      */
    }
    
    public void start(DeploymentInfo di)
@@ -179,13 +167,11 @@ implements EARDeployerMBean
    public void destroy(DeploymentInfo di) throws DeploymentException
    {
       log.info("Undeploying J2EE application, destroy step: " + di.url);
-//      /*
       // Destroy the appropriate JSR-77 instance
       J2EEApplication.destroy(
          server,
          di.shortName
       );
-//      */
    }
    
    
