@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.22 2003/02/03 19:12:22 jmcnally Exp $
+ * @version $Id: ScarabIssues.java,v 1.23 2003/02/18 21:22:47 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -880,14 +880,23 @@ public class ScarabIssues implements java.io.Serializable
                         }
                         else if (avalAttributeOM.isUserAttribute())
                         {
-                            log.debug("We have a User Attribute: " + avalAttributeOM.getName());
+                            log.debug("We have a User Attribute: " 
+                                + avalAttributeOM.getName());
                             if (activity.isNewActivity())
                             {
-                                // don't need to pass in the attachment because it is already
-                                // in the activitySetOM
-                                issueOM.assignUser(activitySetOM, activity.getDescription(),
-                                                   activitySetCreatedByOM, null,
-                                                   avalAttributeOM, null);
+                                // Don't need to pass in the attachment because
+                                // it is already in the activitySetOM.
+                                // If we can't get an assignee new-user, then 
+                                // use the activity set creator as assignee.
+                                @OM@.ScarabUser assigneeOM 
+                                    = @OM@.ScarabUserManager
+                                    .getInstance(activity.getNewUser(), 
+                                    module.getDomain());
+                                assigneeOM = (assigneeOM != null)
+                                    ? assigneeOM: activitySetCreatedByOM;
+                                issueOM.assignUser(activitySetOM, 
+                                    activity.getDescription(), 
+                                    assigneeOM, null, avalAttributeOM, null);
                                 log.debug("-------------Saved User Assign-------------");
                                 break;
                             }
