@@ -6,12 +6,14 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
+import javax.management.ObjectName;
+import javax.management.MalformedObjectNameException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ import java.util.StringTokenizer;
 public class TimerHandleImpl implements TimerHandle
 {
    /** The date pattern used by this handle */
-   public static final String DATE_PATTERN = "dd-MMM-yyy HH:mm:ss";
+   public static final String DATE_PATTERN = "dd-MMM-yyyy HH:mm:ss.SSS";
 
    // The initial txtimer properties
    private TimedObjectId timedObjectId;
@@ -41,7 +43,7 @@ public class TimerHandleImpl implements TimerHandle
    /**
     * Construct a handle from a timer
     */
-   TimerHandleImpl (TimerImpl timer)
+   TimerHandleImpl(TimerImpl timer)
    {
       timedObjectId = timer.getTimedObjectId();
       firstTime = timer.getFirstTime();
@@ -54,39 +56,62 @@ public class TimerHandleImpl implements TimerHandle
    /**
     * Construct a handle from external form
     */
-   public TimerHandleImpl(String externalForm) throws ParseException
+   public TimerHandleImpl(String externalForm)
    {
-      StringTokenizer st = new StringTokenizer(externalForm, "[,=]");
-      if (st.countTokens() % 2 != 0)
-         throw new IllegalArgumentException("Cannot parse: " + externalForm);
+      if (externalForm.startsWith("[") == false || externalForm.endsWith("]") == false)
+         throw new IllegalArgumentException("Square brackets expected arround: " + externalForm);
 
-      SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
-
-      periode = -1;
-
-      String id = null;
-      String pk = null;
-
-      while(st.hasMoreTokens())
+      try
       {
-         String key = st.nextToken();
-         String value = st.nextToken();
-         if (key.equals("id"))
-            id = value;
-         if (key.equals("pk"))
-            pk = value;
-         if (key.equals("created"))
-            createDate = sdf.parse(value);
-         if (key.equals("first"))
-            firstTime = sdf.parse(value);
-         if (key.equals("periode"))
-            periode = new Integer(value).intValue();
+         // take first and last char off
+         String inStr = externalForm.substring(1, externalForm.length() - 1);
+
+         int pkIndex = inStr.indexOf("pk=");
+         if (pkIndex < 0)
+            throw new IllegalArgumentException("Cannot find 'pk=' in: " + inStr);
+
+         String idStr = inStr.substring(0, pkIndex);
+         String pkAndRestStr = inStr.substring(pkIndex);
+
+         idStr = new ObjectName(idStr).toString();
+
+         StringTokenizer st = new StringTokenizer(pkAndRestStr, ",=");
+         if (st.countTokens() % 2 != 0)
+            throw new IllegalArgumentException("Cannot parse: " + pkAndRestStr);
+
+         SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+
+         periode = -1;
+
+         String pk = null;
+         while (st.hasMoreTokens())
+         {
+            String key = st.nextToken();
+            String value = st.nextToken();
+            if (key.equals("pk"))
+               pk = value;
+            if (key.equals("created"))
+               createDate = sdf.parse(value);
+            if (key.equals("first"))
+               firstTime = sdf.parse(value);
+            if (key.equals("periode"))
+               periode = new Integer(value).intValue();
+         }
+
+         if (createDate == null || firstTime == null || periode < 0)
+            throw new IllegalArgumentException("Cannot parse: " + externalForm);
+
+         timedObjectId = new TimedObjectId(idStr, pk);
+      }
+      catch (MalformedObjectNameException e)
+      {
+         throw new IllegalArgumentException("id is not a valid object name: " + externalForm);
+      }
+      catch (ParseException e)
+      {
+         throw new IllegalArgumentException("Cannot parse date/time in: " + externalForm);
       }
 
-      if (id == null || createDate == null || firstTime == null || periode < 0)
-         throw new IllegalArgumentException("Cannot parse: " + externalForm);
-
-      timedObjectId = new TimedObjectId(id, pk);
    }
 
    /**
@@ -98,9 +123,9 @@ public class TimerHandleImpl implements TimerHandle
       SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
       String created = sdf.format(createDate);
       String firstEvent = sdf.format(firstTime);
-      String id = timedObjectId.getTimedObjectId();
+      String id = timedObjectId.getContainerId();
       Object pk = timedObjectId.getInstancePk();
-      return "[id=" + id + "pk=" + pk + ",created=" + created + ",first=" + firstEvent  + ",periode=" + periode + "]";
+      return "[id=" + id + ",pk=" + pk + ",created=" + created + ",first=" + firstEvent + ",periode=" + periode + "]";
    }
 
    TimedObjectId getTimedObjectId()
@@ -141,8 +166,8 @@ public class TimerHandleImpl implements TimerHandle
    public Timer getTimer() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
 
-      EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
-      TimerServiceImpl timerService = (TimerServiceImpl)ejbTimerService.getTimerService(timedObjectId);
+      EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
+      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
       Timer timer = timerService.getTimer(this);
 
       if (timer == null)

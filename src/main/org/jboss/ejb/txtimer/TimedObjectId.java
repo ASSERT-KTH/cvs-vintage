@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectId.java,v 1.1 2004/04/09 22:47:01 tdiesler Exp $
+// $Id: TimedObjectId.java,v 1.2 2004/04/13 10:10:40 tdiesler Exp $
 
 import java.io.Serializable;
 
@@ -18,21 +18,21 @@ import java.io.Serializable;
  */
 public class TimedObjectId implements Serializable
 {
-   private String timedObjectId;
+   private String containerId;
    private Object instancePk;
    private int hashCode;
 
    /**
     * Construct a combined TimedObjectId
-    * @param timedObjectId The TimedObject identifier
+    * @param containerId The TimedObject identifier
     * @param instancePk The TimedObject instance identifier, can be null
     */
-   public TimedObjectId(String timedObjectId, Object instancePk)
+   public TimedObjectId(String containerId, Object instancePk)
    {
-      if (timedObjectId == null)
-         throw new IllegalArgumentException("timedObjectId cannot be null");
+      if (containerId == null)
+         throw new IllegalArgumentException("containerId cannot be null");
 
-      this.timedObjectId = timedObjectId;
+      this.containerId = containerId;
       this.instancePk = instancePk;
    }
 
@@ -45,9 +45,9 @@ public class TimedObjectId implements Serializable
       this(timedObjectId, null);
    }
 
-   public String getTimedObjectId()
+   public String getContainerId()
    {
-      return timedObjectId;
+      return containerId;
    }
 
    public Object getInstancePk()
@@ -68,7 +68,7 @@ public class TimedObjectId implements Serializable
       if (obj instanceof TimedObjectId)
       {
          TimedObjectId other = (TimedObjectId)obj;
-         if (timedObjectId.equals(other.timedObjectId))
+         if (containerId.equals(other.containerId))
             return (instancePk != null ? instancePk.equals(other.instancePk) : other.instancePk == null);
       }
       return false;
@@ -76,6 +76,6 @@ public class TimedObjectId implements Serializable
 
    public String toString()
    {
-      return "[id=" + timedObjectId + ",pk=" + instancePk + "]";
+      return "[id=" + containerId + ",pk=" + instancePk + "]";
    }
 }

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectEJBInvoker.java,v 1.1 2004/04/09 22:45:26 tdiesler Exp $
+// $Id: TimedObjectInvokerImpl.java,v 1.1 2004/04/13 10:10:40 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -27,17 +27,19 @@ import java.io.Serializable;
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */
-public class TimedObjectEJBInvoker implements TimedObjectInvoker
+public class TimedObjectInvokerImpl implements TimedObjectInvoker
 {
 
    private Container container;
+   private TimedObjectId timedObjectId;
    private Method method;
 
-   public TimedObjectEJBInvoker(Container container)
+   public TimedObjectInvokerImpl(Container container, TimedObjectId timedObjectId)
    {
       try
       {
          this.container = container;
+         this.timedObjectId = timedObjectId;
          this.method = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
       catch (NoSuchMethodException ignore)
@@ -48,17 +50,16 @@ public class TimedObjectEJBInvoker implements TimedObjectInvoker
    /**
     * Invokes the ejbTimeout method on the TimedObject with the given id.
     *
-    * @param id The combined TimedObjectId
     * @param timer The Timer that is passed to ejbTimeout
     */
-   public void invokeTimedObject(TimedObjectId id, Timer timer)
+   public void callTimeout(Timer timer)
            throws Exception
    {
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
       try
       {
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-         Invocation inv = new Invocation(id.getInstancePk(), method, new Object[]{timer}, null, null, null);
+         Invocation inv = new Invocation(timedObjectId.getInstancePk(), method, new Object[]{timer}, null, null, null);
          inv.setType(InvocationType.LOCAL);
          container.invoke(inv);
       }

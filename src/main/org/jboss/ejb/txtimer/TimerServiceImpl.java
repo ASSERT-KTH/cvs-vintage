@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -162,7 +162,6 @@ public class TimerServiceImpl implements TimerService
       try
       {
          TimerImpl timer = new TimerImpl(timedObjectId, initialExpiration, intervalDuration, info);
-         log.debug("createTimer: " + timer);
          return timer;
       }
       catch (Exception e)
@@ -224,12 +223,29 @@ public class TimerServiceImpl implements TimerService
 
    /**
     * Kill the timer for the given handle
-    */ 
+    */
    public void killTimer(TimerHandle handle)
    {
       TimerImpl timer = (TimerImpl)timers.get(handle);
       if (timer != null)
          timer.killTimer();
+   }
+
+   /**
+    * Kill all timers
+    */
+   public void killAllTimers()
+   {
+      synchronized (timers)
+      {
+         Iterator it = timers.values().iterator();
+         while (it.hasNext())
+         {
+            TimerImpl timer = (TimerImpl) it.next();
+            it.remove();
+            timer.killTimer();
+         }
+      }
    }
 
    /**

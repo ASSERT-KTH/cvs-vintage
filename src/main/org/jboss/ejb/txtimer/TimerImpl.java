@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.4 2004/04/13 10:10:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -33,6 +33,36 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    // logging support
    private static Logger log = Logger.getLogger(TimerImpl.class);
 
+   /** Timer states and their allowed transitions
+    *
+    * CREATED  - on create
+    * CREATED -> STARTED_IN_TX - when strated with Tx
+    * CREATED -> ACTIVE  - when started without Tx
+    * STARTED_IN_TX -> ACTIVE - on Tx commit
+    * STARTED_IN_TX -> CANCELED - on Tx rollback
+    * ACTIVE -> CANCELED_IN_TX - on cancel() with Tx
+    * ACTIVE -> CANCELED - on cancel() without Tx
+    * CANCELED_IN_TX -> CANCELED - on Tx commit
+    * CANCELED_IN_TX -> ACTIVE - on Tx rollback
+    * ACTIVE -> IN_TIMEOUT - on TimerTask run
+    * IN_TIMEOUT -> ACTIVE - on Tx commit if periode > 0
+    * IN_TIMEOUT -> EXPIRED -> on Tx commit if periode == 0
+    * IN_TIMEOUT -> RETRY_TIMEOUT -> on Tx rollback
+    * RETRY_TIMEOUT -> ACTIVE -> on Tx commit/rollback if periode > 0
+    * RETRY_TIMEOUT -> EXPIRED -> on Tx commit/rollback if periode == 0
+    */
+   private static final int CREATED = 0;
+   private static final int STARTED_IN_TX = 1;
+   private static final int ACTIVE = 2;
+   private static final int CANCELED_IN_TX = 3;
+   private static final int CANCELED = 4;
+   private static final int EXPIRED = 5;
+   private static final int IN_TIMEOUT = 6;
+   private static final int RETRY_TIMEOUT = 7;
+
+   private static final String[] TIMER_STATES = {"created", "started_in_tx", "active","canceled_in_tx",
+                                           "canceled", "expired", "in_timeout", "retry_timeout"};
+
    // The initial txtimer properties
    private TimedObjectId timedObjectId;
    private Date firstTime;
@@ -41,11 +71,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private Serializable info;
 
    private long nextExpire;
-   private boolean startedTx;
-   private boolean started;
-   private boolean canceledTx;
-   private boolean canceled;
-   private boolean expired;
+   private int timerState;
    private Timer utilTimer;
    private int hashCode;
 
@@ -61,6 +87,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       this.info = info;
 
       nextExpire = firstTime.getTime();
+      setTimerState(CREATED);
 
       TimerServiceImpl timerService = getTimerService();
       timerService.addTimer(this);
@@ -120,10 +147,10 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public void killTimer()
    {
       log.debug("killTimer: " + this);
+      setTimerState(CANCELED);
       TimerServiceImpl timerService = getTimerService();
       timerService.removeTimer(this);
       utilTimer.cancel();
-      canceled = true;
    }
 
    /**
@@ -225,10 +252,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public String toString()
    {
       long remaining = nextExpire - System.currentTimeMillis();
-      String retStr = "[id=" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode;
-      if (isExpired()) retStr += ",expired";
-      if (isCanceledInTx()) retStr += ",canceled";
-      return retStr + "]";
+      String retStr = "[" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode +
+         "," + TIMER_STATES[timerState] + "]";
+      return retStr;
    }
 
    /**
@@ -251,6 +277,12 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       }
    }
 
+   private void setTimerState(int timerState)
+   {
+      log.debug("setTimerState: " + TIMER_STATES[timerState]);
+      this.timerState = timerState;
+   }
+
    private void startInTx()
    {
       TimerServiceImpl timerService = getTimerService();
@@ -262,48 +294,18 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
          utilTimer.schedule(new TimerTaskImpl(this), new Date(nextExpire));
 
       if (timerService.getTransaction() != null)
-         startedTx = true;
+         setTimerState(STARTED_IN_TX);
       else
-         started = true;
-   }
-
-   private boolean isStartedInTx()
-   {
-      return started || startedTx;
-   }
-
-   private boolean isStarted()
-   {
-      return started;
+         setTimerState(ACTIVE);
    }
 
    private void cancelInTx()
    {
       TimerServiceImpl timerService = getTimerService();
       if (timerService.getTransaction() != null)
-      {
-         log.debug("cancelInTx: " + this);
-         canceledTx = true;
-      }
+         setTimerState(CANCELED_IN_TX);
       else
-      {
          killTimer();
-      }
-   }
-
-   private boolean isCanceledInTx()
-   {
-      return canceled || canceledTx;
-   }
-
-   private boolean isCanceled()
-   {
-      return canceled;
-   }
-
-   public boolean isExpired()
-   {
-      return expired;
    }
 
    /**
@@ -311,7 +313,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
     */
    private TimerServiceImpl getTimerService()
    {
-      EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
+      EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
       TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
       if (timerService == null)
          throw new NoSuchObjectLocalException("Cannot find TimerService: " + timedObjectId);
@@ -324,9 +326,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
     */
    private void assertTimedOut()
    {
-      if (expired)
+      if (timerState == EXPIRED)
          throw new NoSuchObjectLocalException("Timer has expired");
-      if (isCanceledInTx())
+      if (timerState == CANCELED_IN_TX || timerState == CANCELED)
          throw new NoSuchObjectLocalException("Timer was canceled");
    }
 
@@ -352,23 +354,32 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       if (status == Status.STATUS_COMMITTED)
       {
          log.debug("commit: " + this);
-         if (isCanceledInTx())
-            killTimer();
-         started = isStartedInTx();
+
+         if (timerState == STARTED_IN_TX)
+            setTimerState(ACTIVE);
+         else if (timerState == CANCELED_IN_TX)
+            setTimerState(CANCELED);
+         else if (timerState == IN_TIMEOUT || timerState == RETRY_TIMEOUT)
+            setTimerState(periode == 0 ? EXPIRED : ACTIVE);
       }
 
       if (status == Status.STATUS_ROLLEDBACK)
       {
          log.debug("rollback: " + this);
 
-         if (isCanceledInTx() && isCanceled() == false)
-            canceledTx = false;
-
-         if (isStartedInTx() && isStarted() == false)
-            startedTx = false;
-
-         if (isStartedInTx() == false)
+         if (timerState == STARTED_IN_TX)
             killTimer();
+         else if (timerState == CANCELED_IN_TX)
+            setTimerState(ACTIVE);
+         else if (timerState == IN_TIMEOUT)
+         {
+            setTimerState(RETRY_TIMEOUT);
+            log.debug("retry: " + this);
+            EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
+            ejbTimerService.retryTimeout(timedObjectId, this);
+         }
+         else if (timerState == IN_TIMEOUT || timerState == RETRY_TIMEOUT)
+            setTimerState(periode == 0 ? EXPIRED : ACTIVE);
       }
    }
    // TimerTask ********************************************************************************************************
@@ -392,26 +403,29 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       {
          log.debug("run: " + timer);
 
-         if (isStartedInTx() == true && periode > 0)
+         if ((timerState == STARTED_IN_TX || timerState == ACTIVE) && periode > 0)
             nextExpire += periode;
 
-         if (isStartedInTx() == true && isCanceledInTx() == false)
+         if (timerState == STARTED_IN_TX || timerState == ACTIVE)
          {
             try
             {
-               EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
-               ejbTimerService.invokeTimedObject(timedObjectId, timer);
+               EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
+               setTimerState(IN_TIMEOUT);
+               ejbTimerService.callTimeout(timedObjectId, timer);
             }
             catch (Exception e)
             {
                log.error("Error invoking ejbTimeout: " + e.toString());
             }
-         }
-
-         if (periode == 0)
-         {
-            expired = true;
-            killTimer();
+            finally
+            {
+               if (timerState == IN_TIMEOUT)
+               {
+                  log.warn("Timer was not registered with Tx, reseting state");
+                  setTimerState(periode == 0 ? EXPIRED : ACTIVE);
+               }
+            }
          }
       }
    }
