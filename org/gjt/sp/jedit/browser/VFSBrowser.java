@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.42 2002/06/01 02:32:02 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.43 2002/06/01 05:15:09 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1044,7 +1044,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 			{
 				toolbar = createToolBar();
 				toolbar.add(Box.createGlue());
-				toolbarBox.add(toolbar);
+				toolbarBox.add(toolbar,0);
 				revalidate();
 			}
 			else if(!showToolbar && toolbar != null)
