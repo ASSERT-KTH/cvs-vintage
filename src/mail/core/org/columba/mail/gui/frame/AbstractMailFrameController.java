@@ -27,12 +27,11 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.folderoptions.IFolderOptionsController;
-import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.attachment.IAttachmentController;
+import org.columba.mail.gui.message.AttachmentController;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.MessageController;
 
@@ -145,7 +144,7 @@ public class AbstractMailFrameController extends DefaultFrameController
 	/**
 	 * @see org.columba.mail.gui.frame.AttachmentViewOwner#getAttachmentController()
 	 */
-	public IAttachmentController getAttachmentController() {
+	public AttachmentController getAttachmentController() {
 		return attachmentController;
 	}
 

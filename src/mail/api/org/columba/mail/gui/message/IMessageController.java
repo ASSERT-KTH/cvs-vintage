@@ -21,7 +21,6 @@ import java.util.Observer;
 
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * @author fdietz
@@ -61,8 +60,6 @@ public interface IMessageController {
 	void clear();
 	
 	IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
-	
-	void setMimePartTree(MimeTree mimeTree);
 	
 	void addURLObserver(Observer observer);
 }

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment.util;
+package org.columba.mail.gui.message.attachment.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +33,7 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public final class AttachmentImageIconLoader {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment.util");
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message.attachment.util");
 
     /**
      * Utility constructor.

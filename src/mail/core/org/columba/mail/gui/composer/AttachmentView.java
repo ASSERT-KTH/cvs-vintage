@@ -21,7 +21,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
+import org.columba.mail.gui.message.attachment.util.AttachmentImageIconLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;

@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment.selection;
+package org.columba.mail.gui.message.attachment.selection;
 
 import java.util.logging.Logger;
 
@@ -26,10 +26,8 @@ import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.attachment.AttachmentView;
-import org.columba.mail.gui.attachment.IAttachmentController;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.message.AttachmentController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.frapuccino.iconpanel.IconPanelSelectionListener;
@@ -45,22 +43,20 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 
 	private Object messageUid;
 
-	private AttachmentView view;
-
 	private Integer[] address;
 
 	private boolean useLocalSelection;
 
-	private IAttachmentController controller;
+	private AttachmentController controller;
 
 	public AttachmentSelectionHandler(AttachmentController c) {
 		super("mail.attachment");
-		this.view = c.getView();
+		this.controller = c;
 
 		TableController tableController = ((TableController)((TableViewOwner) c
 				.getFrameController()).getTableController());
 
-		view.addIconPanelSelectionListener(this);
+		controller.getView().addIconPanelSelectionListener(this);
 
 		useLocalSelection = false;
 	}
@@ -87,13 +83,13 @@ public class AttachmentSelectionHandler extends SelectionHandler implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.columba.mail.gui.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
+	 * @see org.columba.mail.gui.message.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
 	 */
 	public void selectionChanged(int[] newselection) {
 		useLocalSelection = false;
 
 		if (newselection.length > 0) {
-			address = view.getSelectedMimePart().getAddress();
+			address = controller.getSelectedMimePart().getAddress();
 		} else {
 			address = null;
 		}

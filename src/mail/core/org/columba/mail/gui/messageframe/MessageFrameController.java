@@ -29,10 +29,10 @@ import org.columba.core.gui.frame.ContentPane;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
@@ -167,7 +167,7 @@ public class MessageFrameController extends AbstractMailFrameController
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
-		panel.add(messageController.getView(), BorderLayout.CENTER);
+		panel.add(messageController, BorderLayout.CENTER);
 
 		ViewItem viewItem = getViewItem();
 

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment.command;
+package org.columba.mail.gui.message.attachment.command;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +45,7 @@ import org.columba.ristretto.message.MimeHeader;
  */
 public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	private static final Logger LOG = Logger
-			.getLogger("org.columba.mail.gui.attachment.command");
+			.getLogger("org.columba.mail.gui.message.attachment.command");
 
 	private File tempFile;
 

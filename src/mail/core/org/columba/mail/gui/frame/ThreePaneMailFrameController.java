@@ -41,9 +41,9 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
+import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
@@ -223,7 +223,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		messagePanel = new JPanel();
 		messagePanel.setLayout(new BorderLayout());
-		messagePanel.add(messageController.getView(), BorderLayout.CENTER);
+		messagePanel.add(messageController, BorderLayout.CENTER);
 
 		tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());

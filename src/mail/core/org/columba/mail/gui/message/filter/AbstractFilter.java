@@ -21,7 +21,7 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
+import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.IColumbaMessage;

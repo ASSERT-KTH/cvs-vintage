@@ -25,8 +25,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
@@ -144,8 +144,5 @@ public class ViewMessageCommand extends Command {
 		}
 		messageController.showMessage(srcFolder, uid);
 
-		// TODO (@author fdietz) make this thread-safe
-		// update attachment model
-		messageController.setMimePartTree(mimePartTree);
 	}
 }

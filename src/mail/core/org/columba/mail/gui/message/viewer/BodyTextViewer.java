@@ -39,6 +39,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
@@ -64,7 +65,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  *  
  */
-public class MessageBodytextViewer extends JTextPane implements Viewer,
+public class BodyTextViewer extends JTextPane implements Viewer,
 		Observer {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -103,7 +104,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	 */
 	private boolean htmlMessage;
 
-	public MessageBodytextViewer() {
+	public BodyTextViewer() {
 		super();
 
 		setMargin(new Insets(5, 5, 5, 5));
@@ -193,8 +194,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public void view(IMailbox folder, Object uid,
-			MailFrameMediator mediator) throws Exception {
+	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
+			throws Exception {
 		MimePart bodyPart = null;
 		InputStream bodyStream;
 
@@ -214,21 +215,18 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 		}
 
-
 		if (bodyPart == null) {
 			bodyStream = new ByteArrayInputStream("<No Message-Text>"
 					.getBytes());
 		} else {
 			// Shall we use the HTML-Viewer?
-			htmlMessage = bodyPart.getHeader().getMimeType().getSubtype().equals(
-					"html");
+			htmlMessage = bodyPart.getHeader().getMimeType().getSubtype()
+					.equals("html");
 
 			bodyStream = folder.getMimePartBodyStream(uid, bodyPart
 					.getAddress());
 		}
 
-		
-		
 		// Which Charset shall we use ?
 		Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 
@@ -236,11 +234,11 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		// -> try to determine charset based on content parameter
 		if (charset == null) {
 			String charsetName = null;
-			
-			if( bodyPart != null ) {
-				charsetName = bodyPart.getHeader().getContentParameter("charset");
+
+			if (bodyPart != null) {
+				charsetName = bodyPart.getHeader().getContentParameter(
+						"charset");
 			}
-				
 
 			if (charsetName == null) {
 				// There is no charset info -> the default system charset is
@@ -264,9 +262,9 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		}
 
 		// default encoding is plain
-		int encoding = MimeHeader.PLAIN; 
-			
-		if( bodyPart != null ) {
+		int encoding = MimeHeader.PLAIN;
+
+		if (bodyPart != null) {
 			encoding = bodyPart.getHeader().getContentTransferEncoding();
 		}
 
@@ -301,7 +299,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		if (Boolean.valueOf(html.getAttribute("disable")).booleanValue()) {
 			// strip HTML message -> remove all HTML tags
 			setBodyText(HtmlParser.stripHtmlTags(text.toString(), true), false);
-			
+
 			htmlMessage = false;
 		} else {
 			setBodyText(text.toString(), htmlMessage);
@@ -435,7 +433,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			Clipboard clipboard = getToolkit().getSystemClipboard();
 
 			// Conversion of html text to plain
-			//TODO (@author karlpeder): make a DataFlavor that can handle HTML text
+			//TODO (@author karlpeder): make a DataFlavor that can handle HTML
+			// text
 			StringSelection selection = new StringSelection(HtmlParser
 					.htmlToText(htmlSelection.toString()));
 			clipboard.setContents(selection, selection);
@@ -459,7 +458,6 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	public void updateGUI() throws Exception {
 
 		if (!htmlMessage) {
-			
 
 			// display bodytext
 			setText(body);
@@ -467,8 +465,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			// this call has to happen in the awt-event dispatcher thread
 			setPage(url);
 		}
-		
-//		 setup base url in order to be able to display images
+
+		//		 setup base url in order to be able to display images
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		LOG.info(baseUrl.toString());
@@ -476,5 +474,47 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		// scroll window to the beginning
 		setCaretPosition(0);
+	}
+
+	/**
+	 * Setting HTMLDocument to be an asynchronize model.
+	 * <p>
+	 * JTextPane therefore uses a background thread to display the message. This
+	 * dramatically improves the performance of displaying a message.
+	 * <p>
+	 * Trick is to overwrite the getAsynchronousLoadPriority() to return a
+	 * decent value.
+	 * 
+	 * @author fdietz
+	 */
+	public class AsynchronousHTMLDocument extends HTMLDocument {
+
+		/**
+		 *  
+		 */
+		public AsynchronousHTMLDocument() {
+			super();
+
+		}
+
+		public AsynchronousHTMLDocument(StyleSheet styles) {
+			super(styles);
+		}
+
+		/**
+		 * From the JDK1.4 reference:
+		 * <p>
+		 * This may load either synchronously or asynchronously depending upon
+		 * the document returned by the EditorKit. If the Document is of type
+		 * AbstractDocument and has a value returned by
+		 * AbstractDocument.getAsynchronousLoadPriority that is greater than or
+		 * equal to zero, the page will be loaded on a separate thread using
+		 * that priority.
+		 * 
+		 * @see javax.swing.text.AbstractDocument#getAsynchronousLoadPriority()
+		 */
+		public int getAsynchronousLoadPriority() {
+			return 0;
+		}
 	}
 }

@@ -43,7 +43,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.gui.attachment.AttachmentModel;
+import org.columba.mail.gui.message.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment.action;
+package org.columba.mail.gui.message.attachment.action;
 
 import java.awt.event.ActionEvent;
 
@@ -23,9 +23,9 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.attachment.command.SaveAttachmentAsCommand;
-import org.columba.mail.gui.attachment.selection.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.attachment.command.SaveAttachmentAsCommand;
+import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 

@@ -506,7 +506,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * @return HeaderController
+	 * @return HeaderViewer
 	 */
 	public HeaderController getHeaderController() {
 		return headerController;

@@ -17,10 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.viewer;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -35,31 +43,110 @@ import org.columba.mail.spam.command.LearnMessageAsHamCommand;
  * @author fdietz
  *  
  */
-public class SpamStatusController implements Viewer, ActionListener {
+public class SpamStatusViewer extends JPanel implements Viewer,
+		ActionListener {
 
-	private SpamStatusView label;
 
 	private boolean visible;
 
 	private MailFrameMediator mediator;
 
-	public SpamStatusController(MailFrameMediator mediator) {
+	private JLabel label;
+
+	private JButton button;
+
+	private JPanel panel;
+
+	public SpamStatusViewer(MailFrameMediator mediator) {
 		super();
 
 		this.mediator = mediator;
+		setBackground(Color.white);
 
-		label = new SpamStatusView();
-		label.addActionListener(this);
+		panel = new JPanel();
+		label = new JLabel("");
+		label.setFont(label.getFont().deriveFont(Font.BOLD));
+		button = new JButton("No Spam");
+
+		setLayout(new BorderLayout());
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
+		panel.setBackground(new Color(0xFABB48));
+		panel.setLayout(new BorderLayout());
+
+		Border border = BorderFactory.createLineBorder(Color.gray);
+
+		panel.setBorder(BorderFactory.createCompoundBorder(border,
+				BorderFactory.createEmptyBorder(2, 5, 2, 2)));
+
+		add(panel, BorderLayout.CENTER);
+
+		panel.add(label, BorderLayout.WEST);
+
+		panel.add(button, BorderLayout.EAST);
+
+		button.addActionListener(this);
 
 		visible = false;
+	}
+
+	protected void layoutComponents(boolean isSpam) {
+
+		if (isSpam) {
+			panel.removeAll();
+
+			setLayout(new BorderLayout());
+			setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
+			panel.setBackground(new Color(1.0f, 0.8f, 0.5f));
+			panel.setLayout(new BorderLayout());
+			panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+			add(panel, BorderLayout.CENTER);
+
+			panel.add(label, BorderLayout.WEST);
+
+			panel.add(button, BorderLayout.EAST);
+
+		} else {
+			removeAll();
+		}
+
+		revalidate();
+		updateUI();
+	}
+
+	/**
+	 * @see javax.swing.JComponent#updateUI()
+	 */
+	public void updateUI() {
+		super.updateUI();
+
+		setBackground(Color.white);
+		if (panel != null)
+			panel.setBackground(Color.orange);
+
+		if (label != null)
+			label.setFont(label.getFont().deriveFont(Font.BOLD));
+
+	}
+
+	private  void setSpam(boolean isSpam) {
+
+		if (label != null) {
+			if (isSpam == true)
+				label.setText("Message is marked as spam");
+			else
+				label.setText("");
+
+			//layoutComponents(isSpam);
+		}
 	}
 
 	/**
 	 * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public void view(IMailbox folder, Object uid,
-			MailFrameMediator mediator) throws Exception {
+	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
+			throws Exception {
 		Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
 
 		visible = spam.booleanValue();
@@ -101,7 +188,7 @@ public class SpamStatusController implements Viewer, ActionListener {
 	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		label.setSpam(visible);
+		setSpam(visible);
 
 	}
 }

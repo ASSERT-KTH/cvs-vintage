@@ -13,8 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment;
+package org.columba.mail.gui.message;
 
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,39 +25,36 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.mail.gui.attachment.action.OpenAction;
-import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
-import org.columba.ristretto.message.MimeTree;
+import org.columba.mail.gui.message.attachment.action.OpenAction;
+import org.columba.mail.gui.message.attachment.command.SaveAttachmentTemporaryCommand;
+import org.columba.mail.gui.message.viewer.AttachmentsViewer;
+import org.columba.ristretto.message.StreamableMimePart;
 import org.frapuccino.swing.DynamicFileFactory;
+import org.frapuccino.swing.DynamicFileTransferHandler;
 
 /**
  * This class shows the attachmentlist
  * 
  * 
  * @version 1.0
- * @author Timo Stich
+ * @author fdietz
  */
-public class AttachmentController implements IAttachmentController {
+public class AttachmentController  {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.attachment");
 
-	//private IconPanel attachmentPanel;
-	//private int actIndex;
-	//private Object actUid;
-	//private TempFolder subMessageFolder;
-	//private boolean inline;
 	private ColumbaPopupMenu menu;
-
-	//private AttachmentActionListener actionListener;
-	private AttachmentView view;
 
 	private AttachmentModel model;
 
 	private FrameMediator frameController;
+	
+	private AttachmentsViewer view;
 
 	public AttachmentController(FrameMediator superController) {
 		super();
@@ -65,45 +63,37 @@ public class AttachmentController implements IAttachmentController {
 
 		model = new AttachmentModel();
 
-		view = new AttachmentView(model);
+		view = new AttachmentsViewer(model);
+
 		view.setDragEnabled(true);
-		view.setTransferHandler(new AttachmentTransferHandler(
-				new FileGenerator()));
+		view.setTransferHandler(new AttachmentTransferHandler(new FileGenerator()));
 
 		MouseListener popupListener = new PopupListener();
-		getView().addMouseListener(popupListener);
+		view.addMouseListener(popupListener);
 	}
 
 	public FrameMediator getFrameController() {
 		return frameController;
 	}
 
-	public AttachmentView getView() {
-		return view;
-	}
-
 	public AttachmentModel getModel() {
 		return model;
-	}
-
-	public boolean setMimePartTree(MimeTree collection) {
-		return getView().setMimePartTree(collection);
 	}
 
 	public void createPopupMenu() {
 		//menu = new AttachmentMenu(getFrameController());
 		menu = new ColumbaPopupMenu(getFrameController(),
 				"org/columba/mail/action/attachment_contextmenu.xml");
-		
+
 		// set double-click action for attachment viewer
-		getView().setDoubleClickAction(new OpenAction(frameController));
+		view.setDoubleClickAction(new OpenAction(frameController));
 	}
 
 	private JPopupMenu getPopupMenu() {
 		// bug #999990 (fdietz): make sure popup menu is created correctly
 		if (menu == null) {
 			createPopupMenu();
-			
+
 		}
 
 		return menu;
@@ -125,7 +115,7 @@ public class AttachmentController implements IAttachmentController {
 				 * getView().select(e.getPoint(), 0); }
 				 */
 
-				if (getView().countSelected() >= 1) {
+				if (view.countSelected() >= 1) {
 					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
@@ -149,5 +139,82 @@ public class AttachmentController implements IAttachmentController {
 			LOG.fine("Temporary attachment created.");
 			return files;
 		}
+	}
+
+	/**
+	 * Returns the selected mime part from the model.
+	 * 
+	 * @return the selected mime part.
+	 */
+	public StreamableMimePart getSelectedMimePart() {
+		return (StreamableMimePart) model.getDisplayedMimeParts().get(
+				view.getSelectedIndex());
+	}
+
+	
+
+	/**
+	 * Transfer handler for the attachment view.
+	 * 
+	 * The Sun DnD integration with the the native platform, requires that the
+	 * file is already exists on the disk, when a File DnD is issued. This
+	 * TransferHandler will create the files locally when the
+	 * 
+	 * @linkplain java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
+	 *            method is called. That method is the last method called before
+	 *            the DnD has completed. The actual extraction is done through
+	 *            the SaveAttachmentTemporaryCommand, and there might be
+	 *            problems waiting for other commands to finish before it. The
+	 *            method does not complete until the file has been created, ie
+	 *            locks up the DnD action.
+	 *            <p>
+	 * @author redsolo
+	 * @see org.columba.mail.gui.message.attachment.command.SaveAttachmentTemporaryCommand
+	 * @see org.frappucino.swing.DynamicFileTransferHandler
+	 */
+	public class AttachmentTransferHandler extends DynamicFileTransferHandler {
+
+		/**
+		 * Setup the dynamic transfer handler.
+		 * 
+		 * @param factory
+		 *            the factory that creates the file for the DnD action.
+		 */
+		public AttachmentTransferHandler(DynamicFileFactory factory) {
+			super(factory, DynamicFileTransferHandler.LATE_GENERATION);
+		}
+
+		/**
+		 * Returns the COPY action.
+		 * 
+		 * @param c
+		 *            ignored.
+		 * @return the
+		 * @link TransferHandler#COPY COPY action.
+		 */
+		public int getSourceActions(JComponent c) {
+			return TransferHandler.COPY;
+		}
+
+		/**
+		 * Returns always false. The attachment transfer handler can only export
+		 * data flavors, and not import them.
+		 * 
+		 * @param comp
+		 *            ignored.
+		 * @param transferFlavors
+		 *            ignored.
+		 * @return false.
+		 */
+		public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
+			return false;
+		}
+	}
+
+	/**
+	 * @return Returns the view.
+	 */
+	public AttachmentsViewer getView() {
+		return view;
 	}
 }
