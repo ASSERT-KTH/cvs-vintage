@@ -45,7 +45,6 @@ import javax.swing.UIManager;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-
 /**
  * @author freddy
  *
@@ -55,200 +54,233 @@ import javax.swing.text.html.HTMLEditorKit;
  * Window>Preferences>Java>Code Generation.
  */
 public class HeaderViewer extends JTextPane {
-    /*
-     * *20030720, karlpeder* Adjusted layout of header table to avoid lines
-     * extending the right margin (bug #774117)
-     */
+	/*
+	 * *20030720, karlpeder* Adjusted layout of header table to avoid lines
+	 * extending the right margin (bug #774117)
+	 */
 
-    // background: ebebeb
-    // frame: d5d5d5
-    private static final String LEFT_COLUMN_PROPERTIES = "border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"5%\""; //width=\"65\"";
-    private static final String RIGHT_COLUMN_PROPERTIES = "border=\"0\" align=\"left\" valign=\"top\" width=\"90%\""; //width=\"100%\"";
-    private static final String OUTTER_TABLE_PROPERTIES =
-        "border=\"1\" cellspacing=\"1\" cellpadding=\"1\" " +
-        "align=\"left\" width=\"100%\" " +
-        "style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
+	// background: ebebeb
+	// frame: d5d5d5
+	private static final String LEFT_COLUMN_PROPERTIES=
+		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"5%\"";
+	//width=\"65\"";
+	private static final String RIGHT_COLUMN_PROPERTIES=
+		"border=\"0\" align=\"left\" valign=\"top\" width=\"90%\"";
+	//width=\"100%\"";
+	private static final String OUTTER_TABLE_PROPERTIES=
+		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" "
+			+ "align=\"left\" width=\"100%\" "
+			+ "style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
 
-    // stylesheet is created dynamically because
-    // user configurable fonts are used
-    private String css = "";
+	// stylesheet is created dynamically because
+	// user configurable fonts are used
+	private String css= "";
 
-    // contains headerfields which are to be displayed
-    List keys;
+	// contains headerfields which are to be displayed
+	List keys;
 
-    public HeaderViewer() {
-        setMargin(new Insets(5, 5, 5, 5));
-        setEditable(false);
+	public HeaderViewer() {
+		setMargin(new Insets(5, 5, 5, 5));
+		setEditable(false);
 
-        HTMLEditorKit editorKit = new HTMLEditorKit();
+		HTMLEditorKit editorKit= new HTMLEditorKit();
 
-        setEditorKit(editorKit);
+		setEditorKit(editorKit);
 
-        // setup base url in order to be able to display images
-        // in html-component
-        URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-        ColumbaLogger.log.info(baseUrl.toString());
-        ((HTMLDocument) getDocument()).setBase(baseUrl);
+		// setup base url in order to be able to display images
+		// in html-component
+		URL baseUrl= DiskIO.getResourceURL("org/columba/core/images/");
+		ColumbaLogger.log.info(baseUrl.toString());
+		((HTMLDocument) getDocument()).setBase(baseUrl);
 
-        // add headerfields which are about to show up
-        initHeaderFields();
+		// add headerfields which are about to show up
+		initHeaderFields();
 
-        initStyleSheet();
-    }
+		initStyleSheet();
+	}
 
-    protected void initHeaderFields() {
-        // add headerfields which are about to show up
-        XmlElement headerviewerElement = MailConfig.get("options").getElement("/options/headerviewer");
-        String list = headerviewerElement.getAttribute("headerfields");
+	protected void initHeaderFields() {
+		// add headerfields which are about to show up
+		XmlElement headerviewerElement=
+			MailConfig.get("options").getElement("/options/headerviewer");
+		String list= headerviewerElement.getAttribute("headerfields");
 
-        StringTokenizer tok = new StringTokenizer(list, " ");
-        keys = new Vector();
+		StringTokenizer tok= new StringTokenizer(list, " ");
+		keys= new Vector();
 
-        while (tok.hasMoreTokens()) {
-            String key = (String) tok.nextToken();
-            keys.add(key);
-        }
+		while (tok.hasMoreTokens()) {
+			String key= (String) tok.nextToken();
+			keys.add(key);
+		}
 
-        /*
-                        keys = new String[7];
-                        keys[0] = "Subject";
-                        keys[1] = "Date";
-                        keys[2] = "Reply-To";
-                        keys[3] = "From";
-                        keys[4] = "To";
-                        keys[5] = "Cc";
-                        keys[6] = "Bcc";
-                        */
-    }
+		/*
+		                keys = new String[7];
+		                keys[0] = "Subject";
+		                keys[1] = "Date";
+		                keys[2] = "Reply-To";
+		                keys[3] = "From";
+		                keys[4] = "To";
+		                keys[5] = "Cc";
+		                keys[6] = "Bcc";
+		                */
+	}
 
-    /**
-    *
-    * read text-properties from configuration and
-    * create a stylesheet for the html-document
-    *
-    */
-    protected void initStyleSheet() {
-        /*
-        //        read configuration from options.xml file
-        XmlElement mainFont =
-                Config.get("options").getElement("/options/gui/mainfont");
-        String name = mainFont.getAttribute("name");
-        String size = mainFont.getAttribute("size");
-        Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-        */
-        Font font = UIManager.getFont("Label.font");
-        String name = font.getName();
-        int size = font.getSize();
+	/**
+	*
+	* read text-properties from configuration and
+	* create a stylesheet for the html-document
+	*
+	*/
+	protected void initStyleSheet() {
+		/*
+		//        read configuration from options.xml file
+		XmlElement mainFont =
+		        Config.get("options").getElement("/options/gui/mainfont");
+		String name = mainFont.getAttribute("name");
+		String size = mainFont.getAttribute("size");
+		Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+		*/
+		Font font= UIManager.getFont("Label.font");
+		String name= font.getName();
+		int size= font.getSize();
 
-        // create css-stylesheet string 
-        // set font of html-element <TD> 
-        css = "<style type=\"text/css\"><!--td {font-family:\"" + name +
-            "\"; font-size:\"" + size + "pt\"}--></style>";
-    }
+		// create css-stylesheet string 
+		// set font of html-element <TD> 
+		css=
+			"<style type=\"text/css\"><!--td {font-family:\""
+				+ name
+				+ "\"; font-size:\""
+				+ size
+				+ "pt\"}--></style>";
+	}
 
-    void setHeader(ColumbaHeader header, boolean hasAttachments)
-        throws Exception {
-        // border #949494
-        // background #989898
-        // #a0a0a0
-        // bright #d5d5d5
-        StringBuffer buf = new StringBuffer();
+	void setHeader(ColumbaHeader header, boolean hasAttachments)
+		throws Exception {
+		// border #949494
+		// background #989898
+		// #a0a0a0
+		// bright #d5d5d5
+		StringBuffer buf= new StringBuffer();
 
-        // prepend HTML-code
-        buf.append("<HTML><HEAD>" + css + "</HEAD><BODY ><TABLE " +
-            OUTTER_TABLE_PROPERTIES + ">");
+		// prepend HTML-code
+		buf.append(
+			"<HTML><HEAD>"
+				+ css
+				+ "</HEAD><BODY ><TABLE "
+				+ OUTTER_TABLE_PROPERTIES
+				+ ">");
 
-        // for every existing headerfield
-        for (Iterator it = keys.iterator(); it.hasNext();) {
-            String key = (String) it.next();
+		// for every existing headerfield
+		for (Iterator it= keys.iterator(); it.hasNext();) {
+			String key= (String) it.next();
 
-            // for (int i = 0; i < keys.size(); i++) {
-            // String key = (String) keys.get(i);
-            if (key == null) {
-                continue;
-            }
+			// for (int i = 0; i < keys.size(); i++) {
+			// String key = (String) keys.get(i);
+			if (key == null) {
+				continue;
+			}
 
-            // message doesn't contain this headerfield
-            if (header.get(key) == null) {
-                continue;
-            }
+			// message doesn't contain this headerfield
+			if (header.get(key) == null) {
+				continue;
+			}
 
-            // headerfield is empty
-            if (((String) header.get(key)).length() == 0) {
-                continue;
-            }
+			// headerfield is empty
+			if (((String) header.get(key)).length() == 0) {
+				continue;
+			}
 
-            // create left column
-            buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+			// create left column
+			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
 
-            // set left column text
-            buf.append("<B>" + key + " : </B></TD>");
+			// set left column text
+			buf.append("<B>" + key + " : </B></TD>");
 
-            // create right column
-            buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			// create right column
+			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
 
-            // set right column text
-            // look for special headers like subject, to, date
-            String str = null;
+			// set right column text
+			// look for special headers like subject, to, date
+			String str= null;
 
-            if (key.equals("Subject")) {
-                str = (String) header.get("columba.subject");
+			if (key.equals("Subject")) {
+				str= (String) header.get("columba.subject");
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            } else if (key.equals("To")) {
-                BasicHeader bHeader = new BasicHeader(header.getHeader());
-                str = AddressListRenderer.renderToHTMLWithLinks(bHeader.getTo())
-                                         .toString();
-            } else if (key.equals("Reply-To")) {
-                BasicHeader bHeader = new BasicHeader(header.getHeader());
-                str = AddressListRenderer.renderToHTMLWithLinks(bHeader.getReplyTo())
-                                         .toString();
-            } else if (key.equals("From")) {
-                BasicHeader bHeader = new BasicHeader(header.getHeader());
-                str = AddressListRenderer.renderToHTMLWithLinks(new Address[] {
-                            (Address) bHeader.getFrom()
-                        }).toString();
-            } else if (key.equals("Date")) {
-                DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
-                        DateFormat.MEDIUM);
-                str = df.format((Date) header.get("columba.date"));
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str= HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else if (key.equals("To")) {
+				BasicHeader bHeader= new BasicHeader(header.getHeader());
+				str=
+					AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getTo())
+						.toString();
+			} else if (key.equals("Reply-To")) {
+				BasicHeader bHeader= new BasicHeader(header.getHeader());
+				str=
+					AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getReplyTo())
+						.toString();
+			} else if (key.equals("Cc")) {
+				BasicHeader bHeader= new BasicHeader(header.getHeader());
+				str=
+					AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getCc())
+						.toString();
+			} else if (key.equals("Bcc")) {
+				BasicHeader bHeader= new BasicHeader(header.getHeader());
+				str=
+					AddressListRenderer
+						.renderToHTMLWithLinks(bHeader.getBcc())
+						.toString();
+			} else if (key.equals("From")) {
+				BasicHeader bHeader= new BasicHeader(header.getHeader());
+				str=
+					AddressListRenderer
+						.renderToHTMLWithLinks(
+							new Address[] {(Address) bHeader.getFrom()})
+						.toString();
+			} else if (key.equals("Date")) {
+				DateFormat df=
+					DateFormat.getDateTimeInstance(
+						DateFormat.LONG,
+						DateFormat.MEDIUM);
+				str= df.format((Date) header.get("columba.date"));
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            } else {
-                str = (String) header.get(key);
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str= HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			} else {
+				str= (String) header.get(key);
 
-                // substitute special characters like:
-                //  <,>,&,\t,\n,"
-                str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
-            }
+				// substitute special characters like:
+				//  <,>,&,\t,\n,"
+				str= HtmlParser.substituteSpecialCharactersInHeaderfields(str);
+			}
 
-            // parse for email addresses and substite with HTML-code
-            //str = HtmlParser.substituteEmailAddress(str);
-            // append HTML-code
-            buf.append(" " + str + "</TD>");
+			// parse for email addresses and substite with HTML-code
+			//str = HtmlParser.substituteEmailAddress(str);
+			// append HTML-code
+			buf.append(" " + str + "</TD>");
 
-            buf.append("</TR>");
-        }
+			buf.append("</TR>");
+		}
 
-        if (hasAttachments) {
-            // email has attachments 
-            //  -> display attachment icon
-            buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+		if (hasAttachments) {
+			// email has attachments 
+			//  -> display attachment icon
+			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
 
-            buf.append("<IMG SRC=\"stock_attach.png\"></TD>");
+			buf.append("<IMG SRC=\"stock_attach.png\"></TD>");
 
-            buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
-            buf.append(" " + "</TD>");
-        }
+			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			buf.append(" " + "</TD>");
+		}
 
-        // close HTML document
-        buf.append("</TABLE></BODY></HTML>");
+		// close HTML document
+		buf.append("</TABLE></BODY></HTML>");
 
-        // display html-text
-        setText(buf.toString());
-    }
+		// display html-text
+		setText(buf.toString());
+	}
 }
