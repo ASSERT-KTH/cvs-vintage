@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2003 Slava Pestov
+ * Copyright (C) 1999, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.79 2004/02/06 19:17:28 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.80 2004/03/19 19:16:35 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1270,7 +1270,7 @@ public class GUIUtilities
 		if (OperatingSystem.isMacOS())
 		{
 			if((modifiers & MouseEvent.BUTTON1_MASK) != 0)
-				return ((modifiers & MouseEvent.META_MASK) != 0);
+				return ((modifiers & MouseEvent.ALT_MASK) != 0);
 			if(!OperatingSystem.hasJava14())
 				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
 			else

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2002 Slava Pestov
+ * Copyright (C) 2001, 2004 Slava Pestov
  * Portions copyright (C) 2001 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@ import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.*;
+import java.text.*;
 import java.util.Calendar;
 import java.util.Date;
 import org.gjt.sp.jedit.io.*;
@@ -52,7 +53,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.62 2004/02/14 19:02:48 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.63 2004/03/19 19:16:36 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -767,7 +768,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			FontRenderContext frc = new FontRenderContext(
 				null,false,false);
 			Rectangle2D bounds = getFont()
-				.getStringBounds(clockTestStr,frc);
+				.getStringBounds(getTime(),frc);
 			Dimension dim = new Dimension((int)bounds.getWidth(),
 				(int)bounds.getHeight());
 			setPreferredSize(dim);
@@ -821,25 +822,19 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		} //}}}
 
 		//{{{ Private members
-		private static final String clockTestStr = "04:20";
-
 		private Timer timer;
+
+		//{{{ getTime() method
+		private String getTime()
+		{
+			return DateFormat.getTimeInstance(
+				DateFormat.SHORT).format(new Date());
+		} //}}}
 
 		//{{{ update() method
 		private void update()
 		{
-			Calendar c = Calendar.getInstance();
-			buf.setLength(0);
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			if(hour < 10)
-				buf.append('0');
-			buf.append(hour);
-			buf.append(':');
-			int minute = c.get(Calendar.MINUTE);
-			if(minute < 10)
-				buf.append('0');
-			buf.append(minute);
-			setText(buf.toString());
+			setText(getTime());
 		} //}}}
 
 		//}}}

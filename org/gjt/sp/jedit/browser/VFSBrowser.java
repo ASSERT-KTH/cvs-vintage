@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.104 2004/02/04 00:07:22 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.105 2004/03/19 19:16:36 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -979,6 +979,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 		ActionSet builtInActionSet = new ActionSet(null,null,null,
 			jEdit.class.getResource("browser.actions.xml"));
+		builtInActionSet.setLabel(jEdit.getProperty("action-set.browser"));
 		builtInActionSet.load();
 		actionContext.addActionSet(builtInActionSet);
 	}

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.13 2003/11/06 03:38:44 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.14 2004/03/19 19:16:35 spestov Exp $
  */
 public class BufferHistory
 {
@@ -380,6 +380,14 @@ public class BufferHistory
 	//{{{ RecentHandler class
 	static class RecentHandler extends HandlerBase
 	{
+		public void endDocument()
+			throws java.lang.Exception
+		{
+			int max = jEdit.getIntegerProperty("recentFiles",50);
+			while(history.size() > max)
+				history.removeLast();
+		}
+
 		public Object resolveEntity(String publicId, String systemId)
 		{
 			if("recent.dtd".equals(systemId))
@@ -418,7 +426,9 @@ public class BufferHistory
 		{
 			if(name.equals("ENTRY"))
 			{
-				addEntry(new Entry(path,caret,selection,encoding));
+				history.addLast(new Entry(
+					path,caret,selection,
+					encoding));
 				path = null;
 				caret = 0;
 				selection = null;
