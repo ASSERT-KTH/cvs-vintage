@@ -10,13 +10,9 @@ import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 
-import org.jboss.ejb.EjbModule;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.plugins.CMPPersistenceManager;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 
 import org.jboss.logging.Logger;
 
@@ -284,44 +280,22 @@ public class QueryParameter {
          JDBCStoreManager manager, 
          Class intf,
          String fieldName) {
-      try {
-         // get this application's metadata
-         JDBCApplicationMetaData appMD = 
-             manager.getMetaData().getJDBCApplication();
 
-         // get the entity metadata associated with supplied interface
-         JDBCEntityMetaData entMD = appMD.getBeanByInterface(intf);
-
-         // get this application's object
-         EjbModule app = manager.getContainer().getEjbModule();
-
-         // get the entity container with the name from 
-         // the found entity metadata
-         EntityContainer con = 
-               (EntityContainer)app.getContainer(entMD.getName());
-         
-         // get the persistence manager from the container
-         CMPPersistenceManager pm = 
-               (CMPPersistenceManager)con.getPersistenceManager();
-
-         // get the store manager from the persistence manger 
-         JDBCStoreManager sm = (JDBCStoreManager)pm.getPersistenceStore();
-         
-         // get the brige from the persistence store
-         JDBCEntityBridge entityBridge = sm.getEntityBridge();
-
-         // finally get the field from the entity
-         return entityBridge.getCMPFieldByName(fieldName);
-      } catch(EJBException e) {
-         throw e;
-      } catch(Exception e) {
-         // there are way to may ways this could go wrong if the 
-         // data structures are not setup correctly, so just throw 
-         // a general error.  Feel free to add the error handling 
-         // code if you want.
-         throw new IllegalArgumentException("Could not find a field for the " +
-               "cmp-jdbc data for entity with the interface " + intf.getName());
+      Catalog catalog = (Catalog)manager.getApplicationData("CATALOG");
+      JDBCEntityBridge entityBridge = 
+            (JDBCEntityBridge)catalog.getEntityByInterface(intf);
+      if(entityBridge == null) {
+         throw new IllegalArgumentException("Entity not found in application " +
+               "catalog with interface=" + intf.getName());
       }
+
+      JDBCCMPFieldBridge cmpField = entityBridge.getCMPFieldByName(fieldName);
+      if(cmpField == null) {
+         throw new IllegalArgumentException("cmpField not found:" + 
+               " cmpFieldName=" + fieldName + 
+               " entityName=" + entityBridge.getEntityName());
+      }
+      return cmpField;
    } 
 
    public String toString() {
