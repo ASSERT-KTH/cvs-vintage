@@ -74,7 +74,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.1 2003/01/28 11:41:31 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.2 2003/01/28 16:09:02 jmcnally Exp $
  */
 public class ImportIssues
 {
@@ -144,15 +144,8 @@ public class ImportIssues
     public void init()
         throws Exception
     {
-        try
-        {
             TurbineInitialization.setTurbineResources(getTurbineResources());
             TurbineInitialization.setUp(getConfigDir().getAbsolutePath(), getConfigFile());
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e);
-        }
     }
     
     public void execute() 
@@ -195,7 +188,7 @@ public class ImportIssues
             log.error("\nThe following error(s) were found: " +
                       "\n------------------------------------------------------\n" +
                       e.getMessage());
-            throw new Exception(e);
+            throw e;
         }
     }
 
