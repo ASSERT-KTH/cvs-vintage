@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.60 2002/08/06 04:06:48 chirino Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.61 2002/08/06 04:14:47 chirino Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -168,7 +168,7 @@
   </mbean>
 
   <!-- Trunk invoker -->
-  <mbean code="org.jboss.invocation.trunk.sever.TrunkInvoker" 
+  <mbean code="org.jboss.invocation.trunk.server.TrunkInvoker" 
          name="jboss:service=invoker,type=trunk">
     <attribute name="EnableTcpNoDelay">true</attribute>
     <attribute name="ServerBindPort">4445</attribute>
