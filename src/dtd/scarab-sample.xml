@@ -26,19 +26,19 @@ easier to work with.
         <code>TBNS</code>
         <issue id="101">
             <artifact-type>Defect</artifact-type>
-            <attribute>
+            <issue-attribute>
                 <name>Status</name>
                 <value>New</value>
-            </attribute>
-            <attribute>
+            </issue-attribute>
+            <issue-attribute>
                 <name>Priority</name>
                 <value>High</value>
-            </attribute>
+            </issue-attribute>
 
-            <dependecy>
+            <dependency>
                 <type>non-blocking</type>
                 <child>TBNS203</child>
-            </dependecy>
+            </dependency>
 
             <attachment>
                 <name>My cool file</name>
@@ -55,7 +55,7 @@ easier to work with.
                 <activity>
                     <old-value>NULL</old-value>
                     <new-value>High</new-value>
-                    <attribute>Priority</attribute>
+                    <activity-attribute>Priority</activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Priority set to high
                     </description>
@@ -63,7 +63,7 @@ easier to work with.
                 <activity>
                     <old-value>NULL</old-value>
                     <new-value>unconfirmed</new-value>
-                    <attribute>Status</attribute>
+                    <activity-attribute>Status</activity-attribute>
                     <description>
                         Issue TBNS101 had attribute Status set to 
                         unconfirmed
@@ -73,18 +73,18 @@ easier to work with.
         </issue>
         <issue id="203">
             <artifact-type>Defect</artifact-type>
-            <attribute>
+            <issue-attribute>
                 <name>Status</name>
                 <value>Closed</value>
-            </attribute>
-            <attribute>
+            </issue-attribute>
+            <issue-attribute>
                 <name>Resolution</name>
                 <value>Fixed</value>
-            </attribute>
-            <dependecy>
+            </issue-attribute>
+            <dependency>
                 <type>blocking</type>
                 <parent>101</parent>
-            </dependecy>
+            </dependency>
         </issue>
     </module>
 </scarab>
