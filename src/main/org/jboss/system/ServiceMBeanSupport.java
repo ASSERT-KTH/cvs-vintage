@@ -23,17 +23,24 @@ import org.apache.log4j.NDC;
  * service that conforms to the ServiceMBean interface. Subclasses must
  * override {@link #getName} method and should override 
  * {@link #startService}, and {@link #stopService} as approriate.
- * 
- * 
+ *
  * @see ServiceMBean
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
- * @version $Revision: 1.6 $
- * 
- * Revisions:
- * 20010619 scott.stark: use the full service class name as the log4j
- *                       log name
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @version $Revision: 1.7 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010619 scott.stark:</b>
+ * <ul>
+ * <li> use the full service class name as the log4j log name
+ * </ul>
+ * <p><b>20011202 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Add the own MBean Service Name to be remembered in an attribute
+ * </ul>
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -43,6 +50,8 @@ public abstract class ServiceMBeanSupport
 
    private int state;
    private MBeanServer server;
+   /** Own Object Name this MBean is registered with, see {@link #preRegister preRegister()}. **/
+   private ObjectName mServiceName;
    private int id = 0;
 
    protected Logger log;
@@ -60,6 +69,10 @@ public abstract class ServiceMBeanSupport
 
    public abstract String getName();
 
+	public ObjectName getServiceName() {
+      return mServiceName;
+   }
+   
    public MBeanServer getServer()
    {
       return server;
@@ -187,12 +200,30 @@ public abstract class ServiceMBeanSupport
       NDC.pop();
    }
    */
+   
+   /**
+   * Callback method of {@link javax.management.MBeanRegistration MBeanRegistration}
+   * before the MBean is registered at the JMX Agent.
+   * <br>
+   * <b>Attention</b>: Always call this method when you overwrite it in a subclass
+   *                   because it saves the Object Name of the MBean.
+   *
+   * @param server Reference to the JMX Agent this MBean is registered on
+   * @param name Name specified by the creator of the MBean. Note that you can
+   *             overwrite it when the given ObjectName is null otherwise the
+   *             change is discarded (maybe a bug in JMX-RI).
+   **/
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
-      name = getObjectName(server, name);
+      ObjectName lName = getObjectName(server, name);
+      if( name == null ) {
+         mServiceName = lName;
+      } else {
+         mServiceName = name;
+      }
       this.server = server;
-      return name;
+      return lName;
    }
 
    public void postRegister(Boolean registrationDone)
@@ -223,7 +254,6 @@ public abstract class ServiceMBeanSupport
       return name;
    }
    
-	
    protected void startService()
       throws Exception
    {

@@ -25,15 +25,26 @@ import org.jnp.server.Main;
 import org.jboss.management.j2ee.JNDI;
 import org.jboss.system.ServiceMBeanSupport;
 
-/** A JBoss service that starts the jnp JNDI server.
- *      
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.21 $
+/**
+ * A JBoss service that starts the jnp JNDI server.
  *
- * Revisions:
- * 20010622 scott.stark: Report IntialContext env for problem tracing
- */
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.22 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010622 scott.stark:</b>
+ * <ul>
+ * <li> Report IntialContext env for problem tracing
+ * </ul>
+ * <p><b>20011202 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Added JSR-77 representation, see {@liink #postRegister postRegister()}
+ *      and {@link #postDeregister postDeregister()}.
+ * </ul>
+ **/
 public class NamingService
    extends ServiceMBeanSupport
    implements NamingServiceMBean
@@ -42,6 +53,9 @@ public class NamingService
     
    // Attributes ----------------------------------------------------
    Main naming;
+   
+   /** Object Name of the JSR-77 representant of this servie **/
+   ObjectName mJNDI;
    
    // Static --------------------------------------------------------
 
@@ -173,21 +187,31 @@ public class NamingService
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
       log.info("Naming started on port "+naming.getPort());
-      
-      // Finally create the JSR-77 management representation
-      JNDI.create( getServer(), "LocalJNDI" );
    }
 
    public void stopService()
    {
-      // First destroy the JSR-77 management representation
-      JNDI.destroy( getServer(), "LocalJNDI" );
-      
       naming.stop();
       log.info("JNP server stopped");
    }
-
+   
+   public void postRegister( Boolean pRegistrationDone )
+   {
+      super.postRegister( pRegistrationDone );
+      if( pRegistrationDone.booleanValue() ) {
+         // Create the JSR-77 management representation
+         mJNDI = JNDI.create( getServer(), "LocalJNDI", getServiceName() );
+      }
+   }
+   
+   public void postDeregister()
+   {
+      super.postDeregister();
+      if( mJNDI != null ) {
+         // Destroy the JSR-77 management representation
+         JNDI.destroy( getServer(), "LocalJNDI" );
+      }
+   }
+   
    // Protected -----------------------------------------------------
 }
-
-
