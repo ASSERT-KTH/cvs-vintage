@@ -7,7 +7,6 @@
 
 package org.jboss.proxy;
 
-
 import java.io.Externalizable;
 
 import java.io.IOException;
@@ -21,8 +20,11 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 
 /**
+ * An invocation handler whichs sets up the client invocation and
+ * starts the invocation interceptor call chain.
+ * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -32,37 +34,39 @@ import org.jboss.invocation.InvocationContext;
 public class ClientContainer
    implements Externalizable, InvocationHandler
 {
-      
-   // the "static" information that gets attached to every invocation
+   /** The <em>static</em> information that gets attached to every invocation. */
    public InvocationContext context;
    
-   // The first interceptor in the chain
+   /** The first interceptor in the chain. */
    public Interceptor next;
    
    /** An empty method parameter list. */
    protected static final Object[] EMPTY_ARGS = {};
-   
+
+   /**
+    * Exposed for externalization.
+    */
    public ClientContainer()
    {
-      // For externalization to work
+      super();
    }
    
-   public ClientContainer(InvocationContext context) 
+   public ClientContainer(final InvocationContext context) 
    {
       this.context = context;
    }
    
    public Object invoke(final Object proxy,
-      final Method m,
-      Object[] args)
-   throws Throwable
+                        final Method m,
+                        Object[] args)
+      throws Throwable
    {
       // Normalize args to always be an array
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = EMPTY_ARGS;
         
-      //Create the invocation object
+      // Create the invocation object
       Invocation invocation = new Invocation();
       
       // Contextual information for the interceptors
@@ -71,7 +75,9 @@ public class ClientContainer
       invocation.setObjectName(context.getObjectName());
       invocation.setMethod(m);
       invocation.setArguments(args);
-      invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING, context.getInvokerProxyBinding(), Invocation.AS_IS);
+      invocation.setValue(InvocationContext.INVOKER_PROXY_BINDING,
+                          context.getInvokerProxyBinding(),
+                          Invocation.AS_IS);
       
       // send the invocation down the client interceptor chain
       return next.invoke(invocation);
@@ -84,6 +90,9 @@ public class ClientContainer
       return interceptor;
    }
    
+   /**
+    * Externalization support.
+    */
    public void writeExternal(final ObjectOutput out)
       throws IOException
    {
@@ -92,19 +101,13 @@ public class ClientContainer
    }
 
    /**
-   * Externalization support.
-   *
-   * @param in
-   *
-   * @throws IOException
-   * @throws ClassNotFoundException
-   */
+    * Externalization support.
+    */
    public void readExternal(final ObjectInput in)
       throws IOException, ClassNotFoundException
    {
       next = (Interceptor) in.readObject();
       context = (InvocationContext) in.readObject();
-
    }
 }
  
