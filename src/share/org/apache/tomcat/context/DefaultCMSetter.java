@@ -201,8 +201,7 @@ class ExceptionHandler extends ServletWrapper {
 	Throwable e= (Throwable)req.
 	    getAttribute("tomcat.servlet.error.throwable");
 	if( e==null ) {
-	    System.out.println("ASSERT: Exception handler without exception");
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    log("Exception handler called without an exception", new Throwable("trace"));
 	    return;
 	}
 
@@ -230,32 +229,14 @@ class ExceptionHandler extends ServletWrapper {
 	buf.append("<b>")
 	    .append(sm.getString("defaulterrorpage.internalservleterror"))
 	    .append("</b><br>");
+
         buf.append("<pre>");
-
-	StringWriter sw = new StringWriter();
-	PrintWriter pw = new PrintWriter(sw);
-	e.printStackTrace(pw);
-
-	buf.append(sw.toString());
+	// prints nested exceptions too, including SQLExceptions, recursively
+	String trace = Logger.throwableToString
+	    (e,	"<b>" + sm.getString("defaulterrorpage.rootcause") + "</b>");
+	buf.append(trace);
 
 	buf.append("</pre>\r\n");
-
-        if (e instanceof ServletException) {
-	    Throwable cause = ((ServletException)e).getRootCause();
-	    if (cause != null) {
-		buf.append("<b>")
-		    .append(sm.getString("defaulterrorpage.rootcause"))
-		    .append("</b>\r\n");
-	    buf.append("<pre>");
-
-	    sw=new StringWriter();
-	    pw=new PrintWriter(sw);
-	    cause.printStackTrace( pw );
-	    buf.append( sw.toString());
-
-	    buf.append("</pre>\r\n");
-	    }
-	}
 	
 	buf.append("\r\n");
 	
