@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -62,7 +62,6 @@ extends AbstractInterceptor
 	public static final int C = 2; // Passivate
 	
 	// Attributes ----------------------------------------------------
-	HashMap synchs = new HashMap();  // tx -> synch
 	
 	int commitOption = A;
 	
@@ -95,47 +94,30 @@ extends AbstractInterceptor
 	
 	public void register(EnterpriseContext ctx, Transaction tx)
 	{
-		// Associate ctx with tx
-		synchronized (synchs)
-		{
-			// Get synchronization for this tx - create if there is none
-			InstanceSynchronization synch = (InstanceSynchronization)synchs.get(tx);
-			if (synch == null)
-			{
-				// Register new synch with current tx
-				synch = new InstanceSynchronization(tx);
-				synchs.put(tx, synch);
-				
-				try
-				{
-					tx.registerSynchronization(synch);
-				} catch (Exception e)
-				{
-					throw new EJBException(e);
-				}
-			}
+		// Create a new synchronization
+		InstanceSynchronization synch = new InstanceSynchronization(tx);
+		
+		try {
 			
-			synch.add(ctx);
-			((EntityEnterpriseContext)ctx).setTransaction(tx);
+			tx.registerSynchronization(synch);
+		} 
+		catch (Exception e) {
+			
+			throw new EJBException(e);
 		}
+		
+		// register
+		synch.add(ctx);	
 	}
 	
-	public void deregister(EntityEnterpriseContext ctx, Transaction tx)
+	public void deregister(EntityEnterpriseContext ctx)
 	{
+		// MF FIXME: I suspect this is redundant now
+		// (won't the pool clean it up?)
+		
 		// Deassociate ctx with tx
-		synchronized (synchs)
-		{
-			// Get synchronization for this tx
-			InstanceSynchronization synch = (InstanceSynchronization)synchs.get(tx);
-			if (synch == null)
-			{
-				return;
-			}
-			
-			synch.remove(ctx);
-			ctx.setTransaction(null);
-			ctx.setInvoked(false);
-		}
+		ctx.setTransaction(null);
+		ctx.setInvoked(false);
 	}
 	
 	// Interceptor implementation --------------------------------------
@@ -160,7 +142,7 @@ extends AbstractInterceptor
 				}
 				
 				// Currently synched with underlying storage
-				((EntityEnterpriseContext)ctx).setSynchronized(true);
+				((EntityEnterpriseContext)ctx).setValid(true);
 			}
 		}
 	}
@@ -168,60 +150,67 @@ extends AbstractInterceptor
 	public Object invoke(MethodInvocation mi)
 	throws Exception
 	{
+		// We are going to work with the context a lot
 		EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
 		
+		// The Tx coming as part of the Method Invocation 
+		Transaction tx = mi.getTransaction();
 		
-		Transaction tx = ctx.getTransaction();
-		Transaction current = mi.getTransaction();
+		//Logger.debug("CTX in: isValid():"+ctx.isValid()+" isInvoked():"+ctx.isInvoked());
+		//Logger.debug("newTx: "+ tx);
 		
-		//DEBUG      Logger.debug("TX:"+(current.getStatus() == Status.STATUS_ACTIVE));
-		
-		if (current != null &&
-			current.getStatus() == Status.STATUS_ACTIVE)
-		{
+		// Is my state valid?
+		if (!ctx.isValid()) {
 			
-			// Synchronize with DB
-			if (!ctx.isSynchronized())
-			{
-				//DEBUG	         Logger.debug("SYNCH");
-				((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
-				ctx.setSynchronized(true);
-			}
+			// If not tell the persistence manager to load the state
+			((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
 			
-			try
-			{
+			// Now the state is valid
+			ctx.setValid(true);
+		}
+		
+		// So we can go on with the invocation
+		
+		if (tx != null &&
+			tx.getStatus() == Status.STATUS_ACTIVE) {
+			
+			try {
+				
 				return getNext().invoke(mi);
-			} finally
-			{
-				if (ctx.getId() != null)
-				{
-					// Associate ctx with tx
-					if (tx != null)
-					{
-						ctx.setInvoked(true); // This causes ejbStore to be invoked on tx commit
-						register(ctx, current);
+			} 
+			
+			finally {
+				
+				// Do we have a valid bean (not removed)
+				if (ctx.getId() != null) {
+					
+					// If the context was not invoked previously...
+					if (!ctx.isInvoked()) {
+						
+						// It is now and this will cause ejbStore to be called...
+						ctx.setInvoked(true);
+						
+						// ... on a transaction callback that we register here.
+						register(ctx, tx);
 					}
-				} else
-				{
+				} 
+				else {
+					
 					// Entity was removed
-					if (ctx.getTransaction() != null)
-					{
-						// Disassociate ctx with tx
-						deregister(ctx, current);
+					if (ctx.getTransaction() != null) {
+						
+						// Disassociate ctx
+						deregister(ctx);
 					}
 				}
+				
+				//Logger.debug("CTX out: isValid():"+ctx.isValid()+" isInvoked():"+ctx.isInvoked());
+				//Logger.debug("PresentTx:"+tx);
+				
 			}
-		} else
-		{
-			// No tx
-			
-			// Synchronize with DB
-			if (!ctx.isSynchronized())
-			{
-				//DEBUG            Logger.debug("SYNCH");
-				((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
-				ctx.setSynchronized(true);
-			}
+		} 
+		
+		else {  // No tx
 			
 			try
 			{
@@ -236,7 +225,7 @@ extends AbstractInterceptor
 			} catch (Exception e)
 			{
 				// Exception - force reload on next call
-				ctx.setSynchronized(false);
+				ctx.setValid(false);
 				throw e;
 			}
 		}
@@ -248,8 +237,11 @@ extends AbstractInterceptor
 	class InstanceSynchronization
 	implements Synchronization
 	{
-		ArrayList ctxList = new ArrayList();
+		// The transaction we follow
 		Transaction tx;
+		
+		// The context we manage
+		EnterpriseContext ctx;
 		
 		InstanceSynchronization(Transaction tx)
 		{
@@ -258,38 +250,27 @@ extends AbstractInterceptor
 		
 		public void add(EnterpriseContext ctx)
 		{
-			ctxList.add(ctx.getId());
+			this.ctx = ctx;
 		}
 		
-		public void remove(EnterpriseContext ctx)
-		{
-			ctxList.remove(ctx.getId());
-		}
 		
 		// Synchronization implementation -----------------------------
 		public void beforeCompletion()
 		{
-			InstanceCache cache = ((EntityContainer)getContainer()).getInstanceCache();
-			
 			try
 			{
-				
-				for (int i = 0; i < ctxList.size(); i++)
+				try
 				{
 					// Lock instance
-					try
-					{
-						EntityEnterpriseContext ctx = (EntityEnterpriseContext)cache.get(ctxList.get(i));
-						// Store instance if business method was
-						if (ctx.isInvoked())
-							((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
-						
-						// Save for after completion
-						ctxList.set(i, ctx);
-					} catch (NoSuchEntityException e)
-					{
-						// Object has been removed -- ignore
-					}
+					((EntityContainer)getContainer()).getInstanceCache().get(ctx.getId());
+					
+					// Store instance if business method was
+					if (((EntityEnterpriseContext) ctx).isInvoked())
+						((EntityContainer)getContainer()).getPersistenceManager().storeEntity((EntityEnterpriseContext)ctx);
+				
+				} catch (NoSuchEntityException e)
+				{
+					// Object has been removed -- ignore
 				}
 			} catch (RemoteException e)
 			{
@@ -310,83 +291,82 @@ extends AbstractInterceptor
 			if (status == Status.STATUS_ROLLEDBACK)
 			{
 				
-				for (int i = 0; i < ctxList.size(); i++)
+				try
 				{
-					try
-					{
-						EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
-						
-						ctx.setId(null);
-						ctx.setTransaction(null);
-						container.getInstanceCache().remove(ctx);
-						container.getInstancePool().free(ctx); // TODO: should this be done? still valid instance?
-					} catch (Exception e)
-					{
-						// Ignore
-					}
+					
+					ctx.setId(null);
+					ctx.setTransaction(null);
+					container.getInstanceCache().remove(ctx);
+					container.getInstancePool().free(ctx); // TODO: should this be done? still valid instance?
+				} catch (Exception e)
+				{
+					// Ignore
 				}
 			} else
 			{
-				for (int i = 0; i < ctxList.size(); i++)
+				
+				// The transaction is done
+				ctx.setTransaction(null);
+				
+				// We are afterCompletion so the invoked can be set to false (db sync is done)
+				((EntityEnterpriseContext) ctx).setInvoked(false);
+				
+				switch (commitOption)
 				{
-					switch (commitOption)
-					{
-						// Keep instance cached after tx commit
-						case A:
-							try
-							{
-								EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
-								ctx.setTransaction(null);
-								ctx.setInvoked(false);
-								container.getInstanceCache().release(ctx);
-							} catch (Exception e)
-							{
-								Logger.debug(e);
-							}
-						break;
-						
-						// Keep instance, but invalidate state
-						case B:
-							try
-							{
-								EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
-								ctx.setTransaction(null);
-								ctx.setInvoked(false);
-								
-								ctx.setSynchronized(false); // Invalidate state
-								container.getInstanceCache().release(ctx);
-							} catch (Exception e)
-							{
-								Logger.debug(e);
-							}
-						break;
-						
-						// Passivate instance
-						case C:
-							try
-							{
-								EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
-								ctx.setTransaction(null);
-								ctx.setInvoked(false);
-								
-								container.getInstanceCache().get(ctx.getId()); // Lock in cache
-								((EntityContainer)getContainer()).getPersistenceManager().passivateEntity(ctx); // Passivate instance
-								container.getInstanceCache().remove(ctx.getId()); // Remove from cache
-								
-								container.getInstancePool().free(ctx); // Add to instance pool
+					// Keep instance cached after tx commit
+					case A:
+						try
+						{
+							// The state is still valid (only point of access is us)
+							((EntityEnterpriseContext) ctx).setValid(true); 
 							
-							} catch (Exception e)
-							{
-								Logger.debug(e);
-							}
-						break;
-					}
+							// Release it though
+							container.getInstanceCache().release(ctx);
+						} catch (Exception e)
+						{
+							Logger.debug(e);
+						}
+					break;
+					
+					// Keep instance active, but invalidate state
+					case B:
+						try
+						{
+							// Invalidate state (there might be other points of entry)
+							((EntityEnterpriseContext) ctx).setValid(false); 
+							
+							// Release it though
+							container.getInstanceCache().release(ctx);
+						} catch (Exception e)
+						{
+							Logger.debug(e);
+						}
+					break;
+					
+					// Invalidate everything AND Passivate instance
+					case C:
+						try
+						{
+							//Lock in cache
+							container.getInstanceCache().get(ctx.getId()); 
+							
+							// Passivate instance
+							((EntityContainer)getContainer()).getPersistenceManager().passivateEntity((EntityEnterpriseContext)ctx); 
+							
+							//Remove from the cache, it is not active anymore
+							container.getInstanceCache().remove(ctx.getId()); 
+							
+							// Back to the pool
+							container.getInstancePool().free(ctx); 
+						
+						} catch (Exception e)
+						{
+							Logger.debug(e);
+						}
+					break;
 				
 				}
 			}
-			
-			// Remove from tx/synch mapping
-			synchs.remove(this);
 			
 			// Notify all who are waiting for this tx to end
 			synchronized (tx)
