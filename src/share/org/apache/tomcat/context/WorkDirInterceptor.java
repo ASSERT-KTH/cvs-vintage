@@ -90,7 +90,7 @@ public class WorkDirInterceptor extends BaseInterceptor {
 	cleanWorkDir=b;
     }
 	
-    public void contextInit(Context ctx) {
+    public void addContext(ContextManager cm, Context ctx) {
 	if( ctx.getWorkDir() == null)
 	    setWorkDir(ctx);
 

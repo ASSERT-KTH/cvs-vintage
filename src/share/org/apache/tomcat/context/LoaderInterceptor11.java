@@ -127,7 +127,10 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	Object pd=context.getProtectionDomain();
 	
 	URL classP[]=context.getClassPath();
-
+	if( debug > 0 ) {
+	    for( int i=0; i< classP.length ; i++ )
+		log ( "Set classpath " + classP[i] );
+	}
 	DependManager dm=context.getDependManager();
 	if( dm==null ) {
 	    dm=new DependManager();

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.5 2000/09/25 07:21:33 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/09/25 07:21:33 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1

@@ -200,6 +200,12 @@ public class Context implements LogAware {
 	return contextFacade;
     }
 
+    public void setFacade(Object obj) {
+        if(contextFacade!=null )
+	    log( "Changing facade " + contextFacade + " " +obj);
+	contextFacade=obj;
+    }
+
 
     // -------------------- Settable context properties --------------------
     // -------------------- Required properties

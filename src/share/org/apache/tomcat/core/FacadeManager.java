@@ -98,16 +98,14 @@ public interface FacadeManager {
     public static final String FACADE_ATTRIBUTE="org.apache.tomcat.facade";
     
     public Object createServletContextFacade(Context ctx);
-    
-    public Context getRealContext( Object ctx );
+    public  Object createHttpServletRequestFacade(Request req);
+    public  Object createHttpServletResponseFacade(Response res);
 
+
+
+    public Context getRealContext( Object ctx );
     public  Request getRealRequest( Object req ); 
 
-
-
-    public  Object createHttpServletRequestFacade(Request req);
-
-    public  Object createHttpServletResponseFacade(Response res);
 
     /** Create a new handler
      */

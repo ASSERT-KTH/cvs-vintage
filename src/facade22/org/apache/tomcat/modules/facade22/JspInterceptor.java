@@ -91,15 +91,22 @@ public class JspInterceptor extends BaseInterceptor {
 				  "tomcat.jspInfoNote");
     }
     
+    public void addContext(ContextManager cm, Context ctx)
+	throws TomcatException 
+    {
+	try {
+	    URL url=new URL( "file", null,
+			     ctx.getWorkDir().getAbsolutePath() + "/");
+	    ctx.addClassPath( url );
+	    if( debug > 0 ) log( "Added to classpath: " + url );
+	} catch( MalformedURLException ex ) {
+	}
+    }
+
     public void contextInit(Context ctx)
 	throws TomcatException 
     {
 	JspFactory.setDefaultFactory(new JspFactoryImpl());
-	try {
-	    ctx.addClassPath( new URL( "file", null,
-					ctx.getWorkDir().getAbsolutePath()));
-	} catch( MalformedURLException ex ) {
-	}
     }
 
     public void preServletInit( Context ctx, Handler sw )
@@ -115,7 +122,7 @@ public class JspInterceptor extends BaseInterceptor {
     }
 
     public int requestMap( Request req ) {
-	ServletWrapper wrapper=(ServletWrapper)req.getWrapper();
+	Handler wrapper=(Handler)req.getWrapper();
 	if( wrapper!=null && ! "jsp".equals( wrapper.getName())
 	    && wrapper.getPath() == null)
 	    return 0;
@@ -134,12 +141,21 @@ public class JspInterceptor extends BaseInterceptor {
 	    mapJspPage( req, jspInfo, jspInfo.uri, jspInfo.fullClassN);
 	}
 
+	if( debug > 3) {
+	    log( "Check if source is up-to-date " +
+		 jspInfo.jspSource + " " + 
+		 jspInfo.jspSource.lastModified() + " "
+		 + jspInfo.compileTime );
+	}
+
 	if( jspInfo.jspSource.lastModified() 
 	    > jspInfo.compileTime ) {
 	    //XXX 	    destroy();
 	    
 	    // jump version number - the file needs to
 	    // be recompiled, and we don't want a reload
+	    if( debug>0 )
+		log( "Compiling " + jspInfo );
 	    jspInfo.nextVersion();
 	    compile( req, jspInfo );
 	    mapJspPage( req , jspInfo, jspInfo.uri, jspInfo.fullClassN);
@@ -179,7 +195,7 @@ public class JspInterceptor extends BaseInterceptor {
 		     " path=" + servletPath );
 	    }
 	    wrapper.setServletClass( classN );
-	    
+	    wrapper.getServlet();
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
 	} catch( TomcatException ex ) {
 	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);
@@ -469,6 +485,8 @@ class JspInfo {
     void writeVersion() {
 	File mapFile=new File(mapPath);
 	try {
+	    File dir=new File(mapFile.getParent());
+	    dir.mkdirs();
 	    FileOutputStream fis=new FileOutputStream( mapFile );
 	    fis.write(version);
 // 	    log("WVersion=" + version );
