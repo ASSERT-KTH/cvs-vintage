@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.17 2005/01/09 14:58:58 linus Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.18 2005/01/22 22:08:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ import org.tigris.gef.presentation.FigNode;
 public class UseCaseDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer {
     private static final Logger LOG =
-	Logger.getLogger(UseCaseDiagramRenderer.class);
+        Logger.getLogger(UseCaseDiagramRenderer.class);
 
 
     /**
@@ -240,7 +240,7 @@ public class UseCaseDiagramRenderer
         // model maybe they should be, just as an implementation issue, dont
         // remove any of the methods that are there now.
 
-        LOG.debug(this.getClass().toString()
+        LOG.error(this.getClass().toString()
 		  + ": getFigEdgeFor(" + gm.toString() + ", "
 		  + lay.toString() + ", " + edge.toString()
 		  + ") - needs more work to handle this sort of edge");

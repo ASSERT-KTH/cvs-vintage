@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.8 2005/01/20 23:20:36 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.9 2005/01/22 22:08:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1795,6 +1795,7 @@ class CoreHelperImpl implements CoreHelper {
             ((MComment) handle).removeAnnotatedElement((MModelElement) me);
             return;
         }
+        LOG.error("Failed to remove comment from model element");
         throw new IllegalArgumentException();
     }
 
@@ -1962,6 +1963,7 @@ class CoreHelperImpl implements CoreHelper {
                 .addAnnotatedElement(((MModelElement) annotatedElement));
             return;
         }
+        LOG.error("Failed to link a comment to a model element");
         throw new IllegalArgumentException("comment: " + comment
                 + " or annotatedElement: " + annotatedElement);
     }

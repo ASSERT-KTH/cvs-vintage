@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.6 2005/01/20 23:20:39 linus Exp $
+// $Id: CommentEdge.java,v 1.7 2005/01/22 22:08:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,11 @@
 
 package org.argouml.uml.diagram.static_structure.ui;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.UUIDManager;
+import org.argouml.uml.diagram.use_case.ui.UseCaseDiagramRenderer;
 
 
 /**
@@ -44,6 +46,9 @@ public class CommentEdge {
     private Object dest;
     private Object uuid;
 
+    private static final Logger LOG =
+        Logger.getLogger(UseCaseDiagramRenderer.class);
+    
     /**
      * Constructor.
      *
@@ -51,6 +56,7 @@ public class CommentEdge {
      * @param d the destination
      */
     public CommentEdge(Object s, Object d) {
+        LOG.debug("Creating a CommentEdge");
         source = s;
         dest = d;
         uuid = UUIDManager.getInstance().getNewUUID();

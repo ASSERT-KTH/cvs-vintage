@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.32 2005/01/11 15:12:35 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.33 2005/01/22 22:08:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,6 +213,7 @@ public class ClassDiagramRenderer
         } else if (edge instanceof CommentEdge) {
             newEdge = new FigEdgeNote(edge, lay);
         }
+        
         if (newEdge == null) {
             throw new IllegalArgumentException(
                     "Don't know how to create FigEdge for model type "
