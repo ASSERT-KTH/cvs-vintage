@@ -49,10 +49,6 @@ public class Main {
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         cmdLineParser.initCmdLine(args);
 
-		// Don't call ColumbaLogger before this line!!
-        MainInterface.DEBUG = cmdLineParser.isDebugOption();
-		// now, you can call the ColumbaLogger!!
-
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         ColumbaClient.loadInVMInstance(args);
 

@@ -40,8 +40,6 @@ public class ColumbaCmdLineParser {
     private static CmdLineParser.Option bcc;
     
     protected CmdLineParser parser;
-    private boolean debugOption = false;
-    private String pathOption = null;
     private String rcptOption = null;
     private String bodyOption = null;
     private boolean composerOption = false;
@@ -137,7 +135,7 @@ public class ColumbaCmdLineParser {
         Boolean debugValue = (Boolean) parser.getOptionValue(debug);
 
         if (debugValue != null) {
-            setDebugOption(debugValue.booleanValue());
+            MainInterface.DEBUG = debugValue.booleanValue();
         }
     }
 
@@ -149,7 +147,6 @@ public class ColumbaCmdLineParser {
      */
     private void checkPath() {
         String pathValue = (String) parser.getOptionValue(path);
-        setPathOption(pathValue);
 
         if (pathValue != null) {
             new ConfigPath(pathValue);
@@ -228,30 +225,30 @@ public class ColumbaCmdLineParser {
      * TODO: all options should be printed
      */
     public static void printUsage() {
-        System.out.println("usage: java -jar columba.jar [OPTION]");
+        System.out.println("usage: java -jar columba.jar [OPTIONS]");
         System.out.println();
         System.out.println(
-            "Mandatory arguments to long options are mandatory for short options too.");
+            "Mandatory arguments to long options are mandatory for short options, too.");
         System.out.println(
-            "  -d, --debug\t\tprints debug informations to standard out");
+            "  -d, --debug\t\tprints debug information to standard out");
         System.out.println(
             "  -p, --path\t\tsets the path to the config directory");
         System.out.println(
             "  -c, --composer\tdisplays the composer window on startup");
         System.out.println(
             "  -r, --rcpt\t\tsets the recipient for the composer " +
-            "(if the composer argument given)");
+            "(if composer argument given)");
         System.out.println(
             "  -b, --body\t\tsets the message body for the composer " +
-            "(if the composer argument given)");
+            "(if composer argument given)");
         System.out.println(
             "  --mailurl\t\topens the composer window with the specified mailurl info");
         System.out.println("  --subject\t\tsets the subject for the composer " +
-            "(if the composer argument given)");
+            "(if composer argument given)");
         System.out.println(
-            "  --cc\t\t\tsets the Cc for the composer (if the composer argument given)");
+            "  --cc\t\t\tsets the Cc for the composer (if composer argument given)");
         System.out.println("  --bcc\t\t\tsets the Bcc for the composer " +
-            "(if the composer argument given)");
+            "(if composer argument given)");
         System.out.println("\t--help\t\tdisplay this help and exit");
         System.out.println("\t--version\toutput version information and exit");
         System.out.println();
@@ -281,22 +278,6 @@ public class ColumbaCmdLineParser {
     }
 
     /**
-     * Gives the value of the Debug option.
-     * @return the value of the Debug option.
-     */
-    public boolean isDebugOption() {
-        return debugOption;
-    }
-
-    /**
-     * Gives the value of the Path Option.
-     * @return the value of the Path Option.
-     */
-    public String getPathOption() {
-        return pathOption;
-    }
-
-    /**
      * Gives the value of the recipient Option.
      * @return the value of the recipient Option.
      */
@@ -318,22 +299,6 @@ public class ColumbaCmdLineParser {
      */
     public void setComposerOption(boolean b) {
         composerOption = b;
-    }
-
-    /**
-     * Sets the value for the Debug Option.
-     * @param b the value for the Debug Option.
-     */
-    public void setDebugOption(boolean b) {
-        debugOption = b;
-    }
-
-    /**
-     * Sets the value for the Path Option.
-     * @param string the value for the Path Option.
-     */
-    public void setPathOption(String string) {
-        pathOption = string;
     }
 
     /**
