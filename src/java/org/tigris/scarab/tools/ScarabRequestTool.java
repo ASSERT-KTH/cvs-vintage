@@ -539,10 +539,11 @@ e.printStackTrace();
     }
 
     /**
-     * A Attribute object for use within the Scarab API.
+     * @return An {@link org.tigris.scarab.om.Attribute} object
+     * (possibly "blank", but never <code>null</code>).
      */
     public Attribute getAttribute()
-     throws Exception
+        throws Exception
     {
         try
         {
