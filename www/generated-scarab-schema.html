@@ -132,19 +132,13 @@
 </tr>
 <tr>
 <td>ACTIVITY_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>PK.&nbsp;</td>
-</tr>
-<tr>
-<td>ISSUE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Issue attribute of which has been modified.&nbsp;</td>
 </tr>
 <tr>
 <td>ATTRIBUTE_ID</td><td>INTEGER
@@ -152,53 +146,6 @@
   
   null
 </td><td>Attribute that has been modified.&nbsp;</td>
-</tr>
-<tr>
-<td>TRANSACTION_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Transaction to which the attribute modification belongs.&nbsp;</td>
-</tr>
-<tr>
-<td>OLD_NUMERIC_VALUE</td><td>INTEGER
-  null
-</td><td>Value of integer attribute before modification.&nbsp;</td>
-</tr>
-<tr>
-<td>NEW_NUMERIC_VALUE</td><td>INTEGER
-  null
-</td><td>Value of integer attribute after modification.&nbsp;</td>
-</tr>
-<tr>
-<td>OLD_USER_ID</td><td>INTEGER
-  null
-</td><td>Value of user attribute before modification.&nbsp;</td>
-</tr>
-<tr>
-<td>NEW_USER_ID</td><td>INTEGER
-  null
-</td><td>Value of user attribute after modification.&nbsp;</td>
-</tr>
-<tr>
-<td>OLD_OPTION_ID</td><td>INTEGER
-  null
-</td><td>Value of option attribute before modification.&nbsp;</td>
-</tr>
-<tr>
-<td>NEW_OPTION_ID</td><td>INTEGER
-  null
-</td><td>Value of option attribute after modification.&nbsp;</td>
-</tr>
-<tr>
-<td>OLD_VALUE</td><td>LONGVARCHAR
-  null
-</td><td>Value of attribute before modification.&nbsp;</td>
-</tr>
-<tr>
-<td>NEW_VALUE</td><td>LONGVARCHAR
-  null
-</td><td>Value of attribute after modification.&nbsp;</td>
 </tr>
 <tr>
 <td>DESCRIPTION</td><td>VARCHAR
@@ -211,6 +158,60 @@
 <td>END_DATE</td><td>DATE
   null
 </td><td>Date this Activity is no longer the current value of the Attribute.&nbsp;</td>
+</tr>
+<tr>
+<td>ISSUE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue attribute of which has been modified.&nbsp;</td>
+</tr>
+<tr>
+<td>NEW_NUMERIC_VALUE</td><td>INTEGER
+  null
+</td><td>Value of integer attribute after modification.&nbsp;</td>
+</tr>
+<tr>
+<td>NEW_OPTION_ID</td><td>INTEGER
+  null
+</td><td>Value of option attribute after modification.&nbsp;</td>
+</tr>
+<tr>
+<td>NEW_USER_ID</td><td>INTEGER
+  null
+</td><td>Value of user attribute after modification.&nbsp;</td>
+</tr>
+<tr>
+<td>NEW_VALUE</td><td>LONGVARCHAR
+  null
+</td><td>Value of attribute after modification.&nbsp;</td>
+</tr>
+<tr>
+<td>OLD_NUMERIC_VALUE</td><td>INTEGER
+  null
+</td><td>Value of integer attribute before modification.&nbsp;</td>
+</tr>
+<tr>
+<td>OLD_OPTION_ID</td><td>INTEGER
+  null
+</td><td>Value of option attribute before modification.&nbsp;</td>
+</tr>
+<tr>
+<td>OLD_USER_ID</td><td>INTEGER
+  null
+</td><td>Value of user attribute before modification.&nbsp;</td>
+</tr>
+<tr>
+<td>OLD_VALUE</td><td>LONGVARCHAR
+  null
+</td><td>Value of attribute before modification.&nbsp;</td>
+</tr>
+<tr>
+<td>TRANSACTION_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Transaction to which the attribute modification belongs.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -293,33 +294,13 @@
 </tr>
 <tr>
 <td>ATTACHMENT_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier.&nbsp;</td>
-</tr>
-<tr>
-<td>ISSUE_ID</td><td>INTEGER
-  null
-</td><td>Issue that attachment is associated with.&nbsp;</td>
-</tr>
-<tr>
-<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Type.&nbsp;</td>
-</tr>
-<tr>
-<td>ATTACHMENT_NAME</td><td>VARCHAR
-    (255)
-  
-    not
-  
-  null
-</td><td>Name that is displayed in the UI.&nbsp;</td>
 </tr>
 <tr>
 <td>ATTACHMENT_DATA</td><td>VARBINARY
@@ -343,19 +324,25 @@
 </td><td>MIME type of the attachment.                      Describes type of information constituting an attachment.&nbsp;</td>
 </tr>
 <tr>
-<td>MODIFIED_BY</td><td>INTEGER
+<td>ATTACHMENT_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
   null
-</td><td>Person that made last modification to the attachment.&nbsp;</td>
+</td><td>Name that is displayed in the UI.&nbsp;</td>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type.&nbsp;</td>
 </tr>
 <tr>
 <td>CREATED_BY</td><td>INTEGER
   null
 </td><td>Person that associated the attachment with an issue initially.&nbsp;</td>
-</tr>
-<tr>
-<td>MODIFIED_DATE</td><td>TIMESTAMP
-  null
-</td><td>Date of the last modification of the attachment.&nbsp;</td>
 </tr>
 <tr>
 <td>CREATED_DATE</td><td>TIMESTAMP
@@ -368,6 +355,21 @@
   
   null
 </td><td>Flag, which marks that attachment has been deleted.&nbsp;</td>
+</tr>
+<tr>
+<td>ISSUE_ID</td><td>INTEGER
+  null
+</td><td>Issue that attachment is associated with.&nbsp;</td>
+</tr>
+<tr>
+<td>MODIFIED_BY</td><td>INTEGER
+  null
+</td><td>Person that made last modification to the attachment.&nbsp;</td>
+</tr>
+<tr>
+<td>MODIFIED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the last modification of the attachment.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -415,8 +417,9 @@
 </tr>
 <tr>
 <td>ATTACHMENT_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -456,12 +459,20 @@
 </tr>
 <tr>
 <td>ATTRIBUTE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier.&nbsp;</td>
+</tr>
+<tr>
+<td>ACTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>For user attributes, whether the user will be emailed, cc'd, or neither.&nbsp;</td>
 </tr>
 <tr>
 <td>ATTRIBUTE_NAME</td><td>VARCHAR
@@ -480,34 +491,6 @@
 </td><td>Type.&nbsp;</td>
 </tr>
 <tr>
-<td>PERMISSION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>A permission related to this attribute.&nbsp;</td>
-</tr>
-<tr>
-<td>REQUIRED_OPTION_ID</td><td>INTEGER
-  null
-</td><td>A required option for this attribute to be active.&nbsp;</td>
-</tr>
-<tr>
-<td>DESCRIPTION</td><td>VARCHAR
-    (255)
-  
-    not
-  
-  null
-</td><td>Description.&nbsp;</td>
-</tr>
-<tr>
-<td>ACTION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>For user attributes, whether the user will be emailed, cc'd, or neither.&nbsp;</td>
-</tr>
-<tr>
 <td>CREATED_BY</td><td>INTEGER
   null
 </td><td>Person that set value to the column of the table initially.&nbsp;</td>
@@ -523,6 +506,27 @@
   
   null
 </td><td>Flag, which marks that attribute has been deleted.&nbsp;</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Description.&nbsp;</td>
+</tr>
+<tr>
+<td>PERMISSION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>A permission related to this attribute.&nbsp;</td>
+</tr>
+<tr>
+<td>REQUIRED_OPTION_ID</td><td>INTEGER
+  null
+</td><td>A required option for this attribute to be active.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -560,21 +564,13 @@
 </tr>
 <tr>
 <td>ATTRIBUTE_CLASS_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier.&nbsp;</td>
-</tr>
-<tr>
-<td>ATTRIBUTE_CLASS_NAME</td><td>VARCHAR
-    (255)
-  
-    not
-  
-  null
-</td><td>Name.&nbsp;</td>
 </tr>
 <tr>
 <td>ATTRIBUTE_CLASS_DESC</td><td>VARCHAR
@@ -584,6 +580,15 @@
   
   null
 </td><td>Description.&nbsp;</td>
+</tr>
+<tr>
+<td>ATTRIBUTE_CLASS_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name.&nbsp;</td>
 </tr>
 <tr>
 <td>JAVA_CLASS_NAME</td><td>VARCHAR
@@ -610,18 +615,24 @@
 </tr>
 <tr>
 <td>ATTRIBUTE_GROUP_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td> Unique identifier.&nbsp;</td>
 </tr>
 <tr>
-<td>NAME</td><td>VARCHAR
-    (255)
+<td>ACTIVE</td><td>BOOLEANINT
+    (1)
   
-    not
+  null
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DEDUPE</td><td>BOOLEANINT
+    (1)
   
   null
 </td><td>&nbsp;</td>
@@ -634,13 +645,6 @@
 </td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>MODULE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Module.&nbsp;</td>
-</tr>
-<tr>
 <td>ISSUE_TYPE_ID</td><td>INTEGER
     not
   
@@ -648,15 +652,17 @@
 </td><td>Issue type.&nbsp;</td>
 </tr>
 <tr>
-<td>ACTIVE</td><td>BOOLEANINT
-    (1)
+<td>MODULE_ID</td><td>INTEGER
+    not
   
   null
-</td><td>&nbsp;</td>
+</td><td>Module.&nbsp;</td>
 </tr>
 <tr>
-<td>DEDUPE</td><td>BOOLEANINT
-    (1)
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
   
   null
 </td><td>&nbsp;</td>
@@ -714,8 +720,9 @@
 </tr>
 <tr>
 <td>OPTION_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -729,6 +736,13 @@
 </td><td>Attribute that can take the options as its value.&nbsp;</td>
 </tr>
 <tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that option has been deleted.&nbsp;</td>
+</tr>
+<tr>
 <td>OPTION_NAME</td><td>VARCHAR
     (255)
   
@@ -736,13 +750,6 @@
   
   null
 </td><td>Name.&nbsp;</td>
-</tr>
-<tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
-  
-  null
-</td><td>Flag, which marks that option has been deleted.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -787,8 +794,9 @@
 </tr>
 <tr>
 <td>ATTRIBUTE_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -855,8 +863,9 @@
 </tr>
 <tr>
 <td>OBSERVED_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -864,19 +873,13 @@
 </tr>
 <tr>
 <td>OBSERVER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Issue that depends on other issue.                      Example: Issue that is being blocked.                      Example: Issue that is duplicate.&nbsp;</td>
-</tr>
-<tr>
-<td>DEPEND_TYPE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Type.&nbsp;</td>
 </tr>
 <tr>
 <td>DELETED</td><td>BOOLEANINT
@@ -884,6 +887,13 @@
   
   null
 </td><td>Flag, which marks that dependency has been deleted.&nbsp;</td>
+</tr>
+<tr>
+<td>DEPEND_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -926,8 +936,9 @@
 </tr>
 <tr>
 <td>DEPEND_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -960,8 +971,9 @@
 </tr>
 <tr>
 <td>FREQUENCY_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -994,21 +1006,20 @@
 </tr>
 <tr>
 <td>ISSUE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier used for primary key.&nbsp;</td>
 </tr>
 <tr>
-<td>ID_PREFIX</td><td>CHAR
-    (4)
-  
-    not
+<td>DELETED</td><td>BOOLEANINT
+    (1)
   
   null
-</td><td>Part of Id related to module.&nbsp;</td>
+</td><td>Flag, which marks that issue has been deleted.&nbsp;</td>
 </tr>
 <tr>
 <td>ID_COUNT</td><td>INTEGER
@@ -1027,9 +1038,13 @@
 </td><td>The instance of scarab the issue was originally reported to.                      This field could be null for the normal instance where the issue                      is local to this database.&nbsp;</td>
 </tr>
 <tr>
-<td>TYPE_ID</td><td>INTEGER
+<td>ID_PREFIX</td><td>CHAR
+    (4)
+  
+    not
+  
   null
-</td><td>Type : Issue, or Enter Issue Template.&nbsp;</td>
+</td><td>Part of Id related to module.&nbsp;</td>
 </tr>
 <tr>
 <td>MODULE_ID</td><td>INTEGER
@@ -1039,11 +1054,9 @@
 </td><td>Module that issue relates to.&nbsp;</td>
 </tr>
 <tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
-  
+<td>TYPE_ID</td><td>INTEGER
   null
-</td><td>Flag, which marks that issue has been deleted.&nbsp;</td>
+</td><td>Type : Issue, or Enter Issue Template.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1097,12 +1110,27 @@
 </tr>
 <tr>
 <td>VALUE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>PK.&nbsp;</td>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute.&nbsp;</td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that attribute has been deleted.&nbsp;</td>
 </tr>
 <tr>
 <td>ISSUE_ID</td><td>INTEGER
@@ -1112,11 +1140,11 @@
 </td><td>Issue that attribute belongs to.&nbsp;</td>
 </tr>
 <tr>
-<td>ATTRIBUTE_ID</td><td>INTEGER
-    not
+<td>NUMERIC_VALUE</td><td>INTEGER
+    (11)
   
   null
-</td><td>Attribute.&nbsp;</td>
+</td><td>some attributes are better saved in numeric format, so this column                      can be used in place of VALUE.&nbsp;</td>
 </tr>
 <tr>
 <td>OPTION_ID</td><td>INTEGER
@@ -1129,23 +1157,9 @@
 </td><td>Person that is the value of the attribute if attribute is person based.&nbsp;</td>
 </tr>
 <tr>
-<td>NUMERIC_VALUE</td><td>INTEGER
-    (11)
-  
-  null
-</td><td>some attributes are better saved in numeric format, so this column                      can be used in place of VALUE.&nbsp;</td>
-</tr>
-<tr>
 <td>VALUE</td><td>LONGVARCHAR
   null
 </td><td>         Display value of the attribute.         This column should always contain a value which serves as a 'summary value'         of the attribute, you MAY need to look elsewhere to get real value.         Purpose of this 'duplication' is to be able to get overview of the attribute         independently of what kind of attribute this is. This also improves performance         so you do not need to perform (sometimes complex) processing each time you view the issue.         It lets you get list of issues with their attributes with a single SQL statement.         Examples of what would go into this fields for different kinds of attributes:          - For 'free-form' attributes this would be the actual value (it's String             representation to be exact)          - For 'select-one' this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUE.             There will also be an apropriate value in OPTION_ID column which you should use to             join with SCARAB_ATTRIBUTE_OPTION          - For 'voted' attributes this would be the vote result. For bugzilla-style votes it is sum             of all votes casted. For average vote this result is DISPLAY_VALUE of OPTION which has              computed as: round(sum(votes.numeric_value)/count(votes)). For 'Tracking'             attribute which is also considered a voted attribute this value is a list of login_IDs             of users tracking the issue.           It is responsibility of Attribute's subclass which implements this ATTRIBUTE_TYPE to          populate this field with an apropriate value.&nbsp;</td>
-</tr>
-<tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
-  
-  null
-</td><td>Flag, which marks that attribute has been deleted.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1209,31 +1223,9 @@
 </tr>
 <tr>
 <td>ISSUE_ID
+          
            *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>NAME</td><td>VARCHAR
-    (255)
-  
-    not
-  
-  null
-</td><td>Person.&nbsp;</td>
-</tr>
-<tr>
-<td>DESCRIPTION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>The description of the saved template.&nbsp;</td>
-</tr>
-<tr>
-<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -1245,6 +1237,29 @@
   
   null
 </td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved template.&nbsp;</td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Person.&nbsp;</td>
 </tr>
 <tr>
 <td>SCOPE_ID</td><td>INTEGER
@@ -1290,12 +1305,27 @@
 </tr>
 <tr>
 <td>ISSUE_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier used for primary key.&nbsp;</td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Description.&nbsp;</td>
 </tr>
 <tr>
 <td>NAME</td><td>VARCHAR
@@ -1307,25 +1337,11 @@
 </td><td>Name.&nbsp;</td>
 </tr>
 <tr>
-<td>DESCRIPTION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>Description.&nbsp;</td>
-</tr>
-<tr>
 <td>PARENT_ID</td><td>INTEGER
     not
   
   null
 </td><td>If this issue type is a template, the id of the issue type it                      Corresponds to. If is not, parent id is 0.&nbsp;</td>
-</tr>
-<tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
-  
-  null
-</td><td>&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1358,8 +1374,9 @@
 </tr>
 <tr>
 <td>ISSUE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -1367,8 +1384,9 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -1416,27 +1434,24 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>TABLE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Table.&nbsp;</td>
-</tr>
-<tr>
 <td>COLUMN_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Column of the table.&nbsp;</td>
 </tr>
 <tr>
-<td>MODIFIED_BY</td><td>INTEGER
+<td>TABLE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
   null
-</td><td>Person that made last modification to the column of the table.&nbsp;</td>
+</td><td>Table.&nbsp;</td>
 </tr>
 <tr>
 <td>CREATED_BY</td><td>INTEGER
@@ -1444,14 +1459,19 @@
 </td><td>Person that set value to the column of the table initially.&nbsp;</td>
 </tr>
 <tr>
-<td>MODIFIED_DATE</td><td>TIMESTAMP
-  null
-</td><td>Date of the last modification of the column of the table.&nbsp;</td>
-</tr>
-<tr>
 <td>CREATED_DATE</td><td>TIMESTAMP
   null
 </td><td>Date of the initial set of the column of the table.&nbsp;</td>
+</tr>
+<tr>
+<td>MODIFIED_BY</td><td>INTEGER
+  null
+</td><td>Person that made last modification to the column of the table.&nbsp;</td>
+</tr>
+<tr>
+<td>MODIFIED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the last modification of the column of the table.&nbsp;</td>
 </tr>
 </table>
 <br>
@@ -1471,21 +1491,25 @@
 </tr>
 <tr>
 <td>MODULE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier.&nbsp;</td>
 </tr>
 <tr>
-<td>MODULE_NAME</td><td>VARCHAR
-    (255)
-  
-    not
+<td>CLASS_KEY</td><td>INTEGER
+  null
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
   
   null
-</td><td>Name. It is RealName because Module implements the Turbine Group interface                      and having it as Name would clash with that interface. Please note that                      the result of group.getName() needs to be unique for each SCARAB_MODULE.&nbsp;</td>
+</td><td>Flag, which marks that module has been deleted.&nbsp;</td>
 </tr>
 <tr>
 <td>DOMAIN</td><td>VARCHAR
@@ -1513,11 +1537,25 @@
 </td><td>Description.&nbsp;</td>
 </tr>
 <tr>
+<td>MODULE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. It is RealName because Module implements the Turbine Group interface                      and having it as Name would clash with that interface. Please note that                      the result of group.getName() needs to be unique for each SCARAB_MODULE.&nbsp;</td>
+</tr>
+<tr>
 <td>MODULE_URL</td><td>VARCHAR
     (255)
   
   null
 </td><td>URL pointing to the information on the module.&nbsp;</td>
+</tr>
+<tr>
+<td>OWNER_ID</td><td>INTEGER
+  null
+</td><td>Person that is responsible for the module. @deprecated.&nbsp;</td>
 </tr>
 <tr>
 <td>PARENT_ID</td><td>INTEGER
@@ -1527,26 +1565,9 @@
 </td><td>Parent module containing the module.                     Allows for hierarchical structure of modules.&nbsp;</td>
 </tr>
 <tr>
-<td>OWNER_ID</td><td>INTEGER
-  null
-</td><td>Person that is responsible for the module. @deprecated.&nbsp;</td>
-</tr>
-<tr>
 <td>QA_CONTACT_ID</td><td>INTEGER
   null
 </td><td>Key quality assurance person for the module. @deprecated.&nbsp;</td>
-</tr>
-<tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
-  
-  null
-</td><td>Flag, which marks that module has been deleted.&nbsp;</td>
-</tr>
-<tr>
-<td>CLASS_KEY</td><td>INTEGER
-  null
-</td><td>&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1589,8 +1610,9 @@
 </tr>
 <tr>
 <td>RELATIONSHIP_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -1623,65 +1645,10 @@
 </tr>
 <tr>
 <td>QUERY_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
-  
-  null
-</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>USER_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Person.&nbsp;</td>
-</tr>
-<tr>
-<td>NAME</td><td>VARCHAR
-    (255)
-  
-    not
-  
-  null
-</td><td>The name the query will be saved under.&nbsp;</td>
-</tr>
-<tr>
-<td>DESCRIPTION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>The description of the saved query.&nbsp;</td>
-</tr>
-<tr>
-<td>VALUE</td><td>LONGVARCHAR
-    not
-  
-  null
-</td><td>The query string.&nbsp;</td>
-</tr>
-<tr>
-<td>SCOPE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Type.&nbsp;</td>
-</tr>
-<tr>
-<td>ISSUE_TYPE_ID</td><td>INTEGER
-    not
-  
-  null
-</td><td>Issue type.&nbsp;</td>
-</tr>
-<tr>
-<td>MODULE_ID</td><td>INTEGER
-  null
-</td><td>Module.&nbsp;</td>
-</tr>
-<tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
   
   null
 </td><td>&nbsp;</td>
@@ -1699,9 +1666,65 @@
 </td><td>&nbsp;</td>
 </tr>
 <tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved query.&nbsp;</td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue type.&nbsp;</td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+  null
+</td><td>Module.&nbsp;</td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>The name the query will be saved under.&nbsp;</td>
+</tr>
+<tr>
+<td>SCOPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type.&nbsp;</td>
+</tr>
+<tr>
 <td>SUBSCRIPTION_FREQUENCY_ID</td><td>INTEGER
   null
 </td><td>Default subscription frequency.&nbsp;</td>
+</tr>
+<tr>
+<td>USER_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Person.&nbsp;</td>
+</tr>
+<tr>
+<td>VALUE</td><td>LONGVARCHAR
+    not
+  
+  null
+</td><td>The query string.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1753,22 +1776,24 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>GROUP_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Group.&nbsp;</td>
-</tr>
-<tr>
 <td>ATTRIBUTE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Attribute.&nbsp;</td>
+</tr>
+<tr>
+<td>GROUP_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Group.&nbsp;</td>
 </tr>
 <tr>
 <td>PREFERRED_ORDER</td><td>INTEGER
@@ -1810,18 +1835,10 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>MODULE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Module.&nbsp;</td>
-</tr>
-<tr>
 <td>ATTRIBUTE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -1829,21 +1846,23 @@
 </tr>
 <tr>
 <td>ISSUE_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Issue type.&nbsp;</td>
 </tr>
 <tr>
-<td>DISPLAY_VALUE</td><td>VARCHAR
-    (255)
-  
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
     not
   
   null
-</td><td>Value that represents the attribute in the UI.&nbsp;</td>
+</td><td>Module.&nbsp;</td>
 </tr>
 <tr>
 <td>ACTIVE</td><td>BOOLEANINT
@@ -1855,13 +1874,22 @@
 </td><td>Flag, which marks that module attribute is not used.&nbsp;</td>
 </tr>
 <tr>
-<td>REQUIRED</td><td>BOOLEANINT
+<td>DEFAULT_TEXT_FLAG</td><td>BOOLEANINT
     (1)
   
     not
   
   null
-</td><td>Flag, which marks that issues entered for this module must have                      this attribute set.&nbsp;</td>
+</td><td>Flag, which marks that this attribute should be used in the email                      subject line, when an issue is created. May be used in other                      contexts as well.&nbsp;</td>
+</tr>
+<tr>
+<td>DISPLAY_VALUE</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Value that represents the attribute in the UI.&nbsp;</td>
 </tr>
 <tr>
 <td>PREFERRED_ORDER</td><td>INTEGER
@@ -1880,13 +1908,13 @@
 </td><td>Flag, which marks this attribute as being eligible for quick search.&nbsp;</td>
 </tr>
 <tr>
-<td>DEFAULT_TEXT_FLAG</td><td>BOOLEANINT
+<td>REQUIRED</td><td>BOOLEANINT
     (1)
   
     not
   
   null
-</td><td>Flag, which marks that this attribute should be used in the email                      subject line, when an issue is created. May be used in other                      contexts as well.&nbsp;</td>
+</td><td>Flag, which marks that issues entered for this module must have                      this attribute set.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -1944,22 +1972,24 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>MODULE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Module.&nbsp;</td>
-</tr>
-<tr>
 <td>ISSUE_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Artifact type.&nbsp;</td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module.&nbsp;</td>
 </tr>
 <tr>
 <td>ACTIVE</td><td>BOOLEANINT
@@ -1971,18 +2001,9 @@
 </td><td>Flag, which marks that the issue type is not used.&nbsp;</td>
 </tr>
 <tr>
-<td>DISPLAY</td><td>BOOLEANINT
-    (1)
-  
-    not
-  
+<td>COMMENTS</td><td>INTEGER
   null
-</td><td>Whether or not the issue type shows up in left hand nav.&nbsp;</td>
-</tr>
-<tr>
-<td>PREFERRED_ORDER</td><td>INTEGER
-  null
-</td><td>Order the the issue types appear in the left nav.&nbsp;</td>
+</td><td>Default number of comments.&nbsp;</td>
 </tr>
 <tr>
 <td>DEDUPE</td><td>BOOLEANINT
@@ -1992,14 +2013,20 @@
 </td><td>Deduping on/off for this module/issuetype.&nbsp;</td>
 </tr>
 <tr>
-<td>HISTORY</td><td>INTEGER
+<td>DISPLAY</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
   null
-</td><td>Default number of history entries.&nbsp;</td>
+</td><td>Whether or not the issue type shows up in left hand nav.&nbsp;</td>
 </tr>
 <tr>
-<td>COMMENTS</td><td>INTEGER
+<td>DISPLAY_DESCRIPTION</td><td>VARCHAR
+    (255)
+  
   null
-</td><td>Default number of comments.&nbsp;</td>
+</td><td>Value that represents the description of the issue type in the UI.&nbsp;</td>
 </tr>
 <tr>
 <td>DISPLAY_NAME</td><td>VARCHAR
@@ -2009,11 +2036,14 @@
 </td><td>Value that represents the name of the issue type in the UI.&nbsp;</td>
 </tr>
 <tr>
-<td>DISPLAY_DESCRIPTION</td><td>VARCHAR
-    (255)
-  
+<td>HISTORY</td><td>INTEGER
   null
-</td><td>Value that represents the description of the issue type in the UI.&nbsp;</td>
+</td><td>Default number of history entries.&nbsp;</td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+  null
+</td><td>Order the the issue types appear in the left nav.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -2050,38 +2080,34 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>MODULE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Module.&nbsp;</td>
-</tr>
-<tr>
 <td>ISSUE_TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Issue Type.&nbsp;</td>
 </tr>
 <tr>
-<td>OPTION_ID
+<td>MODULE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module.&nbsp;</td>
+</tr>
+<tr>
+<td>OPTION_ID
+          
+           *
+        </td><td>INTEGER
     not
   
   null
 </td><td>Option.&nbsp;</td>
-</tr>
-<tr>
-<td>DISPLAY_VALUE</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>Value that represents the option in the UI.&nbsp;</td>
 </tr>
 <tr>
 <td>ACTIVE</td><td>BOOLEANINT
@@ -2091,6 +2117,13 @@
   
   null
 </td><td>Flag, which marks that option has been deleted within the module.&nbsp;</td>
+</tr>
+<tr>
+<td>DISPLAY_VALUE</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Value that represents the option in the UI.&nbsp;</td>
 </tr>
 <tr>
 <td>PREFERRED_ORDER</td><td>INTEGER
@@ -2137,9 +2170,30 @@
 <th>Column Name</th><th>Type</th><th>Description</th>
 </tr>
 <tr>
-<td>MODULE_ID
+<td>ATTRIBUTE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute.&nbsp;</td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Artifact type.&nbsp;</td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
     not
   
   null
@@ -2147,30 +2201,13 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Person.&nbsp;</td>
-</tr>
-<tr>
-<td>ISSUE_TYPE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Artifact type.&nbsp;</td>
-</tr>
-<tr>
-<td>ATTRIBUTE_ID
-           *
-          </td><td>INTEGER
-    not
-  
-  null
-</td><td>Attribute.&nbsp;</td>
 </tr>
 <tr>
 <td>PREFERRED_ORDER</td><td>INTEGER
@@ -2225,8 +2262,9 @@
 </tr>
 <tr>
 <td>OPTION1_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2234,12 +2272,20 @@
 </tr>
 <tr>
 <td>OPTION2_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Child Option.&nbsp;</td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+    not
+  
+  null
+</td><td>The preferred order that these options should be shown in.                      Each option should have a 1-N ordering for all of its                      options (regardless of nesting).&nbsp;</td>
 </tr>
 <tr>
 <td>RELATIONSHIP_ID</td><td>INTEGER
@@ -2252,13 +2298,6 @@
 <td>WEIGHT</td><td>INTEGER
   null
 </td><td>             This gives 'weight' to an option. In other words, it can be used             to set the 'importance' of one option vs. another option. P1 can              be made more 'important' than P2. This is currently not used             in any of the code. This may become more useful in              the future when we have outside workflow logic. This is placed              here because an Attribute Option may have different weights              with different parents.&nbsp;</td>
-</tr>
-<tr>
-<td>PREFERRED_ORDER</td><td>INTEGER
-    not
-  
-  null
-</td><td>The preferred order that these options should be shown in.                      Each option should have a 1-N ordering for all of its                      options (regardless of nesting).&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -2301,8 +2340,9 @@
 </tr>
 <tr>
 <td>QUERY_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2310,8 +2350,9 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2325,16 +2366,16 @@
 </td><td>Is user subscribed.&nbsp;</td>
 </tr>
 <tr>
-<td>SUBSCRIPTION_FREQUENCY_ID</td><td>INTEGER
-  null
-</td><td>User's subscription frequency.&nbsp;</td>
-</tr>
-<tr>
 <td>ISDEFAULT</td><td>BOOLEANINT
     (1)
   
   null
 </td><td>Whether this is the user's default query.&nbsp;</td>
+</tr>
+<tr>
+<td>SUBSCRIPTION_FREQUENCY_ID</td><td>INTEGER
+  null
+</td><td>User's subscription frequency.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -2377,24 +2418,32 @@
 </tr>
 <tr>
 <td>REPORT_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>USER_ID</td><td>INTEGER
-    not
-  
+<td>CREATED_DATE</td><td>TIMESTAMP
   null
-</td><td>Person.&nbsp;</td>
+</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>MODULE_ID</td><td>INTEGER
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
   null
-</td><td>Module.&nbsp;</td>
+</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved report.&nbsp;</td>
 </tr>
 <tr>
 <td>ISSUE_TYPE_ID</td><td>INTEGER
@@ -2402,6 +2451,11 @@
   
   null
 </td><td>Issue type.&nbsp;</td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+  null
+</td><td>Module.&nbsp;</td>
 </tr>
 <tr>
 <td>NAME</td><td>VARCHAR
@@ -2413,13 +2467,6 @@
 </td><td>The name the report will be saved under.&nbsp;</td>
 </tr>
 <tr>
-<td>DESCRIPTION</td><td>VARCHAR
-    (255)
-  
-  null
-</td><td>The description of the saved report.&nbsp;</td>
-</tr>
-<tr>
 <td>QUERY_STRING</td><td>LONGVARCHAR
     not
   
@@ -2427,16 +2474,11 @@
 </td><td>The report string.&nbsp;</td>
 </tr>
 <tr>
-<td>DELETED</td><td>BOOLEANINT
-    (1)
+<td>USER_ID</td><td>INTEGER
+    not
   
   null
-</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>CREATED_DATE</td><td>TIMESTAMP
-  null
-</td><td>&nbsp;</td>
+</td><td>Person.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -2479,8 +2521,9 @@
 </tr>
 <tr>
 <td>SCOPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2513,17 +2556,13 @@
 </tr>
 <tr>
 <td>TRANSACTION_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
 </td><td>Unique identifier.&nbsp;</td>
-</tr>
-<tr>
-<td>TYPE_ID</td><td>INTEGER
-  null
-</td><td>Possible enumerated transaction type.&nbsp;</td>
 </tr>
 <tr>
 <td>ATTACHMENT_ID</td><td>INTEGER
@@ -2539,6 +2578,11 @@
 <td>CREATED_DATE</td><td>TIMESTAMP
   null
 </td><td>Date of the transaction.&nbsp;</td>
+</tr>
+<tr>
+<td>TYPE_ID</td><td>INTEGER
+  null
+</td><td>Possible enumerated transaction type.&nbsp;</td>
 </tr>
 </table>
 <h3>
@@ -2581,8 +2625,9 @@
 </tr>
 <tr>
 <td>TYPE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2615,8 +2660,9 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2660,8 +2706,9 @@
 </tr>
 <tr>
 <td>MODULE_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2669,8 +2716,9 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
@@ -2726,8 +2774,9 @@
 </tr>
 <tr>
 <td>USER_ID
+          
            *
-          </td><td>INTEGER
+        </td><td>INTEGER
     not
   
   null
