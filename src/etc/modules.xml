@@ -13,6 +13,8 @@
 
 <module name="ApacheConfig" javaClass="org.apache.tomcat.modules.config.ApacheConfig"/>
 
+<module name="JservConfig" javaClass="org.apache.tomcat.modules.config.JservConfig"/>
+
 <module name="PolicyLoader" javaClass="org.apache.tomcat.modules.config.PolicyLoader"/>
 
 <module name="DefaultCMSetter" javaClass="org.apache.tomcat.modules.config.DefaultCMSetter"/>
