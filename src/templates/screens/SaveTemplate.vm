@@ -48,7 +48,7 @@
 #if ($issueId)
        <tr>
           <th>template author:</th>
-             #set ($createdUser = $issue.CreatedUser)
+             #set ($createdUser = $issue.CreatedBy)
           <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
        </tr>
 #end
