@@ -30,7 +30,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCCustomFinderQuery implements JDBCQueryCommand {
    private Logger log;
@@ -54,8 +54,7 @@ public class JDBCCustomFinderQuery implements JDBCQueryCommand {
             "." + 
             finderMethod.getName());
 
-      if (log.isDebugEnabled())
-         log.debug("Finder: Custom finder " + finderMethod.getName());
+      log.debug("Finder: Custom finder " + finderMethod.getName());
    }
 
    public Collection execute(
@@ -88,9 +87,9 @@ public class JDBCCustomFinderQuery implements JDBCQueryCommand {
          throw new FinderException("Illegal arguments for finder " +
                "implementation: " + finderMethod.getName());
       } catch(InvocationTargetException e) {
-         log.error("Error invoking custom finder " + finderMethod.getName(),
+         log.error("Error invoking custom finder " + finderMethod.getName(), 
                e.getTargetException());
-         throw new FinderException("Errror invoking cutom finder " +
+         throw new FinderException("Errror invoking cutom finder " + 
                finderMethod.getName() + ": " + e.getTargetException());
       }
    }
