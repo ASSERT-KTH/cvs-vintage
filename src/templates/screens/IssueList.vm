@@ -14,12 +14,16 @@ $page.setTitle("Queue list")
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($issueList = $scarabR.IssueList)
 
+
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+
 #if ($issueList.size() > $resultsPerPage)
  #set ($paginated = "true")
  #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
 <form action="$action" method="post">
-<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
 <input type="hidden" name="pageNum" value="$pageNum" />
 
 ## PAGINATION
