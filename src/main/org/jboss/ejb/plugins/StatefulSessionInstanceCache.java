@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *      
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class StatefulSessionInstanceCache 
 	extends AbstractInstanceCache
@@ -88,7 +88,7 @@ public class StatefulSessionInstanceCache
 	{
 		ctx.setId(id);
 	}
-	protected boolean canPassivate(EnterpriseContext ctx) 
+	protected boolean canPassivate(Object key, EnterpriseContext ctx) 
 	{
 		if (ctx.isLocked()) 
 		{

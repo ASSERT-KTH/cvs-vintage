@@ -20,7 +20,8 @@ import org.jboss.util.Sync;
  * Cache subclass for entity beans.
  * 
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.6 $
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 
@@ -112,19 +113,26 @@ public class EntityInstanceCache
 	{
 		m_container.getInstancePool().free(ctx);
 	}
-	protected boolean canPassivate(EnterpriseContext ctx) 
+        /**
+	 * (Bill Burke> added key parameter so that canPassivate
+	 * can verify that the object being passivated is really the
+	 * same object and hasn't already been freed then re-used.
+	 */
+	protected boolean canPassivate(Object key, EnterpriseContext ctx) 
 	{
 		if (ctx.isLocked()) 
 		{
 			// The context is in the interceptor chain
 			return false;
 		}
-		else 
+		else if (ctx.getTransaction() != null) 
 		{
-			if (ctx.getTransaction() != null) 
-			{
 				return false;
-			}
+		}
+		// (Bill Burke)make sure we're passivating the right object! 
+		else if (!((EntityEnterpriseContext)ctx).getCacheKey().equals(key))
+		{
+		    return false;
 		}
 		return true;
 	}
