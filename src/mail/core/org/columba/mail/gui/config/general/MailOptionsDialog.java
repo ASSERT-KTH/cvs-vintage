@@ -134,6 +134,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			else
 				enableSmiliesCheckBox.setSelected(false);
 
+			/*
 			XmlElement quote = messageviewer.getElement("quote");
 			if (quote == null) {
 				quote = messageviewer.addSubElement("quote");
@@ -149,7 +150,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 			int c = Integer.parseInt(color);
 			quotedColorButton.setBackground(new Color(c));
-
+			*/
+			
 			XmlElement html = options.getElement("html");
 
 			boolean preferhtml =
@@ -196,11 +198,15 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				forwardComboBox.setSelectedIndex(0);
 			else
 				forwardComboBox.setSelectedIndex(1);
+				
+			/*
 			// composer
 			String path =
 				MailConfig.getComposerOptionsConfig().getSpellcheckItem().get(
 					"executable");
 			spellButton.setText(path);
+			*/
+			
 
 		} else {
 
@@ -289,11 +295,12 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			// @see org.columba.mail.gui.table.action.ForwardAction	
 			forward.notifyObservers();
 
+			/*
 			// composer
 			MailConfig.getComposerOptionsConfig().getSpellcheckItem().set(
 				"executable",
 				spellButton.getText());
-
+			*/
 		}
 	}
 
@@ -415,9 +422,13 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(enableSmiliesCheckBox, 4);
 		builder.nextLine();
 
+		// its maybe better to leave this option out of the dialog
+		// -> make it configurable in the xml file anyway
+		/*
 		builder.append(quotedColorCheckBox, quotedColorButton);
 		builder.nextLine();
-
+		*/
+		
 		builder.append(markCheckBox, markSpinner);
 
 		builder.nextLine();
