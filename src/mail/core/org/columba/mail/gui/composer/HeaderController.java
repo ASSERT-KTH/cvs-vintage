@@ -234,8 +234,8 @@ public class HeaderController
 		Object data = model.getValueAt(row, column);
 		*/
 
-		ComposerModel model = controller.getModel();
 		/*
+		ComposerModel model = controller.getModel();
 		model.getToList().clear();
 		model.getCcList().clear();
 		model.getBccList().clear();
@@ -301,15 +301,13 @@ public class HeaderController
 	}
 
 	public void drop(DropTargetDropEvent event) {
-		if (acceptDrop == false) {
+		if (!acceptDrop) {
 			event.rejectDrop();
 
 			//clearSelection();
 
 			return;
 		}
-
-		Transferable transferable = event.getTransferable();
 
 		System.out.println("dropping contact");
 
@@ -321,8 +319,7 @@ public class HeaderController
 		int column = view.getTable().getEditingColumn();
 		System.out.println("row=" + row + " column=" + column);
 
-		if ((row == -1) || (column == -1)) {
-		} else {
+		if ((row != -1) && (column != -1)) {
 			view.getTable().getCellEditor(row, column).stopCellEditing();
 			view.getTable().clearSelection();
 			view.getTable().requestFocus();
@@ -346,7 +343,6 @@ public class HeaderController
 		event.getDropTargetContext().dropComplete(true);
 
 		view.getTable().appendRow();
-
 	}
 
 	public void dropActionChanged(DropTargetDragEvent event) {
