@@ -153,27 +153,31 @@
  ## hiding until implemented<th>$l10n.Weight</th>
 </tr>
 #foreach ($pcao in $pcaos)
+    #set ($immutableOption = $pcao.getChildOption().SystemDefined)
     #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
     #indexedRows($velocityCount)
-     #if(!$immutable)
+     #if(!$immutableOption)
        <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
      #else
        <td>#booleanCheckboxLock ($pcaoGroup.Deleted $immutable)</td>
      #end
      <td>
-     <select name="$pcaoGroup.ParentId.Key">
-     #if ($pcao.ParentId.toString().equals("0"))
-        <option selected="selected" value="0">$l10n.Root</option>
+     #if($immutableOption)
+         $pcao.ParentOption.Name
      #else
-        <option value="0">$l10n.Root</option>
-     #end
-     #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
-       #if (! $parentAttrOption.Name.equals($pcao.Name) )
-         #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
-         #if($pcao.ParentId.toString().equals($parentAttrOption.OptionId.toString()))
-            <option selected="selected" value="$pcaoGroupTemp.OptionId">$pcaoGroupTemp.Name</option>
-         #else
-            <option value="$pcaoGroupTemp.OptionId">$pcaoGroupTemp.Name</option>
+       <select name="$pcaoGroup.ParentId.Key">
+       #if ($pcao.ParentId.toString().equals("0"))
+          <option selected="selected" value="0">$l10n.Root</option>
+       #else
+          <option value="0">$l10n.Root</option>
+       #end
+       #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
+         #if (! $parentAttrOption.Name.equals($pcao.Name) )
+           #if($pcao.ParentId.toString().equals($parentAttrOption.OptionId.toString()))
+              <option selected="selected" value="$parentAttrOption.OptionId">$parentAttrOption.Name</option>
+           #else
+              <option value="$parentAttrOption.OptionId">$parentAttrOption.Name</option>
+           #end
          #end
        #end
      #end
@@ -181,7 +185,7 @@
      </td>
 
      <td>
-     #if(!$immutable)
+     #if(!$immutableOption)
       <input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" />
      #else
        $pcaoGroup.Name
@@ -190,7 +194,11 @@
      </td>
 
      <td>
+     #if($immutableOption)
+        $pcaoGroup.PreferredOrder.Value
+     #else
         #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
+     #end
      </td>
 #* Hiding until implemented
      <td>

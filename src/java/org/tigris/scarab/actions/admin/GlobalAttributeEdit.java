@@ -69,6 +69,7 @@ import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache;  
@@ -77,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.62 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.63 2003/07/30 00:37:57 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -243,7 +244,17 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 {
                     ParentChildAttributeOption pcao = 
                         (ParentChildAttributeOption)pcaoList.get(i);
-                
+
+                    if (pcao.getChildOption().isSystemDefined()) 
+                    {
+                        if (Log.get().isDebugEnabled()) 
+                        {
+                            Log.get().debug("PCAO(" + pcao + 
+                                ") is used by a system defined issue type");
+                        }                        
+                    }
+                    else 
+                    {
                     Group pcaoGroup = intake.get("ParentChildAttributeOption", 
                                                   pcao.getQueryKey());
 
@@ -328,7 +339,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         return false;
                     }
                 }
-
+                }
                 if (somethingSaved)
                 {
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
