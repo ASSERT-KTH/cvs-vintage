@@ -44,7 +44,7 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.10 $
+@version $Revision: 1.11 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -144,9 +144,6 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         return "ExternalContext(" + contextInfo.getJndiName() + ")";
     }
 
-    public void initService() throws Exception
-    {
-    }
 
     /** Start the service by binding the external context into the
         JBoss InitialContext.

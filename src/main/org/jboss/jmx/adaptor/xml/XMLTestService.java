@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport
@@ -55,11 +55,6 @@ public class XMLTestService
   }
 
   // Protected -----------------------------------------------------
-  protected void initService()
-    throws
-      Exception
-  {
-  }
 
   protected void startService()
     throws

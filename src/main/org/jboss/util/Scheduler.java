@@ -535,11 +535,6 @@ public class Scheduler
    // ServiceMBean - Methods
    // -------------------------------------------------------------------------
 
-   protected void initService()
-        throws Exception
-   {
-   }
-
    protected void startService()
         throws Exception
    {

@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ServerSessionPoolLoader 
    extends ServiceMBeanSupport
@@ -121,22 +121,6 @@ public class ServerSessionPoolLoader
       return name;
    }
 
-   /**
-    * Initialize the service.
-    *
-    * <p>Setup the pool factory.
-    *
-    * @throws ClassNotFoundException   Could not find pool factory class.
-    * @throws Exception                Failed to create pool factory instance.
-    */
-   protected void initService() throws Exception
-   {
-      Class cls = Class.forName(poolFactoryClass);
-      poolFactory = (ServerSessionPoolFactory)cls.newInstance();
-      poolFactory.setName(name);
-
-      log.debug("initalized with pool factory: " + poolFactory);
-   }
 
    /**
     * Start the service.
@@ -147,6 +131,11 @@ public class ServerSessionPoolLoader
     */
    protected void startService() throws Exception
    {
+      Class cls = Class.forName(poolFactoryClass);
+      poolFactory = (ServerSessionPoolFactory)cls.newInstance();
+      poolFactory.setName(name);
+
+      log.debug("initialized with pool factory: " + poolFactory);
       InitialContext ctx = new InitialContext();
       String name = poolFactory.getName();
       String jndiname = "java:/" + name;

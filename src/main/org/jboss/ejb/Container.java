@@ -6,14 +6,17 @@
  */
 package org.jboss.ejb;
 
+
+
+
+
+
 import java.lang.reflect.Method;
-
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.Iterator;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
-
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -26,33 +29,32 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.Reference;
-import javax.naming.NamingException;
-import javax.naming.StringRefAddr;
-import javax.naming.RefAddr;
+import javax.naming.Name;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
-
-
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.EnvEntryMetaData;
-import org.jboss.metadata.EjbRefMetaData;
-import org.jboss.metadata.EjbLocalRefMetaData;
-import org.jboss.metadata.ResourceRefMetaData;
-import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EjbLocalRefMetaData;
+import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.ResourceEnvRefMetaData;
+import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
-
-import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -72,7 +74,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  *
  * <p><b>Revisions:</b>
  *
@@ -88,6 +90,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 public abstract class Container implements DynamicMBean
 {
    // Constants -----------------------------------------------------
+   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
 
    // Attributes ----------------------------------------------------
 
@@ -375,7 +378,7 @@ public abstract class Container implements DynamicMBean
     *                      (ClassNotFoundException) or setting up "java:"
     *                      naming environment failed (DeploymentException)
     */
-   public void init() throws Exception
+   /*public void init() throws Exception
    {
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
@@ -391,7 +394,7 @@ public abstract class Container implements DynamicMBean
          application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
       // Setup "java:comp/env" namespace
       setupEnvironment();
-   }
+      }*/
 
    /**
     * A default implementation of starting the container service.
@@ -408,10 +411,27 @@ public abstract class Container implements DynamicMBean
    public void start()
       throws Exception
    {
+      // Acquire classes from CL
+      beanClass = classLoader.loadClass(metaData.getEjbClass());
+
+      if (metaData.getLocalHome() != null)
+         localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
+      if (metaData.getLocal() != null)
+         localInterface = classLoader.loadClass(metaData.getLocal());
+      
+      localContainerInvoker.setContainer( this );
+      //localContainerInvoker.init();
+      if (localHomeInterface != null)
+         application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
+      // Setup "java:comp/env" namespace
+      setupEnvironment();
       localContainerInvoker.start();
-      String jndiName = this.getBeanMetaData().getJndiName();
-      ObjectName jmxName = new ObjectName("J2EE:service=EJB,jndiName="+jndiName);
+      ObjectName jmxName = getObjectName();
       mbeanServer.registerMBean(this, jmxName);
+      mbeanServer.invoke(getServiceControllerName(),
+                           "registerAndStartService",
+                           new Object[] {jmxName, null},
+                           new String[] {"javax.management.ObjectName", "java.lang.String"});
    }
 
    /**
@@ -424,9 +444,15 @@ public abstract class Container implements DynamicMBean
       localContainerInvoker.stop();
       try
       {
-         String jndiName = this.getBeanMetaData().getJndiName();
-         ObjectName jmxName = new ObjectName("J2EE:service=EJB,jndiName="+jndiName);
-         mbeanServer.unregisterMBean(jmxName);
+         ObjectName jmxName = getObjectName();
+         //  localContainerInvoker.destroy();
+         //mbeanServer.unregisterMBean(jmxName);
+         mbeanServer.invoke(getServiceControllerName(),
+                 "undeploy",
+                 new Object[] {jmxName},
+                 new String[] {"javax.management.ObjectName"});
+         application.removeLocalHome( this );//???order??after undeploy?
+
       }
       catch(Exception e)
       {
@@ -438,11 +464,12 @@ public abstract class Container implements DynamicMBean
     * The concrete container classes should override this method to introduce
     * implementation specific destroy behaviour.
     */
+   /*
    public void destroy()
    {
-      localContainerInvoker.destroy();
-      application.removeLocalHome( this );
-   }
+      //localContainerInvoker.destroy();
+      //application.removeLocalHome( this );
+      }*/
 
    /**
     * This method is called by the ContainerInvoker when a method call comes
@@ -870,4 +897,32 @@ public abstract class Container implements DynamicMBean
 
       ctx.bind(n.get(0), val);
    }
+
+   private ObjectName getObjectName() throws DeploymentException
+   {
+      try 
+      {
+      String jndiName = this.getBeanMetaData().getJndiName();
+      return new ObjectName("J2EE:service=EJB,jndiName="+jndiName);
+      } 
+      catch (MalformedObjectNameException mone) 
+      {
+         throw new DeploymentException("Can't construct container object name!!" + mone);
+       } // end of try-catch
+      
+   }
+
+
+   protected ObjectName getServiceControllerName() throws DeploymentException
+   {
+      try 
+      {
+         return new ObjectName(SERVICE_CONTROLLER_NAME);
+      }
+      catch(MalformedObjectNameException mone)
+      {
+         throw new DeploymentException("Can't construct service controller object name!!" + mone);
+      }
+   }
+
 }

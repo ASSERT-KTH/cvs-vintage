@@ -40,7 +40,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JMSProviderLoader 
    extends ServiceMBeanSupport
@@ -108,7 +108,8 @@ public class JMSProviderLoader
       return providerName;
    }      
    
-   public void initService() throws Exception
+   
+   public void startService() throws Exception
    {
       // validate the configuration
       if (queueFactoryRef == null)
@@ -125,10 +126,6 @@ public class JMSProviderLoader
       providerAdapter.setProviderUrl(url);
       providerAdapter.setQueueFactoryRef(queueFactoryRef);
       providerAdapter.setTopicFactoryRef(topicFactoryRef);
-   }            
-   
-   public void startService() throws Exception
-   {
       InitialContext context = new InitialContext();
       try {
          // Bind in JNDI

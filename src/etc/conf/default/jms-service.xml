@@ -11,7 +11,7 @@
 
   <!-- The JMS provider loader -->
   <mbean code="org.jboss.jms.jndi.JMSProviderLoader"
-	 name=":service=JMSProviderLoader,name=JBossMQProvider">
+	 name="JBossMQ:service=JMSProviderLoader,name=JBossMQProvider">
     <attribute name="ProviderName">DefaultJMSProvider</attribute>
     <attribute name="ProviderAdapterClass">
       org.jboss.jms.jndi.JBossMQProvider
@@ -22,7 +22,7 @@
 
   <!-- The server session pool for Message Driven Beans -->
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
-	 name=":service=ServerSessionPoolMBean,name=StdJMSPool">
+	 name="JBossMQ:service=ServerSessionPoolMBean,name=StdJMSPool">
     <attribute name="PoolName">StdJMSPool</attribute>
     <attribute name="PoolFactoryClass">
       org.jboss.jms.asf.StdServerSessionPoolFactory

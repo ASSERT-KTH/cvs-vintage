@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 
 public class J2eeDeployer
@@ -105,39 +105,23 @@ implements J2eeDeployerMBean {
     protected ObjectName rarDeployer;
     protected ObjectName javaDeployer;
     
-    String jarDeployerName;
+   /*String jarDeployerName;
     String warDeployerName;
     String rarDeployerName;
-    String javaDeployerName;
+    String javaDeployerName;*/
     
     int classpathPolicy = EASY;
     
     // <comment author="cgjung"> better be protected for subclassing </comment>
     protected InstallerFactory installer;
     
-    // Static --------------------------------------------------------
-    /** only for testing...*/
-    public static void main(String[] _args) throws Exception {
-        new J2eeDeployer().deploy(_args[0]);
-    }
     
     
     // Constructors --------------------------------------------------
+    
     public J2eeDeployer() {
-        this(DEFAULT_NAME, DEFAULT_JAR_DEPLOYER_NAME,DEFAULT_WAR_DEPLOYER_NAME, DEFAULT_RAR_DEPLOYER_NAME, DEFAULT_JAVA_DEPLOYER_NAME);
     }
     
-    public J2eeDeployer(String _name, String jarDeployerName, String warDeployerName) {
-        this(_name,jarDeployerName,warDeployerName,DEFAULT_RAR_DEPLOYER_NAME,DEFAULT_JAVA_DEPLOYER_NAME);
-    }
-    
-    public J2eeDeployer(String _name, String jarDeployerName, String warDeployerName, String rarDeployerName, String javaDeployerName) {
-        setDeployerName(_name);
-        setJarDeployerName(jarDeployerName);
-        setWarDeployerName(warDeployerName);
-        setJavaDeployerName(javaDeployerName);
-        setRarDeployerName(rarDeployerName);
-    }
     
     public void setDeployerName(String name) {
         this.log = Logger.create(this.getClass().getName() + "#" + name);
@@ -150,36 +134,36 @@ implements J2eeDeployerMBean {
         return name.trim();
     }
     
-    public void setJarDeployerName(String jarDeployerName) {
-        this.jarDeployerName = jarDeployerName;
+    public void setJarDeployer(ObjectName jarDeployer) {
+        this.jarDeployer = jarDeployer;
     }
     
-    public String getJarDeployerName() {
-        return jarDeployerName;
+    public ObjectName getJarDeployer() {
+        return jarDeployer;
     }
     
-    public void setWarDeployerName(String warDeployerName) {
-        this.warDeployerName = warDeployerName;
+    public void setWarDeployer(ObjectName warDeployer) {
+        this.warDeployer = warDeployer;
     }
     
-    public String getWarDeployerName() {
-        return warDeployerName;
+    public ObjectName getWarDeployer() {
+        return warDeployer;
     }
     
-    public void setRarDeployerName(String rarDeployerName) {
-        this.rarDeployerName = rarDeployerName;
+    public void setRarDeployer(ObjectName rarDeployer) {
+        this.rarDeployer = rarDeployer;
     }
     
-    public String getRarDeployerName() {
-        return rarDeployerName;
+    public ObjectName getRarDeployer() {
+        return rarDeployer;
     }
     
-    public void setJavaDeployerName(String javaDeployerName) {
-        this.javaDeployerName = javaDeployerName;
+    public void setServiceDeployer(ObjectName javaDeployer) {
+        this.javaDeployer = javaDeployer;
     }
     
-    public String getJavaDeployerName() {
-        return javaDeployerName;
+    public ObjectName getServiceDeployer() {
+        return javaDeployer;
     }
     
     // Public --------------------------------------------------------
@@ -345,8 +329,9 @@ implements J2eeDeployerMBean {
         return name == null ? new ObjectName(OBJECT_NAME+this.name) : name;
     }
     
+    
     /** */
-    protected void initService()
+    protected void startService()
     throws Exception {
         
         
@@ -363,17 +348,7 @@ implements J2eeDeployerMBean {
         
         installer = new InstallerFactory(dir, log);
         
-        // Save JMX name of the deployers
-        jarDeployer = new ObjectName(jarDeployerName);
-        warDeployer= new ObjectName(warDeployerName);
-        javaDeployer=new ObjectName(javaDeployerName);
-        rarDeployer=new ObjectName(rarDeployerName);
-    }
-    
-    /** */
-    protected void startService()
-    throws Exception {
-        if (!warDeployerAvailable())
+        if (warDeployer == null)
             log.info("No web container found - only EJB deployment available...");
         
         // clean up the deployment directory since on some Windowz the file removement
@@ -488,6 +463,7 @@ implements J2eeDeployerMBean {
             String[] jarUrls = new String[ tmp.size() ];
             tmp.toArray( jarUrls );
             // Call the ContainerFactory that is loaded in the JMX server
+            getLog().info("about to invoke deploy on jardeployer:" + jarDeployer);
             server.invoke(jarDeployer, "deploy",
             new Object[]{ _d.localUrl.toString(), jarUrls, moduleName },
             new String[]{ String.class.getName(), String[].class.getName(), String.class.getName() } );

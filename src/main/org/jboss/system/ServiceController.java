@@ -33,6 +33,7 @@ import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
 import org.w3c.dom.Element;
 import javax.management.IntrospectionException;
+import org.jboss.logging.Logger;
 
 /**
  * This is the main Service Controller. A controller can deploy a service to a
@@ -41,7 +42,7 @@ import javax.management.IntrospectionException;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.11 $ <p>
+ * @version $Revision: 1.12 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -57,9 +58,13 @@ import javax.management.IntrospectionException;
  * </ol>
  */
 public class ServiceController
-       extends ServiceMBeanSupport
+   //extends ServiceMBeanSupport
        implements ServiceControllerMBean, MBeanRegistration
 {
+
+   private final Logger log = Logger.create(getClass());
+
+
    /**
     * A mapping from the Service interface method names to the corresponding
     * index into the ServiceProxy.hasOp array.
@@ -110,6 +115,11 @@ public class ServiceController
    // Constructors --------------------------------------------------
 
    // Public --------------------------------------------------------
+
+   public Logger getLog()
+   {
+      return log;
+   }
 
    /**
     * Gets the Name attribute of the ServiceController object
@@ -293,7 +303,6 @@ public class ServiceController
    public void undeploy(ObjectName objectName) throws Exception
    {
       stop(objectName);
-      destroy(objectName);
       //We are not needing anyone or waiting for anyone
       ArrayList weNeededList = (ArrayList)mbeanToMBeanRefsMap.remove(objectName);
       if (weNeededList != null) 
@@ -349,7 +358,10 @@ public class ServiceController
          // Remove the MBeanClassLoader used by the MBean
          ObjectName loader =
             new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
-         server.unregisterMBean(loader);
+         if (server.isRegistered(loader)) 
+         {
+            server.unregisterMBean(loader);
+         } // end of if ()
       }
       else 
       {
@@ -383,6 +395,23 @@ public class ServiceController
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
+   public void postRegister(Boolean registrationDone)
+   {
+      if (!registrationDone.booleanValue())
+      {
+         log.info( "Registration of ServiceController failed" );
+      }
+   }
+   
+   public void preDeregister()
+      throws Exception
+   {
+   }
+   
+   public void postDeregister()
+   {
+   }
+
    // methods about suspension.
 
    public synchronized boolean isSuspended(ObjectName objectName)
@@ -392,160 +421,42 @@ public class ServiceController
 
    // Service implementation ----------------------------------------
 
-   /**
-    * #Description of the Method
-    *
-    * @exception Exception Description of Exception
-    */
-   public void init()
-          throws Exception
-   {
-
-      log.info("Initializing " + startedServices.size() + " startedServices");
-
-      List servicesCopy = new ArrayList(startedServices);
-      Iterator enum = servicesCopy.iterator();
-      int serviceCounter = 0;
-      ObjectName name = null;
-
-      while (enum.hasNext())
-      {
-         name = (ObjectName)enum.next();
-         try
-         {
-            ((Service)nameToServiceMap.get(name)).init();
-            serviceCounter++;
-         }
-         catch (Throwable e)
-         {
-            log.error("Could not initialize " + name, e);
-         }
-      }
-      
-      log.info("Initialized " + serviceCounter + " services");
-   }
-
-   /**
-    * #Description of the Method
-    *
-    * @exception Exception Description of Exception
-    */
-   public void start()
-          throws Exception
-   {
-      log.info("Starting " + startedServices.size() + " services");
-
-      List servicesCopy = new ArrayList(startedServices);
-      Iterator enum = servicesCopy.iterator();
-      int serviceCounter = 0;
-      ObjectName name = null;
-
-      while (enum.hasNext())
-      {
-         name = (ObjectName)enum.next();
-
-         try
-         {
-            ((Service)nameToServiceMap.get(name)).start();
-            serviceCounter++;
-         }
-         catch (Throwable e)
-         {
-            log.error("Could not start " + name, e);
-         }
-      }
-      log.info("Started " + serviceCounter + " services");
-   }
 
    /**
     * This is the only one we should have of these lifecycle methods!
     */
-   public void stop()
+   public synchronized void shutdown()
    {
       log.info("Stopping " + startedServices.size() + " services");
 
       List servicesCopy = new ArrayList(startedServices);
-      ListIterator enum = servicesCopy.listIterator();
+      //ListIterator enum = servicesCopy.listIterator();
       int serviceCounter = 0;
       ObjectName name = null;
 
-      while (enum.hasNext())
+      for (ListIterator i = servicesCopy.listIterator(servicesCopy.size() - 1);
+           i.hasPrevious(); ) 
       {
-         enum.next();
-      }
-      // pass them all
-      while (enum.hasPrevious())
-      {
-         name = (ObjectName)enum.previous();
+         name = (ObjectName)i.previous();
 
          try
          {
-            ((Service)nameToServiceMap.get(name)).stop();
+            undeploy(name);
+            //((Service)nameToServiceMap.get(name)).stop();
+            //((Service)nameToServiceMap.get(name)).destroy();//should be obsolete soon
+            //server.unregisterMBean(name);
             serviceCounter++;
          }
          catch (Throwable e)
          {
-            log.error("Could not stop " + name, e);
+            log.error("Could not undeploy " + name, e);
          }
       }
       log.info("Stopped " + serviceCounter + " services");
    }
 
 
-   /**
-    * #Description of the Method
-    */
-   public void destroy()
-   {
 
-    // We now iterate the destroy one and one to be able to filter out
-    // some services and are handeling this code in the class Shutdown
-    // until we have a new (un)dependency mechanism ...  
-
-    log.info("ServiceController destroy commented out for now ...");
-
-    /*
-      log.info("Destroying " + services.size() + " services");
-
-      List servicesCopy = new ArrayList(startedServices);
-      ListIterator enum = servicesCopy.listIterator();
-      int serviceCounter = 0;
-      ObjectName name = null;
-
-      while (enum.hasNext())
-      {
-         enum.next();
-      }
-      // pass them all
-      while (enum.hasPrevious())
-      {
-         name = (ObjectName)enum.previous();
-
-         try
-         {
-            ((Service)nameToServiceMap.get(name)).destroy();
-            serviceCounter++;
-         }
-         catch (Throwable e)
-         {
-            log.error("Could not destroy" + name, e);
-         }
-      }
-      
-      log.info("Destroyed " + serviceCounter + " services");
-      */
-   }
-
-   /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
-   public void init(ObjectName serviceName) throws Exception
-   {
-      throw new Exception("init(serviceName) is obsolete");
-   }
 
    /**
     * #Description of the Method
@@ -564,7 +475,6 @@ public class ServiceController
       if (nameToServiceMap.containsKey(serviceName))
       {
 
-         ((Service)nameToServiceMap.get(serviceName)).init();
          ((Service)nameToServiceMap.get(serviceName)).start();
          startedServices.add(serviceName);
       }
@@ -593,7 +503,6 @@ public class ServiceController
                //not waiting for anyone else, can finish deploying.
                log.debug("missing mbeans now present, finishing deployment of " + waitingName);
                suspendedToMissingMBeanMap.remove(waitingName);
-               //init(waitingName);
                start(waitingName);
             } // end of if ()
             else 
@@ -620,17 +529,16 @@ public class ServiceController
       ArrayList usingList = (ArrayList)mbeanRefToMBeansMap.get(serviceName);
       if (usingList != null) 
       {
-         //we have to stop and destroy these beans that depend on serviceName. 
+         //we have to stop these beans that depend on serviceName. 
          Iterator using = usingList.iterator();  
          while (using.hasNext()) 
          {
             ObjectName usingName = (ObjectName)using.next();
-            log.debug("stopping/destroying object " + usingName + " using " + serviceName);
+            log.debug("stopping object " + usingName + " using " + serviceName);
             if (!isWaitingFor(serviceName, usingName)) 
             {
                markWaiting(serviceName, usingName);
                stop(usingName);
-               destroy(usingName);
             } // end of if ()
            
          } // end of while ()
@@ -649,25 +557,6 @@ public class ServiceController
       }
    }
 
-   /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
-   public void destroy(ObjectName serviceName) throws Exception
-   {
-      if (nameToServiceMap.containsKey(serviceName))
-      {
-
-         ((Service)nameToServiceMap.get(serviceName)).destroy();
-      }
-      else
-      {
-         throw new InstanceNotFoundException
-            ("Could not find " + serviceName.toString());
-      }
-   }
 
    /**
     * Get the Service interface through which the mbean given by objectName
@@ -801,7 +690,7 @@ public class ServiceController
 
    /**
     * An implementation of InvocationHandler used to proxy of the Service
-    * interface for mbeans. It determines which of the init/start/stop/destroy
+    * interface for mbeans. It determines which of the start/stop
     * methods of the Service interface an mbean implements by inspecting its
     * MBeanOperationInfo values. Each Service interface method that has a
     * matching operation is forwarded to the mbean by invoking the method
@@ -903,9 +792,9 @@ public class ServiceController
     */
    static
    {
-      serviceOpMap.put("init", new Integer(0));
+      //serviceOpMap.put("init", new Integer(0));
       serviceOpMap.put("start", new Integer(1));
-      serviceOpMap.put("destroy", new Integer(2));
+      //serviceOpMap.put("destroy", new Integer(2));
       serviceOpMap.put("stop", new Integer(3));
    }
 }

@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class XMLAdaptorService
   extends ServiceMBeanSupport
@@ -68,17 +68,12 @@ public class XMLAdaptorService
   }
 
   // Protected -----------------------------------------------------
-  protected void initService()
-    throws
-      Exception
-  {
-    mAdaptor = new XMLAdaptorImpl( getServer() );
-  }
 
   protected void startService()
     throws
       Exception
   {
+    mAdaptor = new XMLAdaptorImpl( getServer() );
     bind( mAdaptor );
   }
 

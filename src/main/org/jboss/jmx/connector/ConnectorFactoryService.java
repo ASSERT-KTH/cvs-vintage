@@ -112,16 +112,13 @@ public class ConnectorFactoryService
 	}
 	
 	// Protected -----------------------------------------------------
-	protected void initService() throws Exception {
+	
+   protected void startService() throws Exception 
+   {
       System.out.println( "Init Connector Factory mNotificationTypeService: " +
-         "NT: " + mNotificationType + ", JMS: " + mJMSName
-      );
+                          "NT: " + mNotificationType + ", JMS: " + mJMSName
+                          );
       mFactory = new ConnectorFactoryImpl( mServer, mNotificationType, mJMSName, mEJBAdaptorName );
-	}
+   }
 	
-	protected void startService() throws Exception {
-	}
-	
-	protected void stopService() {
-	}
 }

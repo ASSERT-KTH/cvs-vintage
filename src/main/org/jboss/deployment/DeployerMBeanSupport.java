@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * <p><b>Revisions:</b>
  *
@@ -164,13 +164,13 @@ public abstract class DeployerMBeanSupport
    // ServiceMBeanSupport overrides ---------------------------------
    
     /**
-     * The <code>initService</code> method sets up a temporary directory
+     * The <code>startService</code> method sets up a temporary directory
      * to hold the copies of deployed packages and possibly inflations 
      * of those copies.  The format is (jboss.system.home)/tmp/deploy/(deployername).
      *
      * @exception Exception if an error occurs
      */
-    public void initService()
+    protected void startService()
           throws Exception
    {
       // find the temp directory - referenced to jboss.system.home property
@@ -201,11 +201,11 @@ public abstract class DeployerMBeanSupport
    }
 
     /**
-     * The <code>destroyService</code> method tries to remove the 
+     * The <code>stopService</code> method tries to remove the 
      * directory created in the initService method.
      *
      */
-    public void destroyService()
+   protected void stopService()
    {
       // Remove our temp directory
       if (!recursiveDelete(deployDir))

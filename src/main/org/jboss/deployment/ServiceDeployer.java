@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.12 $ <p>
+ * @version   $Revision: 1.13 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -91,6 +91,7 @@ public class ServiceDeployer
        implements ServiceDeployerMBean
 {
    // Attributes --------------------------------------------------------
+   private ObjectName objectName;
 
    //Find all the deployment info for a url
    private final Map urlToSarDeploymentInfoMap = new HashMap();
@@ -99,8 +100,6 @@ public class ServiceDeployer
    private final Map objectNameToSupplyingPackageMap = new HashMap();
 
 
-   // JMX
-   private MBeanServer server;
 
    // Public --------------------------------------------------------
 
@@ -577,13 +576,11 @@ public class ServiceDeployer
    public ObjectName preRegister(MBeanServer server, ObjectName name)
           throws java.lang.Exception
    {
-
+      super.preRegister(server, name);
       log.debug("ServiceDeployer preregistered with mbean server");
-      this.server = server;
-      super.initService();//set up the deploy temp directory
-      super.startService();//why not?
+      objectName = name == null ? new ObjectName(OBJECT_NAME) : name;
 
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      return objectName;
    }
 
 
@@ -599,7 +596,12 @@ public class ServiceDeployer
    {
       try
       {
-
+         super.postRegister(registrationDone);
+         //super.startService();//set up the deploy temp directory
+         getServer().invoke(getServiceControllerName(),
+                            "registerAndStartService",
+                            new Object[] {objectName, null},
+                            new String[] {"javax.management.ObjectName", "java.lang.String"});
          //Initialize the libraries for the server by default we add the libraries in lib/services
          // and client
          String urlString = System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml";
@@ -763,7 +765,7 @@ public class ServiceDeployer
    {
       try
       {
-         return server.invoke(name, method, args, sig);
+         return getServer().invoke(name, method, args, sig);
       }
       catch (MBeanException mbe)
       {

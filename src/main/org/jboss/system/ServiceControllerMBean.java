@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
  * </ul>
  */
 public interface ServiceControllerMBean
-   extends Service
+   //   extends Service
 {
    /** The default object name. */
    String OBJECT_NAME = "JBOSS-SYSTEM:spine=ServiceController";
@@ -46,14 +46,17 @@ public interface ServiceControllerMBean
    void undeploy(Element mbean) throws Exception;
    void undeploy(ObjectName mbeanName) throws Exception;
 
+
+   void shutdown();
    //
    // State calls, init, start, stop, destroy
    //
    
-   void init(ObjectName mbean) throws Exception;
+   //void init(ObjectName mbean) throws Exception;
+   //Are these really useful??
    void start(ObjectName mbean) throws Exception;
    void stop(ObjectName mbean) throws Exception;
-   void destroy(ObjectName mbean) throws Exception;
+   //void destroy(ObjectName mbean) throws Exception;
 
    /** Get a list of deployed elements, in the order they were deployed */
    ObjectName[] getDeployed();

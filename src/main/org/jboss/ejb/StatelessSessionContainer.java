@@ -30,7 +30,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -137,7 +137,7 @@ public class StatelessSessionContainer
 
 
    // Container implementation --------------------------------------
-
+   /*
    public void init() throws Exception
    {
       // Associate thread with classloader
@@ -178,15 +178,51 @@ public class StatelessSessionContainer
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-
+   */
    public void start() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      // Call default start
+      // Acquire classes from CL
+      if (metaData.getHome() != null)
+         homeInterface = classLoader.loadClass(metaData.getHome());
+      if (metaData.getRemote() != null)
+         remoteInterface = classLoader.loadClass(metaData.getRemote());
+
+      // Call default init
       super.start();
+
+      // Map the bean methods
+      setupBeanMapping();
+
+      // Map the home methods
+      setupHomeMapping();
+
+      // Initialize pool
+      instancePool.init();
+
+      // Init container invoker
+      if (containerInvoker != null)
+         containerInvoker.init();
+
+      // Initialize the interceptor by calling the chain
+      
+      for (Interceptor in = interceptor; in != null; in = in.getNext()) 
+      {
+         in.setContainer(this);
+         in.init();
+      }
+      
+      // Reset classloader
+      //Thread.currentThread().setContextClassLoader(oldCl);
+      // Associate thread with classloader
+      //ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      //Thread.currentThread().setContextClassLoader(getClassLoader());
+
+      // Call default start
+      //super.start();
 
       // Start container invoker
       if (containerInvoker != null)
@@ -196,11 +232,9 @@ public class StatelessSessionContainer
       instancePool.start();
 
       // Start all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+      for (Interceptor in = interceptor; in != null; in = in.getNext()) 
       {
          in.start();
-         in = in.getNext();
       }
 
       // Reset classloader
@@ -224,17 +258,37 @@ public class StatelessSessionContainer
       instancePool.stop();
 
       // Stop all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+      for (Interceptor in = interceptor; in != null; in = in.getNext()) 
       {
          in.stop();
-         in = in.getNext();
+      }
+
+      // Reset classloader
+      //Thread.currentThread().setContextClassLoader(oldCl);
+      // Associate thread with classloader
+      //ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      //Thread.currentThread().setContextClassLoader(getClassLoader());
+
+      // Call default destroy
+      //super.destroy();
+
+      // Destroy container invoker
+      if (containerInvoker != null)
+         containerInvoker.destroy();
+
+      // Destroy the pool
+      instancePool.destroy();
+
+      // Destroy all the interceptors in the chain
+      for (Interceptor in = interceptor; in != null; in = in.getNext()) 
+      {
+         in.destroy();
       }
 
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-
+   /*
    public void destroy()
    {
       // Associate thread with classloader
@@ -262,7 +316,7 @@ public class StatelessSessionContainer
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
-
+   */
    public Object invokeHome(MethodInvocation mi) throws Exception
    {
       return getInterceptor().invokeHome(mi);

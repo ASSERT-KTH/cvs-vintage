@@ -107,7 +107,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    {
       this.container = con;
    }
-   
+   /*   
    public void init()
    throws Exception
    {
@@ -133,10 +133,33 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       for (int i = 0; i < methods.length; i++)
          homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
    }
-   
+*/   
+   public void init() throws Exception {throw new Exception("don't call init");}
+   public void destroy(){}
    public void start()
    throws Exception
    {
+      if (((ContainerInvokerContainer)container).getLocalClass() == null)
+         return;
+      
+      Context ctx = new InitialContext();
+      
+      jndiName = container.getBeanMetaData().getJndiName();
+      
+      // Set the transaction manager and transaction propagation
+      // context factory of the GenericProxy class
+      transactionManager = ((TransactionManager)ctx.lookup("java:/TransactionManager"));
+      
+      // Create method mappings for container invoker
+      Method[] methods = ((ContainerInvokerContainer)container).getLocalClass().getMethods();
+      beanMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+         beanMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+      
+      methods = ((ContainerInvokerContainer)container).getLocalHomeClass().getMethods();
+      homeMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+         homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
       Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
       if(localHome == null)
       {
@@ -186,11 +209,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
          // ignore.
       }
    }
-   
+   /*   
    public void destroy()
    {
    }
-   
+   */
    
    // ContainerInvoker implementation -------------------------------
    public EJBLocalHome getEJBLocalHome()

@@ -68,13 +68,14 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.95 $
+* @version $Revision: 1.96 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
    implements ContainerFactoryMBean
 {
    // Constants -----------------------------------------------------
+   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
 
    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
@@ -157,20 +158,20 @@ public class ContainerFactory
     */
    public void stopService()
    {
-      Iterator apps = deployments.values().iterator();
-
-      while( apps.hasNext() )
+      for (Iterator apps = deployments.values().iterator(); apps.hasNext(); )
       {
          Application app = (Application) apps.next();
 
          app.stop();
       }
+      deployments.clear();
    }
 
    /**
     * Implements the template method in superclass. This method destroys all
     * the applications in this server and clears the deployments list.
     */
+   /*
    public void destroyService()
    {
       Iterator apps = deployments.values().iterator();
@@ -184,7 +185,7 @@ public class ContainerFactory
 
       deployments.clear();
    }
-
+   */
    /**
     * Enables/disables the application bean verification upon deployment.
     *
@@ -296,6 +297,7 @@ public class ContainerFactory
    public void deploy( String appUrl, String[] jarUrls, String appId )
       throws MalformedURLException, DeploymentException
    {
+      getLog().info("got to deploy in ContainerFactory");
       // Delegate to "real" deployment
       URL[] tmp = new URL[ jarUrls.length ];
 
@@ -374,7 +376,7 @@ public class ContainerFactory
             deploy( app, jarUrls[ i ], cl );
 
          // Init application
-         app.init();
+         //app.init();
          // Start application
          app.start();
          // Startup the Management MBean Wrapper for the containers
@@ -392,7 +394,7 @@ public class ContainerFactory
       {
          log.error("Could not deploy " + appUrl.toString(), e);
          app.stop();
-         app.destroy();
+         //app.destroy();
 
          throw new DeploymentException( "Could not deploy " + appUrl.toString(), e );
       }
@@ -456,16 +458,24 @@ public class ContainerFactory
       NDC.pop();
 
       // Get list of beans for which we will create containers
-      Iterator beans = metaData.getEnterpriseBeans();
+      
       // Deploy beans
       Context ctx = new InitialContext();
-
-      while( beans.hasNext() )
+      for (Iterator beans = metaData.getEnterpriseBeans(); beans.hasNext(); ) 
       {
          BeanMetaData bean = (BeanMetaData) beans.next();
 
          log.info( "Deploying " + bean.getEjbName() );
-         app.addContainer( createContainer( bean, cl, localCl ) );
+         try 
+         {
+            app.addContainer( createContainer( bean, cl, localCl ) );
+         } 
+         catch (Exception e) 
+         {
+            log.error("error adding container to app.", e);
+            throw e;
+         } // end of try-catch
+
       }
    }
 
@@ -496,7 +506,7 @@ public class ContainerFactory
          handleContainerManagement( (Container) i.next(), false );
       }
       app.stop();
-      app.destroy();
+      //app.destroy();
       try {
          if ( app.getClassLoader() != null ) {
             // Remove from webserver
@@ -697,16 +707,24 @@ public class ContainerFactory
                                     new Object[] { container },
                                     new String[] { "org.jboss.ejb.Container" }
                                     );
-            getServer().invoke( name, "init", new Object[] {}, new String[] {} );
-            getServer().invoke( name, "start", new Object[] {}, new String[] {} );
+            //getServer().invoke( name, "init", new Object[] {}, new String[] {} );
+            //getServer().invoke( name, "start", new Object[] {}, new String[] {} );
+            getServer().invoke(getServiceControllerName(),
+                           "registerAndStartService",
+                           new Object[] {name, null},
+                           new String[] {"javax.management.ObjectName", "java.lang.String"});
          }
          else
          {
+            getServer().invoke(getServiceControllerName(),
+                 "undeploy",
+                 new Object[] {name},
+                 new String[] {"javax.management.ObjectName"});
             // If not startup then assume that the MBean is there
-            getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
-            getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
+            //getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
+            //getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
             // Unregister the MBean to avoid future name conflicts
-            getServer().unregisterMBean( name );
+            //getServer().unregisterMBean( name );
          }
       }
       catch( Exception e )
@@ -1002,5 +1020,16 @@ public class ContainerFactory
       }
   }
 
+   protected ObjectName getServiceControllerName() throws DeploymentException
+   {
+      try 
+      {
+         return new ObjectName(SERVICE_CONTROLLER_NAME);
+      }
+      catch(MalformedObjectNameException mone)
+      {
+         throw new DeploymentException("Can't construct service controller object name!!" + mone);
+      }
+   }
 }
 

@@ -22,15 +22,14 @@ import org.apache.log4j.NDC;
  * An abstract base class JBoss services can subclass to implement a
  * service that conforms to the ServiceMBean interface. Subclasses must
  * override {@link #getName} method and should override 
- * {@link #initService}, {@link #startService}, {@link #stopService} AND
- * {@link #destroyService} as approriate.
+ * {@link #startService}, and {@link #stopService} as approriate.
  * 
  * 
  * @see ServiceMBean
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * 
  * Revisions:
  * 20010619 scott.stark: use the full service class name as the log4j
@@ -81,7 +80,7 @@ public abstract class ServiceMBeanSupport
       return log;
    }
 
-   public void init()
+   /*   public void init()
       throws Exception
    {
       NDC.push(getName());
@@ -101,7 +100,7 @@ public abstract class ServiceMBeanSupport
       }
       log.info("Initialized");
    }
-	
+   */
    public void start()
       throws Exception
    {
@@ -162,6 +161,13 @@ public abstract class ServiceMBeanSupport
       NDC.pop();
    }
 
+   public void init() throws Exception
+   {
+      throw new Exception("Don't call init");
+   }
+
+   public void destroy() {};
+   /*
    public void destroy()
    {
       if (getState() != STOPPED)
@@ -180,7 +186,7 @@ public abstract class ServiceMBeanSupport
       log.info("Destroyed");
       NDC.pop();
    }
-
+   */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
@@ -194,7 +200,7 @@ public abstract class ServiceMBeanSupport
       if (!registrationDone.booleanValue())
       {
          log.info( "Registration is not done -> destroy" );
-         destroy();
+         stop();
       }
    }
    
@@ -205,7 +211,8 @@ public abstract class ServiceMBeanSupport
    
    public void postDeregister()
    {
-      destroy();
+      stop();//this is presumably redundant.... ServiceController should have called
+      //stop already.
    }
    
    // Protected -----------------------------------------------------
@@ -216,10 +223,6 @@ public abstract class ServiceMBeanSupport
       return name;
    }
    
-   protected void initService()
-      throws Exception
-   {
-   }
 	
    protected void startService()
       throws Exception
@@ -230,7 +233,4 @@ public abstract class ServiceMBeanSupport
    {
    }
 	
-   protected void destroyService()
-   {
-   }
 }

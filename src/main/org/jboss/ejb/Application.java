@@ -28,7 +28,7 @@ import org.jboss.system.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class Application
    implements Service
@@ -183,21 +183,8 @@ public class Application
    }
 	
    // Service implementation ----------------------------------------
-    
-   /**
-    * Initializes all the containers of this application.
-    *
-    * @exception Exception
-    */
-   public void init() throws Exception
-   {
-      Iterator enum = containers.values().iterator();
-      while (enum.hasNext())
-      {
-         Container con = (Container)enum.next();
-         con.init();
-      }
-   }
+   public void init() throws Exception {throw new Exception("don't call init");}
+   public void destroy(){}
    
    /**
     * Starts all the containers of this application.
@@ -227,16 +214,4 @@ public class Application
       }
    }
 	
-   /**
-    * Destroys all the containers of this application.
-    */
-   public void destroy()
-   {
-      Iterator enum = containers.values().iterator();
-      while (enum.hasNext())
-      {
-         Container con = (Container)enum.next();
-         con.destroy();
-      }
-   }
 }

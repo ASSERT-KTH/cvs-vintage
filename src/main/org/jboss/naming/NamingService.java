@@ -28,7 +28,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -121,7 +121,8 @@ public class NamingService
       return "Naming";
    }
 
-   public void initService()
+
+   public void startService()
       throws Exception
    {
       // Read jndi.properties into system properties
@@ -132,19 +133,13 @@ public class NamingService
       Properties props = new Properties();
       props.load(is);
 
-      Enumeration keys = props.propertyNames();
-      while( keys.hasMoreElements() )
+      for (Enumeration keys = props.propertyNames(); keys.hasMoreElements(); )
       {
          String key = (String) keys.nextElement();
          String value = props.getProperty(key);
          log.debug("System.setProperty, key="+key+", value="+value);
          System.setProperty(key, value);
       }
-   }
-
-   public void startService()
-      throws Exception
-   {
       naming.start();
       /* Create a default InitialContext and dump out its env to show what properties
          were used in its creation. If we find a Context.PROVIDER_URL property
@@ -152,10 +147,9 @@ public class NamingService
       */
       InitialContext iniCtx = new InitialContext();
       Hashtable env = iniCtx.getEnvironment();
-      Enumeration keys = env.keys();
       log.info("InitialContext Environment:");
       String providerURL = null;
-      while( keys.hasMoreElements() )
+      for (Enumeration keys = env.keys(); keys.hasMoreElements(); )
       {
          String key = (String) keys.nextElement();
          String value = (String) env.get(key);

@@ -6,16 +6,17 @@
  */
 package org.jboss.deployment;
 
-import java.net.MalformedURLException;
-import java.io.IOException;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import javax.management.ObjectName;
 import org.jboss.system.ServiceMBean;
 
 /**
  *   @see 
  *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public interface J2eeDeployerMBean
    extends DeployerMBean
@@ -27,16 +28,16 @@ public interface J2eeDeployerMBean
    public void setDeployerName(String name);
    public String getDeployerName();
    
-   public void setJarDeployerName(String jarDeployerName);
-   public String getJarDeployerName();
+   public void setJarDeployer(ObjectName jarDeployer);
+   public ObjectName getJarDeployer();
    
-   public void setWarDeployerName(String warDeployerName);
-   public String getWarDeployerName();
+   public void setWarDeployer(ObjectName warDeployer);
+   public ObjectName getWarDeployer();
    
-   public void setRarDeployerName(String rarDeployerName);
-   public String getRarDeployerName();
+   public void setRarDeployer(ObjectName rarDeployer);
+   public ObjectName getRarDeployer();
    
-   public void setJavaDeployerName(String javaDeployerName);
-   public String getJavaDeployerName();
+   public void setServiceDeployer(ObjectName javaDeployer);
+   public ObjectName getServiceDeployer();
 
 }

@@ -92,12 +92,10 @@ public class RMIAdaptorService
     }
 
    // Protected -----------------------------------------------------
-   protected void initService() throws Exception {
-      mHost = InetAddress.getLocalHost().getHostName();
-      adaptor = new RMIAdaptorImpl( server );
-   }
 
    protected void startService() throws Exception {
+      mHost = InetAddress.getLocalHost().getHostName();
+      adaptor = new RMIAdaptorImpl( server );
       new InitialContext().bind( getJNDIName(), adaptor );
    }
 
