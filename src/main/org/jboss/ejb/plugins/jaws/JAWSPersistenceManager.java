@@ -80,7 +80,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.13 $
+ *	@version $Revision: 1.14 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -315,7 +315,6 @@ public class JAWSPersistenceManager
    public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws RemoteException, CreateException
    {
-      log.debug("Create entity");
       // Get methods
       try
       {
@@ -419,7 +418,8 @@ public class JAWSPersistenceManager
          // Invoke postCreate
          postCreateMethod.invoke(ctx.getInstance(), args);
       } catch (InvocationTargetException e)
-      {
+      {    
+		  
          throw new CreateException("Create failed:"+e);
       } catch (NoSuchMethodException e)
       {
@@ -442,7 +442,6 @@ public class JAWSPersistenceManager
    }
 	
 	public boolean beanExists(Object id) {
-		
 		
 		Connection con = null;
 		
@@ -500,7 +499,6 @@ public class JAWSPersistenceManager
 				throw new SQLException("Unable to check for EJB in database");
 			}
 			
-			//Tracer.trace("Result is "+result);
 			if ( rs.getInt("Total") >= 1 )
 				exists = true;
 			else
@@ -535,18 +533,18 @@ public class JAWSPersistenceManager
 		}
 	}
    
-   	public Object findByPrimaryKey(EntityEnterpriseContext ctx) throws FinderException {
+   	public Object findByPrimaryKey(Object id) throws FinderException {
 	   
         //Tracer.trace("PrimaryKey is "+beanWrapper.getPrimaryKey().getDataBasePrimaryKey());
 
-        if (beanExists(ctx.getId())) {
+        if (beanExists(id)) {
 
-            return ctx;
+            return id;
         }
         else {
 
             throw new FinderException ("Object with primary key "+
-			          					ctx.getId()+ 
+			          					id+ 
                                    		" not found in storage");
         }
     }
@@ -561,7 +559,7 @@ public class JAWSPersistenceManager
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
          
-         return findByPrimaryKey(ctx);
+         return findByPrimaryKey(args[0]);
       }
       else
       {
