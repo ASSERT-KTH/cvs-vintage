@@ -59,7 +59,8 @@ import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.server.ServerConfigImplMBean;
+
+import org.jboss.system.server.ServerConfigLocator;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -151,7 +152,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.38 $
+@version $Revision: 1.39 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -256,19 +257,8 @@ public abstract class AbstractWebContainer
 
    public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
    {
-      File tmpDeployDir = null;
-
-      try
-      {
-         File systemTmpDir = (File)
-            server.getAttribute(ServerConfigImplMBean.OBJECT_NAME, "TempDir");
-         tmpDeployDir = new File(systemTmpDir, "deploy");
-      }
-      catch (Exception e)
-      {
-         // should never happen
-         throw new Error("Failed to get system temporary directory: " + e);
-      }
+      File systemTmpDir = ServerConfigLocator.locate().getServerTempDir();
+      File tmpDeployDir = new File(systemTmpDir, "deploy");
       
       JarFile jarFile = null;
       // Do we have a jar file jar:<theURL>!/..
