@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.4 2005/01/03 15:43:02 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.5 2005/01/04 17:18:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
         
         if (indent == null) {
             try {
-                expander.expand(writer, this);
+                expander.expand(writer, member);
             } catch (ExpansionException e) {
                 throw new SaveException(e);
             }
