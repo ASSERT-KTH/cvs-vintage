@@ -9,8 +9,8 @@ import org.w3c.dom.Element;
 
 public final class JDBCFunctionMappingMetaData {
    private final String functionName;
-   private final String[] sqlChunks;
-   private final int[] parameters;
+   private String[] sqlChunks;
+   private int[] parameters;
 
    public JDBCFunctionMappingMetaData(String functionName, String[] sqlChunks, int[] parameters) {
       this.functionName = functionName;
@@ -22,7 +22,17 @@ public final class JDBCFunctionMappingMetaData {
       functionName = MetaData.getUniqueChildContent(element, "function-name");
       
       String sql = MetaData.getUniqueChildContent(element, "function-sql");
-      
+      initFromString(sql);
+   }
+   
+   public JDBCFunctionMappingMetaData(String functionName, String sql) throws DeploymentException
+   {
+      this.functionName = functionName;
+      initFromString(sql);
+   }
+
+   protected void initFromString(String sql) throws DeploymentException
+   {
       ArrayList chunkList = new ArrayList();      
       ArrayList parameterList = new ArrayList();      
       

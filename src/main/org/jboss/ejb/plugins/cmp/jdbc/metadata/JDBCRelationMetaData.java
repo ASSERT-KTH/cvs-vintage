@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -73,7 +73,7 @@ public final class JDBCRelationMetaData {
    private final boolean removeTable;
    
    /** should we use 'SELECT ... FOR UPDATE' syntax? */
-   private final boolean selectForUpdate;
+   private final boolean rowLocking;
    
    /** should the table have a primary key constraint? */
    private final boolean primaryKeyConstraint;
@@ -114,7 +114,7 @@ public final class JDBCRelationMetaData {
       typeMapping = null;
       createTable = false;
       removeTable = false;
-      selectForUpdate = false;
+      rowLocking = false;
       primaryKeyConstraint = false;
       readOnly = false;
       readTimeOut = -1;      
@@ -206,7 +206,7 @@ public final class JDBCRelationMetaData {
          tableName = defaultValues.getTableName();
          createTable = defaultValues.getCreateTable();
          removeTable = defaultValues.getRemoveTable();
-         selectForUpdate = defaultValues.hasSelectForUpdate();
+         rowLocking = defaultValues.hasRowLocking();
          primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
          readOnly = defaultValues.isReadOnly();
          readTimeOut = defaultValues.getReadTimeOut();
@@ -285,12 +285,12 @@ public final class JDBCRelationMetaData {
 
       // select for update
       String sForUpString = MetaData.getOptionalChildContent(
-            mappingElement, "select-for-update");
+            mappingElement, "row-locking");
       if(sForUpString != null) {
-         selectForUpdate = !isReadOnly() && 
+         rowLocking = !isReadOnly() && 
                (Boolean.valueOf(sForUpString).booleanValue());
       } else {
-         selectForUpdate = defaultValues.hasSelectForUpdate();
+         rowLocking = defaultValues.hasRowLocking();
       }
 
       // primary key constraint?  If not provided, keep default.
@@ -536,10 +536,10 @@ public final class JDBCRelationMetaData {
    }
    
    /**
-    * Should select queries use the for update clause.
+    * Should select queries do row locking
     */
-   public boolean hasSelectForUpdate() {
-      return selectForUpdate;
+   public boolean hasRowLocking() {
+      return rowLocking;
    }
    
    private String createDefaultTableName() {

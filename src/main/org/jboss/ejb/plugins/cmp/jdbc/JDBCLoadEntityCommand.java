@@ -17,6 +17,8 @@ import javax.ejb.NoSuchEntityException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -32,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCLoadEntityCommand {
    private JDBCStoreManager manager;
@@ -64,13 +66,28 @@ public class JDBCLoadEntityCommand {
 
       // generate the sql
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(loadFields));
-      sql.append(" FROM ").append(entity.getTableName());
-      sql.append(" WHERE ").append(
-            SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+      String columnNamesClause = SQLUtil.getColumnNamesClause(loadFields);
+      String tableName = entity.getTableName();
+      String whereClause = SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields());
 
-      if(entity.getMetaData().hasSelectForUpdate()) {
-         sql.append(" FOR UPDATE");
+      if (entity.getMetaData().hasRowLocking())
+      {
+         JDBCFunctionMappingMetaData rowLocking = manager.getMetaData().getTypeMapping().getRowLockingTemplate();
+         if (rowLocking == null)
+         {
+            throw new IllegalStateException("row-locking is not allowed for this type of datastore");
+         }
+         else
+         {
+            String[] args = new String[] {columnNamesClause, tableName, whereClause};
+            sql.append(rowLocking.getFunctionSql(args));
+         }
+      }
+      else
+      {
+         sql.append("SELECT ").append(columnNamesClause);
+         sql.append(" FROM ").append(tableName);
+         sql.append(" WHERE ").append(whereClause);
       }
       
       Connection con = null;

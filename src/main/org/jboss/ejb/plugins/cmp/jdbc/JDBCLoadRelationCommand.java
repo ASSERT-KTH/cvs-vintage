@@ -16,13 +16,15 @@ import javax.ejb.EJBException;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge; 
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCLoadRelationCommand {
    private JDBCStoreManager manager;
@@ -46,15 +48,28 @@ public class JDBCLoadRelationCommand {
 
       // generate SQL
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(
-               cmrField.getRelatedCMRField().getTableKeyFields()));
-      sql.append(" FROM ");
-      sql.append(cmrField.getRelationMetaData().getTableName());
-      sql.append(" WHERE ").append(SQLUtil.getWhereClause(
-               cmrField.getTableKeyFields()));
+      String columnNamesClause = SQLUtil.getColumnNamesClause(cmrField.getRelatedCMRField().getTableKeyFields());
+      String tableName = cmrField.getRelationMetaData().getTableName();
+      String whereClause = SQLUtil.getWhereClause(cmrField.getTableKeyFields());
 
-      if(cmrField.getRelationMetaData().hasSelectForUpdate()) {
-         sql.append(" FOR UPDATE");
+      if (cmrField.getRelationMetaData().hasRowLocking())
+      {
+         JDBCFunctionMappingMetaData rowLocking = manager.getMetaData().getTypeMapping().getRowLockingTemplate();
+         if (rowLocking == null)
+         {
+            throw new IllegalStateException("row-locking is not allowed for this type of datastore");
+         }
+         else
+         {
+            String[] args = new String[] {columnNamesClause, tableName, whereClause};
+            sql.append(rowLocking.getFunctionSql(args));
+         }
+      }
+      else
+      {
+         sql.append("SELECT ").append(columnNamesClause);
+         sql.append(" FROM ").append(tableName);
+         sql.append(" WHERE ").append(whereClause);
       }
 
       Connection con = null;

@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -34,6 +34,7 @@ public final class JDBCTypeMappingMetaData {
    private final String aliasHeaderPrefix;
    private final String aliasHeaderSuffix;
    private final int aliasMaxLength;
+   private JDBCFunctionMappingMetaData rowLocking = null;
 
    /**
     * Constructs a mapping with the data contained in the type-mapping xml element
@@ -47,6 +48,12 @@ public final class JDBCTypeMappingMetaData {
    
       // get the name of this type-mapping
       name = MetaData.getUniqueChildContent(element, "name");
+
+      String rowLockingSQL = MetaData.getUniqueChildContent(element, "row-locking-template");
+      if (rowLockingSQL != null && !rowLockingSQL.trim().equals(""))
+      {
+         rowLocking = new JDBCFunctionMappingMetaData("row-locking", rowLockingSQL);
+      }
       
       // get the mappings
       Iterator iterator = MetaData.getChildrenByTagName(element, "mapping");
@@ -188,6 +195,15 @@ public final class JDBCTypeMappingMetaData {
    
    public JDBCFunctionMappingMetaData getFunctionMapping(String name) {
       return (JDBCFunctionMappingMetaData)functionMappings.get(name.toLowerCase());
+   }
+   
+
+   /**
+    * Returns rowLocking SQL template.
+    */
+   public JDBCFunctionMappingMetaData getRowLockingTemplate() 
+   {
+      return rowLocking;
    }
    
    private void addDefaultFunctionMapping() {

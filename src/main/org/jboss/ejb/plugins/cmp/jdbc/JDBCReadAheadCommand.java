@@ -18,13 +18,15 @@ import javax.ejb.EJBException;
 import org.jboss.util.FinderResults;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCReadAheadCommand {
 
@@ -143,26 +145,37 @@ public class JDBCReadAheadCommand {
          // WHERE pk1=? AND pk2=? OR pk1=? AND pk2=? ...
 
          StringBuffer sql = new StringBuffer(1024);
-
-         sql.append("SELECT ");
-            sql.append(SQLUtil.getColumnNamesClause(
-                     entity.getJDBCPrimaryKeyFields()));
-            sql.append(",");
-            sql.append(SQLUtil.getColumnNamesClause(loadFields));
-            
-         sql.append(" FROM ").append(entity.getTableName());
-
-         sql.append(" WHERE ");
+         StringBuffer columnNamesClause = new StringBuffer(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
+         columnNamesClause.append(",");
+         columnNamesClause.append(SQLUtil.getColumnNamesClause(loadFields));
+         String tableName = entity.getTableName();
+         StringBuffer whereClause = new StringBuffer();
          for(int i=0; i < keysCount; i++) {
             if(i > 0) {
-               sql.append(" OR ");
+               whereClause.append(" OR ");
             }
-            sql.append(SQLUtil.getWhereClause(
+            whereClause.append(SQLUtil.getWhereClause(
                      entity.getJDBCPrimaryKeyFields()));
          }
-
-         if(entity.getMetaData().hasSelectForUpdate()) {
-            sql.append(" FOR UPDATE");
+         
+         if (entity.getMetaData().hasRowLocking())
+         {
+            JDBCFunctionMappingMetaData rowLocking = manager.getMetaData().getTypeMapping().getRowLockingTemplate();
+            if (rowLocking == null)
+            {
+               throw new IllegalStateException("row-locking is not allowed for this type of datastore");
+            }
+            else
+            {
+               String[] args = new String[] {columnNamesClause.toString(), tableName, whereClause.toString()};
+               sql.append(rowLocking.getFunctionSql(args));
+            }
+         }
+         else
+         {
+            sql.append("SELECT ").append(columnNamesClause);
+            sql.append(" FROM ").append(tableName);
+            sql.append(" WHERE ").append(whereClause);
          }
          
          lastKeysCount = keysCount;

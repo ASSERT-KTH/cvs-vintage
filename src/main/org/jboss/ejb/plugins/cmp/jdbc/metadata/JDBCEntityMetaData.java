@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -103,7 +103,7 @@ public final class JDBCEntityMetaData {
    /**
     * Should we use 'SELECT ... FOR UPDATE' syntax when loading?
     */
-   private final boolean selectForUpdate;
+   private final boolean rowLocking;
    
    /**
     * Is this entity read-only?
@@ -285,7 +285,7 @@ public final class JDBCEntityMetaData {
       typeMapping = null;
       createTable = false;
       removeTable = false;
-      selectForUpdate = false;
+      rowLocking = false;
       primaryKeyConstraint = false;
       readOnly = false;
       readTimeOut = -1;
@@ -395,12 +395,12 @@ public final class JDBCEntityMetaData {
       }
 
       String sForUpStr = 
-            MetaData.getOptionalChildContent(element, "select-for-update");
+            MetaData.getOptionalChildContent(element, "row-locking");
       if(sForUpStr != null) {
-         selectForUpdate = 
+         rowLocking = 
                !isReadOnly() && (Boolean.valueOf(sForUpStr).booleanValue());
       } else {
-         selectForUpdate = defaultValues.hasSelectForUpdate();
+         rowLocking = defaultValues.hasRowLocking();
       }
 
       // primary key constraint?  If not provided, keep default.
@@ -775,13 +775,13 @@ public final class JDBCEntityMetaData {
    }
 
    /**
-    * Gets the flag used to determine if the store manager should add a for
-    * update clause when selecting data from the table
-    * @return true if the store manager should add a for update  
+    * Gets the flag used to determine if the store manager should do row locking
+    * when loading entity beans
+    * @return true if the store manager should add a row locking
     *       clause when selecting data from the table
     */
-   public boolean hasSelectForUpdate() {
-      return selectForUpdate;
+   public boolean hasRowLocking() {
+      return rowLocking;
    }
 
    /**
