@@ -16,6 +16,9 @@
   <div>$scarabR.CurrentModule.Name $scarabR.CurrentIssueType</div>
 #end
 </div>
+<div class="functnbar3">
+<input type="submit" value="Edit list" name="eventSubmit_doRedirecttocrossmodulequery" />
+</div>
 
 
 <h3>Issue ID query</h3>
@@ -89,13 +92,15 @@ from:&#160;<input type="text" size="20"
 <h3>Personnel association search</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
+#set ($userList = $data.Parameters.getStrings("user_list"))
+
+#if ($userList && !$userList.isEmpty())
 <th nowrap="nowrap">Select</th>
 <th align="left"><strong>Name</strong></th>
+#end
 <th align="left"><strong>Username</strong></th>
 <th align="left"><strong>Association</strong></th>
 </tr>
-#set ($userList = $data.Parameters.getStrings("user_list"))
-#set ($userAttrs = $search.getUserAttributes()) 
 
 #foreach ($userId in $userList)
   <input type="hidden" name="user_list" value="$userId"  />
@@ -111,8 +116,10 @@ from:&#160;<input type="text" size="20"
 #else
   #set ($selectedAttr = $data.Parameters.getString("user_attr_$userId"))
 #end
+#if ($userList && !$userList.isEmpty())
   <td><input type="checkbox" name="delete_user_$userId" /></td>
   <td><a href="mailto:$user.Email"><strong>$!user.FirstName $!user.LastName</strong></a></td>
+#end
   <td>$user.UserName</a></td>
   <td>
    <select name="user_attr_$userId" size="" >
@@ -122,6 +129,7 @@ from:&#160;<input type="text" size="20"
       <option value="created_by"
          #if ($selectedAttr.equals("created_by")) selected="selected" #end
          >Committed by:</option>
+    #set ($userAttrs = $search.getUserAttributes()) 
     #foreach ($selectUserAttr in $userAttrs)
        #set ($selected = false)
        #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
@@ -140,8 +148,10 @@ from:&#160;<input type="text" size="20"
  #else
     <tr class="a">
  #end
+#if ($userList && !$userList.isEmpty())
   <td>&nbsp;</td>
   <td>&nbsp;</td>
+#end
   <td><input type="text" name="add_user" /></td>
   <td><select name="add_user_attr" size="">
       <option value="any">Any</option>
