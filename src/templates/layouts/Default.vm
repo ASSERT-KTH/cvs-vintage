@@ -42,15 +42,13 @@
   </table>
  </div>
 
+#if ($scarabR.CurrentModule)
 <div class="modbar">
   <small><strong>Current Module:
-  #if ($scarabR.CurrentModule)
    <a href="$link.setPage("SelectModule.vm")">$scarabR.CurrentModule.Name</a>
-  #else
-   --
-  #end
   </strong></small>
 </div>
+#end
 
 <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
